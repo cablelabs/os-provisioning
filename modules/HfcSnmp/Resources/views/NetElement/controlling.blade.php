@@ -1,12 +1,8 @@
 @extends ('Layout.split-nopanel')
 
+<meta name="csrf-token" content="{{ \Session::get('_token') }}">
 
 @section('content_top')
-
-    @if ($reload)
-        {{-- Seconds to refresh the page --}}
-        <!-- <META HTTP-EQUIV="refresh" CONTENT="{{$reload}}"> -->
-    @endif
 
     {!! $headline !!}
 
@@ -17,23 +13,21 @@
 
     @include ('Generic.logging')
 
-    {{-- Stop SSE Button --}}
-    @if ($reload)
-    <div class="row justify-content-end">
-        @if ($view_var->controlling_link)
-            {!! link_to($view_var->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
-        @endif
-        <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="close_source()" value="Stop updating">
-    </div>
-    @endif
-
     {{-- Error Message --}}
     <?php $blade_type = 'form' ?>
     @include('Generic.above_infos')
 
+    {{-- Auto update SNMP values Button --}}
+    <div class="row justify-content-end">
+        @if ($netelement->controlling_link)
+            {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
+        @endif
+        <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()" value="auto update">
+    </div>
+
     {{-- PARAMETERS --}}
     @if (isset ($form_fields['list']))
-        {!! Form::model($view_var, array('route' => array($form_update, $view_var->id, $param_id, $index), 'method' => 'put', 'files' => true)) !!}
+        {!! Form::model($netelement, array('route' => array('NetElement.controlling_update', $netelement->id, $paramId, $index), 'method' => 'put', 'files' => true)) !!}
 
         {{-- LIST --}}
         @if ($form_fields['list'])
@@ -96,7 +90,7 @@
                     @foreach ($table['body'] as $i => $row)
                         <tr>
                             <?php $i = str_replace('.', '', $i) ?>
-                            <td> {!! isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['param_id'], $i]) : $i !!} </td>
+                            <td> {!! isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['paramId'], $i]) : $i !!} </td>
                             @foreach ($row as $col)
                                 <td align="center" style="padding: 4px"> {!! $col !!} </td>
                             @endforeach
@@ -106,17 +100,26 @@
             </table>
         @endforeach
 
-    {{-- Save Button --}}
-    <div class="d-flex justify-content-center">
-        <input
-            class="btn btn-primary"
-            value="{!! \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') !!}"
-            type="submit">
-    </div>
+        {{-- Save Button --}}
+        <div class="d-flex justify-content-center">
+            <input
+                class="btn btn-primary"
+                value="{!! \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') !!}"
+                type="submit">
+        </div>
 
-    {!! Form::close() !!}
+        {!! Form::close() !!}
 
-@endif
+    @endif
+
+    {{-- Test output during development --}}
+    @if (0)
+        <div id="test">
+            Test
+            <input style="simple;width: 85px;" name=".1.2.3.3.3" type="text" value="0">
+            <div style="display: contents" name=".1.23.4.5">0</div>
+        </div>
+    @endif
 
     {{-- javascript --}}
     @include('Generic.form-js')
@@ -125,61 +128,118 @@
 
 
 @section('javascript_extra')
-{{-- JS DATATABLE CONFIG --}}
+
+<script src="{{ asset('vendor/pusher-with-encryption.min.js') }}"></script>
 <script language="javascript">
 
-    window.onresize = function(event) {
-        table.responsive.recalc();
-    }
+    channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}";
+    subscribed = false;
 
-    // use SSE for constant updating values as ajax uses more http overhead
-    function update_snmp_values()
+    function subscribe()
     {
-        $('#stop-button').val('Stop updating');
-        $('#stop-button').attr("onclick", "close_source()");
+        console.log('trigger SNMP query loop');
+        subscribed = true;
 
-        console.log("Establish SSE connection");
-        this.source = new EventSource("{!! route('NetElement.sse_get_snmpvalues', [$view_var->id, $param_id, $index, $reload]) !!}");
+        // Trigger SNMP polling and/or add subscriber
+        window.xhrInit = $.ajax({
+            url: "{{ route('NetElement.triggerSnmpQueryLoop', [$netelement->id, $paramId, $index]) }}",
+            type: "post",
+            data: {
+                _token: "{{\Session::get('_token')}}",
+            },
+            success: function (msg) {
+                console.log('SnmpQueryLoop ' + msg);
+            },
+        });
 
-        this.source.onmessage = function(e)
-        {
-            var data = JSON.parse(e.data);
+        console.log('Subscribe to channel ' + channel);
 
-            console.log("Received data");
+        // window.echo.channel(channel)
+        window.echo.join(channel)
+            .listen('.newSnmpValues', (data) => {
+                // console.log((new Date()).toLocaleTimeString(), data);
+                data = JSON.parse(data.data);
 
-            for (var key in data) {
-                if (document.getElementsByName(key)[0] instanceof HTMLInputElement) {
-                    document.getElementsByName(key)[0].value = data[key];
-                } else if (document.getElementsByName(key)[0] != undefined) {
-                    document.getElementsByName(key)[0].innerHTML = data[key];
+                for (var key in data) {
+                    if (document.getElementsByName(key)[0] instanceof HTMLInputElement) {
+                        document.getElementsByName(key)[0].value = data[key];
+                    } else if (document.getElementsByName(key)[0] != undefined) {
+                        document.getElementsByName(key)[0].innerHTML = data[key];
+                    }
                 }
-            }
-        }
+
+            })
+            .here((users) => {
+                console.log('Listening to channel ' + channel);
+            });
+
+        $('#stop-button').val('stop');
+        $('#stop-button').attr("onclick", "unsubscribe(true)");
     }
 
-    function close_source()
+    /**
+     * Unsubscribe from channel
+     *
+     * @param bool  function was triggered manually by klicking stop button, or automatically by closing/changing active tab
+     */
+    function unsubscribe(manually)
     {
-        console.log('Close SSE connection');
-        this.source.close();
-        // $('#stop-button').remove();
-        $('#stop-button').val('Start update again');
-        $('#stop-button').attr("onclick", "update_snmp_values()");
+        if (manually) {
+            subscribed = false;
+        }
+
+        echo.leave(channel);
+        console.log('Leave channel ' + channel);
+
+        $('#stop-button').val('auto update');
+        $('#stop-button').attr("onclick", "subscribe()");
     }
+
+    // Only listen in active tab
+    document.addEventListener("visibilitychange", function() {
+        tabVisible = document.hidden ? 'hidden' : 'active';
+        console.log('Tab visibility changed to ' + tabVisible);
+
+        if (document.hidden) {
+            unsubscribe(false);
+        } else if (subscribed) {
+            subscribe();
+        }
+    });
 
     $(document).ready(function()
     {
         if (Number("{{$reload}}")) {
-            setTimeout(update_snmp_values(), "{{$reload}}" * 1000);
+            setTimeout(subscribe(), "{{$reload}}" * 1000);
         }
 
         $('.controllingtable').DataTable({
-            // stateSave: true,
             dom: 'lBfrtip',
             @include('datatables.buttons')
             @include('datatables.lang')
         });
     });
 
+    // this.source = new EventSource("{!! route('NetElement.triggerSnmpQueryLoop', [$netelement->id, $paramId, $index]) !!}");
+    // this.source.onmessage = function(e) {
+    //     console.log(JSON.parse(e.data));
+    // }
+    // this.source.close();
+
+</script>
+
+<script type="module">
+    import Echo from "{{ asset('vendor/echo.js') }}";
+
+    window.echo = new Echo({
+        broadcaster: 'pusher',
+        key: 'local',
+        wsHost: window.location.hostname,
+        wsPort: 6001,
+        wssPort: 6001,
+        forceTLS: true,
+        disableStats: true,
+    });
 </script>
 
 @stop

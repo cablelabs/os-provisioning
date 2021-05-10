@@ -24,7 +24,7 @@ BaseRoute::group([], function () {
         'middleware' => ['web', 'can:delete,Modules\HfcSnmp\Entities\Parameter'],
     ]);
 
-    BaseRoute::get('NetElement/{id}/controlling/{parameter}/{index}', [
+    BaseRoute::get('NetElement/{netelement}/controlling/{parameter}/{index}', [
         'as' => 'NetElement.controlling_edit',
         'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@controlling_edit',
         'middleware' => ['can:view,Modules\HfcReq\Entities\NetElementType'],
@@ -36,9 +36,9 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
     ]);
 
-    BaseRoute::get('NetElement/{id}/sse_get_snmpvalues/{parameter}/{index}/{reload}', [
-        'as' => 'NetElement.sse_get_snmpvalues',
-        'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@sse_get_snmpvalues',
+    BaseRoute::post('NetElement/{netelement}/triggerSnmpQueryLoop/{parameter}/{index}', [
+        'as' => 'NetElement.triggerSnmpQueryLoop',
+        'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@triggerSnmpQueryLoop',
         'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
     ]);
 });
