@@ -94,7 +94,10 @@ class ProvBaseObserver
                 \DB::connection('mysql-cacti')
                     ->table('host')
                     ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                    ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                    ->update([
+                        'description' => \DB::raw("REPLACE(description, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                        'hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                    ]);
 
                 \DB::connection('mysql-cacti')
                     ->table('data_input_data')
