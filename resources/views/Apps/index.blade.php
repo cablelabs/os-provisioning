@@ -30,9 +30,9 @@
 					@foreach ($modules as $attr)
 						<div>
 							<a href="{{ $attr['link'] }}">
-								<img title="{{ $attr['description'] }}" src="{{ asset('images/apps/'.$attr['icon']) }}" class="app-image">
+								<img title="{{ $attr['description'] }}" src="{{ asset('images/apps/'.$attr['icon']) }}" class="mx-2" style="height: 100px;">
 							</a>
-							<p class="app-title">{{ $attr['name'] }}</p>
+							<p style="margin-top: 5px; color: black;">{{ $attr['name'] }}</p>
 						</div>
 					@endforeach
 				</div>
@@ -46,9 +46,9 @@
 				<div class="widget row" style="text-align: center; padding-bottom: 25px;">
 					<div style="height: 100px;">
 						<a href="{{ $externalApp['state'] == 'active' ? $externalApp['link'] : $externalApp['website'] }}" style="display: flex;">
-								<img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="app-image">
+							<img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="mx-2" style="height: 100px;">
 						</a>
-						<p class="app-title">{{ $name }}</p>
+						<p style="margin-top: 5px; color: black;">{{ $name }}</p>
 					</div>
 				</div>
 			</div>

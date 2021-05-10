@@ -576,25 +576,18 @@ li.expand div img {
   display: inline;
 }
 
-.hover-supported {
+@media (hover: none) {
+  .hover-not-supported:hover {
     display: none;
-}
-
-@media (hover: hover) {
-  .hover-supported:hover {
-    display: block;
   }
 }
 
-.sidebar .nav > li > div > a > svg {
+.h-20 {
     height: 20px;
-    width: 20px;
 }
 
-.sidebar .nav > li > div > a > svg,
-.sidebar .nav > li > div > a > i,
-.sidebar .nav > li > div > a > img, {
-    margin-right: 7px;
+.w-20 {
+    width: 20px;
 }
 
 .sidebar-element {
@@ -605,10 +598,6 @@ li.expand div img {
     justify-content: space-between;
     align-items: center;
     white-space: nowrap;
-}
-
-.sidebar-element .recolor > a > img {
-    height: 20px;
 }
 
 span.centerblock {
@@ -982,29 +971,8 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     line-height: 16px;
 }
 
-.nav-header .text-success {
-    display: inline-block !important;
-    width: 100%;
-}
-
 .nav-header .text-success i {
     float: right !important;
-}
-
-.apps {
-    font-size: 13px !important;
-    width: 223px;
-}
-
-.app-title {
-    margin-top: 5px;
-    color: black;
-}
-
-.app-image {
-    height: 100px;
-    margin-right: 10px;
-    margin-left: 10px;
 }
 
 .external-app-mini {

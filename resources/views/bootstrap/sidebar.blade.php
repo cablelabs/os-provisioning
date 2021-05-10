@@ -33,8 +33,8 @@
 
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      <li class="nav-header apps" style="border-bottom: 1px solid;">
-        <a href="{{route('Apps.active')}}" class="text-success" style="display: inline-block !important; width: 100%;">{{ trans('messages.nativeApps') }}
+      <li class="nav-header" style="border-bottom: 1px solid; font-size: 13px !important; width: 223px;">
+        <a href="{{route('Apps.active')}}" class="text-success d-inline w-100" style="display: inline-block !important; width: 100%;">{{ trans('messages.nativeApps') }}
           <i class="fa fa-plus"></i>
         </a>
       </li>
@@ -47,9 +47,9 @@
               <a class="caret-link" href="javascript:;">
             @endif
             @if (is_file(public_path('images/apps/').$typearray['icon']))
-              <img src="{{ asset('images/apps/'.$typearray['icon']) }}" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
+              <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
             @else
-              <i class="fa fa-fw {{ $typearray['icon'] }}"></i>
+              <i class="fa fa-fw {{ $typearray['icon'] }} m-r-5"></i>
             @endif
             <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
@@ -73,8 +73,8 @@
         @endif
         </li>
       @endforeach
-    <li class="nav-header apps" style="border-top: 1px solid;">
-      <a href="{{route('Apps.active')}}" class="text-success" style="display: inline-block !important; width: 100%;">{{ trans('messages.externalApps') }}
+    <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important; width: 223px;">
+      <a href="{{route('Apps.active')}}" class="text-success d-inline w-100" style="display: inline-block !important; width: 100%;">{{ trans('messages.externalApps') }}
         <i class="fa fa-plus"></i>
       </a>
     </li>
@@ -83,7 +83,7 @@
         <li>
           <div class="sidebar-element recolor">
             <a href="{{ $externalApp['link'] }}">
-                <img title="{{ $externalApp['description'] }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini">
+                <img src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini h-20 w-20 m-r-5">
                 <span>{{ $appName }}</span>
             </a>
           </div>
@@ -97,7 +97,7 @@
       <li id="network_overview" class="has-sub" data-sidebar="level1">
         <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
             <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
-              <i class="fa fa-sitemap"></i>
+              <i class="fa fa-sitemap m-r-5"></i>
               <span>{{ trans('view.Menu_allNets') }}</span>
             </a>
             <a class="caret-link" href="javascript:;" style="width: 100%; text-align: right;">
@@ -109,7 +109,7 @@
             <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
               <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
                 <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097; max-height: 20px; white-space: nowrap;">
-                  <i class="fa fa-circle text-info"></i>
+                  <i class="fa fa-circle text-info m-r-5"></i>
                   <span>{{$network->name}}</span>
                 </a>
                 @if($network->clusters->isNotEmpty())
@@ -136,7 +136,7 @@
     @endif
     {{-- sidebar minify button --}}
     <li>
-      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-supported" data-click="sidebar-minify">
+      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" data-click="sidebar-minify">
         <i class="fa fa-angle-double-left"></i>
       </a>
     </li>
