@@ -188,7 +188,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:cacti')->daily();
         } else {
             $schedule->call(function () {
-                \Queue::push(new \Modules\ProvBase\Jobs\SetCableModemsOnlineStatusJob());
+                \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\SetCableModemsOnlineStatusJob());
             })->everyFiveMinutes();
         }
 

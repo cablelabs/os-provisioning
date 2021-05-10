@@ -94,7 +94,7 @@ class ModemObserver
         // Note: does not perform a save() which could trigger observer.
         if (Module::collections()->has('HfcCustomer')) {
             if (multi_array_key_exists(['x', 'y'], $diff)) {
-                \Queue::push(new \Modules\HfcCustomer\Jobs\MpsJob($modem));
+                \Queue::pushOn('medium', new \Modules\HfcCustomer\Jobs\MpsJob($modem));
             }
         }
     }
