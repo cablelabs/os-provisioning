@@ -658,9 +658,12 @@ class SnmpController extends \BaseController
         // Get stored Snmpvalues
         $oldValues = $this->getStoredValues();
 
-        if (! $oldValues) {
+        if (! $oldValues || ! isset($oldValues['values'])) {
             throw new Exception('Error: Stored SNMP Values were deleted!');
         }
+
+        $oldValues = $oldValues['values'];
+
         // TODO: get empty collection or already filled with OIDs to increase performance if probable
         // $oids = $this->_get_oid_collection();
         $oids = new \Illuminate\Database\Eloquent\Collection();
