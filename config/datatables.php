@@ -119,4 +119,9 @@ return [
      * TODO: Make this configurable by model/page.
      */
     'showFilterInfo' => env('DATATABLES_FILTER_INFO', true),
+
+    /**
+     * For certain
+     */
+    'relationThreshhold' => env('DATATABLES_RELATION_THRESHHOLD', 25),
 ];

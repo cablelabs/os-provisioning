@@ -296,4 +296,15 @@ class ContractController extends \BaseController
 
         return $data;
     }
+
+    public function getRelationDatatable(Contract $contract, $relation)
+    {
+        return datatables($contract->$relation())
+            ->addColumn('checkbox', true, 0)
+            ->addColumn('label', function ($relation) {
+                return $relation->label();
+            }, 1)
+            ->only(['checkbox', 'label'])
+            ->make();
+    }
 }
