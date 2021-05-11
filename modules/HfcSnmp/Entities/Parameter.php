@@ -20,8 +20,8 @@ class Parameter extends \BaseModel
     public function rules()
     {
         return [
-            'html_frame' => 'numeric|min:1',
-            'html_id' => 'numeric|min:0',
+            'html_frame' => ['nullable', 'numeric', 'min:1'],
+            'html_id' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 

@@ -19,7 +19,7 @@ $conf = [
 ];
 
 if (\Module::collections()->has('BillingBase')) {
-    $conf['PhoneTariff'] = [
+    $conf['MenuItems']['PhoneTariff'] = [
         'link'	=> 'PhoneTariff.index',
         'icon'	=> 'fa-phone-square',
         'class' => PhoneTariff::class,

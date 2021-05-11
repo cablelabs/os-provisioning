@@ -7,9 +7,15 @@
         @include ('bootstrap.header')
     </head>
 
+    @php
+        if (! isset($error)) {
+            $error = '';
+        }
+    @endphp
+
     <body class="pace-top">
         <div class="error">
-            <div class="error-code mb-3">{{ $error ?? 404 }}<i class="fa fa-warning m-l-10"></i></div>
+            <div class="error-code mb-3">{{ $error }}<i class="fa fa-warning m-l-10"></i></div>
             <div class="error-content">
                 @if ($error == 403)
                     <div class="my-5">
