@@ -32,14 +32,14 @@ contributions begin with a GitHub issue.
 4. Make your suggested changes in one branch named after the issue number you
 are working (e.g. `issue-1`).
 5. Commit and push your changes.
-6. Open a [pull request][7] in the [Open Adrenaline repo][8]
+6. Open a [pull request][7] in the [OS Provisioning repo][8]
 7. As part of the pull request review process, Open Adrenaline maintainers
 may provide you with feedback and suggested changes.
 8. Once the pull request is ready to be merged, the maintainers will choose the
 appropriate time to merge the pull request.
 
-You can diff any changes at the [compare][9] page of this repo.
-Our [pull request template][10] should be used for all pull requests. If you're
+
+Our [pull request template][9] should be used for all pull requests. If you're
 creating your pull request from the GitHub site, then it will be automatically
 populated with the template's contents, otherwise please copy and paste the
 template text into your pull request.
