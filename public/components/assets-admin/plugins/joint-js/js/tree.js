@@ -210,28 +210,50 @@ function arrange(tree) {
                     label: {text: tree.id}, body: {stroke: tree.us_snr > 0 ? '#00FF00' : '#FF0000'}
                 }
             });
-        }else if (tree.netelementtype.name === 'bubble') {
+        } else if (tree.netelementtype.name === 'bubble') {
             shape = new Bubble({
                 id: tree.id,
+                collapsed: false,
                 attrs: {
                     link: {
-                        xlinkHref: tree.url
+                        xlinkHref: tree.url,
+                        title: 'Total number of modems: ' + tree.m_count + ' \n' +
+                            'Number of Online modems / Number of Critical modems: '
+                            + tree.m_online_count + '/' + tree.m_critical_count + '\n' +
+                            'Avg. Upstream Power: ' + _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)
                     },
-                    label: {text: tree.id}
-                }
+                    m_count_label: {text: tree.m_count},
+                    m_online_critical_label: {text: tree.m_online_count + '/' + tree.m_critical_count},
+                    m_avg_upstream_label: {text: _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)},
+                },
+                parent_id: tree.parent_id,
+                pagination: tree.pagination,
             });
-        } else {
-            shape = new Block({
+            shape.toggle();
+        } else if (tree.netelementtype.name === 'load_more') {
+            shape = new joint.shapes.standard.Circle();
+            shape.size(50, 50);
+            shape.attr('root/title', 'Load more modems...');
+            shape.attr('label/text', '+' + (tree.total-tree.to));
+            shape.attr('body/fill', 'lightblue');
+            shape.attr(['root','cursor'], 'pointer');
+            shape.set('node_id', tree.node_id);
+            shape.set('parent_id', tree.parent_id);
+            shape.set('next_page', tree.next_page)
+        }else {
+            shape = new Amplifier({
                 id: tree.id,
                 attrs: {
                     link: {
-                        xlinkHref: 'https://jointjs.com'
+                        xlinkHref: '/admin/NetElement/'+tree.id+'/controlling/0/0'
                     },
                     label: {
                         text: tree.name
-                    }
+                    },
+                    header: {stroke: 'green'}
                 }
             });
+            shape.toggle(false);
         }
 
         var result_tree = new Tree(0, [], shape);

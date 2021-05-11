@@ -52,6 +52,10 @@ var headerHeight = 40;
 var buttonSize = 14;
 
 joint.dia.Element.define('custom.Amplifier', {
+    size: {
+        width: 50,
+        height: 50
+    },
     collapsed: false,
     attrs: {
         root: {
@@ -62,34 +66,36 @@ joint.dia.Element.define('custom.Amplifier', {
             refHeight: '100%',
             x: 3,
             y: 3,
-            fill: '#000000',
+            fill: '#b4b4b4',
             opacity: 0.05
         },
-        body: {
-            width: 25,
-            height: 25,
-            refX: '50%',
-            refX2: 1,
-            refY: -3,
-            strokeWidth: 1,
-            stroke: '#DDDDDD',
-            fill: '#FFFFFF'
+        link: {
+            xlinkShow: 'new',
+            cursor: 'pointer'
         },
         header: {
-            // refWidth: '100%',
+            refWidth: '100%',
+            refHeight: '100%',
             refX: '50%',
             refY: 0,
-            height: 40,
-            width: 40,
-            strokeWidth: 2,
+            strokeWidth: 4,
             fill: 'rgba(255,255,255,0)',
-            stroke: '#000',
-            points: '10,0 20,10 10,20'
+            stroke: '#b4b4b4',
+            refPoints: '10,0 20,10 10,20'
+        },
+        label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            refWidth: '100%',
+            refHeight: '100%',
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
         },
         button: {
-            refX: '50%',
-            refX2: 25,
-            refY: 7,
+            refX: '100%',
+            refX2: 40,
+            refY: 20,
             cursor: 'pointer',
             event: 'element:button:pointerdown',
             title: 'Collapse / Expand',
@@ -112,11 +118,16 @@ joint.dia.Element.define('custom.Amplifier', {
 
     markup: [
         {
-            tagName: 'rect',
-            selector: 'body'
-        }, {
-            tagName: 'polygon',
-            selector: 'header'
+            tagName: 'a',
+            selector: 'link',
+            children: [
+               {
+                    tagName: 'text',
+                    selector: 'label'
+                },{
+                    tagName: 'polygon',
+                    selector: 'header'
+                }]
         }, {
             tagName: 'g',
             selector: 'button',
@@ -167,16 +178,16 @@ joint.dia.Element.define('custom.Amplifier', {
 joint.dia.Element.define('custom.House', {
     z: 2,
     size: {
-        width: 40,
-        height: 40
+        width: 50,
+        height: 50
     },
     attrs: {
         label: {
             fontFamily: 'monospace',
             fontSize: 12,
             textAnchor: 'middle',
-            refX: 20,
-            refY: 15,
+            refX: 25,
+            refY: 20,
             stroke: '#333333'
         },
         labelHouseNo: {
@@ -188,7 +199,7 @@ joint.dia.Element.define('custom.House', {
             stroke: '#333333'
         },
         body: {
-            strokeWidth: 2,
+            strokeWidth: 4,
             fill: 'rgba(255,255,255,0)',
             refPoints: '1,0 2,1 2,3 1.25,3 1.25,2 0.75,2 0.75,3 0,3 0,1 0,1',
             stroke: '#0080f0'
@@ -260,7 +271,18 @@ joint.shapes.standard.Link.define('custom.Link', {
 });
 
 joint.dia.Element.define('custom.Bubble', {
+    size: {
+        width: 50,
+        height: 50
+    },
     collapsed: false,
+    pagination: {
+        current_page: 0,
+        from:0,
+        to: 0,
+        total: 0,
+        last_page:0
+    },
     attrs: {
         root: {
             magnetSelector: 'buttonIcon'
@@ -273,22 +295,47 @@ joint.dia.Element.define('custom.Bubble', {
             fill: '#186d20',
             stroke: '#FFFFFF',
             strokeWidth: 0.5,
-            r: 20,
-            cx: 7,
-            cy: 7
-        }, label: {
+            r: 30,
+            cx: 25,
+            cy: 25
+        },
+        m_count_label: {
             textVerticalAnchor: 'bottom',
             textAnchor: 'left',
             refWidth: '100%',
             refHeight: '100%',
-            fontSize: 12,
+            refX: '30%',
+            refY: 20,
+            fontSize: 14,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        m_online_critical_label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            refWidth: '100%',
+            refHeight: '100%',
+            refX: '30%',
+            refY: 35,
+            fontSize: 14,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        m_avg_upstream_label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            refWidth: '100%',
+            refHeight: '100%',
+            refX: '30%',
+            refY: 50,
+            fontSize: 14,
             fontFamily: 'sans-serif',
             fill: '#222222'
         },
         button: {
-            refX: '50%',
-            refX2: 25,
-            refY: 7,
+            refX: '100%',
+            refX2: 10,
+            refY: 20,
             cursor: 'pointer',
             event: 'element:button:pointerdown',
             title: 'Collapse / Expand',
@@ -319,7 +366,13 @@ joint.dia.Element.define('custom.Bubble', {
                     selector: 'header'
                 }, {
                     tagName: 'text',
-                    selector: 'label'
+                    selector: 'm_count_label'
+                }, {
+                    tagName: 'text',
+                    selector: 'm_online_critical_label'
+                }, {
+                    tagName: 'text',
+                    selector: 'm_avg_upstream_label'
                 }]
         }, {
             tagName: 'g',
@@ -369,7 +422,7 @@ joint.dia.Element.define('custom.Bubble', {
 });
 
 joint.dia.Element.define('custom.Cluster', {
-    size: {width: 40, height: 40},
+    size: {width: 50, height: 50},
     collapsed: false,
     attrs: {
         root: {
