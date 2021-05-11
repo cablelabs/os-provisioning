@@ -75,6 +75,7 @@ return [
     'Menu_NetElementType'       => 'Netzelementtypen',
     'Menu_Realty'               => 'Liegenschaften',
     'Menu_TicketType'           => 'Tickettypen',
+    'Menu_TicketReceiver'       => 'Ticketzentrale',
     'Menu_Nets'                 => 'Netze',
     'Menu_allNets'              => 'Alle Netze',
     'Menu_VicinityGraph'        => 'Nachbarschaftsdiagramm',
@@ -135,6 +136,7 @@ return [
     'Header_EditCcc Config'     => 'Einstellungen für das Kundenkontrollzentrum bearbeiten',
     'Header_Prov Base'          => 'Einstellungen für das Provisionierungsmodul',
     'Header_EditProv Base Config'=> 'Einstellungen für das Provisionierungsmodul bearbeiten',
+    'Header_HfcReq'             => 'Einstellungen für das HFC Modul',
     'Header_HfcBase'            => 'Einstellungen für das Detect Modul',
     'Header_EditHfc Base Config'=> 'Einstellungen für das Detect Modul bearbeiten',
     'Header_CostCenter'         => 'Kostenstelle|Kostenstellen', //Workaround decide which one to use
@@ -224,7 +226,7 @@ return [
     'Header_EditMta'            => 'MTA bearbeiten',
     //Phonenumber
     'Header_Phonenumber'        => 'Telefonnummer|Telefonnummern',
-    'Header_PhonenumberManagement' => 'Rufnummereinstellung|Rufnummereinstellungen',
+    'Header_PhonenumberManagement' => 'Rufnummerverwaltung',
     'Header_EditPhonenumber'    => 'Telefonnummer bearbeiten',
     'Header_PhonebookEntry'     => 'Telefonbucheintrag',
     'Header_Tickets'            => 'Ticket|Tickets',
@@ -266,6 +268,7 @@ return [
     'Button_Save'               => 'Speichern',
     'Button_Save / Restart'     => 'Speichern / Neustart',
     'Button_Search'             => 'Suchen',
+    'Button_SendToEnviaTEL'     => 'An envia TEL senden',
     'Button_Submit'             => 'Senden',
     'Button_manage'             => 'Verwalten, schließt alle Basis und Sonderfähigkeiten mit ein. Schnellauswahl um alle Aktionen auf allen Seiten dieses Moduls auszuführen.',
     'Header_Tree Table'         => 'Baumdiagramm|Baumdiagramme',
@@ -335,6 +338,7 @@ return [
     'Button_Create Mta'             => 'MTA erstellen',
     // //Phonenumber
     'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
+    'Button_Create PhonenumberManagement' => 'Rufnummerverwaltung anlegen',
     // //Configfiles
     'Button_Create Configfile'      => 'Konfigurationsdatei erstellen',
     'Button_DragDrop AddList'       => 'Liste erstellen',
@@ -426,17 +430,6 @@ return [
     // Contract
     //
     'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
-
-    'Ticket_State_New' => 'Neu',
-    'Ticket_State_In Process' => 'In Bearbeitung',
-    'Ticket_State_Closed' => 'Geschlossen',
-    'Ticket_Type_General' => 'Allgemein',
-    'Ticket_Type_Technical' => 'Technik',
-    'Ticket_Type_Accounting' => 'Buchhaltung',
-    'Ticket_Priority_Trivial' => 'Niedrig',
-    'Ticket_Priority_Minor' => 'Medium',
-    'Ticket_Priority_Major' => 'Hoch',
-    'Ticket_Priority_Critical' => 'Kritisch',
     'Numberrange_Start' => 'Beginn',
     'Numberrange_End' => 'Ende',
     'Numberrange_Suffix' => 'Suffix',
@@ -446,26 +439,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Telefonbucheintrag',
 
-    // Error
-    'error_specify_id'          => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
-    'error_ticket_settings'     => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
-
-    'commandCenter' => 'Kommandozentrale',
-    'company' => 'Firma',
-    'Credit' => 'Gutschrift',
-    'critical' => 'kritisch',
-    'Debit' => 'Lastschrift',
-    'Diagrams' => 'Diagramme',
-    'Discard' => 'Missachte',
-    'Download' => 'Herunterladen',
-    'false' => 'nein',
-    'Global' => 'Global',
-    'Global notification' => 'Globale Benachrichtigung',
-    'info' => 'Info',
-    'Level' => 'Level',
-    'markon' => 'Preisaufschlag in %',
-    'Message' => 'Nachricht',
-    'name' => 'Name',
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for all translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Berechtigungen',
         'Ability'           => 'Berechtigung',
@@ -495,6 +473,7 @@ return [
         'ProvVoip'          => 'Provisionierung für VoiP',
         'ProvVoipEnvia'     => 'Provisionierung für envia TEL',
         'Save All'          => 'Alle Speichern',
+        'Save Changes'      => 'Änderungen Speichern',
         'See income chart'  => 'Einkommensdiagramm ansehen',
         'Technical Capabilities' => 'Technische Fähigkeiten',
         'Ticketsystem'      => 'Ticketsystem',
@@ -506,6 +485,38 @@ return [
         'View everything'   => 'Alle Seiten ansehen',
         'VoipMon'           => 'Voip Monitor',
     ],
+    'analysis' => 'Analyse',
+    'Assign' => ':model hinzufügen',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Kundenkontrollzentrum',
+    'commandCenter' => 'Kommandozentrale',
+    'company' => 'Firma',
+    'Credit' => 'Gutschrift',
+    'critical' => 'kritisch',
+    'Debit' => 'Lastschrift',
+    'Detach all' => 'Alle :model entfernen',
+    'Diagrams' => 'Diagramme',
+    'Discard' => 'Missachte',
+    'Download' => 'Herunterladen',
+    'error' => [
+        'backToHomePage'        => 'Zurück zur Startseite',
+        'backToPreviousPage'    => 'Zurück zur letzten Seite',
+        'pageNotFound'          => 'Diese Seite existiert leider nicht',
+        'snmpAccessException'   => 'Snmp Zugriff Verweigert',
+        'specifyId'             => 'Bitte geben Sie den Hostnamen des zugehörigen Modems anstelle der IP Adresse an.',
+        'ticketSettings'        => 'Bitte geben Sie den Namen und die E-Mail-Adresse des Noreply Absenders in der Systemkonfiguration an.',
+    ],
+    'false' => 'nein',
+    'Global' => 'Global',
+    'Global notification' => 'Globale Benachrichtigung',
+    'HfcReq' => 'HFC',
+    'info' => 'Info',
+    'Level' => 'Level',
+    'markon' => 'Preisaufschlag in %',
+    'Message' => 'Nachricht',
+    'name' => 'Name',
+    'OverdueDebts' => 'Offene Posten',
+    'parentNetelement' => 'Übergeordnetes Netzelement',
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',
@@ -523,11 +534,16 @@ return [
             'voip' => 'VOIP',
         ],
     ],
+    'ProvBase' => 'Provisionierung',
+    'ProvMon' => 'Monitoring',
+    'ProvVoip' => 'VoIP',
+    'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [
         'Create Connection Infos' => 'Anschlussinfo generieren',
     ],
+
     'ticket' => [
         'priority' => [
             'critical' => 'Kritisch',
@@ -537,12 +553,39 @@ return [
         ],
         'state' => [
             'New' => 'Neu',
-            'In process' => 'In Bearbeitung (pausiert)',
             'Closed' => 'Geschlossen',
-            'Accepted' => 'Angenommen',
-            'In work' => 'Wird gerade bearbeitet',
+            'Paused' => 'In Bearbeitung (pausiert)',
+            'In Progress' => 'Wird gerade bearbeitet',
         ],
+        'notification' => [
+            'NewTicket' => 'Neues Ticket',
+            'RemovedFromTicket' => 'Nicht mehr zugewiesen',
+            'TicketAccepted' => 'Ticket angenommen',
+            'TicketDeclined' => 'Ticket abgelehnt',
+            'TicketFinished' => 'Ticket abgeschlossen',
+            'TicketNoUsers' => 'Ticket benötigt Zuweisung',
+            'TicketUpdated' => 'Ticket aktualisiert',
+        ],
+        'close' => 'Abschließen',
+        'pause' => 'Pausieren',
+        'resume' => 'Fortsetzen',
+        'accept' => 'Annehmen',
+        'decline' => 'Ablehnen',
+        'busy' => 'Beschäftigt',
+        'available' => 'Verfügbar',
+        'ticketReceiver' => 'Ticketzentrale',
+        'legacyTicket' => 'Veraltetes Ticket ohne Zuweisung',
+        'late' => 'verspätet',
+        'showContract' => 'Zum Vertrag',
+        'showModem' => 'Zum Modem',
+        'viewTopography' => 'Topografie',
+        'noTickettype' => 'Es wurden keine Tickettypen gesetzt.',
+        'enableBrowserNotifications' => 'Bitte Browser-Benachrichtigungen einschalten',
+        'notificationText' => 'Um alle Features der Ticketzentrale zu nutzen, muss die Berechtigung für Browser-Benachrichtigungen erteilt werden. Dies sorgt dafür, dass Sie über neue Tickets benachrichtigt werden können.',
+        'openPermissionDialog' => 'Berechtigung erteilen',
+        'noNotifications' => 'Ich will keine Benachrichtigungen!',
     ],
+    'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Zeit',
     'topo' => [
         'addMpr' => 'Erstelle Modembereich',
@@ -561,5 +604,15 @@ return [
         'solved' => 'Heute gelöst',
         'stacked' => 'haben weitere Tickets',
         'summary' => 'Übersicht',
+    ],
+    'contract' => [
+        'groundForDismissal' => 'Kündigungsgrund',
+        'groundsForDismissal' => [
+            'unknown' => 'unbekannt',
+            'relocation' => 'Umzug',
+            'unsatisfied' => 'unzufrieden',
+            'canceled by us' => 'von uns gekündigt',
+            'deceased' => 'verstorben',
+        ],
     ],
 ];

@@ -1,7 +1,7 @@
 <?php
 
-return[
-    'link' => 'Dashboard.index',
+$config = [
+    'link' => null,
     'MenuItems' => [
         'Config Page' => [
             'link' => 'Config.index',
@@ -14,4 +14,7 @@ return[
             'class' => App\GuiLog::class,
         ],
     ],
+
 ];
+
+return $config;

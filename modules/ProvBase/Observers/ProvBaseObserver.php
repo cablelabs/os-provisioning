@@ -2,7 +2,9 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Artisan;
 use Modules\ProvBase\Entities\Qos;
+use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Entities\RadGroupReply;
@@ -19,8 +21,6 @@ class ProvBaseObserver
 {
     public function updated($model)
     {
-        $model->make_dhcp_glob_conf();
-
         $changes = $model->getDirty();
 
         // create new CPE ignore file
@@ -30,10 +30,13 @@ class ProvBaseObserver
 
         // recreate default network, if provisioning server ip address has been changed
         if (array_key_exists('provisioning_server', $changes)) {
-            $model->make_dhcp_default_network_conf();
+            \Queue::push(new \Modules\ProvBase\Jobs\DhcpJob());
         }
 
-        if (array_key_exists('dhcp_def_lease_time', $changes)) {
+        if (multi_array_key_exists(['dhcp_def_lease_time', 'dhcp_max_lease_time'], $changes)) {
+            // recreate global DHCP config file
+            $model->make_dhcp_glob_conf();
+
             // adjust radiusd config and restart it
             $sed = storage_path('app/tmp/update-sqlippool.sed');
             file_put_contents($sed, "s/^\s*lease_duration\s*=.*/\tlease_duration = $model->dhcp_def_lease_time/");
@@ -47,7 +50,7 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('acct_interim_interval', $changes)) {
-            \Artisan::call('nms:radgroupreply-repopulate');
+            Artisan::call('nms:radgroupreply-repopulate');
         }
 
         if (array_key_exists('random_ip_allocation', $changes)) {
@@ -76,7 +79,7 @@ class ProvBaseObserver
             \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
         }
 
-        if (array_key_exists('ro_community', $changes)) {
+        if (Module::collections()->has('ProvMon') && array_key_exists('ro_community', $changes)) {
             // update cacti database: replace the original snmp ro_community with the new one
             \DB::connection('mysql-cacti')
                 ->table('host')
@@ -86,36 +89,41 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('domain_name', $changes)) {
-            // update cacti database: replace the original domain_name with the new one
-            \DB::connection('mysql-cacti')
-                ->table('host')
-                ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+            if (Module::collections()->has('ProvMon')) {
+                // update cacti database: replace the original domain_name with the new one
+                \DB::connection('mysql-cacti')
+                    ->table('host')
+                    ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
+                    ->update([
+                        'description' => \DB::raw("REPLACE(description, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                        'hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                    ]);
 
-            \DB::connection('mysql-cacti')
-                ->table('data_input_data')
-                ->where('value', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                ->update(['value' => \DB::raw("REPLACE(value, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                \DB::connection('mysql-cacti')
+                    ->table('data_input_data')
+                    ->where('value', 'like', "cm-%.{$model->getOriginal('domain_name')}")
+                    ->update(['value' => \DB::raw("REPLACE(value, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
 
-            \DB::connection('mysql-cacti')
-                ->table('poller_item')
-                ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                \DB::connection('mysql-cacti')
+                    ->table('poller_item')
+                    ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
+                    ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
 
-            \DB::connection('mysql-cacti')
-                ->table('poller_item')
-                ->where('arg1', 'like', "%cm-%.{$model->getOriginal('domain_name')}%")
-                ->update(['arg1' => \DB::raw("REPLACE(arg1, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                \DB::connection('mysql-cacti')
+                    ->table('poller_item')
+                    ->where('arg1', 'like', "%cm-%.{$model->getOriginal('domain_name')}%")
+                    ->update(['arg1' => \DB::raw("REPLACE(arg1, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
 
-            \DB::connection('mysql-cacti')
-                ->table('poller')
-                ->where('hostname', 'like', "%.{$model->getOriginal('domain_name')}")
-                ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                \DB::connection('mysql-cacti')
+                    ->table('poller')
+                    ->where('hostname', 'like', "%.{$model->getOriginal('domain_name')}")
+                    ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
 
-            \DB::connection('mysql-cacti')
-                ->table('poller')
-                ->where('dbhost', 'like', "%.{$model->getOriginal('domain_name')}")
-                ->update(['dbhost' => \DB::raw("REPLACE(dbhost, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                \DB::connection('mysql-cacti')
+                    ->table('poller')
+                    ->where('dbhost', 'like', "%.{$model->getOriginal('domain_name')}")
+                    ->update(['dbhost' => \DB::raw("REPLACE(dbhost, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+            }
 
             // adjust named config and restart it
             $sed = storage_path('app/tmp/update-domain.sed');

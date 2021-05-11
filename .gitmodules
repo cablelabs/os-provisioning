@@ -10,3 +10,6 @@
 	path = public/components/assets-admin/plugins/vuedraggable
 	url = https://github.com/SortableJS/Vue.Draggable
 	ignore = all
+[submodule "public/components/assets-admin/plugins/vue-touch-events"]
+	path = public/components/assets-admin/plugins/vue-touch-events
+	url = https://github.com/jerrybendy/vue-touch-events

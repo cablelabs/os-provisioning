@@ -74,16 +74,10 @@ class MtaController extends \BaseController
         \Session::put('Edit', 'MTA');
 
         $tabs = parent::editTabs($model);
+        $analysisTabs = $model->modem->analysisTabs();
+        unset($analysisTabs[0]);
 
-        if (\Module::collections()->has('ProvMon') && \Bouncer::can('view_analysis_pages_of', Modem::class)) {
-            array_push($tabs,
-                ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.index', 'link' => $model->modem_id],
-                ['name' => 'CPE-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.cpe', 'link' => $model->modem_id],
-                ['name' => 'MTA-Analysis', 'icon' => 'area-chart', 'route' => 'ProvMon.mta', 'link' => $model->modem_id]
-            );
-        }
-
-        return $tabs;
+        return array_merge($tabs, $analysisTabs);
     }
 
     /**
@@ -96,23 +90,13 @@ class MtaController extends \BaseController
     public function api_restart($ver, $id)
     {
         if ($ver !== '0') {
-            return response()->json(['ret' => "Version $ver not supported"]);
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
         }
 
-        if (! $mta = static::get_model_obj()->find($id)) {
-            return response()->json(['ret' => 'Object not found']);
-        }
-
+        $mta = static::get_model_obj()->findOrFail($id);
         $mta->restart();
 
-        $err = collect([
-            \Session::get('tmp_info_above_form'),
-            \Session::get('tmp_warning_above_form'),
-            \Session::get('tmp_error_above_form'),
-        ])->collapse()
-        ->implode(', ');
-
-        return response()->json(['ret' => $err ?: 'success']);
+        return response()->v0ApiReply([], true, $id);
     }
 
     public function prepare_rules($rules, $data)

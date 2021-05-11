@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class AddPhonenumberFieldToUsersTable extends BaseMigration
 {
-    protected $migrationScope = 'database';
+    public $migrationScope = 'database';
 
     /**
      * Run the migrations.

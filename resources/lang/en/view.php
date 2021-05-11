@@ -75,6 +75,7 @@ return [
     'Menu_NetElementType'       => 'Net Element Types',
     'Menu_Realty'               => 'Realties',
     'Menu_TicketType'           => 'TicketTypes',
+    'Menu_TicketReceiver'       => 'Ticket Receiver',
     'Menu_Nets'                 => 'Nets',
     'Menu_allNets'              => 'All networks',
     'Menu_VicinityGraph'        => 'Vicinity Graph',
@@ -127,16 +128,17 @@ return [
     'Header_Global Configurations' => 'System Configurations',
     'Header_Global Config'      => 'Global Config|Global Configs',
     'Header_EditGlobal Config'  => 'Edit Global Config',
-    'Header_Billing Config'     => 'Modul Configuration for Billing',
-    'Header_EditBilling Config' => 'Edit Modul Configuration for Billing',
-    'Header_ProvVoip'           => 'Modul Configuration for VOIP',
-    'Header_EditProvVoip Config'=> 'Edit Modul Configuration for VOIP',
-    'Header_Ccc Config'         => 'Modul Configuration for Kundenkontrollzentrum',
-    'Header_EditCcc Config'     => 'Edit Modul Configuration for Kundenkontrollzentrum',
-    'Header_Prov Base'          => 'Modul Configuration for Provisioning',
-    'Header_EditProv Base Config'=> 'Edit Modul Configuration for Provisioning',
-    'Header_HfcBase'            => 'Modul Configuration for Detect',
-    'Header_EditHfc Base Config'=> 'Edit Modul Configuration for Detect',
+    'Header_Billing Config'     => 'Module Configuration for Billing',
+    'Header_EditBilling Config' => 'Edit Module Configuration for Billing',
+    'Header_ProvVoip'           => 'Module Configuration for VOIP',
+    'Header_EditProvVoip Config'=> 'Edit Module Configuration for VOIP',
+    'Header_Ccc Config'         => 'Module Configuration for Kundenkontrollzentrum',
+    'Header_EditCcc Config'     => 'Edit Module Configuration for Kundenkontrollzentrum',
+    'Header_Prov Base'          => 'Module Configuration for Provisioning',
+    'Header_EditProv Base Config'=> 'Edit Module Configuration for Provisioning',
+    'Header_HfcReq'             => 'Module Configuration HFC Controlling',
+    'Header_HfcBase'            => 'Module Configuration for Detect',
+    'Header_EditHfc Base Config'=> 'Edit Module Configuration for Detect',
     'Header_CostCenter'         => 'Cost Center|Cost Centers', //Workaround decide which one to use
     'Header_Cost Center'        => 'Cost Center|Cost Centers',
     'Header_EditCost Center'    => 'Edit Cost Center',
@@ -152,7 +154,7 @@ return [
     'Header_Numberranges'        => 'Numberranges',
     'Header_Files'              => 'Files',
     'Header_SepaAccount'        => 'SEPA-Accounts',
-    //SNMP Modul
+    //SNMP Module
     //Device
     'Header_Device'             => 'Device|Devices',
     'Header_EditDevice'         => 'Edit Device',
@@ -266,6 +268,7 @@ return [
     'Button_Save'               => 'Save',
     'Button_Save / Restart'     => 'Save / Restart',
     'Button_Search'             => 'Search',
+    'Button_SendToEnviaTEL'     => 'Send to envia TEL',
     'Button_Submit'             => 'Submit',
     'Button_manage'             => 'Managing allows or forbids to do everything with each element. This button is a shortcut to manage all entities of this module.',
     'Header_Tree Table'         => 'Tree Table|Tree Tables',
@@ -295,7 +298,7 @@ return [
     'Button_Create NetElement'     => 'Create NetElement',
     'Button_Create MibFile'     => 'Create Mib-File',
     'Button_Create OID'             => 'Create OID',
-    //SNMP Modul
+    //SNMP Module
     //Device
     'Button_Create Device'          => 'Create Device',
     //Device Type
@@ -335,6 +338,7 @@ return [
     'Button_Create Mta'             => 'Create MTA',
     // //Phonenumber
     'Button_Create PhoneTariff'     => 'Create Phonetariffs',
+    'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
     // //Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
     'Button_DragDrop AddList'       => 'Add list',
@@ -426,17 +430,6 @@ return [
     // Contract
     //
     'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!',
-
-    'Ticket_State_New' => 'New',
-    'Ticket_State_In Process' => 'In Process',
-    'Ticket_State_Closed' => 'Closed',
-    'Ticket_Type_General' => 'General',
-    'Ticket_Type_Technical' => 'Technical',
-    'Ticket_Type_Accounting' => 'Accounting',
-    'Ticket_Priority_Trivial' => 'Trivial',
-    'Ticket_Priority_Minor' => 'Minor',
-    'Ticket_Priority_Major' => 'Major',
-    'Ticket_Priority_Critical' => 'Critical',
     'Numberrange_Start' => 'Start',
     'Numberrange_End' => 'End',
     'Numberrange_Suffix' => 'Suffix',
@@ -446,26 +439,11 @@ return [
     // VoIP
     'PhonebookEntry' => 'Phonebook entry',
 
-    // Error
-    'error_specify_id'          => 'Please specify the hostname instead of the ip address.',
-    'error_ticket_settings'     => 'Please set noreply name and address in Global Config Page.',
-
-    'commandCenter' => 'Command Center',
-    'company' => 'Company',
-    'Credit' => 'Credit',
-    'critical' => 'critical',
-    'Debit' => 'Debit',
-    'Diagrams' => 'Diagrams',
-    'Discard' => 'Discard',
-    'Download' => 'Download',
-    'false' => 'false',
-    'Global' => 'Global',
-    'Global notification' => 'Global notification',
-    'info' => 'info',
-    'Level' => 'Level',
-    'markon' => 'Mark-On/Extra charge in %',
-    'Message' => 'Message',
-    'name' => 'Name',
+    /*
+    * New alphabetically sorted translations. Please add new translations below
+    * or convert existing ones from above to new format of the section below.
+    * Please use whenever possible lower camelCase for new translation keys.
+    */
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
@@ -495,6 +473,7 @@ return [
         'ProvVoip'          => 'Voip Provisioning',
         'ProvVoipEnvia'     => 'Provisioning for Envia-TEL',
         'Save All'          => 'Save All',
+        'Save Changes'      => 'Save Changes',
         'See income chart'  => 'See Income Chart',
         'Technical Capabilities' => 'Technical Capabilitiesn',
         'Ticketsystem'      => 'Ticket System',
@@ -506,6 +485,38 @@ return [
         'View everything'   => 'View Everything',
         'VoipMon'           => 'Voip Monitor',
     ],
+    'analysis' => 'Analysis',
+    'Assign' => 'Assign :model',
+    'BillingBase' => 'Billing',
+    'Ccc' => 'Customer Control Center',
+    'commandCenter' => 'Command Center',
+    'company' => 'Company',
+    'Credit' => 'Credit',
+    'critical' => 'critical',
+    'Debit' => 'Debit',
+    'Detach all' => 'Detach all :model',
+    'Diagrams' => 'Diagrams',
+    'Discard' => 'Discard',
+    'Download' => 'Download',
+    'error' => [
+        'backToHomePage'        => 'Go back to Home Page',
+        'backToPreviousPage'    => 'Go back to previous Page',
+        'pageNotFound'          => 'Sorry, we could not find that Page',
+        'snmpAccessException'   => 'Snmp Access Declined',
+        'specifyId'             => 'Please specify the hostname instead of the ip address.',
+        'ticketSettings'        => 'Please set noreply name and address in Global Config Page.',
+    ],
+    'false' => 'false',
+    'Global' => 'Global',
+    'Global notification' => 'Global notification',
+    'HfcReq' => 'HFC',
+    'info' => 'info',
+    'Level' => 'Level',
+    'markon' => 'Mark-On/Extra charge in %',
+    'Message' => 'Message',
+    'name' => 'Name',
+    'OverdueDebts' => 'Overdue Debts',
+    'parentNetelement' => 'Parent netelement',
     'product' => [
         'billingCycles' => [
             'once' => 'once',
@@ -523,11 +534,16 @@ return [
             'voip' => 'VOIP',
         ],
     ],
+    'ProvBase' => 'Provisioning',
+    'ProvMon' => 'Monitoring',
+    'ProvVoip' => 'VoIP',
+    'redirectNote' => 'You are not logged in and tried to access an internal page. After a successful login you are redirected to:',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'tab' => [
         'Create Connection Infos' => 'Create Connection Infos',
     ],
+
     'ticket' => [
         'priority' => [
             'critical' => 'Critical',
@@ -537,12 +553,39 @@ return [
         ],
         'state' => [
             'New' => 'New',
-            'In process' => 'In process (currently paused)',
             'Closed' => 'Closed',
-            'Accepted' => 'Accepted',
-            'In work' => 'In work',
+            'Paused' => 'Paused',
+            'In Progress' => 'In Progress',
         ],
+        'notification' => [
+            'NewTicket' => 'New Ticket',
+            'RemovedFromTicket' => 'You were removed from ticket',
+            'TicketAccepted' => 'Ticket accepted',
+            'TicketDeclined' => 'Ticket declined',
+            'TicketFinished' => 'Ticket finished',
+            'TicketNoUsers' => 'Ticket has no users',
+            'TicketUpdated' => 'Ticket updated',
+        ],
+        'close' => 'Close',
+        'pause' => 'Pause',
+        'resume' => 'Resume',
+        'accept' => 'Accept',
+        'decline' => 'Decline',
+        'busy' => 'Busy',
+        'available' => 'Available',
+        'ticketReceiver' => 'TicketReceiver',
+        'legacyTicket' => 'Legacy Ticket without relation',
+        'late' => 'late',
+        'showContract' => 'Show Contract',
+        'modemAnalysis' => 'Modem Analysis',
+        'viewTopography' => 'View Topography',
+        'noTickettype' => 'There were no Ticket types set.',
+        'enableBrowserNotifications' => 'Please enable Browser Notifications',
+        'notificationText' => 'For the best experience, when using the Ticketreceiver, it is highly recommended to turn on Browser Notifications. This ensures, that you are notified for every update.',
+        'openPermissionDialog' => 'Open Permission Dialog',
+        'noNotifications' => 'I dont want Notifications!',
     ],
+    'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Time',
     'topo' => [
         'addMpr' => 'Add Modem Positioning Rule',
@@ -561,5 +604,15 @@ return [
         'solved' => 'Solved today',
         'stacked' => 'Have more tickets',
         'summary' => 'Overview',
+    ],
+    'contract' => [
+        'groundForDismissal' => 'Ground for dismissal',
+        'groundsForDismissal' => [
+            'unknown' => 'unknown',
+            'relocation' => 'relocation',
+            'unsatisfied' => 'unsatisfied',
+            'canceled by us' => 'canceled by us',
+            'deceased' => 'deceased',
+        ],
     ],
 ];

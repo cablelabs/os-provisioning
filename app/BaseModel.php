@@ -26,6 +26,12 @@ class BaseModel extends Eloquent
 
     protected $fillable = [];
 
+    /**
+     * @var bool
+     *
+     * @TODO: In future we should use this: https://stackoverflow.com/questions/29407818/is-it-possible-to-temporarily-disable-event-in-laravel/51301753#51301753
+     * or with laravel 8 this: https://laravel.com/docs/8.x/eloquent#saving-a-single-model-without-events
+     */
     public $observer_enabled = true;
 
     protected $connection = 'mysql';
@@ -38,6 +44,19 @@ class BaseModel extends Eloquent
 
     // Add Comment here. ..
     protected $guarded = ['id'];
+
+    public const ABOVE_MESSAGES_ALLOWED_TYPES = [
+        'info',    // Blue
+        'success', // Green
+        'warning', // Orange
+        'error',   // Red
+    ];
+
+    public const ABOVE_MESSAGES_ALLOWED_PLACES = [
+        'index_list',
+        'form',
+        'relations',
+    ];
 
     /**
      * Helper to get the model name.
@@ -555,6 +574,14 @@ class BaseModel extends Eloquent
         if (! $this->writeAllowed()) {
             return false;
         }
+
+        if (in_array($this->id, $this->undeletables())) {
+            $msg = trans('messages.base.delete.failUndeletable', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            $this->addAboveMessage($msg, 'error');
+
+            return false;
+        }
+
         if ($this->delete_children) {
             $children = $this->get_all_children();
             // find and delete all children
@@ -688,21 +715,9 @@ class BaseModel extends Eloquent
      */
     public function addAboveMessage($msg, $type = 'info', $place = null)
     {
-        $allowed_types = [
-            'info',     // blue
-            'success',  // green
-            'warning',  // orange
-            'error',    // red
-        ];
-        $allowed_places = [
-            'index_list',
-            'form',
-            'relations',
-        ];
-
         // check if type is valid
-        if (! in_array($type, $allowed_types)) {
-            throw new \UnexpectedValueException('$type has to be in ['.implode('|', $allowed_types).'], “'.$type.'” given.');
+        if (! in_array($type, self::ABOVE_MESSAGES_ALLOWED_TYPES)) {
+            throw new \UnexpectedValueException('$type has to be in ['.implode('|', self::ABOVE_MESSAGES_ALLOWED_TYPES).'], “'.$type.'” given.');
         }
 
         // determine or check place
@@ -724,8 +739,8 @@ class BaseModel extends Eloquent
                 $place = 'index_list';
             }
         } else {
-            if (! in_array($place, $allowed_places)) {
-                throw new \UnexpectedValueException('$place has to be in ['.implode('|', $allowed_places).'], “'.$place.'” given.');
+            if (! in_array($place, self::ABOVE_MESSAGES_ALLOWED_PLACES)) {
+                throw new \UnexpectedValueException('$place has to be in ['.implode('|', self::ABOVE_MESSAGES_ALLOWED_PLACES).'], “'.$place.'” given.');
             }
         }
 

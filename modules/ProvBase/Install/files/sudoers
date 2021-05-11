@@ -1,4 +1,6 @@
 Defaults:apache        !requiretty
+
+apache  ALL=(root) NOPASSWD: /usr/bin/ping
 apache  ALL=(root) NOPASSWD: /usr/bin/hostnamectl
 apache  ALL=(root) NOPASSWD: /usr/bin/systemctl restart radiusd.service
 apache  ALL=(root) NOPASSWD: /usr/bin/systemctl restart named.service

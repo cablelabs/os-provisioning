@@ -89,17 +89,16 @@ class Configfile extends \BaseModel
      * Returns all available files (via directory listing)
      * @author Patrick Reichel
      */
-    public static function get_files($folder)
+    public static function getFiles($folders)
     {
-        // get all available files
-        $files_raw = glob("/tftpboot/$folder/*");
         $files = [null => 'None'];
-        // extract filename
-        foreach ($files_raw as $file) {
-            if (is_file($file)) {
-                $parts = explode('/', $file);
-                $filename = array_pop($parts);
-                $files[$filename] = $filename;
+
+        foreach ((array) $folders as $folder) {
+            foreach (glob("/tftpboot/$folder/*") as $file) {
+                if (is_file($file)) {
+                    $filename = basename($file);
+                    $files[$filename] = "$folder: $filename";
+                }
             }
         }
 
@@ -136,6 +135,7 @@ class Configfile extends \BaseModel
      *   Make Configfile Content for $this Object /
      *   without recursive objects
      *
+     * @todo atm $modem and $provbase is used because of the $$ and should be refactored
      * @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
      */
     private function __text_make($device, $type, $sw_up = false)
@@ -143,6 +143,7 @@ class Configfile extends \BaseModel
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
         $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
+        $provbase = ProvBase::get();
 
         // array to extend the configfile; e.g. for firmware
         $config_extensions = [];
@@ -168,6 +169,7 @@ class Configfile extends \BaseModel
 
             // this is for modem's config files
             case 'modem':
+                $modem = [$device];
                 $qos = [$device->qos];
 
                 // Set test data rate if no qos is assigned - 250 kbit/s (i.e. VoIP only)
@@ -243,6 +245,7 @@ class Configfile extends \BaseModel
                 break;
 
             case 'tr069':
+                $modem = [$device];
                 $db_schemata['modem'][0] = Schema::getColumnListing('modem');
                 $qos = [$device->qos];
                 $db_schemata['qos'][0] = Schema::getColumnListing('qos');
@@ -403,42 +406,17 @@ class Configfile extends \BaseModel
     }
 
     /**
-     * Recursively add all parents of a used node to the list of used nodes,
-     * we must not delete any of them
+     * Configfile-IDs that must not be deleted because they have children or are
+     * still assigned to a modem or mta
      *
-     * @author Ole Ernst
-     */
-    protected static function _add_parent(&$ids, $cf)
-    {
-        $parent = $cf->parent;
-        if ($parent && ! in_array($parent->id, $ids)) {
-            array_push($ids, $parent->id);
-            self::_add_parent($ids, $parent);
-        }
-    }
-
-    /**
-     * Returns a list of configfiles (incl. all of its parents), which are
-     * still assigned to a modem or mta and thus must not be deleted.
-     *
-     * @author Ole Ernst
-     *
-     * NOTE: DB::table would reduce time again by 30%, setting index_delete_disabled of CFs
-     *       instead of creating used_ids array slows function down
+     * @author Ole Ernst, Nino Ryschawy
+     * @return array
      */
     public static function undeletables()
     {
-        $used_ids = [];
-
-        // only public configfiles can be assigned to a modem or mta
-        foreach (self::where('public', 'yes')->withCount('modem', 'mtas')->with('parent')->get() as $cf) {
-            if ((($cf->device != 'mta') && $cf->modem_count) || (($cf->device == 'mta') && $cf->mtas_count)) {
-                array_push($used_ids, $cf->id);
-                self::_add_parent($used_ids, $cf);
-            }
-        }
-
-        return $used_ids;
+        return self::where('public', 'yes')
+            ->has('modem')->orHas('mtas')->orHas('children')
+            ->pluck('id')->toArray();
     }
 
     /**

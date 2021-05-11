@@ -246,5 +246,6 @@ return [
     |
     */
     'googleApiKey' => env('GOOGLE_API_KEY'),
-
+    'adminPort' => env('HTTPS_ADMIN_PORT', 8080),
+    'cccPort' => env('HTTPS_CCC_PORT', 443),
 ];

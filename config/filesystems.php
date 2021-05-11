@@ -75,7 +75,7 @@ return [
 
         'chart-data' => [
             'driver' => 'local',
-            'root' => storage_path('/app/data/dashboard'),
+            'root' => storage_path('app/data/dashboard'),
         ],
 
         'tempfs' => [

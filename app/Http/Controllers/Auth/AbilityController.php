@@ -223,7 +223,7 @@ class AbilityController extends Controller
      */
     public static function getCapabilities(Role $role)
     {
-        if (Module::collections()->has('HfcReq')) {
+        if (! Module::collections()->has('HfcReq')) {
             return;
         }
 
@@ -311,6 +311,7 @@ class AbilityController extends Controller
             'GlobalConfig' => collect([
                 'BillingBase',
                 'Ccc',
+                'HfcReq',
                 'HfcBase',
                 'ProvBase',
                 'ProvVoip',

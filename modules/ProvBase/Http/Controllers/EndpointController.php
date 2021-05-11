@@ -2,8 +2,6 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Modem;
-
 class EndpointController extends \BaseController
 {
     protected $index_create_allowed = false;
@@ -27,7 +25,6 @@ class EndpointController extends \BaseController
             ['form_type' => 'text', 'name' => 'prefix', 'description' => trans('messages.prefix').' (IPv6)', 'checkbox' => 'show_on_fixed_ip', 'options' => ['placeholder' => 'fd00:1::/64']],
             ['form_type' => 'text', 'name' => 'add_reverse', 'description' => 'Additional rDNS record', 'checkbox' => 'show_on_fixed_ip', 'help' => trans('helper.addReverse')],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
-
         ];
     }
 
@@ -37,7 +34,8 @@ class EndpointController extends \BaseController
 
         if ($data['fixed_ip'] == 0) {
             // delete possibly existing ip to avoid later collisions in validation rules
-            $data['ip'] = $data['prefix'] = $data['version'] = null;
+            $data['ip'] = $data['prefix'] = null;
+            $data['version'] = '4';
         } else {
             $data['version'] = IpPoolController::getVersion($data['ip']);
         }
@@ -45,31 +43,13 @@ class EndpointController extends \BaseController
         return unifyMac($data);
     }
 
-    // TODO: tr069 must always be fixed IPv4
     protected function prepare_rules($rules, $data)
     {
         if ($data['version'] == '6') {
             $rules['prefix'][] = 'required';
+        } elseif ($data['ip'] && array_key_exists('mac', $rules) && in_array('required', $rules['mac'])) {
+            unset($rules['mac'][array_search('required', $rules['mac'])]);
         }
-
-        $modem = Modem::with('configfile')->find($data['modem_id']);
-
-        // CNAME: hostname -> mangled name based on CPE MAC address (DOCSIS only)
-        // the only case not requiring an IP address
-        if ($modem && $modem->configfile->device == 'cm' && ! $data['version']) {
-            $rules['mac'][] = 'required';
-
-            return parent::prepare_rules($rules, $data);
-        }
-
-        $rules['ip'][] = 'required';
-
-        // Assign fixed IP to unknown CPE behind CM only implemented for v4
-        if ($modem && $modem->configfile->device == 'cm' && $data['version'] == 4) {
-            return parent::prepare_rules($rules, $data);
-        }
-
-        $rules['mac'][] = 'required';
 
         return parent::prepare_rules($rules, $data);
     }

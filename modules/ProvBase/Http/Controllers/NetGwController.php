@@ -139,14 +139,12 @@ class NetGwController extends \BaseController
      */
     protected function editTabs($netgw)
     {
-        if (! \Module::collections()->has('ProvMon')) {
-            return [];
-        }
-
         $tabs = parent::editTabs($netgw);
+        $tabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id];
 
-        if (\Bouncer::can('view_analysis_pages_of', NetGw::class)) {
-            array_push($tabs, ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id]);
+        if (! \Module::collections()->has('ProvMon')) {
+            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring';
         }
 
         return $tabs;

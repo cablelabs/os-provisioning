@@ -35,7 +35,10 @@ class UserController extends BaseController
                     ->put('browser', 'Browser');
 
         $view_header_links = BaseViewController::view_main_menus();
-        $dashboard_options = ['Dashboard.index' => 'Dashboard'];
+        $dashboard_options = [null => null];
+        if (\Module::collections()->has('Dashboard')) {
+            $dashboard_options['Dashboard.index'] = 'Dashboard';
+        }
         foreach ($view_header_links as $module_name => $typearray) {
             if (isset($typearray['link'])) {
                 $dashboard_options[$typearray['link']] = $typearray['translated_name'] ?? $module_name;

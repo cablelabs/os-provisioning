@@ -40,6 +40,38 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // Allow user to log-in
+        if ($request->is('admin/api/v0/*') || $request->wantsJson()) {
+            if ($exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
+                return response()
+                    ->v0ApiReply(['messages' => ['errors' => ['Unauthenticated']]], false, null, 401)
+                    ->header('WWW-Authenticate', 'Basic');
+            }
+
+            $response = ['messages' => ['errors' => ['Sorry, something went wrong.']]];
+
+            // If the app is in debug mode
+            if (config('app.debug')) {
+                // Add the exception class name, message and stack trace to response
+                // Reflection might be better here
+                $response['exception'] = get_class($exception);
+                if ($exceptionMsg = $exception->getMessage()) {
+                    $response['messages']['errors'] = [$exceptionMsg];
+                }
+                $response['trace'] = $exception->getTrace();
+            }
+
+            // Default response is 400
+            $statusCode = 400;
+            // If this exception is an instance of HttpException
+            if ($this->isHttpException($exception)) {
+                // Grab the HTTP status code from the Exception
+                $statusCode = $exception->getStatusCode();
+            }
+
+            return response()->v0ApiReply($response, false, null, $statusCode);
+        }
+
         // Auth Error Messages
         if ($exception instanceof AuthException) {
             $msg = 'AUTH failed: ';
@@ -70,7 +102,7 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->v0ApiReply(['messages' => ['errors' => ['Unauthenticated']]], false, null, 401);
         }
 
         $server_port = $request->getPort();
@@ -83,15 +115,6 @@ class Handler extends ExceptionHandler
 
         if ($server_port == $ccc_port) {
             return redirect()->guest(route('customerLogin'));
-        }
-    }
-
-    protected function whoopsHandler()
-    {
-        try {
-            return app(\Whoops\Handler\HandlerInterface::class);
-        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
-            return parent::whoopsHandler();
         }
     }
 }

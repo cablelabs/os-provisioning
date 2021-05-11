@@ -20,16 +20,19 @@ class UpdatePhoneTariffExtendType extends BaseMigration
 
         $phonetariffs = [
             0 => [
+                'external_identifier' => 1,
                 'name' => 'Basic',
                 'type' => 'basic',
                 'usable' => 1,
             ],
             1 => [
+                'external_identifier' => 2,
                 'name' => 'Landline flat',
                 'type' => 'landlineflat',
                 'usable' => 1,
             ],
             2 => [
+                'external_identifier' => 3,
                 'name' => 'Allnetflat',
                 'type' => 'allnetflat',
                 'usable' => 1,

@@ -49,6 +49,7 @@ return [
         'number' => 'Vertrags- Nummer',
         'street' => 'Straße',
         'zip' => 'PLZ',
+        'ground_for_dismissal' => 'Kündigungsgrund',
     ],
     // Auth
     'users' => [
@@ -72,8 +73,11 @@ return [
     'company.phone' => 'Telefonnummer',
     'company.mail' => 'E-Mail',
     // Costcenter
-    'costcenter.name' => 'Kostenstelle',
-    'costcenter.number' => 'Nummer',
+    'costcenter' => [
+        'name' => 'Kostenstelle',
+        'number' => 'Nummer',
+        'billing_month' => 'Abrechnungsmonat',
+    ],
     'debt' => [
         'date' => 'Belegdatum',
         'due_date' => 'Fälligkeitsdatum',
@@ -210,6 +214,7 @@ return [
     'modem.inventar_num' => 'Inventar-Nr',
     'modem.lastname' => 'Nachname',
     'modem.mac' => 'MAC Adresse',
+    'modem.serial_num' => 'Seriennummer / CWMP-ID',
     'modem.model' => 'Modell',
     'modem.name' => 'Modemname',
     'modem.street' => 'Straße',

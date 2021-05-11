@@ -51,7 +51,7 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 $request = Illuminate\Http\Request::capture();
 
 if ($request->is('customer*')) {
-    return header('Location: /admin/login');
+    return header('Location: https://'.explode(':', $_SERVER['HTTP_HOST'])[0].'/customer');
 }
 
 

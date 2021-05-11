@@ -1,6 +1,7 @@
 <?php
 
 BaseRoute::group([], function () {
+    BaseRoute::resource('HfcReq', 'Modules\HfcReq\Http\Controllers\HfcReqController');
     BaseRoute::resource('NetElementType', 'Modules\HfcReq\Http\Controllers\NetElementTypeController');
     BaseRoute::resource('NetElement', 'Modules\HfcReq\Http\Controllers\NetElementController');
 
@@ -29,7 +30,7 @@ BaseRoute::group([], function () {
     Route::delete('NetElementType/{netelementtype}/detach_all', [
         'as' => 'NetElementType.detach_all',
         'uses' => 'Modules\HfcReq\Http\Controllers\NetElementTypeController@detach_all',
-        'middleware' => ['can:delete,Modules\HfcReq\Entities\NetElementType'],
+        'middleware' => ['web', 'can:delete,Modules\HfcReq\Entities\NetElementType'],
     ]);
 
     BaseRoute::get('NetElement/{id}/delete', [

@@ -12,7 +12,7 @@ class Phonenumber extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        return [
+        $rules = [
             'country_code' => ['required', 'numeric'],
             'prefix_number' => ['required', 'numeric'],
             'number' => ['required', 'numeric'],
@@ -23,6 +23,14 @@ class Phonenumber extends \BaseModel
             /* 'active' => ['required', 'boolean'], */
             // TODO: check if password is secure and matches needs of external APIs (e.g. envia TEL)
         ];
+
+        if (! \Module::collections()->has('ProvVoipEnvia')) {
+            foreach (['username', 'sipdomain'] as $param) {
+                $rules[$param][] = 'required';
+            }
+        }
+
+        return $rules;
     }
 
     // Name of View
@@ -310,26 +318,16 @@ class Phonenumber extends \BaseModel
 
         // check if installation addresses are equal
         if (
-            ($cur_modem->salutation != $new_modem->salutation)
-            ||
-            ($cur_modem->company != $new_modem->company)
-            ||
-            ($cur_modem->department != $new_modem->department)
-            ||
-            ($cur_modem->firstname != $new_modem->firstname)
-            ||
-            ($cur_modem->lastname != $new_modem->lastname)
-            ||
-            ($cur_modem->street != $new_modem->street)
-            ||
-            ($cur_modem->house_number != $new_modem->house_number)
-            ||
-            ($cur_modem->zip != $new_modem->zip)
-            ||
-            ($cur_modem->city != $new_modem->city)
-            ||
-            ($cur_modem->district != $new_modem->district)
-            ||
+            ($cur_modem->salutation != $new_modem->salutation) ||
+            ($cur_modem->company != $new_modem->company) ||
+            ($cur_modem->department != $new_modem->department) ||
+            ($cur_modem->firstname != $new_modem->firstname) ||
+            ($cur_modem->lastname != $new_modem->lastname) ||
+            ($cur_modem->street != $new_modem->street) ||
+            ($cur_modem->house_number != $new_modem->house_number) ||
+            ($cur_modem->zip != $new_modem->zip) ||
+            ($cur_modem->city != $new_modem->city) ||
+            ($cur_modem->district != $new_modem->district) ||
             ($cur_modem->installation_address_change_date != $new_modem->installation_address_change_date)
         ) {
             return false;

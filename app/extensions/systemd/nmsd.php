@@ -12,15 +12,18 @@ $dir = '/var/www/nmsprime/storage/systemd/';
 // contains restart scripts
 $dir_scripts = '/var/www/nmsprime/app/extensions/systemd/';
 
+// time to wait for same kind of requests to be merged into one request
+$delay = 10;
+
 while (1) {
     $services = glob("$dir/*");
 
     foreach ($services as $service) {
+        clearstatcache();
+        $mtime = filemtime($service);
         $service = basename($service);
 
-        if (! file_exists($dir_scripts.$service.'.php')) {
-            file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.Error: Restart script for service $service not found! (nmsd.php)\n", FILE_APPEND);
-
+        if (! file_exists($dir_scripts.$service.'.php') || (time() - $mtime < $delay)) {
             continue;
         }
 
@@ -28,9 +31,9 @@ while (1) {
         if (! exec("ps -aux | grep $service.php | grep -v grep")) {	// when nothing is returned the script isnt running
             unlink($dir.$service);
 
-            exec('php -f '.$dir_scripts.$service.'.php &>/dev/null &');
+            exec('/opt/rh/rh-php73/root/usr/bin/php -f '.$dir_scripts.$service.'.php &>/dev/null &');
         }
     }
 
-    sleep(4);
+    sleep(1);
 }

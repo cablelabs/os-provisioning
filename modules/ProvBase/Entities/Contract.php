@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use DB;
 use Module;
+use App\Observers\BaseObserver;
 use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
@@ -24,6 +25,8 @@ class Contract extends \BaseModel
     // Via modems -> mtas -> phonenumbers assigned Phonenumbers shown as read-only info field in edit view
     public $guarded = ['related_phonenrs'];
 
+    public const GROUNDS_FOR_DISMISSAL = ['unknown', 'relocation', 'unsatisfied', 'canceled by us', 'deceased'];
+
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
     public function rules()
@@ -38,17 +41,20 @@ class Contract extends \BaseModel
             'company' => 'required_if:salutation,placeholder_salutations_institution',
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
-
-            'street' => 'required_without_all:realty_id,apartment_id',
-            'house_number' => 'required_without_all:realty_id,apartment_id',
-            'zip' => 'required_without_all:realty_id,apartment_id',
-            'city' => 'required_without_all:realty_id,apartment_id',
-            'phone' => 'required',
             'email' => 'nullable|email',
-            'birthday' => 'nullable|date',
-            'contract_start' => 'date',
-            'contract_end' => 'nullable|date', // |after:now -> implies we can not change stuff in an out-dated contract
+            'birthday' => 'nullable|date_format:Y-m-d',
+            'contract_start' => 'date_format:Y-m-d',
+            'contract_end' => 'nullable|date_format:Y-m-d', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
+
+        $addressKeys = ['street', 'house_number', 'zip', 'city'];
+        foreach ($addressKeys as $key) {
+            if (Module::collections()->has('PropertyManagement')) {
+                $rules[$key] = 'required_without_all:realty_id,apartment_id';
+            } else {
+                $rules[$key] = 'required';
+            }
+        }
 
         if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';
@@ -82,8 +88,10 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end'],
+            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
             'header' =>  self::labelFromData($this),
+            'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
+            'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
 
@@ -451,13 +459,9 @@ class Contract extends \BaseModel
             ->first();
     }
 
-    /**
-     * Generate use a new user login password
-     * This does not save the involved model
-     */
-    public function generate_password($length = 10)
+    public function getGroundForDismissal()
     {
-        $this->password = \Acme\php\Password::generate_password($length);
+        return $this->ground_for_dismissal ? trans('view.contract.groundsForDismissal.'.$this->ground_for_dismissal) : '';
     }
 
     /**
@@ -579,6 +583,10 @@ class Contract extends \BaseModel
      *  2. Check if $this is a new contract and activate it -> enable internet_access
      *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
      *
+     * Attention: To avoid endless loops the Observers of Contract & Item need to be disabled before calling save()
+     *      as they would call daily_conversion again. Please only adapt this function with testing all cases. See
+     *      https://devel.roetzer-engineering.com/confluence/display/LAR/Contract+-+Daily+conversion for further documentation
+     *
      * @return none
      * @author Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
@@ -629,9 +637,11 @@ class Contract extends \BaseModel
         }
 
         if ($this->changes_on_daily_conversion) {
+            // Avoid endless loop by disabling observer but add GuiLog entry
+            BaseObserver::addLogEntry($this, 'updated');
             $this->observer_enabled = false;
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -810,6 +820,7 @@ class Contract extends \BaseModel
                     * and to avoid “Multipe valid tariffs active” warning
                 */
                 $item->observer_dailyconversion = false;
+                BaseObserver::addLogEntry($item, 'updated');
                 $item->save();
             }
         }
@@ -880,8 +891,7 @@ class Contract extends \BaseModel
 
         // Tariff: monthly Tariff change – "Tarifwechsel"
         if (
-            ($this->next_qos_id > 0)
-            &&
+            ($this->next_qos_id > 0) &&
             ($this->qos_id != $this->next_qos_id)
         ) {
             Log::info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
@@ -900,7 +910,7 @@ class Contract extends \BaseModel
 
         if ($contract_changed) {
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -1178,26 +1188,13 @@ class Contract extends \BaseModel
      *
      * @author: Torsten Schmidt, Nino Ryschawy
      */
-    public function push_to_modems()
+    public function pushToModems()
     {
-        $internetAccessChanged = false;
-
         foreach ($this->modems as $modem) {
-            if ($modem->internet_access != $this->internet_access) {
-                $internetAccessChanged = true;
-            }
-
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
-            $modem->observer_enabled = false;
-            $modem->updateRadius(false);
-            $modem->make_configfile();
-            $modem->save();
-            $modem->restart_modem();
-        }
 
-        if ($internetAccessChanged) {
-            Modem::createDhcpBlockedCpesFile();
+            $modem->save();
         }
     }
 
@@ -1657,5 +1654,66 @@ class Contract extends \BaseModel
         }
 
         return $objList;
+    }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Phone') => [
+                'text' => $this->phone ?? null,
+                'action' => [
+                    'link' => "tel:{$this->phone}",
+                    'icon' => 'fa-phone',
+                ],
+            ],
+            trans('messages.mail') => [
+                'text' => $this->email ?? null,
+                'action' => [
+                    'link' => "mailto:{$this->email}",
+                    'icon' => 'fa-envelope',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'x', 'y',
+        ];
     }
 }

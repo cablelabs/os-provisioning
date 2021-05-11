@@ -26,8 +26,8 @@ class UpdateContractVoipIdNullable extends Migration
      */
     public function down()
     {
-        DB::statement('UPDATE '.$this->tablename.' SET voip_id = 0 WHERE voip_id = NULL;');
-        DB::statement('UPDATE '.$this->tablename.' SET next_voip_id = 0 WHERE next_voip_id NULL;');
+        DB::statement('UPDATE '.$this->tablename.' SET voip_id = 0 WHERE voip_id is NULL;');
+        DB::statement('UPDATE '.$this->tablename.' SET next_voip_id = 0 WHERE next_voip_id is NULL;');
 
         DB::statement('ALTER TABLE '.$this->tablename.' MODIFY voip_id INTEGER UNSIGNED NOT NULL;');
         DB::statement('ALTER TABLE '.$this->tablename.' MODIFY next_voip_id INTEGER UNSIGNED NOT NULL;');

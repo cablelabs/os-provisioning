@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 class addAutoFactoryReset extends BaseMigration
 {
     protected $tablename = 'provbase';
-    protected $migrationScope = 'database';
+    public $migrationScope = 'database';
 
     /**
      * Run the migrations.

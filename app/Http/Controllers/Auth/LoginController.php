@@ -55,6 +55,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $intended = null;
         $prefix = $this->prefix;
         $globalConfig = GlobalConfig::first();
         $head1 = $globalConfig->headline1;
@@ -63,7 +64,11 @@ class LoginController extends Controller
         $loginPage = 'admin';
         $logo = asset('images/nmsprime-logo-white.png');
 
-        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage', 'logo'));
+        if (session()->has('url.intended') && $pos = strpos($url = session('url.intended'), 'admin')) {
+            $intended = substr($url, $pos + 6); // pos + admin/
+        }
+
+        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage', 'logo', 'intended'));
     }
 
     /**
@@ -128,7 +133,8 @@ class LoginController extends Controller
                 return;
             }
         }
-        App\User::where('id', $user->id)->update(['last_login_at' => Carbon::now()]);
+
+        $user->update(['last_login_at' => Carbon::now()]);
     }
 
     /**
@@ -168,12 +174,16 @@ class LoginController extends Controller
      *
      * @return type Redirect
      */
-    private function redirectTo()
+    public function redirectTo()
     {
         $user = Auth::user();
         $activeModules = Module::collections();
 
         Log::debug($user->login_name.' logged in successfully!');
+
+        if ($activeModules->has('Ticketsystem') && $this->isMobileDevice()) {
+            return route('TicketReceiver.index');
+        }
 
         if ($user->initial_dashboard !== '') {
             return route($user->initial_dashboard);
@@ -192,6 +202,18 @@ class LoginController extends Controller
         }
 
         return route('GlobalConfig.index');
+    }
+
+    /**
+     * Detect Mobile Device with regular expression from http://detectmobilebrowsers.com/
+     *
+     * @return bool
+     */
+    protected function isMobileDevice(): bool
+    {
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+
+        return preg_match(isMobileRegEx(1), $useragent) || preg_match(isMobileRegEx(2), substr($useragent, 0, 4));
     }
 
     /**

@@ -205,14 +205,11 @@ class BaseViewController extends Controller
             //          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
             if (
                 // does a view relation exists?
-                (is_object($view_belongs_to))
-                &&
+                (is_object($view_belongs_to)) &&
                 // not a n:m relation (in which case we have an pivot table)
-                (! ($view_belongs_to instanceof \Illuminate\Support\Collection))
-                &&
+                (! ($view_belongs_to instanceof \Illuminate\Support\Collection)) &&
                 // view table name (*_id) == field name ?
-                ($view_belongs_to->table.'_id' == $field['name'])
-                &&
+                ($view_belongs_to->table.'_id' == $field['name']) &&
                 // hidden was not explicitly set
                 (! isset($field['hidden']))
             ) {
@@ -577,12 +574,12 @@ class BaseViewController extends Controller
 
         $globalPages = config('base.'.$configMenuItemKey);
 
+        $menu['Global']['icon'] = 'fa-globe';
         $menu['Global']['link'] = config('base.link');
         $menu['Global']['translated_name'] = trans('view.Global');
         foreach ($globalPages as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
                 $menuItem = static::translate_view($page, 'Menu');
-                $menu['Global']['icon'] = 'fa-globe';
                 $menu['Global']['submenu'][$menuItem] = $settings;
             }
         }
@@ -626,7 +623,7 @@ class BaseViewController extends Controller
      */
     private static function addWorkforceMenuEntry(&$menu)
     {
-        if (! Module::collections()->has('HfcCustomer')) {
+        if (! Module::collections()->has('HfcCustomer') || ! Module::collections()->has('Ticketsystem')) {
             return;
         }
 
@@ -707,6 +704,9 @@ class BaseViewController extends Controller
         // lambda function to extend the current breadcrumb by its predecessor
         // code within this function originally written by Torsten
         $extend_breadcrumb_path = function ($breadcrumb_path, $model, $i) {
+            if (! $model) {
+                return '';
+            }
 
             // following is the original source code written by Torsten
             $tmp = explode('\\', get_class($model));
@@ -739,8 +739,7 @@ class BaseViewController extends Controller
             while ($parent) {
                 if (
                     // if $parent is not a Collection we have a 1:1 or 1:n relation
-                    (! ($parent instanceof \Illuminate\Support\Collection))
-                    ||
+                    (! ($parent instanceof \Illuminate\Support\Collection)) ||
                     // there is a potential n:m relation, but only one model is really connected
                     ($parent->count() == 1)
                 ) {
@@ -766,7 +765,6 @@ class BaseViewController extends Controller
                     $multicrumbs = '';
 
                     foreach ($parent as $p) {
-
                         // get the breadcrumb for the current parent
                         $extended_path = $extend_breadcrumb_path($breadcrumb_path, $p, $i);
                         $breadcrumb = str_replace($breadcrumb_path_before_split, '', $extended_path);

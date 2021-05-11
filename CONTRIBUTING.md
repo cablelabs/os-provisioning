@@ -1,7 +1,7 @@
 ## How to contribute to NMS Prime
 
 #### Read and accept our CLA
-To get started, [sign the Contributor License Agreement](https://www.clahub.com/agreements/nmsprime/nmsprime).
+To get started, [sign the Contributor License Agreement](https://cla-assistant.io/nmsprime/nmsprime).
 
 #### **Did you find a bug?**
 

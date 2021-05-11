@@ -142,4 +142,29 @@ BaseRoute::group([], function () {
         'uses' => 'AppController@showApps',
         'middleware' => ['can:view,App\App'],
     ]);
+
+    BaseRoute::get('missingModule/{module}', [
+        'as' => 'missingModule',
+        'uses' => 'BaseController@missingModule',
+    ]);
+
+    BaseRoute::get('Notifications', [
+        'as' => 'Notifications.index',
+        'uses' => 'NotificationController@index',
+    ]);
+
+    BaseRoute::get('Notifications/navbar', [
+        'as' => 'Notifications.navbar',
+        'uses' => 'NotificationController@navbar',
+    ]);
+
+    BaseRoute::post('Notifications/markAllRead', [
+        'as' => 'Notifications.markAllRead',
+        'uses' => 'NotificationController@markAllRead',
+    ]);
+
+    BaseRoute::post('Notifications/{notification}', [
+        'as' => 'Notifications.markRead',
+        'uses' => 'NotificationController@markRead',
+    ]);
 });
