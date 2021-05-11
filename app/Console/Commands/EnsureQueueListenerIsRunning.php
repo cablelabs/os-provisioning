@@ -117,7 +117,7 @@ class EnsureQueueListenerIsRunning extends Command
         $pids = json_decode(file_get_contents(__DIR__.'/queue.pid'));
 
         if (! is_object($pids)) {
-            $pids = [];
+            $pids = new \stdClass();
         }
 
         $pids->$name = $pid;
