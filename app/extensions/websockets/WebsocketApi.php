@@ -44,12 +44,12 @@ class WebsocketApi
         $users = $this->pusherApi->get_users_info($channel);
 
         if (! $users) {
-            \Log::debug('Subscribed users: false');
+            \Log::debug("$channel channel - Subscribed users: false");
 
             return false;
         }
 
-        \Log::debug('Subscribed users: '.json_encode($users->users));
+        \Log::debug("$channel channel - subscribed users: ".json_encode($users->users));
 
         return $users->users != [];
     }

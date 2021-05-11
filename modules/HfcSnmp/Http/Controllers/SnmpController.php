@@ -216,7 +216,7 @@ class SnmpController extends \BaseController
             $newSnmpValues->setData($data);
             event($newSnmpValues);
 
-            \Log::debug("Send data to channel $channelName: $data");
+            \Log::debug("Send data to channel $channelName: ".substr($data, 0, 90).(strlen($data) > 90 ? ' ... }' : '').' - Query time: '.round($queryTime, 3));
 
             $this->sleepWell($queryTime, $netelement);
         } while ($websocketApi->channelHasSubscribers($channelName));
