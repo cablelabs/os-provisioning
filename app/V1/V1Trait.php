@@ -154,7 +154,7 @@ trait V1Trait
             'mode' => 'embed',
             'filter_groups' => [],
             'paginate'=> false,
-            'as_tree'=> false
+            'as_tree'=> false,
         ], $this->defaults);
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
         $sort = $this->parseSort($request->get('sort', $this->defaults['sort']));

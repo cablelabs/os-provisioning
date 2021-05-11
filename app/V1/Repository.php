@@ -47,9 +47,10 @@ class Repository
         unset($options['paginate']);
         unset($options['as_tree']);
         $query = $this->createBaseBuilder($options);
-        if($as_tree){
+        if ($as_tree) {
             return $paginate ? $query->with('descendants')->paginate($options['limit']) : $query->get()->toTree();
         }
+
         return $paginate ? $query->paginate($options['limit']) : $query->get();
     }
 
@@ -62,7 +63,7 @@ class Repository
     public function getById($id, array $options = [])
     {
         $as_tree = $options['as_tree'] ?? false;
-        if($as_tree){
+        if ($as_tree) {
             return ($this->getModel())::descendantsAndSelf($id)->toTree();
         }
 
@@ -70,7 +71,6 @@ class Repository
             ['key' => 'id', 'value' => $id, 'operator' => 'eq', 'not' => false], ], 'or' => false,
         ];
         $query = $this->createBaseBuilder($options);
-
 
         return $query->first();
     }
