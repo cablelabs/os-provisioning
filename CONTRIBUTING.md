@@ -5,11 +5,11 @@ First off, thanks for taking the time to contribute! :+1:
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[Open Adrenaline Code of Conduct][1]. By participating, you are
+[OS Provisioning Code of Conduct][1]. By participating, you are
 expected to uphold this code. Please report unacceptable behavior to
-[snaps@cablelabs.com][2].
+[osprovisioning@cablelabs.com][2].
 
-[1]: https://github.com/cablelabs/ps-provisioning/blob/master/CODE_OF_CONDUCT.md
+[1]: https://github.com/cablelabs/os-provisioning/blob/master/CODE_OF_CONDUCT.md
 [2]: mailto:osprovisiong@cablelabs.com
 
 ## How Can I Contribute?
