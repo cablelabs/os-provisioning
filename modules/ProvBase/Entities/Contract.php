@@ -159,18 +159,17 @@ class Contract extends \BaseModel
 
         $ret['Edit']['Modem']['class'] = 'Modem';
         $ret['Edit']['Modem']['count'] = $this->modems_count;
-        $ret['Edit']['Modem']['relation'] = collect([new Modem()]);
-        if ($this->modems_count < $relationThreshhold) {
-            $ret['Edit']['Modem']['relation'] = $this->modems;
-        }
+        $ret['Edit']['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
+            collect([new Modem()]) :
+            $this->modems;
 
         if (Module::collections()->has('BillingBase')) {
-            // view has many version 2
             $ret['Edit']['Item']['class'] = 'Item';
             $ret['Edit']['Item']['count'] = $this->items_count;
             $ret['Edit']['Item']['relation'] = $this->items_count >= $relationThreshhold ?
                 collect([new \Modules\BillingBase\Entities\Item()]) :
                 $this->items;
+
             $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
 
@@ -212,21 +211,18 @@ class Contract extends \BaseModel
 
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['count'] = $this->debts_count;
-                $ret['Billing']['Debt']['relation'] = collect([new \Modules\OverdueDebts\Entities\Debt()]);
-                if ($this->debts_count < $relationThreshhold) {
-                    $ret['Billing']['Debt']['relation'] = $this->debts;
-                }
+                $ret['Billing']['Debt']['relation'] = $this->debts_count >= $relationThreshhold ?
+                    collect([new \Modules\OverdueDebts\Entities\Debt()]) :
+                    $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
             $ret['Billing']['Invoice']['count'] = $this->invoices_count;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
-            $ret['Billing']['Invoice']['relation']['invoices'] = collect([new \Modules\BillingBase\Entities\Invoice()]);
-
-            if ($this->invoices_count < $relationThreshhold) {
-                $ret['Billing']['Invoice']['relation'] = $this->invoices()->orderBy('id', 'desc')->get();
-            }
+            $ret['Billing']['Invoice']['relation']['invoices'] = $this->invoices_count >= $relationThreshhold ?
+                collect([new \Modules\BillingBase\Entities\Invoice()]) :
+                $this->invoices()->orderBy('id', 'desc')->get();
         }
 
         if (Module::collections()->has('ProvVoipEnvia') &&
@@ -246,8 +242,7 @@ class Contract extends \BaseModel
             $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
             // for better navigation: show modems also in envia TEL blade
-            $ret['envia TEL']['Modem']['class'] = 'Modem';
-            $ret['envia TEL']['Modem']['relation'] = $this->modems;
+            $ret['envia TEL']['Modem'] = $ret['Edit']['Modem'];
         }
 
         if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
