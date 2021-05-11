@@ -34,7 +34,7 @@
 - Basic billing functionality
 - [more informations..](https://devel.nmsprime.com/confluence/display/NMS/Applications)
 
-For more information head over to our [Official Documentation](https://devel.nmsprime.com/confluence/display/NMS/NMS+PRIME)
+For more information head over to the NMS Prime [Official Documentation](https://devel.nmsprime.com/confluence/display/NMS/NMS+PRIME)
 
 
 ## Architectural Concepts
