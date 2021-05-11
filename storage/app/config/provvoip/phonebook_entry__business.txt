@@ -872,7 +872,7 @@ Alutechnik
 Aluveredelung
 Alzheimerhilfe
 Amalgamberatung
-ambulant begleitetes Wohnen
+Ambulant begleitetes Wohnen
 Ambulant betreutes Wohnen
 Ambulant Unterstütztes Wohnen
 ambulante Altenpflege
@@ -8879,6 +8879,7 @@ Energiemaklerbüro
 Energiemanagementagentur
 Energiemanagementberatung
 Energiemanagementsysteme
+Energiemontagen
 Energieoptimierung
 Energieoptimierungsanlagen für Schwimmbäder
 Energiepassaussteller
@@ -16379,6 +16380,7 @@ Homecoaching
 Homecookingservice
 Homepagedesign
 Homepagegestaltung
+Homepageservice
 Homepartyservice
 Homesittingservice
 Homöopath
@@ -17118,6 +17120,7 @@ Ingenieurbüro für angewandte Technik
 Ingenieurbüro für Anlagenbau
 Ingenieurbüro für Anlagenkennzeichnung
 Ingenieurbüro für Anlagenplanung
+Ingenieurbüro für Anlagentechnik
 Ingenieurbüro für Antriebstechnik
 Ingenieurbüro für Arbeitsschutz
 Ingenieurbüro für Arbeitsschutzmanagement
@@ -17325,6 +17328,7 @@ Ingenieurbüro für Managementsysteme
 Ingenieurbüro für Marketing
 Ingenieurbüro für Maschinen
 Ingenieurbüro für Maschinenbau
+Ingenieurbüro für Maschinentechnik
 Ingenieurbüro für Mechanik
 Ingenieurbüro für mechanische Systeme
 Ingenieurbüro für Mechatronik
@@ -18331,6 +18335,7 @@ Justizwachtmeister
 Jutehandel
 Juwelenfabrikation
 Juwelenfassatelier
+Juwelenfasseratelier
 Juwelenschmiede
 Juwelenstudio
 Juwelier
@@ -28016,6 +28021,7 @@ Praxis für lösungsorientierte Psychotherapie
 Praxis für Lungenkrankheiten
 Praxis für Lymphologie
 Praxis für Lymphtherapie
+Praxis für Magen- und Darmkrankheiten
 Praxis für Mammographie
 Praxis für Manuelle Lymphdrainage
 Praxis für Manuelle Medizin
@@ -28340,6 +28346,7 @@ Privatlehrerin
 Privatpraxis für Orthopädie, Sportmedizin
 Privatpraxis für physikalische Therapie
 Privatpraxis für Physiotherapie
+Privatpraxis für Psychotherapie
 Problembaumfällung
 Problemhundeberatung
 Probst em.
@@ -32409,6 +32416,7 @@ Sekretärin
 Sektkellerei
 Sektorale Heilpraktikerin der Physiotherapie
 Sektorale Heilpraktikerin Podologie
+selbständige Finanzberaterin
 Selbstbedienungsbäckerei
 Selbstbedienungsladen
 Selbstbedienungsmarkt für Lebensmittel

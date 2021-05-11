@@ -268,6 +268,7 @@ return [
     'Button_Save'               => 'Save',
     'Button_Save / Restart'     => 'Save / Restart',
     'Button_Search'             => 'Search',
+    'Button_SendToEnviaTEL'     => 'Send to envia TEL',
     'Button_Submit'             => 'Submit',
     'Button_manage'             => 'Managing allows or forbids to do everything with each element. This button is a shortcut to manage all entities of this module.',
     'Header_Tree Table'         => 'Tree Table|Tree Tables',
