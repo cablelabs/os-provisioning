@@ -215,6 +215,7 @@ return [
     'modem.inventar_num' => 'Serial Nr',
     'modem.lastname' => 'Surname',
     'modem.mac' => 'MAC Address',
+    'modem.serial_num' => 'Serial Number / CWMP-ID',
     'modem.model' => 'Model',
     'modem.name' => 'Modem Name',
     'modem.street' => 'Street',

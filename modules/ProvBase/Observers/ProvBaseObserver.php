@@ -21,9 +21,6 @@ class ProvBaseObserver
 {
     public function updated($model)
     {
-        // TODO: Call this as a job
-        Artisan::call('nms:dhcp');
-
         $changes = $model->getDirty();
 
         // create new CPE ignore file
@@ -33,10 +30,13 @@ class ProvBaseObserver
 
         // recreate default network, if provisioning server ip address has been changed
         if (array_key_exists('provisioning_server', $changes)) {
-            $model->make_dhcp_default_network_conf();
+            \Queue::push(new \Modules\ProvBase\Jobs\DhcpJob());
         }
 
-        if (array_key_exists('dhcp_def_lease_time', $changes)) {
+        if (multi_array_key_exists(['dhcp_def_lease_time', 'dhcp_max_lease_time'], $changes)) {
+            // recreate global DHCP config file
+            $model->make_dhcp_glob_conf();
+
             // adjust radiusd config and restart it
             $sed = storage_path('app/tmp/update-sqlippool.sed');
             file_put_contents($sed, "s/^\s*lease_duration\s*=.*/\tlease_duration = $model->dhcp_def_lease_time/");
@@ -94,7 +94,10 @@ class ProvBaseObserver
                 \DB::connection('mysql-cacti')
                     ->table('host')
                     ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                    ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                    ->update([
+                        'description' => \DB::raw("REPLACE(description, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                        'hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                    ]);
 
                 \DB::connection('mysql-cacti')
                     ->table('data_input_data')

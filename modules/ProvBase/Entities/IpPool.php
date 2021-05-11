@@ -201,7 +201,7 @@ class IpPool extends \BaseModel
      */
     public function get_range()
     {
-        $empty = "\t\t\t#pool: $this->type $this->ip_pool_start $this->ip_pool_end\n\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
+        $empty = "\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
 
         if ($this->type != 'CPEPub') {
             return $empty;
@@ -218,17 +218,10 @@ class IpPool extends \BaseModel
             $static[] = ip2long($ep->ip);
         }
 
-        $leases = array_diff(range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end)), $static);
-        if (! $leases) {
-            return;
-        }
-
-        $start = long2ip(reset($leases));
-        $end = long2ip(end($leases));
-
-        $pool = "\t\t\t#pool: $this->type $start $end\n";
-        foreach ($leases as $lease) {
-            $pool .= "\t\t\trange ".long2ip($lease).";\n";
+        $pool = '';
+        $all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
+        foreach (array_diff($all, $static) as $ip) {
+            $pool .= "\t\t\trange ".long2ip($ip).";\n";
         }
 
         return $pool;

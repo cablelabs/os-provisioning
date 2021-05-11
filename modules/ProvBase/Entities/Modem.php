@@ -92,7 +92,7 @@ class Modem extends \BaseModel
         }
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
             'header' => $this->label(),
             'edit' => ['contract_valid' => 'get_contract_valid'],
@@ -139,6 +139,7 @@ class Modem extends \BaseModel
         $label = $this->mac ?: $this->ppp_username;
         $label .= $this->name ? ' - '.$this->name : '';
         $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
+        $label .= $this->ppp_username ? ' - '.$this->ppp_username : '';
 
         return $label;
     }
@@ -579,18 +580,7 @@ class Modem extends \BaseModel
             $content = implode("\n", $lines);
         }
 
-        // lock
-        $fp = fopen(self::CONF_FILE_PATH, 'r+');
-
-        if (! flock($fp, LOCK_EX)) {
-            Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
-        }
-
         self::_write_dhcp_file(self::IGNORE_CPE_FILE_PATH, $content);
-
-        // unlock
-        flock($fp, LOCK_UN);
-        fclose($fp);
     }
 
     /**
@@ -1897,7 +1887,10 @@ class Modem extends \BaseModel
             $this->radusergroups()
                 ->where('groupname', '!=', RadGroupReply::$defaultGroup)
                 ->update(['groupname' => $this->qos_id]);
-            $this->restart_modem();
+
+            if (! $this->wasRecentlyCreated) {
+                $this->restart_modem();
+            }
         }
     }
 
@@ -1928,7 +1921,7 @@ class Modem extends \BaseModel
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
         if ($this->isTR069()) {
-            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
+            $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
@@ -1950,7 +1943,7 @@ class Modem extends \BaseModel
                 $configfile['text'] = [];
             }
         } else {
-            $configfile = Modem::getConfigfileText("/tftpboot/cm/$this->hostname");
+            $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
 
         $onlineStatus = $this->onlineStatus();
@@ -2062,7 +2055,7 @@ class Modem extends \BaseModel
 
         $conf['mtime'] = strftime('%c', filemtime("$path.cfg"));
 
-        exec("docsis -d $path.cfg", $conf['text']);
+        exec("cd /tmp; docsis -d $path.cfg", $conf['text']);
         $conf['text'] = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $conf['text']);
 
         return $conf;

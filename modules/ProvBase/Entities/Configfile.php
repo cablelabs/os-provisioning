@@ -89,17 +89,16 @@ class Configfile extends \BaseModel
      * Returns all available files (via directory listing)
      * @author Patrick Reichel
      */
-    public static function get_files($folder)
+    public static function getFiles($folders)
     {
-        // get all available files
-        $files_raw = glob("/tftpboot/$folder/*");
         $files = [null => 'None'];
-        // extract filename
-        foreach ($files_raw as $file) {
-            if (is_file($file)) {
-                $parts = explode('/', $file);
-                $filename = array_pop($parts);
-                $files[$filename] = $filename;
+
+        foreach ((array) $folders as $folder) {
+            foreach (glob("/tftpboot/$folder/*") as $file) {
+                if (is_file($file)) {
+                    $filename = basename($file);
+                    $files[$filename] = "$folder: $filename";
+                }
             }
         }
 

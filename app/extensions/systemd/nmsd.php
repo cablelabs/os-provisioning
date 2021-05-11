@@ -12,13 +12,18 @@ $dir = '/var/www/nmsprime/storage/systemd/';
 // contains restart scripts
 $dir_scripts = '/var/www/nmsprime/app/extensions/systemd/';
 
+// time to wait for same kind of requests to be merged into one request
+$delay = 10;
+
 while (1) {
     $services = glob("$dir/*");
 
     foreach ($services as $service) {
+        clearstatcache();
+        $mtime = filemtime($service);
         $service = basename($service);
 
-        if (! file_exists($dir_scripts.$service.'.php')) {
+        if (! file_exists($dir_scripts.$service.'.php') || (time() - $mtime < $delay)) {
             continue;
         }
 
@@ -30,5 +35,5 @@ while (1) {
         }
     }
 
-    sleep(4);
+    sleep(1);
 }
