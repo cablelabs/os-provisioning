@@ -42,27 +42,35 @@ class Repository
      */
     public function get(array $options = [])
     {
-        $paginate = isset($options['paginate']) ? $options['paginate'] : false;
+        $paginate = $options['paginate'] ?? false;
+        $as_tree = $options['as_tree'] ?? false;
         unset($options['paginate']);
+        unset($options['as_tree']);
         $query = $this->createBaseBuilder($options);
-
+        if($as_tree){
+            return $paginate ? $query->with('descendants')->paginate($options['limit']) : $query->get()->toTree();
+        }
         return $paginate ? $query->paginate($options['limit']) : $query->get();
-
-        return $query->get();
     }
 
     /**
      * Get a resource by its primary key
      * @param  mixed $id
      * @param  array $options
-     * @return Collection
+     * @return \App\BaseModel|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
     public function getById($id, array $options = [])
     {
+        $as_tree = $options['as_tree'] ?? false;
+        if($as_tree){
+            return ($this->getModel())::descendantsAndSelf($id)->toTree();
+        }
+
         $options['filter_groups'][] = ['filters' => [
             ['key' => 'id', 'value' => $id, 'operator' => 'eq', 'not' => false], ], 'or' => false,
         ];
         $query = $this->createBaseBuilder($options);
+
 
         return $query->first();
     }
@@ -72,7 +80,7 @@ class Repository
      * @param  array $options
      * @return Collection
      */
-    public function getRecent(array $options = [])
+    public function getRecent(array $options = []): Collection
     {
         $query = $this->createBaseBuilder($options);
 
@@ -83,12 +91,10 @@ class Repository
 
     /**
      * Get all resources by a where clause ordered by recentness
-     * @param  string $column
-     * @param  mixed $value
      * @param  array  $options
      * @return Collection
      */
-    public function getRecentWhere($column, $value, array $options = [])
+    public function getRecentWhere(array $options = []): Collection
     {
         $query = $this->createBaseBuilder($options);
 
@@ -100,9 +106,9 @@ class Repository
     /**
      * Get latest resource
      * @param  array $options
-     * @return Collection
+     * @return BaseModel
      */
-    public function getLatest(array $options = [])
+    public function getLatest(array $options = []): BaseModel
     {
         $query = $this->createBaseBuilder($options);
 
@@ -113,12 +119,10 @@ class Repository
 
     /**
      * Get latest resource by a where clause
-     * @param  string $column
-     * @param  mixed $value
      * @param  array  $options
-     * @return Collection
+     * @return BaseModel
      */
-    public function getLatestWhere($column, $value, array $options = [])
+    public function getLatestWhere(array $options = []): BaseModel
     {
         $query = $this->createBaseBuilder($options);
 
@@ -129,12 +133,12 @@ class Repository
 
     /**
      * Get resources by a where clause
-     * @param  string $column
+     * @param string $column
      * @param  mixed $value
      * @param  array $options
      * @return Collection
      */
-    public function getWhere($column, $value, array $options = [])
+    public function getWhere(string $column, $value, array $options = []): Collection
     {
         $query = $this->createBaseBuilder($options);
 
@@ -150,7 +154,7 @@ class Repository
      * @deprecated
      * @return Collection
      */
-    public function getWhereArray(array $clauses, array $options = [])
+    public function getWhereArray(array $clauses, array $options = []): Collection
     {
         $query = $this->createBaseBuilder($options);
 
@@ -178,7 +182,7 @@ class Repository
      * @param array $data
      * @return BaseModel
      */
-    public function create(array $data)
+    public function create(array $data): BaseModel
     {
         $model = $this->getModel();
         $model->fill($data);
@@ -192,7 +196,7 @@ class Repository
      * @param array $data
      * @return BaseModel
      */
-    public function update(BaseModel $model, array $data)
+    public function update(BaseModel $model, array $data): BaseModel
     {
         $model->fill($data);
         $model->save();
@@ -215,11 +219,11 @@ class Repository
 
     /**
      * Delete resources by a where clause
-     * @param  string $column
+     * @param string $column
      * @param  mixed $value
      * @return void
      */
-    public function deleteWhere($column, $value)
+    public function deleteWhere(string $column, $value)
     {
         $query = $this->createQueryBuilder();
 
@@ -244,7 +248,7 @@ class Repository
      * @param  array $options
      * @return Builder
      */
-    protected function createBaseBuilder(array $options = [])
+    protected function createBaseBuilder(array $options = []): Builder
     {
         $query = $this->createQueryBuilder();
 
@@ -261,7 +265,7 @@ class Repository
      * Creates a new query builder
      * @return Builder
      */
-    protected function createQueryBuilder()
+    protected function createQueryBuilder(): Builder
     {
         return $this->model->newQuery();
     }
@@ -271,7 +275,7 @@ class Repository
      * @param  Builder $query
      * @return string
      */
-    protected function getPrimaryKey(Builder $query)
+    protected function getPrimaryKey(Builder $query): string
     {
         return $query->getModel()->getKeyName();
     }
