@@ -7,5 +7,5 @@ systemctl reload httpd
 
 rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache
-systemctl restart nmsprimed
+systemctl restart nmsprimed supervisord
 systemd-tmpfiles --create
