@@ -16,14 +16,11 @@ class WebsocketApi
             $connection['app_id'],
             [
                 'cluster' => $connection['options']['cluster'],
-                'useTLS' => true,
-                'curl_options' => [
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                ],
+                'curl_options' => $connection['options']['curl_options'],
                 'host' => $connection['options']['host'],
-                'port' => '6001',
-                'scheme' => 'https',
+                'port' => $connection['options']['port'],
+                'useTLS' => $connection['options']['encrypted'],
+                'scheme' => $connection['options']['scheme'],
             ]
         );
     }
