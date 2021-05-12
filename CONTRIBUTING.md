@@ -69,4 +69,4 @@ Some useful resources to get started:
 - [OS Provisioning License][12]
 
 [11]: README.md
-[12]: LICENSE
+[12]: https://github.com/cablelabs/os-provisioning/blob/main/LICENSE
