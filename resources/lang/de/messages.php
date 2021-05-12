@@ -197,6 +197,7 @@ return [
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',
+        'lastValues' => 'Das Gerät ist nicht erreichbar, aber dies sind die letzten Werte von :date.',
         'missing_netgw' => 'Dem Cluster fehlt ein übergeordnetes NetGw.',
         'missingIp' => 'Das Netzelement ist nicht erreichbar, da keine IP bzw. kein Hostname zugewiesen wurde.',
         'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
