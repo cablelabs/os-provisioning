@@ -111,4 +111,4 @@ See [Upcoming Developments](https://devel.nmsprime.com/confluence/x/oQAQBQ)
 
 **License**
 
-This project is licensed under the [Apache-2.0](LICENSE.md) file for details. For more information: [License Article](https://devel.nmsprime.com/confluence/display/NMS/License)
+This project is licensed under the [Apache-2.0](https://github.com/cablelabs/os-provisioning/blob/main/LICENSE) file for details. For more information: [License Article](https://devel.nmsprime.com/confluence/display/NMS/License)
