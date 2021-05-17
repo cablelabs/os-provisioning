@@ -33,6 +33,14 @@ class ModemController extends \BaseController
      */
     private $configfile;
 
+    public function index()
+    {
+        // preserve show_filter Param from Request for later use in datatable calls
+        Modem::storeIndexFilterIntoSession();
+
+        return parent::index();
+    }
+
     public function edit($id)
     {
         if (ProvBase::first()->additional_modem_reset) {
