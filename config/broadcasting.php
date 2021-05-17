@@ -32,6 +32,7 @@ return [
 
         'pusher' => [
             // Note: By default a maximum of 1024 concurrent connections can be established
+            // See https://beyondco.de/docs/laravel-websockets/faq/deploying
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
