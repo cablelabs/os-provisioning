@@ -8,6 +8,10 @@
 
 @stop
 
+@php
+    // Store in variable as session key is removed in above_infos blade
+    $error = \Session::has('tmp_error_above_form');
+@endphp
 
 @section ('content_left')
 
@@ -16,14 +20,19 @@
     {{-- Error Message --}}
     <?php $blade_type = 'form' ?>
     @include('Generic.above_infos')
-
-    {{-- Auto update SNMP values Button --}}
-    <div class="row justify-content-end">
-        @if ($netelement->controlling_link)
-            {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
-        @endif
-        <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()" value="auto update">
+    <div class="col-md-12">
+        <div id="echoError" class="pt-0 pl-1 mb-1 font-weight-bold" style="border-left: solid 2px #ffaaaa"></div>
     </div>
+
+    {{-- Auto update button - Show only when device could be queried via SNMP --}}
+    @if (! $error)
+        <div class="row justify-content-end">
+            @if ($netelement->controlling_link)
+                {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
+            @endif
+            <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()" value="auto update">
+        </div>
+    @endif
 
     {{-- PARAMETERS --}}
     @if (isset ($form_fields['list']))
@@ -137,6 +146,12 @@
 
     function subscribe()
     {
+        if (window.echo == undefined || window.echo.connector.pusher.connection.state != 'connected') {
+            $("#echoError").html("{{ trans('messages.wsConFail') }}");
+
+            return;
+        }
+
         console.log('trigger SNMP query loop');
         subscribed = true;
 
@@ -209,7 +224,7 @@
 
     $(document).ready(function()
     {
-        if (Number("{{$reload}}")) {
+        if ("{{ ! $error && $reload }}") {
             setTimeout(subscribe(), "{{$reload}}" * 1000);
         }
 
@@ -234,16 +249,29 @@
     var config = "{{ json_encode(config('broadcasting.connections.pusher')) }}";
     config = JSON.parse(config.replace(/&quot;/ig,'"'));
 
-    window.echo = new Echo({
-        broadcaster: 'pusher',
-        key: config.key,
-        wsHost: window.location.hostname,
-        wsPort: config.options.port,
-        wssPort: config.options.port,
-        forceTLS: config.options.encrypted,
-        disableStats: true,
-        enabledTransports: ['ws', 'wss'],
-    });
+    if ("{{ ! $error }}") {
+        window.echo = new Echo({
+            broadcaster: 'pusher',
+            key: config.key,
+            wsHost: window.location.hostname,
+            wsPort: config.options.port,
+            wssPort: config.options.port,
+            forceTLS: config.options.encrypted,
+            disableStats: true,
+            enabledTransports: ['ws', 'wss'],
+        });
+
+        // Binding to error event doesn't work as expected
+        // See https://pusher.com/docs/channels/using_channels/connection
+        // window.echo.connector.pusher.connection.bind("error", function (error) {
+        //     console.log('error');
+        // });
+        // But we could use state change event
+        // window.echo.connector.pusher.connection.bind("state_change", function (states) {
+        //     console.log('state_changed', states);
+        // });
+    }
+
 </script>
 
 @stop

@@ -105,11 +105,14 @@ class SnmpController extends \BaseController
 
             $form_fields = $this->getSnmpValues(true);
         } catch (Exception $e) {
-            // Show error or warning
+            Session::push('tmp_error_above_form', $e->getMessage());
+
             if ($e->getMessage() == trans('messages.snmp.unreachable')) {
                 $form_fields = $this->getLastValues();
-            } else {
-                Session::push('tmp_error_above_form', $e->getMessage());
+
+                if ($form_fields) {
+                    Session::forget('tmp_error_above_form');
+                }
             }
         }
 

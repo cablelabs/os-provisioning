@@ -202,6 +202,7 @@ return [
         'missingIp' => 'The netelement is not reachable as it has no IP or hostname defined.',
         'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'The device is not reachable via SNMP.',
+        'wsConFail' => 'The connection to the websocket server could not be established. Please check if the server runs and is configured correctly.',
     ],
     'State'                     => 'State',
     'Street'                    => 'Street',
