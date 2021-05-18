@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWebSocketsStatisticsEntriesTable extends Migration
+class CreateWebSocketsStatisticsEntriesTable extends BaseMigration
 {
+    public $migrationScope = 'database';
+
     /**
      * Run the migrations.
      *
