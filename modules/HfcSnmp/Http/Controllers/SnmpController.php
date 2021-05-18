@@ -328,20 +328,18 @@ class SnmpController extends \BaseController
                     $finalValues[$oid] = $value;
 
                     // Order results and get HTML field description for initial view
-                    if ($ordered) {
-                        // set table head only once
-                        if (! isset($orderedValues['table'][$table_id]['head'][$suboid])) {
-                            $orderedValues['table'][$table_id]['head'][$suboid] = $subparam->oid->name_gui ?: $subparam->oid->name;
-                        }
-
-                        $arr = self::_get_formfield_array($subparam->oid, $index, $value, true);
-                        $field = BaseViewController::get_html_input($arr);
-
-                        $orderedValues['table'][$table_id]['body'][$index][$suboid] = $field;
+                    // set table head only once
+                    if (! isset($orderedValues['table'][$table_id]['head'][$suboid])) {
+                        $orderedValues['table'][$table_id]['head'][$suboid] = $subparam->oid->name_gui ?: $subparam->oid->name;
                     }
+
+                    $arr = self::_get_formfield_array($subparam->oid, $index, $value, true);
+                    $field = BaseViewController::get_html_input($arr);
+
+                    $orderedValues['table'][$table_id]['body'][$index][$suboid] = $field;
                 }
 
-                if ($ordered && $param->children->where('third_dimension', '=', 1)->count()) {
+                if ($param->children->where('third_dimension', '=', 1)->count()) {
                     $orderedValues['table'][$table_id]['3rd_dim'] = ['netelement_id' => $this->netelement->id, 'paramId' => $param->id];
                 }
             }
@@ -359,26 +357,23 @@ class SnmpController extends \BaseController
                     $finalValues[$oid] = $value;
 
                     // Order results and get HTML field description for initial view
-                    if ($ordered) {
-                        $arr = self::_get_formfield_array($param->oid, $index, $value);
-                        $field = BaseViewController::add_html_string([$arr])[0]['html'];
+                    $arr = self::_get_formfield_array($param->oid, $index, $value);
+                    $field = BaseViewController::add_html_string([$arr])[0]['html'];
 
-                        if (! $param->html_frame) {
-                            $orderedValues['list'][] = $field;
-                        } elseif (strlen((string) $param->html_frame) == 1) {
-                            $orderedValues['frame']['linear'][$param->html_frame][] = $field;
-                        } else {
-                            // e.g.: '12' -> row 1, column 2
-                            $frame = (string) $param->html_frame;
-                            $orderedValues['frame']['tabular'][$frame[0]][$frame[1]][] = $field;
-                        }
+                    if (! $param->html_frame) {
+                        $orderedValues['list'][] = $field;
+                    } elseif (strlen((string) $param->html_frame) == 1) {
+                        $orderedValues['frame']['linear'][$param->html_frame][] = $field;
+                    } else {
+                        // e.g.: '12' -> row 1, column 2
+                        $frame = (string) $param->html_frame;
+                        $orderedValues['frame']['tabular'][$frame[0]][$frame[1]][] = $field;
                     }
                 }
             }
         } // end foreach
 
         $this->storeSnmpValues($valuesToStore);
-        $this->storeSnmpValues($orderedValues, 'ordered');
         Cache::put($this->cacheKey, $orderedValues, 5);
 
         return $ordered ? $orderedValues : json_encode($finalValues);
