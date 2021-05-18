@@ -30,6 +30,15 @@ class Modem extends \BaseModel
     public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
 
+    /**
+     * Contains all implemented index filters, also used as whitelist
+     *
+     * @var array
+     */
+    public const AVAILABLE_FILTERS = [
+        'sw_rev',
+    ];
+
     public function rules()
     {
         $rules = [
@@ -80,16 +89,7 @@ class Modem extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-
-        // we need to put the filter into the session,
-        // as the upcoming datatables AJAX request won't carry the input parameters
-        if (\Request::filled('modem_show_filter')) {
-            \Session::put('modem_show_filter', \Request::get('modem_show_filter'));
-        }
-        // non-datatable request; current route is null on testing
-        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
-            \Session::forget('modem_show_filter');
-        }
+        $filter = session(class_basename(self::class).'_show_filter', 'all');
 
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
@@ -100,7 +100,7 @@ class Modem extends \BaseModel
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
             'order_by' => ['0' => 'desc'],
-            'where_clauses' => self::_get_where_clause(),
+            'where_clauses' => $filter === 'all' ? [self::getWhereClauseFirmware($filter)] : [],
         ];
 
         if (Module::collections()->has('ProvMon')) {
@@ -175,15 +175,9 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    private static function _get_where_clause()
+    private static function getWhereClauseFirmware($filter)
     {
-        $filter = \Session::get('modem_show_filter');
-
-        if ($filter) {
-            return ["sw_rev = '$filter'"];
-        } else {
-            return [];
-        }
+        return "`sw_rev` = '{$filter}'";
     }
 
     /**

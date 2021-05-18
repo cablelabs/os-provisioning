@@ -13,16 +13,22 @@ class ProvBaseController extends BaseController
     {
         $title = 'Provisioning Dashboard';
 
-        $contracts_data = [];
-        if (Module::collections()->has('BillingBase')) {
-            $contracts_data = \Modules\BillingBase\Helpers\BillingAnalysis::getContractData();
-        } else {
-            $contracts_data['total'] = Contract::where('contract_start', '<=', date('Y-m-d'))
-                ->where(whereLaterOrEqual('contract_end', date('Y-m-d')))
-                ->count();
-        }
+        $contracts_data = self::getContractDashboardData();
 
         return View::make('provbase::index', $this->compact_prep_view(compact('title', 'contracts_data')));
+    }
+
+    public static function getContractDashboardData()
+    {
+        if (Module::collections()->has('BillingBase')) {
+            return \Modules\BillingBase\Helpers\BillingAnalysis::getContractData();
+        }
+
+        return [
+            'total' => Contract::where('contract_start', '<=', now())
+                ->where(whereLaterOrEqual('contract_end', now()))
+                ->count(),
+        ];
     }
 
     /**
