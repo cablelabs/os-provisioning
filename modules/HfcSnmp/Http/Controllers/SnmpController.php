@@ -201,7 +201,7 @@ class SnmpController extends \BaseController
         $websocketApi = new \App\extensions\websockets\WebsocketApi();
 
         // Don't run another query loop when someone else already triggered it
-        if ($websocketApi->channelHasSubscribers($channelName)) {
+        if ($websocketApi->channelHasSubscribers($channelName, true)) {
             return 'already running';
         }
 

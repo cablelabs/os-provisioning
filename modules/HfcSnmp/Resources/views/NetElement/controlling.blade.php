@@ -152,6 +152,10 @@
             return;
         }
 
+        if (document.hidden) {
+            return;
+        }
+
         console.log('trigger SNMP query loop');
         subscribed = true;
 
