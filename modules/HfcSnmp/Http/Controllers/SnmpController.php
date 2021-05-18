@@ -20,7 +20,7 @@ class SnmpController extends \BaseController
     private $retry = 1;
 
     /**
-     * @var  object 	NetElement
+     * @var  object     NetElement
      */
     private $netelement;
 
@@ -91,10 +91,10 @@ class SnmpController extends \BaseController
      *
      * Note: This function is used again for the 3rd Dimension of a Snmp Table (of which the Index link references to)
      *
-     * @param 	id  		The NetElement id
-     * @param 	paramId 	ID of the Parameter for 3rd Dimension View
-     * @param 	index 		The Index we want to see 3rd Dim for
-     * @author 	Torsten Schmidt, Nino Ryschawy
+     * @param   id          The NetElement id
+     * @param   paramId     ID of the Parameter for 3rd Dimension View
+     * @param   index       The Index we want to see 3rd Dim for
+     * @author  Torsten Schmidt, Nino Ryschawy
      */
     public function controlling_edit(NetElement $netelement, $paramId = 0, $index = 0)
     {
@@ -136,7 +136,7 @@ class SnmpController extends \BaseController
      * Controlling Update Function
      *
      * @param int id the NetElement id
-     * @param int paramId, index 	just for Redirect
+     * @param int paramId, index    just for Redirect
      *
      * @author Torsten Schmidt, Nino Ryschawy
      */
@@ -161,7 +161,7 @@ class SnmpController extends \BaseController
     /**
      * Get the necessary parameters (OIDs) of the netelementtype
      *
-     * @return \Illuminate\Database\Eloquent\Collection 	of Parameter objects with related OID object
+     * @return \Illuminate\Database\Eloquent\Collection     of Parameter objects with related OID object
      */
     private function getParameters()
     {
@@ -193,7 +193,7 @@ class SnmpController extends \BaseController
      */
     public function triggerSnmpQueryLoop(NetElement $netelement, $paramId = 0, $index = 0)
     {
-        \Log::debug(__FUNCTION__.": Poll netelement $netelement->id via SNMP");
+        Log::debug(__FUNCTION__.": Poll netelement $netelement->id via SNMP");
 
         $newSnmpValues = new NewSnmpValues([], $netelement, $paramId, $index);
         $channelName = $newSnmpValues->broadcastOn()->name;
@@ -219,7 +219,7 @@ class SnmpController extends \BaseController
             $newSnmpValues->setData($data);
             event($newSnmpValues);
 
-            \Log::debug("Send data to channel $channelName: ".substr($data, 0, 90).(strlen($data) > 90 ? ' ... }' : '').' - Query time: '.round($queryTime, 3));
+            Log::debug("Send data to channel $channelName: ".substr($data, 0, 90).(strlen($data) > 90 ? ' ... }' : '').' - Query time: '.round($queryTime, 3));
 
             $this->sleepWell($queryTime, $netelement);
         } while ($websocketApi->channelHasSubscribers($channelName));
@@ -240,10 +240,10 @@ class SnmpController extends \BaseController
     /**
      * GET all SNMP values from device
      *
-     * @param bool 		ordered 	true:  @return SNMP values as structured array to build initial view
-     * 								false: @return raw json data to update values via Ajax
-     * @param array 	params 		Optional array of Parameter objects to improve performance in loop
-     * @return array 				TODO: explain output array
+     * @param bool      ordered     true:  @return SNMP values as structured array to build initial view
+     *                              false: @return raw json data to update values via Ajax
+     * @param array     params      Optional array of Parameter objects to improve performance in loop
+     * @return array                TODO: explain output array
      * @author Nino Ryschawy
      */
     public function getSnmpValues($ordered, $params = [])
@@ -291,7 +291,7 @@ class SnmpController extends \BaseController
                 $indices = $indices_o && $indices_o->indices ? explode(',', $indices_o->indices) : [];
 
                 if ($this->netelement->netelementtype_id == 2 && ! $indices_o) {
-                    \Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->netelement->id]);
+                    Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->netelement->id]);
                     continue;
                 }
             }
@@ -305,8 +305,8 @@ class SnmpController extends \BaseController
 
                 $subparam = null;
                 foreach ($results as $oid => $value) {
-                    $index = strrchr($oid, '.'); 								// row in table
-                    $suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
+                    $index = strrchr($oid, '.');                                // row in table
+                    $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
 
                     if (! $subparam || $subparam->oid != $suboid) {
                         if ($param->children->isEmpty()) {
@@ -319,7 +319,7 @@ class SnmpController extends \BaseController
                     }
 
                     if (! $subparam || ! $subparam->oid) {
-                        \Log::error("SNMP Query returned OID $suboid that is missing in database");
+                        Log::error("SNMP Query returned OID $suboid that is missing in database");
 
                         continue;
                     }
@@ -352,8 +352,8 @@ class SnmpController extends \BaseController
 
                 // Calculate differential param
                 foreach ($results as $oid => $value) {
-                    $index = strrchr($oid, '.'); 								// row in table
-                    $suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
+                    $index = strrchr($oid, '.');                                // row in table
+                    $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
                     // join relevant information before calling diff function
                     $value = self::_build_diff_and_divide($param, $index, $results, $value, $oldValues);
                     $finalValues[$oid] = $value;
@@ -436,11 +436,11 @@ class SnmpController extends \BaseController
     /**
      * Determine resulting value dependent of unit divisor or other OID values (see source code descriptions)
      *
-     * @param object 	param 	Parameter
-     * @param string 	index 	last number of OID
-     * @param array 	results
-     * @param string|int 	value 		current value from snmpwalk
-     * @param string|int 	old_value 	value from last snmpwalk (to possibly calculate the difference)
+     * @param object    param   Parameter
+     * @param string    index   last number of OID
+     * @param array     results
+     * @param string|int    value       current value from snmpwalk
+     * @param string|int    old_value   value from last snmpwalk (to possibly calculate the difference)
      *
      * @author Nino Ryschawy
      */
@@ -485,10 +485,10 @@ class SnmpController extends \BaseController
     /**
      * Generate Form Field array as preparation for creating the html form fields from it
      *
-     * @param object 	OID
-     * @param string 	index 	Last number of OID (with starting dot)
+     * @param object    OID
+     * @param string    index   Last number of OID (with starting dot)
      * @param string|int value
-     * @param bool 		table
+     * @param bool      table
      */
     private static function _get_formfield_array($oid, $index, $value, $table = false)
     {
@@ -508,12 +508,12 @@ class SnmpController extends \BaseController
         $description = $table ? '' : ($oid->name_gui ? $oid->name_gui.$ext : $oid->name.$ext);
 
         $field = [
-            'form_type' 	=> $oid->html_type,
-            'name' 			=> $oid->oid.$index,
-            'description' 	=> $description,
-            'field_value' 	=> $value,
-            'options' 		=> $options,
-            // 'help' 			=> $oid->description,
+            'form_type'     => $oid->html_type,
+            'name'          => $oid->oid.$index,
+            'description'   => $description,
+            'field_value'   => $value,
+            'options'       => $options,
+            // 'help'           => $oid->description,
         ];
 
         if ($oid->html_type == 'select') {
@@ -528,9 +528,9 @@ class SnmpController extends \BaseController
      *
      * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
      *
-     * @param 	object
+     * @param   object
      * @param   array   of strings
-     * @return 	array 	SNMP values in form: [OID => value]
+     * @return  array   SNMP values in form: [OID => value]
      *
      * @author Torsten Schmidt, Nino Ryschawy
      */
@@ -555,7 +555,7 @@ class SnmpController extends \BaseController
                     } catch (Exception $e) {
                         $name = $oid->name_gui ?: $oid->name;
                         $this->errors[] = "$name.$index";
-                        \Log::error("snmp2_get: $name.$index");
+                        Log::error("snmp2_get: $name.$index");
                     }
                 }
             } catch (Exception $e) {
@@ -568,7 +568,7 @@ class SnmpController extends \BaseController
                         } catch (Exception $e) {
                             $name = $oid->name_gui ?: $oid->name;
                             $this->errors[] = "$name.$index";
-                            \Log::error("snmpget: $name.$index");
+                            Log::error("snmpget: $name.$index");
                         }
                     }
                 } catch (Exception $e) {
@@ -602,10 +602,10 @@ class SnmpController extends \BaseController
     /**
      * SNMP Walk over a Table OID Parameter - Can also be a walk over all it's SubOIDs
      *
-     * @param 	param 	Table Object ID
-     * @return 	array	[values => [index => [oid => value]], [diff-OIDs]]
+     * @param   param   Table Object ID
+     * @return  array   [values => [index => [oid => value]], [diff-OIDs]]
      *
-     * @author 	Nino Ryschawy
+     * @author  Nino Ryschawy
      */
     public function snmp_table($param, $indices)
     {
@@ -638,7 +638,7 @@ class SnmpController extends \BaseController
 
                 $results = [];
                 $this->errors[] = $oid->name_gui ?: $oid->name;
-                \Log::error('snmp2_real_walk: '.$oid->name_gui ?: $oid->name);
+                Log::error('snmp2_real_walk: '.$oid->name_gui ?: $oid->name);
             }
         }
 
@@ -652,7 +652,7 @@ class SnmpController extends \BaseController
     /**
      * Update all changed SNMP Values
      *
-     * @param array data 	the HTML POST data array in form: [<oid> => <value>]
+     * @param array data    the HTML POST data array in form: [<oid> => <value>]
      *
      * @author Nino Ryschawy
      */
@@ -678,7 +678,7 @@ class SnmpController extends \BaseController
             $this->netelement = $this->parent_device;
         }
 
-        $pre_conf = $this->netelement->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
+        $pre_conf = $this->netelement->netelementtype->pre_conf_value ? true : false;           // true - has to be done
         $user = \Auth::user();
 
         foreach ($data as $full_oid => $value) {
@@ -705,8 +705,8 @@ class SnmpController extends \BaseController
             }
 
             // GET OID to check if shown value was divided by unit_divisor (for the view)
-            $index = strrchr($full_oid, '.'); 									// row in table
-            $oid = substr($full_oid, 0, strlen($full_oid) - strlen($index)); 	// column in table
+            $index = strrchr($full_oid, '.');                                   // row in table
+            $oid = substr($full_oid, 0, strlen($full_oid) - strlen($index));    // column in table
 
             if (! $oid_o || $oid_o->oid != $oid) {
                 // GET OID from database only once
@@ -744,11 +744,11 @@ class SnmpController extends \BaseController
                 // Create GuiLog Entry
                 \App\GuiLog::log_changes([
                     'user_id' => $user ? $user->id : 0,
-                    'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
-                    'method' 	=> 'updated',
-                    'model' 	=> 'NetElement',
+                    'username'  => $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+                    'method'    => 'updated',
+                    'model'     => 'NetElement',
                     'model_id'  => $this->netelement->netelementtype_id == 2 ? $netelement->id : $this->netelement->id,
-                    'text' 		=> ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
+                    'text'      => ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
                 ]);
 
                 $oldValues->{$full_oid} = $value;
@@ -771,7 +771,7 @@ class SnmpController extends \BaseController
 
     /**
      * Gets all necessary OIDs if it's probable that they will be necessary for update so that
-     *	we have only one DB-Query and not multiple queries inside the for loop
+     *  we have only one DB-Query and not multiple queries inside the for loop
      *
      * @return \Illuminate\Database\Eloquent\Collection  - empty by default - filled with OIDs if it's possible to increase performance
      */
@@ -796,17 +796,17 @@ class SnmpController extends \BaseController
      * Set the corresponding Values to Configure the Device for a successful snmpset (e.g. needed by kathrein amplifiers)
      * NOTE: If Value is specified the post configuration is done
      *
-     * @param 	value   the value of the Parameter before the Configuration to reset
-     * @return 	value of Parameter before the configuration, null when resetting the Parameter to this value (specified in argument)
+     * @param   value   the value of the Parameter before the Configuration to reset
+     * @return  value of Parameter before the configuration, null when resetting the Parameter to this value (specified in argument)
      *
-     * @author 	Nino Ryschawy
+     * @author  Nino Ryschawy
      */
     private function _configure($value = null)
     {
         $type = $this->netelement->netelementtype;
 
         if ($type->pre_conf_oid_id xor $type->pre_conf_value) {
-            \Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->netelement->name, $this->netelement->id]);
+            Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->netelement->name, $this->netelement->id]);
 
             return;
         }
@@ -822,7 +822,7 @@ class SnmpController extends \BaseController
                 $ret = snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
             }
 
-            $ret ? \Log::debug('Preconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->netelement->name, $this->netelement->id]);
+            $ret ? Log::debug('Preconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]) : Log::debug('Failed to Preconfigure Device for snmpset', [$this->netelement->name, $this->netelement->id]);
 
             // wait time in usec
             $sleep_time = $type->pre_conf_time_offset * 1000000 ?: 0;
@@ -834,7 +834,7 @@ class SnmpController extends \BaseController
         // PostConfiguration
         snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
 
-        \Log::debug('Postconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]);
+        Log::debug('Postconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]);
     }
 
     /**
