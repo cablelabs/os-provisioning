@@ -225,7 +225,7 @@
     $(document).ready(function()
     {
         if ("{{ ! $error && $reload }}") {
-            setTimeout(subscribe(), "{{$reload}}" * 1000);
+            setTimeout(subscribe, "{{$reload}}" * 1000);
         }
 
         $('.controllingtable').DataTable({
