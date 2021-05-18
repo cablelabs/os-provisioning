@@ -40,3 +40,7 @@
 [submodule "public/components/assets-admin/plugins/pdfmake"]
 	path = public/components/assets-admin/plugins/pdfmake
 	url = https://github.com/bpampuch/pdfmake
+[submodule "public/vendor/pusher-js"]
+	path = public/vendor/pusher-js
+	url = https://github.com/pusher/pusher-js.git
+

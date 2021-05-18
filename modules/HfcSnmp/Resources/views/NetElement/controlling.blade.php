@@ -138,7 +138,7 @@
 
 @section('javascript_extra')
 
-<script src="{{ asset('vendor/pusher-with-encryption.min.js') }}"></script>
+<script src="{{ asset('vendor/pusher-js/dist/web/pusher-with-encryption.min.js') }}"></script>
 <script language="javascript">
 
     channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}";
