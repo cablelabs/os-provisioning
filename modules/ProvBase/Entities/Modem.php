@@ -100,7 +100,7 @@ class Modem extends \BaseModel
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
             'order_by' => ['0' => 'desc'],
-            'where_clauses' => $filter === 'all' ? [self::getWhereClauseFirmware($filter)] : [],
+            'where_clauses' => $filter !== 'all' ? [self::getWhereClauseFirmware($filter)] : [],
         ];
 
         if (Module::collections()->has('ProvMon')) {
@@ -175,7 +175,7 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    private static function getWhereClauseFirmware($filter)
+    protected static function getWhereClauseFirmware($filter)
     {
         return "`sw_rev` = '{$filter}'";
     }
