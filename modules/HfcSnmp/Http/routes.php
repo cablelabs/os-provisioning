@@ -39,6 +39,6 @@ BaseRoute::group([], function () {
     BaseRoute::post('NetElement/{netelement}/triggerSnmpQueryLoop/{parameter}/{index}', [
         'as' => 'NetElement.triggerSnmpQueryLoop',
         'uses' => 'Modules\HfcSnmp\Http\Controllers\SnmpController@triggerSnmpQueryLoop',
-        'middleware' => ['can:update,Modules\HfcReq\Entities\NetElement'],
+        'middleware' => ['can:view,Modules\HfcReq\Entities\NetElement'],
     ]);
 });
