@@ -270,11 +270,13 @@ class SnmpController extends \BaseController
             $values = Cache::get($this->cacheKey);
 
             if ($values) {
+                Log::debug('Return cached SNMP values for netelement '.$this->netelement->id);
+
                 return $values;
             }
         }
 
-        $oldValues = $this->getStoredValues();
+        $oldValues = $this->getStoredValues()['values'];
         if (! $params) {
             $params = $this->getParameters();
         }
@@ -424,7 +426,7 @@ class SnmpController extends \BaseController
 
         return [
             'time' => filemtime($filePath),
-            'values' => json_decode(File::get($filePath)),
+            'values' => json_decode(File::get($filePath), true),
         ];
     }
 
@@ -689,7 +691,7 @@ class SnmpController extends \BaseController
             $full_oid = str_replace('_', '.', $full_oid);
 
             // Null value can actually only happen, when someone deleted storage json file manually between last get and the save
-            $old_val = isset($oldValues->{$full_oid}) ? $oldValues->{$full_oid} : null;
+            $old_val = $oldValues[$full_oid] ?? null;
 
             // ATTENTION: This check improves performance, but assumes that it's not possible to change value previously
             // divided by unit_divisor to a value multiplied exactly by unit_divisor as in following example:
@@ -746,7 +748,7 @@ class SnmpController extends \BaseController
                     'text'      => ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
                 ]);
 
-                $oldValues->{$full_oid} = $value;
+                $oldValues[$full_oid] = $value;
             } else {
                 $this->errors[] = $oid_o->name_gui ?: $oid_o->name;
             }
