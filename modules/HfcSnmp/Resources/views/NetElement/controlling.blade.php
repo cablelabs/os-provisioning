@@ -141,8 +141,8 @@
 <script src="{{ asset('vendor/pusher-js/dist/web/pusher-with-encryption.min.js') }}"></script>
 <script language="javascript">
 
-    channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}";
-    subscribed = false;
+    let channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}";
+    let subscribed = false;
 
     function subscribe()
     {
