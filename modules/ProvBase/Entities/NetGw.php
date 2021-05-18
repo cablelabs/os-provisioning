@@ -10,7 +10,7 @@ class NetGw extends \BaseModel
     public const TYPES = ['cmts', 'bras', 'olt', 'dslam'];
     // don't put a trailing slash here!
     public const NETGW_INCLUDE_PATH = '/etc/dhcp-nmsprime/cmts_gws';
-    protected const US_SNR_PATH = 'data/provmon/us_snr';
+    public const US_SNR_PATH = 'data/provmon/us_snr';
     protected const DHCP6_GATEWAYS_FILE = '/etc/kea/gateways6.conf';
     protected const DHCP6_GATEWAYS_DIR = '/etc/kea/gateways6';
 
