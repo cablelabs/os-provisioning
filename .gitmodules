@@ -43,4 +43,3 @@
 [submodule "public/vendor/pusher-js"]
 	path = public/vendor/pusher-js
 	url = https://github.com/pusher/pusher-js.git
-
