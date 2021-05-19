@@ -27,10 +27,16 @@ class EnsureQueueListenerIsRunning extends Command
      */
     protected $description = 'Ensure that the queue listener is running.';
 
+    /**
+     * All workers that shall run (can have a dependent module)
+     *
+     * @var array
+     */
     protected $workers = [
         // handle all low priority tasks - e.g. SettlementRunJob
+        // This is the default queue
         'low' => [
-            'dependency' => 'BillingBase',
+            // 'dependency' => 'BillingBase',
         ],
         // handle all high and medium priority tasks - queue 'high' is prioritised - e.g. ConfigfileJob
         'high,medium' => [],
