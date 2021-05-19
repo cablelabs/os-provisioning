@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Queue;
 use Artisan;
 use Modules\ProvBase\Entities\Qos;
 use Nwidart\Modules\Facades\Module;
@@ -30,7 +31,7 @@ class ProvBaseObserver
 
         // recreate default network, if provisioning server ip address has been changed
         if (array_key_exists('provisioning_server', $changes)) {
-            \Queue::push(new \Modules\ProvBase\Jobs\DhcpJob());
+            Queue::pushOn('high', new \Modules\ProvBase\Jobs\DhcpJob());
         }
 
         if (multi_array_key_exists(['dhcp_def_lease_time', 'dhcp_max_lease_time'], $changes)) {
@@ -76,7 +77,7 @@ class ProvBaseObserver
 
         // build all Modem Configfiles via Job as this will take a long time
         if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient', 'max_cpe'], $changes)) {
-            \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
+            Queue::pushOn('medium', new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
         }
 
         if (Module::collections()->has('ProvMon') && array_key_exists('ro_community', $changes)) {
