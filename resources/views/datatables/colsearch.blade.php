@@ -1,6 +1,7 @@
 initComplete: function () {
     this.api().columns().every(function () {
         var column = this;
+        var input_filter_timeout;
         var input = document.createElement('input');
         input.classList.add('form-control');
         input.classList.add('input-sm');
@@ -9,8 +10,11 @@ initComplete: function () {
             $(input).appendTo($(column.footer()).empty())
             .on('keyup', function () {
                 var val = $(this).val();
+                clearTimeout(input_filter_timeout);
 
-                column.search(val ? val : '', true, false).draw();
+                input_filter_timeout = setTimeout(function() {
+                    column.search(val ? val : '', true, false).draw();
+                }, 500);
             });
         }
         $('.select2').css('width', "100%");
