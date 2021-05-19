@@ -143,8 +143,11 @@
 {{-- JS DATATABLE CONFIG --}}
 <script language="javascript">
 $(document).ready(function() {
-    var table = $('table.datatable').DataTable(
-        {
+    // Show Buttons and enable lazy loading
+    window.JSZip = true
+    window.pdfMake = true
+
+    let table = $('table.datatable').DataTable({
     {{-- STANDARD CONFIGURATION --}}
         {{-- Translate Datatables Base --}}
             @include('datatables.lang')
@@ -160,39 +163,38 @@ $(document).ready(function() {
             }
         },
         autoWidth: false, {{-- Option to ajust Table to Width of container --}}
-        dom: 'lBfrtip', {{-- sets order and what to show  --}}
+        dom: 'lBfrt{{ config('datatables.showFilterInfo') ? 'i' : ''}}p', {{-- sets order and what to show  --}}
         stateSave: true, {{-- Save Search Filters and visible Columns --}}
         stateDuration: 0, // 60 * 60 * 24, {{-- Time the State is used - set to 24h --}}
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
         {{-- Responsive Column --}}
-        columnDefs: [],
-        aoColumnDefs: [ {
-                className: 'control',
-                orderable: false,
-                searchable: false,
-                targets:   [0]
-            },
-            {{-- Dont print error message, but fill NULL Fields with empty string --}}
-            {
-                defaultContent: "",
-                targets: "_all"
-            },
-            @if (isset($delete_allowed) && $delete_allowed == true) {{-- show checkboxes only when needed --}}
-            {
-                className: 'index_check',
-                orderable: false,
-                searchable: false,
-                targets:   [1]
-            },
-            @endif
-            {
-                className: 'nocolvis',
-                targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[2]' : '[1]'}},
-            },
-            {
-                targets :  "_all",
-                className : 'ClickableTd',
-            } ],
+        columnDefs: [ {
+            className: 'control',
+            orderable: false,
+            searchable: false,
+            targets:   [0]
+        },
+        {{-- Dont print error message, but fill NULL Fields with empty string --}}
+        {
+            defaultContent: "",
+            targets: "_all"
+        },
+        @if (isset($delete_allowed) && $delete_allowed == true) {{-- show checkboxes only when needed --}}
+        {
+            className: 'index_check',
+            orderable: false,
+            searchable: false,
+            targets:   [1]
+        },
+        @endif
+        {
+            className: 'nocolvis',
+            targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[2]' : '[1]'}},
+        },
+        {
+            targets :  "_all",
+            className : 'ClickableTd',
+        } ],
     {{-- AJAX CONFIGURATION --}}
         @if (isset($model) && method_exists( $model, 'view_index_label') )
             processing: true, {{-- show loader--}}

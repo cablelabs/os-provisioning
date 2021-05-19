@@ -932,3 +932,9 @@ div.recolor:hover img {
         color: #6c757d;
     }
   }
+
+  table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTable.dtr-column > tbody > tr > th.dtr-control::before, table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+}

@@ -86,16 +86,52 @@ Relation Blade is used inside a Panel Element to display relational class object
         {!! Form::open(array('route' => array($class.'.destroy', 0), 'method' => 'delete', 'id' => $tab['name'].$class)) !!}
     @endif
 
-    <table class="table">
-        @foreach ($relation as $rel_elem)
-            <?php $labelData = $rel_elem->view_index_label(); ?>
-            <tr class="{{isset ($labelData['bsclass']) ? $labelData['bsclass'] : ''}}">
-                <td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
-                <td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($class.'.'.$method, is_array($labelData) ? $labelData['header'] : $labelData, $rel_elem->id) !!} </td>
-            </tr>
-        @endforeach
-    </table>
-
+    @if ($count < config('datatables.relationThreshhold'))
+        <table class="table">
+            @foreach ($relation as $rel_elem)
+                <?php $labelData = $rel_elem->view_index_label(); ?>
+                <tr class="{{isset ($labelData['bsclass']) ? $labelData['bsclass'] : ''}}">
+                    <td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
+                    <td> {!! $rel_elem->view_icon() !!} {!! HTML::linkRoute($class.'.'.$method, is_array($labelData) ? $labelData['header'] : $labelData, $rel_elem->id) !!} </td>
+                </tr>
+            @endforeach
+        </table>
+    @else
+        <table id="{{ $class }}-datatable" class="table table-hover datatable table-bordered d-table">
+            <thead>
+                <tr>
+                    <th style="width:20px;"></th>
+                    <th style="width:100%;">Label</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let {{ $class }} = $('#{{ $class }}-datatable').DataTable({
+                    @include('datatables.lang')
+                    @include('datatables.paginate')
+                    dom: 'rtip',
+                    columnDefs: [
+                        {
+                            defaultContent: "",
+                            targets: "_all"
+                        }
+                    ],
+                    {{-- AJAX CONFIGURATION --}}
+                    processing: true, {{-- show loader--}}
+                    serverSide: true, {{-- enable Serverside Handling--}}
+                    deferRender: true,
+                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => Str::lower(Str::plural($class))]) }}',
+                    columns:[
+                        {data: 'checkbox', orderable: false, searchable: false},
+                        {data: 'label', orderable: false, searchable: false}
+                    ]
+                })
+            });
+        </script>
+    @endif
     {!! Form::close() !!}
 @DivClose()
 @endif
