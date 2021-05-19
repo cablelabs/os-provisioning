@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Module;
 use Illuminate\Console\Command;
 
 /**
@@ -27,6 +28,21 @@ class EnsureQueueListenerIsRunning extends Command
     protected $description = 'Ensure that the queue listener is running.';
 
     /**
+     * All workers that shall run (can have a dependent module)
+     *
+     * @var array
+     */
+    protected $workers = [
+        // handle all low priority tasks - e.g. SettlementRunJob
+        // This is the default queue
+        'low' => [
+            // 'dependency' => 'BillingBase',
+        ],
+        // handle all high and medium priority tasks - queue 'high' is prioritised - e.g. ConfigfileJob
+        'high,medium' => [],
+    ];
+
+    /**
      * Create a new command instance.
      */
     public function __construct()
@@ -41,24 +57,34 @@ class EnsureQueueListenerIsRunning extends Command
      */
     public function handle()
     {
-        if (! $this->isQueueListenerRunning()) {
-            $this->comment('Queue listener is being started.');
-            $pid = $this->startQueueListener();
-            $this->saveQueueListenerPID($pid);
+        foreach ($this->workers as $name => $properties) {
+            if (array_key_exists('dependency', $properties) && ! Module::collections()->has($properties['dependency'])) {
+                continue;
+            }
+
+            if (! $this->isWorkerRunning($name)) {
+                $this->comment("$name worker is being started.");
+
+                $pid = $this->startWorker($name);
+                $this->saveWorkerPid($pid, $name);
+            }
+
+            $this->comment("$name worker is running.");
         }
-        $this->comment('Queue listener is running.');
     }
 
     /**
      * Check if the queue listener is running.
      *
+     * @param string    name of worker
      * @return bool
      */
-    private function isQueueListenerRunning()
+    private function isWorkerRunning($name)
     {
-        if (! $pid = $this->getLastQueueListenerPID()) {
+        if (! $pid = $this->getLastWorkerPid($name)) {
             return false;
         }
+
         $process = exec("ps -p $pid -opid=,cmd=");
         $processIsQueueListener = \Str::contains($process, 'queue:work');
 
@@ -70,13 +96,19 @@ class EnsureQueueListenerIsRunning extends Command
      *
      * @return bool|string
      */
-    private function getLastQueueListenerPID()
+    private function getLastWorkerPid($name)
     {
         if (! file_exists(__DIR__.'/queue.pid')) {
             return false;
         }
 
-        return file_get_contents(__DIR__.'/queue.pid');
+        $pids = json_decode(file_get_contents(__DIR__.'/queue.pid'));
+
+        if (! is_object($pids) || ! isset($pids->$name)) {
+            return false;
+        }
+
+        return $pids->$name;
     }
 
     /**
@@ -86,9 +118,17 @@ class EnsureQueueListenerIsRunning extends Command
      *
      * @return void
      */
-    private function saveQueueListenerPID($pid)
+    private function saveWorkerPid($pid, $name)
     {
-        file_put_contents(__DIR__.'/queue.pid', $pid);
+        $pids = json_decode(file_get_contents(__DIR__.'/queue.pid'));
+
+        if (! is_object($pids)) {
+            $pids = new \stdClass();
+        }
+
+        $pids->$name = $pid;
+
+        file_put_contents(__DIR__.'/queue.pid', json_encode($pids));
     }
 
     /**
@@ -96,12 +136,12 @@ class EnsureQueueListenerIsRunning extends Command
      *
      * @return int
      */
-    private function startQueueListener()
+    private function startWorker($name)
     {
-        $command = 'php '.base_path().'/artisan queue:work --tries=1 --timeout=9999 > /dev/null & echo $!';
+        $command = 'php '.base_path()."/artisan queue:work --queue=$name --tries=1 --timeout=9999 > /dev/null & echo $!";
         $pid = exec($command);
 
-        \Log::info('Start general queue worker');
+        \Log::info("Start queue worker '$name'");
 
         return $pid;
     }

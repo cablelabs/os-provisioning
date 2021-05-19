@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use Log;
+use File;
 use Illuminate\Console\Command;
+use Nwidart\Modules\Facades\Module;
 
 /**
  * This can be used to cleanup the storage folder. E.g. if using the module ProvVoipEnvia man can store all sent and received XML in files.
@@ -48,8 +51,6 @@ class StorageCleaner extends Command
     public function __construct()
     {
         parent::__construct();
-
-        $this->_prepare_metadata();
     }
 
     /**
@@ -60,8 +61,7 @@ class StorageCleaner extends Command
      */
     protected function _prepare_metadata()
     {
-        if (\Module::collections()->has('ProvVoipEnvia')) {
-
+        if (Module::collections()->has('ProvVoipEnvia')) {
             // defaults
             $envia_api_xml_thresholds = [
                 'path' =>storage_path().'/app/data/provvoipenvia/XML', // the base path holding the date subdirs
@@ -97,6 +97,21 @@ class StorageCleaner extends Command
 
             array_push($this->thresholds, $envia_api_xml_thresholds);
         }
+
+        // Tmp dir is used for billing & ccc
+        $this->thresholds[] = [
+            'path' => storage_path('app/tmp/'),
+            'function' => 'removeOutdatedFiles',
+            'delete' => '6M',
+        ];
+
+        if (Module::collections()->has('HfcSnmp')) {
+            $this->thresholds[] = [
+                'path' => storage_path('app/data/hfc/snmpvalues/'),
+                'function' => 'removeOutdatedFiles',
+                'delete' => '1M',
+            ];
+        }
     }
 
     /**
@@ -106,11 +121,14 @@ class StorageCleaner extends Command
      */
     public function handle()
     {
-        \Log::info('Storage cleaner started');
+        $this->_prepare_metadata();
+
+        Log::info('Storage cleaner started');
+
         // process the folders one by one
         foreach ($this->thresholds as $entry) {
             try {
-                \Log::debug('Calling '.$entry['function'].'() for '.$entry['path']);
+                Log::debug('Calling '.$entry['function'].'() for '.$entry['path']);
                 $function = $entry['function'];
                 $this->${'function'}($entry);
             } catch (\Exception $ex) {
@@ -119,8 +137,49 @@ class StorageCleaner extends Command
                 } else {
                     $path = '(not set)';
                 }
-                \Log::error('ERROR cleaning storage folder '.$path.': '.$ex->getMessage());
-                throw $ex;
+
+                Log::error('ERROR cleaning storage folder '.$path.': '.$ex->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Simple method to remove files older than specified timeframe in given directory
+     *
+     * @author Nino Ryschawy
+     */
+    protected function removeOutdatedFiles($data)
+    {
+        if (! array_key_exists('path', $data)) {
+            Log::error(__CLASS__.': No path given');
+
+            return;
+        }
+
+        if (! File::isDirectory($data['path'])) {
+            Log::warning('Path '.$data['path'].' not existing or not a directory');
+
+            return;
+        }
+
+        $now = new \DateTime();
+        $threshold = $now->sub(new \DateInterval('P'.$data['delete']))->getTimestamp();
+
+        $files = File::allFiles($data['path']);
+
+        foreach ($files as $file) {
+            if ($file->getMTime() > $threshold) {
+                // echo date('Y-m-d - ', $file->getMTime()).$file->getPathName()."\n";
+                continue;
+            }
+
+            unlink($file->getPathName());
+            $msg = 'Deleted '.$file->getPathName()."\n";
+
+            if ($this->output) {
+                echo $msg;
+            } else {
+                Log::info($msg);
             }
         }
     }
@@ -134,13 +193,13 @@ class StorageCleaner extends Command
     protected function _monthly_folders($data)
     {
         if (! array_key_exists('path', $data)) {
-            \Log::error('No path given.');
+            Log::error(__CLASS__.': No path given');
 
             return;
         }
 
-        if (! \File::isDirectory($data['path'])) {
-            \Log::warning('Path '.$data['path'].' not existing or not a directory');
+        if (! File::isDirectory($data['path'])) {
+            Log::warning('Path '.$data['path'].' not existing or not a directory');
 
             return;
         }
@@ -150,7 +209,7 @@ class StorageCleaner extends Command
             $now = new \DateTime();
             $compress = $now->sub(new \DateInterval('P'.$data['compress']))->format('Y-m');
             if ($compress == date('Y-m')) {
-                \Log::warning('Compression threshold seems to be set to zero – will not compress');
+                Log::warning('Compression threshold seems to be set to zero – will not compress');
                 $compress = null;
             }
         } else {
@@ -163,7 +222,7 @@ class StorageCleaner extends Command
             $now = new \DateTime();
             $delete = $now->sub(new \DateInterval('P'.$data['delete']))->format('Y-m');
             if ($delete == date('Y-m')) {
-                \Log::warning('Deletion threshold seems to be set to zero – will not delete');
+                Log::warning('Deletion threshold seems to be set to zero – will not delete');
                 $delete = null;
             }
         } else {
@@ -211,20 +270,20 @@ class StorageCleaner extends Command
                 $dirpath = $path.'/'.$dir;
 
                 // compress
-                \Log::info('Compressing '.$dirpath);
+                Log::info('Compressing '.$dirpath);
                 $tar_cmd = "cd $path && tar -jcvf $archivepath $dir";
                 try {
                     $tar_return = `$tar_cmd`;
                     $tar_return = explode("\n", $tar_return);
                     $tar_return_log = array_slice($tar_return, 0, 3);
-                    \Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
+                    Log::debug('Calling "'.$tar_cmd.'" returned '.count($tar_return).' lines, beginning with '.implode('\n ', $tar_return_log));
                 } catch (\Exception $ex) {
-                    \Log::error("Exception calling '$tar_cmd': ".$ex->getMessage());
+                    Log::error("Exception calling '$tar_cmd': ".$ex->getMessage());
                 }
 
-                if (\File::isFile($archivepath)) {
+                if (File::isFile($archivepath)) {
                     // remove original directory
-                    \File::deleteDirectory($dirpath);
+                    File::deleteDirectory($dirpath);
                     // append archive to files list
                     array_push($files, $archive);
                 }
@@ -244,14 +303,14 @@ class StorageCleaner extends Command
                 $elementpath = $path.'/'.$element;
 
                 // delete .tar.bz2 files older than threshold
-                if (\File::isFile($elementpath)) {
-                    \Log::info('Deleting '.$elementpath);
-                    \File::delete($elementpath);
+                if (File::isFile($elementpath)) {
+                    Log::info('Deleting '.$elementpath);
+                    File::delete($elementpath);
                 }
                 // delete directories older than threshold (e.g. in no compression is wanted)
-                elseif (\File::isDirectory($elementpath)) {
-                    \Log::info('Deleting '.$elementpath);
-                    \File::deleteDirectory($elementpath);
+                elseif (File::isDirectory($elementpath)) {
+                    Log::info('Deleting '.$elementpath);
+                    File::deleteDirectory($elementpath);
                 }
             }
         }

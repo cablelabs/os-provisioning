@@ -61,6 +61,6 @@ class IpPoolObserver
      */
     private static function updateRadIpPool($pool)
     {
-        \Queue::push(new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getOriginal(), $pool->wasRecentlyCreated));
+        \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getOriginal(), $pool->wasRecentlyCreated));
     }
 }

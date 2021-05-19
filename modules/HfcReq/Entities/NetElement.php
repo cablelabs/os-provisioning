@@ -5,11 +5,14 @@ namespace Modules\HfcReq\Entities;
 use Auth;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
+use App\Exceptions\SnmpAccessException;
 
 class NetElement extends \BaseModel
 {
     // Do not delete children (modem, mta, phonenmumber, etc.)!
     protected $delete_children = false;
+
+    public const SNMP_VALUES_STORAGE_REL_DIR = 'data/hfc/snmpvalues/';
 
     // The associated SQL table for this Model
     public $table = 'netelement';
@@ -959,5 +962,53 @@ class NetElement extends \BaseModel
     public function reducedFields()
     {
         return ['id', 'netelementtype', 'name', 'pos', 'cluster'];
+    }
+
+    public function getSnmpValuesStoragePath($ext = '')
+    {
+        $path = storage_path('app/').self::SNMP_VALUES_STORAGE_REL_DIR.$this->id;
+
+        if ($ext) {
+            $path .= '-'.$ext;
+        }
+
+        return $path;
+    }
+
+    public function isReachableViaSnmp()
+    {
+        $comm = $this->community();
+
+        // SysDescr
+        try {
+            snmpget($this->ip, $comm, '.1.3.6.1.2.1.1.1.0');
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return the Community String for Read-Only or Read-Write Access
+     *
+     * @param   access  String  'ro' or 'rw'
+     * @author  Nino Ryschawy
+     */
+    public function community($access = 'ro')
+    {
+        $community = $this->{'community_'.$access};
+
+        if (! $community) {
+            $community = \Modules\HfcReq\Entities\HfcReq::get([$access.'_community'])->first()->{$access.'_community'};
+        }
+
+        if (! $community) {
+            Log::error("community {$access} for Netelement $this->id is not set!");
+
+            throw new SnmpAccessException(trans('messages.NoSnmpAccess', ['access' => $access, 'name' => $this->name]));
+        }
+
+        return $community;
     }
 }
