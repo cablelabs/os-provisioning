@@ -694,6 +694,7 @@ class BaseController extends Controller
     public function index()
     {
         $model = static::get_model_obj();
+        $model::storeIndexFilterIntoSession();
         $headline = BaseViewController::translate_view($model->view_headline(), 'Header', 2);
         $view_header = BaseViewController::translate_view('Overview', 'Header');
         $create_allowed = static::get_controller_obj()->index_create_allowed;

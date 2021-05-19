@@ -197,10 +197,12 @@ return [
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'The following Parameters could not be Set: :oids.',
+        'lastValues' => 'Device is not reachable, but these are the last values from :date.',
         'missing_netgw' => 'The cluster misses a superior NetGw as parent device.',
         'missingIp' => 'The netelement is not reachable as it has no IP or hostname defined.',
         'undefined' => 'For this netelementtype is no controlling defined.',
         'unreachable' => 'The device is not reachable via SNMP.',
+        'wsConFail' => 'The connection to the websocket server could not be established. Please check if the server runs and is configured correctly.',
     ],
     'State'                     => 'State',
     'Street'                    => 'Street',

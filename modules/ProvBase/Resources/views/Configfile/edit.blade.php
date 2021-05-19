@@ -11,8 +11,6 @@
 
         @include($form_path, $view_var)
 
-    {{ Form::close() }}
-
 @if (multi_array_key_exists(['lists'], $additional_data))
 <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/sortable/Sortable.min.js')}}"></script>

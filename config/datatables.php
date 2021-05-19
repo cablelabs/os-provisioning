@@ -113,4 +113,15 @@ return [
         'options' => 0,
     ],
 
+    /**
+     * For large Datasets the count query to display this information becomes
+     * slow. This element determines if the info is displayed.
+     * TODO: Make this configurable by model/page.
+     */
+    'showFilterInfo' => env('DATATABLES_FILTER_INFO', true),
+
+    /**
+     * For certain
+     */
+    'relationThreshhold' => env('DATATABLES_RELATION_THRESHHOLD', 25),
 ];

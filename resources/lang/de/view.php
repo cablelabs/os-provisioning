@@ -30,6 +30,7 @@ return [
     'jQuery_colvisRestore'      => 'Wiederherstellen',
     'jQuery_colvisReset'        => 'Zurücksetzen',
     'jQuery_ExportTo'           => 'Exportieren als',
+    'jQuery_copyToClipboard'    => 'Zwischenablage',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Wohnungen',

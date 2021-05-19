@@ -154,17 +154,26 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
+        $this->setRelationCounts();
+        $relationThreshhold = config('datatables.relationThreshhold');
+
         $ret['Edit']['Modem']['class'] = 'Modem';
-        $ret['Edit']['Modem']['relation'] = $this->modems;
+        $ret['Edit']['Modem']['count'] = $this->modems_count;
+        $ret['Edit']['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
+            collect([new Modem()]) :
+            $this->modems;
 
         if (Module::collections()->has('BillingBase')) {
-            // view has many version 2
             $ret['Edit']['Item']['class'] = 'Item';
-            $ret['Edit']['Item']['relation'] = $this->items;
-            $ret['Billing']['Item']['class'] = 'Item';
-            $ret['Billing']['Item']['relation'] = $this->items;
+            $ret['Edit']['Item']['count'] = $this->items_count;
+            $ret['Edit']['Item']['relation'] = $this->items_count >= $relationThreshhold ?
+                collect([new \Modules\BillingBase\Entities\Item()]) :
+                $this->items;
+
             $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
+
+            $ret['Billing']['Item'] = $ret['Edit']['Item'];
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
@@ -199,42 +208,21 @@ class Contract extends \BaseModel
                 $resultingDebt = $this->getResultingDebt();
                 $ret['Edit']['DebtResult']['view']['vars']['debt'] = $resultingDebt['amount'];
                 $ret['Edit']['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
-            }
 
-            // Show invoices in 2 panels
-            if (! $this->relationLoaded('invoices')) {
-                $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->get());
-            }
-
-            $invoicesPanel1 = collect();
-            $countPanel1 = $this->invoices->count() > 15 ? 15 : $this->invoices->count();
-
-            for ($i = 0; $i < $countPanel1; $i++) {
-                $invoicesPanel1->push($this->invoices[$i]);
-            }
-
-            if (Module::collections()->has('OverdueDebts')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
-                $ret['Billing']['Debt']['relation'] = $this->debts;
+                $ret['Billing']['Debt']['count'] = $this->debts_count;
+                $ret['Billing']['Debt']['relation'] = $this->debts_count >= $relationThreshhold ?
+                    collect([new \Modules\OverdueDebts\Entities\Debt()]) :
+                    $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
-            $ret['Billing']['Invoice']['relation'] = $invoicesPanel1;
+            $ret['Billing']['Invoice']['count'] = $this->invoices_count;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
-
-            // 2nd panel with old invoices - collapsed and in 2 columns
-            if ($this->invoices->count() > 15) {
-                $invoicesPanel2 = collect();
-
-                for ($i = 15; $i < $this->invoices->count(); $i++) {
-                    $invoicesPanel2->push($this->invoices[$i]);
-                }
-
-                $ret['Billing']['OldInvoices']['view']['view'] = 'billingbase::Contract.oldInvoices';
-                $ret['Billing']['OldInvoices']['view']['vars']['invoices'] = $invoicesPanel2;
-                $ret['Billing']['OldInvoices']['panelOptions']['display'] = 'none';
-            }
+            $ret['Billing']['Invoice']['relation']['invoices'] = $this->invoices_count >= $relationThreshhold ?
+                collect([new \Modules\BillingBase\Entities\Invoice()]) :
+                $this->invoices()->orderBy('id', 'desc')->get();
         }
 
         if (Module::collections()->has('ProvVoipEnvia') &&
@@ -254,8 +242,7 @@ class Contract extends \BaseModel
             $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
             // for better navigation: show modems also in envia TEL blade
-            $ret['envia TEL']['Modem']['class'] = 'Modem';
-            $ret['envia TEL']['Modem']['relation'] = $this->modems;
+            $ret['envia TEL']['Modem'] = $ret['Edit']['Modem'];
         }
 
         if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
@@ -269,6 +256,22 @@ class Contract extends \BaseModel
         $this->addViewHasManyTickets($ret);
 
         return $ret;
+    }
+
+    public function setRelationCounts()
+    {
+        $relations = ['modems'];
+
+        if (Module::collections()->has('BillingBase')) {
+            $relations[] = 'invoices';
+            $relations[] = 'items';
+        }
+
+        if (Module::collections()->has('OverdueDebts')) {
+            $relations[] = 'debts';
+        }
+
+        $this->loadCount($relations);
     }
 
     public function view_belongs_to()

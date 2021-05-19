@@ -59,6 +59,13 @@ class BaseModel extends Eloquent
     ];
 
     /**
+     * Contains all implemented index filters and is also used as whitelist.
+     *
+     * @var array
+     */
+    public const AVAILABLE_FILTERS = [];
+
+    /**
      * Helper to get the model name.
      *
      * @author Patrick Reichel
@@ -251,6 +258,23 @@ class BaseModel extends Eloquent
         $cols = implode(',', $cols);
 
         return $cols;
+    }
+
+    /**
+     * Get the filter to use for index view (used to show only new Tickets).
+     * To make the filter available in datatables we use the session.
+     *
+     * @author Patrick Reichel, Christian Schramm
+     */
+    public static function storeIndexFilterIntoSession()
+    {
+        $filter = request('show_filter', 'all');
+
+        if (! in_array($filter, self::AVAILABLE_FILTERS)) {
+            $filter = 'all';
+        }
+
+        Session::put(class_basename(self::class).'_show_filter', $filter);
     }
 
     /**

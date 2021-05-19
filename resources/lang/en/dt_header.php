@@ -143,12 +143,15 @@ return [
     'mpr.name' => 'Name',
     'mpr.id'    => 'ID',
     // NetElement
-    'netelement.id' => 'ID',
-    'netelement.name' => 'Netelement',
-    'netelement.ip' => 'IP Adress',
-    'netelement.state' => 'State',
-    'netelement.pos' => 'Position',
-    'netelement.options' => 'Options',
+    'netelement' => [
+        'id' => 'ID',
+        'name' => 'Netelement',
+        'ip' => 'IP Adress',
+        'state' => 'State',
+        'pos' => 'Position',
+        'options' => 'Options',
+        'kml_file' => 'KML File',
+    ],
     // NetElementType
     'netelementtype.name' => 'Netelementtype',
     //HfcSnmp

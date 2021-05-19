@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Queue;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
 
@@ -25,7 +26,7 @@ class ConfigfileObserver
     {
         $this->updateProvision($configfile, false);
 
-        \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $configfile->id));
+        Queue::pushOn('high', new \Modules\ProvBase\Jobs\ConfigfileJob(null, $configfile->id));
         // $configfile->build_corresponding_configfiles();
         // with parameter one the children are built
         // $configfile->search_children(1);
@@ -43,7 +44,7 @@ class ConfigfileObserver
         $childrenQuery->update(['parent_id' => $configfile->parent_id]);
 
         foreach ($children as $child) {
-            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob(null, $child->id));
+            Queue::pushOn('high', new \Modules\ProvBase\Jobs\ConfigfileJob(null, $child->id));
         }
     }
 

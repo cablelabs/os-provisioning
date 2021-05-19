@@ -1,4 +1,4 @@
-fnDrawCallback: function(oSettings) {
+drawCallback: function(oSettings) {
     if ( ($('#datatable tr').length <= this.api().page.info().length) && (this.api().page.info().page == 0) ){
         $('.dataTables_paginate').hide();
         $('.dataTables_info').hide();

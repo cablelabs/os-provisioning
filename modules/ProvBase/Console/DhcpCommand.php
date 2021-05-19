@@ -3,12 +3,13 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvBase\Traits\DhcpCommandTrait;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\NetGw;
+use Modules\ProvBase\Entities\Endpoint;
+use Modules\ProvBase\Entities\ProvBase;
 
 class DhcpCommand extends Command
 {
-    use DhcpCommandTrait;
-
     /**
      * The console command name.
      *
@@ -40,37 +41,43 @@ class DhcpCommand extends Command
      */
     public function handle()
     {
-        // if module HA not enabled: queue
-        if (! \Module::collections()->has('ProvHA')) {
-            $this->doQueueCommand();
+        // Global Config part
+        $prov = ProvBase::first();
+        $prov->make_dhcp_glob_conf();
+        $prov->make_dhcp_default_network_conf();
 
-            return;
+        echo "Build modem related files ...\n";
+        Modem::make_dhcp_cm_all();
+        echo "Build CPE related files ...\n";
+        Modem::create_ignore_cpe_dhcp_file();
+        Modem::createDhcpBlockedCpesFile();
+
+        Endpoint::makeDhcp4All();
+        Endpoint::makeDhcp6All();
+
+        if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('mta')) {
+            echo "Build MTA related files ...\n";
+            \Modules\ProvVoip\Entities\Mta::make_dhcp_mta_all();
         }
 
-        // if not a slave machine: queue
-        if ('slave' != config('provha.hostinfo.ownState')) {
-            $this->doQueueCommand();
-
-            return;
+        // don't run this command during a new installation
+        // this is needed, due to cmts to netgw renaming
+        $table = (new \ReflectionClass(NetGw::class))->getDefaultProperties()['table'];
+        if (\Schema::hasTable($table)) {
+            echo "Build NetGw related files ...\n";
+            foreach (NetGw::where('type', 'cmts')->get() as $cmts) {
+                $cmts->makeDhcpConf();
+            }
         }
 
-        // on HA slave: execute (is not allowed to write to database and therefore not allowed to queue
-        $this->doExecuteCommand();
-    }
+        // Restart dhcp server
+        $dir = storage_path('systemd/');
+        if (! is_dir($dir)) {
+            mkdir($dir, 0700, true);
+            chown($dir, 'apache');
+        }
+        touch($dir.'dhcpd');
 
-    /**
-     * Push to queue for asyncronous, non-blocking execution.
-     */
-    private function doQueueCommand()
-    {
-        \Queue::push(new \Modules\ProvBase\Jobs\DhcpJob());
-    }
-
-    /**
-     * Execute the command directly.
-     */
-    private function doExecuteCommand()
-    {
-        $this->executeCommand();
+        system('/usr/bin/chown -R apache /etc/dhcp-nmsprime/ /etc/kea/');
     }
 }

@@ -7,11 +7,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Modules\ProvBase\Traits\DhcpCommandTrait;
 
 class DhcpJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, DhcpCommandTrait;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -30,6 +29,6 @@ class DhcpJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->executeCommand();
+        \Artisan::call('nms:dhcp');
     }
 }

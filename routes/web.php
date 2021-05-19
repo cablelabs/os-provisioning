@@ -34,6 +34,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web']], function () {
     ]);
 });
 
+Broadcast::routes();
+
 // Core Admin API
 BaseRoute::group([], function () {
     BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
