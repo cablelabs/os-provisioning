@@ -173,7 +173,11 @@ var Link = joint.shapes.custom.Link;
 
 function arrange(tree) {
     return (function fn(tree) {
-        var subdata = unzip(tree.children.map(fn));
+        if(tree.children){
+            var subdata = unzip(tree.children.map(fn));
+        }else{
+            var subdata = unzip(tree.map(fn));
+        }
         var subtrees = subdata[0];
         var subextent_list = subdata[1];
 
@@ -270,24 +274,24 @@ function draw_tree(graph, tree, xoff, yoff, xscale, yscale) {
     var x0 = xoff + tree.child_offset * xscale;
     var y0 = yoff;
 
-
-    if (tree.children.length > 0) {
-        tree.shape.position(x0, y0);
+    if(tree.shape) {
+        if (tree.children.length > 0) {
+            tree.shape.position(x0, y0);
+        }
+        tree.shape.addTo(graph);
+        if (tree.parent.shape) {
+            tree.parent.shape.embed(tree.shape);
+            tree.shape.position(x0, y0 - yscale / 2);
+            var link = new Link({
+                z: 4,
+                source: {id: tree.parent.shape.id},
+                target: {id: tree.shape.id}
+            });
+            link.addTo(graph);
+            link.reparent();
+            tree.parent.shape.toggle(false);
+        }
     }
-    tree.shape.addTo(graph);
-    if (tree.parent) {
-        tree.parent.shape.embed(tree.shape);
-        tree.shape.position(x0, y0 - yscale / 2);
-        var link = new Link({
-            z: 4,
-            source: {id: tree.parent.shape.id},
-            target: {id: tree.shape.id}
-        });
-        link.addTo(graph);
-        link.reparent();
-        tree.parent.shape.toggle(false);
-    }
-
     for (const i in tree.children) {
         draw_tree(graph, tree.children[i], x0, y0 + yscale,
             xscale, yscale);
