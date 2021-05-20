@@ -100,11 +100,11 @@ Relation Blade is used inside a Panel Element to display relational class object
         @php
             $dtName = strtolower($tab['name']).$class.'Datatable';
         @endphp
-        <table id="{{ $dtName }}" class="table table-hover datatable table-bordered d-table">
+        <table id="{{ $dtName }}" class="table table-hover datatable table-bordered d-table w-100">
             <thead>
                 <tr>
-                    <th style="width:20px;"></th>
-                    <th style="width:100%;">Label</th>
+                    <th class="w-5"></th>
+                    <th class="w-100">Label</th>
                 </tr>
             </thead>
             <tbody>
