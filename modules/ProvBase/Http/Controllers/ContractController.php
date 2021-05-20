@@ -6,7 +6,6 @@ use DB;
 use Module;
 use Bouncer;
 use Session;
-use Illuminate\Support\Str;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Contract;
 
@@ -298,19 +297,21 @@ class ContractController extends \BaseController
         return $data;
     }
 
-    public function getRelationDatatable(Contract $contract, $relation)
+    public function getRelationDatatable(Contract $contract, $relationClass)
     {
-        return datatables($contract->$relation())
-            ->addColumn('checkbox', function ($relation) {
-                if (method_exists($relation, 'set_index_delete')) {
-                    $relation->set_index_delete();
+        $relationFn = \Illuminate\Support\Str::plural(strtolower($relationClass));
+
+        return datatables($contract->$relationFn())
+            ->addColumn('checkbox', function ($model) {
+                if (method_exists($model, 'set_index_delete')) {
+                    $model->set_index_delete();
                 }
 
-                return "<input style='simple' align='center' class='' name='ids[".$relation->id."]' type='checkbox' value='1' ".
-                ($relation->index_delete_disabled ? 'disabled' : '').'>';
+                return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
+                ($model->index_delete_disabled ? 'disabled' : '').'>';
             }, 0)
-            ->addColumn('label', function ($model) use ($relation) {
-                return '<a href="'.route(ucfirst(Str::singular($relation)).'.edit', $model->id).'">'.
+            ->addColumn('label', function ($model) use ($relationClass) {
+                return '<a href="'.route($relationClass.'.edit', $model->id).'">'.
                 $model->view_icon().' '.$model->label().'</a>';
             }, 1)
             ->only(['checkbox', 'label'])

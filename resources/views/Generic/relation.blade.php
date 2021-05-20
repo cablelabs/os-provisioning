@@ -97,7 +97,10 @@ Relation Blade is used inside a Panel Element to display relational class object
             @endforeach
         </table>
     @else
-        <table id="{{ $class }}-datatable" class="table table-hover datatable table-bordered d-table">
+        @php
+            $dtName = strtolower($tab['name']).$class.'Datatable';
+        @endphp
+        <table id="{{ $dtName }}" class="table table-hover datatable table-bordered d-table">
             <thead>
                 <tr>
                     <th style="width:20px;"></th>
@@ -109,9 +112,8 @@ Relation Blade is used inside a Panel Element to display relational class object
         </table>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                let {{ $class }} = $('#{{ $class }}-datatable').DataTable({
+                let {{ $dtName }} = $('#{{ $dtName }}').DataTable({
                     @include('datatables.lang')
-                    @include('datatables.paginate')
                     dom: 'rtip',
                     columnDefs: [
                         {
@@ -123,7 +125,7 @@ Relation Blade is used inside a Panel Element to display relational class object
                     processing: true, {{-- show loader--}}
                     serverSide: true, {{-- enable Serverside Handling--}}
                     deferRender: true,
-                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => Str::lower(Str::plural($class))]) }}',
+                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => $class]) }}',
                     columns:[
                         {data: 'checkbox', orderable: false, searchable: false},
                         {data: 'label', orderable: false, searchable: false}
