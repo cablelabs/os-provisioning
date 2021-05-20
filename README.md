@@ -107,7 +107,7 @@ NMS Prime started as an German initiative from ISP's for ISP's with the goal in 
 
 **Roadmap**
 
-See [Upcoming Developments](https://devel.nmsprime.com/confluence/x/oQAQBQ)
+See [Upcoming Developments](https://github.com/cablelabs/os-provisioning/wiki)
 
 **License**
 
