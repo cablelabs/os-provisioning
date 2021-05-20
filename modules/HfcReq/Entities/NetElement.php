@@ -404,6 +404,7 @@ class NetElement extends \BaseModel
         } else {
             $url = route('NetElement.controlling_edit', [$this->id, 0, 0]);
         }
+
         return $url;
     }
 
