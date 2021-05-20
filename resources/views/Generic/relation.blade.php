@@ -56,8 +56,8 @@ Relation Blade is used inside a Panel Element to display relational class object
             {!! Form::close() !!}
         @endif
     @endcan
-    @if($relation)
-        @can('delete', $relation->get(0))
+    @if(isset($relation[0]))
+        @can('delete', $relation[0])
             {{-- Delete Button --}}
             @if (! isset($options['hide_delete_button']) && isset($relation[0]))
                 <div class="col align-self-end">
