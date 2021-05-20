@@ -169,6 +169,7 @@ var Bubble = joint.shapes.custom.Bubble;
 var House = joint.shapes.custom.House;
 var Block = joint.shapes.custom.Block;
 var Cluster = joint.shapes.custom.Cluster;
+var Cloud = joint.shapes.custom.Cloud;
 var Link = joint.shapes.custom.Link;
 
 function arrange(tree) {
@@ -192,74 +193,110 @@ function arrange(tree) {
 
         var result_extents = cons([0, 0], extents_merge_list(subextent_list_positioned));
         var shape;
-        if (tree.netelementtype.name === 'Cluster') {
-            shape = new Cluster({
-                id: tree.id,
-                attrs: {
-                    link: {
-                        xlinkHref: 'https://jointjs.com'
-                    },
-                    label: {text: tree.name}
-                }
-            });
+        var status_color = get_color(tree.bs_class);
+        if(tree.netelementtype){
+            switch (tree.netelementtype.name) {
+                case 'Cluster':
+                case 'Net':
+                    shape = new Cloud({
+                        id: tree.id,
+                        attrs: {
+                            link: {
+                                xlinkHref: tree.url ? tree.url : '#',
+                            },
+                            label: {text: tree.name},
+                            path: {fill: status_color},
+                        }
+                    });
+                    break;
+                case 'Passive Component':
+                    shape = new Amplifier({
+                        id: tree.id, attrs: {label: {text: tree.name}}
+                    });
+                    break;
+                case 'modem':
+                    shape = new House({
+                        id: tree.id,
+                        attrs: {
+                            label: {text: tree.id}, body: {stroke: tree.us_snr > 0 ? '#00FF00' : '#FF0000'}
+                        }
+                    });
+                    break;
+                case 'bubble':
+                    shape = new Bubble({
+                        id: tree.id,
+                        collapsed: false,
+                        attrs: {
+                            link: {
+                                xlinkHref: tree.url ? tree.url : '#',
+                                title: 'Total number of modems: ' + tree.m_count + ' \n' +
+                                    'Number of Online modems / Number of Critical modems: '
+                                    + tree.m_online_count + '/' + tree.m_critical_count + '\n' +
+                                    'Avg. Upstream Power: ' + _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)
+                            },
+                            m_count_label: {text: tree.m_count},
+                            m_online_critical_label: {text: tree.m_online_count + '/' + tree.m_critical_count},
+                            m_avg_upstream_label: {text: _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)},
+                        },
+                        parent_id: tree.parent_id,
+                        pagination: tree.pagination,
+                    });
+                    shape.toggle();
+                    break;
+                case 'load_more':
+                    shape = new joint.shapes.standard.Circle();
+                    shape.size(50, 50);
+                    shape.attr('root/title', 'Load more modems...');
+                    shape.attr('label/text', '+' + (tree.total - tree.to));
+                    shape.attr('body/fill', 'lightblue');
+                    shape.attr(['root', 'cursor'], 'pointer');
+                    shape.set('node_id', tree.node_id);
+                    shape.set('parent_id', tree.parent_id);
+                    shape.set('next_page', tree.next_page);
+                    break;
+                case 'Data':
+                case 'Wireless Bridge':
+                case 'airFiber24':
+                case 'SAF Wireless':
+                case 'Airfiber 5':
+                case 'Switch':
+                case 'Cisco Switch SG300-10':
+                case 'Cisco Switch WS-C3560X':
+                case 'ES‑8‑150W':
+                    shape = new Cluster({
+                        id: tree.id,
+                        attrs: {
+                            link: {
+                                xlinkHref: tree.url ? tree.url : '#',
+                            },
+                            label: {text: tree.name},
+                            body: {stroke: status_color},
+                            cluster_dot1: {fill: status_color},
+                            cluster_dot2: {fill: status_color},
+                            cluster_dot3: {fill: status_color},
+                            cluster_line1: {stroke: status_color},
+                            cluster_line2: {stroke: status_color},
+                            cluster_line3: {stroke: status_color},
+                        }
+                    });
+                    break;
 
-        } else if (tree.netelementtype.name === 'Passive Component') {
-            shape = new Amplifier({
-                id: tree.id, attrs: {label: {text: tree.name}}
-            });
-        } else if (tree.netelementtype.name === 'modem') {
-            shape = new House({
-                id: tree.id,
-                attrs: {
-                    label: {text: tree.id}, body: {stroke: tree.us_snr > 0 ? '#00FF00' : '#FF0000'}
-                }
-            });
-        } else if (tree.netelementtype.name === 'bubble') {
-            shape = new Bubble({
-                id: tree.id,
-                collapsed: false,
-                attrs: {
-                    link: {
-                        xlinkHref: tree.url,
-                        title: 'Total number of modems: ' + tree.m_count + ' \n' +
-                            'Number of Online modems / Number of Critical modems: '
-                            + tree.m_online_count + '/' + tree.m_critical_count + '\n' +
-                            'Avg. Upstream Power: ' + _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)
-                    },
-                    m_count_label: {text: tree.m_count},
-                    m_online_critical_label: {text: tree.m_online_count + '/' + tree.m_critical_count},
-                    m_avg_upstream_label: {text: _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)},
-                },
-                parent_id: tree.parent_id,
-                pagination: tree.pagination,
-            });
-            shape.toggle();
-        } else if (tree.netelementtype.name === 'load_more') {
-            shape = new joint.shapes.standard.Circle();
-            shape.size(50, 50);
-            shape.attr('root/title', 'Load more modems...');
-            shape.attr('label/text', '+' + (tree.total-tree.to));
-            shape.attr('body/fill', 'lightblue');
-            shape.attr(['root','cursor'], 'pointer');
-            shape.set('node_id', tree.node_id);
-            shape.set('parent_id', tree.parent_id);
-            shape.set('next_page', tree.next_page)
-        }else {
-            shape = new Amplifier({
-                id: tree.id,
-                attrs: {
-                    link: {
-                        xlinkHref: '/admin/NetElement/'+tree.id+'/controlling/0/0'
-                    },
-                    label: {
-                        text: tree.name
-                    },
-                    header: {stroke: 'green'}
-                }
-            });
-            shape.toggle(false);
+                default:
+                    shape = new Amplifier({
+                        id: tree.id,
+                        attrs: {
+                            link: {
+                                xlinkHref: tree.url ? tree.url : '#',
+                            },
+                            label: {
+                                text: tree.name
+                            },
+                            header: {stroke: status_color}
+                        }
+                    });
+                    shape.toggle(false);
+            }
         }
-
         var result_tree = new Tree(0, [], shape);
         result_tree.extents = result_extents;
         for (var i in subtrees_positioned) {
@@ -268,6 +305,24 @@ function arrange(tree) {
 
         return [result_tree, result_extents];
     })(tree)[0];
+}
+
+function get_color(bs_class) {
+    var color;
+    switch (bs_class) {
+        case 'warning':
+            color = '#f0ad4e';
+            break;
+        case 'info':
+            color = '#5bc0de';
+            break;
+        case 'danger':
+            color = '#d9534f';
+            break;
+        default:
+            color = 'green'
+    }
+    return color;
 }
 
 function draw_tree(graph, tree, xoff, yoff, xscale, yscale) {

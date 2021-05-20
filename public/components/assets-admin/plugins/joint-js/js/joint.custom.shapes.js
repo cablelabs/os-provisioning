@@ -121,10 +121,10 @@ joint.dia.Element.define('custom.Amplifier', {
             tagName: 'a',
             selector: 'link',
             children: [
-               {
+                {
                     tagName: 'text',
                     selector: 'label'
-                },{
+                }, {
                     tagName: 'polygon',
                     selector: 'header'
                 }]
@@ -420,6 +420,106 @@ joint.dia.Element.define('custom.Bubble', {
         });
     }
 });
+
+var Path = joint.dia.Element.define('custom.Cloud', {
+    size: {width: 50, height: 50},
+    collapsed: false,
+    attrs: {
+        link: {
+            xlinkShow: 'new',
+            cursor: 'pointer'
+        },
+        path: {
+            refD: 'm 465.83684,466.9869 c -18.8823,0 -37.6499,7.7751 -51.0017,21.127 -8.4122,8.4121 -14.6043,18.9734 -18.0383,30.3583 -8.2539,1.5581 -16.0492,5.5866 -21.9931,11.5304 -7.7473,7.7473 -12.2573,18.6331 -12.2573,29.5895 0,10.9565 4.51,21.8458 12.2573,29.5931 7.7474,7.7473 18.6367,12.2573 29.5931,12.2573 l 187.4365,0 c 6.9935,0 13.9453,-2.8775 18.8904,-7.8224 4.9452,-4.9451 7.8227,-11.8971 7.8227,-18.8906 0,-6.9935 -2.8775,-13.9417 -7.8227,-18.8868 -4.9147,-4.9149 -11.8119,-7.784 -18.7617,-7.8193 -1.3562,-12.6709 -7.0967,-24.867 -16.1148,-33.8851 -10.3847,-10.3847 -24.9798,-16.4314 -39.666,-16.4314 -3.5656,0 -7.1233,0.3656 -10.6192,1.0539 -2.5582,-3.8175 -5.4715,-7.3951 -8.7235,-10.6469 -13.3518,-13.3519 -32.1193,-21.127 -51.0017,-21.127 z', // path offset is 10,10
+            fill: 'red',
+            stroke: 'black'
+        },
+        label: {
+            textVerticalAnchor: 'bottom',
+            textAnchor: 'left',
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            fill: '#222222'
+        },
+        button: {
+            refX: '50%',
+            refX2: 25,
+            refY: 7,
+            cursor: 'pointer',
+            event: 'element:button:pointerdown',
+            title: 'Collapse / Expand',
+        },
+        buttonBorder: {
+            fill: '#4C65DD',
+            stroke: '#FFFFFF',
+            strokeWidth: 0.5,
+            r: 10,
+            cx: 7,
+            cy: 7
+        },
+        buttonIcon: {
+            fill: 'none',
+            stroke: '#FFFFFF',
+            strokeWidth: 1
+        },
+    }
+}, {
+    markup: [{
+        tagName: 'a',
+        selector: 'link',
+        children: [
+            {
+                tagName: 'path',
+                selector: 'path'
+            }, {
+                tagName: 'text',
+                selector: 'label'
+            }]
+    }, {
+        tagName: 'g',
+        selector: 'button',
+        children: [{
+            tagName: 'circle',
+            selector: 'buttonBorder'
+        }, {
+            tagName: 'path',
+            selector: 'buttonIcon'
+        }]
+    },],
+
+    toggle: function (shouldCollapse) {
+        var buttonD;
+        var collapsed = (shouldCollapse === undefined) ? !this.get('collapsed') : shouldCollapse;
+        if (collapsed) {
+            buttonD = 'M 2 7 12 7 M 7 2 7 12';
+        } else {
+            buttonD = 'M 2 7 12 7';
+            // this.fitChildren();
+        }
+
+
+        this.attr(['buttonIcon', 'd'], buttonD);
+        this.set('collapsed', collapsed);
+    },
+
+    isCollapsed: function () {
+        return Boolean(this.get('collapsed'));
+    },
+
+    fitChildren: function () {
+        var padding = 10;
+        this.fitEmbeds({
+            padding: {
+                top: headerHeight + padding,
+                left: padding,
+                right: padding,
+                bottom: padding
+            },
+            deep: true
+        });
+    }
+});
+
 
 joint.dia.Element.define('custom.Cluster', {
     size: {width: 50, height: 50},
