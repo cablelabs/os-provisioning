@@ -19,6 +19,8 @@ class NetElement extends \BaseModel
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
     protected $with = ['netelementtype'];
 
+    protected $appends = ['url', 'bs_class'];
+
     public $guarded = ['kml_file_upload'];
 
     /**
@@ -153,6 +155,11 @@ class NetElement extends \BaseModel
         }
 
         return 'warning';
+    }
+
+    public function getBsClassAttribute(): string
+    {
+        return $this->get_bsclass();
     }
 
     //for empty relationships
@@ -375,6 +382,26 @@ class NetElement extends \BaseModel
         }
 
         return route('TreeErd.show', ['field' => 'id', 'search' => $this->id]);
+    }
+
+    /**
+     * Url of netelement at ERD-Vicinity graph as model Attribute
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        $url = '';
+        if ($this->link) {
+            $url = $this->link;
+        } elseif ($this->netelementtype_id == 8) {
+            $url = route('TreeErd.show', ['parent_id', $this->id]);
+        } elseif ($this->netelementtype_id == 9) {
+            $url = Module::collections()->has('Satkabel') ? route('NetElement.tapControlling', $this->id) : '';
+        } else {
+            $url = route('NetElement.controlling_edit', [$this->id, 0, 0]);
+        }
+        return $url;
     }
 
     /**
