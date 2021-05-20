@@ -220,7 +220,7 @@ class Contract extends \BaseModel
             $ret['Billing']['Invoice']['count'] = $this->invoices_count;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
-            $ret['Billing']['Invoice']['relation']['invoices'] = $this->invoices_count >= $relationThreshhold ?
+            $ret['Billing']['Invoice']['relation'] = $this->invoices_count >= $relationThreshhold ?
                 collect([new \Modules\BillingBase\Entities\Invoice()]) :
                 $this->invoices()->orderBy('id', 'desc')->get();
         }
