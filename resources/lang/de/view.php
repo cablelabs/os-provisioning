@@ -30,6 +30,7 @@ return [
     'jQuery_colvisRestore'      => 'Wiederherstellen',
     'jQuery_colvisReset'        => 'Zurücksetzen',
     'jQuery_ExportTo'           => 'Exportieren als',
+    'jQuery_copyToClipboard'    => 'Zwischenablage',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Wohnungen',
@@ -75,6 +76,7 @@ return [
     'Menu_NetElementType'       => 'Netzelementtypen',
     'Menu_Realty'               => 'Liegenschaften',
     'Menu_TicketType'           => 'Tickettypen',
+    'Menu_TicketReceiver'       => 'Ticketzentrale',
     'Menu_Nets'                 => 'Netze',
     'Menu_allNets'              => 'Alle Netze',
     'Menu_VicinityGraph'        => 'Nachbarschaftsdiagramm',
@@ -267,6 +269,7 @@ return [
     'Button_Save'               => 'Speichern',
     'Button_Save / Restart'     => 'Speichern / Neustart',
     'Button_Search'             => 'Suchen',
+    'Button_SendToEnviaTEL'     => 'An envia TEL senden',
     'Button_Submit'             => 'Senden',
     'Button_manage'             => 'Verwalten, schließt alle Basis und Sonderfähigkeiten mit ein. Schnellauswahl um alle Aktionen auf allen Seiten dieses Moduls auszuführen.',
     'Header_Tree Table'         => 'Baumdiagramm|Baumdiagramme',
@@ -428,17 +431,6 @@ return [
     // Contract
     //
     'Contract_Numberrange_Failure' => 'Keine freie Vertragsnummer für die gewählte Kostenstelle gefunden.',
-
-    'Ticket_State_New' => 'Neu',
-    'Ticket_State_In Process' => 'In Bearbeitung',
-    'Ticket_State_Closed' => 'Geschlossen',
-    'Ticket_Type_General' => 'Allgemein',
-    'Ticket_Type_Technical' => 'Technik',
-    'Ticket_Type_Accounting' => 'Buchhaltung',
-    'Ticket_Priority_Trivial' => 'Niedrig',
-    'Ticket_Priority_Minor' => 'Medium',
-    'Ticket_Priority_Major' => 'Hoch',
-    'Ticket_Priority_Critical' => 'Kritisch',
     'Numberrange_Start' => 'Beginn',
     'Numberrange_End' => 'Ende',
     'Numberrange_Suffix' => 'Suffix',
@@ -525,6 +517,7 @@ return [
     'Message' => 'Nachricht',
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
+    'parentNetelement' => 'Übergeordnetes Netzelement',
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',
@@ -551,6 +544,7 @@ return [
     'tab' => [
         'Create Connection Infos' => 'Anschlussinfo generieren',
     ],
+
     'ticket' => [
         'priority' => [
             'critical' => 'Kritisch',
@@ -560,11 +554,37 @@ return [
         ],
         'state' => [
             'New' => 'Neu',
-            'In process' => 'In Bearbeitung (pausiert)',
             'Closed' => 'Geschlossen',
-            'Accepted' => 'Angenommen',
-            'In work' => 'Wird gerade bearbeitet',
+            'Paused' => 'In Bearbeitung (pausiert)',
+            'In Progress' => 'Wird gerade bearbeitet',
         ],
+        'notification' => [
+            'NewTicket' => 'Neues Ticket',
+            'RemovedFromTicket' => 'Nicht mehr zugewiesen',
+            'TicketAccepted' => 'Ticket angenommen',
+            'TicketDeclined' => 'Ticket abgelehnt',
+            'TicketFinished' => 'Ticket abgeschlossen',
+            'TicketNoUsers' => 'Ticket benötigt Zuweisung',
+            'TicketUpdated' => 'Ticket aktualisiert',
+        ],
+        'close' => 'Abschließen',
+        'pause' => 'Pausieren',
+        'resume' => 'Fortsetzen',
+        'accept' => 'Annehmen',
+        'decline' => 'Ablehnen',
+        'busy' => 'Beschäftigt',
+        'available' => 'Verfügbar',
+        'ticketReceiver' => 'Ticketzentrale',
+        'legacyTicket' => 'Veraltetes Ticket ohne Zuweisung',
+        'late' => 'verspätet',
+        'showContract' => 'Zum Vertrag',
+        'showModem' => 'Zum Modem',
+        'viewTopography' => 'Topografie',
+        'noTickettype' => 'Es wurden keine Tickettypen gesetzt.',
+        'enableBrowserNotifications' => 'Bitte Browser-Benachrichtigungen einschalten',
+        'notificationText' => 'Um alle Features der Ticketzentrale zu nutzen, muss die Berechtigung für Browser-Benachrichtigungen erteilt werden. Dies sorgt dafür, dass Sie über neue Tickets benachrichtigt werden können.',
+        'openPermissionDialog' => 'Berechtigung erteilen',
+        'noNotifications' => 'Ich will keine Benachrichtigungen!',
     ],
     'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Zeit',
@@ -585,5 +605,15 @@ return [
         'solved' => 'Heute gelöst',
         'stacked' => 'haben weitere Tickets',
         'summary' => 'Übersicht',
+    ],
+    'contract' => [
+        'groundForDismissal' => 'Kündigungsgrund',
+        'groundsForDismissal' => [
+            'unknown' => 'unbekannt',
+            'relocation' => 'Umzug',
+            'unsatisfied' => 'unzufrieden',
+            'canceled by us' => 'von uns gekündigt',
+            'deceased' => 'verstorben',
+        ],
     ],
 ];

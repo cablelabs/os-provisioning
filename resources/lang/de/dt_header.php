@@ -49,6 +49,7 @@ return [
         'number' => 'Vertrags- Nummer',
         'street' => 'Straße',
         'zip' => 'PLZ',
+        'ground_for_dismissal' => 'Kündigungsgrund',
     ],
     // Auth
     'users' => [
@@ -72,8 +73,11 @@ return [
     'company.phone' => 'Telefonnummer',
     'company.mail' => 'E-Mail',
     // Costcenter
-    'costcenter.name' => 'Kostenstelle',
-    'costcenter.number' => 'Nummer',
+    'costcenter' => [
+        'name' => 'Kostenstelle',
+        'number' => 'Nummer',
+        'billing_month' => 'Abrechnungsmonat',
+    ],
     'debt' => [
         'date' => 'Belegdatum',
         'due_date' => 'Fälligkeitsdatum',
@@ -139,13 +143,15 @@ return [
     'mpr.name' => 'Name',
     'mpr.id'    => 'ID',
     // NetElement
-    'netelement.id' => 'ID',
-    'netelement.name' => 'Netzelement',
-    'netelement.ip' => 'IP Adresse',
-    'netelement.state' => 'Status',
-    'netelement.pos' => 'Position',
-    'netelement.options' => 'Optionen',
-
+    'netelement' => [
+        'id' => 'ID',
+        'name' => 'Netzelement',
+        'ip' => 'IP Adresse',
+        'state' => 'Status',
+        'pos' => 'Position',
+        'options' => 'Optionen',
+        'kml_file' => 'KML Datei',
+    ],
     // NetElementType
     'netelementtype.name' => 'Netzelementtyp',
     //HfcSnmp
@@ -210,6 +216,7 @@ return [
     'modem.inventar_num' => 'Inventar-Nr',
     'modem.lastname' => 'Nachname',
     'modem.mac' => 'MAC Adresse',
+    'modem.serial_num' => 'Seriennummer / CWMP-ID',
     'modem.model' => 'Modell',
     'modem.name' => 'Modemname',
     'modem.street' => 'Straße',

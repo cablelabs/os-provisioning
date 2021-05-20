@@ -2,6 +2,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Queue;
 use Artisan;
 use Modules\ProvBase\Entities\Qos;
 use Nwidart\Modules\Facades\Module;
@@ -21,9 +22,6 @@ class ProvBaseObserver
 {
     public function updated($model)
     {
-        // TODO: Call this as a job
-        Artisan::call('nms:dhcp');
-
         $changes = $model->getDirty();
 
         // create new CPE ignore file
@@ -33,10 +31,13 @@ class ProvBaseObserver
 
         // recreate default network, if provisioning server ip address has been changed
         if (array_key_exists('provisioning_server', $changes)) {
-            $model->make_dhcp_default_network_conf();
+            Queue::pushOn('high', new \Modules\ProvBase\Jobs\DhcpJob());
         }
 
-        if (array_key_exists('dhcp_def_lease_time', $changes)) {
+        if (multi_array_key_exists(['dhcp_def_lease_time', 'dhcp_max_lease_time'], $changes)) {
+            // recreate global DHCP config file
+            $model->make_dhcp_glob_conf();
+
             // adjust radiusd config and restart it
             $sed = storage_path('app/tmp/update-sqlippool.sed');
             file_put_contents($sed, "s/^\s*lease_duration\s*=.*/\tlease_duration = $model->dhcp_def_lease_time/");
@@ -76,7 +77,7 @@ class ProvBaseObserver
 
         // build all Modem Configfiles via Job as this will take a long time
         if (multi_array_key_exists(['ds_rate_coefficient', 'us_rate_coefficient', 'max_cpe'], $changes)) {
-            \Queue::push(new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
+            Queue::pushOn('medium', new \Modules\ProvBase\Jobs\ConfigfileJob('cm'));
         }
 
         if (Module::collections()->has('ProvMon') && array_key_exists('ro_community', $changes)) {
@@ -94,7 +95,10 @@ class ProvBaseObserver
                 \DB::connection('mysql-cacti')
                     ->table('host')
                     ->where('hostname', 'like', "cm-%.{$model->getOriginal('domain_name')}")
-                    ->update(['hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')")]);
+                    ->update([
+                        'description' => \DB::raw("REPLACE(description, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                        'hostname' => \DB::raw("REPLACE(hostname, '{$model->getOriginal('domain_name')}', '$model->domain_name')"),
+                    ]);
 
                 \DB::connection('mysql-cacti')
                     ->table('data_input_data')

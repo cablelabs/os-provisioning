@@ -28,8 +28,8 @@ class HfcReqController extends \BaseController
                 ['form_type' => 'text', 'name' => 'rkm_server_password', 'description' => 'RKM Server '.trans('messages.Password'), 'space' => 1],
 
                 ['form_type' => 'text', 'name' => 'video_controller', 'description' => 'Video Controlling Server '.trans('messages.Address'), 'options' => ['placeholder' => '172.20.0.11:1701']],
-                ['form_type' => 'text', 'name' => 'video_controller_username', 'description' => 'RKM Server '.trans('messages.Username')],
-                ['form_type' => 'text', 'name' => 'video_controller_password', 'description' => 'RKM Server '.trans('messages.Password'), 'space' => 1],
+                ['form_type' => 'text', 'name' => 'video_controller_username', 'description' => 'Video Controlling Server '.trans('messages.Username')],
+                ['form_type' => 'text', 'name' => 'video_controller_password', 'description' => 'Video Controlling Server '.trans('messages.Password'), 'space' => 1],
 
                 ['form_type' => 'text', 'name' => 'video_encoder', 'description' => 'Video Encoding Server '.trans('messages.Address'), 'options' => ['placeholder' => '172.20.0.12:1702'], 'space' => 1],
             ];
@@ -65,7 +65,7 @@ class HfcReqController extends \BaseController
         $view_var = $model::find($id);
         $view_header = 'Attach single OIDs';
         $model_pure = \NamespaceController::get_route_name();
-        $headline = BaseViewController::compute_headline($model_pure, $view_header, $view_var).' assign';
+        $headline = BaseViewController::compute_headline($model_pure, $view_header, $view_var).'<li><a href="#">assign</a></li>';
 
         // Get Mibs in case all OIDs from one Mib shall be attached
         $mibs = \Modules\HfcSnmp\Entities\MibFile::select(['id', 'name', 'version'])->get();

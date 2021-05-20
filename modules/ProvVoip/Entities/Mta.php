@@ -150,9 +150,11 @@ class Mta extends \BaseModel
             goto _failed;
         }
 
-        Log::info("docsis -eu -p $conf_file $cfg_file");
+        $dialplan = ($cf->firmware) ? "-dialplan \"/tftpboot/dialplan/{$cf->firmware}\"" : '';
+
+        Log::info("docsis -eu $dialplan -p $conf_file $cfg_file");
         // "&" to start docsis process in background improves performance but we can't reliably proof if file exists anymore
-        exec("docsis -eu -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
+        exec("docsis -eu $dialplan -p $conf_file $cfg_file >/dev/null 2>&1 &", $out);
 
         // TODO: Error handling missing (see Modem for more information)
 
@@ -323,16 +325,21 @@ class Mta extends \BaseModel
             // 'private' is the always working default community
             snmp2_set($fqdn, 'private', '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
         } catch (\Exception $e) {
-            \Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
+            try {
+                // PKTC-IETF-MTA-MIB::pktcMtaDevResetNow
+                snmp2_set($fqdn, 'private', '1.3.6.1.2.1.140.1.1.1.0', 'i', '1', 300000, 1);
+            } catch (\Exception $e) {
+                \Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
 
-            // only ignore error with this error message (catch exception with this string)
-            if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false))) {
-                \Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
-            } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
-                \Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
-            // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
-            } else {
-                \Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
+                // only ignore error with this error message (catch exception with this string)
+                if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false))) {
+                    \Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
+                } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
+                    \Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
+                // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
+                } else {
+                    \Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
+                }
             }
 
             return -1;

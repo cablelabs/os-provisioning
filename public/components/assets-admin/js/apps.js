@@ -620,9 +620,15 @@ var handleSavePanelPosition = function(element) {
             }
             index++;
         })).done(function() {
-            var targetPage = window.location.href;
+            let targetPage = window.location.href;
                 targetPage = targetPage.split('?');
                 targetPage = targetPage[0];
+            let isEdit = targetPage.split('/');
+
+            if (! isNaN(isEdit[isEdit.length -1])) {
+                targetPage = isEdit.slice(0, -1).join('/');
+            }
+
             localStorage.setItem(targetPage, JSON.stringify(newValue));
             $(element).find('[data-id="title-spinner"]').delay(500).fadeOut(500, function() {
                 $(this).remove();
@@ -637,9 +643,15 @@ var handleSavePanelPosition = function(element) {
 var handleLocalStorage = function() {
     "use strict";
     if (typeof(Storage) !== 'undefined' && typeof(localStorage) !== 'undefined') {
-        var targetPage = window.location.href;
+        let targetPage = window.location.href;
             targetPage = targetPage.split('?');
             targetPage = targetPage[0];
+
+        let isEdit = targetPage.split('/');
+
+        if (! isNaN(isEdit[isEdit.length -1])) {
+            targetPage = isEdit.slice(0, -1).join('/');
+        }
         var panelPositionData = localStorage.getItem(targetPage);
 
         if (panelPositionData) {

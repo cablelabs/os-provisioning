@@ -25,6 +25,8 @@
         "phpseclib/phpseclib": "~2.0",
         "intervention/validation": "^2.6",
         "kalnoy/nestedset": "^5.0"
+        "beyondcode/laravel-websockets": "^1.12",
+        "pusher/pusher-php-server": "~3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.0",

@@ -127,7 +127,7 @@ class LoginController extends Controller
 
         self::setDashboardNotifications();
 
-        App\User::where('id', $user->id)->update(['last_login_at' => Carbon::now()]);
+        $user->update(['last_login_at' => Carbon::now()]);
     }
 
     /**
@@ -174,6 +174,10 @@ class LoginController extends Controller
 
         Log::debug($user->login_name.' logged in successfully!');
 
+        if ($activeModules->has('Ticketsystem') && $this->isMobileDevice()) {
+            return route('TicketReceiver.index');
+        }
+
         if ($user->initial_dashboard !== '') {
             return route($user->initial_dashboard);
         }
@@ -191,6 +195,18 @@ class LoginController extends Controller
         }
 
         return route('GlobalConfig.index');
+    }
+
+    /**
+     * Detect Mobile Device with regular expression from http://detectmobilebrowsers.com/
+     *
+     * @return bool
+     */
+    protected function isMobileDevice(): bool
+    {
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+
+        return preg_match(isMobileRegEx(1), $useragent) || preg_match(isMobileRegEx(2), substr($useragent, 0, 4));
     }
 
     /**

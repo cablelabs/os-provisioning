@@ -1759,6 +1759,7 @@ Dipl.-Verwaltungswiss.
 Dipl.-Vet.Med.
 Dipl.-Veterinär
 Dipl.-Veterinär Dr.
+Dipl.-Violinistin
 Dipl.-Violinpädagoge
 Dipl.-Violinpädagogin
 Dipl.-Visagist
@@ -3968,6 +3969,7 @@ Prof.-med.
 Prof.-med.(China)
 Prof.-theol.
 Prof.Dr.-Ing.Dr.h.c.mult. i.R.
+Prof.Dr.med.Dr.
 Prof.em.
 Prof.em. Dr.
 Prof.em. Dr. Dr.

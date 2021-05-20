@@ -6,6 +6,7 @@ use DB;
 use Module;
 use Bouncer;
 use Session;
+use Illuminate\Support\Str;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Contract;
 
@@ -110,12 +111,18 @@ class ContractController extends \BaseController
             $b1[] = ['form_type' => 'text', 'name' => 'related_phonenrs', 'description' => trans('provvoip::view.contractRelatedPns'), 'options' => ['readonly']];
         }
 
+        foreach ($model::GROUNDS_FOR_DISMISSAL as $key => $reason) {
+            $reasons[$reason] = trans("view.contract.groundsForDismissal.$reason");
+        }
+
         $b2 = [
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
             ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
             ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
+            ['form_type' => 'select', 'name' => 'ground_for_dismissal', 'description' => trans('view.contract.groundForDismissal'),
+                'value' => array_merge([null => null], $reasons), ],
         ];
 
         if (Module::collections()->has('BillingBase')) {
@@ -289,5 +296,32 @@ class ContractController extends \BaseController
         }
 
         return $data;
+    }
+
+    public function getRelationDatatable(Contract $contract, $relation)
+    {
+        return datatables($contract->$relation())
+            ->addColumn('checkbox', function ($relation) {
+                if (method_exists($relation, 'set_index_delete')) {
+                    $relation->set_index_delete();
+                }
+
+                return "<input style='simple' align='center' class='' name='ids[".$relation->id."]' type='checkbox' value='1' ".
+                ($relation->index_delete_disabled ? 'disabled' : '').'>';
+            }, 0)
+            ->addColumn('label', function ($model) use ($relation) {
+                return '<a href="'.route(ucfirst(Str::singular($relation)).'.edit', $model->id).'">'.
+                $model->view_icon().' '.$model->label().'</a>';
+            }, 1)
+            ->only(['checkbox', 'label'])
+            ->rawColumns(['checkbox', 'label'])
+            ->setRowClass(function ($model) {
+                if (method_exists($model, 'get_bsclass')) {
+                    return $model->get_bsclass();
+                }
+
+                return $model->view_index_label()['bsclass'] ?? 'info';
+            })
+            ->make();
     }
 }

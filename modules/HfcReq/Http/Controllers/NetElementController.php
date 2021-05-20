@@ -52,15 +52,12 @@ class NetElementController extends BaseController
             $hidden4Tap = 1;
         }
 
-        if ($type == 9) {
-            $parents = $netelement->html_list(NetElement::where('netelementtype_id', 8)->get(), 'name');
-            $types = NetElementType::where('id', $type)->get();
-            $hidden4TapPort = 1;
+        $parents = $netelement->getParentList();
+        $types = NetElementType::get();
 
+        if ($type == 9) {
+            $hidden4TapPort = 1;
             $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
-        } else {
-            $parents = $netelement->getParentList();
-            $types = NetElementType::get();
         }
 
         /*

@@ -30,6 +30,15 @@ class Modem extends \BaseModel
     public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
 
+    /**
+     * Contains all implemented index filters, also used as whitelist
+     *
+     * @var array
+     */
+    public const AVAILABLE_FILTERS = [
+        'sw_rev',
+    ];
+
     public function rules()
     {
         $rules = [
@@ -80,19 +89,10 @@ class Modem extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-
-        // we need to put the filter into the session,
-        // as the upcoming datatables AJAX request won't carry the input parameters
-        if (\Request::filled('modem_show_filter')) {
-            \Session::put('modem_show_filter', \Request::get('modem_show_filter'));
-        }
-        // non-datatable request; current route is null on testing
-        elseif (\Route::getCurrentRoute() && basename(\Route::getCurrentRoute()->uri) == 'Modem') {
-            \Session::forget('modem_show_filter');
-        }
+        $filter = session(class_basename(self::class).'_show_filter', 'all');
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.mac', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
+            'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
             'header' => $this->label(),
             'edit' => ['contract_valid' => 'get_contract_valid'],
@@ -100,7 +100,7 @@ class Modem extends \BaseModel
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
             'order_by' => ['0' => 'desc'],
-            'where_clauses' => self::_get_where_clause(),
+            'where_clauses' => $filter !== 'all' ? [self::getWhereClauseFirmware($filter)] : [],
         ];
 
         if (Module::collections()->has('ProvMon')) {
@@ -139,6 +139,7 @@ class Modem extends \BaseModel
         $label = $this->mac ?: $this->ppp_username;
         $label .= $this->name ? ' - '.$this->name : '';
         $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
+        $label .= $this->ppp_username ? ' - '.$this->ppp_username : '';
 
         return $label;
     }
@@ -174,15 +175,9 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    private static function _get_where_clause()
+    protected static function getWhereClauseFirmware($filter)
     {
-        $filter = \Session::get('modem_show_filter');
-
-        if ($filter) {
-            return ["sw_rev = '$filter'"];
-        } else {
-            return [];
-        }
+        return "`sw_rev` = '{$filter}'";
     }
 
     /**
@@ -584,18 +579,7 @@ class Modem extends \BaseModel
             $content = implode("\n", $lines);
         }
 
-        // lock
-        $fp = fopen(self::CONF_FILE_PATH, 'r+');
-
-        if (! flock($fp, LOCK_EX)) {
-            Log::error('Could not get exclusive lock for '.self::CONF_FILE_PATH);
-        }
-
         self::_write_dhcp_file(self::IGNORE_CPE_FILE_PATH, $content);
-
-        // unlock
-        flock($fp, LOCK_UN);
-        fclose($fp);
     }
 
     /**
@@ -862,14 +846,28 @@ class Modem extends \BaseModel
             return;
         }
 
-        $this->createGenieAcsProvisions($text);
+        preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
+        $settings = json_decode($json[1] ?? null, true);
+
+        $events = [];
+        if ($settings['EVENT']) {
+            foreach ($settings['EVENT'] as $value) {
+                if (! $value) {
+                    continue;
+                }
+
+                $events[$value] = true;
+            }
+        } else {
+            $events['0 BOOTSTRAP'] = true;
+        }
+
+        $this->createGenieAcsProvisions($text, $events);
 
         $preset = [
             'weight' => 0,
             'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
-            'events' => [
-                '0 BOOTSTRAP' => true,
-            ],
+            'events' => $events,
             'configurations' => [
                 [
                     'type' => 'provision',
@@ -881,7 +879,7 @@ class Modem extends \BaseModel
 
         self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
-        unset($preset['events']['0 BOOTSTRAP']);
+        unset($preset['events']);
         $preset['events']['2 PERIODIC'] = true;
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
@@ -961,17 +959,21 @@ class Modem extends \BaseModel
      *
      * @author Roy Schneider
      * @param string $text
+     * @param array $events
      * @return bool
      */
-    public function createGenieAcsProvisions($text)
+    public function createGenieAcsProvisions($text, $events = [])
     {
         $prefix = '';
 
         // during bootstrap always clear the info we have about the device
-        $prov = [
-            "clear('Device', Date.now());",
-            "clear('InternetGatewayDevice', Date.now());",
-        ];
+        $prov = [];
+        if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
+            $prov = [
+                "clear('Device', Date.now());",
+                "clear('InternetGatewayDevice', Date.now());",
+            ];
+        }
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
@@ -1884,7 +1886,10 @@ class Modem extends \BaseModel
             $this->radusergroups()
                 ->where('groupname', '!=', RadGroupReply::$defaultGroup)
                 ->update(['groupname' => $this->qos_id]);
-            $this->restart_modem();
+
+            if (! $this->wasRecentlyCreated) {
+                $this->restart_modem();
+            }
         }
     }
 
@@ -1915,7 +1920,7 @@ class Modem extends \BaseModel
         $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
 
         if ($this->isTR069()) {
-            $prov = json_decode(Modem::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
+            $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
@@ -1937,7 +1942,7 @@ class Modem extends \BaseModel
                 $configfile['text'] = [];
             }
         } else {
-            $configfile = Modem::getConfigfileText("/tftpboot/cm/$this->hostname");
+            $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
 
         $onlineStatus = $this->onlineStatus();
@@ -1966,7 +1971,7 @@ class Modem extends \BaseModel
         $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
-        $lease = $this->validateLease($lease);
+        $lease = self::validateLease($lease);
 
         if ($api) {
             return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
@@ -2049,7 +2054,7 @@ class Modem extends \BaseModel
 
         $conf['mtime'] = strftime('%c', filemtime("$path.cfg"));
 
-        exec("docsis -d $path.cfg", $conf['text']);
+        exec("cd /tmp; docsis -d $path.cfg", $conf['text']);
         $conf['text'] = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $conf['text']);
 
         return $conf;
@@ -2245,5 +2250,65 @@ class Modem extends \BaseModel
         }
 
         return ['bsclass' => 'info', 'text' => trans('messages.modemAnalysis.onlyVoip')];
+    }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+                'action' =>[
+                    'link' => 'tel:'.preg_replace(["/\s+/", "/\//"], '', $this->contract()->first('phone')->phone),
+                    'icon' => 'fa-phone',
+                ],
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Signal Parameters') => [
+                'text' => "US Pwr: {$this->us_pwr} | US SNR: {$this->us_snr} ||DS Pwr: {$this->ds_pwr} | DS SNR: {$this->ds_snr}",
+                'action' => [
+                    'link' => route('ProvMon.index', [$this->id]),
+                    'icon' => 'fa-area-chart',
+                    'title' => trans('view.analysis'),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'us_pwr', 'us_snr', 'ds_pwr', '
+            ds_snr', 'x', 'y',
+        ];
     }
 }

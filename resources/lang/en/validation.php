@@ -142,6 +142,7 @@ return [
     'available'            => 'Theres no entry available in Configfiles - Please insert :attribute',
     'creditor_id'          => ':attribute is not valid.',
     'docsis'               => ':attribute',
+    'geopos'               => 'No valid position. Please make sure, there are no white spaces and the position is given in the format ´Longitude,Latitude´. The precision of the position should be limited to 11 digits after the comma.',
     'invalid_input'        => 'Input invalid – please correct the following errors.',
     'ip_in_range'          => 'The IP address is not inside the previous specified range',
     'ip_larger'            => 'The IP address must have a higher number due to address specification in earlier fields',

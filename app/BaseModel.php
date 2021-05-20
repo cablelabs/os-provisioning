@@ -27,6 +27,12 @@ class BaseModel extends Eloquent
 
     protected $fillable = [];
 
+    /**
+     * @var bool
+     *
+     * @TODO: In future we should use this: https://stackoverflow.com/questions/29407818/is-it-possible-to-temporarily-disable-event-in-laravel/51301753#51301753
+     * or with laravel 8 this: https://laravel.com/docs/8.x/eloquent#saving-a-single-model-without-events
+     */
     public $observer_enabled = true;
 
     protected $connection = 'mysql';
@@ -52,6 +58,13 @@ class BaseModel extends Eloquent
         'form',
         'relations',
     ];
+
+    /**
+     * Contains all implemented index filters and is also used as whitelist.
+     *
+     * @var array
+     */
+    public const AVAILABLE_FILTERS = [];
 
     /**
      * Helper to get the model name.
@@ -246,6 +259,23 @@ class BaseModel extends Eloquent
         $cols = implode(',', $cols);
 
         return $cols;
+    }
+
+    /**
+     * Get the filter to use for index view (used to show only new Tickets).
+     * To make the filter available in datatables we use the session.
+     *
+     * @author Patrick Reichel, Christian Schramm
+     */
+    public static function storeIndexFilterIntoSession()
+    {
+        $filter = request('show_filter', 'all');
+
+        if (! in_array($filter, self::AVAILABLE_FILTERS)) {
+            $filter = 'all';
+        }
+
+        Session::put(class_basename(self::class).'_show_filter', $filter);
     }
 
     /**

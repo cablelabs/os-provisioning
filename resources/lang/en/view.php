@@ -30,6 +30,7 @@ return [
     'jQuery_colvisRestore'      => 'Restore',
     'jQuery_colvisReset'        => 'Reset',
     'jQuery_ExportTo'           => 'Export to',
+    'jQuery_copyToClipboard'    => 'Copy to Clipboard',
     //MENU
     //Main Menu
     'Menu_Apartment'            => 'Apartments',
@@ -75,6 +76,7 @@ return [
     'Menu_NetElementType'       => 'Net Element Types',
     'Menu_Realty'               => 'Realties',
     'Menu_TicketType'           => 'TicketTypes',
+    'Menu_TicketReceiver'       => 'Ticket Receiver',
     'Menu_Nets'                 => 'Nets',
     'Menu_allNets'              => 'All networks',
     'Menu_VicinityGraph'        => 'Vicinity Graph',
@@ -267,6 +269,7 @@ return [
     'Button_Save'               => 'Save',
     'Button_Save / Restart'     => 'Save / Restart',
     'Button_Search'             => 'Search',
+    'Button_SendToEnviaTEL'     => 'Send to envia TEL',
     'Button_Submit'             => 'Submit',
     'Button_manage'             => 'Managing allows or forbids to do everything with each element. This button is a shortcut to manage all entities of this module.',
     'Header_Tree Table'         => 'Tree Table|Tree Tables',
@@ -428,17 +431,6 @@ return [
     // Contract
     //
     'Contract_Numberrange_Failure' => 'No free contract number for selected costcenter available!',
-
-    'Ticket_State_New' => 'New',
-    'Ticket_State_In Process' => 'In Process',
-    'Ticket_State_Closed' => 'Closed',
-    'Ticket_Type_General' => 'General',
-    'Ticket_Type_Technical' => 'Technical',
-    'Ticket_Type_Accounting' => 'Accounting',
-    'Ticket_Priority_Trivial' => 'Trivial',
-    'Ticket_Priority_Minor' => 'Minor',
-    'Ticket_Priority_Major' => 'Major',
-    'Ticket_Priority_Critical' => 'Critical',
     'Numberrange_Start' => 'Start',
     'Numberrange_End' => 'End',
     'Numberrange_Suffix' => 'Suffix',
@@ -525,6 +517,7 @@ return [
     'Message' => 'Message',
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
+    'parentNetelement' => 'Parent netelement',
     'product' => [
         'billingCycles' => [
             'once' => 'once',
@@ -551,6 +544,7 @@ return [
     'tab' => [
         'Create Connection Infos' => 'Create Connection Infos',
     ],
+
     'ticket' => [
         'priority' => [
             'critical' => 'Critical',
@@ -560,11 +554,37 @@ return [
         ],
         'state' => [
             'New' => 'New',
-            'In process' => 'In process (currently paused)',
             'Closed' => 'Closed',
-            'Accepted' => 'Accepted',
-            'In work' => 'In work',
+            'Paused' => 'Paused',
+            'In Progress' => 'In Progress',
         ],
+        'notification' => [
+            'NewTicket' => 'New Ticket',
+            'RemovedFromTicket' => 'You were removed from ticket',
+            'TicketAccepted' => 'Ticket accepted',
+            'TicketDeclined' => 'Ticket declined',
+            'TicketFinished' => 'Ticket finished',
+            'TicketNoUsers' => 'Ticket has no users',
+            'TicketUpdated' => 'Ticket updated',
+        ],
+        'close' => 'Close',
+        'pause' => 'Pause',
+        'resume' => 'Resume',
+        'accept' => 'Accept',
+        'decline' => 'Decline',
+        'busy' => 'Busy',
+        'available' => 'Available',
+        'ticketReceiver' => 'TicketReceiver',
+        'legacyTicket' => 'Legacy Ticket without relation',
+        'late' => 'late',
+        'showContract' => 'Show Contract',
+        'modemAnalysis' => 'Modem Analysis',
+        'viewTopography' => 'View Topography',
+        'noTickettype' => 'There were no Ticket types set.',
+        'enableBrowserNotifications' => 'Please enable Browser Notifications',
+        'notificationText' => 'For the best experience, when using the Ticketreceiver, it is highly recommended to turn on Browser Notifications. This ensures, that you are notified for every update.',
+        'openPermissionDialog' => 'Open Permission Dialog',
+        'noNotifications' => 'I dont want Notifications!',
     ],
     'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Time',
@@ -585,5 +605,15 @@ return [
         'solved' => 'Solved today',
         'stacked' => 'Have more tickets',
         'summary' => 'Overview',
+    ],
+    'contract' => [
+        'groundForDismissal' => 'Ground for dismissal',
+        'groundsForDismissal' => [
+            'unknown' => 'unknown',
+            'relocation' => 'relocation',
+            'unsatisfied' => 'unsatisfied',
+            'canceled by us' => 'canceled by us',
+            'deceased' => 'deceased',
+        ],
     ],
 ];

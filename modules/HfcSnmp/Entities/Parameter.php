@@ -20,8 +20,8 @@ class Parameter extends \BaseModel
     public function rules()
     {
         return [
-            'html_frame' => 'numeric|min:1',
-            'html_id' => 'numeric|min:0',
+            'html_frame' => ['nullable', 'numeric', 'min:1'],
+            'html_id' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 
@@ -102,14 +102,5 @@ class Parameter extends \BaseModel
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
-
-        return self::where('parent_id', '=', $this->id)->orderBy('third_dimension')->orderBy('html_id')->orderBy('id')->get()->all();
-    }
-
-    public function third_dimension_params()
-    {
-        return $this->children()->where('third_dimension', '=', 1);
-
-        return self::where('parent_id', '=', $this->id)->where('third_dimension', '=', 1)->orderBy('id')->get()->all();
     }
 }

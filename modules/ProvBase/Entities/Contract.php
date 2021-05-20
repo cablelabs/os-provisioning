@@ -4,6 +4,7 @@ namespace Modules\ProvBase\Entities;
 
 use DB;
 use Module;
+use App\Observers\BaseObserver;
 use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
@@ -23,6 +24,8 @@ class Contract extends \BaseModel
 
     // Via modems -> mtas -> phonenumbers assigned Phonenumbers shown as read-only info field in edit view
     public $guarded = ['related_phonenrs'];
+
+    public const GROUNDS_FOR_DISMISSAL = ['unknown', 'relocation', 'unsatisfied', 'canceled by us', 'deceased'];
 
     // Add your validation rules here
     // TODO: dependencies of active modules (billing)
@@ -85,8 +88,10 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end'],
+            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
             'header' =>  self::labelFromData($this),
+            'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
+            'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'], ];
 
@@ -149,17 +154,26 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
+        $this->setRelationCounts();
+        $relationThreshhold = config('datatables.relationThreshhold');
+
         $ret['Edit']['Modem']['class'] = 'Modem';
-        $ret['Edit']['Modem']['relation'] = $this->modems;
+        $ret['Edit']['Modem']['count'] = $this->modems_count;
+        $ret['Edit']['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
+            collect([new Modem()]) :
+            $this->modems;
 
         if (Module::collections()->has('BillingBase')) {
-            // view has many version 2
             $ret['Edit']['Item']['class'] = 'Item';
-            $ret['Edit']['Item']['relation'] = $this->items;
-            $ret['Billing']['Item']['class'] = 'Item';
-            $ret['Billing']['Item']['relation'] = $this->items;
+            $ret['Edit']['Item']['count'] = $this->items_count;
+            $ret['Edit']['Item']['relation'] = $this->items_count >= $relationThreshhold ?
+                collect([new \Modules\BillingBase\Entities\Item()]) :
+                $this->items;
+
             $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
+
+            $ret['Billing']['Item'] = $ret['Edit']['Item'];
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
@@ -194,42 +208,21 @@ class Contract extends \BaseModel
                 $resultingDebt = $this->getResultingDebt();
                 $ret['Edit']['DebtResult']['view']['vars']['debt'] = $resultingDebt['amount'];
                 $ret['Edit']['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
-            }
 
-            // Show invoices in 2 panels
-            if (! $this->relationLoaded('invoices')) {
-                $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->get());
-            }
-
-            $invoicesPanel1 = collect();
-            $countPanel1 = $this->invoices->count() > 15 ? 15 : $this->invoices->count();
-
-            for ($i = 0; $i < $countPanel1; $i++) {
-                $invoicesPanel1->push($this->invoices[$i]);
-            }
-
-            if (Module::collections()->has('OverdueDebts')) {
                 $ret['Billing']['Debt']['class'] = 'Debt';
-                $ret['Billing']['Debt']['relation'] = $this->debts;
+                $ret['Billing']['Debt']['count'] = $this->debts_count;
+                $ret['Billing']['Debt']['relation'] = $this->debts_count >= $relationThreshhold ?
+                    collect([new \Modules\OverdueDebts\Entities\Debt()]) :
+                    $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
-            $ret['Billing']['Invoice']['relation'] = $invoicesPanel1;
+            $ret['Billing']['Invoice']['count'] = $this->invoices_count;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
-
-            // 2nd panel with old invoices - collapsed and in 2 columns
-            if ($this->invoices->count() > 15) {
-                $invoicesPanel2 = collect();
-
-                for ($i = 15; $i < $this->invoices->count(); $i++) {
-                    $invoicesPanel2->push($this->invoices[$i]);
-                }
-
-                $ret['Billing']['OldInvoices']['view']['view'] = 'billingbase::Contract.oldInvoices';
-                $ret['Billing']['OldInvoices']['view']['vars']['invoices'] = $invoicesPanel2;
-                $ret['Billing']['OldInvoices']['panelOptions']['display'] = 'none';
-            }
+            $ret['Billing']['Invoice']['relation']['invoices'] = $this->invoices_count >= $relationThreshhold ?
+                collect([new \Modules\BillingBase\Entities\Invoice()]) :
+                $this->invoices()->orderBy('id', 'desc')->get();
         }
 
         if (Module::collections()->has('ProvVoipEnvia') &&
@@ -249,8 +242,7 @@ class Contract extends \BaseModel
             $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
             // for better navigation: show modems also in envia TEL blade
-            $ret['envia TEL']['Modem']['class'] = 'Modem';
-            $ret['envia TEL']['Modem']['relation'] = $this->modems;
+            $ret['envia TEL']['Modem'] = $ret['Edit']['Modem'];
         }
 
         if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
@@ -264,6 +256,22 @@ class Contract extends \BaseModel
         $this->addViewHasManyTickets($ret);
 
         return $ret;
+    }
+
+    public function setRelationCounts()
+    {
+        $relations = ['modems'];
+
+        if (Module::collections()->has('BillingBase')) {
+            $relations[] = 'invoices';
+            $relations[] = 'items';
+        }
+
+        if (Module::collections()->has('OverdueDebts')) {
+            $relations[] = 'debts';
+        }
+
+        $this->loadCount($relations);
     }
 
     public function view_belongs_to()
@@ -454,6 +462,11 @@ class Contract extends \BaseModel
             ->first();
     }
 
+    public function getGroundForDismissal()
+    {
+        return $this->ground_for_dismissal ? trans('view.contract.groundsForDismissal.'.$this->ground_for_dismissal) : '';
+    }
+
     /**
      * Helper to get the customer number (may be identical with the contract number).
      * As there is no hard coded customer number in database we have to use this mapper. The semantic meaning of number…number4 can be defined in global configuration.
@@ -573,6 +586,10 @@ class Contract extends \BaseModel
      *  2. Check if $this is a new contract and activate it -> enable internet_access
      *  3. Change QoS id and Voip id if actual valid (billing-) tariff changes
      *
+     * Attention: To avoid endless loops the Observers of Contract & Item need to be disabled before calling save()
+     *      as they would call daily_conversion again. Please only adapt this function with testing all cases. See
+     *      https://devel.roetzer-engineering.com/confluence/display/LAR/Contract+-+Daily+conversion for further documentation
+     *
      * @return none
      * @author Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
@@ -623,9 +640,11 @@ class Contract extends \BaseModel
         }
 
         if ($this->changes_on_daily_conversion) {
+            // Avoid endless loop by disabling observer but add GuiLog entry
+            BaseObserver::addLogEntry($this, 'updated');
             $this->observer_enabled = false;
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -804,6 +823,7 @@ class Contract extends \BaseModel
                     * and to avoid “Multipe valid tariffs active” warning
                 */
                 $item->observer_dailyconversion = false;
+                BaseObserver::addLogEntry($item, 'updated');
                 $item->save();
             }
         }
@@ -893,7 +913,7 @@ class Contract extends \BaseModel
 
         if ($contract_changed) {
             $this->save();
-            $this->push_to_modems();
+            $this->pushToModems();
         }
     }
 
@@ -1171,26 +1191,13 @@ class Contract extends \BaseModel
      *
      * @author: Torsten Schmidt, Nino Ryschawy
      */
-    public function push_to_modems()
+    public function pushToModems()
     {
-        $internetAccessChanged = false;
-
         foreach ($this->modems as $modem) {
-            if ($modem->internet_access != $this->internet_access) {
-                $internetAccessChanged = true;
-            }
-
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
-            $modem->observer_enabled = false;
-            $modem->updateRadius(false);
-            $modem->make_configfile();
-            $modem->save();
-            $modem->restart_modem();
-        }
 
-        if ($internetAccessChanged) {
-            Modem::createDhcpBlockedCpesFile();
+            $modem->save();
         }
     }
 
@@ -1650,5 +1657,66 @@ class Contract extends \BaseModel
         }
 
         return $objList;
+    }
+
+    /**
+     * Collect the necessary data for TicketReceiver and Notifications.
+     *
+     * @return array
+     */
+    public function getTicketSummary()
+    {
+        if ($this->street && $this->city) {
+            $navi = [
+                'link' => "https://www.google.com/maps/search/{$this->street} {$this->house_number}, {$this->zip} {$this->city}",
+                'icon' => 'fa-globe',
+                'title' => trans('view.Button_Search'),
+            ];
+        }
+
+        if ($this->x != 0 || $this->y != 0) {
+            $navi = [
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'icon' => 'fa-location-arrow',
+                'title' => trans('messages.route'),
+            ];
+        }
+
+        return [
+            trans('messages.Personal Contact') => [
+                'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
+            ],
+            trans('messages.Address') => [
+                'text' => "{$this->street} {$this->house_number}||{$this->zip} {$this->city} {$this->district}",
+                'action' => $navi ?? null,
+            ],
+            trans('messages.Phone') => [
+                'text' => $this->phone ?? null,
+                'action' => [
+                    'link' => "tel:{$this->phone}",
+                    'icon' => 'fa-phone',
+                ],
+            ],
+            trans('messages.mail') => [
+                'text' => $this->email ?? null,
+                'action' => [
+                    'link' => "mailto:{$this->email}",
+                    'icon' => 'fa-envelope',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * To reduce AJAX Payload, only this subset is loaded.
+     *
+     * @return array
+     */
+    public function reducedFields()
+    {
+        return [
+            'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'x', 'y',
+        ];
     }
 }

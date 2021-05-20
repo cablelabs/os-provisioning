@@ -2,12 +2,16 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
+use File;
+use Cache;
 use Session;
+use App\User;
+use Exception;
 use Modules\HfcSnmp\Entities\OID;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\SnmpAccessException;
 use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcSnmp\Entities\Parameter;
+use Modules\HfcSnmp\Events\NewSnmpValues;
 use App\Http\Controllers\BaseViewController;
 
 class SnmpController extends \BaseController
@@ -16,9 +20,9 @@ class SnmpController extends \BaseController
     private $retry = 1;
 
     /**
-     * @var  object 	NetElement
+     * @var  object     NetElement
      */
-    private $device;
+    private $netelement;
 
     /**
      * @var  object     Used for parent netgw of a cluster
@@ -31,9 +35,19 @@ class SnmpController extends \BaseController
     private $errors = [];
 
     /**
-     * @var  bool 	If Set we only want to show the 3rd dimension parameters of this index for the controlling view
+     * If set we only want to show the 3rd dimension parameters of this parameter and index in the controlling view
+     *
+     * @var int
      */
     private $index = 0;
+    private $paramId = 0;
+
+    /**
+     * Key to get values from cache - set in init() function
+     *
+     * @var string
+     */
+    private $cacheKey;
 
     /**
      * Init SnmpController with a certain Device Model and
@@ -42,27 +56,34 @@ class SnmpController extends \BaseController
      * @param device the Device Model
      * @param mibs the MIB array
      *
-     * @author Torsten Schmidt
+     * @author Torsten Schmidt, Nino Ryschawy
      */
-    public function init($device = null, $index = 0)
+    public function init($netelement = null, $paramId, $index = 0)
     {
-        $this->device = $device;
+        $this->netelement = $netelement;
         $this->index = $index ? [$index] : 0;
-
-        // Search parent NetGw for type cluster
-        if ($device->netelementtype_id == 2) {
-            $netgw = $device->get_parent_netgw();
-            $this->parent_device = $netgw ?: null;
-            if (! $this->device->ip) {
-                if ($netgw) {
-                    $this->device->ip = $netgw->ip;
-                } else {
-                    Session::push('tmp_error_above_form', trans('messages.snmp.missing_netgw'));
-                }
-            }
-        }
+        $this->paramId = $paramId;
+        $this->cacheKey = "snmpvalues.{$this->netelement->id}.$paramId.$index";
 
         $this->snmp_def_mode();
+
+        if ($netelement->netelementtype_id != 2) {
+            return;
+        }
+
+        // Search parent NetGw for type cluster
+        $netgw = $netelement->get_parent_netgw();
+        $this->parent_device = $netgw ?: null;
+
+        if ($this->netelement->ip) {
+            return;
+        }
+
+        if (! $netgw) {
+            throw new Exception(trans('messages.snmp.missing_netgw'));
+        }
+
+        $this->netelement->ip = $netgw->ip;
     }
 
     /**
@@ -70,72 +91,62 @@ class SnmpController extends \BaseController
      *
      * Note: This function is used again for the 3rd Dimension of a Snmp Table (of which the Index link references to)
      *
-     * @param 	id  		The NetElement id
-     * @param 	param_id 	ID of the Parameter for 3rd Dimension View
-     * @param 	index 		The Index we want to see 3rd Dim for
-     * @author 	Torsten Schmidt, Nino Ryschawy
+     * @param   id          The NetElement id
+     * @param   paramId     ID of the Parameter for 3rd Dimension View
+     * @param   index       The Index we want to see 3rd Dim for
+     * @author  Torsten Schmidt, Nino Ryschawy
      */
-    public function controlling_edit($id, $param_id = 0, $index = 0)
+    public function controlling_edit(NetElement $netelement, $paramId = 0, $index = 0)
     {
-        // Init NetElement Model & SnmpController
-        $netelem = NetElement::findOrFail($id);
-        $this->init($netelem, $index);
-
-        // GET SNMP values of NetElement
-        $params = $this->_get_parameter($param_id);
+        $form_fields = [];
 
         try {
-            $form_fields = $this->get_snmp_values($params, true);
-        } catch (\Exception $e) {
-            $form_fields = null;
+            $this->init($netelement, $paramId, $index);
+
+            $form_fields = $this->getSnmpValues(true);
+        } catch (Exception $e) {
+            Session::push('tmp_error_above_form', $e->getMessage());
+
+            if ($e->getMessage() == trans('messages.snmp.unreachable')) {
+                $form_fields = $this->getLastValues();
+
+                if ($form_fields) {
+                    Session::forget('tmp_error_above_form');
+                }
+            }
         }
 
-        // Error messages
-        if (isset($e)) {
-            Session::push('tmp_error_above_form', $e->getMessage());
-        } elseif (! $form_fields && ! Session::exists('tmp_error_above_form')) {
-            Session::push('tmp_error_above_form', trans('messages.snmp.undefined'));
-        } elseif ($this->errors) {
-            $msg = trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]);
-            Session::push('tmp_error_above_form', $msg);
+        // Show single OIDs that are not accessable on device
+        if (! isset($e) && $this->errors) {
+            Session::push('tmp_error_above_form', trans('messages.snmp.errors_walk', ['oids' => implode(', ', $this->errors)]));
         }
 
         // Init View
-        $view_header = 'SNMP Settings: '.$netelem->name;
-        $view_var = $netelem;
+        $view_header = 'SNMP Settings: '.$netelement->name;
         $route_name = \NamespaceController::get_route_name();
-        $headline = BaseViewController::compute_headline($route_name, $view_header, $view_var).' > controlling';
-        $tabs = $netelem->tabs();
+        $headline = BaseViewController::compute_headline($route_name, $view_header, $netelement).'<li><a href="#">controlling</a></li>';
+        $tabs = $netelement->tabs();
+        $reload = $netelement->netelementtype->page_reload_time ?: 0;
 
-        $view_path = 'hfcsnmp::NetElement.controlling';
-        $form_path = 'Generic.form';
-        $form_update = 'NetElement.controlling_update';
-
-        $reload = $this->device->netelementtype->page_reload_time ?: 0;
-
-        return \View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'tabs', 'form_fields', 'form_update', 'route_name', 'headline', 'reload', 'param_id', 'index')));
+        return \View::make('hfcsnmp::NetElement.controlling', $this->compact_prep_view(compact('netelement',
+            'view_header', 'tabs', 'form_fields', 'route_name', 'headline', 'reload', 'paramId', 'index')));
     }
 
     /**
      * Controlling Update Function
      *
      * @param int id the NetElement id
-     * @param int param_id, index 	just for Redirect
+     * @param int paramId, index    just for Redirect
      *
      * @author Torsten Schmidt, Nino Ryschawy
      */
-    public function controlling_update($id, $param_id = 0, $index = 0)
+    public function controlling_update($id, $paramId = 0, $index = 0)
     {
-        // Init SnmpController
         $netelem = NetElement::where('id', '=', $id)->with('netelementtype')->first();
-        $this->init($netelem, $index);
+        $this->init($netelem, $paramId, $index);
 
         // TODO: validation
-        // Transfer Settings via SNMP to Device
         $this->snmp_set_all(\Request::all());
-
-        $msg = 'Updated!';
-        $msg_color = 'blue';
 
         // Set Error Message in case some OIDs could not be set
         if ($this->errors) {
@@ -144,102 +155,145 @@ class SnmpController extends \BaseController
             Session::push('tmp_error_above_form', $msg);
         }
 
-        return \Redirect::route('NetElement.controlling_edit', [$id, $param_id, $index]);
+        return \Redirect::route('NetElement.controlling_edit', [$id, $paramId, $index]);
     }
 
     /**
      * Get the necessary parameters (OIDs) of the netelementtype
      *
-     * @return \Illuminate\Database\Eloquent\Collection 	of Parameter objects with related OID object
+     * @return \Illuminate\Database\Eloquent\Collection     of Parameter objects with related OID object
      */
-    private function _get_parameter($param_id)
+    private function getParameters()
     {
-        if ($param_id) {
-            return Parameter::where('parent_id', '=', $param_id)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get();
+        if ($this->paramId) {
+            return Parameter::where('parent_id', '=', $this->paramId)->where('third_dimension', '=', 1)->with('oid')->orderBy('id')->get();
         }
 
-        $device = $this->device;
+        $netelement = $this->netelement;
 
         // use parent netgw for cluster
-        if ($this->device->netelementtype_id == 2) {
+        if ($this->netelement->netelementtype_id == 2) {
             if (! $this->parent_device) {
                 return [];
             }
 
-            $device = $this->parent_device;
+            $netelement = $this->parent_device;
         }
 
-        // TODO: check if netelement has a netelementtype -> exception for root elem
-        return $device->netelementtype->parameters()
+        return $netelement->netelementtype->parameters()
             ->with('oid')
             ->orderBy('html_frame')->orderBy('html_id')->orderBy('oid_id')->orderBy('id')
             ->get();
     }
 
     /**
-     * Returns updated SnmpValues via client opened TCP connection (SSE)
+     * Start loop for broadcasting SNMP live values by first subscriber
+     *
+     * @return string   status
      */
-    public function sse_get_snmpvalues($netelem_id, $param_id = 0, $index = 0, $reload = 1)
+    public function triggerSnmpQueryLoop(NetElement $netelement, $paramId = 0, $index = 0)
     {
-        $this->init(NetElement::find($netelem_id), $index);
-        $params = $this->_get_parameter($param_id);
+        Log::debug(__FUNCTION__.": Poll netelement $netelement->id via SNMP");
 
-        \Log::debug(__FUNCTION__.": $netelem_id, $param_id, $index, $reload, ".count($params));
+        $newSnmpValues = new NewSnmpValues([], $netelement, $paramId, $index);
+        $channelName = $newSnmpValues->broadcastOn()->name;
 
-        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($params, $reload) {
+        $websocketApi = new \App\extensions\websockets\WebsocketApi();
 
-            // Get data and push to client
+        // Don't run another query loop when someone else already triggered it
+        if ($websocketApi->channelHasSubscribers($channelName, true)) {
+            return 'already running';
+        }
+
+        $this->init($netelement, $paramId, $index);
+        $params = $this->getParameters();
+
+        // TODO: Write as Job ? - Then we would need to start and stop as many workers on demand as we
+        // have loops running as the jobs/loops would need to run simultaneously
+        do {
             $start = microtime(true);
-            echo 'data: '.$this->get_snmp_values($params)."\n\n";
-            $end = microtime(true);
+            $data = $this->getSnmpValues(false, $params);
+            // $data = json_encode(['.1.2.3.3.3' => rand(1, 100), '.1.23.4.5' => rand(1, 100)]);    // Testdata
+            $queryTime = microtime(true) - $start;
 
-            // Dont stress device too much - sleep at least as long as the device needs to return the values
-            $diff = $end - $start;
-            $sleep_time = $diff > $reload / 2 ? $diff : $reload - $diff;
-            sleep($sleep_time);
+            $newSnmpValues->setData($data);
+            event($newSnmpValues);
 
-            \Log::debug('Updating NetElements SnmpValues for SSE took '.round($diff, 2).' seconds');
-        });
+            Log::debug("Send data to channel $channelName: ".substr($data, 0, 90).(strlen($data) > 90 ? ' ... }' : '').' - Query time: '.round($queryTime, 3));
 
-        $response->headers->set('Content-Type', 'text/event-stream');
+            $this->sleepWell($queryTime, $netelement);
+        } while ($websocketApi->channelHasSubscribers($channelName));
 
-        return $response;
+        return 'stopped';
+    }
+
+    /**
+     * Let process sleep enough time to not stress device too much
+     */
+    private function sleepWell($queryTime, $netelement)
+    {
+        $reload = $netelement->netelementtype->page_reload_time ?: 2;
+
+        usleep(($queryTime > $reload ? 2 : $reload - $queryTime) * 1000000);
     }
 
     /**
      * GET all SNMP values from device
      *
-     * @param array 	params 		Array of Parameter Objects
-     * @param bool 		ordered 	true:  @return SNMP values as structured array to build initial view
-     * 								false: @return raw json data to update values via Ajax
-     * @return array 				TODO: explain output array
+     * @param bool      ordered     true:  @return SNMP values as structured array to build initial view
+     *                              false: @return raw json data to update values via Ajax
+     * @param array     params      Optional array of Parameter objects to improve performance in loop
+     * @return array                TODO: explain output array
      * @author Nino Ryschawy
      */
-    public function get_snmp_values($params, $ordered = false)
+    public function getSnmpValues($ordered, $params = [])
     {
-        $results_tot = $ordered ? ['list' => [], 'frame' => ['linear' => [], 'tabular' => []], 'table' => []] : [];
-        $values_to_store = [];
+        $orderedValues = ['list' => [], 'frame' => ['linear' => [], 'tabular' => []], 'table' => []];
+        $valuesToStore = $finalValues = [];
         $table_id = 0;
 
-        // Get stored Snmpvalues
-        $old_vals = $this->_values();
+        if (! $this->netelement->ip) {
+            throw new Exception(trans('messages.snmp.missingIp'));
+        }
 
-        // TODO: if device not reachable take already saved SnmpValues from Database but show a hint - check via snmpget !?
-        if (! $this->device->ip) {
-            Session::push('tmp_error_above_form', trans('messages.snmp.missingIp'));
+        // Use cached values if device was already queried during the last seconds
+        if ($ordered) {
+            // TODO: if a query to a device takes a huge time - e.g. 3 secs and multiple users access the controlling page at the
+            // same time we could mark the device as queried and let the user wait for the stored values triggered by the other user
+            // Take care of marking it as not queried also when exception is thrown
+            // if ($this->netelement->isQueried()) {
+            //     while (! Cache::has($this->cacheKey)) {
+            //         usleep(200000);
+            //     }
+            // }
 
-            return [];
+            $values = Cache::get($this->cacheKey);
+
+            if ($values) {
+                Log::debug('Return cached SNMP values for netelement '.$this->netelement->id);
+
+                return $values;
+            }
+        }
+
+        $oldValues = $this->getStoredValues()['values'];
+        if (! $params) {
+            $params = $this->getParameters();
+        }
+
+        if ($params->isEmpty()) {
+            throw new Exception(trans('messages.snmp.undefined'));
         }
 
         foreach ($params as $param) {
             $indices = $this->index ?: [];
 
             if (! $indices) {
-                $indices_o = $param->indices()->where('netelement_id', '=', $this->device->id)->first();
+                $indices_o = $param->indices()->where('netelement_id', '=', $this->netelement->id)->first();
                 $indices = $indices_o && $indices_o->indices ? explode(',', $indices_o->indices) : [];
 
-                if ($this->device->netelementtype_id == 2 && ! $indices_o) {
-                    \Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->device->id]);
+                if ($this->netelement->netelementtype_id == 2 && ! $indices_o) {
+                    Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->netelement->id]);
                     continue;
                 }
             }
@@ -249,113 +303,141 @@ class SnmpController extends \BaseController
                 $table_id++;
 
                 $results = $this->snmp_table($param, $indices);
-                $values_to_store = array_merge($values_to_store, $results);
+                $valuesToStore = array_merge($valuesToStore, $results);
 
                 $subparam = null;
                 foreach ($results as $oid => $value) {
-                    $index = strrchr($oid, '.'); 								// row in table
-                    $suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
+                    $index = strrchr($oid, '.');                                // row in table
+                    $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
 
                     if (! $subparam || $subparam->oid != $suboid) {
                         if ($param->children->isEmpty()) {
                             $subparam = new Parameter;
                             $subparam->setRelation('oid', OID::where('oid', '=', $suboid)->first());
                         } else {
-                            // Note: If existent Subparams are already fetched from DB in snmp_table() with joined OID
+                            // If existent Subparams are already fetched from DB in snmp_table() with joined OID
                             $subparam = $param->children->where('oidoid', $suboid)->first();
                         }
                     }
 
                     if (! $subparam || ! $subparam->oid) {
-                        \Log::error('SNMP Query returned OID that is missing in database!');
+                        Log::error("SNMP Query returned OID $suboid that is missing in database");
+
                         continue;
                     }
 
-                    $value = self::_build_diff_and_divide($subparam, $index, $results, $value, $old_vals);
+                    $value = self::_build_diff_and_divide($subparam, $index, $results, $value, $oldValues);
+                    $finalValues[$oid] = $value;
 
-                    // order results for initial view
-                    if ($ordered) {
-                        // set table head only once
-                        if (! isset($results_tot['table'][$table_id]['head'][$suboid])) {
-                            $results_tot['table'][$table_id]['head'][$suboid] = $subparam->oid->name_gui ? $subparam->oid->name_gui : $subparam->oid->name;
-                        }
-
-                        $arr = self::_get_formfield_array($subparam->oid, $index, $value, true);
-                        $field = BaseViewController::get_html_input($arr);
-
-                        $results_tot['table'][$table_id]['body'][$index][$suboid] = $field;
-                    } else {
-                        $results_tot[$oid] = $value;
+                    // Order results and get HTML field description for initial view
+                    // set table head only once
+                    if (! isset($orderedValues['table'][$table_id]['head'][$suboid])) {
+                        $orderedValues['table'][$table_id]['head'][$suboid] = $subparam->oid->name_gui ?: $subparam->oid->name;
                     }
+
+                    $arr = self::_get_formfield_array($subparam->oid, $index, $value, true);
+                    $field = BaseViewController::get_html_input($arr);
+
+                    $orderedValues['table'][$table_id]['body'][$index][$suboid] = $field;
                 }
 
-                if ($ordered && $param->third_dimension_params()->count()) {
-                    $results_tot['table'][$table_id]['3rd_dim'] = ['netelement_id' => $this->device->id, 'param_id' => $param->id];
+                if ($param->children->where('third_dimension', '=', 1)->count()) {
+                    $orderedValues['table'][$table_id]['3rd_dim'] = ['netelement_id' => $this->netelement->id, 'paramId' => $param->id];
                 }
             }
             // Non Table Param - can not have subparams
             else {
                 $results = $this->snmp_walk($param->oid, $indices);
-                $values_to_store = array_merge($values_to_store, $results);
+                $valuesToStore = array_merge($valuesToStore, $results);
 
                 // Calculate differential param
                 foreach ($results as $oid => $value) {
-                    $index = strrchr($oid, '.'); 								// row in table
-                    $suboid = substr($oid, 0, strlen($oid) - strlen($index)); 	// column in table
+                    $index = strrchr($oid, '.');                                // row in table
+                    $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
                     // join relevant information before calling diff function
-                    $value = self::_build_diff_and_divide($param, $index, $results, $value, $old_vals);
+                    $value = self::_build_diff_and_divide($param, $index, $results, $value, $oldValues);
+                    $finalValues[$oid] = $value;
 
-                    // order results for initial view
-                    if ($ordered) {
-                        $arr = self::_get_formfield_array($param->oid, $index, $value);
-                        $field = BaseViewController::add_html_string([$arr])[0]['html'];
+                    // Order results and get HTML field description for initial view
+                    $arr = self::_get_formfield_array($param->oid, $index, $value);
+                    $field = BaseViewController::add_html_string([$arr])[0]['html'];
 
-                        if (! $param->html_frame) {
-                            $results_tot['list'][] = $field;
-                        } elseif (strlen((string) $param->html_frame) == 1) {
-                            $results_tot['frame']['linear'][$param->html_frame][] = $field;
-                        } else {
-                            // e.g.: '12' -> row 1, column 2
-                            $frame = (string) $param->html_frame;
-                            $results_tot['frame']['tabular'][$frame[0]][$frame[1]][] = $field;
-                        }
+                    if (! $param->html_frame) {
+                        $orderedValues['list'][] = $field;
+                    } elseif (strlen((string) $param->html_frame) == 1) {
+                        $orderedValues['frame']['linear'][$param->html_frame][] = $field;
                     } else {
-                        $results_tot[$oid] = $value;
+                        // e.g.: '12' -> row 1, column 2
+                        $frame = (string) $param->html_frame;
+                        $orderedValues['frame']['tabular'][$frame[0]][$frame[1]][] = $field;
                     }
                 }
             }
         } // end foreach
 
-        // store snmp values
-        $this->_values($values_to_store);
+        $this->storeSnmpValues($valuesToStore);
+        Cache::put($this->cacheKey, $orderedValues, 5);
 
-        return $ordered ? $results_tot : json_encode($results_tot);
+        return $ordered ? $orderedValues : json_encode($finalValues);
+    }
+
+    /**
+     * Return last queried values from device that is not reachable anymore and show warning with queried time
+     *
+     * @return array
+     */
+    private function getLastValues()
+    {
+        $formFields = $this->getStoredValues('ordered');
+
+        if ($formFields) {
+            Session::push('tmp_warning_above_form', trans('messages.snmp.lastValues', ['date' => date('Y-m-d', $values['time'])]));
+        }
+
+        return $formFields;
+    }
+
+    /**
+     * Store SNMP values
+     *
+     * @param array
+     * @param string
+     */
+    private function storeSnmpValues($data, $ext = '')
+    {
+        $filePath = $this->netelement->getSnmpValuesStoragePath($ext);
+
+        File::put($filePath, json_encode($data), true);
     }
 
     /**
      * Store values or get stored values
      *
-     * @param array  if array ([oid => value]) is set these values are stored
+     * @param string
+     * @return array
      */
-    private function _values($array = null)
+    private function getStoredValues($ext = '')
     {
-        $dir_path_rel = 'data/hfc/snmpvalues/'.$this->device->id;
+        $filePath = $this->netelement->getSnmpValuesStoragePath($ext);
 
-        if ($array) {
-            \Storage::put($dir_path_rel, json_encode($array));
-        } else {
-            return \Storage::exists($dir_path_rel) ? json_decode(\Storage::get($dir_path_rel)) : [];
+        if (! File::exists($filePath)) {
+            return [];
         }
+
+        return [
+            'time' => filemtime($filePath),
+            'values' => json_decode(File::get($filePath), true),
+        ];
     }
 
     /**
      * Determine resulting value dependent of unit divisor or other OID values (see source code descriptions)
      *
-     * @param object 	param 	Parameter
-     * @param string 	index 	last number of OID
-     * @param array 	results
-     * @param string|int 	value 		current value from snmpwalk
-     * @param string|int 	old_value 	value from last snmpwalk (to possibly calculate the difference)
+     * @param object    param   Parameter
+     * @param string    index   last number of OID
+     * @param array     results
+     * @param string|int    value       current value from snmpwalk
+     * @param string|int    old_value   value from last snmpwalk (to possibly calculate the difference)
      *
      * @author Nino Ryschawy
      */
@@ -400,10 +482,10 @@ class SnmpController extends \BaseController
     /**
      * Generate Form Field array as preparation for creating the html form fields from it
      *
-     * @param object 	OID
-     * @param string 	index 	Last number of OID (with starting dot)
+     * @param object    OID
+     * @param string    index   Last number of OID (with starting dot)
      * @param string|int value
-     * @param bool 		table
+     * @param bool      table
      */
     private static function _get_formfield_array($oid, $index, $value, $table = false)
     {
@@ -423,12 +505,12 @@ class SnmpController extends \BaseController
         $description = $table ? '' : ($oid->name_gui ? $oid->name_gui.$ext : $oid->name.$ext);
 
         $field = [
-            'form_type' 	=> $oid->html_type,
-            'name' 			=> $oid->oid.$index,
-            'description' 	=> $description,
-            'field_value' 	=> $value,
-            'options' 		=> $options,
-            // 'help' 			=> $oid->description,
+            'form_type'     => $oid->html_type,
+            'name'          => $oid->oid.$index,
+            'description'   => $description,
+            'field_value'   => $value,
+            'options'       => $options,
+            // 'help'           => $oid->description,
         ];
 
         if ($oid->html_type == 'select') {
@@ -443,63 +525,63 @@ class SnmpController extends \BaseController
      *
      * NOTE: snmp2 is minimum 20 times faster for several snmpwalks
      *
-     * @param 	object
+     * @param   object
      * @param   array   of strings
-     * @return 	array 	SNMP values in form: [OID => value]
+     * @return  array   SNMP values in form: [OID => value]
      *
      * @author Torsten Schmidt, Nino Ryschawy
      */
     public function snmp_walk($oid, $indices = [])
     {
         $results = [];
-        $community = $this->_get_community();
+        $community = $this->netelement->community();
 
         $oid_s = $oid->oid;
 
         // Log
-        Log::debug('snmpwalk '.$this->device->ip.' '.$oid_s);
+        Log::debug('snmpwalk '.$this->netelement->ip.' '.$oid_s);
 
         if ($indices) {
             try {
                 // check if snmp version 2 is supported - use it - otherwise use version 1
-                snmp2_get($this->device->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+                snmp2_get($this->netelement->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
 
                 foreach ($indices as $index) {
                     try {
-                        $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
-                    } catch (\Exception $e) {
+                        $results["$oid_s.$index"] = snmp2_get($this->netelement->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                    } catch (Exception $e) {
                         $name = $oid->name_gui ?: $oid->name;
                         $this->errors[] = "$name.$index";
-                        \Log::error("snmp2_get: $name.$index");
+                        Log::error("snmp2_get: $name.$index");
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 try {
-                    snmpget($this->device->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+                    snmpget($this->netelement->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
 
                     foreach ($indices as $index) {
                         try {
-                            $results["$oid_s.$index"] = snmp2_get($this->device->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
-                        } catch (\Exception $e) {
+                            $results["$oid_s.$index"] = snmp2_get($this->netelement->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                        } catch (Exception $e) {
                             $name = $oid->name_gui ?: $oid->name;
                             $this->errors[] = "$name.$index";
-                            \Log::error("snmpget: $name.$index");
+                            Log::error("snmpget: $name.$index");
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $results = [];
                 }
             }
         } else {
             try {
-                $results = snmp2_real_walk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
-            } catch (\Exception $e) {
+                $results = snmp2_real_walk($this->netelement->ip, $community, $oid_s, $this->timeout, $this->retry);
+            } catch (Exception $e) {
                 try {
                     // There are devices where querying v1 directly after v2 leads to exception (e.g. kathrein HMS-Transponder)
                     // usleep(400000);
 
-                    $results = snmprealwalk($this->device->ip, $community, $oid_s, $this->timeout, $this->retry);
-                } catch (\Exception $e) {
+                    $results = snmprealwalk($this->netelement->ip, $community, $oid_s, $this->timeout, $this->retry);
+                } catch (Exception $e) {
                     $results = [];
 
                     $this->errors[] = $oid->name_gui ?: $oid->name;
@@ -517,10 +599,10 @@ class SnmpController extends \BaseController
     /**
      * SNMP Walk over a Table OID Parameter - Can also be a walk over all it's SubOIDs
      *
-     * @param 	param 	Table Object ID
-     * @return 	array	[values => [index => [oid => value]], [diff-OIDs]]
+     * @param   param   Table Object ID
+     * @return  array   [values => [index => [oid => value]], [diff-OIDs]]
      *
-     * @author 	Nino Ryschawy
+     * @author  Nino Ryschawy
      */
     public function snmp_table($param, $indices)
     {
@@ -539,21 +621,21 @@ class SnmpController extends \BaseController
         if (! $param->children->isEmpty()) {
             foreach ($param->children as $param) {
                 // Note: snmpwalk -CE ends on this OID - makes it much faster
-                // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->_get_community().' '.$this->device->ip.' '.$oid->oid, $results);
+                // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->netelement->community().' '.$this->netelement->ip.' '.$oid->oid, $results);
                 $results += $this->snmp_walk($param->oid, $indices);
             }
         }
         // standard table OID (all suboids(columns) and elements (rows))
         else {
-            Log::debug('snmp2_real_walk (table) '.$this->device->ip.' '.$oid->oid);
+            Log::debug('snmp2_real_walk (table) '.$this->netelement->ip.' '.$oid->oid);
             try {
-                $results = snmp2_real_walk($this->device->ip, $this->_get_community(), $oid->oid);
-            } catch (\Exception $e) {
+                $results = snmp2_real_walk($this->netelement->ip, $this->netelement->community(), $oid->oid);
+            } catch (Exception $e) {
                 self::check_reachability($e);
 
                 $results = [];
                 $this->errors[] = $oid->name_gui ?: $oid->name;
-                \Log::error('snmp2_real_walk: '.$oid->name_gui ?: $oid->name);
+                Log::error('snmp2_real_walk: '.$oid->name_gui ?: $oid->name);
             }
         }
 
@@ -567,30 +649,33 @@ class SnmpController extends \BaseController
     /**
      * Update all changed SNMP Values
      *
-     * @param array data 	the HTML POST data array in form: [<oid> => <value>]
+     * @param array data    the HTML POST data array in form: [<oid> => <value>]
      *
      * @author Nino Ryschawy
      */
     public function snmp_set_all($data)
     {
         // Get stored Snmpvalues
-        $old_vals = $this->_values();
+        $oldValues = $this->getStoredValues();
 
-        if (! $old_vals) {
-            throw new \Exception('Error: Stored SNMP Values were deleted!');
+        if (! $oldValues || ! isset($oldValues['values'])) {
+            throw new Exception('Error: Stored SNMP Values were deleted!');
         }
+
+        $oldValues = $oldValues['values'];
+
         // TODO: get empty collection or already filled with OIDs to increase performance if probable
         // $oids = $this->_get_oid_collection();
         $oids = new \Illuminate\Database\Eloquent\Collection();
         $oid_o = null;
 
         // switch device and parent device if type is cluster so that all functions work properly - switch again to store values
-        if ($this->device->netelementtype_id == 2) {
-            $device = $this->device;
-            $this->device = $this->parent_device;
+        if ($this->netelement->netelementtype_id == 2) {
+            $netelement = $this->netelement;
+            $this->netelement = $this->parent_device;
         }
 
-        $pre_conf = $this->device->netelementtype->pre_conf_value ? true : false; 			// true - has to be done
+        $pre_conf = $this->netelement->netelementtype->pre_conf_value ? true : false;           // true - has to be done
         $user = \Auth::user();
 
         foreach ($data as $full_oid => $value) {
@@ -599,13 +684,14 @@ class SnmpController extends \BaseController
                 continue;
             }
 
-            // All dots of input variables are automatically replaced by PHP - See: https://stackoverflow.com/questions/68651/get-php-to-stop-replacing-characters-in-get-or-post-arrays
+            // All dots of input variables are automatically replaced by PHP
+            // See: https://stackoverflow.com/questions/68651/get-php-to-stop-replacing-characters-in-get-or-post-arrays
             // There is a workaround for $_POST (file_get_contents("php://input")) and $_GET ($_SERVER['QUERY_STRING']), but not very nice
             // So we have to replace all underscores by dots again
             $full_oid = str_replace('_', '.', $full_oid);
 
             // Null value can actually only happen, when someone deleted storage json file manually between last get and the save
-            $old_val = isset($old_vals->{$full_oid}) ? $old_vals->{$full_oid} : null;
+            $old_val = $oldValues[$full_oid] ?? null;
 
             // ATTENTION: This check improves performance, but assumes that it's not possible to change value previously
             // divided by unit_divisor to a value multiplied exactly by unit_divisor as in following example:
@@ -616,8 +702,8 @@ class SnmpController extends \BaseController
             }
 
             // GET OID to check if shown value was divided by unit_divisor (for the view)
-            $index = strrchr($full_oid, '.'); 									// row in table
-            $oid = substr($full_oid, 0, strlen($full_oid) - strlen($index)); 	// column in table
+            $index = strrchr($full_oid, '.');                                   // row in table
+            $oid = substr($full_oid, 0, strlen($full_oid) - strlen($index));    // column in table
 
             if (! $oid_o || $oid_o->oid != $oid) {
                 // GET OID from database only once
@@ -655,14 +741,14 @@ class SnmpController extends \BaseController
                 // Create GuiLog Entry
                 \App\GuiLog::log_changes([
                     'user_id' => $user ? $user->id : 0,
-                    'username' 	=> $user ? $user->first_name.' '.$user->last_name : 'cronjob',
-                    'method' 	=> 'updated',
-                    'model' 	=> 'NetElement',
-                    'model_id'  => $this->device->netelementtype_id == 2 ? $device->id : $this->device->id,
-                    'text' 		=> ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
+                    'username'  => $user ? $user->first_name.' '.$user->last_name : 'cronjob',
+                    'method'    => 'updated',
+                    'model'     => 'NetElement',
+                    'model_id'  => $this->netelement->netelementtype_id == 2 ? $netelement->id : $this->netelement->id,
+                    'text'      => ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
                 ]);
 
-                $old_vals->{$full_oid} = $value;
+                $oldValues[$full_oid] = $value;
             } else {
                 $this->errors[] = $oid_o->name_gui ?: $oid_o->name;
             }
@@ -674,13 +760,15 @@ class SnmpController extends \BaseController
         }
 
         // Store values
-        $this->device = $this->device->netelementtype_id == 2 ? $device : $this->device;
-        $this->_values($old_vals);
+        $this->netelement = $this->netelement->netelementtype_id == 2 ? $netelement : $this->netelement;
+        $this->storeSnmpValues($oldValues);
+
+        Cache::forget($this->cacheKey);
     }
 
     /**
      * Gets all necessary OIDs if it's probable that they will be necessary for update so that
-     *	we have only one DB-Query and not multiple queries inside the for loop
+     *  we have only one DB-Query and not multiple queries inside the for loop
      *
      * @return \Illuminate\Database\Eloquent\Collection  - empty by default - filled with OIDs if it's possible to increase performance
      */
@@ -688,7 +776,7 @@ class SnmpController extends \BaseController
     {
         // Performance improvement (needs only 33% of the time for 35 OIDs)
         // Get OID Collection (all read-write OIDs) for NetElements that dont have a table parameter only once before the foreach loop
-        $query = $this->device->netelementtype->parameters()->join('oid', 'oid.id', '=', 'parameter.oid_id');
+        $query = $this->netelement->netelementtype->parameters()->join('oid', 'oid.id', '=', 'parameter.oid_id');
         $has_table = $query->where('oid.oid_table', '=', 1)->count();
         $cnt = $query->where('oid.access', '=', 'read-write')->whereNotIn('oid.unit_divisor', [null, 0])->count();
 
@@ -696,7 +784,7 @@ class SnmpController extends \BaseController
             return new \Illuminate\Database\Eloquent\Collection();
         }
 
-        $oid_ids = $this->device->netelementtype->parameters()->get(['oid_id'])->pluck('oid_id')->all();
+        $oid_ids = $this->netelement->netelementtype->parameters()->get(['oid_id'])->pluck('oid_id')->all();
 
         return $oids = OID::whereIn('id', $oid_ids)->where('access', '=', 'read-write')->get();
     }
@@ -705,17 +793,17 @@ class SnmpController extends \BaseController
      * Set the corresponding Values to Configure the Device for a successful snmpset (e.g. needed by kathrein amplifiers)
      * NOTE: If Value is specified the post configuration is done
      *
-     * @param 	value   the value of the Parameter before the Configuration to reset
-     * @return 	value of Parameter before the configuration, null when resetting the Parameter to this value (specified in argument)
+     * @param   value   the value of the Parameter before the Configuration to reset
+     * @return  value of Parameter before the configuration, null when resetting the Parameter to this value (specified in argument)
      *
-     * @author 	Nino Ryschawy
+     * @author  Nino Ryschawy
      */
     private function _configure($value = null)
     {
-        $type = $this->device->netelementtype;
+        $type = $this->netelement->netelementtype;
 
         if ($type->pre_conf_oid_id xor $type->pre_conf_value) {
-            \Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->device->name, $this->device->id]);
+            Log::debug('Snmp Preconfiguration settings incomplete for this Device (NetElement)', [$this->netelement->name, $this->netelement->id]);
 
             return;
         }
@@ -724,14 +812,14 @@ class SnmpController extends \BaseController
 
         // PreConfiguration
         if (! $value) {
-            $conf_val = snmpget($this->device->ip, $this->_get_community(), $oid->oid.'.0', $this->timeout, $this->retry);
+            $conf_val = snmpget($this->netelement->ip, $this->netelement->community(), $oid->oid.'.0', $this->timeout, $this->retry);
 
             $ret = false;
             if ($conf_val != $type->pre_conf_value) {
-                $ret = snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
+                $ret = snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
             }
 
-            $ret ? \Log::debug('Preconfigured Device for snmpset', [$this->device->name, $this->device->id]) : \Log::debug('Failed to Preconfigure Device for snmpset', [$this->device->name, $this->device->id]);
+            $ret ? Log::debug('Preconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]) : Log::debug('Failed to Preconfigure Device for snmpset', [$this->netelement->name, $this->netelement->id]);
 
             // wait time in usec
             $sleep_time = $type->pre_conf_time_offset * 1000000 ?: 0;
@@ -741,9 +829,9 @@ class SnmpController extends \BaseController
         }
 
         // PostConfiguration
-        snmpset($this->device->ip, $this->_get_community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
+        snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
 
-        \Log::debug('Postconfigured Device for snmpset', [$this->device->name, $this->device->id]);
+        Log::debug('Postconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]);
     }
 
     /**
@@ -757,44 +845,21 @@ class SnmpController extends \BaseController
      */
     public function snmp_set($oid, $type, $value)
     {
-        $community = $this->_get_community('rw');
+        $community = $this->netelement->community('rw');
 
         // catch all OIDs that could not be set to print later in error message
         try {
             // NOTE: snmp2_set is also available
-            $ret = snmpset($this->device->ip, $community, $oid, $type, $value, $this->timeout, $this->retry);
+            $ret = snmpset($this->netelement->ip, $community, $oid, $type, $value, $this->timeout, $this->retry);
         } catch (\ErrorException $e) {
-            Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->device->ip, $community, $type, $value]);
+            Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->netelement->ip, $community, $type, $value]);
 
             return false;
         }
 
-        Log::debug('snmpset '.$this->device->ip.' '.$community.' '.$oid.' '.$value.' '.$type, [$ret]);
+        Log::debug('snmpset '.$this->netelement->ip.' '.$community.' '.$oid.' '.$value.' '.$type, [$ret]);
 
         return $ret;
-    }
-
-    /**
-     * Return the Community String for Read-Only or Read-Write Access
-     *
-     * @param 	access 	String 	'ro' or 'rw'
-     * @author 	Nino Ryschawy
-     */
-    private function _get_community($access = 'ro')
-    {
-        $community = $this->device->{'community_'.$access};
-
-        if (! $community) {
-            $community = \Modules\HfcReq\Entities\HfcReq::get([$access.'_community'])->first()->{$access.'_community'};
-        }
-
-        if (! $community) {
-            Log::error("community {$access} access for Netelement is not set!", [$this->device]);
-
-            throw new SnmpAccessException(trans('messages.NoSnmpAccess', ['access' => $access, 'name' => $this->device->name]));
-        }
-
-        return $community;
     }
 
     /**
@@ -817,12 +882,13 @@ class SnmpController extends \BaseController
      * @param exception
      * @throws exception    when device is not reachable
      */
-    public static function check_reachability(\Exception $e)
+    public static function check_reachability(Exception $e)
     {
         $msg = $e->getMessage();
 
         if (stripos($msg, 'Name or service not known') !== false || stripos($msg, 'No response from') !== false) {
-            throw new \Exception(trans('messages.snmp.unreachable'));
+            // This interrupts the code and doesn't lead to further SNMP queries
+            throw new Exception(trans('messages.snmp.unreachable'));
         }
     }
 }

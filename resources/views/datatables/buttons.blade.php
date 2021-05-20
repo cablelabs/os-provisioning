@@ -21,11 +21,40 @@ buttons: [
             {
                 extend: 'excelHtml5',
                 text: "<i class='fa fa-file-excel-o'></i> .XLSX",
+                action: function (e, dt, button, config) {
+                    $.ajax({
+                          url: '{{ asset('components/assets-admin/plugins/jszip/dist/jszip.min.js') }}',
+                          dataType: "script",
+                          cache: true,
+                          success: () => {
+                            console.log(this)
+                            $.fn.dataTableExt.buttons.excelHtml5.action.call(this, e, dt, button, config)
+                          }
+                        })
+                },
                 exportOptions: {columns: ':visible.content'}
             },
             {
                 extend: 'pdfHtml5',
                 text: "<i class='fa fa-file-pdf-o'></i> .PDF",
+                action: function ( e, dt, node, config ) {
+                    delete window.pdfMake
+                    $.ajax({
+                      url: '{{ asset('components/assets-admin/plugins/pdfmake/build/pdfmake.min.js') }}',
+                      dataType: "script",
+                      cache: true,
+                      success: () => {
+                        $.ajax({
+                            url: '{{ asset('components/assets-admin/plugins/pdfmake/build/vfs_fonts.js') }}',
+                            dataType: "script",
+                            cache: true,
+                            success: () => {
+                                $.fn.dataTableExt.buttons.pdfHtml5.action.call(this, e, dt, node, config )
+                            }
+                        })
+                      }
+                    })
+                },
                 exportOptions: {
                     columns: ':visible.content'
                     },
@@ -45,8 +74,17 @@ buttons: [
                         doc.pageOrientation = 'landscape';
                     }
                 },
-
             },
+            {
+                extend: 'print',
+                text: "<i class='fa fa-print'></i> {{ trans('view.jQuery_Print') }}",
+                exportOptions: { columns: ':visible.content' },
+            },
+            {
+                extend: 'copy',
+                text: "<i class='fa fa-clipboard'></i> {{ trans('view.jQuery_copyToClipboard') }}",
+                exportOptions: { columns: ':visible.content' },
+            }
         ]
     },
     {

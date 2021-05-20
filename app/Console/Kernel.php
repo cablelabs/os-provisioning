@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Queue;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -126,8 +127,12 @@ class Kernel extends ConsoleKernel
             // [0] minute, [1] hour, [2] day, [3] month, [4] day of week, [5] year
             $day1 = date('d', strtotime('last sunday of march'));
             $day2 = date('d', strtotime('last sunday of oct'));
-            $schedule->command('nms:dhcp')->cron("0 4 $day1 3 0");
-            $schedule->command('nms:dhcp')->cron("0 4 $day2 10 0");
+            $schedule->call(function () {
+                Queue::pushOn('high', new \Modules\ProvBase\Jobs\DhcpJob());
+            })->cron("0 4 $day1 3 0");
+            $schedule->call(function () {
+                Queue::pushOn('high', new \Modules\ProvBase\Jobs\DhcpJob());
+            })->cron("0 4 $day2 10 0");
 
             // Contract - network access, item dates, internet (qos) & voip tariff changes
             // important!! daily conversion has to be run BEFORE monthly conversion
@@ -188,7 +193,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:cacti')->daily();
         } else {
             $schedule->call(function () {
-                \Queue::push(new \Modules\ProvBase\Jobs\SetModemsOnlineStatusJob());
+                \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\SetCableModemsOnlineStatusJob());
             })->everyFiveMinutes();
         }
 

@@ -34,6 +34,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web']], function () {
     ]);
 });
 
+Broadcast::routes();
+
 // Core Admin API
 BaseRoute::group([], function () {
     BaseRoute::resource('GlobalConfig', 'GlobalConfigController');
@@ -146,5 +148,25 @@ BaseRoute::group([], function () {
     BaseRoute::get('missingModule/{module}', [
         'as' => 'missingModule',
         'uses' => 'BaseController@missingModule',
+    ]);
+
+    BaseRoute::get('Notifications', [
+        'as' => 'Notifications.index',
+        'uses' => 'NotificationController@index',
+    ]);
+
+    BaseRoute::get('Notifications/navbar', [
+        'as' => 'Notifications.navbar',
+        'uses' => 'NotificationController@navbar',
+    ]);
+
+    BaseRoute::post('Notifications/markAllRead', [
+        'as' => 'Notifications.markAllRead',
+        'uses' => 'NotificationController@markAllRead',
+    ]);
+
+    BaseRoute::post('Notifications/{notification}', [
+        'as' => 'Notifications.markRead',
+        'uses' => 'NotificationController@markRead',
     ]);
 });

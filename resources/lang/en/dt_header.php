@@ -49,6 +49,7 @@ return [
         'number' => 'Contract Number',
         'street' => 'Street',
         'zip' => 'ZIP',
+        'ground_for_dismissal' => 'Ground for dismissal',
     ],
     // Auth
     'users' => [
@@ -72,8 +73,11 @@ return [
     'company.phone' => 'Mobile Number',
     'company.mail' => 'E-Mail',
     // Costcenter
-    'costcenter.name' => 'CostCenter',
-    'costcenter.number' => 'Number',
+    'costcenter' => [
+        'name' => 'CostCenter',
+        'number' => 'Number',
+        'billing_month' => 'Billing month',
+    ],
     'debt' => [
         'date' => 'Date',
         'due_date' => 'Due date',
@@ -139,12 +143,15 @@ return [
     'mpr.name' => 'Name',
     'mpr.id'    => 'ID',
     // NetElement
-    'netelement.id' => 'ID',
-    'netelement.name' => 'Netelement',
-    'netelement.ip' => 'IP Adress',
-    'netelement.state' => 'State',
-    'netelement.pos' => 'Position',
-    'netelement.options' => 'Options',
+    'netelement' => [
+        'id' => 'ID',
+        'name' => 'Netelement',
+        'ip' => 'IP Adress',
+        'state' => 'State',
+        'pos' => 'Position',
+        'options' => 'Options',
+        'kml_file' => 'KML File',
+    ],
     // NetElementType
     'netelementtype.name' => 'Netelementtype',
     //HfcSnmp
@@ -211,6 +218,7 @@ return [
     'modem.inventar_num' => 'Serial Nr',
     'modem.lastname' => 'Surname',
     'modem.mac' => 'MAC Address',
+    'modem.serial_num' => 'Serial Number / CWMP-ID',
     'modem.model' => 'Model',
     'modem.name' => 'Modem Name',
     'modem.street' => 'Street',
@@ -257,7 +265,7 @@ return [
     'phonetariff.type' => 'Type',
     'phonetariff.description' => 'Description',
     'phonetariff.voip_protocol' => 'VOIP Protocol',
-    'phonetariff.usable' => 'Usable?',
+    'phonetariff.usable' => 'Usable',
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
