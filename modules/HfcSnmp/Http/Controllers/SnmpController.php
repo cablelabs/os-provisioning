@@ -444,7 +444,7 @@ class SnmpController extends \BaseController
      */
     private static function _build_diff_and_divide($param, &$index, &$results, $value, $old_values)
     {
-        $old_value = isset($old_values->{$param->oidoid.$index}) ? $old_values->{$param->oidoid.$index} : 0;
+        $old_value = isset($old_values[$param->oidoid.$index]) ? $old_values[$param->oidoid.$index] : 0;
 
         // Subtract old value from new value
         if ($param->diff_param) {
@@ -463,7 +463,7 @@ class SnmpController extends \BaseController
 
                 // For differential params build difference of divisor to old value as well
                 if ($param->diff_param) {
-                    $old_value = isset($old_values->{$divisor_oid.$index}) ? $old_values->{$divisor_oid.$index} : 0;
+                    $old_value = isset($old_values[$divisor_oid.$index]) ? $old_values[$divisor_oid.$index] : 0;
                     $divisor = $results[$divisor_oid.$index] - $old_value;
                 }
 
