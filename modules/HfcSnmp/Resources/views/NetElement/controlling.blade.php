@@ -147,7 +147,7 @@
     function subscribe()
     {
         if (window.echo == undefined || window.echo.connector.pusher.connection.state != 'connected') {
-            $("#echoError").html("{{ trans('messages.wsConFail') }}");
+            $("#echoError").html("{{ trans('messages.snmp.wsConFail') }}");
 
             return;
         }
