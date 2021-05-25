@@ -376,6 +376,7 @@ class SnmpController extends \BaseController
         } // end foreach
 
         $this->storeSnmpValues($valuesToStore);
+        $this->storeSnmpValues($valuesToStore, 'ordered');
         Cache::put($this->cacheKey, $orderedValues, 5);
 
         return $ordered ? $orderedValues : json_encode($finalValues);
