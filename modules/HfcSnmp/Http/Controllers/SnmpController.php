@@ -389,7 +389,7 @@ class SnmpController extends \BaseController
      */
     private function getLastValues()
     {
-        $formFields = $this->getStoredValues('ordered');
+        $formFields = $this->getStoredValues('ordered')['values'];
 
         if ($formFields) {
             Session::push('tmp_warning_above_form', trans('messages.snmp.lastValues', ['date' => date('Y-m-d', $values['time'])]));
@@ -422,7 +422,7 @@ class SnmpController extends \BaseController
         $filePath = $this->netelement->getSnmpValuesStoragePath($ext);
 
         if (! File::exists($filePath)) {
-            return [];
+            return ['values' => []];
         }
 
         return [
@@ -657,13 +657,11 @@ class SnmpController extends \BaseController
     public function snmp_set_all($data)
     {
         // Get stored Snmpvalues
-        $oldValues = $this->getStoredValues();
+        $oldValues = $this->getStoredValues()['values'];
 
-        if (! $oldValues || ! isset($oldValues['values'])) {
+        if (! $oldValues) {
             throw new Exception('Error: Stored SNMP Values were deleted!');
         }
-
-        $oldValues = $oldValues['values'];
 
         // TODO: get empty collection or already filled with OIDs to increase performance if probable
         // $oids = $this->_get_oid_collection();
