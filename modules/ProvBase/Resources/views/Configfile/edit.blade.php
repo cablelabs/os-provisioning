@@ -41,7 +41,7 @@
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, -1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, 0, id)">{{ trans('view.Button_DragDrop DeleteElement') }}</span>
                             </div>
-                            <input type="text" name="name" v-model="item.name"/>
+                            <input type="text" name="oname" v-model="item.name"/>
                             <select name="operator" v-model="item.operator" v-dispatchsel2>
                                 <option value=""></option>
                                 <option value="+">+</option>
@@ -114,7 +114,7 @@
                               <span class="dragdropitemmenubutton" v-for="(listname, listkey) in lists" v-if="listkey != '0'" v-on:click="moveItem(key,listkey, id)">{{ trans('view.Button_DragDrop MoveTo') }} @{{ listname.name }}</span>
                               <span class="dragdropitemmenubutton" v-on:click="moveItem(key,-1, id)">{{ trans('view.Button_DragDrop MoveToNewList') }}</span>
                             </div>
-                            <input type="text" name="name" v-model="item.name" v-on:keyup="onKeyUp($event.target.value, key, id, $event.target.name)"/>
+                            <input type="text" name="oname" v-model="item.name"/>
                             </div>
                         </div>
                     </draggable>
