@@ -124,9 +124,11 @@
     </div>
 
 </div>
+@endif
 @stop
 
-@section('javascript')
+@section('javascript_extra')
+@if (multi_array_key_exists(['lists'], $additional_data))
 <script>
 Vue.directive('dispatchsel2', {
     inserted: function(app) {
