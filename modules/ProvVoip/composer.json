@@ -2,8 +2,8 @@
 	"name": "nmsprime-modules/provvoip",
 	"description": "NMS Prime VOIP Provisioning Module",
 	"authors": [{
-		"name": "Roetzer engineering",
-		"email": "info@roetzer-engineering.com"
+		"name": "NMS Prime GmbH",
+		"email": "info@nmsprime.com"
 	}],
 	"autoload": {
 		"psr-4": {
