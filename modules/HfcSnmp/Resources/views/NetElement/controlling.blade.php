@@ -8,11 +8,6 @@
 
 @stop
 
-@php
-    // Store in variable as session key is removed in above_infos blade
-    $error = \Session::has('tmp_error_above_form');
-@endphp
-
 @section ('content_left')
 
     @include ('Generic.logging')

@@ -99,6 +99,7 @@ class SnmpController extends \BaseController
     public function controlling_edit(NetElement $netelement, $paramId = 0, $index = 0)
     {
         $form_fields = [];
+        $error = false;
 
         try {
             $this->init($netelement, $paramId, $index);
@@ -106,6 +107,7 @@ class SnmpController extends \BaseController
             $form_fields = $this->getSnmpValues(true);
         } catch (Exception $e) {
             Session::push('tmp_error_above_form', $e->getMessage());
+            $error = true;
 
             if ($e->getMessage() == trans('messages.snmp.unreachable')) {
                 $form_fields = $this->getLastValues();
@@ -128,7 +130,7 @@ class SnmpController extends \BaseController
         $tabs = $netelement->tabs();
         $reload = $netelement->netelementtype->page_reload_time ?: 0;
 
-        return \View::make('hfcsnmp::NetElement.controlling', $this->compact_prep_view(compact('netelement',
+        return \View::make('hfcsnmp::NetElement.controlling', $this->compact_prep_view(compact('error', 'netelement',
             'view_header', 'tabs', 'form_fields', 'route_name', 'headline', 'reload', 'paramId', 'index')));
     }
 
