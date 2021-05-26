@@ -20,7 +20,7 @@ class ProvBase extends \BaseModel
     public $provhaPeerDnsPw;
 
     protected const DEFAULT_NETWORK_FILE_PATH = '/etc/dhcp-nmsprime/default-network.conf';
-    const NSUPDATE_LOGFILE = '/var/log/nmsprime/nsupdate.log';
+    public const NSUPDATE_LOGFILE = '/var/log/nmsprime/nsupdate.log';
 
     /**
      * Constructor.
