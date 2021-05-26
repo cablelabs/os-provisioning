@@ -1917,8 +1917,7 @@ class Modem extends \BaseModel
         $mac = strtolower($this->mac);
         $eventlog = null;
         $tickets = $this->tickets;
-
-        $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
+        $genieCmds = [];
 
         if ($this->isTR069()) {
             $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
@@ -1932,13 +1931,17 @@ class Modem extends \BaseModel
                     if (count($match) != 3) {
                         continue;
                     }
-                    $val = array_shift($match);
-                    $key = json_encode([
-                        'name' => 'setParameterValues',
-                        'parameterValues' => [$match],
-                    ]);
-                    $genieCmds[$key] = $val;
+                    $genieCmds[array_shift($match)][] = $match;
                 }
+
+                $genieCmds = array_map(function ($cmd) {
+                    return json_encode([
+                        'name' => 'setParameterValues',
+                        'parameterValues' => $cmd,
+                    ]);
+                }, $genieCmds);
+                $genieCmds = array_flip($genieCmds);
+                $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
             } else {
                 $configfile['text'] = [];
             }
