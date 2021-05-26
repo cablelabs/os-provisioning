@@ -72,9 +72,13 @@ class EndpointObserver
         // delete radreply containing Framed-IP-Address
         $endpoint->modem->radreply()->delete();
 
-        // reset state of original ip address
-        RadIpPool::where('framedipaddress', $endpoint->getOriginal('ip'))
-            ->update(['expiry_time' => null, 'username' => '']);
+        // add / update unreserved ip address
+        if ($endpoint->getOriginal('ip')) {
+            RadIpPool::updateOrCreate(
+                ['framedipaddress' => $endpoint->getOriginal('ip')],
+                ['pool_name' => 'CPEPub', 'expiry_time' => null, 'username' => '']
+            );
+        }
 
         if ($endpoint->deleted_at || ! $endpoint->ip || ! $endpoint->modem->isPPP()) {
             return;
@@ -88,8 +92,7 @@ class EndpointObserver
         $reply->value = $endpoint->ip;
         $reply->save();
 
-        // set expiry_time to 'infinity' for reserved ip addresses
-        RadIpPool::where('framedipaddress', $endpoint->ip)
-            ->update(['expiry_time' => '9999-12-31 23:59:59', 'username' => $endpoint->modem->ppp_username]);
+        // remove reserved ip address from ippool
+        RadIpPool::where('framedipaddress', $endpoint->ip)->delete();
     }
 }
