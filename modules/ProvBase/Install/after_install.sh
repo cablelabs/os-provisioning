@@ -17,10 +17,6 @@ chown -R named:named /var/named/dynamic
 chown apache:dhcpd /etc/named-ddns.sh
 chmod 750 /etc/named-ddns.sh
 
-touch /var/log/nmsprime/nsupdate.log
-chown apache.dhcpd /var/log/nmsprime/nsupdate.log
-chmod 660 /var/log/nmsprime/nsupdate.log
-
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
@@ -50,3 +46,5 @@ GRANT ALL ON radius.* TO 'radius'@'localhost' IDENTIFIED BY '$mysql_radius_psw';
 EOF
 
 sed -i "s/RADIUS_DB_PASSWORD=$/RADIUS_DB_PASSWORD=$mysql_radius_psw/" "$env/provbase.env"
+
+systemd-tmpfiles --create
