@@ -524,10 +524,10 @@ class ExtendedValidator
      *
      * @author Patrick Reichel
      */
-    public function validateHostname($attribute, $value, $parameters)
+    protected function validateHostname($attribute, $value, $parameters)
     {
         // check if at least on letter is contained to filter mistyped IP addresses (192.168.10.1111) – such hostnames should not be in use…
-        if ((substr_count($value, '.') > 1) && (! preg_match('/[A-Za-z]/i', $value))) {
+        if ((substr_count($value, '.') == 3) && (! preg_match('/[A-Za-z]/', $value))) {
             return false;
         }
 
