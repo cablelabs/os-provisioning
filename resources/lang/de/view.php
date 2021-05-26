@@ -517,7 +517,7 @@ return [
     'Message' => 'Nachricht',
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
-    'parentNetelement' => 'Übergeordnetes Netzelement',
+    'parentNetelement' => 'Übergeordnetes <br> Netzelement',
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',
