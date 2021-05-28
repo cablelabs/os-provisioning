@@ -1,0 +1,189 @@
+\documentclass[version=last, fontsize=11pt, fromlogo=true, refline=wide, fromaddress=false, enlargefirstpage=true, numericaldate=true]{scrlttr2}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{eurosym}
+\usepackage{graphicx}
+
+\usepackage{tabularx}
+%\usepackage{hyperref}
+\usepackage{ifthen} 								% if then else
+
+\usepackage{helvet}
+\renewcommand*\familydefault{\sfdefault}             % sorgt für serifenlose Schrift
+
+
+\makeatletter
+	% see hettstedt.tex or koma script tutorial page 397 - 402
+	\@setplength{firstfootvpos}{25.2cm}             % set footer higher
+	\@setplength{toaddrhpos}{2.45cm}                % margin 2,45 cm
+	\@setplength{firstheadhpos}{2.45cm}
+	\@setplength{firstfoothpos}{2.45cm}             % smaller because of margin of picture
+	% Rand des Brieftextes an Rand des Briefkopfes anpassen
+	\setlength{\oddsidemargin}{\useplength{toaddrhpos}}
+	\addtolength{\oddsidemargin}{-1in}
+	\setlength{\textwidth}{16.1cm}                  % 21cm (A4) - (2 x 2.45cm) (margin)
+\makeatother
+
+
+\begin{document}
+
+	\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+	\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+	\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+	% Define own komavars
+	\newkomavar[\Tax]           {tax}
+	\newkomavar[\Court]         {court}
+	\newkomavar[\Management]    {management}
+	\newkomavar[\Dictorate]     {directorate}
+	\newkomavar[\FooterExtra]   {footerextra}
+
+	% Set KomaVars
+	\setkomavar{firsthead}  {\includegraphics[width=16.1cm]{{company\_logo}}}
+	\setkomavar{fromname}   {{company\_name}}
+	\setkomavar{fromaddress}{{company\_street}\\{company\_zip} {company\_city}}
+	\setkomavar{date}       {\footnotesize\today} % let it free
+	\setkomavar{footerextra}{{company\_web}}
+	\setkomavar{directorate}{{company\_directorate}}
+	\setkomavar{tax}        {USt.-IdNr.: {company\_tax\_id\_nr}\\Steuer-Nr.: {company\_tax\_nr}}
+	\setkomavar{court}      {{company\_registration\_court\_1}}
+	\setkomavar{management} {{company\_management}}
+	\setkomavar{frombank}   {{company\_account\_institute}\\IBAN: {company\_account\_iban}\\BIC: {company\_account\_bic}}
+
+	% location next to sender
+	\setkomavar{location}{
+		\begin{footnotesize}
+			% align on right margin
+			\raggedleft
+				Tel: {company\_phone}\\
+				Fax: {company\_fax}\\
+				{{company\_mail}}\\
+		\end{footnotesize}
+	}
+
+	% footer
+	\setkomavar{firstfoot}{
+		\tiny %or small
+		\begin{flushleft}
+		\begin{tabular}[t]{@{}l l l l l l}
+
+			\ifkomavarempty{court}{}{
+				\begin{tabular}[t]{@{}l}%
+					\multicolumn{1}{@{}l@{}}{\textbf{Registergericht:}}\\
+					\usekomavar{court}
+				\end{tabular}%
+				\hfill}
+
+			\ifkomavarempty{management}{}{
+				\begin{tabular}[t]{@{}l@{}}
+					\multicolumn{1}{@{}l@{}}{\textbf{Vorstand:}}\\
+					\usekomavar{management}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{directorate}{}{
+				\begin{tabular}[t]{@{}l@{}}%
+					\multicolumn{1}{@{}l@{}}{\textbf{Aufsichtsrat:}}\\
+					\usekomavar{directorate}
+				\end{tabular}%
+				\hfill}
+
+			\ifkomavarempty{frombank}{}{
+				\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Bankverbindung:}}\\
+					\usekomavar{frombank}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{tax}{}{
+				\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Steuer:}}\\
+					\usekomavar{tax}
+				\end{tabular}
+				\hfill}
+
+			\ifkomavarempty{footerextra}{}{
+				\begin{tabular}[t]{@{}l}
+					\multicolumn{1}{@{}l@{}}{\textbf{Internet}}\\
+					\usekomavar{footerextra}
+				\end{tabular}}
+
+		\end{tabular}
+		\end{flushleft}
+	} % end footer
+
+
+	\begin{letter}{{contract\_address}}
+		\opening{\textbf{\Large{Vertragsbestätigung}}}
+
+		Vertragsnummer: {contract\_nr}
+
+		\par
+
+		% Contract data
+		\begin{flushleft}
+			\begin{small}
+				\renewcommand{\arraystretch}{1.1}
+				%\begin{tabular}{@{}L{1.8cm} C{12.2cm} L{2.1cm}}
+				\begin{tabular}{@{}l l}
+					% \topaligned
+					\textbf{Kundennummer:} & {contract\_nr}\\
+					\textbf{Vertragsbeginn:} & {contract\_start}\\
+					\textbf{Tarif:} &
+						\begin{tabular}{@{}l}
+							{tariff\_table}
+						\end{tabular} \\
+					\textbf{Kündigungsfrist:} & {period\_of\_notice} \\
+				\end{tabular}
+			\end{small}
+		\end{flushleft}
+
+		\par
+		\begin{flushleft}
+		\vspace{0.5cm}
+
+		%Die Abbuchung erfolgt von folgendem Konto: {contract\_iban}
+		\ifthenelse{\equal{{contract\_iban}}{}}
+		{
+			Bitte überweisen Sie den Rechnungsbetrag unter Angabe des auf der Rechnung stehenden Verwendungszwecks Innerhalb von 14 Tagen auf das angegebene Konto:
+
+			\begin{flushleft}
+				\begin{small}
+					\renewcommand{\arraystretch}{1.1}
+					\begin{tabular}{@{}l l}
+						\textbf{IBAN:} & {company\_account\_iban}\\
+						\textbf{BIC:} & {company\_account\_bic}\\
+						%\textbf{Verwendungszweck:} & {contract\_nr} \\
+					\end{tabular}
+				\end{small}
+			\end{flushleft}
+		}
+		%else
+		{
+			Die Abbuchung erfolgt von folgendem Konto: {contract\_iban}
+		}
+		\end{flushleft}
+		\par
+
+		\begin{flushleft}
+		Ihre monatliche Rechnung finden Sie auf der Homepage im Kundenbereich unter Angabe von Kundennummer ({contract\_nr}) und Passwort.
+		Das Passwort entnehmen Sie bitte den beiliegenden Anschluss-Informationen.
+		\end{flushleft}
+		\par
+
+		\begin{flushleft}
+		\vspace{1.1cm}
+		Mit freundlichem Glück Auf
+		\newline
+		\newline
+		\newline
+		Antennengemeinschaften
+		\vspace{0.1cm}
+		\newline
+		ERZNET AG Marienberg
+		\end{flushleft}
+
+	\end{letter}
+
+\end{document}

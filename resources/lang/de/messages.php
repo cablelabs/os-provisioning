@@ -53,6 +53,11 @@ return [
     'Contract valid'            => 'Vertrag gültig',
     'Contract'                  => 'Vertrag',
     'Contract List'             => 'Vertragsliste',
+    'contractConfirm' => [
+        'missingTariff' => 'Dem Vertrag ist kein Tarif zugewiesen.',
+        'missingTemplate' => 'Vertragsbestätigungstemplate \'contractConfirm.tex\' (und \'contractConfirm-default.tex\') fehlt in /var/www/nmsprime/storage/app/config/ccc/template/',
+        'taxIncl' => 'inkl. Mwst.',
+    ],
     'Contracts'                 => 'Verträge',
     'International prefix'      => 'Ländervorwahl',
     'Country code'              => 'Ländercode',

@@ -246,7 +246,7 @@ class Contract extends \BaseModel
         }
 
         if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
-            $ret['Create Connection Infos']['Connection Information']['view']['view'] = 'ccc::prov.conn_info';
+            $ret['Documents']['Documents']['view']['view'] = 'ccc::prov.conn_info';
         }
 
         if (Module::collections()->has('Mail')) {
@@ -1251,6 +1251,29 @@ class Contract extends \BaseModel
     public function get_end_time()
     {
         return $this->contract_end && $this->contract_end != '0000-00-00' ? strtotime($this->contract_end) : null;
+    }
+
+    /**
+     * Get all tariffs (Items of product type Internet, Voip, TV)
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function getTariffs()
+    {
+        if (! Module::collections()->has('BillingBase')) {
+            return;
+        }
+
+        return $this->items()->join('product', 'item.product_id', '=', 'product.id')
+            ->where(function ($query) {
+                $query
+                ->where('product.type', 'Internet')
+                ->orWhere('product.type', 'Voip')
+                ->orWhere('product.type', 'TV');
+            })
+            ->select('item.*', 'product.type as type')
+            ->with('product')
+            ->get();
     }
 
     /**
