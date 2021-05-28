@@ -361,7 +361,7 @@ function langDateFormat($date)
             return date('d/m/Y', $date);
 
         default:
-            return date('d-m-Y', $date);
+            return date('Y-m-d', $date);
     }
 }
 
