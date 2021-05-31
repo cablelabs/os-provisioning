@@ -184,12 +184,15 @@ class Kernel extends ConsoleKernel
             })->cron("0 4 $day2 10 0");
 
             // Contract - network access, item dates, internet (qos) & voip tariff changes
-            // important!! daily conversion has to be run BEFORE monthly conversion
-            // commands within one call of “artisan schedule:run” should be processed sequentially (AFAIR)
-            // but to force the order we add runtimes: ten minutes difference should be more than enough
-            // TODO: ckeck if this is really needed
-            $schedule->command('nms:contract daily')->daily()->at('00:03');
-            $schedule->command('nms:contract monthly')->monthly()->at('00:13');
+            // important!! daily conversion must run BEFORE monthly conversion
+            // jobs on same queue should be processed sequentially (AFAIR) - but to force the order we add runtimes
+            $schedule->call(function () {
+                Queue::push(new \Modules\ProvBase\Jobs\ContractJob('daily'));
+            })->daily()->at('00:03');
+            $schedule->call(function () {
+                Queue::push(new \Modules\ProvBase\Jobs\ContractJob('monthly'));
+            })->monthly()->at('00:33');
+
             $schedule->call(function () {
                 foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'cmts')->get() as $cmts) {
                     $cmts->store_us_snrs();
