@@ -909,7 +909,7 @@ class Contract extends \BaseModel
         ) {
             Log::info('monthly: contract: change Tariff for '.$this->id.' from '.$this->qos_id.' to '.$this->next_qos_id);
             $this->qos_id = $this->next_qos_id;
-            $this->next_qos_id = 0;
+            $this->next_qos_id = null;
             $contract_changed = true;
         }
 
@@ -917,7 +917,7 @@ class Contract extends \BaseModel
         if ($this->next_voip_id > 0) {
             Log::info('monthly: contract: change VOIP-ID for '.$this->id.' from '.$this->voip_id.' to '.$this->next_voip_id);
             $this->voip_id = $this->next_voip_id;
-            $this->next_voip_id = 0;
+            $this->next_voip_id = null;
             $contract_changed = true;
         }
 
