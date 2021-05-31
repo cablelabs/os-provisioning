@@ -223,6 +223,7 @@ function arrange(tree) {
                     });
                     break;
                 case 'bubble':
+                    var avg_upstream = tree.m_upstream_avg.length ? _.round(tree.m_upstream_avg[0].us_pwr_avg, 1) : 'Not known';
                     shape = new Bubble({
                         id: tree.id,
                         collapsed: false,
@@ -232,11 +233,11 @@ function arrange(tree) {
                                 title: 'Total number of modems: ' + tree.m_count + ' \n' +
                                     'Number of Online modems / Number of Critical modems: '
                                     + tree.m_online_count + '/' + tree.m_critical_count + '\n' +
-                                    'Avg. Upstream Power: ' + _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)
+                                    'Avg. Upstream Power: ' + avg_upstream
                             },
                             m_count_label: {text: tree.m_count},
                             m_online_critical_label: {text: tree.m_online_count + '/' + tree.m_critical_count},
-                            m_avg_upstream_label: {text: _.round(tree.m_upstream_avg[0].us_pwr_avg, 1)},
+                            m_avg_upstream_label: {text: avg_upstream},
                         },
                         parent_id: tree.parent_id,
                         pagination: tree.pagination,
