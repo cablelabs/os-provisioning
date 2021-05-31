@@ -39,6 +39,13 @@ class ContractCommand extends Command
     protected $description = 'Contract Scheduling Command (call with daily, daily_all or monthly)';
 
     /**
+     * Global counter
+     *
+     * @var int
+     */
+    protected $i;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -68,15 +75,17 @@ class ContractCommand extends Command
             return false;
         }
 
+        \Log::debug('Run '.$this->argument('date').' conversion');
+
         if (\Str::endswith($this->argument('date'), '_all')) {
             // fallback mode – runs conversions on every contract
-            $cs = Contract::all();
+            $contractsQuery = Contract::query();
         } else {
             // shrink the list of contracts to run daily conversion on – this is an expensive operation
             if (\Module::collections()->has('BillingBase')) {
                 // attention: do not check if valid_to or valid_from is fixed – we need them both
                 //      (change item dates, trigger online state of modems)
-                $cs = Contract::where(whereLaterOrEqual('contract_end', $min_date))
+                $contractsQuery = Contract::where(whereLaterOrEqual('contract_end', $min_date))
                     ->where('contract_start', '<=', $today)
                     ->join('item', 'contract.id', '=', 'item.contract_id')
                     ->join('product', 'product.id', '=', 'item.product_id')
@@ -90,31 +99,67 @@ class ContractCommand extends Command
                             ->orWhereBetween('contract.contract_end', [$min_date, $max_date]);
                     })
                     ->groupBy('contract.id')
-                    ->select('contract.*')
-                    ->get();
+                    ->select('contract.*');
             } else {
-                $cs = Contract::where(whereLaterOrEqual('contract_end', $min_date))
-                    ->where('contract_start', '<=', date('Y-m-d'))
-                    ->get();
+                if ($this->argument('date') == 'daily') {
+                    /*  (1) Contract begins today or began in last days and internet_access = 0
+                        (2) Contract ended in last days and internet_access = 1
+                    */
+                    $contractsQuery = Contract::where(function ($query) use ($min_date) {
+                        $query
+                        ->where('internet_access', 0)
+                        ->where('contract_start', '<=', date('Y-m-d'))
+                        ->where('contract_start', '>', $min_date);
+                    })
+                    ->orWhere(function ($query) use ($min_date) {
+                        $query
+                        ->where('internet_access', 1)
+                        ->whereNotNull('contract_end')
+                        ->where('contract_end', '<', date('Y-m-d'))
+                        ->where('contract_end', '>=', $min_date);
+                    });
+                } else {
+                    /* Contract must be valid and
+                        (3) Qos-id needs to be changed
+                        (4) Voip-id needs to be changed
+                    */
+                    $contractsQuery = Contract::where('contract_start', '<=', date('Y-m-d'))
+                        ->where(whereLaterOrEqual('contract_end', date('Y-m-d', strtotime('+1 day'))))
+                        ->where(function ($query) {
+                            $query
+                            ->whereNotNull('next_qos_id')
+                            ->orWhereNotNull('next_voip_id');
+                        })
+                        ->where(function ($query) {
+                            $query
+                            ->whereRaw('qos_id != next_qos_id')
+                            ->orWhereRaw('voip_id != next_voip_id');
+                        });
+                }
             }
         }
 
-        $i = 1;
-        $num = count($cs);
+        $this->i = 1;
+        $num = (clone $contractsQuery)->pluck('id')->count();
 
-        foreach ($cs as $c) {
-            echo "contract month: $i/$num \r";
-            $i++;
+        $contractsQuery->chunk(1000, function ($contracts) use ($num) {
+            foreach ($contracts as $c) {
+                echo "contract month: $this->i/$num \r";
+                $this->i++;
 
-            if (in_array($this->argument('date'), ['daily', 'daily_all'])) {
-                $c->daily_conversion();
+                if (in_array($this->argument('date'), ['daily', 'daily_all'])) {
+                    $c->daily_conversion();
+                }
+
+                if ($this->argument('date') == 'monthly') {
+                    $c->monthly_conversion();
+                }
             }
+        });
 
-            if ($this->argument('date') == 'monthly') {
-                $c->monthly_conversion();
-            }
+        if ($this->i > 1) {
+            echo "\n";
         }
-        echo "\n";
 
         system('/bin/chown -R apache '.storage_path('logs'));
     }

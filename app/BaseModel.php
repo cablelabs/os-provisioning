@@ -809,6 +809,13 @@ class BaseModel extends Eloquent
         return $user ? $user->first_name.' '.$user->last_name : 'cronjob';
     }
 
+    public function saveWithoutEvents()
+    {
+        return static::withoutEvents(function () {
+            return $this->save();
+        });
+    }
+
     /**
      * Helper to check if writing (=changing the database) is allowed
      * Intercept writing operations on ProvHA slave machines instead of let laravel throw PDO exceptions.
