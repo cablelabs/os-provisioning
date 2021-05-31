@@ -621,7 +621,7 @@ class Contract extends \BaseModel
         Log::debug('Starting daily conversion for contract '.$this->number, [$this->id]);
 
         if (! Module::collections()->has('BillingBase')) {
-            $this->_update_internet_access_from_contract();
+            $this->updateInternetAccess();
         } else {
 
             // Get items by only 1 db query & set them as contract relations to work with them in next functions
@@ -669,38 +669,31 @@ class Contract extends \BaseModel
      * This enables/disables internet_access according to start and end date of the contract.
      * Used if billing is disabled.
      *
-     * @author Torsten Schmidt
+     * @author Torsten Schmidt, Nino Ryschawy
      */
-    protected function _update_internet_access_from_contract()
+    protected function updateInternetAccess()
     {
-        $now = \Carbon\Carbon::now();
-
-        // Task 1: Check if $this contract end date is expired -> disable internet_access
-        if ($this->contract_end) {
-            $end = $this->_date_to_carbon($this->contract_end);
-            if ($end->lt($now) && ! $this->_date_null($end) && $this->internet_access == 1) {
-                Log::info('daily: contract: disable based on ending contract date for '.$this->id);
-
-                $this->internet_access = 0;
-                $this->changes_on_daily_conversion = true;
+        // Enable internet access when contract is valid
+        if ($this->isValid('now', null, [strtotime($this->contract_start), strtotime($this->contract_end)])) {
+            if ($this->internet_access) {
+                return;
             }
+
+            Log::info("daily: contract: enable internet access for contract $this->number");
+            $this->changes_on_daily_conversion = true;
+            $this->internet_access = 1;
+
+            return;
         }
 
-        // Task 2: Check if $this is a new contract and activate it -> enable internet_access
-        // Note: to avoid enabling contracts which are disabled manually, we also check if
-        //       maximum time beetween start contract and now() is not older than 1 day.
-        // Note: This requires the daily scheduling to run well
-        //       Otherwise the contracts must be enabled manually
-        // TODO: give them a good testing
-        if ($this->contract_start) {
-            $start = $this->_date_to_carbon($this->contract_start);
-            if ($start->lt($now) && ! $this->_date_null($start) && $start->diff($now)->days <= 1 && $this->internet_access == 0) {
-                Log::info('daily: contract: enable contract based on start contract date for '.$this->id);
-
-                $this->internet_access = 1;
-                $this->changes_on_daily_conversion = true;
-            }
+        // Disable internet access when contract is not valid
+        if (! $this->internet_access) {
+            return;
         }
+
+        $this->internet_access = 0;
+        $this->changes_on_daily_conversion = true;
+        Log::info("daily: contract: disable internet access for contract $this->number");
     }
 
     /**
