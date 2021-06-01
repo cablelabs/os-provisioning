@@ -53,6 +53,11 @@ return [
     'Contract valid'            => 'Contract valid',
     'Contract'                  => 'Contract',
     'Contract List'             => 'Contract List',
+    'contractConfirm' => [
+        'missingTariff' => 'The tariff for this contract is missing.',
+        'missingTemplate' => 'Contract confirmation template \'contractConfirm.tex\' (and \'contractConfirm-default.tex\') is missing in /var/www/nmsprime/storage/app/config/ccc/template/',
+        'taxIncl' => 'tax included',
+    ],
     'Contracts'                 => 'Contracts',
     'International prefix'      => 'International prefix',
     'Country code'              => 'Country code',
