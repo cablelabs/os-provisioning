@@ -2,9 +2,9 @@
 
 namespace Modules\HfcReq\Observers;
 
-use Auth;
 use Session;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use Modules\HfcReq\Entities\NetElement;
 
 class NetElementObserver
@@ -74,7 +74,13 @@ class NetElementObserver
 
     protected function flushSidebarNetCache()
     {
-        Cache::forget(Auth::user()->login_name.'-Nets');
+        if ($user = auth()->user()) {
+            Cache::forget($user->login_name.'-Nets');
+
+            return;
+        }
+
+        return Artisan::call('cache:clear');
     }
 
     /**

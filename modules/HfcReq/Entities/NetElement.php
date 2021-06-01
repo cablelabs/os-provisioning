@@ -3,12 +3,15 @@
 namespace Modules\HfcReq\Entities;
 
 use Auth;
+use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\SnmpAccessException;
 
 class NetElement extends \BaseModel
 {
+    use NodeTrait;
+
     // Do not delete children (modem, mta, phonenmumber, etc.)!
     protected $delete_children = false;
 
@@ -18,6 +21,8 @@ class NetElement extends \BaseModel
     public $table = 'netelement';
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
     protected $with = ['netelementtype'];
+
+    protected $appends = ['url', 'bs_class'];
 
     public $guarded = ['kml_file_upload'];
 
@@ -37,12 +42,12 @@ class NetElement extends \BaseModel
     public function rules()
     {
         $rules = [
-            'name' 			=> 'required|string',
-            'pos' 			=> 'nullable|geopos',
-            'community_ro' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
-            'community_rw' 	=> 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
-            'netelementtype_id'	=> 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
-            'agc_offset'	=> 'nullable|numeric|between:-99.9,99.9',
+            'name' => 'required|string',
+            'pos' => 'nullable|geopos',
+            'community_ro' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
+            'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
+            'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
+            'agc_offset' => 'nullable|numeric|between:-99.9,99.9',
         ];
 
         return $rules;
@@ -111,8 +116,8 @@ class NetElement extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name',  $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
-            'header' =>  $this->id.' - '.$this->name,
+            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
+            'header' => $this->id.' - '.$this->name,
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'],
             'eager_loading' => ['netelementtype'],
@@ -140,7 +145,7 @@ class NetElement extends \BaseModel
         }
 
         if (! Module::collections()->has('HfcBase') || (! array_key_exists('icingaObject', $this->relations) &&
-            ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
+                ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
             return 'warning';
         }
 
@@ -153,6 +158,11 @@ class NetElement extends \BaseModel
         }
 
         return 'warning';
+    }
+
+    public function getBsClassAttribute(): string
+    {
+        return $this->get_bsclass();
     }
 
     //for empty relationships
@@ -235,6 +245,11 @@ class NetElement extends \BaseModel
     public function modems()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
+    }
+
+    public function passive_modems()
+    {
+        return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
     public function geoPosModems()
@@ -373,6 +388,27 @@ class NetElement extends \BaseModel
     }
 
     /**
+     * Url of netelement at ERD-Vicinity graph as model Attribute
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        $url = '';
+        if ($this->link) {
+            $url = $this->link;
+        } elseif ($this->netelementtype_id == 8) {
+            $url = route('TreeErd.show', ['parent_id', $this->id]);
+        } elseif ($this->netelementtype_id == 9) {
+            $url = Module::collections()->has('Satkabel') ? route('NetElement.tapControlling', $this->id) : '';
+        } else {
+            $url = route('NetElement.controlling_edit', [$this->id, 0, 0]);
+        }
+
+        return $url;
+    }
+
+    /**
      * Link to Ticket creation form already prefilled.
      *
      * @return string
@@ -491,7 +527,7 @@ class NetElement extends \BaseModel
     /**
      * Get first parent of type NetGw
      *
-     * @return object NetElement 	(or NULL if there is no parent NetGw)
+     * @return object NetElement    (or NULL if there is no parent NetGw)
      */
     public function get_parent_netgw()
     {
@@ -529,8 +565,8 @@ class NetElement extends \BaseModel
             ->whereNull('n.deleted_at')
             ->where(function ($query) {
                 $query
-                ->whereNull('n.id')
-                ->orWhere('apartment.id', $this->apartment_id);
+                    ->whereNull('n.id')
+                    ->orWhere('apartment.id', $this->apartment_id);
             })
             ->select('apartment.*')
             ->get();
@@ -744,8 +780,8 @@ class NetElement extends \BaseModel
      * Returns all tabs for the view depending on the NetelementType
      * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port
      *
-     * @author Roy Schneider, Nino Ryschawy
      * @return array
+     * @author Roy Schneider, Nino Ryschawy
      */
     public function tabs()
     {
@@ -809,9 +845,9 @@ class NetElement extends \BaseModel
     /**
      * Return number from IP address field if the record is written like: 'cm-...'.
      *
-     * @author Roy Schneider
      * @param string
      * @return string
+     * @author Roy Schneider
      */
     private function getModemIdFromHostname($hostname)
     {
@@ -827,9 +863,8 @@ class NetElement extends \BaseModel
     /**
      * Get the IP address if set, otherwise return IP address of parent NetGw
      *
-     * @author Ole Ernst
-     *
      * @return string: IP address (null if not found)
+     * @author Ole Ernst
      */
     private function _get_ip()
     {

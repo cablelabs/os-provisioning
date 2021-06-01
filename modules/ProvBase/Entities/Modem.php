@@ -318,6 +318,11 @@ class Modem extends \BaseModel
         return $this->hasMany(RadPostAuth::class, 'username', 'ppp_username');
     }
 
+    public function nextPassiveElement()
+    {
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'id', 'next_passive_id');
+    }
+
     /*
      * Relation Views
      */
