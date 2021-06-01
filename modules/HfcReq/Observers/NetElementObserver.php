@@ -2,7 +2,6 @@
 
 namespace Modules\HfcReq\Observers;
 
-use Auth;
 use Session;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
