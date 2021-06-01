@@ -757,4 +757,7 @@ return [
     'mark all as read'          => 'mark all as read',
     'mark as read'              => 'mark as read',
     'details'                   => 'Details',
+    'SnmpAccessException'       => 'Snmp Access Declined',
+    'flappingDhcp'              => 'The device is sending too many DHCPDISCOVER messages in a short span of time',
+    'criticalValues'            => 'The device has critical values',
 ];
