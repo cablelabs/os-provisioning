@@ -106,7 +106,14 @@ class Modem extends \BaseModel
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
-        $filter = session(class_basename(self::class).'_show_filter', 'all');
+
+        if (session(class_basename(self::class).'_show_filter', 'all') != 'all') {
+            $whereClauses = [
+                function ($query) {
+                    return self::getWhereClauseFirmware($query, session('filter_data'));
+                },
+            ];
+        }
 
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
@@ -117,7 +124,7 @@ class Modem extends \BaseModel
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
             'order_by' => ['0' => 'desc'],
-            'where_clauses' => $filter !== 'all' ? [self::getWhereClauseFirmware($filter)] : [],
+            'where_clauses' => $whereClauses ?? [],
         ];
 
         if (Module::collections()->has('ProvMon')) {
@@ -192,9 +199,13 @@ class Modem extends \BaseModel
      *
      * @author Ole Ernst
      */
-    protected static function getWhereClauseFirmware($filter)
+    protected static function getWhereClauseFirmware($query, $filter)
     {
-        return "`sw_rev` = '{$filter}'";
+        if (! $filter) {
+            return $query;
+        }
+
+        return $query->whereRaw('`sw_rev` = :filter')->setBindings(['filter' => $filter]);
     }
 
     /**

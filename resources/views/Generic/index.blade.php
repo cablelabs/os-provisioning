@@ -54,8 +54,8 @@
                         <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
                         <a class="badge badge-primary" href="{{ Request::url() }}"
                             style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
-                            title="{{ trans("messages.removeFilter") }}">
-                            {{ trans("messages.onlyNewTickets") }}
+                            title="{{ trans('messages.removeFilter') }}">
+                            {{ trans("view.filter.{$filter['key']}", ['data' => $filter['data']]) }}
                             <i class="fa fa-close p-l-5"></i>
                         </a>
                     </div>

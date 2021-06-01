@@ -359,6 +359,14 @@ return [
     'Button_Create IpPool'          => 'IpPool anlegen', //workaround
     'Button_Create IP-Pools'        => 'IpPool anlegen',
 
+    // Index
+    'filter' => [
+        'all'               => 'ungültiger Filter',
+        'newTickets'        => 'neue Tickets',
+        'sw_rev'            => 'Modems mit Firmware :data',
+        'action_needed'     => 'Aufträge die Bearbeitung benötigen',
+    ],
+
     // DASHBOARD
     'dashboard' => [
         'netIncome'           => 'NETTOERLÖSE',

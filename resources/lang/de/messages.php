@@ -637,7 +637,6 @@ return [
     'deletedTicketUsersMessage' => 'Du wurdest aus einem Ticket entfernt.',
     'ticketUpdatedMessage'      => 'das Ticket wurde geändert.',
     'isLegacyTicket'            => 'Dies ist ein veraltetes Ticket. Es ist mit keiner anderen Entität verknüpft.',
-    'onlyNewTickets'            => 'Nur neue Tickets!',
     'noTicketsAtAll'            => 'Genieße den Tag! Dir sind aktuell keine Tickets zugewiesen!',
     'noComments'                => 'Für dieses Ticket existieren noch keine Kommentare',
     'backToDetails'             => 'Zurück zu den Details',

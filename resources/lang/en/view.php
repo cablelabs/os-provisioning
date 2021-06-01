@@ -359,6 +359,14 @@ return [
     'Button_Create IpPool'          => 'Create IpPool', //workaround
     'Button_Create IP-Pools'        => 'Create IpPools',
 
+    // Index
+    'filter' => [
+        'all'               => 'bad filter',
+        'newTickets'        => 'New tickets',
+        'sw_rev'            => 'Modems with firmware :data',
+        'action_needed'     => 'Orders needing actions',
+    ],
+
     // DASHBOARD
     'dashboard' => [
         'netIncome'         => 'NET PROCEEDS',

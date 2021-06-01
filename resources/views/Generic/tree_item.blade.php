@@ -46,7 +46,7 @@
             {{$key}}
             @include('Generic.tree_item', array('items' => $item))
         @else
-            {!! HTML::linkRoute('Modem.index', "$key: $item", ['show_filter' => $key]) !!}
+            {!! HTML::linkRoute('Modem.index', "$key: $item", ['show_filter' => 'sw_rev', 'data' => $key]) !!}
         @endif
     @endif
 @endforeach

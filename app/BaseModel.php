@@ -280,9 +280,9 @@ class BaseModel extends Eloquent
      * Get the filter to use for index view (used to show only new Tickets).
      * To make the filter available in datatables we use the session.
      *
-     * @author Patrick Reichel, Christian Schramm
+     * @return array with key and data as keys
      */
-    public static function storeIndexFilterIntoSession()
+    public static function storeIndexFilterIntoSession(): array
     {
         $filter = request('show_filter', 'all');
 
@@ -290,7 +290,13 @@ class BaseModel extends Eloquent
             $filter = 'all';
         }
 
-        Session::put(class_basename(static::class).'_show_filter', $filter);
+        session([class_basename(static::class).'_show_filter' => $filter]);
+        session(['filter_data', $payload = e(request('data', ''))]);
+
+        return [
+            'key' => $filter,
+            'data' => $payload,
+        ];
     }
 
     /**

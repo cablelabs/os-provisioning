@@ -23,6 +23,7 @@ use Str;
 use Auth;
 use View;
 use Bouncer;
+use Closure;
 use Request;
 use Session;
 use Redirect;
@@ -740,7 +741,6 @@ class BaseController extends Controller
     public function index()
     {
         $model = static::get_model_obj();
-        $model::storeIndexFilterIntoSession();
         $headline = BaseViewController::translate_view($model->view_headline(), 'Header', 2);
         $view_header = BaseViewController::translate_view('Overview', 'Header');
         $create_allowed = static::get_controller_obj()->index_create_allowed;
@@ -761,15 +761,12 @@ class BaseController extends Controller
             return View::make('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed', 'undeletables')));
         }
 
-        $view_path = 'Generic.index';
-        if (View::exists(NamespaceController::get_view_name().'.index')) {
-            $view_path = NamespaceController::get_view_name().'.index';
-        }
+        $filter = $model::storeIndexFilterIntoSession();
+        $viewName = NamespaceController::get_view_name();
+        $view_path = View::exists($viewName.'.index') ? $viewName.'.index' : 'Generic.index';
+        Log::debug('Showing only index() elements a user can access is not yet implemented');
 
-        // TODO: show only entries a user has at view rights on model and net!!
-        Log::warning('Showing only index() elements a user can access is not yet implemented');
-
-        return View::make($view_path, $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed')));
+        return View::make($view_path, $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'filter')));
     }
 
     /**
@@ -1637,7 +1634,7 @@ class BaseController extends Controller
         $edit_column_data = $dt_config['edit'] ?? [];
         $filter_column_data = $dt_config['filter'] ?? [];
         $eager_loading_tables = $dt_config['eager_loading'] ?? [];
-        $additional_raw_where_clauses = $dt_config['where_clauses'] ?? [];
+        $whereClauses = $dt_config['where_clauses'] ?? [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
         if (empty($eager_loading_tables)) { //use eager loading only when its needed
@@ -1657,8 +1654,14 @@ class BaseController extends Controller
         }
 
         // apply additional where clauses
-        foreach ($additional_raw_where_clauses as $where_clause) {
-            $request_query = $request_query->whereRaw($where_clause);
+        foreach ($whereClauses as $whereClause) {
+            if ($whereClause instanceof Closure) {
+                $request_query = call_user_func($whereClause, $request_query);
+            }
+
+            if (is_string($whereClause)) {
+                $request_query = $request_query->whereRaw($whereClause);
+            }
         }
 
         $DT = DataTables::make($request_query)
