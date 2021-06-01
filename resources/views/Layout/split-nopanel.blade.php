@@ -16,6 +16,10 @@
         $leftMdSizeXl -= $mdSizes['rightRightXl'];
         $leftMdSizeLg -= $mdSizes['rightRightLg'];
     }
+
+    if (\Request::route()->getName() == 'TreeTopo.show') {
+        $flex = 'flex:1;';
+    }
 @endphp
 
 @section ('content')
@@ -66,7 +70,7 @@
                 </div>
                 @endif
                 <div class="d-flex flex-wrap" style="display:flex;flex: 1;">
-                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ isset($withHistory) ? 'display:flex;flex: 1;' : '' }}">
+                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || \Request::route()->getName() == 'TreeTopo.show') ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>
                     @yield('content_right')
