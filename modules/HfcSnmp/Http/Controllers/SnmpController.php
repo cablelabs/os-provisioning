@@ -99,6 +99,7 @@ class SnmpController extends \BaseController
     public function controlling_edit(NetElement $netelement, $paramId = 0, $index = 0)
     {
         $form_fields = [];
+        $error = false;
 
         try {
             $this->init($netelement, $paramId, $index);
@@ -106,6 +107,7 @@ class SnmpController extends \BaseController
             $form_fields = $this->getSnmpValues(true);
         } catch (Exception $e) {
             Session::push('tmp_error_above_form', $e->getMessage());
+            $error = true;
 
             if ($e->getMessage() == trans('messages.snmp.unreachable')) {
                 $form_fields = $this->getLastValues();
@@ -128,7 +130,7 @@ class SnmpController extends \BaseController
         $tabs = $netelement->tabs();
         $reload = $netelement->netelementtype->page_reload_time ?: 0;
 
-        return \View::make('hfcsnmp::NetElement.controlling', $this->compact_prep_view(compact('netelement',
+        return \View::make('hfcsnmp::NetElement.controlling', $this->compact_prep_view(compact('error', 'netelement',
             'view_header', 'tabs', 'form_fields', 'route_name', 'headline', 'reload', 'paramId', 'index')));
     }
 
@@ -376,6 +378,7 @@ class SnmpController extends \BaseController
         } // end foreach
 
         $this->storeSnmpValues($valuesToStore);
+        $this->storeSnmpValues($valuesToStore, 'ordered');
         Cache::put($this->cacheKey, $orderedValues, 5);
 
         return $ordered ? $orderedValues : json_encode($finalValues);
@@ -388,7 +391,7 @@ class SnmpController extends \BaseController
      */
     private function getLastValues()
     {
-        $formFields = $this->getStoredValues('ordered');
+        $formFields = $this->getStoredValues('ordered')['values'];
 
         if ($formFields) {
             Session::push('tmp_warning_above_form', trans('messages.snmp.lastValues', ['date' => date('Y-m-d', $values['time'])]));
@@ -421,7 +424,7 @@ class SnmpController extends \BaseController
         $filePath = $this->netelement->getSnmpValuesStoragePath($ext);
 
         if (! File::exists($filePath)) {
-            return [];
+            return ['values' => []];
         }
 
         return [
@@ -443,7 +446,7 @@ class SnmpController extends \BaseController
      */
     private static function _build_diff_and_divide($param, &$index, &$results, $value, $old_values)
     {
-        $old_value = isset($old_values->{$param->oidoid.$index}) ? $old_values->{$param->oidoid.$index} : 0;
+        $old_value = isset($old_values[$param->oidoid.$index]) ? $old_values[$param->oidoid.$index] : 0;
 
         // Subtract old value from new value
         if ($param->diff_param) {
@@ -462,7 +465,7 @@ class SnmpController extends \BaseController
 
                 // For differential params build difference of divisor to old value as well
                 if ($param->diff_param) {
-                    $old_value = isset($old_values->{$divisor_oid.$index}) ? $old_values->{$divisor_oid.$index} : 0;
+                    $old_value = isset($old_values[$divisor_oid.$index]) ? $old_values[$divisor_oid.$index] : 0;
                     $divisor = $results[$divisor_oid.$index] - $old_value;
                 }
 
@@ -656,13 +659,11 @@ class SnmpController extends \BaseController
     public function snmp_set_all($data)
     {
         // Get stored Snmpvalues
-        $oldValues = $this->getStoredValues();
+        $oldValues = $this->getStoredValues()['values'];
 
-        if (! $oldValues || ! isset($oldValues['values'])) {
+        if (! $oldValues) {
             throw new Exception('Error: Stored SNMP Values were deleted!');
         }
-
-        $oldValues = $oldValues['values'];
 
         // TODO: get empty collection or already filled with OIDs to increase performance if probable
         // $oids = $this->_get_oid_collection();

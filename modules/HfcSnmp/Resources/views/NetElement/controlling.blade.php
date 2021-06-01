@@ -8,20 +8,23 @@
 
 @stop
 
-@php
-    // Store in variable as session key is removed in above_infos blade
-    $error = \Session::has('tmp_error_above_form');
-@endphp
-
 @section ('content_left')
 
     @include ('Generic.logging')
 
-    {{-- Error Message --}}
-    <?php $blade_type = 'form' ?>
+    {{-- Error Messages --}}
+    @php
+        $blade_type = 'form';
+        $directWsLink = str_replace('8080', '6001', route('Home'));
+    @endphp
+
     @include('Generic.above_infos')
-    <div class="col-md-12">
-        <div id="echoError" class="pt-0 pl-1 mb-1 font-weight-bold" style="border-left: solid 2px #ffaaaa"></div>
+
+    <div id="echoError" style="display: none" class="col-md-12">
+        <div class="pt-0 pl-1 mb-1 font-weight-bold" style="border-left: solid 2px #ffaaaa">
+            {{ trans('messages.snmp.wsConFail') }}
+            <a href="{{ $directWsLink }}" target="_blank">{{ $directWsLink }}</a>
+        </div>
     </div>
 
     {{-- Auto update button - Show only when device could be queried via SNMP --}}
@@ -147,7 +150,7 @@
     function subscribe()
     {
         if (window.echo == undefined || window.echo.connector.pusher.connection.state != 'connected') {
-            $("#echoError").html("{{ trans('messages.wsConFail') }}");
+            $("#echoError").attr('style', 'display:block');
 
             return;
         }

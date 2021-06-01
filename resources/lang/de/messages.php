@@ -202,7 +202,7 @@ return [
         'missingIp' => 'Das Netzelement ist nicht erreichbar, da keine IP bzw. kein Hostname zugewiesen wurde.',
         'undefined' => 'Für diesen Netzelementtyp ist kein Controlling definiert.',
         'unreachable' => 'Das Gerät ist nicht per SNMP erreichbar.',
-        'wsConFail' => 'Es konnte keine Verbindung zum Websocket Server aufgebaut werden. Bitte prüfen Sie ob der Server läuft und korrekt konfiguriert ist.',
+        'wsConFail' => 'Es konnte keine Verbindung zum Websocket Server aufgebaut werden. Bitte prüfen Sie ob der Server läuft und korrekt konfiguriert ist oder versuchen Sie die Verbindung einmalig über folgenden Link zu aktivieren: ',
     ],
     'State'                     => 'Status',
     'Street'                    => 'Straße',
