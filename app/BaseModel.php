@@ -271,11 +271,11 @@ class BaseModel extends Eloquent
     {
         $filter = request('show_filter', 'all');
 
-        if (! in_array($filter, self::AVAILABLE_FILTERS)) {
+        if (! in_array($filter, static::AVAILABLE_FILTERS)) {
             $filter = 'all';
         }
 
-        Session::put(class_basename(self::class).'_show_filter', $filter);
+        Session::put(class_basename(static::class).'_show_filter', $filter);
     }
 
     /**

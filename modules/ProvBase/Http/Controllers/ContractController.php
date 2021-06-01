@@ -300,8 +300,9 @@ class ContractController extends \BaseController
     public function getRelationDatatable(Contract $contract, $relationClass)
     {
         $relationFn = \Illuminate\Support\Str::plural(strtolower($relationClass));
+        $order = $relationClass !== 'Invoice' ? 'asc' : 'desc';
 
-        return datatables($contract->$relationFn())
+        return datatables($contract->$relationFn()->orderBy('id', $order))
             ->addColumn('checkbox', function ($model) {
                 if (method_exists($model, 'set_index_delete')) {
                     $model->set_index_delete();
