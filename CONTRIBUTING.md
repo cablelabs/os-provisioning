@@ -1,48 +1,72 @@
-## How to contribute to NMS Prime
+# Contributing to OS Provisioning
 
-#### Read and accept our CLA
-To get started, [sign the Contributor License Agreement](https://cla-assistant.io/nmsprime/nmsprime).
+First off, thanks for taking the time to contribute! :+1:
 
-#### **Did you find a bug?**
+## Code of Conduct
 
-* **Do not open up a GitHub issue if the bug is a security vulnerability
-  in NMS Prime**, and instead send us an e-mail to: support@roetzer-engineering.com.
+This project and everyone participating in it is governed by the
+[OS Provisioning Code of Conduct][1]. By participating, you are
+expected to uphold this code. Please report unacceptable behavior to
+[osprovisioning@cablelabs.com][2].
 
-* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/nmsprime/nmsprime/issues).
+[1]: https://github.com/cablelabs/os-provisioning/blob/dev/CODE_OF_CONDUCT.md
+[2]: mailto:osprovisiong@cablelabs.com
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/nmsprime/nmsprime/issues/new?template=bug_report.md). Be sure to include a **title and clear description** and as much relevant information as possible.
+## How Can I Contribute?
 
-#### **Did you write a patch that fixes a bug?**
+We're happy you want to contribute! There are many ways to contribute, from reporting
+a bug to implementing a feature.  All contributions begin as a GitHub issue.
+All pull requests will need to be associated with an issue. 
 
-* Open a new [GitHub Pull request](https://github.com/nmsprime/nmsprime/compare) with the patch.
+- [Open an issue][3] with suggestions for improvements
+- Fork this repository and submit a pull request
 
-* Ensure the Pull request description clearly describes the problem and solution. Include the relevant issue number if applicable.
+[3]: https://github.com/cablelabs/os-provisioning/issues
 
-* Before submitting, please read the [Contribute Code to NMS Prime](https://devel.roetzer-engineering.com/confluence/x/YARk) guide to know more about coding conventions and benchmarks. Pull request fixing a regular bug (bugfix branch) MUST be opened against the dev branch. Pull request fixing a critical bug (hotfix branch) MUST be opened against both master and dev branch. See [Git Workflow](https://devel.roetzer-engineering.com/confluence/x/SwFs) for more details.
+### How Can I Submit a Pull Request?
 
-#### **Do you want to help translate NMS Prime?**
-We use the [crowdin](https://crowdin.com/project/nmsprime) project for generic languange translation. No coding knowledge required!
+1. [Find or open an issue][3] with suggestions for improvements. All
+contributions begin with a GitHub issue.
+2. [Fork][5] this repository to a different Github account.
+3. [Clone][6] the newly created repository to your development environment.
+4. Make your suggested changes in one branch named after the issue number you
+are working (e.g. `issue-1`).
+5. Commit and push your changes.
+6. Open a [pull request][7] in the [OS Provisioning repo][8]
+7. As part of the pull request review process, Open Adrenaline maintainers
+may provide you with feedback and suggested changes.
+8. Once the pull request is ready to be merged, the maintainers will choose the
+appropriate time to merge the pull request.
 
-#### **Do you intend to add a new feature or change an existing one?**
 
-* Suggest your change via [Github Feature request](https://github.com/nmsprime/nmsprime/issues/new?template=feature_request.md), try to get feedback from core members before you start
+Our [pull request template][9] should be used for all pull requests. If you're
+creating your pull request from the GitHub site, then it will be automatically
+populated with the template's contents, otherwise please copy and paste the
+template text into your pull request.
 
-* Writing your code.
+[5]: https://help.github.com/articles/fork-a-repo/
+[6]: https://help.github.com/articles/cloning-a-repository/
+[7]: https://help.github.com/articles/about-pull-requests/
+[8]: https://github.com/cablelabs/os-provisioning
+[9]: PULL_REQUEST_TEMPLATE.md
 
-* Before submitting, please read the [Contribute Code to NMS Prime](https://devel.roetzer-engineering.com/confluence/x/YARk) guide to know more about coding conventions and benchmarks. Pull request (feature branch) MUST be opened against dev branch. See [Git Workflow](https://devel.roetzer-engineering.com/confluence/x/SwFs) for more details.
+#### Sample Pull Request Commands
 
-#### **Do you have questions about the source code?**
+```
+# Step 3: Clone the new repo
+git clone https://github.com/YOUR-GITHUB-USERNAME/os-provisioning.git
+git checkout -b my-dev-branch
+# Step 5: Commit and push your changes
+git add /path/to/changed/file
+git commit -m "Description of changes"
+git push origin my-dev-branch
+```
 
-* Ask any question about how to use NMS Prime in the [Official Forum](https://devel.roetzer-engineering.com/confluence/x/foDCAQ).
+## Resources
 
-#### **Do you want to contribute to the NMS Prime documentation?**
+Some useful resources to get started:
+- Project [README][11]
+- [OS Provisioning License][12]
 
-* If you want to contribute to the [Forum](https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum) please use the anonymous users for now.
-
-* If you want to contribute to the [Official Documentation](https://devel.roetzer-engineering.com/confluence/display/NMS/NMS+PRIME), use either the comment function or request confluence access via support@roetzer-engineering.com.
-
-NMS Prime is an open source project. We encourage you to [become a member](https://www.nmsprime.com/about)!
-
-Thanks! :heart: :heart: :heart:
-
-NMS Prime Team
+[11]: README.md
+[12]: https://github.com/cablelabs/os-provisioning/blob/dev/LICENSE
