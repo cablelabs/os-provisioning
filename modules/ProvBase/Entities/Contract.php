@@ -922,7 +922,7 @@ class Contract extends \BaseModel
         }
 
         if ($contract_changed) {
-            $this->saveWithoutEvents();
+            $this->saveQuietly();
             $this->pushToModems();
         }
     }

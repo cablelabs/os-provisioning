@@ -809,7 +809,7 @@ class BaseModel extends Eloquent
         return $user ? $user->first_name.' '.$user->last_name : 'cronjob';
     }
 
-    public function saveWithoutEvents()
+    public function saveQuietly()
     {
         return static::withoutEvents(function () {
             return $this->save();

@@ -77,10 +77,10 @@ class ContractCommand extends Command
 
         \Log::debug('Run '.$this->argument('date').' conversion');
 
-        if (\Str::endswith($this->argument('date'), '_all')) {
-            // fallback mode – runs conversions on every contract
-            $contractsQuery = Contract::query();
-        } else {
+        // Fallback mode – runs conversions on every contract
+        $contractsQuery = Contract::query();
+
+        if (! \Str::endswith($this->argument('date'), '_all')) {
             // shrink the list of contracts to run daily conversion on – this is an expensive operation
             if (\Module::collections()->has('BillingBase')) {
                 // attention: do not check if valid_to or valid_from is fixed – we need them both
