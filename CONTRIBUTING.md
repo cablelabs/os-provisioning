@@ -9,7 +9,7 @@ This project and everyone participating in it is governed by the
 expected to uphold this code. Please report unacceptable behavior to
 [osprovisioning@cablelabs.com][2].
 
-[1]: https://github.com/cablelabs/os-provisioning/blob/main/CODE%20OF%20CONDUCT.md
+[1]: https://github.com/cablelabs/os-provisioning/blob/main/CODE_OF_CONDUCT.md
 [2]: mailto:osprovisiong@cablelabs.com
 
 ## How Can I Contribute?
