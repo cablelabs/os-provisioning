@@ -245,7 +245,7 @@ return [
     'Header_ProvVoipEnvia'      => 'envia-TEL management|envia-TEL management',
 
     'Header_Contact'            => 'Contacts',
-    'Header_Connection Information' => 'Connection Information',
+    'Header_Documents'          => 'Documents',
     'Header_Debt'               => 'Debt history',
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
@@ -498,6 +498,10 @@ return [
     'Detach all' => 'Detach all :model',
     'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
+    'download' => [
+        'connInfo' => 'Connection Information',
+        'contractConfirmation' => 'Contract Confirmation',
+    ],
     'Download' => 'Download',
     'error' => [
         'backToHomePage'        => 'Go back to Home Page',
@@ -517,7 +521,7 @@ return [
     'Message' => 'Message',
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
-    'parentNetelement' => 'Parent netelement',
+    'parentNetelement' => 'Parent <br> netelement',
     'product' => [
         'billingCycles' => [
             'once' => 'once',
@@ -542,7 +546,7 @@ return [
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'tab' => [
-        'Create Connection Infos' => 'Create Connection Infos',
+        'Documents' => 'Documents',
     ],
 
     'ticket' => [

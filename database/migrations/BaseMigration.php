@@ -112,6 +112,10 @@ class BaseMigration extends Migration
 
     protected function set_auto_increment($i)
     {
+        if (! $this->tablename) {
+            return;
+        }
+
         DB::update('ALTER TABLE '.$this->tablename." AUTO_INCREMENT = $i;");
     }
 

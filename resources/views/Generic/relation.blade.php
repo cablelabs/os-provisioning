@@ -56,8 +56,8 @@ Relation Blade is used inside a Panel Element to display relational class object
             {!! Form::close() !!}
         @endif
     @endcan
-    @if($relation)
-        @can('delete', $relation->get(0))
+    @if(isset($relation[0]))
+        @can('delete', $relation[0])
             {{-- Delete Button --}}
             @if (! isset($options['hide_delete_button']) && isset($relation[0]))
                 <div class="col align-self-end">
@@ -97,11 +97,14 @@ Relation Blade is used inside a Panel Element to display relational class object
             @endforeach
         </table>
     @else
-        <table id="{{ $class }}-datatable" class="table table-hover datatable table-bordered d-table">
+        @php
+            $dtName = strtolower($tab['name']).$class.'Datatable';
+        @endphp
+        <table id="{{ $dtName }}" class="table table-hover datatable table-bordered d-table w-100">
             <thead>
                 <tr>
-                    <th style="width:20px;"></th>
-                    <th style="width:100%;">Label</th>
+                    <th class="w-5"></th>
+                    <th class="w-100">Label</th>
                 </tr>
             </thead>
             <tbody>
@@ -109,9 +112,8 @@ Relation Blade is used inside a Panel Element to display relational class object
         </table>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                let {{ $class }} = $('#{{ $class }}-datatable').DataTable({
+                let {{ $dtName }} = $('#{{ $dtName }}').DataTable({
                     @include('datatables.lang')
-                    @include('datatables.paginate')
                     dom: 'rtip',
                     columnDefs: [
                         {
@@ -123,7 +125,7 @@ Relation Blade is used inside a Panel Element to display relational class object
                     processing: true, {{-- show loader--}}
                     serverSide: true, {{-- enable Serverside Handling--}}
                     deferRender: true,
-                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => Str::lower(Str::plural($class))]) }}',
+                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => $class]) }}',
                     columns:[
                         {data: 'checkbox', orderable: false, searchable: false},
                         {data: 'label', orderable: false, searchable: false}

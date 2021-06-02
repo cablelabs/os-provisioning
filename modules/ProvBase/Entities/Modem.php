@@ -319,6 +319,11 @@ class Modem extends \BaseModel
         return $this->hasMany(RadPostAuth::class, 'username', 'ppp_username');
     }
 
+    public function nextPassiveElement()
+    {
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'id', 'next_passive_id');
+    }
+
     /*
      * Relation Views
      */
@@ -1928,8 +1933,8 @@ class Modem extends \BaseModel
         $this->domainName = ProvBase::first()->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
-
-        $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
+        $tickets = $this->tickets;
+        $genieCmds = [];
 
         if ($this->isTR069()) {
             $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
@@ -1943,13 +1948,17 @@ class Modem extends \BaseModel
                     if (count($match) != 3) {
                         continue;
                     }
-                    $val = array_shift($match);
-                    $key = json_encode([
-                        'name' => 'setParameterValues',
-                        'parameterValues' => [$match],
-                    ]);
-                    $genieCmds[$key] = $val;
+                    $genieCmds[array_shift($match)][] = $match;
                 }
+
+                $genieCmds = array_map(function ($cmd) {
+                    return json_encode([
+                        'name' => 'setParameterValues',
+                        'parameterValues' => $cmd,
+                    ]);
+                }, $genieCmds);
+                $genieCmds = array_flip($genieCmds);
+                $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
             } else {
                 $configfile['text'] = [];
             }
@@ -1998,7 +2007,7 @@ class Modem extends \BaseModel
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header');
+            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets');
     }
 
     /**
@@ -2133,7 +2142,7 @@ class Modem extends \BaseModel
      *
      * @return array    of lease entry strings
      */
-    public static function searchLease(string $search): array
+    public static function searchLease(string $search, $findAll = false): array
     {
         $ret = [];
 
@@ -2154,6 +2163,11 @@ class Modem extends \BaseModel
                 // push matching results
                 array_push($ret, preg_replace('/\r|\n/', '<br/>', $s));
             }
+        }
+
+        // return all lease entries
+        if ($findAll) {
+            return $ret;
         }
 
         // handle multiple lease entries

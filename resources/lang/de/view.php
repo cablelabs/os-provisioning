@@ -245,7 +245,7 @@ return [
     'Header_ProvVoipEnvia'      => 'envia-TEL Vertragsmanagement|envia-TEL Vertragsmanagement',
 
     'Header_Contact'            => 'Ansprechpartner / Hausverwaltungen',
-    'Header_Connection Information' => 'Anschlussinformationen',
+    'Header_Documents'          => 'Dokumente',
     'Header_Debt'               => 'Offene Posten',
     'Header_DebtResult'         => 'Summe offener Posten',
     'Header_Node'               => 'Übergabepunkte',
@@ -498,6 +498,10 @@ return [
     'Detach all' => 'Alle :model entfernen',
     'Diagrams' => 'Diagramme',
     'Discard' => 'Missachte',
+    'download' => [
+        'connInfo' => 'Anschlussinformation',
+        'contractConfirmation' => 'Vertragsbestätigung',
+    ],
     'Download' => 'Herunterladen',
     'error' => [
         'backToHomePage'        => 'Zurück zur Startseite',
@@ -517,7 +521,7 @@ return [
     'Message' => 'Nachricht',
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
-    'parentNetelement' => 'Übergeordnetes Netzelement',
+    'parentNetelement' => 'Übergeordnetes <br> Netzelement',
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',
@@ -542,7 +546,7 @@ return [
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [
-        'Create Connection Infos' => 'Anschlussinfo generieren',
+        'Documents' => 'Dokumente',
     ],
 
     'ticket' => [

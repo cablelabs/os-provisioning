@@ -26,7 +26,7 @@ trait V1Trait
      * @param  mixed  $data
      * @param  int $statusCode
      * @param  array  $headers
-     * @return Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function response($data, $statusCode = 200, array $headers = [])
     {
@@ -42,7 +42,7 @@ trait V1Trait
      * @param  mixed $data
      * @param  array  $options
      * @param  string $key
-     * @return mixed
+     * @return array|LengthAwarePaginator
      */
     protected function parseData($data, array $options, $key = null)
     {
@@ -64,7 +64,7 @@ trait V1Trait
      * @param array $sort
      * @return array
      */
-    protected function parseSort(array $sort)
+    protected function parseSort(array $sort): array
     {
         return array_map(function ($sort) {
             if (is_string($sort)) {
@@ -83,7 +83,7 @@ trait V1Trait
      * @param  array  $includes
      * @return array The parsed resources and their respective modes
      */
-    protected function parseIncludes(array $includes)
+    protected function parseIncludes(array $includes): array
     {
         $return = [
             'includes' => [],
@@ -108,7 +108,7 @@ trait V1Trait
      * @param array $filter_groups
      * @return array
      */
-    protected function parseFilterGroups(array $filter_groups)
+    protected function parseFilterGroups(array $filter_groups): array
     {
         $return = [];
         foreach ($filter_groups as $group) {
@@ -140,7 +140,7 @@ trait V1Trait
      * @param null $request
      * @return array
      */
-    protected function parseResourceOptions($request = null)
+    protected function parseResourceOptions($request = null): array
     {
         if ($request === null) {
             $request = request();
@@ -154,14 +154,15 @@ trait V1Trait
             'mode' => 'embed',
             'filter_groups' => [],
             'paginate'=> false,
+            'as_tree'=> false,
         ], $this->defaults);
-
         $includes = $this->parseIncludes($request->get('includes', $this->defaults['includes']));
         $sort = $this->parseSort($request->get('sort', $this->defaults['sort']));
         $limit = $request->get('limit', $this->defaults['limit']);
         $page = $request->get('page', $this->defaults['page']);
         $filter_groups = $this->parseFilterGroups($request->get('filter_groups', $this->defaults['filter_groups']));
         $paginate = boolval($request->get('paginate', $this->defaults['paginate']));
+        $as_tree = boolval($request->get('as_tree', $this->defaults['as_tree']));
 
         if ($page !== null && $limit === null) {
             throw new BadRequestHttpException('Cannot use page option without limit option');
@@ -175,6 +176,7 @@ trait V1Trait
             'page' => $page,
             'filter_groups' => $filter_groups,
             'paginate'=> $paginate,
+            'as_tree'=> $as_tree,
         ];
     }
 }
