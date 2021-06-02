@@ -140,6 +140,10 @@ class ProvBaseObserver
             exec('sudo systemctl restart named.service');
             unlink($sed);
         }
+
+        if (array_key_exists('dns_password', $changes)) {
+            $model->makeDdnsConf();
+        }
     }
 
     /**

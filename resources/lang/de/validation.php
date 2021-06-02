@@ -140,9 +140,11 @@ return [
     ],
 
     'available'            => 'Kein Eintrag in Konfigurationsdateien verfügbar - Füllen Sie dieses Feld bitte aus',
+    'comma_separated_hostnames_or_ips'  =>  'Dies ist keine kommaseparierte Liste von Hostnamen und/oder IP-Adressen',
     'creditor_id'          => ':attribute ist ungültig.',
     'docsis'               => ':attribute',
     'geopos'               => 'Keine gültige Position. Bitte stellen Sie sicher, dass keine Leerzeichen enthalten sind und die Position im Format ´Breitengrad,Längengrad´ angegeben wurde. Die Genauigkeit der Koordinaten sollte 11 Nachkommastellen nicht überschreiten.',
+    'hostname_or_ip'       => 'Dies ist weder ein Hostname noch eine IP-Adresse',
     'invalid_input'        => 'Ungültige Eingabe – bitte korrigieren Sie die unten aufgeführten Fehler.',
     'ip_in_range'          => 'Die angegebene IP-Adresse ist nicht innerhalb des spezifizierten Bereichs',
     'ip_larger'            => 'Die angegebene IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen',

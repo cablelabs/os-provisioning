@@ -2,6 +2,7 @@
 /**
  * Restarts the dhcpd server after checking for correct syntax of the config
  */
+require_once '/var/www/nmsprime/app/extensions/systemd/laralog.php';
 
 // check config
 exec('dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf &>/dev/null', $out, $ret);
@@ -19,18 +20,10 @@ if ($ret == 0) {
 
     if (! flock($fp_cm, LOCK_EX) || ! flock($fp_mta, LOCK_EX)) {
         // Note: This should never occure as flock waits until file is unlocked from other process
-        if (file_exists($logfile)) {
-            file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.ERROR: DHCP Configfiles are locked\n", FILE_APPEND);
-        }
+        laralog('DHCP Configfiles are locked', 'ERROR');
     }
 
-    // Log
-    if (file_exists($logfile)) {
-        file_put_contents($logfile, '['.date('Y-m-d H:i:s')."] local.INFO: Restart dhcpd.service\n", FILE_APPEND);
-    } else {
-        syslog(LOG_ERR, $logfile.' does not exist ['.__FILE__.']');
-    }
-
+    laralog('Restart dhcpd.service', 'INFO');
     exec('systemctl restart dhcpd');
 
     flock($fp_cm, LOCK_UN);

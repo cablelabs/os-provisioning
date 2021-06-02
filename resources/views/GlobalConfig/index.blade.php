@@ -30,6 +30,11 @@
 
 @DivOpen(12)
 		<div class="tab-content">
+            @php
+                $blade_type = 'form';
+            @endphp
+            @include('Generic.above_infos')
+
 			@foreach($moduleModels as $count => $model)
 				<div class="tab-pane fade in" id="settings-{{Str::slug($links[$count]['name'],'_')}}" role="tabpanel">
 					{!! Form::model($model, array('route' => array($links[$count]['link'].'.update', '1'), 'method' => 'put', 'files' => true) ) !!}

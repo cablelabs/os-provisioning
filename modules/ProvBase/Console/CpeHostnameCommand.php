@@ -39,33 +39,74 @@ class CpeHostnameCommand extends Command
      */
     public function handle()
     {
-        $pw = env('DNS_PASSWORD');
-        $domain = ProvBase::first()->domain_name;
+        $provbase = ProvBase::first();
+        $domain = $provbase->domain_name;
+
         $zones = array_map(function ($zone) {
             return basename($zone, '.zone');
         }, glob('/var/named/dynamic/*in-addr.arpa.zone'));
 
         $zones[] = $domain;
 
-        // remove all .cpe.$domain forward and reverse DNS entries
-        foreach ($zones as $zone) {
-            $cmd = shell_exec("dig -tAXFR $zone | grep '\.cpe\.$domain.' | awk '{ print \"update delete\", $1 }'; echo send");
-            $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
-            fwrite($handle, $cmd);
-            pclose($handle);
+        // detect servers to be updated
+        $servers = [];
+        if (! \Module::collections()->has('ProvHA')) {
+            $servers['127.0.0.1'] = $provbase->dns_password;
+        } else {
+            $servers['127.0.0.1'] = $provbase->provhaOwnDnsPw;
+            $servers[$provbase->provhaPeerIp] = $provbase->provhaPeerDnsPw;
         }
 
-        // get all active leases
-        preg_match_all('/^lease(.*?)(^})/ms', file_get_contents('/var/lib/dhcpd/dhcpd.leases'), $leases);
-        // get the required parameters and run named-ddns.sh for every cpe
-        foreach ($leases[0] as $lease) {
-            if (preg_match('/;\s*binding state active;.*set ip = "([^"]*).*set hw_mac = "([^"]*)/s', $lease, $match)) {
-                $octets = explode('.', $match[1]);
-                if ((! filter_var($match[1], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) ||
-                    ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)) {
-                    continue;
+        // remove all .cpe.$domain forward and reverse DNS entries
+        foreach ($zones as $zone) {
+            foreach ($servers as $server => $password) {
+                $cmd = "server $server\n";
+                $cmd .= shell_exec("dig -tAXFR $zone | grep '\.cpe\.$domain.' | awk '{ print \"update delete\", $1 }'; echo send");
+                $handle = popen("/usr/bin/nsupdate -v -y dhcpupdate:$password", 'w');
+                fwrite($handle, $cmd);
+                pclose($handle);
+
+                $log = [
+                    '',
+                    '--------------------------------------------------------------------------------',
+                    date('c'),
+                    __METHOD__,
+                    $cmd,
+                ];
+                try {
+                    file_put_contents($provbase::NSUPDATE_LOGFILE, implode("\n", $log), FILE_APPEND);
+                } catch (\Exception $ex) {
+                    $msg = 'Could not write to logfile '.$provbase::NSUPDATE_LOGFILE;
+                    $this->addAboveMessage($msg, 'error');
+                    \Log::error($msg);
                 }
-                exec("/etc/named-ddns.sh $match[2] $match[1] 0\n");
+            }
+        }
+
+        // get all leases
+        preg_match_all('/^lease(.*?)(^})/ms', file_get_contents('/var/lib/dhcpd/dhcpd.leases'), $leases);
+
+        // get the required parameters and run named-ddns.sh for every public cpe
+        foreach ($leases[0] as $lease) {
+            // can't rely on the order in leases – check each relevant line individually
+            if (preg_match('/;\s*binding state active;/s', $lease, $match)) {
+                $ip = null;
+                $mac = null;
+                if (preg_match('/.*set ip = "([^"]*).*/s', $lease, $match)) {
+                    $ip = $match[1];
+                    $octets = explode('.', $ip);
+                    if ((! filter_var($match[1], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) ||
+                        ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)) {
+                        // skip private and NAT IPs
+                        continue;
+                    }
+                }
+                if (preg_match('/.*set hw_mac = "([^"]*).*/s', $lease, $match)) {
+                    $mac = $match[1];
+                }
+                if ($ip && $mac) {
+                    exec("/etc/named-ddns.sh $mac $ip 0\n");
+                }
             }
         }
 

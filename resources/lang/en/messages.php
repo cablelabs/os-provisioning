@@ -233,6 +233,7 @@ return [
     'HfcReq'                    => 'HFC Config',
     'HfcBase'                   => 'Detect Config',
     'ProvBase'                  => 'ProvBase Config',
+    'ProvHA'                    => 'ProvHA Config',
     'ProvVoip'                  => 'ProvVoip Config',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Config',
     'ProvMon'                   => 'Monitoring Config',
@@ -760,4 +761,8 @@ return [
     'SnmpAccessException'       => 'Snmp Access Declined',
     'flappingDhcp'              => 'The device is sending too many DHCPDISCOVER messages in a short span of time',
     'criticalValues'            => 'The device has critical values',
+    'error_reading_file'        => 'Error reading file :0!',
+    'error_writing_file'        => 'Error writing file :0!',
+    'error_building_config'     => 'Error building config for :0!',
+    'error_restarting_daemon'   => 'Error restarting :0!',
 ];

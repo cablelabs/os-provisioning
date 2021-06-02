@@ -200,6 +200,8 @@ class Endpoint extends \BaseModel
 
     public function nsupdate($del = false)
     {
+        $provbase = ProvBase::first();
+
         if ($this->version == '4') {
             $cmd = $this->getNsupdate4Cmd($del);
         } else {
@@ -209,11 +211,36 @@ class Endpoint extends \BaseModel
             return;
         }
 
-        $pw = env('DNS_PASSWORD');
+        // detect servers to be updated
+        $servers = [];
+        if (! \Module::collections()->has('ProvHA')) {
+            $servers['127.0.0.1'] = $provbase->dns_password;
+        } else {
+            $servers['127.0.0.1'] = $provbase->provhaOwnDnsPw;
+            $servers[$provbase->provhaPeerIp] = $provbase->provhaPeerDnsPw;
+        }
 
-        $handle = popen("/usr/bin/nsupdate -v -l -y dhcpupdate:$pw", 'w');
-        fwrite($handle, $cmd);
-        pclose($handle);
+        foreach ($servers as $server => $password) {
+            $server_cmd = str_replace('update ', "server $server\nupdate ", $cmd);
+            $handle = popen("/usr/bin/nsupdate -v -y dhcpupdate:$password", 'w');
+            fwrite($handle, $server_cmd);
+            pclose($handle);
+
+            $log = [
+                '',
+                '--------------------------------------------------------------------------------',
+                date('c'),
+                __METHOD__,
+                $server_cmd,
+            ];
+            try {
+                file_put_contents($provbase::NSUPDATE_LOGFILE, implode("\n", $log), FILE_APPEND);
+            } catch (\Exception $ex) {
+                $msg = 'Could not write to logfile '.$provbase::NSUPDATE_LOGFILE;
+                $this->addAboveMessage($msg, 'error');
+                \Log::error($msg);
+            }
+        }
     }
 
     /**

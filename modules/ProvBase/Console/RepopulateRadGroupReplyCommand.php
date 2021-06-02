@@ -36,7 +36,7 @@ class RepopulateRadGroupReplyCommand extends Command
     {
         // check if writing to database is allowed
         if (\Module::collections()->has('ProvHA')) {
-            if ('master' != config('provha.hostinfo.own_state')) {
+            if ('master' != config('provha.hostinfo.ownState')) {
                 $msg = 'ProvHA slave not allowed to change database. Exiting…';
                 \Log::warning(__METHOD__.': '.$msg);
                 $this->info($msg);

@@ -112,10 +112,13 @@
                 "icon": "fa fa-arrow-circle-o-right text-warning fa-lg"
               },
               "Data": {
-                "icon": "fa fa-server text-active fa-lg"
+                "icon": "fa fa-database text-active fa-lg"
               },
               "UPS": {
                 "icon": "fa fa-stack fa-bolt text-warning fa-lg"
+              },
+              "NMSPrime ProvHA slave": {
+                "icon": "fa fa-server text-secondary fa-lg"
               },
               "default": {
                   "icon": "fa fa-file-code-o text-success fa-lg"

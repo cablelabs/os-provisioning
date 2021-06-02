@@ -233,6 +233,7 @@ return [
     'HfcReq'                    => 'HFC Konfiguration',
     'HfcBase'                   => 'Detect Konfiguration',
     'ProvBase'                  => 'ProvBase Konfiguration',
+    'ProvHA'                    => 'ProvHA Konfiguration',
     'ProvVoip'                  => 'ProvVoip Konfiguration',
     'ProvVoipEnvia'             => 'ProvVoipEnvia Konfiguration',
     'ProvMon'                   => 'Monitoring Konfiguration',
@@ -760,4 +761,8 @@ return [
     'SnmpAccessException'       => 'Snmp Zugriff Verweigert',
     'flappingDhcp'              => 'Das Gerät kann keine Stabile Verbindung mit dem DHCP Server aufbauen und sendet wiederholt DHCPDISCOVER Nachrichten',
     'criticalValues'            => 'Einige Werte des Gerätes sind in kritischem Zustand',
+    'error_reading_file'        => 'Fehler beim Lesen der Datei :0!',
+    'error_writing_file'        => 'Fehler beim Schreiben der Datei :0!',
+    'error_building_config'     => 'Fehler beim Erzeugen den Konfiguration für :0!',
+    'error_restarting_daemon'   => 'Fehler beim Neustarten von :0!',
 ];

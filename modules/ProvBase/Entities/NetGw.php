@@ -272,6 +272,13 @@ class NetGw extends \BaseModel
         $this->snmp_ro = $this->community_ro ?: $conf->ro_community;
         $this->snmp_rw = $this->community_rw ?: $conf->rw_community;
 
+        // add data used if ProvHA is enabled
+        if (\Module::collections()->has('ProvHA')) {
+            $provha = \DB::table('provha')->first();
+            $this->provha_servers = [$provha->master];
+            $this->provha_servers = array_merge($this->provha_servers, explode(',', $provha->slaves));
+        }
+
         // Help section: onhover
         $this->enable_secret = '<span title="NETGW_ENABLE_SECRET and NETGW_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->enable_secret.'</b></span>';
         $this->admin_psw = '<span title="NETGW_ADMIN_PASSWORD and NETGW_SAVE_ENCRYPTED_PASSWORDS"><b>'.$this->admin_psw.'</b></span>';
@@ -567,6 +574,9 @@ class NetGw extends \BaseModel
             if ($range) {
                 $data .= "\n\n\t\t".'pool'."\n\t\t{\n";
                 $data .= $range;
+                if (\Module::collections()->has('ProvHA')) {
+                    $data .= "\n\t\t\t".'failover peer "dhcpd-failover";'."\n";
+                }
 
                 switch ($type) {
                     case 'CM':
