@@ -41,7 +41,7 @@
       <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap/css/fixedHeader.bootstrap4.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons-bootstrap/css/buttons.bootstrap4.min.css')}}" rel="stylesheet" />
 
-      <link href="{{asset('components/assets-admin/plugins/select2-v4/vendor/select2/select2/dist/css/select2.css')}}" rel="stylesheet" />
+      <link href="{{asset('components/assets-admin/plugins/select2/dist/css/select2.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/jstree/dist/themes/default/style.min.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
