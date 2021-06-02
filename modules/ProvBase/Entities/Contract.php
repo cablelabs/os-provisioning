@@ -1268,8 +1268,8 @@ class Contract extends \BaseModel
             ->where(function ($query) {
                 $query
                 ->where('product.type', 'Internet')
-                ->orWhere('product.type', 'Voip')
-                ->orWhere('product.type', 'TV');
+                ->orWhere('product.type', 'Voip');
+                // ->orWhere('product.type', 'TV');
             })
             ->select('item.*', 'product.type as type')
             ->with('product')
