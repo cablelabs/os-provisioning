@@ -95,7 +95,7 @@ git checkout -- .
 
 **How to contribute**
 
-Please read [CONTRIBUTING](https://github.com/cablelabs/os-provisioning/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING](https://github.com/cablelabs/os-provisioning/blob/dev/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 **Write your own Application**
 
@@ -111,4 +111,4 @@ See [Upcoming Developments](https://github.com/cablelabs/os-provisioning/wiki)
 
 **License**
 
-This project is licensed under the [Apache-2.0](https://github.com/cablelabs/os-provisioning/blob/main/LICENSE) file for details. For more information: [License Article](https://devel.nmsprime.com/confluence/display/NMS/License)
+This project is licensed under the [Apache-2.0](https://github.com/cablelabs/os-provisioning/blob/dev/LICENSE) file for details. For more information: [License Article](https://devel.nmsprime.com/confluence/display/NMS/License)
