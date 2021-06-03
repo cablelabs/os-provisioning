@@ -55,24 +55,21 @@ These tools are actively developed, approved and used. See [Design Architecture]
 
 ## Installation
 
-### From RPM for CentOS 7 (RHEL 7)
+### Community Version
 
-**[Community Version](https://devel.nmsprime.com/confluence/x/AYFB)**
+**From RPM for CentOS 7 (RHEL 7)**
 
 ```bash
 curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/master/INSTALL-REPO.sh | bash
 yum install nmsprime-*
 ```
+### Enterprise Version
 
-**[Enterprise Version](https://devel.nmsprime.com/confluence/x/AYFB)**
+Select your applications and run them in the **Cloud** or **On-Prem** here: [Enterprise Installation](https://www.nmsprime.com/trial/?m=osprov--)
 
-### SaaS Cloud hosted
+### Developers only (source-code installation)
 
-You can run all applications in the cloud here: [Free Trial](https://www.nmsprime.com/free-trial/)
-
-### [From source code](https://devel.nmsprime.com/confluence/x/IgBs)
-
-This is typically only recommended for developers. In order to track and install all NMS Prime dependencies, the workflow for getting a source code installation up and running starts with the normal RPM installation process, see [Community Version](https://devel.nmsprime.com/confluence/x/AYFB).
+In order to track and install all NMS Prime dependencies, the workflow for getting a source code installation up and running starts like described above. You can use both variants (community or enterprise) to do so.
 
 Afterwards the NMS Prime RPM packages are replaced with the GIT repository by issuing the following commands:
 
