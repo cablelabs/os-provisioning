@@ -82,7 +82,7 @@ for module in $(rpm -qa "nmsprime-*" | grep -v '^nmsprime-repos'); do rpm -e --j
 yum install git
   
 cd /var/www
-git clone https://github.com/nmsprime/nmsprime.git nmsprimeGit
+git clone https://github.com/cablelabs/os-provisioning nmsprimeGit
 mv nmsprimeGit/.git/ nmsprime/
 rm -rf nmsprimeGit/
 cd nmsprime
