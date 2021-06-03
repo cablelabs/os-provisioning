@@ -82,7 +82,31 @@
 @section('content_log')
     <div class="tab-content">
         @include('provbase::Modem.logLeaseConfTabs')
+        @include('provbase::Modem.radiusTabs')
     </div>
+@stop
+
+@section('content_realtime')
+    @if (array_key_exists('DT_Current Session', $radius))
+        <h4> {{ trans('view.modemAnalysis.currentSession') }} </h4>
+
+        <div class="table-responsive">
+            <table class="table streamtable table-bordered radius-table" width="auto">
+                <thead>
+                    <!-- <th/> -->
+                    @foreach ($radius['DT_Current Session'] as $colHeader => $colData)
+                        <th class="active text-center">{{ $colHeader }}</th>
+                    @endforeach
+                </thead>
+                <tbody>
+                    <!-- <td/> -->
+                    @foreach ($radius['DT_Current Session'] as $colHeader => $colData)
+                        <td class="text-center"><font color="grey"> {{ $colData[0] }}</font></td>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 @stop
 
 @if (Module::collections()->has('HfcCustomer'))
@@ -120,6 +144,14 @@
                 document.getElementById('ping-test').innerHTML += e.data;
             }
         }, 500);
+
+        $('table.radius-table').DataTable({
+            autoWidth: false,
+            paging: false,
+            info: true,
+            searching: false,
+            });
+        });
     });
 @endif
 </script>

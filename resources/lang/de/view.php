@@ -543,6 +543,12 @@ return [
     'Level' => 'Level',
     'markon' => 'Preisaufschlag in %',
     'Message' => 'Nachricht',
+    'modemAnalysis' => [
+        'currentSession' => 'Aktuelle Session',
+        'DT_Last Sessions' => 'Letzte Sessions',
+        'DT_Replies' => 'RadReplies',
+        'DT_Authentications' => 'Auth',
+    ],
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',

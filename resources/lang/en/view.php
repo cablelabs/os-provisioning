@@ -546,6 +546,12 @@ return [
     'Level' => 'Level',
     'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
+    'modemAnalysis' => [
+        'currentSession' => 'Current Session',
+        'DT_Last Sessions' => 'Last Sessions',
+        'DT_Replies' => 'RadReplies',
+        'DT_Authentications' => 'Auth',
+    ],
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
     'parentNetelement' => 'Parent <br> netelement',

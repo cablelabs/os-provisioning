@@ -2010,8 +2010,10 @@ class Modem extends \BaseModel
         $lease['text'] = self::searchLease("hardware ethernet $mac");
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
 
+        $radius = $this->radiusData();
+
         if ($api) {
-            return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
+            return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip', 'radius');
         }
 
         $floodPing = ModemController::floodPing($ip);
@@ -2023,7 +2025,7 @@ class Modem extends \BaseModel
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets');
+            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius');
     }
 
     /**
@@ -2234,6 +2236,97 @@ class Modem extends \BaseModel
         }
 
         return $lease;
+    }
+
+    /**
+     * Fetch realtime values via FreeRADIUS database
+     *
+     * @param modem: modem object
+     * @return array[section][Fieldname][Values]
+     *
+     * @author Ole Ernst
+     */
+    public function radiusData()
+    {
+        $ret = [];
+
+        if (! $this->isPPP()) {
+            return $ret;
+        }
+
+        // Current
+        $cur = $this->radacct()->latest('radacctid')->first();
+        if ($cur && ! $cur->acctstoptime) {
+            $ret['DT_Current Session']['Start'] = [$cur->acctstarttime];
+            $ret['DT_Current Session']['Last Update'] = [$cur->acctupdatetime];
+            $ret['DT_Current Session']['BRAS IP'] = [$cur->nasipaddress];
+        }
+
+        // Sessions
+        $sessionItems = [
+            ['acctstarttime', 'Start', null],
+            ['acctstoptime', 'Stop', null],
+            ['acctsessiontime', 'Duration', function ($item) {
+                return \Carbon\CarbonInterval::seconds($item)->cascade()->format('%dd %Hh %Im %Ss');
+            }],
+            ['acctterminatecause', 'Stop Info', null],
+            ['acctinputoctets', 'In', function ($item) {
+                return humanFilesize($item);
+            }],
+            ['acctoutputoctets', 'Out', function ($item) {
+                return humanFilesize($item);
+            }],
+            ['nasportid', 'Port', null],
+            ['callingstationid', 'MAC', null],
+            ['framedipaddress', 'IP', null],
+        ];
+        $sessions = $this->radacct()
+            ->latest('radacctid')
+            ->limit(10)
+            ->get(array_map(function ($a) {
+                return $a[0];
+            }, $sessionItems));
+
+        foreach ($sessionItems as $item) {
+            $values = $sessions->pluck($item[0])->toArray();
+            $ret['DT_Last Sessions'][$item[1]] = $item[2] ? array_map($item[2], $values) : $values;
+        }
+
+        // Replies
+        $replyItems = [
+            ['attribute', 'Attribute'],
+            ['op', 'Operand'],
+            ['value', 'Value'],
+        ];
+        $replies = $this->radusergroups()
+            ->join('radgroupreply', 'radusergroup.groupname', 'radgroupreply.groupname')
+            ->get(array_map(function ($a) {
+                return $a[0];
+            }, $replyItems));
+
+        foreach ($replyItems as $item) {
+            $ret['DT_Replies'][$item[1]] = $replies->pluck($item[0])->toArray();
+        }
+        // add sequence number for proper sorting
+        $ret['DT_Replies'] = array_merge(['#' => array_keys(reset($ret['DT_Replies']))], $ret['DT_Replies']);
+
+        // Authentications
+        $authItems = [
+            ['authdate', 'Date'],
+            ['reply', 'Reply'],
+        ];
+        $auths = $this->radpostauth()
+            ->latest('id')
+            ->limit(10)
+            ->get(array_map(function ($a) {
+                return $a[0];
+            }, $authItems));
+
+        foreach ($authItems as $item) {
+            $ret['DT_Authentications'][$item[1]] = $auths->pluck($item[0])->toArray();
+        }
+
+        return $ret;
     }
 
     /**

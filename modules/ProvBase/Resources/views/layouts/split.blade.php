@@ -55,6 +55,17 @@
                     $panelHeader .= "<li role=\"presentation\"><a href=\"#$pill\" data-toggle=\"pill\">".ucfirst($pill).'</a></li>';
                 }
             }
+
+            if (isset($radius)) {
+                foreach ($radius as $table => $data) {
+                    if ($table == 'DT_Current Session') {
+                        continue;
+                    }
+
+                    $panelHeader .= "<li role=\"presentation\"><a href=\"#$table\" data-toggle=\"pill\">".trans("view.modemAnalysis.$table").'</a></li>';
+                }
+            }
+
             $panelHeader .= '</ul>';
         @endphp
 
