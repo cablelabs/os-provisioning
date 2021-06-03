@@ -2008,7 +2008,7 @@ class Modem extends \BaseModel
         $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
-        $lease = self::validateLease($lease);
+        $lease = self::validateLease($lease, null, $online && $this->isTR069());
 
         if ($api) {
             return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip');
@@ -2212,7 +2212,7 @@ class Modem extends \BaseModel
     /**
      * Proves if the last found lease is actually valid or has already expired
      */
-    public static function validateLease($lease, $type = null)
+    public static function validateLease($lease, $type = null, $onlineTr069 = false)
     {
         if ($lease['text'] && $lease['text'][0]) {
             // calculate endtime
@@ -2229,7 +2229,7 @@ class Modem extends \BaseModel
                 $lease['forecast'] = 'Lease is out of date';
             }
         } else {
-            $lease['state'] = 'red';
+            $lease['state'] = $onlineTr069 ? 'orange' : 'red';
             $lease['forecast'] = trans('messages.modem_lease_error');
         }
 
