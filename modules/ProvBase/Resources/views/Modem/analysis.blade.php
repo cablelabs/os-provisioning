@@ -19,7 +19,7 @@
 @extends ('provbase::layouts.split')
 
 @section('content_dash')
-    <div class="d-flex flex-wrap justify-content-between" style="min-height: 135px;">
+    <div class="d-flex flex-wrap justify-content-between">
     <div class="d-flex justify-content-end align-self-start {{ ($dash && count($dash) == 1) ? 'order-1 order-sm-3' : 'order-3'}}" style="flex: 1">
         @include('Generic.documentation', ['documentation' => $modem->help])
     </div>
