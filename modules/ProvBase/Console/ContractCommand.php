@@ -140,6 +140,8 @@ class ContractCommand extends Command
         }
 
         $this->i = 1;
+        // Count on groupBy delivers unexpected results - See https://github.com/laravel/framework/issues/28931
+        // TODO: Laravel 7
         $num = (clone $contractsQuery)->pluck('id')->count();
 
         $contractsQuery->chunk(1000, function ($contracts) use ($num) {
