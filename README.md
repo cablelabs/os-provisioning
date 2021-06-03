@@ -79,7 +79,7 @@ Afterwards the NMS Prime RPM packages are replaced with the GIT repository by is
 ```bash
 for module in $(rpm -qa "nmsprime-*" | grep -v '^nmsprime-repos'); do rpm -e --justdb --noscripts --nodeps "$module"; done
   
-yum install git
+yum install composer git
   
 cd /var/www
 git clone https://github.com/cablelabs/os-provisioning nmsprimeGit
@@ -88,6 +88,23 @@ rm -rf nmsprimeGit/
 cd nmsprime
   
 git checkout -- .
+
+# move enterprise apps into /root folder for reference, they are not needed for the community git version
+for module in $(ls -1 modules | grep -v '^HfcReq$\|^HfcSnmp$\|^NmsMail$\|^ProvBase$\|^ProvVoip$'); do mv "$module" /root/; done
+
+COMPOSER_MEMORY_LIMIT=-1 composer update
+
+/opt/rh/rh-php73/root/usr/bin/php artisan config:cache
+/opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
+/opt/rh/rh-php73/root/usr/bin/php artisan optimize
+/opt/rh/rh-php73/root/usr/bin/php artisan migrate
+/opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
+/opt/rh/rh-php73/root/usr/bin/php artisan module:publish
+/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
+/opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
+/opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
+/opt/rh/rh-php73/root/usr/bin/php artisan route:cache
+/opt/rh/rh-php73/root/usr/bin/php artisan view:clear
 ```
 
 ---
