@@ -17,7 +17,7 @@
  */
 ?>
 <!doctype html>
-<html>
+<html lang="{{ App::getLocale() }}">
 <head>
     <meta charset="utf-8">
     <title>{{$html_title}}</title>
