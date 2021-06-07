@@ -1785,6 +1785,31 @@ class BaseController extends Controller
     }
 
     /**
+     * Prepare the preselected model for the select 2 field. Currently only
+     * single select is supported.
+     *
+     * @param BaseModel|null $model model in edit view, null in create context
+     * @param string $field Name of the Class (or Parent)
+     * @return array
+     */
+    protected function setupSelect2Field($model, string $field): array
+    {
+        $lowerField = strtolower($field);
+
+        if ($model->exists) {
+            return [optional($model->$lowerField)->id => optional($model->$lowerField)->label()];
+        }
+
+        if (request("{$lowerField}_id") && array_key_exists($field, $models = session('models'))) {
+            $model = $models[$field]::findOrFail(request("{$lowerField}_id"));
+
+            return [$model->id => $model->label()];
+        }
+
+        return [null => trans('view.select.base', ['model' => trans("view.select.{$field}")])];
+    }
+
+    /**
      *  The official Documentation Help Menu Function
      *
      *  See: See: config/documenation.php array

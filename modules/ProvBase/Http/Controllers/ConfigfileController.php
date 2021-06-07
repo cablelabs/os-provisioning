@@ -49,27 +49,15 @@ class ConfigfileController extends \BaseController
         }
         $firmware_files = Configfile::getFiles($folders);
 
-        $parents = Configfile::where('id', '!=', $model->id);
-        if ($model->id) {
-            // Don't make loops possible - by setting parent_id to a configfile that has THIS configfile as parent
-            $parents->where(function ($query) use ($model) {
-                $query
-                    ->where('parent_id', '!=', $model->id)
-                    ->orWhereNull('parent_id');
-            });
-        }
-        $parents = $model->html_list($parents->get(), ['device', 'name'], true, ': ');
-
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA', 'tr069' => 'TR-69']],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $parents],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $this->setupSelect2Field($model, 'Parent'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Configfile.select2', ['model' => $model, 'relation' => 'parent'])]],
             ['form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => ['yes' => 'Yes', 'no' => 'No']],
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware/Dialplan File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware/Dialplan File'],
             ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String', 'hidden' => true],
-
         ];
 
         if (\Route::currentRouteName() == 'Configfile.create') {
