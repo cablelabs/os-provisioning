@@ -172,15 +172,93 @@ var saveTabPillState = function() {
   });
 };
 
-
-// Select2 Init - intelligent HTML select
-// Resize on Zoom to look always pretty
-// @author: Christian Schramm
-var makeInputFitOnResize = function() {
+/**
+ * Init Select2 fields and resize them. Also get data via AJAX for specific
+ * fields.
+ */
+var initSelect2Fields = function() {
   $(window).resize(function() {
-  $('.select2').css('width', "100%");
+    $('.select2').css('width', "100%");
   });
-  $("select").select2();
+
+  let lang = document.documentElement.lang
+
+  if ($('.select2-ajax').length) {
+    $(".select2-ajax").each(function () {
+      let searchTerm = ''
+      let full = false
+
+      // credit to https://github.com/select2/select2/issues/3902#issuecomment-708772383
+      $(this).on('select2:closing', function (e) {
+        // Preserve typed value
+        searchTerm = $('.select2-search input').prop('value')
+      }).on('select2:open', function (e) {
+          // Fill preserved value back into Select2 input field and trigger the AJAX loading (if any)
+          let search = $('.select2-search input').val(searchTerm).trigger('change')
+
+          if(searchTerm) {
+            search.trigger('input');
+          }
+
+          if (full) {
+            $('.loading-results').hide()
+          }
+      }).on('select2:select', function (e) {
+        $('.select2-search input').val('').trigger('change')
+      });
+
+      $(this).select2({
+        language: lang,
+        search: '',
+        ajax: {
+          url: $(this).attr('ajax-route'),
+          type: 'get',
+          dataType: 'json',
+          delay: 500,
+          transport: function (params, success, failure) {
+            if ((params.data.search === searchTerm || params.data.search === undefined) && full) {
+              return false
+            }
+
+            full = false
+
+            let $request = $.ajax(params);
+            $request.then(success);
+            $request.fail(failure);
+
+            return $request;
+          },
+          data: function (params) {
+            return {
+              search: params.term, // search term
+              page: params.page || 1
+            }
+          },
+          processResults: function (response) {
+            for (element in response.data) {
+              if (response.data[element].count) {
+                response.data[element].text += ' (' + response.data[element].count + ')'
+              }
+            }
+
+            if (response.current_page == response.last_page) {
+              full = true
+            }
+
+            return {
+              results: response.data,
+              pagination: {
+                more: !! response.next_page_url
+              }
+            };
+          },
+          cache: true
+        }
+      })
+    })
+  }
+
+  $("select").not('.select2-ajax').select2({language: lang});
 };
 
 var positionErdPopover= function() {
@@ -261,7 +339,7 @@ var NMS = function () {
 		//main function
 		init: function () {
 			makeNavbarSearch();
-			makeInputFitOnResize();
+			initSelect2Fields();
 			saveTabPillState();
       positionErdPopover();
       rezizeTextareas();
