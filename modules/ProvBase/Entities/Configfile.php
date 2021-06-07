@@ -156,6 +156,48 @@ class Configfile extends \BaseModel
     }
 
     /**
+     * Quick access to MTA Count
+     *
+     * @return int
+     */
+    public function getMtaCountAttribute()
+    {
+        return $this->mtas()->count();
+    }
+
+    /**
+     * Quick access to modem count
+     *
+     * @return int
+     */
+    public function getModemCountAttribute()
+    {
+        return $this->modem()->count();
+    }
+
+    /**
+     * Format Configfile parents for select 2 field and allow for seeaching.
+     *
+     * @param string|null $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Parent($search): \Illuminate\Database\Eloquent\Builder
+    {
+        $modelId = request('model');
+
+        return self::select('id', 'name as text')
+            ->where('id', '!=', $modelId)
+            ->where(function ($query) use ($modelId) {
+                $query
+                    ->where('parent_id', '!=', $modelId)
+                    ->orWhereNull('parent_id');
+            })
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            });
+    }
+
+    /**
      * Internal Helper:
      *   Make Configfile Content for $this Object /
      *   without recursive objects

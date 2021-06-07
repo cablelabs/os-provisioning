@@ -269,19 +269,22 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Return all Contracts
-     * NOTE: Dont use Eloquent here as it's super slow for many models and we dont need the Eloquent instance here
+     * Format Contracts for edit view select field and allow for seeaching.
+     *
+     * @param string|null $search
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function contracts()
+    public function select2Contracts(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        $contracts = DB::table('contract')->whereNull('deleted_at')->get();
+        return Contract::select('id')
+            ->selectRaw('CONCAT(number, \' - \', firstname, \' \', lastname) as text')
+            ->when($search, function ($query, $search) {
+                foreach (['number', 'firstname', 'lastname'] as $field) {
+                    $query = $query->orWhere($field, 'like', "%{$search}%");
+                }
 
-        $list = [];
-        foreach ($contracts as $contract) {
-            $list[$contract->id] = Contract::labelFromData($contract);
-        }
-
-        return $list;
+                return $query;
+            });
     }
 
     public function mtas()
