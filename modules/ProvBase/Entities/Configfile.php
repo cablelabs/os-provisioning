@@ -58,6 +58,15 @@ class Configfile extends \BaseModel
         return $this->device.': '.$this->name;
     }
 
+    public function label()
+    {
+        if ($this->device === 'mta') {
+            return "{$this->name} ({$this->mtaCount})";
+        }
+
+        return "{$this->name} ({$this->modemCount})";
+    }
+
     // icon type for tree view
     public function get_icon_type()
     {

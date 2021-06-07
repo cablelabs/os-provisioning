@@ -105,7 +105,7 @@ class Contract extends \BaseModel
 
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
-            'header' =>  self::labelFromData($this),
+            'header' =>  $this->label(),
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
             'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
@@ -157,14 +157,14 @@ class Contract extends \BaseModel
     /**
      * @return string
      */
-    public static function labelFromData($contract)
+    public function label()
     {
-        return $contract->number.' - '.$contract->firstname.' '.$contract->lastname;
+        return $this->number.' - '.$this->firstname.' '.$this->lastname;
     }
 
     public function get_costcenter_name()
     {
-        return $costcenter = $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
+        return $this->costcenter ? $this->costcenter->name : trans('messages.noCC');
     }
 
     // View Relation.
