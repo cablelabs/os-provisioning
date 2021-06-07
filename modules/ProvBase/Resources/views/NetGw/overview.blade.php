@@ -37,7 +37,7 @@ This is the top level blade for NETGW config
 	@include ('provbase::NetGwBlade.load')
 @stop
 
-@include('bootstrap.group', ['header' => 'Setup', 'content' => 'group_1', 'expand' => !\Modules\ProvBase\Entities\ProvBase::prov_ip_online()])
+@include('bootstrap.group', ['header' => 'Setup', 'content' => 'group_1', 'expand' => ! $cb->provBase->prov_ip_online()])
 @include('bootstrap.group', ['header' => 'Routing / IPs', 'content' => 'group_2', 'expand' => ($cb->missing_pools || $cb->missing_routes)])
 @include('bootstrap.group', ['header' => 'Config', 'content' => 'group_3'])
 

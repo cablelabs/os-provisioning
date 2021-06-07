@@ -36,6 +36,7 @@ class NetGw extends \BaseModel
     // Attributes
     public $guarded = ['formatted_support_state', 'nas_secret'];
     protected $appends = ['formatted_support_state'];
+    protected $with = ['ippools'];
 
     // Add your validation rules here
     public function rules()
@@ -270,12 +271,12 @@ class NetGw extends \BaseModel
         }
 
         // get provisioning IP and interface
-        $conf = ProvBase::first();
-        $this->prov_ip = $conf->provisioning_server;
+        $this->provBase = ProvBase::first();
+        $this->prov_ip = $this->provBase->provisioning_server;
         exec('ip a | grep '.$this->prov_ip.' | tr " " "\n" | tail -n1', $prov_if);
         $this->prov_if = (isset($prov_if[0]) ? $prov_if[0] : 'eth');
 
-        $this->domain = $conf->domain_name;
+        $this->domain = $this->provBase->domain_name;
         $this->router_ip = env('NETGW_DEFAULT_GW', '172.20.3.254');
         $this->netmask = env('NETGW_IP_NETMASK', '255.255.252.0');
         $this->prefix = env('NETGW_IP_PREFIX', '22');
@@ -285,8 +286,8 @@ class NetGw extends \BaseModel
         $this->customer_vlan = env('CUSTOMER_VLAN', '101');
         $this->netmask6 = env('NETGW_IP6_NETMASK', '/116');
 
-        $this->snmp_ro = $this->community_ro ?: $conf->ro_community;
-        $this->snmp_rw = $this->community_rw ?: $conf->rw_community;
+        $this->snmp_ro = $this->community_ro ?: $this->provBase->ro_community;
+        $this->snmp_rw = $this->community_rw ?: $this->provBase->rw_community;
 
         // add data used if ProvHA is enabled
         if (\Module::collections()->has('ProvHA')) {

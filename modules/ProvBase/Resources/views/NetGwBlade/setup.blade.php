@@ -24,7 +24,7 @@ HOWTO: setup a new NETGW
 --}}
 
 <b>Setup command:</b><br>
-@if (!\Modules\ProvBase\Entities\ProvBase::prov_ip_online())
+@if (! $cb->provBase->prov_ip_online())
 	<div class="label label-danger">!!! Provisioning Server Management IP {!!$cb->prov_ip!!} Offline !!!</div><br><br>
 @else
 	<i>connect <b>{!!$cb->prov_if!!}</b> Interface with <b>{!!$cb->interface!!}</b> Interface</i><br><br>

@@ -190,20 +190,13 @@ class IpPool extends \BaseModel
      *
      * @author Ole Ernst
      */
-    public function is_secondary()
+    public function is_secondary($netgw)
     {
         if ($this->version == '6') {
-            // d($this, $this->netgw->ippools->where('version', '6')->first());
-            return $this->id == $this->netgw->ippools->where('version', '6')->first()->id ? '' : 'secondary';
+            return $this->id == optional($netgw->ippools->firstWhere('version', '6'))->id ? '' : 'secondary';
         }
 
-        $cmPools = $this->netgw->ippools->where('type', 'CM');
-
-        if ($cmPools->isEmpty() || $this->id != $cmPools->first()->id) {
-            return 'secondary';
-        }
-
-        return '';
+        return $this->id == optional($netgw->ippools->firstWhere('type', 'CM'))->id ? '' : 'secondary';
     }
 
     /**
