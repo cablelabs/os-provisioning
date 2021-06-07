@@ -22,10 +22,15 @@ use Log;
 use File;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Traits\HasConfigfile;
 
 class Mta extends \BaseModel
 {
+    use HasConfigfile;
+
+    public const TYPES = ['mta'];
+    public const CONFIGFILE_PREFIX = 'mta';
+    public const CONFIGFILE_DIRECTORY = '/tftpboot/mta/';
     public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/mta.conf';
 
     // The associated SQL table for this Model
@@ -68,7 +73,7 @@ class Mta extends \BaseModel
             'header' => $this->hostname.($this->mac ? ' - '.$this->mac : ''),
             'bsclass' => $this->get_bsclass(),
             'order_by' => ['3' => 'asc'],
-            'edit' => ['configfile.name' => 'has_configfile_assigned'],
+            'edit' => ['configfile.name' => 'assignedConfigfile'],
             'eager_loading' => ['configfile'], ];
     }
 
@@ -79,17 +84,6 @@ class Mta extends \BaseModel
         }
 
         return 'info';
-    }
-
-    public function has_configfile_assigned()
-    {
-        $cf_name = 'No Configfile assigned';
-
-        if (isset($this->configfile)) {
-            $cf_name = $this->configfile->name;
-        }
-
-        return $cf_name;
     }
 
     public function view_belongs_to()
@@ -106,14 +100,6 @@ class Mta extends \BaseModel
         return $ret;
     }
 
-    /**
-     * All Relations
-     */
-    public function configfile()
-    {
-        return $this->belongsTo(\Modules\ProvBase\Entities\Configfile::class, 'configfile_id');
-    }
-
     public function modem()
     {
         return $this->belongsTo(\Modules\ProvBase\Entities\Modem::class, 'modem_id');
@@ -124,10 +110,16 @@ class Mta extends \BaseModel
         return $this->hasMany(Phonenumber::class);
     }
 
-    // return all Configfile Objects for MTAs
-    public function configfiles()
+    /**
+     * BOOT:
+     * - init mta observer
+     */
+    public static function boot()
     {
-        return Configfile::where('device', '=', 'mta')->where('public', '=', 'yes')->get();
+        parent::boot();
+
+        self::observe(new \Modules\ProvVoip\Observers\MtaObserver);
+        self::observe(new \App\Observers\SystemdObserver);
     }
 
     /**
@@ -137,21 +129,22 @@ class Mta extends \BaseModel
      */
     public function make_configfile()
     {
-        $mta = $this;
-        $id = $mta->id;
-        $mac = $mta->mac;
+        Log::debug(__METHOD__.' started for '.$this->hostname);
 
         // dir; filenames
-        $dir = '/tftpboot/mta/';
-        $conf_file = $dir."mta-$id.conf";
-        $cfg_file = $dir."mta-$id.cfg";
+        $dir = static::CONFIGFILE_DIRECTORY;
+        $conf_file = $dir.static::CONFIGFILE_PREFIX.'-'.$this->id.'.conf';
+        $cfg_file = $dir.static::CONFIGFILE_PREFIX.'-'.$this->id.'.cfg';
 
         // load configfile for mta
-        $cf = $mta->configfile;
+        $cf = $this->configfile;
 
         if (! $cf) {
-            Log::info('Error could not load configfile for mta '.$mta->id);
-            goto _failed;
+            Log::info('Error could not load configfile for mta '.$this->id);
+            // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+            system("/bin/chown -R apache {$dir}");
+
+            return false;
         }
 
         /*
@@ -160,10 +153,13 @@ class Mta extends \BaseModel
          * For Versions lower than 0.9.8 we have to build it twice and use european OID
          * for pktcMtaDevProvConfigHash.0 from excentis packet cable mta mib
          */
-        $text = "Main\n{\n\tMtaConfigDelimiter 1;".$cf->text_make($mta, 'mta')."\n\tMtaConfigDelimiter 255;\n}";
+        $text = "Main\n{\n\tMtaConfigDelimiter 1;".$cf->text_make($this, 'mta')."\n\tMtaConfigDelimiter 255;\n}";
         if (! File::put($conf_file, $text)) {
-            Log::info('Error writing to file '.$conf_file_pre);
-            goto _failed;
+            Log::info('Error writing to file '.$conf_file);
+            // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
+            system("/bin/chown -R apache {$dir}");
+
+            return false;
         }
 
         $dialplan = ($cf->firmware) ? "-dialplan \"/tftpboot/dialplan/{$cf->firmware}\"" : '';
@@ -182,51 +178,9 @@ class Mta extends \BaseModel
         // }
 
         // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
-        system('/bin/chown -R apache /tftpboot/mta');
+        system("/bin/chown -R apache {$dir}");
 
         return true;
-
-        _failed:
-        // change owner in case command was called from command line via php artisan nms:configfile that changes owner to root
-        system('/bin/chown -R apache /tftpboot/mta');
-
-        // touch flagfile e.g. used in ProvHA
-        Storage::makeDirectory('/data/provbase');
-        Storage::put('/data/provbase/configfiles_changed', null);
-
-        return false;
-    }
-
-    /**
-     * Make configfiles for all MTAs
-     *
-     * @author Patrick Reichel
-     */
-    public function make_configfile_all()
-    {
-        $mtas = self::all();
-        foreach ($mtas as $mta) {
-            if ($mta->id == 0) {
-                continue;
-            }
-            if (! $mta->make_configfile()) {
-                Log::warning('failed to build/write configfile for mta mta-'.$mta->id);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * BOOT:
-     * - init mta observer
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        self::observe(new \Modules\ProvVoip\Observers\MtaObserver);
-        self::observe(new \App\Observers\SystemdObserver);
     }
 
     /**
@@ -304,22 +258,6 @@ class Mta extends \BaseModel
     public static function clear_dhcp_conf_file()
     {
         File::put(self::CONF_FILE_PATH, '');
-    }
-
-    /**
-     * Deletes Configfile of one mta
-     */
-    public function delete_configfile()
-    {
-        $dir = '/tftpboot/mta/';
-        $file['1'] = $dir.'mta-'.$this->id.'.cfg';
-        $file['2'] = $dir.'mta-'.$this->id.'.conf';
-
-        foreach ($file as $f) {
-            if (file_exists($f)) {
-                unlink($f);
-            }
-        }
     }
 
     /**

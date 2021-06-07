@@ -26,15 +26,18 @@ use Request;
 use Storage;
 use Acme\php\ArrayHelper;
 use Illuminate\Support\Facades\Log;
+use Modules\ProvBase\Traits\HasConfigfile;
 use Modules\ProvBase\Http\Controllers\ModemController;
 
 class Modem extends \BaseModel
 {
-    // get functions for some address select options
-    use \App\AddressFunctionsTrait;
+    use HasConfigfile;
+    use \App\AddressFunctionsTrait; // get functions for some address select options
     use \App\extensions\geocoding\Geocoding;
 
     public const TYPES = ['cm', 'tr069'];
+    public const CONFIGFILE_PREFIX = 'cm';
+    public const CONFIGFILE_DIRECTORY = '/tftpboot/cm/';
     public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
     protected const CONF_FILE_PATH_PUB = '/etc/dhcp-nmsprime/modems-clients-public.conf';
     protected const IGNORE_CPE_FILE_PATH = '/etc/dhcp-nmsprime/ignore-cpe.conf';
@@ -209,16 +212,6 @@ class Modem extends \BaseModel
     }
 
     /**
-     * return all Configfile Objects for CMs (for Edit view)
-     */
-    public function configfiles()
-    {
-        $types = $this->exists ? [$this->configfile->device] : self::TYPES;
-
-        return Configfile::select(['id', 'name'])->where('public', '=', 'yes')->whereIn('device', $types)->get();
-    }
-
-    /**
      * return all Configfile Objects for CMs
      */
     public function qualities()
@@ -263,11 +256,6 @@ class Modem extends \BaseModel
         } else {
             return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
         }
-    }
-
-    public function configfile()
-    {
-        return $this->belongsTo(Configfile::class);
     }
 
     public function qos()
@@ -841,40 +829,6 @@ class Modem extends \BaseModel
         Storage::put('/data/provbase/configfiles_changed', null);
 
         return true;
-    }
-
-    /**
-     * Make all Configfiles
-     */
-    public function make_configfile_all()
-    {
-        $m = self::all();
-        foreach ($m as $modem) {
-            if ($modem->id == 0) {
-                continue;
-            }
-            if (! $modem->make_configfile()) {
-                Log::warning('failed to build/write configfile for modem cm-'.$modem->id);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Deletes Configfile of a modem
-     */
-    public function delete_configfile()
-    {
-        $dir = '/tftpboot/cm/';
-        $file['1'] = $dir.'cm-'.$this->id.'.cfg';
-        $file['2'] = $dir.'cm-'.$this->id.'.conf';
-
-        foreach ($file as $f) {
-            if (file_exists($f)) {
-                unlink($f);
-            }
-        }
     }
 
     /**
