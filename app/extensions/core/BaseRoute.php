@@ -112,6 +112,13 @@ class BaseRoute
             $options,
         ]);
 
+        Route::get("$name/select/{relation}", [
+            'as' => $name.'.select2',
+            'uses' => $controller.'@select2Ajax',
+            'middleware' => ['web', 'can:view,'.$models[$name]],
+            $options,
+        ]);
+
         // update
         Route::patch("$name/{{$name}}", [
             'as' => $name.'.update',

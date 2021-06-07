@@ -1741,6 +1741,50 @@ class BaseController extends Controller
     }
 
     /**
+     * Returns the Relations in a prepared format that is working with select2.
+     * The Data must follow a specific structure for that. Hence following it
+     * is explained how to use the "generic" of this function.
+     *
+     * 1. Add an options key to the view_form_fields array of the select field
+     * a.) set key class to 'select2-ajax'
+     * b.) set key route to {Modelname}.select2 and set the route parameter
+     *    relation to the plural name of the relation
+     *
+     * 2. Add a public method inside the model which conforms to the naming
+     *   schema: "select2{Relation}"
+     * a.) This function should return an Eloquent Builder instance
+     * b.) The query should have selected 'id' and the label for each element as
+     *     'text'
+     * c.) The query MUST contain a when($search, function ($query, $search)) to
+     *     handle the seach inside the select field
+     * d.) optional count can be defined to have a count displayed to every
+     *    option of the select field
+     *
+     * example implementation can be found in Modem(Controller)
+     *
+     * @param string $relation
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function select2Ajax(string $relation)
+    {
+        $search = request('search');
+        $relation = ucfirst($relation);
+        $model = static::get_model_obj();
+
+        if (! method_exists($model, "select2{$relation}")) {
+            throw new \BadMethodCallException("select2{$relation} does not exist");
+        }
+
+        $selectQuery = $model->{"select2{$relation}"}($search);
+
+        if (! $selectQuery instanceof \Illuminate\Database\Eloquent\Builder) {
+            throw new \UnexpectedValueException("Return type of select2{$relation} should be \Illuminate\Database\Eloquent\Builder.");
+        }
+
+        return $selectQuery->paginate(20);
+    }
+
+    /**
      *  The official Documentation Help Menu Function
      *
      *  See: See: config/documenation.php array
