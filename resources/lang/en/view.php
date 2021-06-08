@@ -359,6 +359,17 @@ return [
     'Button_Create IpPool'          => 'Create IpPool', //workaround
     'Button_Create IP-Pools'        => 'Create IpPools',
 
+    // Select Fields
+    'select' => [
+        'base' => 'Please choose :model!',
+        'Configfile' => 'a Configfile',
+        'Contract' => 'a Contract',
+        'Mta' => 'a MTA',
+        'NetElement' => 'a Netelement',
+        'Parent' => 'a parent Element',
+        'Phonenumber' => 'Sa Phone Number',
+    ],
+
     // Index
     'filter' => [
         'all'               => 'bad filter',
