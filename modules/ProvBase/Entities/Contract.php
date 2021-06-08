@@ -226,10 +226,7 @@ class Contract extends \BaseModel
                 $ret['Edit']['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
 
                 $ret['Billing']['Debt']['class'] = 'Debt';
-                $ret['Billing']['Debt']['count'] = $this->debts_count;
-                $ret['Billing']['Debt']['relation'] = $this->debts_count >= $relationThreshhold ?
-                    collect([new \Modules\OverdueDebts\Entities\Debt()]) :
-                    $this->debts;
+                $ret['Billing']['Debt']['relation'] = $this->debts;
             }
 
             $ret['Billing']['Invoice']['class'] = 'Invoice';
@@ -238,7 +235,7 @@ class Contract extends \BaseModel
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
             $ret['Billing']['Invoice']['relation'] = $this->invoices_count >= $relationThreshhold ?
                 collect([new \Modules\BillingBase\Entities\Invoice()]) :
-                $this->invoices()->orderBy('id', 'desc')->get();
+                $this->invoices;
         }
 
         if (Module::collections()->has('ProvVoipEnvia') &&
@@ -276,18 +273,22 @@ class Contract extends \BaseModel
 
     public function setRelationCounts()
     {
-        $relations = ['modems'];
+        $threshhold = config('datatables.relationThreshhold');
 
         if (Module::collections()->has('BillingBase')) {
-            $relations[] = 'invoices';
-            $relations[] = 'items';
+            $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->limit($threshhold)->get());
+            $this->invoices_count = $this->invoices->count();
+            $this->setRelation('items', $this->items()->limit($threshhold)->get());
+            $this->items_count = $this->items->count();
         }
 
-        if (Module::collections()->has('OverdueDebts')) {
-            $relations[] = 'debts';
+        if ($this->relationLoaded('modems')) {
+            $this->modems_count = $this->modems->count();
+
+            return;
         }
 
-        $this->loadCount($relations);
+        $this->modems_count = $this->modems()->limit($threshhold)->get('id')->count();
     }
 
     public function view_belongs_to()
@@ -1426,6 +1427,7 @@ class Contract extends \BaseModel
      */
     public function getResultingDebt()
     {
+        $this->load('debts:id,missing_amount');
         // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
         // return \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
         //     ->groupBy('contract_id')
