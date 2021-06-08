@@ -208,6 +208,11 @@ class BaseModel extends Eloquent
         return [];
     }
 
+    public function loadEditViewRelations()
+    {
+        return $this;
+    }
+
     /**
      *	This returns an array with all possible enum values.
      *	Use this instead of hardcoding it e.g. in your view (where it has to be

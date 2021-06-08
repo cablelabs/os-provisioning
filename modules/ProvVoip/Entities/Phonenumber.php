@@ -227,6 +227,22 @@ class Phonenumber extends \BaseModel
         return $this->mta;
     }
 
+    /**
+     * Eager load relationships to prevent query duplication
+     *
+     * @return void
+     */
+    public function loadEditViewRelations()
+    {
+        $this->load([
+            'mta:id,modem_id,hostname,mac',
+            'mta.modem:id,contract_id,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date,mac',
+            'mta.modem.contract:id,number,firstname,lastname,contract_start',
+            'mta.modem.contract.modems:id,contract_id,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date',
+            'mta.modem.contract.modems.mtas:id,modem_id,hostname,mac'
+        ]);
+    }
+
     // View Relation.
     public function view_has_many()
     {

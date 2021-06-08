@@ -965,6 +965,7 @@ class BaseController extends Controller
     {
         $model = static::get_model_obj();
         $view_var = $model->findOrFail($id);
+        $view_var->loadEditViewRelations();
 
         $view_header = BaseViewController::translate_view($model->view_headline(), 'Header');
         $headline = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
