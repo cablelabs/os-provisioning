@@ -153,7 +153,7 @@ class ContractController extends \BaseController
                 ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => ['Modem'], 'hidden' => 1],
             ];
 
-            if (\Modules\BillingBase\Entities\BillingBase::first()->show_ags) {
+            if (cache('billingBase')->show_ags) {
                 $c[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
             }
 

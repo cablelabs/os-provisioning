@@ -320,7 +320,7 @@ class PhonenumberObserver
         }
 
         // check if number already existed within the last month(s)
-        $delay = \Modules\BillingBase\Entities\BillingBase::first()->cdr_offset;
+        $delay = cache('billingBase')->cdr_offset;
         $cdr_first_day_of_month = date('Y-m-01', strtotime('first day of -'.(1 + $delay).' month'));
 
         $num = \DB::table('phonenumber')
