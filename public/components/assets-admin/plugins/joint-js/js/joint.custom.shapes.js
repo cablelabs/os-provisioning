@@ -308,7 +308,7 @@ joint.dia.Element.define('custom.Bubble', {
             refY: 20,
             fontSize: 14,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#ffffff'
         },
         m_online_critical_label: {
             textVerticalAnchor: 'bottom',
@@ -319,7 +319,7 @@ joint.dia.Element.define('custom.Bubble', {
             refY: 35,
             fontSize: 14,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#ffffff'
         },
         m_avg_upstream_label: {
             textVerticalAnchor: 'bottom',
@@ -330,7 +330,7 @@ joint.dia.Element.define('custom.Bubble', {
             refY: 50,
             fontSize: 14,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#ffffff'
         },
         button: {
             refX: '100%',
