@@ -41,49 +41,17 @@ class PhonenumberController extends \BaseController
         $hasProvVoipEnvia = \Module::collections()->has('ProvVoipEnvia');
         $provVoip = \Modules\ProvVoip\Entities\ProvVoip::first();
 
-        // if there is no phonenumbermanagement: make checkbox changeable
-        // TODO: should this be the case or do we want to need a management in each case?
-        if (is_null($model->phonenumbermanagement)) {
-            $active_checkbox = [
-                'form_type' => 'checkbox',
-                'name' => 'active',
-                'description' => 'Active',
-                'help' => 'If you create a PhonenumberManagement this checkbox will be set depending on its (de)activation date.',
-            ];
-        }
-        // otherwise: store value in hidden form field and show symbol to indicate the current state instead
-        else {
+        $roOption = $model->contract_external_id && $hasProvVoipEnvia ? ['readonly'] :
+        ['placeholder' => 'Leave empty on phonenumbers to be created.'];
+        $ajaxOption = [
+            'class' => 'select2-ajax',
+            'ajax-route' => route('Phonenumber.select2', ['relation' => 'mtas']),
+        ];
 
-            // TODO: move style to css file or use existing styles
-            $active_symbol_style = 'font-size: 1.4em; padding-top:0.4em; padding-left: 4.8em';
-
-            // prepare the data to be stored and the symbol to be shown
-            if ($model->active) {
-                $active_state = '1';
-                $active_symbol = '<div style="color: #080; '.$active_symbol_style.'">✔</div>';
-            } else {
-                $active_state = '0';
-                $active_symbol = '<div style="color: #f00; '.$active_symbol_style.'">✘</div>';
-            }
-
-            $active_checkbox = ['form_type' => 'html', 'name' => 'active', 'description' => 'Active',
-                'html' => '<div class="col-md-7">
-                        <input name="active" type="hidden" id="active" value="'.$active_state.'">'.$active_symbol.'
-                    </div>',
-                'help' => 'Automatically set by (de)activation date in phonenumber management',
-            ];
-        }
-
-        $reassign_help = 'Can be used to assign the phonenumber (and related data) to another MTA.';
+        $help = 'Can be used to assign the phonenumber (and related data) to another MTA.';
         if ($hasProvVoipEnvia) {
-            $reassign_help .= 'MTA has to belong to the same contract and modem installation addresses have to be equal.';
-        }
-
-        // get a list of MTAs the modem can be moved to
-        if ($model->exists) {
-            $mta_list = $model->mtas_list_phonenumber_can_be_reassigned_to();
-        } else {
-            $mta_list = [];
+            $help .= 'MTA has to belong to the same contract and modem installation addresses have to be equal.';
+            $ajaxOption = [];
         }
 
         // label has to be the same like column in sql table
@@ -92,9 +60,12 @@ class PhonenumberController extends \BaseController
                 'form_type' => 'select',
                 'name' => 'mta_id',
                 'description' => 'MTA',
-                'value' => $mta_list,
+                'value' => $hasProvVoipEnvia ?
+                    $model->mtasWhenEnviaEnabled() :
+                    $this->setupSelect2Field($model, 'Mta'),
                 'hidden' => 'C',
-                'help' => $reassign_help,
+                'help' => $help,
+                'options' => $ajaxOption,
             ],
             [
                 'form_type' => 'text',
@@ -123,66 +94,63 @@ class PhonenumberController extends \BaseController
                 'help' => 'The phonenumber to port or a free number given by your provider.',
                 'space' => 1,
             ],
+            [
+                'form_type' => 'text',
+                'name' => 'username',
+                'description' => 'Username',
+                'options' => $roOption,
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'password',
+                'description' => 'Password',
+                'space' => 1,
+                'options' => $hasProvVoipEnvia ? ['placeholder' => 'Autofilled if empty.'] : [],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'sipdomain',
+                'description' =>'SIP domain',
+                'autocomplete' => [],
+                'init_value' => $hasProvVoipEnvia ? '' : $provVoip->default_sip_registrar,
+                'options' =>  $roOption,
+            ],
         ];
 
-        // create the form field for SIP username – envia TEL causes special handling
-        $options = [];
-        if ($hasProvVoipEnvia) {
-            if ($model->contract_external_id) {
-                $options = ['readonly'];
+        // if there is no phonenumbermanagement: make checkbox changeable
+        // TODO: should this be the case or do we want to need a management in each case?
+        if (is_null($model->phonenumbermanagement)) {
+            $active_checkbox = [
+                'form_type' => 'checkbox',
+                'name' => 'active',
+                'description' => 'Active',
+                'help' => 'If you create a PhonenumberManagement this checkbox will be set depending on its (de)activation date.',
+            ];
+        }
+        // otherwise: store value in hidden form field and show symbol to indicate the current state instead
+        else {
+            // TODO: move style to css file or use existing styles
+            $active_symbol_style = 'font-size: 1.4em; padding-top:0.4em; padding-left: 4.8em';
+
+            // prepare the data to be stored and the symbol to be shown
+            if ($model->active) {
+                $active_state = '1';
+                $active_symbol = '<div style="color: #080; '.$active_symbol_style.'">✔</div>';
             } else {
-                $options = ['placeholder' => 'Leave empty on phonenumbers to be created.'];
+                $active_state = '0';
+                $active_symbol = '<div style="color: #f00; '.$active_symbol_style.'">✘</div>';
             }
-        }
-        $username = [
-            'form_type' => 'text',
-            'name' => 'username',
-            'description' => 'Username',
-        ];
-        if ($options) {
-            $username['options'] = $options;
-        }
 
-        // create the form field for SIP password – envia TEL causes special handling
-        $options = [];
-        if ($hasProvVoipEnvia) {
-            $options = ['placeholder' => 'Autofilled if empty.'];
-        }
-        $password = [
-            'form_type' => 'text',
-            'name' => 'password',
-            'description' => 'Password',
-            'space' => 1,
-        ];
-        if ($options) {
-            $password['options'] = $options;
-        }
-
-        // create the form field for SIP domain – envia TEL causes special handling
-        $options = [];
-        if ($hasProvVoipEnvia) {
-            if ($model->contract_external_id) {
-                $options = ['readonly'];
-            } else {
-                $options = ['placeholder' => 'Leave empty on phonenumbers to be created.'];
-            }
-        }
-        $sipdomain = [
-            'form_type' => 'text',
-            'name' => 'sipdomain',
-            'description' => trans('messages.SIP domain'),
-            'autocomplete' => [],
-            'init_value' => $hasProvVoipEnvia ? '' : $provVoip->default_sip_registrar,
-        ];
-        if ($options) {
-            $sipdomain['options'] = $options;
+            $active_checkbox = ['form_type' => 'html', 'name' => 'active', 'description' => 'Active',
+                'html' => '<div class="col-md-7">
+                        <input name="active" type="hidden" id="active" value="'.$active_state.'">'.$active_symbol.'
+                    </div>',
+                'help' => 'Automatically set by (de)activation date in phonenumber management',
+            ];
         }
 
         array_push(
             $ret,
-            $username,
-            $password,
-            $sipdomain,
             $active_checkbox
         );
 

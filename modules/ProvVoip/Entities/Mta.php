@@ -70,7 +70,7 @@ class Mta extends \BaseModel
     {
         return ['table' => $this->table,
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
-            'header' => $this->hostname.($this->mac ? ' - '.$this->mac : ''),
+            'header' => $this->label(),
             'bsclass' => $this->get_bsclass(),
             'order_by' => ['3' => 'asc'],
             'edit' => ['configfile.name' => 'assignedConfigfile'],
@@ -84,6 +84,11 @@ class Mta extends \BaseModel
         }
 
         return 'info';
+    }
+
+    public function label()
+    {
+        return $this->hostname.($this->mac ? ' - '.$this->mac : '');
     }
 
     public function view_belongs_to()

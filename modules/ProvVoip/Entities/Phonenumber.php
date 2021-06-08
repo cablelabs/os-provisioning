@@ -239,7 +239,7 @@ class Phonenumber extends \BaseModel
             'mta.modem:id,contract_id,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date,mac',
             'mta.modem.contract:id,number,firstname,lastname,contract_start',
             'mta.modem.contract.modems:id,contract_id,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date',
-            'mta.modem.contract.modems.mtas:id,modem_id,hostname,mac'
+            'mta.modem.contract.modems.mtas:id,modem_id,hostname,mac',
         ]);
     }
 
@@ -277,59 +277,48 @@ class Phonenumber extends \BaseModel
     }
 
     /**
-     * return all mta objects
-     */
-    public function mtas()
-    {
-        $dummies = Mta::withTrashed()->where('is_dummy', true)->get();
-        $mtas = Mta::get();
-
-        return ['dummies' => $dummies, 'mtas' => $mtas];
-    }
-
-    /**
-     * return a list [id => hostname] of all mtas
-     */
-    public function mtas_list()
-    {
-        $ret = [];
-        foreach ($this->mtas()['mtas'] as $mta) {
-            $ret[$mta->id] = $mta->hostname;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * return a list [id => hostname] of all mtas
-     */
-    public function mtas_list_with_dummies()
-    {
-        $ret = [];
-        foreach ($this->mtas() as $mta_tmp) {
-            foreach ($mta_tmp as $mta) {
-                $ret[$mta->id] = $mta->hostname;
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * return a list [id => hostname, mac and contract information] of all mtas assigned to a contract
      */
-    public function mtas_list_only_contract_assigned()
+    public function select2Mtas($search)
     {
+        return MTA::select('mta.id', 'mta.hostname', 'mta.mac', 'c.number', 'c.firstname', 'c.lastname')
+            ->selectRaw('CONCAT(mta.hostname, \' (\' ,mta.mac, \') => \', c.number, \' - \', c.firstname, \' \', c.lastname) as text')
+            ->join('modem as m', 'm.id', '=', 'mta.modem_id')
+            ->join('contract as c', 'c.id', '=', 'm.contract_id')
+            ->where('m.deleted_at', '=', null)
+            ->where('c.deleted_at', '=', null)
+            ->when($search, function ($query, $search) {
+                return $query->where('mta.hostname', 'like', "%{$search}%")
+                    ->orWhere('mta.mac', 'like', "%{$search}%")
+                    ->orWhere('c.number', 'like', "%{$search}%")
+                    ->orWhere('c.firstname', 'like', "%{$search}%")
+                    ->orWhere('c.lastname', 'like', "%{$search}%");
+            });
+    }
+
+    /**
+     * Return a list of MTAs the current phonenumber can be assigned to.
+     * special case activated envia TEL module:
+     * - MTA has to belong to the same contract
+     * - Installation address of current modem match installation address of new modem
+     *
+     * @author Patrick Reichel, Christian Schramm
+     */
+    public function mtasWhenEnviaEnabled()
+    {
+        if (! $this->exists) {
+            return [null => trans('view.select.base', ['model' => trans('view.select.Mta')])];
+        }
+
         $ret = [];
+        $currentModem = $this->mta->modem;
 
-        $mtas = \DB::table('mta')
-            ->join('modem as m', 'm.id', '=', 'mta.modem_id')->join('contract as c', 'c.id', '=', 'm.contract_id')
-            ->where('m.deleted_at', '=', null)->where('c.deleted_at', '=', null)->where('mta.deleted_at', '=', null)
-            ->select('mta.*', 'c.number', 'c.firstname', 'c.lastname')
-            ->get();
-
-        foreach ($mtas as $mta) {
-            $ret[$mta->id] = $mta->hostname.' ('.$mta->mac.') ⇒ '.$mta->number.': '.$mta->lastname.', '.$mta->firstname;
+        foreach ($this->mta->modem->contract->modems as $modem) {
+            if ($this->isPhonenumberReassignmentAllowed($currentModem, $modem)) {
+                foreach ($modem->mtas as $mta) {
+                    $ret[$mta->id] = $mta->hostname.' ('.$mta->mac.')';
+                }
+            }
         }
 
         return $ret;
@@ -338,66 +327,16 @@ class Phonenumber extends \BaseModel
     /**
      * Checks if a number can be reassigned to a given new modem
      *
-     * @author Patrick Reichel
+     * @author Patrick Reichel, Christian Schramm
      */
-    public function phonenumber_reassignment_allowed($cur_modem, $new_modem)
+    protected function isPhonenumberReassignmentAllowed($currentModem, $newModem): bool
     {
+        $intersect = array_intersect_assoc($currentModem->getAttributes(), $newModem->getAttributes());
+        $check = ['salutation', 'company', 'department', 'firstname', 'lastname', 'street',
+            'house_number', 'zip', 'city', 'district', 'installation_address_change_date',
+        ];
 
-        // check if modems belong to the same contract
-        if ($cur_modem->contract->id != $new_modem->contract->id) {
-            return false;
-        }
-
-        // check if installation addresses are equal
-        if (
-            ($cur_modem->salutation != $new_modem->salutation) ||
-            ($cur_modem->company != $new_modem->company) ||
-            ($cur_modem->department != $new_modem->department) ||
-            ($cur_modem->firstname != $new_modem->firstname) ||
-            ($cur_modem->lastname != $new_modem->lastname) ||
-            ($cur_modem->street != $new_modem->street) ||
-            ($cur_modem->house_number != $new_modem->house_number) ||
-            ($cur_modem->zip != $new_modem->zip) ||
-            ($cur_modem->city != $new_modem->city) ||
-            ($cur_modem->district != $new_modem->district) ||
-            ($cur_modem->installation_address_change_date != $new_modem->installation_address_change_date)
-        ) {
-            return false;
-        }
-
-        // all checks passed: reassignment is allowed
-        return true;
-    }
-
-    /**
-     * Return a list of MTAs the current phonenumber can be assigned to.
-     *
-     * @author Patrick Reichel
-     */
-    public function mtas_list_phonenumber_can_be_reassigned_to()
-    {
-
-        // special case activated envia TEL module:
-        //   - MTA has to belong to the same contract
-        //   - Installation address of current modem match installation address of new modem
-        if (\Module::collections()->has('ProvVoipEnvia')) {
-            $ret = [];
-
-            $cur_modem = $this->mta->modem;
-            $candidate_modems = $cur_modem->contract->modems;
-            foreach ($candidate_modems as $tmp_modem) {
-                if ($this->phonenumber_reassignment_allowed($cur_modem, $tmp_modem)) {
-                    foreach ($tmp_modem->mtas as $mta) {
-                        $ret[$mta->id] = $mta->hostname.' ('.$mta->mac.')';
-                    }
-                }
-            }
-
-            return $ret;
-        }
-
-        // default: can use every mta assigned to a contract
-        return $this->mtas_list_only_contract_assigned();
+        return ! (bool) array_diff_key(array_flip($check), $intersect);
     }
 
     /**
