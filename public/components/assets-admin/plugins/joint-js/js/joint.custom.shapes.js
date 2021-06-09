@@ -59,7 +59,7 @@ joint.dia.Element.define('custom.Amplifier', {
     collapsed: false,
     attrs: {
         root: {
-            magnetSelector: 'buttonIcon'
+            magnetSelector: 'label'
         },
         shadow: {
             refWidth: '100%',
@@ -76,7 +76,7 @@ joint.dia.Element.define('custom.Amplifier', {
         header: {
             refWidth: '100%',
             refHeight: '100%',
-            refX: '50%',
+            refX: 0,
             refY: 0,
             strokeWidth: 4,
             fill: 'rgba(255,255,255,0)',
@@ -90,11 +90,16 @@ joint.dia.Element.define('custom.Amplifier', {
             refHeight: '100%',
             fontSize: 12,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#222222',
+            textWrap: {
+                width: '200%',
+                height: '100%',
+                ellipsis: true
+            }
         },
         button: {
             refX: '100%',
-            refX2: 40,
+            refX2: 10,
             refY: 20,
             cursor: 'pointer',
             event: 'element:button:pointerdown',
@@ -285,7 +290,7 @@ joint.dia.Element.define('custom.Bubble', {
     },
     attrs: {
         root: {
-            magnetSelector: 'buttonIcon'
+            magnetSelector: 'header'
         },
         link: {
             xlinkShow: 'replace',
@@ -439,7 +444,12 @@ var Path = joint.dia.Element.define('custom.Cloud', {
             textAnchor: 'left',
             fontSize: 12,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#222222',
+            textWrap: {
+                width: '200%',
+                height: '100%',
+                ellipsis: true
+            }
         },
         button: {
             refX: '50%',
@@ -586,7 +596,12 @@ joint.dia.Element.define('custom.Cluster', {
             textAnchor: 'left',
             fontSize: 12,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#222222',
+            textWrap: {
+                width: '100%',
+                height: '200%',
+                ellipsis: true
+            }
         },
         button: {
             refX: '50%',
@@ -719,7 +734,12 @@ joint.dia.Element.define('custom.Block', {
             refHeight: '100%',
             fontSize: 12,
             fontFamily: 'sans-serif',
-            fill: '#222222'
+            fill: '#222222',
+            textWrap: {
+                width: '200%',
+                height: '100%',
+                ellipsis: true
+            }
         },
         button: {
             refX: '100%',
