@@ -316,34 +316,4 @@ class ContractController extends \BaseController
 
         return $data;
     }
-
-    public function getRelationDatatable(Contract $contract, $relationClass)
-    {
-        $relationFn = \Illuminate\Support\Str::plural(strtolower($relationClass));
-        $order = $relationClass !== 'Invoice' ? 'asc' : 'desc';
-
-        return datatables($contract->$relationFn()->orderBy('id', $order))
-            ->addColumn('checkbox', function ($model) {
-                if (method_exists($model, 'set_index_delete')) {
-                    $model->set_index_delete();
-                }
-
-                return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
-                ($model->index_delete_disabled ? 'disabled' : '').'>';
-            }, 0)
-            ->addColumn('label', function ($model) use ($relationClass) {
-                return '<a href="'.route($relationClass.'.edit', $model->id).'">'.
-                $model->view_icon().' '.$model->label().'</a>';
-            }, 1)
-            ->only(['checkbox', 'label'])
-            ->rawColumns(['checkbox', 'label'])
-            ->setRowClass(function ($model) {
-                if (method_exists($model, 'get_bsclass')) {
-                    return $model->get_bsclass();
-                }
-
-                return $model->view_index_label()['bsclass'] ?? 'info';
-            })
-            ->make();
-    }
 }

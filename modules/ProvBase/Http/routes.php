@@ -93,10 +93,4 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@realtimePing',
         'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
-
-    BaseRoute::get('Contract/relation/{contract}/{relation}', [
-        'as' => 'Contract.relationDatatable',
-        'uses' => 'Modules\ProvBase\Http\Controllers\ContractController@getRelationDatatable',
-        'middleware' => ['can:view,Modules\ProvBase\Entities\Contract'],
-    ]);
 });

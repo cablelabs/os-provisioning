@@ -1811,6 +1811,51 @@ class BaseController extends Controller
     }
 
     /**
+     * This creates the AJAX data for the DataTables inside the relation panels
+     * of the edit views.
+     * Prerequisits:
+     * 1. The related model MUST have a public label() method
+     * 2. The view_has_many array MUST contain a count value (this way the ajax
+     *    handling is triggered)
+     *
+     * for example implementations look into Contract.
+     *
+     * @param int $model id of the model
+     * @param string $relationClass unqualified class name of the relation
+     * @return void
+     */
+    public function getRelationDatatable($model, $relationClass)
+    {
+        $model = static::get_model_obj()->findOrFail($model);
+        $relationFn = \Illuminate\Support\Str::plural(strtolower($relationClass));
+        $order = $relationClass !== 'Invoice' ? 'asc' : 'desc';
+
+        return datatables($model->$relationFn()->orderBy('id', $order))
+            ->addColumn('checkbox', function ($model) {
+                if (method_exists($model, 'set_index_delete')) {
+                    $model->set_index_delete();
+                }
+
+                return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
+                ($model->index_delete_disabled ? 'disabled' : '').'>';
+            }, 0)
+            ->addColumn('label', function ($model) use ($relationClass) {
+                return '<a href="'.route($relationClass.'.edit', $model->id).'">'.
+                    $model->view_icon().' '.$model->label().'</a>';
+            }, 1)
+            ->only(['checkbox', 'label'])
+            ->rawColumns(['checkbox', 'label'])
+            ->setRowClass(function ($model) {
+                if (method_exists($model, 'get_bsclass')) {
+                    return $model->get_bsclass();
+                }
+
+                return $model->view_index_label()['bsclass'] ?? 'info';
+            })
+            ->make();
+    }
+
+    /**
      *  The official Documentation Help Menu Function
      *
      *  See: See: config/documenation.php array

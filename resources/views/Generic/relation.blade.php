@@ -143,7 +143,7 @@ Relation Blade is used inside a Panel Element to display relational class object
                     processing: true, {{-- show loader--}}
                     serverSide: true, {{-- enable Serverside Handling--}}
                     deferRender: true,
-                    ajax: '{{ route('Contract.relationDatatable', ['contract' => $view_var->id, 'relation' => $class]) }}',
+                    ajax: '{{ route((new ReflectionClass($view_var))->getShortName().'.relationDatatable', ['model' => $view_var->id, 'relation' => $class]) }}',
                     columns:[
                         {data: 'checkbox', orderable: false, searchable: false},
                         {data: 'label', orderable: false, searchable: false}

@@ -119,6 +119,12 @@ class BaseRoute
             $options,
         ]);
 
+        BaseRoute::get("$name/relation/{model}/{relation}", [
+            'as' => $name.'.relationDatatable',
+            'uses' => $controller.'@getRelationDatatable',
+            'middleware' => ['web', 'can:view,'.$models[$name]],
+        ]);
+
         // update
         Route::patch("$name/{{$name}}", [
             'as' => $name.'.update',
