@@ -133,7 +133,7 @@ class NetElement extends \BaseModel
 
         return ['table' => $this->table,
             'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
-            'header' => $this->id.' - '.$this->name,
+            'header' => $this->label(),
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'],
             'eager_loading' => ['netelementtype'],
@@ -179,6 +179,15 @@ class NetElement extends \BaseModel
     public function getBsClassAttribute(): string
     {
         return $this->get_bsclass();
+    }
+
+    public function label()
+    {
+        if (! $this->netelementtype) {
+            return "{$this->id} - {$this->name}";
+        }
+
+        return "{$this->netelementtype->name}: {$this->name}";
     }
 
     //for empty relationships
@@ -565,14 +574,23 @@ class NetElement extends \BaseModel
      *
      * @return array
      */
-    public function getParentList()
+    public function select2Parent($search)
     {
-        $netelems = \DB::table('netelement')->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
-            ->select(['netelement.id as id', 'netelement.name as name', 'nt.name as ntname'])
-            ->whereNull('netelement.deleted_at')
-            ->get();
+        $modelId = request('model');
 
-        return $this->html_list($netelems, ['ntname', 'name'], true, ': ');
+        return self::select('netelement.id')
+            ->selectRaw('CONCAT(nt.name,\': \', netelement.name) as text')
+            ->where('netelement.id', '!=', $modelId)
+            ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
+            ->where(function ($query) use ($modelId) {
+                $query
+                    ->where('netelement.parent_id', '!=', $modelId)
+                    ->orWhereNull('netelement.parent_id');
+            })
+            ->when($search, function ($query, $search) {
+                return $query->where('netelement.name', 'like', "%{$search}%")
+                    ->orWhere('nt.name', 'like', "%{$search}%");
+            });
     }
 
     public function getApartmentsList()

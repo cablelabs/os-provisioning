@@ -68,7 +68,6 @@ class NetElementController extends BaseController
             $hidden4Tap = 1;
         }
 
-        $parents = $netelement->getParentList();
         $types = NetElementType::get();
 
         if ($type == 9) {
@@ -125,7 +124,7 @@ class NetElementController extends BaseController
             ['form_type' => 'text', 'name' => 'link', 'description' => 'ERD Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden],
             ['form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition', 'hidden' => $hidden4TapPort],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $parents],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 
