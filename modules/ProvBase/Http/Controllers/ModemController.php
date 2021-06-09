@@ -186,15 +186,7 @@ class ModemController extends \BaseController
      */
     public function dynamicDisplayFormFields()
     {
-        $all = Configfile::pluck('id');
-        $cfIds['all'] = $all->combine($all)->toArray();
-
-        // for now only tr069 is needed
-        foreach (/*Modem::TYPES*/['tr069'] as $type) {
-            $cfIds[$type] = Configfile::where('device', $type)->pluck('id')->implode(' ') ?: 'hide';
-        }
-
-        return $cfIds;
+        return ['tr069' => Configfile::where('device', 'tr069')->pluck('id')->implode(' ') ?: 'hide'];
     }
 
     /**
