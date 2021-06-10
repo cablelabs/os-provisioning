@@ -366,6 +366,7 @@ return [
         'Contract' => 'a Contract',
         'Mta' => 'a MTA',
         'NetElement' => 'a Netelement',
+        'Oid' => 'an OID',
         'Parent' => 'a parent Element',
         'Phonenumber' => 'Sa Phone Number',
     ],

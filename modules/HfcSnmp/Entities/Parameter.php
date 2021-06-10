@@ -57,13 +57,9 @@ class Parameter extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $label = $this->oid ? $this->oid->oid : '';
-        $label .= $this->oid ? ' - '.$this->oid->name : '';
-        $label .= $this->oid && $this->oid->name_gui ? ' - '.$this->oid->name_gui : '';
-
         return ['table' => $this->table,
             'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
-            'header' =>  $label,
+            'header' =>  $this->label(),
             'order_by' => ['1' => 'asc'],
             'bsclass' => $this->get_bsclass(),
             'eager_loading' => ['oid'], ];
@@ -78,6 +74,13 @@ class Parameter extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        return ($this->oid ? $this->oid->oid : '').
+            ($this->oid ? ' - '.$this->oid->name : '').
+            ($this->oid && $this->oid->name_gui ? ' - '.$this->oid->name_gui : '');
     }
 
     public function view_has_many()

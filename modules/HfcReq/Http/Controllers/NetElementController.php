@@ -44,9 +44,6 @@ class NetElementController extends BaseController
     public function view_form_fields($netelement = null)
     {
         $netelement = $netelement ?: new NetElement;
-
-        $empty_field = $netelement->exists;
-
         $kml_files = $netelement->kml_files();
 
         // parse which netelementtype we want to edit/create
@@ -78,26 +75,21 @@ class NetElementController extends BaseController
         /*
          * provisioning device
          */
-        $prov_device = [];
-        $prov_device_hidden = 1;
-
         if ($type == 3) { // netgw
-            $prov_device = $netelement->html_list(\Modules\ProvBase\Entities\NetGw::get(['id', 'hostname']), 'hostname', $empty_field);
+            $prov_device = $this->setupSelect2Field($netelement, 'prov_device');
         }
 
         if ($type == 4 || $type == 5) { // amp || node
-            $prov_device = $netelement->html_list(\DB::table('modem')->where('deleted_at', '=', null)->get(['id', 'name']), ['id', 'name'], $empty_field, ': ');
+            $prov_device = $this->setupSelect2Field($netelement, 'prov_device');
         }
 
+        $prov_device_hidden = 1;
         if ($prov_device) {
             $prov_device_hidden = 0;
         }
 
-        $cluster = false;
         // netelement is a cluster or will be created as type cluster
-        if ($netelement->netelementtype_id == 2 || (! $netelement->exists && Request::get('netelementtype_id') == 2)) {
-            $cluster = true;
-        }
+        $cluster = ($netelement->netelementtype_id == 2 || (! $netelement->exists && Request::get('netelementtype_id') == 2));
 
         // this is just a helper and won't be stored in the database
         $netelement->enable_agc = $netelement->exists && $netelement->agc_offset !== null;

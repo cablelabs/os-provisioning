@@ -63,8 +63,13 @@ class NetElementType extends \BaseModel
         return $type;
     }
 
-    // link title in index view
+    // Depricated
     public function view_index_label()
+    {
+        return $this->label();
+    }
+
+    public function label()
     {
         // in Tree View returning an array is currently not yet implemented
         $version = $this->version ? ' - '.$this->version : '';
@@ -75,19 +80,26 @@ class NetElementType extends \BaseModel
     // returns all objects that are related to a DeviceType
     public function view_has_many()
     {
+        $threshhold = config('datatables.relationThreshhold');
+        $this->setRelation('netelements', $this->netelements()->limit($threshhold)->get());
+        $this->netelements_count = $this->netelements->count();
+
         $ret['Edit']['NetElement']['class'] = 'NetElement';
-        $ret['Edit']['NetElement']['relation'] = $this->netelements;
+        $ret['Edit']['NetElement']['count'] = $this->netelements_count;
+        $ret['Edit']['NetElement']['relation'] = $this->netelements_count >= $threshhold ?
+            collect([new \Modules\HfcReq\Entities\NetElement()]) :
+            $this->netelements;
 
         if (\Module::collections()->has('HfcSnmp') && ! in_array($this->name, self::$undeletables)) {
-            // $ret['Base']['Parameter']['class'] 	= 'Parameter';
-            // $ret['Base']['Parameter']['relation']	= $this->parameters;
-
             // Extra view for easier attachment (e.g. attach all oids from one mibfile)
             $ret['Edit']['Parameters']['view']['view'] = 'hfcreq::NetElementType.parameters';
+            $ret['Edit']['Parameters']['view']['vars']['class'] = 'Parameter';
+            $ret['Edit']['Parameters']['view']['vars']['count'] = $this->parameters->count();
             $ret['Edit']['Parameters']['view']['vars']['list'] = $this->parameters ?: [];
+
             // Extra view for easier controlling view structure setting (html_frame, html_id of parameter)
             $ret['Parameter Settings']['Settings']['view']['view'] = 'hfcreq::NetElementType.settings';
-            $ret['Parameter Settings']['Settings']['view']['vars']['list'] = self::param_list($this->id);
+            $ret['Parameter Settings']['Settings']['view']['vars']['list'] = $this->parameterList();
         }
 
         return $ret;
@@ -123,12 +135,31 @@ class NetElementType extends \BaseModel
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public static function param_list($id)
+    public function select2Parent($search)
+    {
+        $modelId = request('model');
+
+        return self::select('id', 'name as text')
+            ->whereNotIn('id', [1, 2, 8, 9, $modelId])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            });
+    }
+
+    public function select2Oids($search)
+    {
+        return \Modules\HfcSnmp\Entities\OID::select('id')
+            ->selectRaw('CONCAT(oid, \' - \', name) as text')
+            ->when($search, function ($query, $search) {
+                return $query->where('oid', 'like', "%{$search}%")
+                    ->where('name', 'like', "%{$search}%");
+            });
+    }
+
+    public function parameterList()
     {
         $list = [];
-        $params = \Modules\HfcSnmp\Entities\Parameter::where('netelementtype_id', '=', $id)
-            ->with('oid')
-            ->get();
+        $params = $this->parameters;
 
         if (! $params) {
             return $list;

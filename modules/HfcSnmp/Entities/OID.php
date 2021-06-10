@@ -61,13 +61,10 @@ class OID extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-        $label = $this->oid.' - '.$this->name;
-        $label .= $this->name_gui ? ' - '.$this->name_gui : '';
-
         return ['table' => $this->table,
+            'bsclass' => $this->get_bsclass(),
             'index_header' => [$this->table.'.name', $this->table.'.name_gui',  $this->table.'.oid', $this->table.'.access'],
-            'header' => $label,
+            'header' => $this->label(),
             'order_by' => ['2' => 'asc'], ];
     }
 
@@ -80,6 +77,11 @@ class OID extends \BaseModel
         }
 
         return $bsclass;
+    }
+
+    public function label()
+    {
+        return $this->oid.' - '.$this->name.($this->name_gui ? ' - '.$this->name_gui : '');
     }
 
     /**
@@ -100,24 +102,6 @@ class OID extends \BaseModel
     public function view_belongs_to()
     {
         return $this->mibfile;
-    }
-
-    /**
-     * Return OID List for Select Field
-     */
-    public static function oid_list($empty_elem = false)
-    {
-        $list = $empty_elem ? [0 => null] : [];
-
-        // Note: DB::table is way faster than instantiating the Eloquent Objects which are not needed in this case
-        $oids = \DB::table('oid')->whereNull('deleted_at')->get(['id', 'name', 'name_gui', 'oid']);
-
-        foreach ($oids as $oid) {
-            $list[$oid->id] = $oid->name_gui ?: $oid->name;
-            $list[$oid->id] .= ' - '.$oid->oid;
-        }
-
-        return $list;
     }
 
     /**

@@ -1793,16 +1793,17 @@ class BaseController extends Controller
      * @param string $field Name of the Class (or Parent)
      * @return array
      */
-    protected function setupSelect2Field($model, string $field): array
+    protected function setupSelect2Field($model, string $field, string $fieldName = null): array
     {
         $lowerField = strtolower($field);
+        $fieldName = $fieldName ?? "{$lowerField}_id";
 
         if ($model->exists) {
             return [optional($model->$lowerField)->id => optional($model->$lowerField)->label()];
         }
 
-        if (request("{$lowerField}_id") && array_key_exists($field, $models = session('models'))) {
-            $model = $models[$field]::findOrFail(request("{$lowerField}_id"));
+        if (request($fieldName) && array_key_exists($field, $models = session('models'))) {
+            $model = $models[$field]::findOrFail(request($fieldName));
 
             return [$model->id => $model->label()];
         }
