@@ -38,8 +38,6 @@ class NetElement extends \BaseModel
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
     protected $with = ['netelementtype'];
 
-    protected $appends = ['url', 'bs_class'];
-
     public $guarded = ['kml_file_upload'];
 
     /**
