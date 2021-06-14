@@ -13,7 +13,7 @@ var makeNavbarSearch = function() {
 	    var code = (event.keyCode ? event.keyCode : event.which);
 	    if (event.which !== 0 && !event.ctrlKey && !event.metaKey && !event.altKey) {
 	      $("#togglesearch").click();
-	      if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+	      if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
 	        $("#globalsearch").val(String.fromCharCode(code));
 	        }
 	      }
@@ -81,7 +81,7 @@ if (typeof(Storage) !== "undefined" && $('#sidebar').length) {
 
 
     $('#sidebar ul > li').click(function (event) { //main menu click
-      if(!! $(this).attr('id')) {
+      if (!! $(this).attr('id')) {
         localStorage.setItem("sidebar-item", $(this).attr('id'));
         localStorage.setItem("clicked-item", $(this).attr('id'));
       }
@@ -196,7 +196,7 @@ var initSelect2Fields = function() {
           // Fill preserved value back into Select2 input field and trigger the AJAX loading (if any)
           let search = $('.select2-search input').val(searchTerm).trigger('change')
 
-          if(searchTerm) {
+          if (searchTerm) {
             search.trigger('input');
           }
 
