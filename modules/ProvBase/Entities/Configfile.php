@@ -179,11 +179,12 @@ class Configfile extends \BaseModel
      * Format Configfile parents for select 2 field and allow for seeaching.
      *
      * @param string|null $search
+     * @request param model - the id of the model to edit or null if in create context
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function select2Parent($search): \Illuminate\Database\Eloquent\Builder
+    public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        $modelId = request('model');
+        $modelId = request('model') ?? 0;
 
         return self::select('id', 'name as text')
             ->where('id', '!=', $modelId)
