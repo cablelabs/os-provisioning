@@ -1790,25 +1790,29 @@ class BaseController extends Controller
      * single select is supported.
      *
      * @param BaseModel|null $model model in edit view, null in create context
-     * @param string $field Name of the Class (or Parent)
+     * @param string $class unqualified name of the Class
+     * @param string|null $field Name of the input field
+     * @param string|null $fnName Name of the relation(function)
      * @return array
      */
-    protected function setupSelect2Field($model, string $field, string $fieldName = null): array
+    protected function setupSelect2Field($model, string $class, string $field = null, string $fn = null): array
     {
-        $lowerField = strtolower($field);
-        $fieldName = $fieldName ?? "{$lowerField}_id";
+        $lowerField = strtolower($class);
+        $field = $field ?? "{$lowerField}_id";
 
         if ($model->exists) {
-            return [optional($model->$lowerField)->id => optional($model->$lowerField)->label()];
+            $fn = $fn ?? $lowerField;
+
+            return [optional($model->$fn)->id => optional($model->$fn)->label()];
         }
 
-        if (request($fieldName) && array_key_exists($field, $models = session('models'))) {
-            $model = $models[$field]::findOrFail(request($fieldName));
+        if (request($field) && array_key_exists($class, $models = session('models'))) {
+            $model = $models[$class]::findOrFail(request($field));
 
             return [$model->id => $model->label()];
         }
 
-        return [null => trans('view.select.base', ['model' => trans("view.select.{$field}")])];
+        return [null => trans('view.select.base', ['model' => trans("view.select.{$class}")])];
     }
 
     /**
