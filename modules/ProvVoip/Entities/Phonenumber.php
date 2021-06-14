@@ -277,9 +277,12 @@ class Phonenumber extends \BaseModel
     }
 
     /**
-     * return a list [id => hostname, mac and contract information] of all mtas assigned to a contract
+     * Format MTAs for select 2 field and allow for seaching.
+     *
+     * @param string|null $search
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function select2Mtas($search)
+    public function select2Mtas(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return MTA::select('mta.id', 'mta.hostname', 'mta.mac', 'c.number', 'c.firstname', 'c.lastname')
             ->selectRaw('CONCAT(mta.hostname, \' (\' ,mta.mac, \') => \', c.number, \' - \', c.firstname, \' \', c.lastname) as text')

@@ -137,7 +137,14 @@ class NetElementType extends \BaseModel
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function select2Parent($search)
+    /**
+     * Format Parent (NetElementTypes) for Select 2 field and allow searching.
+     *
+     * @param string|null $search
+     * @request param model The id of the model or null if in create context
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         $modelId = request('model') ?? 1;
 
@@ -148,7 +155,13 @@ class NetElementType extends \BaseModel
             });
     }
 
-    public function select2Oids($search)
+    /**
+     * Format OIDs for Select 2 field and allow for searching.
+     *
+     * @param string|null $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Oids(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return \Modules\HfcSnmp\Entities\OID::select('id', 'name_gui as count')
             ->selectRaw('CONCAT(oid, \' - \', name) as text')

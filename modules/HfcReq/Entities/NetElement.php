@@ -372,6 +372,11 @@ class NetElement extends \BaseModel
         return $this->icingaObject->hostStatus;
     }
 
+    /**
+     * Depending on Netelement Base Type the relation is made
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function provDevice()
     {
         if ($this->netelementtype->base_type == 3) {
@@ -591,7 +596,15 @@ class NetElement extends \BaseModel
      *
      * @return array
      */
-    public function select2Parent($search)
+
+    /**
+     * Format Parent (NetElements) for Select 2 field and allow for searching.
+     *
+     * @param string|null $search
+     * @request param model The id of the model or null if in create context
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         $modelId = request('model') ?? 0;
 
@@ -610,7 +623,15 @@ class NetElement extends \BaseModel
             });
     }
 
-    public function select2ProvDevice($search)
+    /**
+     * Format Provisioning Device Connection for Select 2 field and allow for
+     * searching. Depending on NetElemetType id the relation differs.
+     *
+     * @param string|null $search
+     * @request param netelementtype_id The NetElemetType id in create context
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2ProvDevice(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         if (! $this->netelementtype) {
             $this->netelementtype = NetElementType::findOrFail(request('netelementtype_id'));
@@ -627,7 +648,13 @@ class NetElement extends \BaseModel
             });
     }
 
-    public function select2Netelementtypes($search)
+    /**
+     * Format NetElemetType for Select 2 field and allow for searching.
+     *
+     * @param string|null $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Netelementtypes(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return NetElementType::select('id', 'name as text', 'version as count')
             ->when($search, function ($query, $search) {
