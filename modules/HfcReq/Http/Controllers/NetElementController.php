@@ -54,6 +54,7 @@ class NetElementController extends BaseController
         $hidden4TapPort = $hidden4Tap = 0;
         $addressDesc1 = 'Address Line 1';
         $addressDesc2 = 'Address Line 2';
+        $prov_device_hidden = in_array($type, [3, 4, 5]) ? 0 : 1;
 
         if ($type == 8) {
             $addressDesc1 = 'RKS '.trans('messages.Address'); // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
@@ -67,7 +68,7 @@ class NetElementController extends BaseController
         }
 
         // netelement is a cluster or will be created as type cluster
-        $cluster = ($netelement->netelementtype_id == 2 || (! $netelement->exists && Request::get('netelementtype_id') == 2));
+        $cluster = ($netelement->netelementtype_id == 2 || (! $netelement->exists && request('netelementtype_id') == 2));
 
         // this is just a helper and won't be stored in the database
         $netelement->enable_agc = $netelement->exists && $netelement->agc_offset !== null;
@@ -76,25 +77,25 @@ class NetElementController extends BaseController
          * cluster: rf card settings
          * Options array is hidden when not used
          */
-        $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options'];
-        if ($netelement->netelementtype && $netelement->netelementtype->get_base_type() == 2) {
-            $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array()];
+        $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options', 'hidden' => true];
+        if ($netelement->netelementtype && $type == 2) {
+            $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array($type)];
         }
 
         /*
          * return
          */
         $a = [
-            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $netelement->html_list($types, ['name', 'version'], true, ' - '), 'hidden' => 0],
+            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $this->setupSelect2Field($netelement, 'NetElementType'), 'hidden' => 0, 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['relation' => 'netelementtypes'])]],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'link', 'description' => 'ERD Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
-            ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $prov_device, 'hidden' => $prov_device_hidden],
+            ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'Custom', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'data-placeholder' => trans('view.select.base', ['model' => trans('view.select.Parent')]), 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'provDevice'])]],
             ['form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition', 'hidden' => $hidden4TapPort],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'data-placeholder' => trans('view.select.base', ['model' => trans('view.select.Parent')]), 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 

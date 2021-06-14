@@ -372,6 +372,15 @@ class NetElement extends \BaseModel
         return $this->icingaObject->hostStatus;
     }
 
+    public function provDevice()
+    {
+        if ($this->netelementtype->base_type == 3) {
+            return $this->belongsTo(\Modules\ProvBase\Entities\NetGw::class);
+        }
+
+        return $this->belongsTo(\Modules\ProvBase\Entities\Modem::class);
+    }
+
     /**
      * Link for this Host in IcingaWeb2
      *
@@ -584,12 +593,12 @@ class NetElement extends \BaseModel
      */
     public function select2Parent($search)
     {
-        $modelId = request('model');
+        $modelId = request('model') ?? 0;
 
         return self::select('netelement.id')
+            ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
             ->selectRaw('CONCAT(nt.name,\': \', netelement.name) as text')
             ->where('netelement.id', '!=', $modelId)
-            ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
             ->where(function ($query) use ($modelId) {
                 $query
                     ->where('netelement.parent_id', '!=', $modelId)
@@ -598,6 +607,32 @@ class NetElement extends \BaseModel
             ->when($search, function ($query, $search) {
                 return $query->where('netelement.name', 'like', "%{$search}%")
                     ->orWhere('nt.name', 'like', "%{$search}%");
+            });
+    }
+
+    public function select2ProvDevice($search)
+    {
+        if (! $this->netelementtype) {
+            $this->netelementtype = NetElementType::findOrFail(request('netelementtype_id'));
+        }
+
+        $class = \Modules\ProvBase\Entities\Modem::class;
+        if ($this->netelementtype->base_type == 3) {
+            $class = \Modules\ProvBase\Entities\NetGw::class;
+        }
+
+        return $class::select('id', 'hostname as text')
+            ->when($search, function ($query, $search) {
+                return $query->where('hostname', 'like', "%{$search}%");
+            });
+    }
+
+    public function select2Netelementtypes($search)
+    {
+        return NetElementType::select('id', 'name as text', 'version as count')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('version', 'like', "%{$search}%");
             });
     }
 

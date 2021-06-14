@@ -69,12 +69,10 @@ class NetGw extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', $this->table.'.hostname', 'type', $this->table.'.ip', $this->table.'.company', $this->table.'.series'],
-            'header' =>  $this->hostname,
-            'bsclass' => $bsclass,
+            'header' =>  $this->label(),
+            'bsclass' => $this->get_bsclass(),
             'order_by' => ['0' => 'asc'], ];
 
         if (Sla::firstCached()->valid()) {
@@ -88,17 +86,21 @@ class NetGw extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = 'success';
-
         // TODO: use netgw state value
         if ($this->state == 1) {
-            $bsclass = 'warning';
-        }
-        if ($this->state == 2) {
-            $bsclass = 'danger';
+            return 'warning';
         }
 
-        return $bsclass;
+        if ($this->state == 2) {
+            return 'danger';
+        }
+
+        return 'success';
+    }
+
+    public function label()
+    {
+        return $this->hostname;
     }
 
     /**

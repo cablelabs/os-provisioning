@@ -366,6 +366,7 @@ return [
         'Contract' => 'einen Vertrag',
         'Mta' => 'ein MTA',
         'NetElement' => 'ein Netzelement',
+        'NetElementType' => 'ein Netzelementtyp',
         'Oid' => 'eine OID',
         'Parent' => 'ein übergeordnetes Element',
         'Phonenumber' => 'eine Telefonnummer',

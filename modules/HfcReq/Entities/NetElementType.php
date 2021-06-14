@@ -76,10 +76,7 @@ class NetElementType extends \BaseModel
 
     public function label()
     {
-        // in Tree View returning an array is currently not yet implemented
-        $version = $this->version ? ' - '.$this->version : '';
-
-        return $this->name.$version;
+        return $this->name.($this->version ? "({$this->version})" : '');
     }
 
     // returns all objects that are related to a DeviceType
@@ -142,7 +139,7 @@ class NetElementType extends \BaseModel
 
     public function select2Parent($search)
     {
-        $modelId = request('model');
+        $modelId = request('model') ?? 1;
 
         return self::select('id', 'name as text')
             ->whereNotIn('id', [1, 2, 8, 9, $modelId])
@@ -153,11 +150,12 @@ class NetElementType extends \BaseModel
 
     public function select2Oids($search)
     {
-        return \Modules\HfcSnmp\Entities\OID::select('id')
+        return \Modules\HfcSnmp\Entities\OID::select('id', 'name_gui as count')
             ->selectRaw('CONCAT(oid, \' - \', name) as text')
             ->when($search, function ($query, $search) {
                 return $query->where('oid', 'like', "%{$search}%")
-                    ->where('name', 'like', "%{$search}%");
+                    ->where('name', 'like', "%{$search}%")
+                    ->where('name_gui', 'like', "%{$search}%");
             });
     }
 

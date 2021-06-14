@@ -81,7 +81,7 @@ class OID extends \BaseModel
 
     public function label()
     {
-        return $this->oid.' - '.$this->name.($this->name_gui ? ' - '.$this->name_gui : '');
+        return $this->oid.' - '.$this->name.($this->name_gui ? " ({$this->name_gui})" : '');
     }
 
     /**
@@ -147,8 +147,6 @@ class OID extends \BaseModel
             $arr = range($this->startvalue, $this->endvalue, $this->stepsize);
 
             return array_combine($arr, $arr);
-
-            return $list;
         }
 
         return [];
