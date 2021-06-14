@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-    $index_label_arr = $model->view_index_label();
+    $index_label_arr = $indexTableInfo ?? $model->view_index_label();
 ?>
 
 {{-- Add Columns - First 2 Columns are for Responsive Button and Input Checkbox --}}
