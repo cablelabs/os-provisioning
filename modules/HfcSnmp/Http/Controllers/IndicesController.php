@@ -19,9 +19,9 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use Modules\HfcReq\Entities\NetElement;
-use Modules\HfcReq\Entities\NetElementType;
+use App\Http\Controllers\BaseController;
 
-class IndicesController extends \BaseController
+class IndicesController extends BaseController
 {
     /**
      * defines the formular fields for the edit and create view
@@ -47,8 +47,7 @@ class IndicesController extends \BaseController
                 'form_type' => 'select',
                 'name' => 'parameter_id',
                 'description' => 'Parameter',
-                'value' => $netelem ? NetElementType::param_list($netelem->netelementtype_id) : [],
-
+                'value' => $netelement ? $netelement->parameterList() : [],
             ],
             [
                 'form_type' => 'text',

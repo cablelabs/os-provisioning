@@ -68,7 +68,7 @@ class NetElementType extends \BaseModel
         return $type;
     }
 
-    // Depricated
+    // Deprecated
     public function view_index_label()
     {
         return $this->label();
