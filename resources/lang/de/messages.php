@@ -694,6 +694,9 @@ return [
     'CccUser'                       => 'CCC-Benutzer',
     'EnviaOrderDocument'            => 'EnviaOrderDocument',
     'EnviaContract'                 => 'Envia Vertag',
+    'endpoint' => [
+        'noNgw' => 'Das CMTS des Endpunktes konnte nicht ermittelt werden. Damit könnte die DHCP Config fehlerhaft sein. Bitte prüfen Sie ob der passende IP-Pool angelegt wurde und die IP nicht mehr dynamisch vergeben werden kann (grep -Rn ":ip" /etc/dhcp-nmsprime/cmts_gws/ darf keinen Rückgabewert liefern).',
+    ],
     'Endpoint'                      => 'Endpunkt',
     'PhonebookEntry'                => 'Telefonbucheintrag',
     'Sla'                           => 'SLA Konfiguration',

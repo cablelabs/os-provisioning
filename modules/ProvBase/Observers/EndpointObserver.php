@@ -35,9 +35,7 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->makeDhcp();
-        if ($endpoint->netGw) {
-            $endpoint->netGw->makeDhcp4Conf();
-        }
+        $endpoint->makeNetGwConf();
         $endpoint->nsupdate();
 
         $endpoint->modem->restart_modem();
@@ -56,9 +54,7 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->makeDhcp();
-        if ($endpoint->netGw) {
-            $endpoint->netGw->makeDhcp4Conf();
-        }
+        $endpoint->makeNetGwConf();
         $endpoint->nsupdate();
 
         $endpoint->modem->restart_modem();
@@ -69,9 +65,7 @@ class EndpointObserver
         self::reserveAddress($endpoint);
 
         $endpoint->makeDhcp();
-        if ($endpoint->netGw) {
-            $endpoint->netGw->makeDhcp4Conf();
-        }
+        $endpoint->makeNetGwConf();
         $endpoint->nsupdate(true);
 
         $endpoint->modem->restart_modem();

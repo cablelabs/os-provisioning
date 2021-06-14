@@ -124,6 +124,9 @@ class Endpoint extends \BaseModel
         return $this->belongsTo(Modem::class);
     }
 
+    /**
+     * @return obj \Modules\ProvBase\Entities\NetGw
+     */
     public function netGw()
     {
         $query = NetGw::join('ippool as i', 'netgw.id', 'i.netgw_id')
@@ -131,7 +134,9 @@ class Endpoint extends \BaseModel
             ->whereRaw('INET_ATON("'.$this->ip.'") BETWEEN INET_ATON(i.ip_pool_start) AND INET_ATON(i.ip_pool_end)')
             ->select('netgw.*', 'i.net', 'i.netmask', 'i.ip_pool_start', 'i.ip_pool_end');
 
-        return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', null);
+        return $query->first();
+
+        // return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', 'netGw');
     }
 
     /**
@@ -212,6 +217,21 @@ class Endpoint extends \BaseModel
         $data = '"reservations": ['.implode(',', $reservations)."\n]";
 
         file_put_contents($file, $data, LOCK_EX);
+    }
+
+    public function makeNetGwConf()
+    {
+        $ngw = $this->netGw();
+
+        if (! $ngw) {
+            if ($this->modem->configfile->device == 'cm') {
+                session()->push('tmp_error_above_form', trans('messages.endpoint.noNgw', ['ip' => $this->ip]));
+            }
+
+            return;
+        }
+
+        $ngw->makeDhcp4Conf();
     }
 
     public function nsupdate($del = false)

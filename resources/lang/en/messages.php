@@ -694,6 +694,9 @@ return [
     'CccUser'                       => 'CCC-User',
     'EnviaOrderDocument'            => 'Envia Order Document',
     'EnviaContract'                 => 'Envia Contract',
+    'endpoint' => [
+        'noNgw' => 'The CMTS of the endpoint could not be determined. DHCP Server could be misconfigured now. Please check if the appropriate IP-Pool exists and the IP can\'t be dynamically assigned anymore (grep -Rn ":ip" /etc/dhcp-nmsprime/cmts_gws/ must be empty).',
+    ],
     'Endpoint'                      => 'Endpoint',
     'PhonebookEntry'                => 'Phonebook Entry',
     'Sla'                           => 'SLA',
