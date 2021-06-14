@@ -127,15 +127,24 @@ class NetElement extends \BaseModel
     // generates datatable content and classes for model
     public function view_index_label()
     {
-        $bsclass = $this->get_bsclass();
-
-        return ['table' => $this->table,
+        $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
             'header' => $this->label(),
-            'bsclass' => $bsclass,
+            'bsclass' => $this->get_bsclass(),
             'order_by' => ['0' => 'asc'],
-            'eager_loading' => ['netelementtype'],
-            'edit' => ['netelementtype.name' => 'get_elementtype_name'], ];
+            'eager_loading' => ['netelementtype:id,name'],
+            'edit' => ['netelementtype.name' => 'get_elementtype_name'],
+        ];
+
+        if (Module::collections()->has('HfcBase') &&
+            \Modules\HfcBase\Entities\IcingaObject::db_exists()) {
+            array_push($ret['eager_loading'],
+                'icingaObject:object_id,name1,is_active',
+                'icingaObject.hostStatus:host_object_id,hoststatus_id,last_hard_state',
+            );
+        }
+
+        return $ret;
     }
 
     public function get_bsclass()
@@ -158,8 +167,9 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! Module::collections()->has('HfcBase') || (! array_key_exists('icingaObject', $this->relations) &&
-                ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
+        if (! Module::collections()->has('HfcBase') ||
+            (! array_key_exists('icingaObject', $this->relations) &&
+            ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
             return 'warning';
         }
 
