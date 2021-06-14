@@ -98,7 +98,7 @@ class NetElement extends \BaseModel
         // }
 
         if (Module::collections()->has('HfcCustomer')) {
-            if ($this->netelementtype->get_base_type() != 9) {
+            if ($this->netelementtype->base_type != 9) {
                 $ret['Edit']['Mpr']['class'] = 'Mpr';
                 $ret['Edit']['Mpr']['relation'] = $this->mprs;
             }
@@ -113,7 +113,7 @@ class NetElement extends \BaseModel
             // see NetElementController@controlling_edit for Controlling Tab!
         }
 
-        if ($this->netelementtype->get_base_type() == 8) {
+        if ($this->netelementtype->base_type == 8) {
             $ret['Edit']['SubNetElement']['class'] = 'NetElement';
             $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
@@ -572,7 +572,7 @@ class NetElement extends \BaseModel
             if (! $parent) {
                 break;
             }
-        } while (! $parent->netelementtype || $parent->netelementtype->get_base_type() != 3);
+        } while (! $parent->netelementtype || $parent->netelementtype->base_type != 3);
 
         return $parent;
     }
@@ -778,7 +778,7 @@ class NetElement extends \BaseModel
             return false;
         }
 
-        return $this->netelementtype->get_base_type() == 3; // 3 .. is base element for netgw
+        return $this->netelementtype->base_type == 3; // 3 .. is base element for netgw
     }
 
     /**
@@ -789,7 +789,7 @@ class NetElement extends \BaseModel
      */
     public function get_base_netelementtype()
     {
-        return $this->netelementtype->get_base_type();
+        return $this->netelementtype->base_type;
     }
 
     /**
@@ -799,23 +799,27 @@ class NetElement extends \BaseModel
      * @param
      * @return array()
      */
-    public function get_options_array()
+    public function get_options_array($type = null)
     {
-        if ($this->get_base_netelementtype() == 2) { // cluster
-            return [
-                '0' => '8x4', // default
-                '81' => '8x1',
-                '82' => '8x2',
-                '84' => '8x4',
-                '88' => '8x8',
-                '124' => '12x4',
-                '128' => '12x8',
-                '164' => '16x4',
-                '168' => '16x8',
-            ];
+        if (! $type) {
+            $type = $this->netelementtype->base_type;
         }
 
-        return [];
+        if ($type != 2) {  // cluster
+            return [];
+        }
+
+        return [
+            '0' => '8x4', // default
+            '81' => '8x1',
+            '82' => '8x2',
+            '84' => '8x4',
+            '88' => '8x8',
+            '124' => '12x4',
+            '128' => '12x8',
+            '164' => '16x4',
+            '168' => '16x8',
+        ];
     }
 
     /**
@@ -832,7 +836,7 @@ class NetElement extends \BaseModel
         }
 
         $provmonEnabled = Module::collections()->has('ProvMon');
-        $type = $this->netelementtype->get_base_type();
+        $type = $this->netelementtype->base_type;
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 

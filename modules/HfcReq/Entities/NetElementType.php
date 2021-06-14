@@ -23,7 +23,12 @@ class NetElementType extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'netelementtype';
 
-    private $max_parents = 15;
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new \Modules\HfcReq\Observers\NetElementTypeObserver);
+    }
 
     // Add your validation rules here
     public function rules()
@@ -202,36 +207,5 @@ class NetElementType extends \BaseModel
     {
         return self::whereIn('id', array_keys(self::$undeletables))
             ->orWhereDoesntHave('parent');
-    }
-
-    /**
-     * Return the base type id of the current NetElementType
-     *
-     * @note: base device means: parent_id = 0, 2 (cluster)
-     *
-     * @param
-     * @return int id of base device netelementtype
-     */
-    public function get_base_type()
-    {
-        $p = $this;
-        $i = 0;
-
-        do {
-            if (! is_object($p)) {
-                return false;
-            }
-
-            // exit: on base type, or cluster (which is child of net), or tap-port
-            if ($p->parent_id == null || in_array($p->id, [2, 9])) {
-                return $p->id;
-            }
-
-            $p = $p->parent;
-        } while ($i++ < $this->max_parents);
-
-        \Log::error('Chain or parent-children NetElementTypes is too long');
-
-        return false;
     }
 }

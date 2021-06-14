@@ -48,12 +48,8 @@ class NetElementController extends BaseController
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
-        $type = 0;
-        if (Request::has('netelementtype_id')) {
-            $type = Request::get('netelementtype_id');
-        } elseif ($netelement->netelementtype) {
-            $type = $netelement->netelementtype->get_base_type();
-        }
+        $type = NetElementType::find(request('netelementtype_id'))->base_type ??
+            ($netelement->exists ? $netelement->netelementtype->base_type : null);
 
         $hidden4TapPort = $hidden4Tap = 0;
         $addressDesc1 = 'Address Line 1';
@@ -65,27 +61,9 @@ class NetElementController extends BaseController
             $hidden4Tap = 1;
         }
 
-        $types = NetElementType::get();
-
         if ($type == 9) {
             $hidden4TapPort = 1;
             $addressDesc1 = 'RKS Port'; // Used as address to control the attenuation setting via Sat-Kabel-RKS-Server
-        }
-
-        /*
-         * provisioning device
-         */
-        if ($type == 3) { // netgw
-            $prov_device = $this->setupSelect2Field($netelement, 'prov_device');
-        }
-
-        if ($type == 4 || $type == 5) { // amp || node
-            $prov_device = $this->setupSelect2Field($netelement, 'prov_device');
-        }
-
-        $prov_device_hidden = 1;
-        if ($prov_device) {
-            $prov_device_hidden = 0;
         }
 
         // netelement is a cluster or will be created as type cluster
