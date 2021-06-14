@@ -58,7 +58,7 @@ class NetElementTypeObserver
     {
         $p = $netElementType;
 
-        while ($p->parent_id !== null && ! in_array($p->id, [2, 9])) {
+        while (! $p->parent_id && ! in_array($p->id, [2, 9])) {
             $p = $p->parent;
         }
 

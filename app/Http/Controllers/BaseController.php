@@ -1792,7 +1792,7 @@ class BaseController extends Controller
      * @param BaseModel|null $model model in edit view, null in create context
      * @param string $class unqualified name of the Class
      * @param string|null $field Name of the input field
-     * @param string|null $fnName Name of the relation(function)
+     * @param string|null $fn Name of the relation(function)
      * @return array
      */
     protected function setupSelect2Field($model, string $class, string $field = null, string $fn = null): array

@@ -76,7 +76,7 @@ class NetElementController extends BaseController
          * cluster: rf card settings
          * Options array is hidden when not used
          */
-        $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options', 'hidden' => true];
+        $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options'];
         if ($netelement->netelementtype && $type == 2) {
             $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array($type)];
         }
