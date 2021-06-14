@@ -764,9 +764,12 @@ class BaseController extends Controller
         $filter = $model::storeIndexFilterIntoSession();
         $viewName = NamespaceController::get_view_name();
         $view_path = View::exists($viewName.'.index') ? $viewName.'.index' : 'Generic.index';
+
+        $methodExists = method_exists($model, 'view_index_label');
+        $indexTableInfo = $methodExists ? $model->view_index_label() : [];
         Log::debug('Showing only index() elements a user can access is not yet implemented');
 
-        return View::make($view_path, $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'filter')));
+        return View::make($view_path, $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'filter', 'methodExists', 'indexTableInfo')));
     }
 
     /**

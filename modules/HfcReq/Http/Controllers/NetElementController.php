@@ -33,8 +33,10 @@ class NetElementController extends BaseController
         $view_header = BaseViewController::translate_view('Overview', 'Header');
         $create_allowed = $this->index_create_allowed;
         $delete_allowed = $this->index_delete_allowed;
+        $methodExists = method_exists($model, 'view_index_label');
+        $indexTableInfo = $methodExists ? $model->view_index_label() : [];
 
-        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed')));
+        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'methodExists', 'indexTableInfo')));
     }
 
     /**

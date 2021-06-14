@@ -15,8 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-    $index_label_arr = $indexTableInfo ?? $model->view_index_label();
 ?>
 
 {{-- Add Columns - First 2 Columns are for Responsive Button and Input Checkbox --}}
@@ -25,26 +23,26 @@ columns:[
     @if (isset($delete_allowed) && $delete_allowed == true)
         {data: 'checkbox', orderable: false, searchable: false},
     @endif
-    @if (isset($index_label_arr['index_header']))
-        @foreach ($index_label_arr['index_header'] as $field)
+    @if (isset($indexTableInfo['index_header']))
+        @foreach ($indexTableInfo['index_header'] as $field)
         {
-            @if ( Str::startsWith($field, $index_label_arr["table"].'.'))
-                data: '{{ substr($field, strlen($index_label_arr["table"]) + 1) }}',
+            @if ( Str::startsWith($field, $indexTableInfo["table"].'.'))
+                data: '{{ substr($field, strlen($indexTableInfo["table"]) + 1) }}',
             @else
                 data: '{{ $field }}',
             @endif
             name: '{{ $field }}',
-            searchable: {{ isset($index_label_arr["disable_sortsearch"][$field]) ? $index_label_arr["disable_sortsearch"][$field] : "true" }},
-            orderable:  {{ isset($index_label_arr["disable_sortsearch"][$field]) ? $index_label_arr["disable_sortsearch"][$field] : "true" }}
+            searchable: {{ isset($indexTableInfo["disable_sortsearch"][$field]) ? $indexTableInfo["disable_sortsearch"][$field] : "true" }},
+            orderable:  {{ isset($indexTableInfo["disable_sortsearch"][$field]) ? $indexTableInfo["disable_sortsearch"][$field] : "true" }}
         },
         @endforeach
     @endif
 ],
 
 {{-- Set Sorting if order_by is set -> Standard is ASC of first Column --}}
-@if (isset($index_label_arr['order_by']))
+@if (isset($indexTableInfo['order_by']))
     order:
-    @foreach ($index_label_arr['order_by'] as $columnindex => $direction)
+    @foreach ($indexTableInfo['order_by'] as $columnindex => $direction)
         @if (isset($delete_allowed) && $delete_allowed == true)
             [{{$columnindex + 2}}, '{{$direction}}'],
         @else

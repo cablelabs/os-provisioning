@@ -100,11 +100,6 @@
     @endif
     {{-- INIT DT --}}
 
-    @php
-        $methodExists = method_exists($model, 'view_index_label');
-        $indexTableInfo = $methodExists ? $model->view_index_label() : [];
-    @endphp
-
     <table class="table table-hover datatable table-bordered d-table" id="datatable">
         {{-- Get Headerdata and translate with translation files --}}
         <thead> {{-- TABLE HEADER --}}
