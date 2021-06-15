@@ -223,7 +223,7 @@ function arrange(tree) {
                     });
                     break;
                 case 'bubble':
-                    var avg_upstream = tree.m_upstream_avg.length ? _.round(tree.m_upstream_avg[0].us_pwr_avg, 1) : 'Not known';
+                    var avg_upstream = tree.m_upstream_avg.length ? _.round(tree.m_upstream_avg[0].us_pwr_avg, 1) : '-';
                     shape = new Bubble({
                         id: tree.id,
                         collapsed: false,
