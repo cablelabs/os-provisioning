@@ -1802,20 +1802,27 @@ class BaseController extends Controller
     {
         $lowerField = strtolower($class);
         $field = $field ?? "{$lowerField}_id";
+        $placeholder = trans('view.select.base', ['model' => trans("view.select.{$class}")]);
 
         if ($model->exists) {
             $fn = $fn ?? $lowerField;
 
-            return [optional($model->$fn)->id => optional($model->$fn)->label()];
+            return [
+                null => $placeholder,
+                optional($model->$fn)->id => optional($model->$fn)->label(),
+            ];
         }
 
         if (request($field) && array_key_exists($class, $models = session('models'))) {
             $model = $models[$class]::findOrFail(request($field));
 
-            return [$model->id => $model->label()];
+            return [
+                null => $placeholder,
+                $model->id => $model->label(),
+            ];
         }
 
-        return [null => trans('view.select.base', ['model' => trans("view.select.{$class}")])];
+        return [null => $placeholder];
     }
 
     /**

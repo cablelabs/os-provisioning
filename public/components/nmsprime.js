@@ -210,6 +210,7 @@ var initSelect2Fields = function() {
       $(this).select2({
         language: lang,
         search: '',
+        placeholder: $(this).find('option[value=""]').text(),
         ajax: {
           url: $(this).attr('ajax-route'),
           type: 'get',

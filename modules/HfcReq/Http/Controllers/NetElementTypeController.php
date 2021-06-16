@@ -42,12 +42,12 @@ class NetElementTypeController extends HfcReqController
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'options' => $hidden4Net ? ['readonly'] : []],
             ['form_type' => 'text', 'name' => 'vendor', 'description' => 'Vendor', 'hidden' => $hidden4Net],
             ['form_type' => 'text', 'name' => 'version', 'description' => 'Version', 'hidden' => $hidden4Net],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $this->setupSelect2Field($model, 'Parent'), 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'data-placeholder' => trans('view.select.base', ['model' => trans('view.select.Parent')]), 'ajax-route' => route('NetElementType.select2', ['model' => $model, 'relation' => 'parent'])]],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Device Type', 'value' => $this->setupSelect2Field($model, 'Parent'), 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElementType.select2', ['model' => $model, 'relation' => 'parent'])]],
         ];
 
         if (Module::collections()->has('HfcSnmp')) {
             // possibly load only OIDs from Mibs that are related to this Device/NetElement-Type
-            $a[] = ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'hidden' => $hidden4Net || $hidden4Tap, 'value' => $this->setupSelect2Field($model, 'Oid', 'pre_conf_oid'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'data-placeholder' => trans('view.select.base', ['model' => trans('view.select.Oid')]), 'ajax-route' => route('NetElementType.select2', ['relation' => 'oids'])]];
+            $a[] = ['form_type' => 'select', 'name' => 'pre_conf_oid_id', 'description' => 'OID for PreConfiguration Setting', 'hidden' => $hidden4Net || $hidden4Tap, 'value' => $this->setupSelect2Field($model, 'Oid', 'pre_conf_oid'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElementType.select2', ['relation' => 'oids'])]];
         }
 
         $b = [

@@ -52,7 +52,7 @@ class ConfigfileController extends \BaseController
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA', 'tr069' => 'TR-69']],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $this->setupSelect2Field($model, 'Parent'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Configfile.select2', ['model' => $model, 'relation' => 'parent'])]],
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Configfile', 'value' => $this->setupSelect2Field($model, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('Configfile.select2', ['model' => $model, 'relation' => 'parent'])]],
             ['form_type' => 'select', 'name' => 'public', 'description' => 'Public Use', 'value' => ['yes' => 'Yes', 'no' => 'No']],
             ['form_type' => 'textarea', 'name' => 'text', 'description' => 'Config File Parameters'],
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware/Dialplan File', 'value' => $firmware_files],
