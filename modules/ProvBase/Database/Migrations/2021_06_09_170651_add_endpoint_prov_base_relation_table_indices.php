@@ -32,9 +32,7 @@ class AddEndpointProvBaseRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('modem_id');
-        });
+        $this->addIndex('modem_id');
     }
 
     /**

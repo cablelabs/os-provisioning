@@ -32,9 +32,7 @@ class AddConfigfileProvBaseRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('parent_id');
-        });
+        $this->addIndex('parent_id');
     }
 
     /**

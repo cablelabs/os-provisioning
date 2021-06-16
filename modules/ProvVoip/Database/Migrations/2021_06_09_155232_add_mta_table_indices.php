@@ -32,10 +32,8 @@ class AddMtaTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('modem_id');
-            $table->index('configfile_id');
-        });
+        $this->addIndex('modem_id');
+        $this->addIndex('configfile_id');
     }
 
     /**

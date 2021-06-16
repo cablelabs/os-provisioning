@@ -32,12 +32,10 @@ class AddContractProvBaseRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('qos_id');
-            $table->index('next_qos_id');
-            $table->index('salesman_id');
-            $table->index('costcenter_id');
-        });
+        $this->addIndex('qos_id');
+        $this->addIndex('next_qos_id');
+        $this->addIndex('salesman_id');
+        $this->addIndex('costcenter_id');
     }
 
     /**

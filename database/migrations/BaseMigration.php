@@ -17,6 +17,8 @@
  */
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class BaseMigration extends Migration
@@ -151,6 +153,19 @@ class BaseMigration extends Migration
 
         // create FULLTEXT index including the given
         $this->fim->make_index();
+    }
+
+    public function addIndex(string $column)
+    {
+        Schema::table($this->tableName, function (Blueprint $table) use ($column) {
+            $indices = Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->listTableIndexes($this->tableName);
+
+            if (! array_key_exists("{$this->tableName}_{$column}_index", $indices)) {
+                $table->index($column);
+            }
+        });
     }
 
     public function __destruct()

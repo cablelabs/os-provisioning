@@ -32,11 +32,9 @@ class AddNetelementHfcReqRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('parent_id');
-            $table->index('netelementtype_id');
-            $table->index('netgw_id');
-        });
+        $this->addIndex('parent_id');
+        $this->addIndex('netelementtype_id');
+        $this->addIndex('netgw_id');
     }
 
     /**

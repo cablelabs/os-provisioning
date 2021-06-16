@@ -32,9 +32,7 @@ class AddPhonenumberTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('mta_id');
-        });
+        $this->addIndex('mta_id');
     }
 
     /**

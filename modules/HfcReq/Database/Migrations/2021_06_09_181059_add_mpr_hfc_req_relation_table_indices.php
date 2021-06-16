@@ -32,9 +32,7 @@ class AddMprHfcReqRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('netelement_id');
-        });
+        $this->addIndex('netelement_id');
     }
 
     /**

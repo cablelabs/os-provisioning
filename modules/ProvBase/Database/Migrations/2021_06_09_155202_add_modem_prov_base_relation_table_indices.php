@@ -32,12 +32,10 @@ class AddModemProvBaseRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('qos_id');
-            $table->index('contract_id');
-            $table->index('configfile_id');
-            $table->index('netelement_id');
-        });
+        $this->addIndex('qos_id');
+        $this->addIndex('contract_id');
+        $this->addIndex('configfile_id');
+        $this->addIndex('netelement_id');
     }
 
     /**

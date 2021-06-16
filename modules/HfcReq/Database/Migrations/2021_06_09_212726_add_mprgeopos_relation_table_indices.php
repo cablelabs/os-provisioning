@@ -32,9 +32,7 @@ class AddMprgeoposRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('mpr_id');
-        });
+        $this->addIndex('mpr_id');
     }
 
     /**

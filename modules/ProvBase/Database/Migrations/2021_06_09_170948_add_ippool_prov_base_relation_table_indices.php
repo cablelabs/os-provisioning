@@ -32,9 +32,7 @@ class AddIppoolProvBaseRelationTableIndices extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->index('netgw_id');
-        });
+        $this->addIndex('netgw_id');
     }
 
     /**
