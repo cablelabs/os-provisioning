@@ -40,7 +40,13 @@ class AddBaseTypeToNetelementtypeTable extends BaseMigration
         foreach (NetElementType::withTrashed()->get() as $netElementType) {
             $p = $netElementType;
 
-            while ($p->parent_id !== null && ! in_array($p->id, [2, 9])) {
+            while ($p->parent_id && ! in_array($p->id, [2, 9])) {
+                if (! $p->parent) {
+                    NetElementType::where('id', $p->id)->update(['base_type' => null]);
+
+                    break;
+                }
+
                 $p = $p->parent;
             }
 

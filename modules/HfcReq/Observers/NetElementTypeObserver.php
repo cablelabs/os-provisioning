@@ -24,20 +24,23 @@ class NetElementTypeObserver
 {
     public function created($netElementType)
     {
-        $netElementType->update(['base_type' => $this->getBaseType($netElementType)]);
+        NetElementType::where('id', $netElementType->id)
+            ->update(['base_type' => $this->getBaseType($netElementType)]);
     }
 
-    public function updated($netElementType)
+    public function updating($netElementType)
     {
-        if (! $netElementType->wasRecentlyCreated &&
-            ! $netElementType->isDirty('base_type') &&
-            $netElementType->isDirty('parent_id')) {
-            $netElementType->update(['base_type' => $this->getBaseType($netElementType)]);
+        if (! $netElementType->isDirty('parent_id')) {
+            return;
         }
+
+        $netElementType->base_type = $this->getBaseType($netElementType);
     }
 
     public function deleting($netElementType)
     {
+        $netElementType->parent_id = null;
+
         // update without Events to save 1 query per NetElementType
         foreach ($netElementType->children as $nET) {
             NetElementType::where('id', $nET->id)->update([
@@ -58,7 +61,7 @@ class NetElementTypeObserver
     {
         $p = $netElementType;
 
-        while (! $p->parent_id && ! in_array($p->id, [2, 9])) {
+        while ($p->parent_id && ! in_array($p->id, [2, 9])) {
             $p = $p->parent;
         }
 
