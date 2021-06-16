@@ -369,7 +369,8 @@ return [
         'NetElementType' => 'a NetElement Type',
         'Oid' => 'an OID',
         'Parent' => 'a parent Element',
-        'Phonenumber' => 'Sa Phone Number',
+        'Phonenumber' => 'a Phone Number',
+        'provDevice' => 'a provisioning device',
     ],
 
     // Index

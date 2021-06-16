@@ -370,6 +370,7 @@ return [
         'Oid' => 'eine OID',
         'Parent' => 'ein übergeordnetes Element',
         'Phonenumber' => 'eine Telefonnummer',
+        'provDevice' => 'ein zur Provisionierung verknüpftes Gerät',
     ],
 
     // Index
