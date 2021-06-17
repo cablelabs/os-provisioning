@@ -72,9 +72,9 @@ class Mta extends \BaseModel
             'index_header' => [$this->table.'.hostname', $this->table.'.mac', $this->table.'.type', 'configfile.name'],
             'header' => $this->label(),
             'bsclass' => $this->get_bsclass(),
-            'order_by' => ['3' => 'asc'],
             'edit' => ['configfile.name' => 'assignedConfigfile'],
-            'eager_loading' => ['configfile'], ];
+            'eager_loading' => ['configfile'],
+        ];
     }
 
     public function get_bsclass()

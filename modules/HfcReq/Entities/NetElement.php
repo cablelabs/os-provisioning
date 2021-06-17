@@ -131,7 +131,6 @@ class NetElement extends \BaseModel
             'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
             'header' => $this->label(),
             'bsclass' => $this->get_bsclass(),
-            'order_by' => ['0' => 'asc'],
             'eager_loading' => ['netelementtype:id,name'],
             'edit' => ['netelementtype.name' => 'get_elementtype_name'],
         ];

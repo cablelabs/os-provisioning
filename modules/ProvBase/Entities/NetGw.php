@@ -73,7 +73,7 @@ class NetGw extends \BaseModel
             'index_header' => [$this->table.'.id', $this->table.'.hostname', 'type', $this->table.'.ip', $this->table.'.company', $this->table.'.series'],
             'header' =>  $this->label(),
             'bsclass' => $this->get_bsclass(),
-            'order_by' => ['0' => 'asc'], ];
+        ];
 
         if (Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';

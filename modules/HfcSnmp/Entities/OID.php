@@ -65,7 +65,7 @@ class OID extends \BaseModel
             'bsclass' => $this->get_bsclass(),
             'index_header' => [$this->table.'.name', $this->table.'.name_gui',  $this->table.'.oid', $this->table.'.access'],
             'header' => $this->label(),
-            'order_by' => ['2' => 'asc'], ];
+        ];
     }
 
     public function get_bsclass()

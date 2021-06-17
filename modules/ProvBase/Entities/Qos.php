@@ -79,7 +79,7 @@ class Qos extends \BaseModel
             'header' =>  $this->name,
             'bsclass' => $bsclass,
             'edit' => ['ds_rate_max' => 'unit_ds_rate_max', 'us_rate_max' => 'unit_us_rate_max'],
-            'order_by' => ['0' => 'asc'], ];
+        ];
     }
 
     public function get_bsclass()

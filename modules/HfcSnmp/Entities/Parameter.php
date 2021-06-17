@@ -60,7 +60,6 @@ class Parameter extends \BaseModel
         return ['table' => $this->table,
             'index_header' => ['oid.name', 'oid.oid',  'oid.access'],
             'header' =>  $this->label(),
-            'order_by' => ['1' => 'asc'],
             'bsclass' => $this->get_bsclass(),
             'eager_loading' => ['oid'], ];
     }

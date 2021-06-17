@@ -109,7 +109,8 @@ class Contract extends \BaseModel
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
             'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
-            'order_by' => ['0' => 'asc'], ];
+            'order_by' => ['0' => 'asc'],
+        ];
 
         if (Module::collections()->has('BillingBase')) {
             $ret['index_header'][] = 'costcenter.name';

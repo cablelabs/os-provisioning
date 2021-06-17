@@ -131,7 +131,6 @@ class Modem extends \BaseModel
             'eager_loading' => ['configfile', 'contract'],
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
-            'order_by' => ['0' => 'desc'],
             'where_clauses' => $whereClauses ?? [],
         ];
 
