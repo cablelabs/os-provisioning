@@ -23,9 +23,8 @@
     $model = NamespaceController::get_route_name();
 @endphp
 
-
-{{-- attach button --}}
 <div class="row justify-content-between">
+    {{-- attach button --}}
     <div>
         {!! Form::open(['route' => [$model.'.assign', $view_var->id], 'method' => 'get']) !!}
             {!! Form::submit(trans('view.Assign', ['model' => $description[$model]]), ['style' => 'simple']) !!}
@@ -39,10 +38,29 @@
             {!! Form::submit(trans('view.Detach all', ['model' => $description[$model]]), ['!class' => 'btn btn-danger', 'style' => 'simple']) !!}
         {!! Form::close() !!}
     </div>
+
+    {{-- Delete Button --}}
+    @if (isset($list[0]) && ! isset($options['hide_delete_button']))
+        @can('delete', $list[0])
+            <div>
+                <button class="btn btn-outline-danger m-b-10 float-right"
+                    data-toggle="tooltip"
+                    data-delay='{"show":"250"}'
+                    data-placement="top"
+                    form="{{'Parameters'.$class}}"
+                    style="simple"
+                    title="{{ !isset($options['delete_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') : trans($options['delete_button_text']) }}">
+                        <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                </button>
+            </div>
+        @endcan
+    @endif
 </div>
-<br><br>
 
 @include('Generic.relationTable', [
+    'class' => 'Parameter',
+    'count' => 0, // set count to zero to not load Parameters by ajax again
     'relation' => $list,
     'method' => 'edit',
+    'tab' => ['name' => 'Parameters'],
 ])
