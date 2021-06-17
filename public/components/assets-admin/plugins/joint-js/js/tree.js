@@ -228,6 +228,9 @@ function arrange(tree) {
                         id: tree.id,
                         collapsed: false,
                         attrs: {
+                            header: {
+                              fill: tree.bs_color
+                            },
                             link: {
                                 xlinkHref: tree.url ? tree.url : '#',
                                 title: 'Total number of modems: ' + tree.m_count + ' \n' +
