@@ -17,32 +17,32 @@
  */
 ?>
 @php
-	$description['NetElementType'] = 'Parameter';
-	$description['Parameter'] = 'SubOIDs';
+    $description['NetElementType'] = 'Parameter';
+    $description['Parameter'] = 'SubOIDs';
 
-	$model = NamespaceController::get_route_name();
+    $model = NamespaceController::get_route_name();
 @endphp
 
 
 {{-- attach button --}}
 <div class="row justify-content-between">
-	<div>
-		{!! Form::open(['route' => [$model.'.assign', $view_var->id], 'method' => 'get']) !!}
-			{!! Form::submit(trans('view.Assign', ['model' => $description[$model]]), ['style' => 'simple']) !!}
-		{{-- .\App\Http\Controllers\BaseViewController::translate($view) --}}
-		{!! Form::close() !!}
-	</div>
+    <div>
+        {!! Form::open(['route' => [$model.'.assign', $view_var->id], 'method' => 'get']) !!}
+            {!! Form::submit(trans('view.Assign', ['model' => $description[$model]]), ['style' => 'simple']) !!}
+        {{-- .\App\Http\Controllers\BaseViewController::translate($view) --}}
+        {!! Form::close() !!}
+    </div>
 
-	{{-- detach all button --}}
-	<div>
-		{!! Form::open(['route' => [$model.'.detach_all', $view_var->id], 'method' => 'delete']) !!}
-			{!! Form::submit(trans('view.Detach all', ['model' => $description[$model]]), ['!class' => 'btn btn-danger', 'style' => 'simple']) !!}
-		{!! Form::close() !!}
-	</div>
+    {{-- detach all button --}}
+    <div>
+        {!! Form::open(['route' => [$model.'.detach_all', $view_var->id], 'method' => 'delete']) !!}
+            {!! Form::submit(trans('view.Detach all', ['model' => $description[$model]]), ['!class' => 'btn btn-danger', 'style' => 'simple']) !!}
+        {!! Form::close() !!}
+    </div>
 </div>
 <br><br>
 
 @include('Generic.relationTable', [
-	'relation' => $list,
-	'method' => 'edit',
+    'relation' => $list,
+    'method' => 'edit',
 ])
