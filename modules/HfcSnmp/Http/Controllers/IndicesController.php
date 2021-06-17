@@ -47,7 +47,7 @@ class IndicesController extends BaseController
                 'form_type' => 'select',
                 'name' => 'parameter_id',
                 'description' => 'Parameter',
-                'value' => $netelement ? $netelement->parameterList() : [],
+                'value' => $netelement ? $netelement->netelementtype->parameterList() : [],
             ],
             [
                 'form_type' => 'text',
