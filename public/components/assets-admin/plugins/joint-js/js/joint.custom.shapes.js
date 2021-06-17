@@ -45,7 +45,6 @@ joint.shapes.standard.Link.define('custom.Bus', {
         });
     },
     setStart: function (y) {
-        console.log('test');
     },
 });
 var headerHeight = 40;
@@ -306,10 +305,10 @@ joint.dia.Element.define('custom.Bubble', {
         },
         m_count_label: {
             textVerticalAnchor: 'bottom',
-            textAnchor: 'left',
+            textAnchor: 'middle',
             refWidth: '100%',
             refHeight: '100%',
-            refX: 12.5,
+            refX: '50%',
             refY: 20,
             fontSize: 14,
             fontFamily: 'sans-serif',
@@ -317,10 +316,10 @@ joint.dia.Element.define('custom.Bubble', {
         },
         m_online_critical_label: {
             textVerticalAnchor: 'bottom',
-            textAnchor: 'left',
+            textAnchor: 'middle',
             refWidth: '100%',
             refHeight: '100%',
-            refX: 12.5,
+            refX: '50%',
             refY: 35,
             fontSize: 14,
             fontFamily: 'sans-serif',
@@ -328,10 +327,10 @@ joint.dia.Element.define('custom.Bubble', {
         },
         m_avg_upstream_label: {
             textVerticalAnchor: 'bottom',
-            textAnchor: 'left',
+            textAnchor: 'middle',
             refWidth: '100%',
             refHeight: '100%',
-            refX: 12.5,
+            refX: '50%',
             refY: 50,
             fontSize: 14,
             fontFamily: 'sans-serif',
