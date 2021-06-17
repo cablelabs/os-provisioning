@@ -1695,11 +1695,21 @@ class BaseController extends Controller
 
             return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
                 ($model->index_delete_disabled ? 'disabled' : '').'>';
-        })
-            ->editColumn($first_column, function ($model) use ($first_column) {
-                return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).'"><strong>'.
-                $model->view_icon().$model[$first_column].'</strong></a>';
-            });
+        })->editColumn($first_column, function ($model) use ($first_column) {
+            $content = $model[$first_column];
+            // Get cell content when data is eager loaded on first column
+            if (strpos($first_column, '.') !== false) {
+                $chain = explode('.', $first_column);
+
+                $content = $model;
+                foreach ($chain as $value) {
+                    $content = $content->{$value};
+                }
+            }
+
+            return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).'"><strong>'.
+            $model->view_icon().$content.'</strong></a>';
+        });
 
         foreach ($edit_column_data as $column => $functionname) {
             if ($column == $first_column) {
