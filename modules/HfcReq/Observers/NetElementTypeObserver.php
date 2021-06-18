@@ -39,13 +39,18 @@ class NetElementTypeObserver
 
     public function deleting($netElementType)
     {
-        $netElementType->parent_id = null;
-
         // update without Events to save 1 query per NetElementType
         foreach ($netElementType->children as $nET) {
             NetElementType::where('id', $nET->id)->update([
                 'parent_id' => $netElementType->parent_id,
             ]);
+        }
+    }
+
+    public function restoring($netElementType)
+    {
+        if (! NetElementType::find($netElementType->parent_id)) {
+            $netElementType->parent_id = null;
         }
     }
 
