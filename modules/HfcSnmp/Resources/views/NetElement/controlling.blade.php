@@ -51,7 +51,7 @@
             @if ($netelement->controlling_link)
                 {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
             @endif
-            <input id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()" value="auto update">
+            <button type="button" id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()">auto update</button>
         </div>
     @endif
 
@@ -213,7 +213,7 @@
                 console.log('Listening to channel ' + channel);
             });
 
-        $('#stop-button').val('stop');
+        $('#stop-button').html('stop');
         $('#stop-button').attr("onclick", "unsubscribe(true)");
     }
 
@@ -231,7 +231,7 @@
         echo.leave(channel);
         console.log('Leave channel ' + channel);
 
-        $('#stop-button').val('auto update');
+        $('#stop-button').html('auto update');
         $('#stop-button').attr("onclick", "subscribe()");
     }
 
