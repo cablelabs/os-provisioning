@@ -370,7 +370,7 @@ return [
         'Oid' => 'eine OID',
         'Parent' => 'ein übergeordnetes Element',
         'Phonenumber' => 'eine Telefonnummer',
-        'provDevice' => 'ein zur Provisionierung verknüpftes Gerät',
+        'provDevice' => 'ein entsprechendes Gerät aus dem Provisionierungsmodul',
     ],
 
     // Index
