@@ -21,7 +21,7 @@ namespace App;
 class GuiLog extends \BaseModel
 {
     // The associated SQL table for this Model
-    protected $table = 'guilog';
+    public $table = 'guilog';
 
     public $index_delete_disabled = false;
 

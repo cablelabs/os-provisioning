@@ -21,7 +21,7 @@ namespace Modules\ProvVoip\Entities;
 class ProvVoip extends \BaseModel
 {
     // The associated SQL table for this Model
-    protected $table = 'provvoip';
+    public $table = 'provvoip';
 
     // Don't forget to fill this array
     // protected $fillable = ['startid_mta'];

@@ -21,7 +21,7 @@ namespace Modules\HfcReq\Entities;
 class HfcReq extends \BaseModel
 {
     // The associated SQL table for this Model
-    protected $table = 'hfcreq';
+    public $table = 'hfcreq';
 
     // Add your validation rules here
     public function rules()

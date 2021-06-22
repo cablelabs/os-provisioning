@@ -21,7 +21,7 @@ namespace App;
 class GlobalConfig extends BaseModel
 {
     // The associated SQL table for this Model
-    protected $table = 'global_config';
+    public $table = 'global_config';
 
     // Add your validation rules here
     public function rules()

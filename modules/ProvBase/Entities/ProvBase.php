@@ -23,7 +23,7 @@ use File;
 class ProvBase extends \BaseModel
 {
     // The associated SQL table for this Model
-    protected $table = 'provbase';
+    public $table = 'provbase';
 
     public $name = 'Provisioning Basic Config';
 
