@@ -22,6 +22,7 @@ use Log;
 use Str;
 use Auth;
 use View;
+use Cache;
 use Bouncer;
 use Closure;
 use Request;
@@ -536,7 +537,7 @@ class BaseController extends Controller
         $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
 
         // Get Framework Informations
-        $gc = \Cache::remember('GlobalConfig', now()->addHour(), function () {
+        $gc = Cache::remember('GlobalConfig', now()->addHour(), function () {
             return GlobalConfig::first();
         });
         $a['framework']['header1'] = $gc->headline1;
@@ -567,7 +568,7 @@ class BaseController extends Controller
             $apps[$name]['state'] = \Str::contains($package, 'not installed') ? 'inactive' : 'active';
         }
 
-        \Cache::forever('externalApps', $apps);
+        Cache::forever('externalApps', $apps);
 
         return $apps;
     }
