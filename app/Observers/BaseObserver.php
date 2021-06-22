@@ -30,6 +30,8 @@ class BaseObserver
 {
     public function created($model)
     {
+        $this->changeCacheCount($model, __FUNCTION__);
+
         if (! $model->observer_enabled) {
             return;
         }
@@ -60,6 +62,8 @@ class BaseObserver
 
     public function deleted($model)
     {
+        $this->changeCacheCount($model, __FUNCTION__);
+
         if (! $model->observer_enabled) {
             return;
         }
@@ -139,5 +143,21 @@ class BaseObserver
         ];
 
         GuiLog::log_changes($data);
+    }
+
+    /**
+     * Adapt database model count cached for better index table performance
+     */
+    private function changeCacheCount($model, $method)
+    {
+        $count = $model->cached_index_table_count;
+
+        if ($method == 'created') {
+            $count += 1;
+        } elseif ($method == 'deleted') {
+            $count -= 1;
+        }
+
+        cache(['indexTables.'.$model->table => $count]);
     }
 }
