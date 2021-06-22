@@ -392,7 +392,7 @@ class NetGw extends \BaseModel
         }
 
         // L2 CMTSes may share the same IP pools
-        $outdated = now()->subMinutes(10)->timestamp;
+        $outdated = now()->subMinutes(30)->timestamp;
         foreach (\Storage::files(self::US_SNR_PATH) as $file) {
             // ignore files older than 10 minutes, e.g. from a decommissioned cmts
             if (\Storage::lastModified($file) > $outdated &&
@@ -413,85 +413,40 @@ class NetGw extends \BaseModel
     public function store_us_snrs()
     {
         $ret = [];
-        $com = $this->get_ro_community();
+        $freqs = [];
+        $ips = [];
+        $snrs = [];
 
-        snmp_set_valueretrieval(SNMP_VALUE_LIBRARY);
-        snmp_set_quick_print(true);
+        $fn = self::US_SNR_PATH."/{$this->id}.php";
 
-        \Log::debug("CMTS $this->hostname: Store CM US SNRs");
-
-        try {
-            try {
-                $freqs = [];
-                foreach (snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.1.2.1.2') as $idx => $f) {
-                    $freqs[last(explode('.', $idx))] = strval($f / 1000000);
-                }
-                // DOCS-IF3-MIB::docsIf3CmtsCmRegStatusIPv4Addr, ...
-                $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.3.1.5');
-                $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.4.1.4491.2.1.20.1.4.1.4');
-
-                foreach ($ips as $ipOid => $ip) {
-                    // if all hex values of the given ip address can be interpreted as ASCII,
-                    // net-snmp won't return as Hex-STRING but STRING, thus we need to adjust
-                    // unfortunately via php we can't supply -Ox to force Hex-STRING output
-                    if (strlen($ip) == 6) {
-                        $ip = bin2hex(trim($ip, '"'));
-                    }
-                    $ip = long2ip(hexdec($ip));
-                    if ($ip == '0.0.0.0') {
-                        continue;
-                    }
-                    $ipDeviceId = last(explode('.', $ipOid));
-
-                    foreach ($snrs as $snrOid => $snr) {
-                        $arr = explode('.', $snrOid);
-                        $snrDeviceId = $arr[count($arr) - 2];
-
-                        if ($snrDeviceId != $ipDeviceId) {
-                            continue;
-                        }
-
-                        $snrFreqId = last(explode('.', $snrOid));
-
-                        $ret[$ip][$freqs[$snrFreqId]] = $snr / 10;
-                    }
-                }
-            } catch (\Exception $e) {
-                if (strpos($e->getMessage(), 'No Such Object available on this agent at this OID') === false) {
-                    throw $e;
-                }
-                // try DOCSIS2.0 - DOCS-IF-MIB::docsIfCmtsCmStatusIpAddress, ...
-                $ips = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.3');
-                $snrs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.13');
-                $us_idxs = snmp2_real_walk($this->ip, $com, '.1.3.6.1.2.1.10.127.1.3.3.1.5');
-
-                foreach ($ips as $ip_idx => $ip) {
-                    if ($ip == '0.0.0.0') {
-                        continue;
-                    }
-                    $ip_idx = last(explode('.', $ip_idx));
-
-                    foreach ($snrs as $idx => $snr) {
-                        if (strpos($idx, $ip_idx) === false) {
-                            continue;
-                        }
-                        $idx = last(explode('.', $idx));
-
-                        $us_idx = array_filter($us_idxs, function ($us_idx) use ($idx) {
-                            return strpos($us_idx, $idx) !== false;
-                        }, ARRAY_FILTER_USE_KEY);
-                        $us_idx = last($us_idx);
-
-                        $ret[$ip][$freqs[$us_idx]] = $snr / 10;
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            // have to catch errors here – throwing an exception results in stopping the console command
-            // no other CMTSs will be asked for US values after the first crash
-            \Log::error("Cannot get modem US SNR values for CMTS $this->hostname: ".get_class($e).' ('.$e->getMessage().') in '.$e->getFile().':'.$e->getLine());
-
+        if (! \Storage::exists($fn)) {
             return;
+        }
+
+        require_once storage_path('app/').$fn;
+        \Storage::delete($fn);
+
+        $freqs = array_map(function ($freq) {
+            return strval($freq / 1000000);
+        }, $freqs);
+        $ips = array_map(function ($hex) {
+            return long2ip(hexdec($hex));
+        }, $ips);
+
+        foreach ($ips as $ipIdx => $ip) {
+            if ($ip == '0.0.0.0') {
+                continue;
+            }
+
+            foreach ($snrs as $snrOid => $snr) {
+                [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
+
+                if ($snrIpIdx != $ipIdx) {
+                    continue;
+                }
+
+                $ret[$ip][$freqs[$snrFreqIdx]] = $snr / 10;
+            }
         }
 
         \Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret));
