@@ -43,7 +43,7 @@ class GuiLog extends \BaseModel
     {
         return [
             'table' => $this->table,
-            'index_header' => [$this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id'],
+            'index_header' => ['id', $this->table.'.created_at', $this->table.'.username', $this->table.'.method', $this->table.'.model', $this->table.'.model_id', $this->table.'.text'],
             'bsclass' => $this->get_bsclass(),
             'header' => $this->id.' - '.$this->mac.($this->name ? ' - '.$this->name : ''),
             'edit'	=> ['model_id' => 'generate_model_link'],

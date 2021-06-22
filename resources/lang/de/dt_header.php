@@ -62,11 +62,14 @@ return [
     'roles.rank' => 'Rang',
     'roles.description' => 'Beschreibung',
     // GuiLog
-    'guilog.created_at' => 'Zeitpunkt',
-    'guilog.username' => 'Nutzer',
-    'guilog.method' => 'Aktion',
-    'guilog.model' => 'Tabelle',
-    'guilog.model_id' => 'ID',
+    'guilog' => [
+        'created_at' => 'Zeitpunkt',
+        'username' => 'Nutzer',
+        'method' => 'Aktion',
+        'model' => 'Tabelle',
+        'model_id' => 'ID',
+        'text' => 'Änderungen',
+    ],
     // Company
     'company.name' => 'Unternehmen',
     'company.city' => 'Stadt',
