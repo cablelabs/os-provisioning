@@ -17,18 +17,34 @@
  */
 ?>
 initComplete: function () {
+
+    // Add event listener to unset sorting when search string is changed on huge table - is done on each column as well - see below
+    if ({{ intval($hugeTable) }}) {
+        $('.dataTables_filter input').off().on('keyup', function() {
+            table.order(order);
+            table.search(this.value.trim(), false, false).draw();
+        });
+    }
+
     this.api().columns().every(function () {
         var column = this;
         var input_filter_timeout;
         var input = document.createElement('input');
+
         input.classList.add('form-control');
         input.classList.add('input-sm');
         input.classList.add('select2');
+
         if ($(this.footer()).hasClass('searchable')){
             $(input).appendTo($(column.footer()).empty())
             .on('keyup', function () {
                 var val = $(this).val();
+
                 clearTimeout(input_filter_timeout);
+
+                if ({{ intval($hugeTable) }}) {
+                    table.order(order);
+                }
 
                 input_filter_timeout = setTimeout(function() {
                     column.search(val ? val : '', true, false).draw();

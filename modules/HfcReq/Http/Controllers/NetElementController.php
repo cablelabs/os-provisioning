@@ -35,8 +35,9 @@ class NetElementController extends BaseController
         $delete_allowed = $this->index_delete_allowed;
         $methodExists = method_exists($model, 'view_index_label');
         $indexTableInfo = $methodExists ? $model->view_index_label() : [];
+        $hugeTable = $model->hasHugeIndexTable();
 
-        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'methodExists', 'indexTableInfo')));
+        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'hugeTable', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'methodExists', 'indexTableInfo')));
     }
 
     /**

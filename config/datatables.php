@@ -130,11 +130,13 @@ return [
     ],
 
     /**
-     * For large Datasets the count query to display this information becomes
-     * slow. This element determines if the info is displayed.
-     * TODO: Make this configurable by model/page.
+     * This defines the threshhold from which we talk about a large dataset.
+     * Index tables of large datasets are handled a bit different to not dramatically decrease performance.
+     * This currently affects only sorting. As sorting decreases the performance the most, sorting is removed
+     * when the user initially opens the index page and no filter is set. Everytime a/the filter is changed the
+     * sorting (order by) is initially removed
      */
-    'showFilterInfo' => env('DATATABLES_FILTER_INFO', true),
+    'hugeTableThreshhold' => env('DATATABLES_HUGE_TABLE_THRESHHOLD', 500000),
 
     /**
      * For certain

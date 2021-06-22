@@ -160,6 +160,20 @@ $(document).ready(function() {
     window.JSZip = true
     window.pdfMake = true
 
+    removeInitialOrder();
+
+    let order = [
+        @if (isset($indexTableInfo['order_by']))
+            @foreach ($indexTableInfo['order_by'] as $columnindex => $direction)
+                @if (isset($delete_allowed) && $delete_allowed == true)
+                    [{{$columnindex + 2}}, '{{$direction}}'],
+                @else
+                    [{{$columnindex + 1}}, '{{$direction}}'],
+                @endif
+            @endforeach
+        @endif
+    ];
+
     let table = $('table.datatable').DataTable({
     {{-- STANDARD CONFIGURATION --}}
         {{-- Translate Datatables Base --}}
@@ -180,6 +194,7 @@ $(document).ready(function() {
         stateSave: true, {{-- Save Search Filters and visible Columns --}}
         stateDuration: 0, // 60 * 60 * 24, {{-- Time the State is used - set to 24h --}}
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
+        order: order,
         {{-- Responsive Column --}}
         columnDefs: [ {
             className: 'control',
@@ -218,6 +233,47 @@ $(document).ready(function() {
                 @include('datatables.genericColHeader')
         @endif
     });
+
+    /**
+     * Remove sorting (order by statement in query) in huge tables when no filter is set on initialization by
+     * removing order key from browser cache
+     */
+    function removeInitialOrder()
+    {
+        if (! {{ intval($hugeTable) }}) {
+            return;
+        }
+
+        let storageKey = 'DataTables_datatable_/admin/{{$route_name}}';
+        let storage = localStorage.getItem(storageKey);
+
+        if (! storage || storage == {}) {
+            return;
+        }
+
+        storage = JSON.parse(storage);
+
+        if (! storage || storage.search.search) {
+            return;
+        }
+
+        let hasFilter = false;
+        storage.columns.forEach(function (obj) {
+            if (obj.search.search) {
+                hasFilter = true;
+                return;
+            }
+        });
+
+        if (hasFilter) {
+            return;
+        }
+
+        console.log('REMOVE initial order');
+
+        delete storage.order;
+        localStorage.setItem(storageKey, storage);
+    }
 });
 </script>
 @stop

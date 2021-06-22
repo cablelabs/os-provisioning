@@ -38,15 +38,3 @@ columns:[
         @endforeach
     @endif
 ],
-
-{{-- Set Sorting if order_by is set -> Standard is ASC of first Column --}}
-@if (isset($indexTableInfo['order_by']))
-    order:
-    @foreach ($indexTableInfo['order_by'] as $columnindex => $direction)
-        @if (isset($delete_allowed) && $delete_allowed == true)
-            [{{$columnindex + 2}}, '{{$direction}}'],
-        @else
-            [{{$columnindex + 1}}, '{{$direction}}'],
-        @endif
-    @endforeach
-@endif

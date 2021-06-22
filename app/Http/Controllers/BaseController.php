@@ -767,9 +767,12 @@ class BaseController extends Controller
 
         $methodExists = method_exists($model, 'view_index_label');
         $indexTableInfo = $methodExists ? $model->view_index_label() : [];
+        $hugeTable = $model->hasHugeIndexTable();
+
         Log::debug('Showing only index() elements a user can access is not yet implemented');
 
-        return View::make($view_path, $this->compact_prep_view(compact('headline', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'filter', 'methodExists', 'indexTableInfo')));
+        return View::make($view_path, $this->compact_prep_view(compact('create_allowed', 'delete_allowed',
+            'filter', 'headline', 'hugeTable', 'indexTableInfo', 'methodExists', 'model', 'view_header')));
     }
 
     /**
@@ -1671,6 +1674,13 @@ class BaseController extends Controller
         $DT = DataTables::make($request_query)
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
+
+        $cacheCount = $model->cached_index_table_count;
+        if ($cacheCount) {
+            $DT->setTotalRecords($cacheCount);
+            // ->setFilteredRecords(10000)
+            // ->skipTotalRecords()
+        }
 
         foreach ($filter_column_data as $column => $custom_query) {
             // backward compatibility – accept strings as input, too

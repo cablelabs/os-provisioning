@@ -59,7 +59,7 @@ class BaseModel extends Eloquent
     public $index_delete_disabled = false;
 
     // Add Comment here. ..
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'cached_index_table_count'];
 
     public const ABOVE_MESSAGES_ALLOWED_TYPES = [
         'info',    // Blue
@@ -879,5 +879,25 @@ class BaseModel extends Eloquent
         }
 
         return parent::update($attributes, $options);
+    }
+
+    public function getCachedIndexTableCountAttribute()
+    {
+        return cache('indexTables.'.$this->table);
+    }
+
+    /**
+     * Check if entry count of the index table of the model exceeds configured threshhold
+     * Huge tables behave a bit different to not degrade performance - see description in config/datatables.php
+     */
+    public function hasHugeIndexTable()
+    {
+        $count = $this->cached_index_table_count;
+
+        if ($count && $count > config('datatables.hugeTableThreshhold')) {
+            return true;
+        }
+
+        return false;
     }
 }
