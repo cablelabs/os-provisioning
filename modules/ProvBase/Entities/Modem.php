@@ -2303,6 +2303,78 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Fetch realtime values via GenieACS
+     *
+     * @param refresh: bool refresh values from device instead of using cached ones
+     * @return mixed
+     *
+     * @author Ole Ernst
+     */
+    public function realtimeTR069($refresh)
+    {
+        $mon = $this->configfile->getMonitoringConfig();
+        if (! $mon) {
+            return $mon;
+        }
+
+        if ($refresh) {
+            $request = ['name' => 'refreshObject'];
+            $request['objectName'] = \Illuminate\Support\Arr::flatten($mon);
+
+            $id = rawurlencode($this->getGenieAcsModel('_id'));
+            self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', json_encode($request));
+        }
+
+        foreach ($mon as $category => &$params) {
+            $params = array_map(function ($param) {
+                if (! $param = self::sanitizeParameter($param)) {
+                    return [];
+                }
+
+                $value = $this->getGenieAcsModel($param[0]);
+
+                // _lastInform, _deviceId._SerialNumber etc. are strings, not objects
+                $value = is_string($value) ? $value : ($value->_value ?? '');
+
+                if (isset($param[1]) && is_numeric($value)) {
+                    $value = eval("return $value {$param[1][0]} {$param[1][1]};");
+                }
+
+                return preg_split('/\r\n|\r|\n/', $value);
+            }, $params);
+        }
+
+        return $mon;
+    }
+
+    /**
+     * Sanitize parameter from json monitoring string
+     *
+     * @return mixed
+     *
+     * @author Ole Ernst
+     */
+    protected static function sanitizeParameter($param)
+    {
+        if (is_string($param)) {
+            return [$param];
+        }
+
+        // not as expected -> ignore entry
+        if (! isset($param[0]) || ! is_string($param[0])) {
+            return;
+        }
+
+        // array not as expected -> don't perform evaluation
+        if (! isset($param[1][0]) || ! in_array($param[1][0], ['+', '-', '*', '/']) || ! isset($param[1][1]) || ! is_numeric($param[1][1])) {
+            return [$param[0]];
+        }
+
+        // perform evaluation
+        return $param;
+    }
+
+    /**
      * Determine modem status of internet access and telephony for analysis dashboard
      *
      * @param array     Lines of Configfile

@@ -179,8 +179,8 @@ class ConfigfileController extends \BaseController
         if (count($modemSerialsIntersect)) {
             $modemSerial = reset($modemSerialsIntersect);
             $modem = $model->modem()->where('serial_num', $modemSerial)->first();
-            \Modules\ProvMon\Http\Controllers\ProvMonController::realtimeTR069($modem, true);
 
+            $modem->realtimeTR069(true);
             $modem = Modem::callGenieAcsApi("devices?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
