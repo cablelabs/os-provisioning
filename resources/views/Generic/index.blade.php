@@ -247,7 +247,7 @@ $(document).ready(function() {
         let storageKey = 'DataTables_datatable_/admin/{{$route_name}}';
         let storage = localStorage.getItem(storageKey);
 
-        if (! storage || storage == {}) {
+        if (! storage) {
             return;
         }
 
@@ -268,8 +268,6 @@ $(document).ready(function() {
         if (hasFilter) {
             return;
         }
-
-        console.log('REMOVE initial order');
 
         delete storage.order;
         localStorage.setItem(storageKey, storage);
