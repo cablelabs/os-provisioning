@@ -75,6 +75,11 @@ class BaseObserver
         return true;
     }
 
+    public function restored($model)
+    {
+        $this->changeCacheCount($model, __FUNCTION__);
+    }
+
     /**
      * Create Log Entry on fired Event
      */
@@ -152,7 +157,7 @@ class BaseObserver
     {
         $count = $model->cachedIndexTableCount;
 
-        if ($method == 'created') {
+        if ($method == 'created' || $method == 'restored') {
             $count += 1;
         } elseif ($method == 'deleted') {
             $count -= 1;
