@@ -1676,12 +1676,16 @@ class BaseController extends Controller
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
-        $cacheCount = $model->cachedIndexTableCount;
-        if ($cacheCount) {
-            $DT->setTotalRecords($cacheCount);
-            // ->setFilteredRecords(10000)
-            // ->skipTotalRecords()
+        $count = $model->cachedIndexTableCount;
+        if (! $count) {
+            $count = $model::count();
+
+            cache(['indexTables.'.$model->table => $count]);
         }
+
+        $DT->setTotalRecords($count);
+        // ->setFilteredRecords(10000)
+        // ->skipTotalRecords()
 
         foreach ($filter_column_data as $column => $custom_query) {
             // backward compatibility – accept strings as input, too
