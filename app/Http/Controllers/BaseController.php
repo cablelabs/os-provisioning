@@ -1676,7 +1676,7 @@ class BaseController extends Controller
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
-        $cacheCount = $model->cached_index_table_count;
+        $cacheCount = $model->cachedIndexTableCount;
         if ($cacheCount) {
             $DT->setTotalRecords($cacheCount);
             // ->setFilteredRecords(10000)

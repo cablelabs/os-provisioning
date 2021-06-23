@@ -59,7 +59,7 @@ class BaseModel extends Eloquent
     public $index_delete_disabled = false;
 
     // Add Comment here. ..
-    protected $guarded = ['id', 'cached_index_table_count'];
+    protected $guarded = ['id', 'cachedIndexTableCount'];
 
     public const ABOVE_MESSAGES_ALLOWED_TYPES = [
         'info',    // Blue
@@ -892,7 +892,7 @@ class BaseModel extends Eloquent
      */
     public function hasHugeIndexTable()
     {
-        $count = $this->cached_index_table_count;
+        $count = $this->cachedIndexTableCount;
 
         if ($count && $count > config('datatables.hugeTableThreshhold')) {
             return true;

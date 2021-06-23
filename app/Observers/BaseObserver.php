@@ -150,7 +150,7 @@ class BaseObserver
      */
     private function changeCacheCount($model, $method)
     {
-        $count = $model->cached_index_table_count;
+        $count = $model->cachedIndexTableCount;
 
         if ($method == 'created') {
             $count += 1;
