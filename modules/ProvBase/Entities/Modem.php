@@ -1481,7 +1481,7 @@ class Modem extends \BaseModel
         $domain = $this->domainName ?: ProvBase::first()->domain_name;
         $file = "/usr/share/cacti/rra/$this->hostname.$domain.json";
 
-        if (! file_exists($file) || time() - filemtime($file) > 300) {
+        if (! file_exists($file) || time() - filemtime($file) > 450) {
             return ['No pre-equalization data found'];
         }
 
