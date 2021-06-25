@@ -104,7 +104,7 @@ class Contract extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number',  $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
+            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.apartment_nr', $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
             'header' =>  $this->label(),
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
             'disable_sortsearch' => ['ground_for_dismissal' => 'false'],

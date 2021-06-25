@@ -36,6 +36,7 @@ return [
     'contact_id' => 'Group contract',
     'contract' => [
         'additional' => 'Additional info',
+        'apartment_nr' => 'Apartmentnr',
         'city' => 'City',
         'company' => 'Company',
         'contact' => 'Contact',
@@ -217,6 +218,7 @@ return [
     'modem.firstname' => 'First name',
     'modem.geocode_source' => 'Geocode origin',
     'modem.house_number' => 'Housenr',
+    'modem.apartment_nr' => 'Apartmentnr',
     'modem.id' => 'Modem',
     'modem.inventar_num' => 'Serial Nr',
     'modem.lastname' => 'Surname',
