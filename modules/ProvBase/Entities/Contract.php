@@ -659,9 +659,10 @@ class Contract extends \BaseModel
         if ($this->changes_on_daily_conversion) {
             // Avoid endless loop by disabling observer but add GuiLog entry
             BaseObserver::addLogEntry($this, 'updated');
+
+            $this->pushToModems();
             $this->observer_enabled = false;
             $this->save();
-            $this->pushToModems();
         }
     }
 
@@ -1206,6 +1207,13 @@ class Contract extends \BaseModel
         foreach ($this->modems as $modem) {
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
+
+            if (! $modem->getDirty() && $this->isDirty('has_telephony')) {
+                $modem->make_configfile();
+                $modem->restart_modem();
+
+                continue;
+            }
 
             $modem->save();
         }
