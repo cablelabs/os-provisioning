@@ -43,6 +43,12 @@
 [submodule "public/vendor/pusher-js"]
 	path = public/vendor/pusher-js
 	url = https://github.com/pusher/pusher-js.git
+[submodule "public/components/assets-admin/plugins/backbone"]
+	path = public/components/assets-admin/plugins/backbone
+	url = https://github.com/jashkenas/backbone
+[submodule "public/components/assets-admin/plugins/joint-js"]
+	path = public/components/assets-admin/plugins/joint-js
+	url = https://github.com/clientIO/joint.git
 [submodule "public/components/assets-admin/plugins/select2"]
 	path = public/components/assets-admin/plugins/select2
 	url = https://github.com/select2/select2
