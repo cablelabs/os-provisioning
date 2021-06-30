@@ -104,6 +104,7 @@ class IpPoolController extends \BaseController
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types,
                 'options' => ['translate' => true], 'help' => trans('provbase::help.type'),
                 'select' => array_combine($typesKeys, $typesKeys), ],
+            ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true],
             ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net')],
             ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask', 'options' => ['placeholder' => '255.255.0.0 | /16']],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],

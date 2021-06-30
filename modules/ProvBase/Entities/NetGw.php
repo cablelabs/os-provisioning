@@ -517,6 +517,7 @@ class NetGw extends \BaseModel
         File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
         foreach ($ippools as $pool) {
+            $active = $pool->active;
             $subnet = $pool->net;
             $netmask = $pool->netmask;
             $broadcast_addr = $pool->broadcast_ip;
@@ -552,32 +553,36 @@ class NetGw extends \BaseModel
                     $data .= "\n\t\t\t".'failover peer "dhcpd-failover";'."\n";
                 }
 
-                switch ($type) {
-                    case 'CM':
-                        $data .= "\n\t\t\t".'allow members of "CM";';
-                        $data .= "\n\t\t\t".'deny unknown-clients;';
-                        break;
+                if ($active) {
+                    switch ($type) {
+                        case 'CM':
+                            $data .= "\n\t\t\t".'allow members of "CM";';
+                            $data .= "\n\t\t\t".'deny unknown-clients;';
+                            break;
 
-                    case 'CPEPriv':
-                        $data .= "\n\t\t\t".'allow members of "Client";';
-                        $data .= "\n\t\t\t".'deny members of "Client-Public";';
-                        // $data .= "\n\t\t\t".'allow known-clients;';
-                        break;
+                        case 'CPEPriv':
+                            $data .= "\n\t\t\t".'allow members of "Client";';
+                            $data .= "\n\t\t\t".'deny members of "Client-Public";';
+                            // $data .= "\n\t\t\t".'allow known-clients;';
+                            break;
 
-                    case 'CPEPub':
-                        $data .= "\n\t\t\t".'allow members of "Client-Public";';
-                        // $data .= "\n\t\t\t".'allow unknown-clients;';
-                        // $data .= "\n\t\t\t".'allow known-clients;';
-                        break;
+                        case 'CPEPub':
+                            $data .= "\n\t\t\t".'allow members of "Client-Public";';
+                            // $data .= "\n\t\t\t".'allow unknown-clients;';
+                            // $data .= "\n\t\t\t".'allow known-clients;';
+                            break;
 
-                    case 'MTA':
-                        $data .= "\n\t\t\t".'allow members of "MTA";';
-                        // $data .= "\n\t\t\t".'allow known-clients;';
-                        break;
+                        case 'MTA':
+                            $data .= "\n\t\t\t".'allow members of "MTA";';
+                            // $data .= "\n\t\t\t".'allow known-clients;';
+                            break;
 
-                    default:
-                        // code...
-                        break;
+                        default:
+                            // code...
+                            break;
+                    }
+                } else {
+                    $data .= "\n\t\t\t".'deny all clients;';
                 }
 
                 $data .= "\n\t\t".'}';
