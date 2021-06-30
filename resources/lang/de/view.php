@@ -378,7 +378,7 @@ return [
         'all'               => 'ungültiger Filter',
         'newTickets'        => 'neue Tickets',
         'sw_rev'            => 'Modems mit Firmware :data',
-        'action_needed'     => 'Aufträge die Bearbeitung benötigen',
+        'action_needed'     => 'Aufträge die eine Bearbeitung erfordern',
     ],
 
     // DASHBOARD

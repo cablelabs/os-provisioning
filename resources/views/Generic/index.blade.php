@@ -59,6 +59,9 @@
                             <i class="fa fa-close p-l-5"></i>
                         </a>
                     </div>
+                {{-- TODO: Make this generic and let the user select the filter from dropdown or via link --}}
+                @elseif (! empty($model::AVAILABLE_FILTERS) && $model instanceof Modules\ProvVoipEnvia\Entities\EnviaOrder)
+                    <a href="?show_filter=action_needed" target="_self"> <i class="fa fa-filter"></i> {{ trans('provvoipenvia::view.enviaOrder.showInteractionNeeding')}} </a><br>
                 @endif
             </div>
         {{-- Create Form --}}
