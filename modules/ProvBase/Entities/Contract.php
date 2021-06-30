@@ -1429,7 +1429,6 @@ class Contract extends \BaseModel
      */
     public function getResultingDebt()
     {
-        $this->load('debts:id,missing_amount');
         // https://stackoverflow.com/questions/17210787/php-float-calculation-error-when-subtracting
         // return \Modules\OverdueDebts\Entities\Debt::where('contract_id', $this->id)
         //     ->groupBy('contract_id')
