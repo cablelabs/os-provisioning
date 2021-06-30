@@ -997,3 +997,11 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     border: none;
     line-height: 1;
 }
+
+textarea.select2-search__field {
+    height: 1.5rem !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+    padding-left: 12px;
+}
