@@ -426,8 +426,13 @@ return [
         'VoipMon' => 'Analysieren Sie den Datenverkehr von Telefongesprächen.',
 
         //externe
+        // source: own translation
         'Cacti' => 'Anwendung zur Überwachung und graphischen Darstellung von Netzdaten.',
+        // source: own translation
         'GenieACS' => 'Anwendung zur Provisionierung und Verwaltung von TR-069 fähigen Geräten.',
+        // source: https://de.wikipedia.org/wiki/Grafana
+        'Grafana' => 'Plattformübergreifende Open-Source-Anwendung zur grafischen Darstellung von Daten aus verschiedenen Datenquellen.',
+        // source: own translation
         'Icinga' => 'Anwendung zur System-und Netzwerküberwachung.',
     ],
 

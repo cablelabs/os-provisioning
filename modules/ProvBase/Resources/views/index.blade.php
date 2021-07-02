@@ -95,13 +95,6 @@
                         !!}
                     @endif
 
-                    <a href="/genieacs/">
-                        <span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                            <img src="{{asset('images/genieacs.svg')}}" height="45"><br>
-                            <span class="username text-ellipsis text-center">GenieACS</span>
-                        </span>
-                    </a>
-
                     {{-- reference link --}}
                     <div class="stats-link noHover"><a href="#"><br></a></div>
 

@@ -430,6 +430,8 @@ return [
         'Cacti' => 'Cacti is a complete network graphing solution.',
         // source https://genieacs.com
         'GenieACS' => 'GenieACS is an open source TR-069 remote management solution with advanced device provisioning capabilities.',
+        // source https://github.com/grafana/grafana
+        'Grafana' => 'The open and composable observability and data visualization platform.',
         // source https://icinga.com/docs/icinga-2/latest
         'Icinga' => 'Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.',
     ],

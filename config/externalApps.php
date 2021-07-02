@@ -24,4 +24,11 @@ return [
         'website' => 'https://genieacs.com',
         'rpmName' => 'genieacs',
     ],
+    'Grafana' => [
+        'icon'  => 'grafana.svg',
+        'description' => 'apps.Grafana',
+        'link' => '/grafana',
+        'website' => 'https://grafana.com/',
+        'rpmName' => 'grafana',
+    ],
 ];
