@@ -270,6 +270,18 @@ return [
             'strict'    => false,
         ],
 
+        'pgsql-timescaledb' => [
+            'driver'   => 'pgsql',
+            'host'     => env('TIMESCALE_DB_HOST', 'localhost'),
+            'database' => env('TIMESCALE_DB_DATABASE', 'nmsprime'),
+            'username' => env('TIMESCALE_DB_USERNAME', 'grafana'),
+            'password' => env('TIMESCALE_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
     ],
 
     /*
