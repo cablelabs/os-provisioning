@@ -49,6 +49,14 @@ class ConfigfileController extends \BaseController
         }
         $firmware_files = Configfile::getFiles($folders);
 
+        try {
+            $dashboards = collect(json_decode(file_get_contents('http://localhost:3001/api/search?type=dash-db'), true))
+                ->pluck('title', 'url')
+                ->toArray();
+        } catch (\Exception $e) {
+            $dashboards = [];
+        }
+
         $form = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'select', 'name' => 'device', 'description' => 'Device', 'value' => ['cm' => 'CM', 'mta' => 'MTA', 'tr069' => 'TR-69']],
@@ -58,6 +66,7 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware/Dialplan File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware/Dialplan File'],
             ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String', 'hidden' => true],
+            ['form_type' => 'select', 'name' => 'dashboard', 'description' => 'Analysis Dashboard', 'value' => [null => null] + $dashboards],
         ];
 
         if (\Route::currentRouteName() == 'Configfile.create') {
