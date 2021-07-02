@@ -6,6 +6,9 @@ yum install -y epel-release
 # add Icinga repo
 yum install -y https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
 
+# add Postgres repo
+yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
 # add NMS Prime repos
 yum install -y https://repo.nmsprime.com/rpm/nmsprimeOS/nmsprime-repos-3.0.0-1.noarch.rpm
 
