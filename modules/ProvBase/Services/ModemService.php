@@ -2,12 +2,12 @@
 
 namespace Modules\ProvBase\Services;
 
-use App\V1\Repository;
 use App\V1\Service;
 
-class ModemService extends Service{
-
-    public function getPosModems($options = []){
+class ModemService extends Service
+{
+    public function getPosModems($options = [])
+    {
         $query = $this->repository->createBaseBuilder($options);
         $query->select('modem.*')
             ->selectRaw('COUNT(*) AS count')
@@ -22,6 +22,7 @@ class ModemService extends Service{
         if (isset($options['paginate']) && $options['paginate']) {
             return $query->paginate($options['limit'], ['modem.*']);
         }
+
         return $query->get();
     }
 }

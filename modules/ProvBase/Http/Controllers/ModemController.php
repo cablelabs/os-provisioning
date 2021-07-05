@@ -18,19 +18,19 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\V1\Repository;
-use Modules\ProvBase\Services\ModemService;
 use View;
 use App\Sla;
 use Bouncer;
 use Request;
 use App\GlobalConfig;
+use App\V1\Repository;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Session;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Services\ModemService;
 use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
