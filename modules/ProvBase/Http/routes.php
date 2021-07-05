@@ -57,6 +57,11 @@ BaseRoute::group([], function () {
     ]);
 
     Route::group(['prefix' => 'api/v{ver}'], function () {
+        Route::get('modem/geo-pos', [
+            'as' => 'Modem.apiGeoPos',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@apiGeoPos',
+            'middleware' => ['api', 'can:view,Modules\ProvBase\Entities\Modem'],
+        ]);
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_restart',

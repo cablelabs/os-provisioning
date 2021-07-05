@@ -265,7 +265,7 @@ class Repository
      * @param  array $options
      * @return Builder
      */
-    protected function createBaseBuilder(array $options = []): Builder
+    public function createBaseBuilder(array $options = []): Builder
     {
         $query = $this->createQueryBuilder();
 

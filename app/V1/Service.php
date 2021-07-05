@@ -31,7 +31,7 @@ class Service
 {
     private $dispatcher;
 
-    private $repository;
+    protected $repository;
 
     public function __construct(
         Repository $repository

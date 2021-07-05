@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use App\V1\Repository;
+use Modules\ProvBase\Services\ModemService;
 use View;
 use App\Sla;
 use Bouncer;
@@ -423,6 +425,19 @@ class ModemController extends \BaseController
         $modem->restart_modem();
 
         return response()->v0ApiReply([], true, $id);
+    }
+
+    public function apiGeoPos($ver)
+    {
+        if ($ver !== '1') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+        $resourceOptions = $this->parseResourceOptions();
+        $service = new ModemService(new Repository(static::get_model_obj()));
+        $data = $service->getPosModems($resourceOptions);
+        $parsedData = $this->parseData($data, $resourceOptions);
+
+        return $this->response($parsedData);
     }
 
     /**
