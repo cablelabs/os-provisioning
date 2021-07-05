@@ -208,7 +208,7 @@ class IpPool extends \BaseModel
      *
      * @author Ole Ernst
      */
-    public function get_range()
+    public function getRanges()
     {
         $empty = "\t\t\trange $this->ip_pool_start $this->ip_pool_end;\n";
 
@@ -224,16 +224,50 @@ class IpPool extends \BaseModel
         }
 
         foreach ($endpoints as $ep) {
-            $static[] = ip2long($ep->ip);
+            $eps[] = ip2long($ep->ip);
         }
 
-        $pool = '';
-        $all = range(ip2long($this->ip_pool_start), ip2long($this->ip_pool_end));
-        foreach (array_diff($all, $static) as $ip) {
-            $pool .= "\t\t\trange ".long2ip($ip).";\n";
+        $start = ip2long($this->ip_pool_start);
+        $end = ip2long($this->ip_pool_end);
+        $eps = array_filter($eps, function ($ep) use ($start, $end) {
+            // keep endpoints within pool range
+            return $ep >= $start && $ep <= $end;
+        });
+
+        if (! $eps) {
+            return $empty;
         }
 
-        return $pool;
+        // array_unique should not be necessary
+        $eps = array_unique($eps);
+
+        // reverse for array_pop, rather than array_shift
+        rsort($eps);
+
+        $ranges = [];
+        $i = $start;
+        while ($eps) {
+            // get next endpoint
+            $ep = array_pop($eps);
+
+            if ($i == $ep) {
+                $i++;
+                continue;
+            }
+
+            $ranges[] = [$i, $ep - 1];
+            $i = $ep + 1;
+        }
+
+        if ($i <= $end) {
+            $ranges[] = [$i, $end];
+        }
+
+        $ranges = array_map(function ($range) {
+            return "\t\t\trange ".implode(' ', array_map('long2ip', array_unique($range))).';';
+        }, $ranges);
+
+        return implode("\n", $ranges)."\n";
     }
 
     /**

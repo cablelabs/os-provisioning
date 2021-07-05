@@ -521,7 +521,7 @@ class NetGw extends \BaseModel
             $subnet = $pool->net;
             $netmask = $pool->netmask;
             $broadcast_addr = $pool->broadcast_ip;
-            $range = $pool->get_range();
+            $ranges = $pool->getRanges();
             $router = $pool->router_ip;
             $type = $pool->type;
             $options = $pool->optional;
@@ -546,9 +546,9 @@ class NetGw extends \BaseModel
                 $data .= substr_replace($data_tmp, '', $pos, 1).';';
             }
 
-            if ($range) {
+            if ($ranges) {
                 $data .= "\n\n\t\t".'pool'."\n\t\t{\n";
-                $data .= $range;
+                $data .= $ranges;
                 if (\Module::collections()->has('ProvHA')) {
                     $data .= "\n\t\t\t".'failover peer "dhcpd-failover";'."\n";
                 }
