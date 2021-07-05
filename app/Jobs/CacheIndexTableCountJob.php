@@ -56,7 +56,7 @@ class CacheIndexTableCountJob implements ShouldQueue
 
             $table = (new $namespace)->table;
 
-            if (! $table) {
+            if (! $table || ! \Schema::hasTable($table)) {
                 continue;
             }
 
