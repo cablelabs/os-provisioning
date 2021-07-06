@@ -1661,17 +1661,6 @@ class BaseController extends Controller
             }
         }
 
-        // apply additional where clauses
-        foreach ($whereClauses as $whereClause) {
-            if ($whereClause instanceof Closure) {
-                $request_query = call_user_func($whereClause, $request_query);
-            }
-
-            if (is_string($whereClause)) {
-                $request_query = $request_query->whereRaw($whereClause);
-            }
-        }
-
         $DT = DataTables::make($request_query)
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
@@ -1690,7 +1679,7 @@ class BaseController extends Controller
         foreach ($filter_column_data as $column => $custom_query) {
             // backward compatibility – accept strings as input, too
             if (is_string($custom_query)) {
-                $custom_query = ['query' => $custom_query, 'eagers' => []];
+                $custom_query = ['query' => $custom_query, 'eagers' => [], 'exact' => false];
             } elseif (! is_array($custom_query)) {
                 throw new \Exception('$custom_query has to be string or array');
             }
@@ -1699,7 +1688,12 @@ class BaseController extends Controller
                 foreach ($custom_query['eagers'] as $eager) {
                     $query->with($eager);
                 }
-                $query->whereRaw($custom_query['query'], ["%{$keyword}%"]);
+
+                if (isset($custom_query['exact']) && !$custom_query['exact']){
+                    $keyword = "%{$keyword}%";
+                }
+
+                $query->whereRaw($custom_query['query'], [$keyword]);
             });
         }
 

@@ -50,7 +50,7 @@
                     {!! $model->view_icon().' '.$headline !!}
                 </h3>
                 @if (Request::has('show_filter'))
-                    <div>
+                    <div id="filter">
                         <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
                         <a class="badge badge-primary" href="{{ Request::url() }}"
                             style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
@@ -163,7 +163,7 @@ $(document).ready(function() {
     window.JSZip = true
     window.pdfMake = true
 
-    removeInitialOrder();
+    removeInitialOrder()
 
     let order = [
         @if (isset($indexTableInfo['order_by']))
@@ -231,11 +231,24 @@ $(document).ready(function() {
             processing: true, {{-- show loader--}}
             serverSide: true, {{-- enable Serverside Handling--}}
             deferRender: true,
+            deferLoading: true,
             ajax: '{{ isset($ajax_route_name) && $route_name != "Config.index" ? route($ajax_route_name) : "" }}',
             {{-- generic Col Header generation --}}
-                @include('datatables.genericColHeader')
+            @include('datatables.genericColHeader')
         @endif
     });
+
+    @if (isset($indexTableInfo['globalFilter']) && Request::has('show_filter'))
+        @foreach ($indexTableInfo['globalFilter'] as $col => $search)
+            setGlobalFilter('{{ $col }}', '{{ $search }}')
+        @endforeach
+    @elseif (isset($indexTableInfo['globalFilter']) && !Request::has('show_filter'))
+        @foreach ($indexTableInfo['globalFilter'] as $col => $search)
+            removeGlobalFilter('{{ $col }}')
+        @endforeach
+    @endif
+
+    table.draw()
 
     /**
      * Remove sorting (order by statement in query) in huge tables when no filter is set on initialization by
@@ -274,6 +287,35 @@ $(document).ready(function() {
 
         delete storage.order;
         localStorage.setItem(storageKey, storage);
+    }
+
+    function setGlobalFilter(col, search)
+    {
+        let idx = getKeyByValue(table.columns().dataSrc(), col)
+        let searchField = $('input', table.column(idx).footer())
+
+        table.column(idx).search(search)
+        searchField.val(search)
+        searchField.keyup(function () {
+            let filter = $('#filter')
+
+            if (filter.length) {
+                filter.remove()
+            }
+        })
+    }
+
+    function removeGlobalFilter(col)
+    {
+        let idx = getKeyByValue(table.columns().dataSrc(), col)
+
+        $('input', table.column(idx).footer()).val('')
+        table.column(idx).search('')
+    }
+
+    function getKeyByValue(object, value)
+    {
+        return Object.keys(object).find(key => object[key] === value);
     }
 });
 </script>

@@ -115,14 +115,6 @@ class Modem extends \BaseModel
     {
         $bsclass = $this->get_bsclass();
 
-        if (session(class_basename(self::class).'_show_filter', 'all') != 'all') {
-            $whereClauses = [
-                function ($query) {
-                    return self::getWhereClauseFirmware($query, session('filter_data'));
-                },
-            ];
-        }
-
         $ret = ['table' => $this->table,
             'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.apartment_nr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
             'bsclass' => $bsclass,
@@ -131,7 +123,7 @@ class Modem extends \BaseModel
             'eager_loading' => ['configfile', 'contract'],
             'disable_sortsearch' => ['contract_valid' => 'false'],
             'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
-            'where_clauses' => $whereClauses ?? [],
+            'globalFilter' => ['sw_rev' => e(session('filter_data', ''))],
         ];
 
         if (Module::collections()->has('ProvMon')) {
@@ -199,20 +191,6 @@ class Modem extends \BaseModel
     public function getSupportState()
     {
         return $this->formatted_support_state." <i class='pull-right fa fa-2x ".$this->getFaSmileClass()['fa-class'].' text-'.$this->getFaSmileClass()['bs-class']."'></i>";
-    }
-
-    /**
-     * Get WHERE clause for datatable filtering.
-     *
-     * @author Ole Ernst
-     */
-    protected static function getWhereClauseFirmware($query, $filter)
-    {
-        if (! $filter) {
-            return $query;
-        }
-
-        return $query->whereRaw('`sw_rev` = :filter')->setBindings(['filter' => $filter]);
     }
 
     /**

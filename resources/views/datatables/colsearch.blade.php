@@ -17,7 +17,6 @@
  */
 ?>
 initComplete: function () {
-
     // Add event listener to unset sorting when search string is changed on huge table - is done on each column as well - see below
     if ({{ intval($hugeTable) }}) {
         $('.dataTables_filter input').off().on('keyup', function() {
@@ -53,6 +52,7 @@ initComplete: function () {
         }
         $('.select2').css('width', "100%");
     });
+
     var state = this.api().state.loaded();
     if (state) {
         this.api().columns().eq(0).each(function (colIdx) {
