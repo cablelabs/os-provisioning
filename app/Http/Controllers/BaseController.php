@@ -24,7 +24,6 @@ use Auth;
 use View;
 use Cache;
 use Bouncer;
-use Closure;
 use Request;
 use Session;
 use Redirect;
@@ -1642,7 +1641,6 @@ class BaseController extends Controller
         $edit_column_data = $dt_config['edit'] ?? [];
         $filter_column_data = $dt_config['filter'] ?? [];
         $eager_loading_tables = $dt_config['eager_loading'] ?? [];
-        $whereClauses = $dt_config['where_clauses'] ?? [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
         if (empty($eager_loading_tables)) { //use eager loading only when its needed
@@ -1659,6 +1657,11 @@ class BaseController extends Controller
             } else {
                 $first_column = head($header_fields);
             }
+        }
+
+        if (isset($dt_config['scope'])) {
+            $scope = $dt_config['scope'];
+            $request_query->$scope();
         }
 
         $DT = DataTables::make($request_query)
@@ -1685,15 +1688,11 @@ class BaseController extends Controller
             }
 
             $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
-                foreach ($custom_query['eagers'] as $eager) {
-                    $query->with($eager);
-                }
-
-                if (isset($custom_query['exact']) && !$custom_query['exact']){
+                if (isset($custom_query['exact']) && ! $custom_query['exact']) {
                     $keyword = "%{$keyword}%";
                 }
 
-                $query->whereRaw($custom_query['query'], [$keyword]);
+                $query->with($custom_query['eagers'])->whereRaw($custom_query['query'], [$keyword]);
             });
         }
 
