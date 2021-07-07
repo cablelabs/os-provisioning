@@ -296,7 +296,19 @@ class Modem extends \BaseModel
 
     public function radcheck()
     {
-        return $this->hasOne(RadCheck::class, 'username', 'ppp_username');
+        return $this->hasMany(RadCheck::class, 'username', 'ppp_username');
+    }
+
+    public function radcheckPassword()
+    {
+        return $this->hasOne(RadCheck::class, 'username', 'ppp_username')
+            ->where('attribute', 'Cleartext-Password');
+    }
+
+    public function radcheckPool()
+    {
+        return $this->hasOne(RadCheck::class, 'username', 'ppp_username')
+            ->where('attribute', 'Pool-Name');
     }
 
     public function radreply()
@@ -1825,11 +1837,19 @@ class Modem extends \BaseModel
 
         // update existing RadCheck, if password was changed
         if (array_key_exists('ppp_password', $this->getDirty())) {
-            $check = $this->radcheck;
+            $check = $this->radcheckPassword;
             $check->value = $this->ppp_password;
             $check->save();
             $this->make_configfile();
             $this->factoryReset();
+        }
+
+        // update existing RadCheck, if public flag was changed
+        if (array_key_exists('public', $this->getDirty())) {
+            $check = $this->radcheckPool;
+            $check->value = $this->public ? 'CPEPub' : 'CPEPriv';
+            $check->save();
+            $this->restart_modem();
         }
     }
 
