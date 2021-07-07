@@ -883,7 +883,7 @@ class Modem extends \BaseModel
             'acctupdatetime',
             '>=',
             \Carbon\Carbon::now()->subSeconds(ProvBase::first()->acct_interim_interval)
-        )->pluck('username');
+        )->pluck('username')->unique();
 
         DB::beginTransaction();
         // make all ppp devices offline
