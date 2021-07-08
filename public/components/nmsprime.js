@@ -310,7 +310,7 @@ function rezizeTextareas() {
   $('textarea').each(function () {
       $(this).css({
           "height": this.scrollHeight + 5 + "px",
-          "max-height": "1080px"
+          "max-height": "85vh"
       });
   }).on('input', function () {
     var scrollLeft = window.pageXOffset ||
