@@ -37,11 +37,15 @@
           <i class="fa fa-plus"></i>
         </a>
       </li>
+      {{-- Main Menu --}}
       @foreach ($view_header_links as $module_name => $typearray)
-        <li id="{{ Str::slug($module_name,'_')}}"
-          class="has-sub {{-- ($route_name == $module_name) ? 'active' : '' --}}"
-          :class="lastActive == '{{ Str::slug($module_name,'_')}}' ? 'active' : ''">
-          <div class="recolor sidebar-element" v-on:click="setMenu('{{ Str::slug($module_name,'_')}}')">
+        @php
+          $moduleNameSlug = Str::slug($module_name, '_');
+        @endphp
+        <li id="{{ $moduleNameSlug }}"
+          class="has-sub"
+          :class="{active: (lastActive == '{{ $moduleNameSlug }}'), 'position-relative': minified}">
+          <div class="recolor sidebar-element" v-on:click="setMenu('{{ $moduleNameSlug }}')" v-on:mouseover="minified ? setMenu('{{ $moduleNameSlug }}') : ''" v-on:mouseLeave="leaveMinifiedSidebar">
             <a class="caret-link" href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
                 <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
@@ -52,15 +56,16 @@
             </a>
             @if(isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" style="width: 100%; height: 20px; display:block; text-align: right">
-                <i class="fa fa-caret-right" :class="activeItem == '{{ Str::slug($module_name,'_')}}' && !isCollapsed ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
+                <i class="fa fa-caret-right" :class="showSubMenu('{{ $moduleNameSlug }}') ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
               </a>
             @endif
           </div>
+        {{-- SubMenu --}}
         @isset ($typearray['submenu'])
           <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave">
-            <ul v-show="activeItem == '{{ Str::slug($module_name,'_')}}' && !isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0 " style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
+            <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
             @foreach ($typearray['submenu'] as $type => $valuearray)
-            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="lastClicked == 'menu-{{ Str::slug($type,'_') }}' ? 'active' : ''">
+            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}" v-on:mouseover="minified ? setMenu('{{ $moduleNameSlug }}') : ''" v-on:mouseLeave="showMinifiedHoverMenu = false">
               <a href="{{ route($valuearray['link']) }}" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                 <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
                 <span>{{ $type }}</span>
@@ -70,8 +75,11 @@
             </ul>
           </transition>
         @endisset
+        {{-- End SubMenu--}}
         </li>
       @endforeach
+      {{-- End Menu --}}
+
     <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important; width: 223px;">
       <a href="{{route('Apps.active')}}" class="text-success d-inline w-100" style="display: inline-block !important; width: 100%;">{{ trans('messages.externalApps') }}
         <i class="fa fa-plus"></i>
@@ -94,8 +102,8 @@
       <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success">{{ trans('view.Menu_Nets') }}</div>
         <div class="d-flex">
-          <div style="cursor:pointer;" class="text-success p-r-10" v-on:click="isVisible = !isVisible"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
-          <div style="cursor:pointer;" class="text-success p-r-10" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-pencil"></i></div>
+          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" v-on:click="isVisible = !isVisible"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
+          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-pencil"></i></div>
           <div style="cursor:pointer;" class="text-success" v-on:click="isSearchMode = !isSearchMode"><i class="fa fa-search"></i></div>
         </div>
       </li>
@@ -147,7 +155,7 @@
     @endif
     {{-- sidebar minify button --}}
     <li>
-      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" v-on:click="minified = !minified" data-click="sidebar-minify">
+      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" v-on:click="handleMinify" data-click="sidebar-minify">
         <i class="fa fa-angle-double-left"></i>
       </a>
     </li>

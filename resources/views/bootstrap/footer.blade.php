@@ -112,6 +112,8 @@ new Vue({
       {{-- sidebarObject: @json($view_header_links), --}}
       {{-- route: '{{$route_name}}', --}}
       minified: null,
+      leaveTimer: null,
+      showMinifiedHoverMenu: false,
       isVisible: true,
       isSearchMode: false,
       isCollapsed: true,
@@ -124,20 +126,28 @@ new Vue({
   },
   methods: {
     initSidebar() {
-      this.handleMinify()
+      this.initMinify()
 
       this.isVisible = localStorage.getItem('sidebar-net-visibility') === 'true'
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
       this.isCollapsed = false
     },
-    handleMinify() {
+    initMinify() {
+      this.minified = this.activeItem = localStorage.getItem('minified-state') === 'true'
 
       if (this.minified) {
-        return $('#page-container').addClass('page-sidebar-minified')
+        return document.getElementById('page-container').classList.add('page-sidebar-minified')
       }
 
-      $('#page-container').removeClass('page-sidebar-minified')
+      document.getElementById('page-container').classList.remove('page-sidebar-minified')
+    },
+    handleMinify() {
+      this.minified = ! this.minified
+      this.isCollapsed = true
+    },
+    leaveMinifiedSidebar() {
+      this.leaveTimer = setTimeout(() => {this.showMinifiedHoverMenu = false; }, 250)
     },
     setVisibility() {
       this.isVisible = !isVisible
@@ -145,14 +155,18 @@ new Vue({
       localStorage.setItem('sidebar-net-visibility', JSON.stringify(this.isVisible))
     },
     setMenu(name) {
-      if (name === this.activeItem) {
+      if (name === this.activeItem && ! this.minified) {
         return this.isCollapsed = ! this.isCollapsed
-        {{-- this.clickedItem = 'null'; localStorage.setItem("clicked-item", this.clickedItem) --}}
       }
 
       this.activeItem = name
       this.clickedItem = name
       this.isCollapsed = false
+
+      if (this.minified) {
+        clearTimeout(this.leaveTimer)
+        this.showMinifiedHoverMenu = true
+      }
 
       localStorage.setItem("sidebar-item", name)
       localStorage.setItem("clicked-item", name)
@@ -160,6 +174,13 @@ new Vue({
     setSubMenu(name) {
       this.clickedItem = name
       localStorage.setItem("clicked-item", name)
+    },
+    showSubMenu(name, minified = false) {
+      if (! minified) {
+        return this.activeItem == name && ! this.isCollapsed && ! this.minified
+      }
+
+      return this.activeItem == name && ! this.isCollapsed
     },
     beforeEnter(el) {
       el.style.maxHeight = '0'

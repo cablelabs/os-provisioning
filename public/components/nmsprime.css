@@ -1017,3 +1017,16 @@ textarea.select2-search__field {
 .sidebar .sidebar-hover > li.active > a:focus {
     color: #fff !important;
 }
+
+.minifiedMenu {
+    position: absolute;
+    display: block !important;
+    top:0px;
+    right: -200px;
+    width: 200px;
+}
+
+.minifiedMenu span,
+.minifiedMenu a {
+    display: flex !important;
+}
