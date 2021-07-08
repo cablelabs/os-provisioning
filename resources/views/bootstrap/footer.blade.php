@@ -20,6 +20,12 @@
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/Abilities/axios.min.js')}}"></script>
+
+{{-- When in Development use this Version
+    <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
+--}}
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
