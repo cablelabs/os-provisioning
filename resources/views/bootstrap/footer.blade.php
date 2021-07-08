@@ -27,6 +27,13 @@
     <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
 --}}
 
+<script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/Abilities/axios.min.js')}}"></script>
+
+{{-- When in Development use this Version
+  <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
+--}}
+
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
@@ -75,4 +82,101 @@ $(document).ready(function() {
   {{-- init modals --}}
   $("#alertModal").modal();
 });
+Vue.directive('hover-class', {
+  bind(el, binding, vnode) {
+    const { value="" } = binding;
+    el.addEventListener('mouseenter',()=> {
+        el.classList.add(value)
+    });
+    el.addEventListener('mouseleave',()=> {
+        el.classList.remove(value)
+    });
+  },
+  unbind(el, binding, vnode) {
+    el.removeEventListener('mouseenter');
+    el.removeEventListener('mouseleave')
+  }
+})
+
+new Vue({
+  el: '#sidebar',
+  mounted() {
+    if (typeof(Storage) === "undefined") {
+      console.error("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
+    }
+
+    this.initSidebar()
+  },
+  data() {
+    return {
+      {{-- sidebarObject: @json($view_header_links), --}}
+      {{-- route: '{{$route_name}}', --}}
+      minified: null,
+      isVisible: true,
+      isSearchMode: false,
+      isCollapsed: true,
+      scrollheight: '50px',
+      lastActive: 'null',
+      lastClicked: 'null',
+      activeItem: 'null',
+      clickedItem: 'null'
+    }
+  },
+  methods: {
+    initSidebar() {
+      this.handleMinify()
+
+      this.isVisible = localStorage.getItem('sidebar-net-visibility') === 'true'
+      this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
+      this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
+      this.isCollapsed = false
+    },
+    handleMinify() {
+
+      if (this.minified) {
+        return $('#page-container').addClass('page-sidebar-minified')
+      }
+
+      $('#page-container').removeClass('page-sidebar-minified')
+    },
+    setVisibility() {
+      this.isVisible = !isVisible
+
+      localStorage.setItem('sidebar-net-visibility', JSON.stringify(this.isVisible))
+    },
+    setMenu(name) {
+      if (name === this.activeItem) {
+        return this.isCollapsed = ! this.isCollapsed
+        {{-- this.clickedItem = 'null'; localStorage.setItem("clicked-item", this.clickedItem) --}}
+      }
+
+      this.activeItem = name
+      this.clickedItem = name
+      this.isCollapsed = false
+
+      localStorage.setItem("sidebar-item", name)
+      localStorage.setItem("clicked-item", name)
+    },
+    setSubMenu(name) {
+      this.clickedItem = name
+      localStorage.setItem("clicked-item", name)
+    },
+    beforeEnter(el) {
+      el.style.maxHeight = '0'
+    },
+    enter(el) {
+      el.style.maxHeight = el.scrollHeight + 'px'
+    },
+    beforeLeave(el) {
+      el.style.maxHeight = el.scrollHeight + 'px'
+      el.classList.add('accordion-leave-active')
+    },
+    leave(el) {
+      el.classList.add('accordion-leave-active')
+      console.log('leave')
+      el.style.maxHeight = '0'
+    },
+  }
+})
+
 </script>

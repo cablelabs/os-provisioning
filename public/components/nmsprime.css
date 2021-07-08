@@ -249,8 +249,12 @@ input[type="checkbox"].form-control:checked:after {
         padding-top: 101px;
     }
     .sidebar, .sidebar-bg {
-        margin-top: 56px;
+        margin-top: 62px;
     }
+}
+
+.no-content-pseudo::before, .no-content-pseudo::after {
+    content: none !important;
 }
 
 .table>tbody>tr>td {
@@ -1004,4 +1008,12 @@ textarea.select2-search__field {
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
     padding-left: 12px;
+}
+
+.sidebar .sidebar-hover > li > a:hover,
+.sidebar .sidebar-hover > li > a:focus,
+.sidebar .sidebar-hover > li.active > a,
+.sidebar .sidebar-hover > li.active > a:hover,
+.sidebar .sidebar-hover > li.active > a:focus {
+    color: #fff !important;
 }

@@ -30,7 +30,6 @@
       </li>
     </ul>
     {{-- end sidebar user --}}
-
     {{-- begin sidebar nav --}}
     <ul class="nav">
       <li class="nav-header" style="border-bottom: 1px solid; font-size: 13px !important; width: 223px;">
@@ -39,38 +38,38 @@
         </a>
       </li>
       @foreach ($view_header_links as $module_name => $typearray)
-        <li id="{{ Str::slug($module_name,'_')}}" class="has-sub {{ ($route_name == $module_name) ? 'active' : ''}}" data-sidebar="level1">
-          <div class="recolor sidebar-element">
-            @if (isset($typearray['link']))
-              <a href="{{route($typearray['link'])}}">
-            @else
-              <a class="caret-link" href="javascript:;">
-            @endif
-            @if (is_file(public_path('images/apps/').$typearray['icon']))
-              <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
-            @else
-              <i class="fa fa-fw {{ $typearray['icon'] }} m-r-5"></i>
-            @endif
-            <span>{{$typearray['translated_name'] ?? $module_name}}</span>
+        <li id="{{ Str::slug($module_name,'_')}}"
+          class="has-sub {{-- ($route_name == $module_name) ? 'active' : '' --}}"
+          :class="lastActive == '{{ Str::slug($module_name,'_')}}' ? 'active' : ''">
+          <div class="recolor sidebar-element" v-on:click="setMenu('{{ Str::slug($module_name,'_')}}')">
+            <a class="caret-link" href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
+              @if (is_file(public_path('images/apps/').$typearray['icon']))
+                <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
+              @else
+                <i class="fa fa-fw {{ $typearray['icon'] }} m-r-5"></i>
+              @endif
+              <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
             @if(isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" style="width: 100%; height: 20px; display:block; text-align: right">
-                <b class="caret fa-rotate-270" style="right: 5px; top: 14px;"></b>
+                <i class="fa fa-caret-right" :class="activeItem == '{{ Str::slug($module_name,'_')}}' && !isCollapsed ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
               </a>
             @endif
           </div>
-        @if (isset($typearray['submenu']))
-          <ul class="sub-menu line">
-          @foreach ($typearray['submenu'] as $type => $valuearray)
-          <li id="menu-{{ Str::slug($type,'_') }}">
-            <a href="{{ route($valuearray['link']) }}" style="overflow: hidden; white-space: nowrap;">
-              <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
-              <span>{{ $type }}</span>
-            </a>
-          </li>
-          @endforeach
-          </ul>
-        @endif
+        @isset ($typearray['submenu'])
+          <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave">
+            <ul v-show="activeItem == '{{ Str::slug($module_name,'_')}}' && !isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0 " style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
+            @foreach ($typearray['submenu'] as $type => $valuearray)
+            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="lastClicked == 'menu-{{ Str::slug($type,'_') }}' ? 'active' : ''">
+              <a href="{{ route($valuearray['link']) }}" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
+                <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
+                <span>{{ $type }}</span>
+              </a>
+            </li>
+            @endforeach
+            </ul>
+          </transition>
+        @endisset
         </li>
       @endforeach
     <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important; width: 223px;">
@@ -91,52 +90,64 @@
       @endif
     @endforeach
 
-
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
-      <li class="nav-header" style="border-top: 1px solid;">{{ trans('view.Menu_Nets') }}</li>
-      <li id="network_overview" class="has-sub" data-sidebar="level1">
-        <div style="display: flex;justify-content:space-between;padding: 8px 20px;line-height: 20px;">
-            <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
-              <i class="fa fa-sitemap m-r-5"></i>
-              <span>{{ trans('view.Menu_allNets') }}</span>
-            </a>
-            <a class="caret-link" href="javascript:;" style="width: 100%; text-align: right;">
-              <b class="caret fa-rotate-270"></b>
-            </a>
+      <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
+        <div class="text-success">{{ trans('view.Menu_Nets') }}</div>
+        <div class="d-flex">
+          <div style="cursor:pointer;" class="text-success p-r-10" v-on:click="isVisible = !isVisible"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
+          <div style="cursor:pointer;" class="text-success p-r-10" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-pencil"></i></div>
+          <div style="cursor:pointer;" class="text-success" v-on:click="isSearchMode = !isSearchMode"><i class="fa fa-search"></i></div>
         </div>
-        <ul class="sub-menu" style="display: none;padding-left:21px;">
-          @foreach ($networks as $network)
-            <li id="network_{{$network->id}}" class="has-sub" data-sidebar="level2">
-              <div style="display: flex;justify-content:space-between;padding: 0.25rem 1.25rem 0.25rem 0;">
-                <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="color: #889097; max-height: 20px; white-space: nowrap;">
-                  <i class="fa fa-circle text-info m-r-5"></i>
-                  <span>{{$network->name}}</span>
-                </a>
-                @if($network->clusters->isNotEmpty())
-                  <a class="caret-link" style="color: #889097; width: 100%; text-align: right;" href="javascript:;">
-                    <b class="caret fa-rotate-270"></b>
-                  </a>
-                @endif
-              </div>
-              <ul class="sub-menu line sub-line" style="display: none;padding: 0;">
-                {{-- Network-Clusters are Cached for 5 minutes --}}
-                @foreach ($network->clusters as $cluster)
-                  <li id="cluster_{{$cluster->id}}">
-                    <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                      <i class="fa fa-circle-thin text-info"></i>
-                      {{$cluster->name}}
-                    </a>
-                  </li>
-                @endforeach
-              </ul>
-            </li>
-          @endforeach
-        </ul>
       </li>
+      <div v-if="isSearchMode" class="my-1 d-flex align-items-center" style="padding:0.5rem 1.25rem;">
+        <input type="text" class="form-control position-relative" style="padding-right:2.5rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
+        <div class="position-absolute btn bg-transparent" type="button" style="right:20px;padding: 0 .5rem;"><i class="fa fa-arrow-circle-right m-0"></i></div>
+      </div>
+      <div v-show="isVisible">
+        @if (auth()->user()->isAllNetsSidebarEnabled)
+          <li id="network_overview" class="has-sub">
+            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;line-height: 20px;">
+              <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
+                <i class="fa fa-sitemap m-r-5"></i>
+                <span>{{ trans('view.Menu_allNets') }}</span>
+              </a>
+            </div>
+          </li>
+        @endif
+        @foreach ($networks as $network)
+          <li id="network_{{$network->id}}" class="has-sub">
+            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
+              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="max-height: 20px; white-space: nowrap;">
+                <i class="fa fa-sitemap m-r-5"></i>
+                <span>{{$network->name}}</span>
+              </a>
+              {{-- @if($network->clusters->isNotEmpty()) --}}
+                <a class="caret-link" style="width: 100%; text-align: right;" href="javascript:;">
+                  <b class="caret fa-rotate-270"></b>
+                </a>
+              {{-- @endif --}}
+            </div>
+            <ul class="sub-menu line sub-line" style="display: none;padding: 0;">
+              {{-- Network-Clusters are Cached for 5 minutes --}}
+              {{-- @foreach ($network->clusters as $cluster)
+                <li id="cluster_{{$cluster->id}}">
+                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
+                    <i class="fa fa-circle-thin text-info"></i>
+                    {{$cluster->name}}
+                  </a>
+                </li>
+              @endforeach --}}
+            </ul>
+          </li>
+        @endforeach
+      </div>
+      <div id="searchresults">
+
+      </div>
     @endif
     {{-- sidebar minify button --}}
     <li>
-      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" data-click="sidebar-minify">
+      <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" v-on:click="minified = !minified" data-click="sidebar-minify">
         <i class="fa fa-angle-double-left"></i>
       </a>
     </li>
