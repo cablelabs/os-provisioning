@@ -449,7 +449,7 @@ class BaseController extends Controller
         if (! isset($a['networks'])) {
             $a['networks'] = [];
             if (Module::collections()->has('HfcBase') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
-                $a['networks'] = \Modules\HfcReq\Entities\NetElement::getNetsWithClusters();
+                $a['networks'] = \Modules\HfcReq\Entities\NetElement::getSidebarNets();
             }
         }
 

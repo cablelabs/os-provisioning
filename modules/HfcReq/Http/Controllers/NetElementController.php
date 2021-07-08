@@ -188,10 +188,6 @@ class NetElementController extends BaseController
         $this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
 
         return parent::store();
-
-        // $ret = parent::store();
-        // NetElement::relation_index_build_all();
-        // return $ret;
     }
 
     /**

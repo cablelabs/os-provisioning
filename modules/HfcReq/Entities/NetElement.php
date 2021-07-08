@@ -691,16 +691,24 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Return all NetElements of NetElementType Net (name = 'Net')
+     * Return favorited Nets of the user or the first 25 Nets
      */
-    public static function getNetsWithClusters()
+    public static function getSidebarNets()
     {
         return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
-            $net_id = array_search('Net', NetElementType::$undeletables);
+            $nets = Auth::user()
+                ->favNetelements()
+                ->without('netlementtype')
+                ->get(['netelement.id', 'name', 'net', 'netelementtype_id']);
 
-            return self::where('netelementtype_id', '=', $net_id)
-                ->with('clusters')
-                ->get();
+            if ($nets->count()) {
+                return $nets;
+            }
+
+            return self::where('netelementtype_id', array_search('Net', NetElementType::$undeletables))
+                ->without('netlementtype')
+                ->limit(25)
+                ->get(['id', 'name', 'net', 'netelementtype_id']);
         });
     }
 
