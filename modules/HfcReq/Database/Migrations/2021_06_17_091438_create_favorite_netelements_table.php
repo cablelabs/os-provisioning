@@ -36,9 +36,10 @@ class CreateFavoriteNetelementsTable extends BaseMigration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('netelement_id');
-            $table->index(['user_id', 'netelement_id']);
             $table->timestamps();
+
             $table->index(['user_id', 'netelement_id']);
+            $table->unique(['user_id', 'netelement_id']);
         });
     }
 

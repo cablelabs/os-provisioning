@@ -695,20 +695,22 @@ class NetElement extends \BaseModel
      */
     public static function getSidebarNets()
     {
+        cache()->forget(Auth::user()->login_name.'-Nets');
+
         return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
             $nets = Auth::user()
                 ->favNetelements()
-                ->without('netlementtype')
-                ->get(['netelement.id', 'name', 'net', 'netelementtype_id']);
+                ->without('netelementtype')
+                ->get(['netelement.id', 'name', 'netelementtype_id']);
 
             if ($nets->count()) {
                 return $nets;
             }
 
             return self::where('netelementtype_id', array_search('Net', NetElementType::$undeletables))
-                ->without('netlementtype')
+                ->without('netelementtype')
                 ->limit(25)
-                ->get(['id', 'name', 'net', 'netelementtype_id']);
+                ->get(['id', 'name', 'netelementtype_id']);
         });
     }
 

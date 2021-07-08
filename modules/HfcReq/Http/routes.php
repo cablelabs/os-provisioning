@@ -48,9 +48,18 @@ BaseRoute::group([], function () {
         'middleware' => ['web', 'can:delete,Modules\HfcReq\Entities\NetElementType'],
     ]);
 
-    BaseRoute::get('NetElement/{id}/delete', [
-        'as' => 'NetElement.delete',
-        'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@destroy',
-        'middleware' => ['can:delete,Modules\HfcReq\Entities\NetElement'],
+    BaseRoute::post('Netelement/{netelement}/favorite', [
+        'as' => 'NetElement.favorite',
+        'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@favorite',
+    ]);
+
+    BaseRoute::post('Netelement/{netelement}/unfavorite', [
+        'as' => 'NetElement.unfavorite',
+        'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@unfavorite',
+    ]);
+
+    BaseRoute::post('Netelement/search', [
+        'as' => 'NetElement.searchNetsClusters',
+        'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@searchForNetsAndClusters',
     ]);
 });

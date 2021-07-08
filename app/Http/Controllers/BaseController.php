@@ -450,6 +450,7 @@ class BaseController extends Controller
             $a['networks'] = [];
             if (Module::collections()->has('HfcBase') && Bouncer::can('view', \Modules\HfcBase\Entities\TreeErd::class)) {
                 $a['networks'] = \Modules\HfcReq\Entities\NetElement::getSidebarNets();
+                $a['favorites'] = auth()->user()->favNetelements()->pluck('netelement.id');
             }
         }
 

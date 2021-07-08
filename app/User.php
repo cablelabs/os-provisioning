@@ -19,6 +19,7 @@
 namespace App;
 
 use App;
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
@@ -112,6 +113,15 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function tickets()
     {
         return $this->belongsToMany(\Modules\Ticketsystem\Entities\Ticket::class, 'ticket_user', 'user_id', 'ticket_id');
+    }
+
+    public function favNetelements()
+    {
+        if (! Module::collections()->has('HfcReq')) {
+            return collect();
+        }
+
+        return $this->belongsToMany(\Modules\HfcReq\Entities\NetElement::class, 'favorite_netelements', 'user_id', 'netelement_id');
     }
 
     /**

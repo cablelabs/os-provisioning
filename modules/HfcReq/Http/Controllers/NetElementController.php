@@ -19,6 +19,7 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use View;
+use Illuminate\Http\Request;
 use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseController;
 use Modules\HfcReq\Entities\NetElementType;
@@ -199,5 +200,37 @@ class NetElementController extends BaseController
         $this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
 
         return parent::update($id);
+    }
+
+    public function favorite($netelement)
+    {
+        cache()->forget(auth()->user()->login_name.'-Nets');
+
+        return auth()->user()->favNetelements()->attach([$netelement]);
+    }
+
+    public function unfavorite($netelement)
+    {
+        cache()->forget(auth()->user()->login_name.'-Nets');
+
+        return auth()->user()->favNetelements()->detach([$netelement]);
+    }
+
+    public function searchForNetsAndClusters(Request $request)
+    {
+        if (! $request->get('query')) {
+            return collect();
+        }
+
+        $netId = array_search('Net', NetElementType::$undeletables);
+        $clusterId = array_search('Cluster', NetElementType::$undeletables);
+
+        return NetElement::without('netelementtype')
+            ->whereIn('netelementtype_id', [$netId, $clusterId])
+            ->where('name', 'like', '%'.$request->get('query').'%')
+            ->limit(25)
+            ->orderBy('netelementtype_id', 'ASC')
+            ->get(['name', 'id', 'netelementtype_id', 'net'])
+            ->toJson();
     }
 }
