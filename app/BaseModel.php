@@ -296,7 +296,7 @@ class BaseModel extends Eloquent
         }
 
         session([class_basename(static::class).'_show_filter' => $filter]);
-        session(['filter_data', $payload = e(request('data', ''))]);
+        session(['filter_data' => $payload = e(request('data', ''))]);
 
         return [
             'key' => $filter,
