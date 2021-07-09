@@ -79,38 +79,6 @@ var generateSlimScroll = function(element) {
     $(element).attr('data-init', true);
 };
 
-
-/* 02. Handle Sidebar - Menu
------------------------------------------------- */
-var handleSidebarMenu = function() {
-    "use strict";
-    $('.sidebar .nav > .has-sub > a').click(function() {
-        var target = $(this).next('.sub-menu');
-        var otherMenu = '.sidebar .nav > li.has-sub > .sub-menu';
-
-        if ($('.page-sidebar-minified').length === 0) {
-            $(otherMenu).not(target).slideUp(250, function() {
-                $(this).closest('li').removeClass('expand');
-            });
-            $(target).slideToggle(250, function() {
-                var targetLi = $(this).closest('li');
-                if ($(targetLi).hasClass('expand')) {
-                    $(targetLi).removeClass('expand');
-                } else {
-                    $(targetLi).addClass('expand');
-                }
-            });
-        }
-    });
-    $('.sidebar .nav > .has-sub .sub-menu li.has-sub > a').click(function() {
-        if ($('.page-sidebar-minified').length === 0) {
-            var target = $(this).next('.sub-menu');
-            $(target).slideToggle(250);
-        }
-    });
-};
-
-
 /* 03. Handle Sidebar - Mobile View Toggle
 ------------------------------------------------ */
 var handleMobileSidebarToggle = function() {
@@ -178,54 +146,6 @@ var handleMobileSidebarToggle = function() {
     });
 };
 
-
-/* 04. Handle Sidebar - Minify / Expand
------------------------------------------------- */
-var handleSidebarMinify = function() {
-    $('[data-click=sidebar-minify]').click(function(e) {
-        e.preventDefault();
-        var sidebarClass = 'page-sidebar-minified';
-        var targetContainer = '#page-container';
-        $('#sidebar [data-scrollbar="true"]').css('margin-top','0');
-        $('#sidebar [data-scrollbar="true"]').removeAttr('data-init');
-        $('#sidebar [data-scrollbar=true]').stop();
-        if ($(targetContainer).hasClass(sidebarClass)) {
-            $(targetContainer).removeClass(sidebarClass);
-            if ($(targetContainer).hasClass('page-sidebar-fixed')) {
-                generateSlimScroll($('#sidebar [data-scrollbar="true"]'));
-                if ($('#sidebar .slimScrollDiv').length !== 0) {
-                    $('#sidebar [data-scrollbar="true"]').slimScroll({destroy: true});
-                    $('#sidebar [data-scrollbar="true"]').removeAttr('style');
-                    localStorage.setItem("minified-state", "false");
-                }
-                $('#sidebar [data-scrollbar=true]').trigger('mouseover');
-            } else if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                if ($('#sidebar .slimScrollDiv').length !== 0) {
-                    $('#sidebar [data-scrollbar="true"]').slimScroll({destroy: true});
-                    $('#sidebar [data-scrollbar="true"]').removeAttr('style');
-                }
-                generateSlimScroll($('#sidebar [data-scrollbar="true"]'));
-            }
-        } else {
-            $(targetContainer).addClass(sidebarClass);
-
-            if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                if ($(targetContainer).hasClass('page-sidebar-fixed')) {
-                    $('#sidebar [data-scrollbar="true"]').slimScroll({destroy: true});
-                    $('#sidebar [data-scrollbar="true"]').removeAttr('style');
-                }
-                $('#sidebar [data-scrollbar=true]').trigger('mouseover');
-            } else {
-                $('#sidebar [data-scrollbar="true"]').css('margin-top','0');
-                $('#sidebar [data-scrollbar="true"]').css('overflow', 'visible');
-            }
-            localStorage.setItem("minified-state", "true");
-        }
-        $(window).trigger('resize');
-    });
-};
-
-
 /* 05. Handle Page Load - Fade in
 ------------------------------------------------ */
 var handlePageContentView = function() {
@@ -234,7 +154,6 @@ var handlePageContentView = function() {
         $('#page-container').addClass('in');
     });
 };
-
 
 /* 06. Handle Panel - Remove / Reload / Collapse / Expand
 ------------------------------------------------ */
@@ -1170,9 +1089,7 @@ var App = function () {
 		    this.initThemePanel();
 		},
 		initSidebar: function() {
-			handleSidebarMenu();
 			handleMobileSidebarToggle();
-			handleSidebarMinify();
 			handleMobileSidebar();
 		},
 		initSidebarSelection: function() {
