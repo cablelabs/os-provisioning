@@ -151,8 +151,6 @@ new Vue({
       document.getElementById('page-container').classList.remove('page-sidebar-minified')
     },
     handleMinify(e) {
-      e.preventDefault()
-
       let sidebar = document.getElementById('sidebar')
       let pageContainer = document.getElementById('page-container')
 
@@ -236,8 +234,10 @@ new Vue({
     },
     leave(el) {
       el.classList.add('accordion-leave-active')
-      console.log('leave')
       el.style.maxHeight = '0'
+    },
+    afterLeave(el) {
+      el.style.maxHeight = 1000 + 'px'
     },
     searchForNetOrCluster(event) {
       clearTimeout(this.searchTimeout)

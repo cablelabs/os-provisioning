@@ -46,9 +46,9 @@
           :class="{active: (lastActive == '{{ $moduleNameSlug }}'), 'position-relative': minified}"
           style="z-index:10000;">
           <div class="recolor sidebar-element"
-            v-on:click="setMenu('{{ $moduleNameSlug }}')"
-            v-on:mouseover="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
-            v-on:mouseLeave="leaveMinifiedSidebar">
+            v-on:click.stop="setMenu('{{ $moduleNameSlug }}')"
+            v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
+            v-on:mouseLeave.stop="leaveMinifiedSidebar">
             <a class="caret-link"
               href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
@@ -60,16 +60,16 @@
             </a>
             @if(isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" style="width: 100%; height: 20px; display:block; text-align: right">
-                <i class="fa fa-caret-right" :class="showSubMenu('{{ $moduleNameSlug }}') ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
+                <i class="fa fa-caret-right" :class="{'fa-rotate-90': showSubMenu('{{ $moduleNameSlug }}')}" style="transition:all .25s;"></i>
               </a>
             @endif
           </div>
         {{-- SubMenu --}}
         @isset ($typearray['submenu'])
-          <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave">
-            <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none">
+          <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
+            <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
             @foreach ($typearray['submenu'] as $type => $valuearray)
-            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}" v-on:mouseover="minified ? setMenu('{{ $moduleNameSlug }}') : ''" v-on:mouseLeave="showMinifiedHoverMenu = false">
+            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}" v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''" v-on:mouseLeave.stop="showMinifiedHoverMenu = false">
               <a href="{{ route($valuearray['link']) }}" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                 <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
                 <span>{{ $type }}</span>
