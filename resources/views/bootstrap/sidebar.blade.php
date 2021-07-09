@@ -17,7 +17,7 @@
  */
 ?>
 {{-- begin #sidebar --}}
-<div id="sidebar" class="sidebar d-print-none">
+<div v-cloak id="sidebar" class="sidebar d-print-none">
   {{-- begin sidebar scrollbar --}}
   <div data-scrollbar="true" data-height="100%">
     {{-- begin sidebar user --}}
@@ -219,3 +219,15 @@
     </div>
    {{-- end theme-panel --}}
 @endif
+
+ <script language="javascript">
+  if (typeof(Storage) === "undefined") {
+    console.error("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
+  }
+
+  if (localStorage.getItem('minified-state') === 'true') {
+    document.getElementById('page-container').classList.add('page-sidebar-minified')
+  } else {
+    document.getElementById('page-container').classList.remove('page-sidebar-minified')
+  }
+</script>

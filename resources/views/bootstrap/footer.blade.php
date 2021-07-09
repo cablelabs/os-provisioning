@@ -131,8 +131,7 @@ new Vue({
   },
   methods: {
     initSidebar() {
-      this.initMinify()
-
+      this.minified = localStorage.getItem('minified-state') === 'true'
       this.isVisible = localStorage.getItem('sidebar-net-isVisible') === 'true'
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
       this.clusterSearch = localStorage.getItem('sidebar-net-search')
@@ -140,15 +139,6 @@ new Vue({
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
       this.isCollapsed = false
-    },
-    initMinify() {
-      this.minified = this.activeItem = localStorage.getItem('minified-state') === 'true'
-
-      if (this.minified) {
-        return document.getElementById('page-container').classList.add('page-sidebar-minified')
-      }
-
-      document.getElementById('page-container').classList.remove('page-sidebar-minified')
     },
     handleMinify(e) {
       let sidebar = document.getElementById('sidebar')
