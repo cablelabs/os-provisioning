@@ -121,14 +121,22 @@ new Vue({
       lastActive: 'null',
       lastClicked: 'null',
       activeItem: 'null',
-      clickedItem: 'null'
+      clickedItem: 'null',
+      searchTimeout: null,
+      clusterSearch: '',
+      searchResults: {},
+      activeNetelement: 'null',
+      clickedNetelement: 'null',
     }
   },
   methods: {
     initSidebar() {
       this.initMinify()
 
-      this.isVisible = localStorage.getItem('sidebar-net-visibility') === 'true'
+      this.isVisible = localStorage.getItem('sidebar-net-isVisible') === 'true'
+      this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
+      this.clusterSearch = localStorage.getItem('sidebar-net-search')
+      this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
       this.isCollapsed = false
@@ -142,17 +150,51 @@ new Vue({
 
       document.getElementById('page-container').classList.remove('page-sidebar-minified')
     },
-    handleMinify() {
+    handleMinify(e) {
+      e.preventDefault()
+
+      let sidebar = document.getElementById('sidebar')
+      let pageContainer = document.getElementById('page-container')
+
+      sidebar.style.marginTop = 0
+      sidebar.style.overflow = 'visible'
+      sidebar.removeAttribute('data-init')
+
+      if (! this.minified) {
+        pageContainer.classList.add('page-sidebar-minified')
+      }
+
+      if (this.minified) {
+        pageContainer.classList.remove('page-sidebar-minified')
+        generateSlimScroll(sidebar);
+
+        $(sidebar).slimScroll({destroy: true})
+        sidebar.removeAttribute('style')
+        $(sidebar).trigger('mouseover');
+      }
+
+      if(! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        $(sidebar).slimScroll({destroy: true})
+        sidebar.removeAttribute('style')
+        $(sidebar).trigger('mouseover');
+      }
+
       this.minified = ! this.minified
-      this.isCollapsed = true
+      localStorage.setItem('minified-state', this.minified)
+      $(window).trigger('resize');
     },
     leaveMinifiedSidebar() {
       this.leaveTimer = setTimeout(() => {this.showMinifiedHoverMenu = false; }, 250)
     },
     setVisibility() {
-      this.isVisible = !isVisible
+      this.isVisible = !this.isVisible
 
-      localStorage.setItem('sidebar-net-visibility', JSON.stringify(this.isVisible))
+      localStorage.setItem('sidebar-net-isVisible', this.isVisible)
+    },
+    setSearchMode() {
+      this.isSearchMode = !this.isSearchMode
+
+      localStorage.setItem('sidebar-net-isSearchMode', this.isSearchMode)
     },
     setMenu(name) {
       if (name === this.activeItem && ! this.minified) {
