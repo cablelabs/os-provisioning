@@ -76,15 +76,15 @@ Afterwards the NMS Prime RPM packages are replaced with the GIT repository by is
 
 ```bash
 for module in $(rpm -qa "nmsprime-*" | grep -v '^nmsprime-repos'); do rpm -e --justdb --noscripts --nodeps "$module"; done
-  
+
 yum install composer git
-  
+
 cd /var/www
 git clone https://github.com/cablelabs/os-provisioning nmsprimeGit
 mv nmsprimeGit/.git/ nmsprime/
 rm -rf nmsprimeGit/
 cd nmsprime
-  
+
 git checkout -- .
 
 # move enterprise apps into /root folder for reference, they are not needed for the community git version
