@@ -239,6 +239,31 @@ new Vue({
       console.log('leave')
       el.style.maxHeight = '0'
     },
+    searchForNetOrCluster(event) {
+      clearTimeout(this.searchTimeout)
+      localStorage.setItem('sidebar-net-search', this.clusterSearch)
+
+      this.searchTimeout = setTimeout(() => {
+        axios({
+            method: 'post',
+            url: "{{ route('NetElement.searchNetsClusters') }}",
+            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: {
+              query: this.clusterSearch
+            }
+        })
+        .then((response) => {
+            this.searchResults = response.data
+
+            localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
+        })
+        .catch((error) => {
+            this.$snotify.error(error.message)
+            this.init = true
+        })
+      }, 500)
+    }
   }
 })
 

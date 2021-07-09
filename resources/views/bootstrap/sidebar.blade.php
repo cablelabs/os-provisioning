@@ -106,19 +106,18 @@
       <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success">{{ trans('view.Menu_Nets') }}</div>
         <div class="d-flex">
-          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" v-on:click="isVisible = !isVisible"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
-          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-pencil"></i></div>
-          <div style="cursor:pointer;" class="text-success" v-on:click="isSearchMode = !isSearchMode"><i class="fa fa-search"></i></div>
+          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" v-on:click="setVisibility"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
+          <div style="cursor:pointer;" class="text-success" v-on:click="setSearchMode"><i class="fa fa-star"></i></div>
         </div>
       </li>
-      <div v-if="isSearchMode" class="my-1 d-flex align-items-center" style="padding:0.5rem 1.25rem;">
-        <input type="text" class="form-control position-relative" style="padding-right:2.5rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
-        <div class="position-absolute btn bg-transparent" type="button" style="right:20px;padding: 0 .5rem;"><i class="fa fa-arrow-circle-right m-0"></i></div>
+      <div v-if="isSearchMode" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;">
+        <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
+        <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
-      <div v-show="isVisible">
+      <template v-if="isVisible && ! isSearchMode">
         @if (auth()->user()->isAllNetsSidebarEnabled)
           <li id="network_overview" class="has-sub">
-            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;line-height: 20px;">
+            <div class="recolor sidebar-element">
               <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
                 <i class="fa fa-sitemap m-r-5"></i>
                 <span>{{ trans('view.Menu_allNets') }}</span>
@@ -128,14 +127,14 @@
         @endif
         @foreach ($networks as $network)
           <li id="network_{{$network->id}}" class="has-sub">
-            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
-              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" style="max-height: 20px; white-space: nowrap;">
+            <div class="recolor sidebar-element" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
+              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" class="caret-link" style="max-height: 20px; white-space: nowrap;">
                 <i class="fa fa-sitemap m-r-5"></i>
                 <span>{{$network->name}}</span>
               </a>
               {{-- @if($network->clusters->isNotEmpty()) --}}
                 <a class="caret-link" style="width: 100%; text-align: right;" href="javascript:;">
-                  <b class="caret fa-rotate-270"></b>
+                  <i class="fa fa-caret-right" style="transition:all .25s;"></i>
                 </a>
               {{-- @endif --}}
             </div>
@@ -152,10 +151,33 @@
             </ul>
           </li>
         @endforeach
-      </div>
-      <div id="searchresults">
-
-      </div>
+      </template>
+      <template v-if="isSearchMode" id="searchresults">
+        <template v-for="netelement in searchResults">
+          <li :id="'netelement_' + netelement.id" class="has-sub">
+            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
+              <a :href="'https://localhost:8080/admin/Tree/erd/net/' + netelement.id" style="max-height: 20px; white-space: nowrap;">
+                <i class="fa fa-star-o m-r-5"></i>
+                <span v-text="netelement.name"></span>
+              </a>
+              <a v-if="netelement.net && netelement.netelementtype_id == 1" style="width: 100%; text-align: right;" href="javascript:;" v-on:click="activeNetelement != netelement.name ? activeNetelement = netelement.name : 'null'">
+                <i class="fa fa-caret-right" :class="activeNetelement == netelement.name ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
+              </a>
+            </div>
+            {{-- <ul class="sub line" style="display: none;padding: 0;">
+              {{-- Network-Clusters are Cached for 5 minutes --}}
+              {{-- @foreach ($network->clusters as $cluster)
+                <li id="cluster_{{$cluster->id}}">
+                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
+                    <i class="fa fa-circle-thin text-info"></i>
+                    {{$cluster->name}}
+                  </a>
+                </li>
+              @endforeach
+            </ul> --}}
+          </li>
+        </template>
+      </template>
     @endif
     {{-- sidebar minify button --}}
     <li>
