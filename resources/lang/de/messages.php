@@ -770,4 +770,6 @@ return [
     'nativeApps'                => 'Native Apps',
     'nativeApps'                => 'Interne Apps',
     'externalApps'              => 'Externe Apps',
+    'delete_task'               => 'Lösche Aufgabe:',
+
 ];

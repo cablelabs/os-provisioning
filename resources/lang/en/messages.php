@@ -769,4 +769,5 @@ return [
     'error_restarting_daemon'   => 'Error restarting :0!',
     'nativeApps'                => 'Native apps',
     'externalApps'              => 'External apps',
+    'delete_task'               => 'Delete task:',
 ];

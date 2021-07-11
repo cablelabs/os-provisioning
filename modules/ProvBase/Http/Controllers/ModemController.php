@@ -296,15 +296,23 @@ class ModemController extends \BaseController
      */
     public static function genieTask($id)
     {
-        $task = Request::get('task');
-        if (json_decode($task) === null) {
-            Session::push('tmp_error_above_form', 'JSON decode failed');
+        if (! $modem = Modem::find($id)) {
+            Session::push('tmp_error_above_form', 'Modem not found');
 
             return \Redirect::back();
         }
 
-        if (! $modem = Modem::find($id)) {
-            Session::push('tmp_error_above_form', 'Modem not found');
+        $task = Request::get('task');
+
+        if (\Str::startsWith($task, 'tasks/')) {
+            $modem->callGenieAcsApi($task, 'DELETE');
+            Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
+
+            return \Redirect::back();
+        }
+
+        if (json_decode($task) === null) {
+            Session::push('tmp_error_above_form', 'JSON decode failed');
 
             return \Redirect::back();
         }

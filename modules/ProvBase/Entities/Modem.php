@@ -1928,6 +1928,18 @@ class Modem extends \BaseModel
             } else {
                 $configfile['text'] = [];
             }
+
+            $tasks = json_decode(Modem::callGenieAcsApi('tasks', 'GET'));
+
+            if ($tasks != []) {
+                foreach ($tasks as $key => $task) {
+                    if ($task->device != rawurlencode($this->serial_num)) {
+                        continue;
+                    }
+
+                    $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name '$task->objectName'";
+                }
+            }
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
