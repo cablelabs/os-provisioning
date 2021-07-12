@@ -58,8 +58,13 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@unfavorite',
     ]);
 
-    BaseRoute::post('Netelement/search', [
+    BaseRoute::post('Netelement/netclustersearch', [
         'as' => 'NetElement.searchNetsClusters',
         'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@searchForNetsAndClusters',
+    ]);
+
+    BaseRoute::post('Netelement/{netelement}/clustersearch', [
+        'as' => 'NetElement.searchNetsClusters',
+        'uses' => 'Modules\HfcReq\Http\Controllers\NetElementController@searchClusters',
     ]);
 });

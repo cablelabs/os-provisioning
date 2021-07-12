@@ -114,7 +114,7 @@
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
-      <template v-if="isVisible && ! isSearchMode">
+      <template v-if="isVisible">
         @if (auth()->user()->isAllNetsSidebarEnabled)
           <li id="network_overview" class="has-sub">
             <div class="recolor sidebar-element">
@@ -125,54 +125,34 @@
             </div>
           </li>
         @endif
-        <template v-for="netelement in netelements">
-          <li :id="'network_' + netelement.id" class="has-sub">
+        <template v-for="netelement in loopNetElements">
+          <li class="has-sub" :key="netelement.id">
             <div class="recolor sidebar-element" style="display: flex;padding: 0.5rem 1.25rem;">
               <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
                 <i class="fa fa-sitemap m-r-5"></i>
                 <span v-text="netelement.name"></span>
               </a>
-              <a v-if="netelement.netelementtype_id == 1" class="caret-link" style="width: 100%; text-align: right;" href="javascript:;">
-                <i class="fa fa-caret-right" style="transition:all .25s;"></i>
-              </a>
-            </div>
-            <ul class="sub-menu line sub-line" style="display: none;padding: 0;">
-              {{-- Network-Clusters are Cached for 5 minutes --}}
-             <template v-for="cluster in netelement.clusters">
-               <li :id="'cluster_' + cluster.id">
-                 <a :href="'https://localhost:8080/admin/Tree/erd/cluster/' + cluster.id" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                   <i class="fa fa-circle-thin text-info"></i>
-                   <span v-text="cluster.name"></span>
-                 </a>
-               </li>
-             </template>
-            </ul>
-          </li>
-        </template>
-      </template>
-      <template v-if="isSearchMode" id="searchresults">
-        <template v-for="netelement in searchResults">
-          <li :id="'netelement_' + netelement.id" class="has-sub">
-            <div class="recolor" style="display: flex;padding: 0.5rem 1.25rem;">
-              <div v-on:click="favorNetelement(netelement)" style="cursor:pointer;"><i class="fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'"></i></div>
-              <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
-                <span v-text="netelement.name"></span>
-              </a>
-              <div v-if="netelement.net && netelement.netelementtype_id == 1" style="width: 100%; text-align: right;" v-on:click="activeNetelement != netelement.name ? activeNetelement = netelement.name : 'null'">
-                <i class="fa fa-caret-right" :class="activeNetelement == netelement.name ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
+              <div v-if="netelement.netelementtype_id == 1" v-on:click="loadClusters(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
+                <i class="fa fa-caret-right" :class="{'fa-rotate-90': netelement.isCollapsed}" style="transition:all .25s;"></i>
               </div>
             </div>
-            {{-- <ul class="sub line" style="display: none;padding: 0;">
-              {{-- Network-Clusters are Cached for 5 minutes --}}
-              {{-- @foreach ($network->clusters as $cluster)
-                <li id="cluster_{{$cluster->id}}">
-                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                    <i class="fa fa-circle-thin text-info"></i>
-                    {{$cluster->name}}
-                  </a>
-                </li>
-              @endforeach
-            </ul> --}}
+            <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
+              <ul :id="'network_' + netelement.id" v-if="netelement.clustersLoaded && netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && netelement.clustersLoaded)}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;">
+                <template v-for="cluster in netelement.clusters" >
+                  <li :id="'cluster_' + cluster.id"
+                    :key="cluster.id"
+                    v-on:click="clickedNetelement = netelement.name"
+                    :class="{active: (clickedNetelement== netelement.name), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
+                    v-on:mouseEnter.stop="minified ? setNet(netelement) : ''"
+                    v-on:mouseLeave.stop="showMinifiedHoverMenu = false">
+                    <a :href="'https://localhost:8080/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
+                      <i class="fa fa-circle-thin text-info"></i>
+                      <span v-text="cluster.name"></span>
+                    </a>
+                  </li>
+                </template>
+              </ul>
+            </transition>
           </li>
         </template>
       </template>

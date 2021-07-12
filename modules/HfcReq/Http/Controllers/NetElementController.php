@@ -230,7 +230,17 @@ class NetElementController extends BaseController
             ->where('name', 'like', '%'.$request->get('query').'%')
             ->limit(25)
             ->orderBy('netelementtype_id', 'ASC')
-            ->get(['name', 'id', 'netelementtype_id', 'net'])
+            ->get(['name', 'id', 'netelementtype_id'])
+            ->toJson();
+    }
+
+    public function searchClusters($netId)
+    {
+        return NetElement::without('netelementtype')
+            ->where('netelementtype_id', array_search('Cluster', NetElementType::$undeletables))
+            ->where('net', $netId)
+            ->limit(25)
+            ->get(['name', 'id', 'netelementtype_id'])
             ->toJson();
     }
 }

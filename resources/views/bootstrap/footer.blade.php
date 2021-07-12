@@ -126,8 +126,18 @@ new Vue({
       searchResults: {},
       activeNetelement: 'null',
       clickedNetelement: 'null',
+      netelementIsCollapsed: true,
       netelements: @json($networks ?? new stdClass()),
       favorites: @json($favorites ?? new stdClass()),
+    }
+  },
+  computed: {
+    loopNetElements() {
+      if (this.isSearchMode) {
+        return this.searchResults
+      }
+
+      return this.netelements
     }
   },
   methods: {
@@ -139,6 +149,8 @@ new Vue({
       this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
+      this.activeNetelement = localStorage.getItem('sidebar-net')
+      this.clickedNetelement = localStorage.getItem('clicked-netelement')
       this.isCollapsed = false
     },
     handleMinify(e) {
@@ -202,6 +214,15 @@ new Vue({
       localStorage.setItem("sidebar-item", name)
       localStorage.setItem("clicked-item", name)
     },
+    setNet(netelement) {
+      if (this.minified) {
+        clearTimeout(this.leaveTimer)
+        this.showMinifiedHoverMenu = true
+      }
+
+      localStorage.setItem('sidebar-net', netelement.name)
+      localStorage.setItem('clicked-netelement', netelement.name)
+    },
     setSubMenu(name) {
       this.clickedItem = name
       localStorage.setItem("clicked-item", name)
@@ -221,10 +242,8 @@ new Vue({
     },
     beforeLeave(el) {
       el.style.maxHeight = el.scrollHeight + 'px'
-      el.classList.add('accordion-leave-active')
     },
     leave(el) {
-      el.classList.add('accordion-leave-active')
       el.style.maxHeight = '0'
     },
     afterLeave(el) {
@@ -237,7 +256,7 @@ new Vue({
       this.searchTimeout = setTimeout(() => {
         axios({
             method: 'post',
-            url: "{{ route('NetElement.searchNetsClusters') }}",
+            url: '/admin/Netelement/netclustersearch',
             headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: {
@@ -254,6 +273,46 @@ new Vue({
         })
       }, 500)
     },
+    loadClusters(netelement) {
+      this.toggleNet(netelement)
+
+      if (netelement.clustersLoaded) {
+        return
+      }
+
+      axios({
+        method: 'post',
+        url: '/admin/Netelement/' + netelement.id + '/clustersearch',
+        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      })
+      .then((response) => {
+        netelement.clustersLoaded = true
+
+        if (this.isSearchMode) {
+          this.searchResults[this.searchResults.findIndex(n => n.id === netelement.id)].clusters = response.data
+          return this.searchResults = jQuery.extend(true, {}, this.searchResults);
+        }
+
+        this.netelements[this.netelements.findIndex(n => n.id === netelement.id)].clusters = response.data
+        this.netelements = jQuery.extend(true, [], this.netelements)
+
+        let domElement = document.getElementById('network_' + netelement.id)
+        domElement.style.maxHeight = 0
+        domElement.style.maxHeight = 20 + response.data.length * 28.6 + 'px'
+        console.log(domElement.style.maxHeight)
+      })
+      .catch((error) => {
+          this.$snotify.error(error.message)
+      })
+    },
+    toggleNet(netelement) {
+      netelement.isCollapsed = ! netelement.isCollapsed
+
+      if (this.activeNetelement != netelement.name) {
+        this.activeNetelement = netelement.name
+      }
+    },
     favorNetelement(netelement) {
       axios({
         method: 'post',
@@ -263,8 +322,7 @@ new Vue({
       })
       .then(() => {
         if (this.favorites.includes(netelement.id)) {
-          this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
-          return
+          return this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
         }
 
         this.favorites.splice(this.favorites.length, 0, netelement.id)
