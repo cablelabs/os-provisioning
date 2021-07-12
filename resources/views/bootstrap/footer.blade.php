@@ -109,7 +109,6 @@ new Vue({
   },
   data() {
     return {
-      {{-- sidebarObject: @json($view_header_links), --}}
       {{-- route: '{{$route_name}}', --}}
       minified: null,
       leaveTimer: null,
@@ -127,6 +126,8 @@ new Vue({
       searchResults: {},
       activeNetelement: 'null',
       clickedNetelement: 'null',
+      netelements: @json($networks ?? new stdClass()),
+      favorites: @json($favorites ?? new stdClass()),
     }
   },
   methods: {
@@ -250,9 +251,27 @@ new Vue({
         })
         .catch((error) => {
             this.$snotify.error(error.message)
-            this.init = true
         })
       }, 500)
+    },
+    favorNetelement(netelement) {
+      axios({
+        method: 'post',
+        url: '/admin/Netelement/' + netelement.id + '/' + (this.favorites.includes(netelement.id) ? 'unfavorite' : 'favorite'),
+        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      })
+      .then(() => {
+        if (this.favorites.includes(netelement.id)) {
+          this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
+          return
+        }
+
+        this.favorites.splice(this.favorites.length, 0, netelement.id)
+      })
+      .catch((error) => {
+          this.$snotify.error(error.message)
+      })
     }
   }
 })

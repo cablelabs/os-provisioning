@@ -125,44 +125,42 @@
             </div>
           </li>
         @endif
-        @foreach ($networks as $network)
-          <li id="network_{{$network->id}}" class="has-sub">
-            <div class="recolor sidebar-element" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
-              <a href="{{ route('TreeErd.show', ['field' => 'net', 'search' => $network->id]) }}" class="caret-link" style="max-height: 20px; white-space: nowrap;">
+        <template v-for="netelement in netelements">
+          <li :id="'network_' + netelement.id" class="has-sub">
+            <div class="recolor sidebar-element" style="display: flex;padding: 0.5rem 1.25rem;">
+              <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
                 <i class="fa fa-sitemap m-r-5"></i>
-                <span>{{$network->name}}</span>
+                <span v-text="netelement.name"></span>
               </a>
-              {{-- @if($network->clusters->isNotEmpty()) --}}
-                <a class="caret-link" style="width: 100%; text-align: right;" href="javascript:;">
-                  <i class="fa fa-caret-right" style="transition:all .25s;"></i>
-                </a>
-              {{-- @endif --}}
+              <a v-if="netelement.netelementtype_id == 1" class="caret-link" style="width: 100%; text-align: right;" href="javascript:;">
+                <i class="fa fa-caret-right" style="transition:all .25s;"></i>
+              </a>
             </div>
             <ul class="sub-menu line sub-line" style="display: none;padding: 0;">
               {{-- Network-Clusters are Cached for 5 minutes --}}
-              {{-- @foreach ($network->clusters as $cluster)
-                <li id="cluster_{{$cluster->id}}">
-                  <a href="{{ route('TreeErd.show', ['field' => 'cluster', 'search' => $cluster->id]) }}" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
-                    <i class="fa fa-circle-thin text-info"></i>
-                    {{$cluster->name}}
-                  </a>
-                </li>
-              @endforeach --}}
+             <template v-for="cluster in netelement.clusters">
+               <li :id="'cluster_' + cluster.id">
+                 <a :href="'https://localhost:8080/admin/Tree/erd/cluster/' + cluster.id" style="width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">
+                   <i class="fa fa-circle-thin text-info"></i>
+                   <span v-text="cluster.name"></span>
+                 </a>
+               </li>
+             </template>
             </ul>
           </li>
-        @endforeach
+        </template>
       </template>
       <template v-if="isSearchMode" id="searchresults">
         <template v-for="netelement in searchResults">
           <li :id="'netelement_' + netelement.id" class="has-sub">
-            <div class="recolor" style="display: flex;justify-content:space-between;padding: 0.5rem 1.25rem;">
-              <a :href="'https://localhost:8080/admin/Tree/erd/net/' + netelement.id" style="max-height: 20px; white-space: nowrap;">
-                <i class="fa fa-star-o m-r-5"></i>
+            <div class="recolor" style="display: flex;padding: 0.5rem 1.25rem;">
+              <div v-on:click="favorNetelement(netelement)" style="cursor:pointer;"><i class="fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'"></i></div>
+              <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
                 <span v-text="netelement.name"></span>
               </a>
-              <a v-if="netelement.net && netelement.netelementtype_id == 1" style="width: 100%; text-align: right;" href="javascript:;" v-on:click="activeNetelement != netelement.name ? activeNetelement = netelement.name : 'null'">
+              <div v-if="netelement.net && netelement.netelementtype_id == 1" style="width: 100%; text-align: right;" v-on:click="activeNetelement != netelement.name ? activeNetelement = netelement.name : 'null'">
                 <i class="fa fa-caret-right" :class="activeNetelement == netelement.name ? 'fa-rotate-90' : ''" style="transition:all .25s;"></i>
-              </a>
+              </div>
             </div>
             {{-- <ul class="sub line" style="display: none;padding: 0;">
               {{-- Network-Clusters are Cached for 5 minutes --}}
