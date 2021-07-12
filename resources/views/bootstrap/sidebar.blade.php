@@ -104,13 +104,17 @@
 
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
-        <div class="text-success">{{ trans('view.Menu_Nets') }}</div>
-        <div class="d-flex">
-          <div v-if="! isSearchMode" style="cursor:pointer;" class="text-success p-r-10" v-on:click="setVisibility"><i class="fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'"></i></div>
-          <div style="cursor:pointer;" class="text-success" v-on:click="setSearchMode"><i class="fa fa-star"></i></div>
+        <div class="text-success" style="flex:1;">{{ trans('view.Menu_Nets') }}</div>
+        <div v-on:click.stop="setVisibility">
+          <i class="text-white m-r-10 fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
+        </div>
+        <div v-show="isVisible" class="d-flex align-items-center position-relative" :style="'cursor:pointer;background: #232a2f;border-radius: 9999px;width:3.25rem;height:1.35rem;transition: width .25s;' + (!isVisible ? 'opacity:0;width:0;' : '')" v-on:click="setSearchMode">
+          <div class="position-absolute" :style="'background: #8ec73a;border-radius: 9999px;width:1.2rem;height:1.2rem;transition: all .25s;' + ((isSearchMode) ? 'left:31.5px;' : 'left:2px;')"></div>
+          <div class="position-absolute" :style="((!isSearchMode) ? 'left:5px;color: #fff;' : 'left:5px;')"><i class="m-0 fa" :class="favorites.length ? 'fa-star' : 'fa-sitemap'"></i></div>
+          <div class="position-absolute" :style="'right:6px;' + ((isSearchMode) ? 'color: #fff;' : '')"><i class="m-0 fa fa-search"></i></div>
         </div>
       </li>
-      <div v-if="isSearchMode" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;">
+      <div v-if="isSearchMode && isVisible" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;">
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
@@ -128,12 +132,19 @@
         <template v-for="netelement in loopNetElements">
           <li class="has-sub" :key="netelement.id">
             <div class="recolor sidebar-element" style="display: flex;padding: 0.5rem 1.25rem;">
-              <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
+              <template v-if="isSearchMode" style="cursor: pointer;">
+                <i class="fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)" style="cursor: pointer;"></i>
+                <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
+                  <span v-text="netelement.name"></span>
+                </a>
+              </template>
+              <a v-else :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
                 <i class="fa fa-sitemap m-r-5"></i>
                 <span v-text="netelement.name"></span>
               </a>
               <div v-if="netelement.netelementtype_id == 1" v-on:click="loadClusters(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
-                <i class="fa fa-caret-right" :class="{'fa-rotate-90': netelement.isCollapsed}" style="transition:all .25s;"></i>
+                <i v-if="isLoading.includes(netelement.id)" class="fa fa-circle-o-notch fa-spin"></i>
+                <i v-else class="fa fa-caret-right" :class="{'fa-rotate-90': netelement.isCollapsed}" style="transition:all .25s;"></i>
               </div>
             </div>
             <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">

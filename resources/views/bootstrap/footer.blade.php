@@ -116,6 +116,7 @@ new Vue({
       isVisible: true,
       isSearchMode: false,
       isCollapsed: true,
+      isLoading: [],
       scrollheight: '50px',
       lastActive: 'null',
       lastClicked: 'null',
@@ -280,6 +281,8 @@ new Vue({
         return
       }
 
+      this.isLoading.splice(0, 0, netelement.id)
+
       axios({
         method: 'post',
         url: '/admin/Netelement/' + netelement.id + '/clustersearch',
@@ -288,7 +291,7 @@ new Vue({
       })
       .then((response) => {
         netelement.clustersLoaded = true
-
+        this.isLoading.splice(this.isLoading.indexOf(netelement.id), 1)
         if (this.isSearchMode) {
           this.searchResults[this.searchResults.findIndex(n => n.id === netelement.id)].clusters = response.data
           return this.searchResults = jQuery.extend(true, {}, this.searchResults);
@@ -297,10 +300,6 @@ new Vue({
         this.netelements[this.netelements.findIndex(n => n.id === netelement.id)].clusters = response.data
         this.netelements = jQuery.extend(true, [], this.netelements)
 
-        let domElement = document.getElementById('network_' + netelement.id)
-        domElement.style.maxHeight = 0
-        domElement.style.maxHeight = 20 + response.data.length * 28.6 + 'px'
-        console.log(domElement.style.maxHeight)
       })
       .catch((error) => {
           this.$snotify.error(error.message)
