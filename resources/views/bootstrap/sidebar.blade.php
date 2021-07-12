@@ -108,7 +108,7 @@
     @endforeach
 
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
-      <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
+      <li v-cloak v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success" style="flex:1;">{{ trans('view.Menu_Nets') }}</div>
         <div class="m-r-15" v-on:click.stop="setVisibility">
           <i class="text-white fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
@@ -119,7 +119,7 @@
           <div class="position-absolute" :style="'right:6px;' + ((isSearchMode) ? 'color: #fff;' : '')"><i class="m-0 fa fa-search"></i></div>
         </div>
       </li>
-      <div v-if="isSearchMode && isVisible" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;">
+      <div v-show="isSearchMode && isVisible" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;display:none;">
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
@@ -188,7 +188,7 @@
 {{-- end sidebar scrollbar --}}
 </div>
 {{-- end #sidebar --}}
-<div class="sidebar-bg d-print-none"></div>
+<div class="sidebar-bg d-print-none" style="transition: all .25s ease-in-out"></div>
 
 
 {{-- java script dynamic panel on right top side under tabs --}}

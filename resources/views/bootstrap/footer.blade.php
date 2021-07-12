@@ -168,21 +168,22 @@ new Vue({
 
       if (this.minified) {
         pageContainer.classList.remove('page-sidebar-minified')
-        generateSlimScroll(sidebar);
-
         $(sidebar).slimScroll({destroy: true})
-        sidebar.removeAttribute('style')
-        $(sidebar).trigger('mouseover');
       }
 
       if(! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $(sidebar).slimScroll({destroy: true})
-        sidebar.removeAttribute('style')
-        $(sidebar).trigger('mouseover');
       }
 
+      sidebar.style.transition = 'all .15s ease-in-out'
+      sidebar.style.width = this.minified ? '220px' : '60px'
       this.minified = ! this.minified
       this.netelements.forEach(n => n.isCollapsed = false)
+
+      if (this.isVisible && this.isSearchMode) {
+        this.setSearchMode()
+      }
+
       localStorage.setItem('minified-state', this.minified)
       $(window).trigger('resize');
     },
