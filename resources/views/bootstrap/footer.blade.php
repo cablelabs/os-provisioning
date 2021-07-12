@@ -113,11 +113,11 @@ new Vue({
       minified: null,
       leaveTimer: null,
       showMinifiedHoverMenu: false,
+      showMinifiedHoverNet: false,
       isVisible: true,
       isSearchMode: false,
       isCollapsed: true,
       isLoading: [],
-      scrollheight: '50px',
       lastActive: 'null',
       lastClicked: 'null',
       activeItem: 'null',
@@ -182,11 +182,37 @@ new Vue({
       }
 
       this.minified = ! this.minified
+      this.netelements.forEach(n => n.isCollapsed = false)
       localStorage.setItem('minified-state', this.minified)
       $(window).trigger('resize');
     },
-    leaveMinifiedSidebar() {
+    leaveMinifiedSidebar(netelement = 'null') {
+      if (netelement !== 'null') {
+        return this.leaveTimer = setTimeout(() => {
+          this.netelements.forEach(n => n.isCollapsed = false)
+          this.showMinifiedHoverNet = false
+        }, 250)
+      }
+
       this.leaveTimer = setTimeout(() => {this.showMinifiedHoverMenu = false; }, 250)
+    },
+    toggleNetMinified(netelement) {
+      clearTimeout(this.leaveTimer)
+      this.netelements.forEach((n) => n.isCollapsed = n.id == netelement.id)
+      this.showMinifiedHoverNet = true
+    },
+    minifiedSidebarNet(netelement, type) {
+      if (! this.minified) {
+        return;
+      }
+
+      if (type == 'enter') {
+        this.showMinifiedHoverNet = true
+        netelement.isCollapsed = true
+        return clearTimeout(this.leaveTimer)
+      }
+
+      this.leaveMinifiedSidebar(netelement)
     },
     setVisibility() {
       this.isVisible = !this.isVisible
@@ -214,15 +240,6 @@ new Vue({
 
       localStorage.setItem("sidebar-item", name)
       localStorage.setItem("clicked-item", name)
-    },
-    setNet(netelement) {
-      if (this.minified) {
-        clearTimeout(this.leaveTimer)
-        this.showMinifiedHoverMenu = true
-      }
-
-      localStorage.setItem('sidebar-net', netelement.name)
-      localStorage.setItem('clicked-netelement', netelement.name)
     },
     setSubMenu(name) {
       this.clickedItem = name
@@ -270,12 +287,17 @@ new Vue({
             localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
         })
         .catch((error) => {
+            console.log(error)
             this.$snotify.error(error.message)
         })
       }, 500)
     },
     loadClusters(netelement) {
-      this.toggleNet(netelement)
+      if (this.minified) {
+        this.toggleNetMinified(netelement)
+      } else {
+        netelement.isCollapsed = !netelement.isCollapsed
+      }
 
       if (netelement.clustersLoaded) {
         return
@@ -302,15 +324,9 @@ new Vue({
 
       })
       .catch((error) => {
+          console.log(error)
           this.$snotify.error(error.message)
       })
-    },
-    toggleNet(netelement) {
-      netelement.isCollapsed = ! netelement.isCollapsed
-
-      if (this.activeNetelement != netelement.name) {
-        this.activeNetelement = netelement.name
-      }
     },
     favorNetelement(netelement) {
       axios({
@@ -327,6 +343,7 @@ new Vue({
         this.favorites.splice(this.favorites.length, 0, netelement.id)
       })
       .catch((error) => {
+          console.log(error)
           this.$snotify.error(error.message)
       })
     }

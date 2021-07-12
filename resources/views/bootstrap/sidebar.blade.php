@@ -48,7 +48,7 @@
           <div class="recolor sidebar-element"
             v-on:click.stop="setMenu('{{ $moduleNameSlug }}')"
             v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
-            v-on:mouseLeave.stop="leaveMinifiedSidebar">
+            v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar : ''">
             <a class="caret-link"
               href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
@@ -69,7 +69,12 @@
           <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
             <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
             @foreach ($typearray['submenu'] as $type => $valuearray)
-            <li id="menu-{{ Str::slug($type,'_') }}" v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')" class="{{ $loop->first ? 'p-t-10' : ''}}" :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}" v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''" v-on:mouseLeave.stop="showMinifiedHoverMenu = false">
+            <li id="menu-{{ Str::slug($type,'_') }}"
+              class="{{ $loop->first ? 'p-t-10' : ''}}"
+              :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}"
+              v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')"
+              v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
+              v-on:mouseLeave.stop="minified ? showMinifiedHoverMenu = false : ''">
               <a href="{{ route($valuearray['link']) }}" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                 <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
                 <span>{{ $type }}</span>
@@ -105,10 +110,10 @@
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
       <li v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success" style="flex:1;">{{ trans('view.Menu_Nets') }}</div>
-        <div v-on:click.stop="setVisibility">
-          <i class="text-white m-r-10 fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
+        <div class="m-r-15" v-on:click.stop="setVisibility">
+          <i class="text-white fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
         </div>
-        <div v-show="isVisible" class="d-flex align-items-center position-relative" :style="'cursor:pointer;background: #232a2f;border-radius: 9999px;width:3.25rem;height:1.35rem;transition: width .25s;' + (!isVisible ? 'opacity:0;width:0;' : '')" v-on:click="setSearchMode">
+        <div class="d-flex align-items-center position-relative" :style="'cursor:pointer;background: #232a2f;border-radius: 9999px;width:3.25rem;height:1.35rem;transition: width .25s;' + (!isVisible ? 'opacity:0;width:0;' : '')" v-on:click="setSearchMode">
           <div class="position-absolute" :style="'background: #8ec73a;border-radius: 9999px;width:1.2rem;height:1.2rem;transition: all .25s;' + ((isSearchMode) ? 'left:31.5px;' : 'left:2px;')"></div>
           <div class="position-absolute" :style="((!isSearchMode) ? 'left:5px;color: #fff;' : 'left:5px;')"><i class="m-0 fa" :class="favorites.length ? 'fa-star' : 'fa-sitemap'"></i></div>
           <div class="position-absolute" :style="'right:6px;' + ((isSearchMode) ? 'color: #fff;' : '')"><i class="m-0 fa fa-search"></i></div>
@@ -131,10 +136,13 @@
         @endif
         <template v-for="netelement in loopNetElements">
           <li class="has-sub" :key="netelement.id">
-            <div class="recolor sidebar-element" style="display: flex;padding: 0.5rem 1.25rem;">
+            <div v-cloak class="recolor sidebar-element"
+              v-on:mouseEnter.stop="minified ? loadClusters(netelement) : ''"
+              v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
+              style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
-                <i class="fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)" style="cursor: pointer;"></i>
-                <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
+                <a href="javascript;"><i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i></a>
+                <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
                   <span v-text="netelement.name"></span>
                 </a>
               </template>
@@ -144,18 +152,18 @@
               </a>
               <div v-if="netelement.netelementtype_id == 1" v-on:click="loadClusters(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
                 <i v-if="isLoading.includes(netelement.id)" class="fa fa-circle-o-notch fa-spin"></i>
-                <i v-else class="fa fa-caret-right" :class="{'fa-rotate-90': netelement.isCollapsed}" style="transition:all .25s;"></i>
+                <i v-else class="fa fa-caret-right" :class="{'fa-rotate-90': netelement.isCollapsed && !minified}" style="transition:all .25s;"></i>
               </div>
             </div>
             <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
-              <ul :id="'network_' + netelement.id" v-if="netelement.clustersLoaded && netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && netelement.clustersLoaded)}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;">
+              <ul :id="'network_' + netelement.id" v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverNet && netelement.clustersLoaded)}" :style="(!minified ? 'transition:max-height .3s linear;' : '') + 'overflow:hidden;list-style-type: none;background: #1a2229;'">
                 <template v-for="cluster in netelement.clusters" >
                   <li :id="'cluster_' + cluster.id"
                     :key="cluster.id"
                     v-on:click="clickedNetelement = netelement.name"
                     :class="{active: (clickedNetelement== netelement.name), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
-                    v-on:mouseEnter.stop="minified ? setNet(netelement) : ''"
-                    v-on:mouseLeave.stop="showMinifiedHoverMenu = false">
+                    v-on:mouseEnter.stop="minified ? minifiedSidebarNet(netelement, 'enter') : ''"
+                    v-on:mouseLeave.stop="minified ? minifiedSidebarNet(netelement, 'leave') : ''">
                     <a :href="'https://localhost:8080/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                       <i class="fa fa-circle-thin text-info"></i>
                       <span v-text="cluster.name"></span>
