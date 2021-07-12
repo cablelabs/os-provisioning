@@ -288,7 +288,7 @@ new Vue({
             localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
         })
         .catch((error) => {
-            console.log(error)
+            console.error(error)
             this.$snotify.error(error.message)
         })
       }, 500)
@@ -325,7 +325,7 @@ new Vue({
 
       })
       .catch((error) => {
-          console.log(error)
+          console.error(error)
           this.$snotify.error(error.message)
       })
     },
