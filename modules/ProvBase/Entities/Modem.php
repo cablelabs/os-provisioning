@@ -1931,7 +1931,7 @@ class Modem extends \BaseModel
 
             $genieId = rawurlencode($this->getGenieAcsModel('_id'));
             foreach ((array) json_decode(self::callGenieAcsApi("tasks?query={\"device\":\"$genieId\"}", 'GET')) as $task) {
-                $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name '$task->objectName'";
+                $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name '$task->device'";
             }
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
