@@ -141,7 +141,7 @@
               v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
               style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
-                <a href="javascript;"><i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i></a>
+                <a href="javascript:;"><i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i></a>
                 <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
                   <span v-text="netelement.name"></span>
                 </a>
