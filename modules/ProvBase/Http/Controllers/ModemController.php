@@ -305,7 +305,7 @@ class ModemController extends \BaseController
         $task = Request::get('task');
 
         if (\Str::startsWith($task, 'tasks/')) {
-            $modem->callGenieAcsApi($task, 'DELETE');
+            Modem::callGenieAcsApi($task, 'DELETE');
             Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
             return \Redirect::back();
@@ -322,14 +322,14 @@ class ModemController extends \BaseController
 
         foreach (['factoryReset', 'reboot'] as $action) {
             if ($taskDecode === ['name' => $action] &&
-                json_decode($modem->callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
+                json_decode(Modem::callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
                 Session::push('tmp_info_above_form', $action.trans('messages.modemAnalysis.actionAlreadyScheduled'));
 
                 return \Redirect::back();
             }
         }
 
-        $modem->callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
+        Modem::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
         Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
         return \Redirect::back();
