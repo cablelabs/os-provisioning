@@ -178,6 +178,7 @@ new Vue({
       sidebar.style.transition = 'all .15s ease-in-out'
       sidebar.style.width = this.minified ? '220px' : '60px'
       this.minified = ! this.minified
+      this.showMinifiedHoverMenu = this.minified
       this.netelements.forEach(n => n.isCollapsed = false)
 
       if (this.isVisible && this.isSearchMode) {
