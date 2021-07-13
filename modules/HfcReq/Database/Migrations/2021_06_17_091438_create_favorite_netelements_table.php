@@ -33,9 +33,9 @@ class CreateFavoriteNetelementsTable extends BaseMigration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('netelement_id');
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('netelement_id');
             $table->timestamps();
 
             $table->index(['user_id', 'netelement_id']);
