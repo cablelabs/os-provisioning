@@ -7,6 +7,7 @@
 export COMPOSER_MEMORY_LIMIT=-1
 
 declare -a CMDS=(
+	"php artisan module:publish"
 	"git submodule update --init --recursive"
 	"mkdir -p /var/www/nmsprime/storage/framework/cache"
 	"mkdir -p /var/www/nmsprime/storage/framework/sessions"
@@ -14,10 +15,9 @@ declare -a CMDS=(
 	"chown -R apache /var/www/nmsprime/storage/framework"
 	"composer dump-autoload"
 	"composer update"
-	"php artisan route:clear"
-	"php artisan cache:clear"
-	"php artisan config:clear"
-	"php artisan view:clear"
+	"php artisan optimize:clear"
+	"php artisan migrate"
+	"php artisan module:migrate"
 	)
 
 clear
