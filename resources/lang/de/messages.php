@@ -258,7 +258,7 @@ return [
     'Headline 1'                => 'Überschrift Kopfzeile',
     'Headline 2'                => 'Überschrift Navigationsleiste',
     'M'                     => 'Monat|Monate',
-    'Mark solved'           => 'Als gelöst markeren?',
+    'Mark solved'           => 'Als gelöst markieren?',
     'missing_product'       => 'Fehlendes Produkt!',
     'modem_eventlog_error'  => 'Modem Eventlog nicht gefunden',
     'modem_force_restart_button_title' => 'Startet nur das Modem neu. Speichert keine geänderten Daten!',
