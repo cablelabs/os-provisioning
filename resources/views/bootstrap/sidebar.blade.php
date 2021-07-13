@@ -142,11 +142,11 @@
               style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
                 <a href="javascript;"><i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i></a>
-                <a :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
                   <span v-text="netelement.name"></span>
                 </a>
               </template>
-              <a v-else :href="'https://localhost:8080/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
+              <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
                 <i class="fa fa-sitemap m-r-5"></i>
                 <span v-text="netelement.name"></span>
               </a>
@@ -164,7 +164,7 @@
                     :class="{active: (clickedNetelement== netelement.name), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
                     v-on:mouseEnter.stop="minified ? minifiedSidebarNet(netelement, 'enter') : ''"
                     v-on:mouseLeave.stop="minified ? minifiedSidebarNet(netelement, 'leave') : ''">
-                    <a :href="'https://localhost:8080/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
+                    <a :href="'/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                       <i class="fa fa-circle-thin text-info"></i>
                       <span v-text="cluster.name"></span>
                     </a>
