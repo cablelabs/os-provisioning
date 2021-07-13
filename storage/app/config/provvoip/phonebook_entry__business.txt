@@ -3271,6 +3271,7 @@ Baubetriebsamt
 Baubetriebsberatung
 Baubetriebsingenieur
 Baubiologe
+Baubiologe (IBN)
 Baubiologin
 Baubiologische Beratung
 Baubiologische Gesundheitsberatung
@@ -11847,6 +11848,7 @@ Fliesenverlegeservice
 Fliesenverlegung
 Fliesenversiegelung
 Fliesenvertrieb
+Flohmarkt-Händler
 Flohmarktlädchen
 Flohmarktveranstalter
 Florist
@@ -14415,6 +14417,8 @@ Großhandel für Industriearmaturen
 Großhandel für Industriebedarf
 Großhandel für Isoliermaterialien
 Großhandel für Jagdbedarf
+Großhandel für Kaffee
+Großhandel für Kaffeemaschinen
 Großhandel für Kerzen
 Großhandel für Kinderbekleidung
 Großhandel für Kommunikationstechnik
@@ -30815,6 +30819,7 @@ Sachverständiger für Straßenverkehrsunfälle
 Sachverständiger für Tankanlagen
 Sachverständiger für Telekommunikation
 Sachverständiger für Teppiche
+Sachverständiger für Textil
 Sachverständiger für Theatertechnik
 Sachverständiger für Tiefbau
 Sachverständiger für Türen
@@ -31476,6 +31481,7 @@ Schlaf-Beatmungs-Zentrum
 Schlaflabor
 Schlafmöbelfachgeschäft
 Schlafmöbelverkauf
+Schlafplatzausstatter
 Schlafraumberatung
 Schlafsackladen
 Schlafzimmerfachgeschäft
@@ -32521,6 +32527,7 @@ Service für Autowaschanlagen
 Service für Boiler
 Service für elektronische Kirchenorgeln
 Service für elektronische Tasteninstrumente
+Service für Espressomaschinen
 Service für Feuerwehrbrandschutz
 Service für Förderbänder
 Service für graphische Maschinen
