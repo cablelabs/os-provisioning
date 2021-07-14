@@ -52,3 +52,9 @@
 [submodule "public/components/assets-admin/plugins/select2"]
 	path = public/components/assets-admin/plugins/select2
 	url = https://github.com/select2/select2
+[submodule "public/components/assets-admin/plugins/leaflet"]
+	path = public/components/assets-admin/plugins/leaflet
+	url = https://github.com/Leaflet/Leaflet.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/heatmap"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/heatmap
+	url = https://github.com/Leaflet/Leaflet.heat.git
