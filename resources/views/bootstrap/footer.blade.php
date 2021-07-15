@@ -307,7 +307,10 @@ new Vue({
         }
 
         this.netelements[this.netelements.findIndex(n => n.id === netelement.id)].clusters = response.data
-        this.netelements = jQuery.extend(true, [], this.netelements)
+
+        if (this.isLoading.length === 0) {
+          this.netelements = jQuery.extend(true, [], this.netelements)
+        }
       })
       .catch((error) => {
           console.error(error)
