@@ -323,9 +323,11 @@ new Vue({
       })
       .then(() => {
         if (this.favorites.includes(netelement.id)) {
+          this.netelements.splice(this.netelements.findIndex(n => n.id === netelement.id), 1)
           return this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
         }
 
+        this.netelements.splice(this.netelements.length, 0, netelement)
         this.favorites.splice(this.favorites.length, 0, netelement.id)
       })
       .catch((error) => {
