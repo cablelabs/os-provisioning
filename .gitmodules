@@ -58,3 +58,15 @@
 [submodule "public/components/assets-admin/plugins/leaflet-plugins/heatmap"]
 	path = public/components/assets-admin/plugins/leaflet-plugins/heatmap
 	url = https://github.com/Leaflet/Leaflet.heat.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/draw"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/draw
+	url = https://github.com/Leaflet/Leaflet.draw.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/toolbar"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/toolbar
+	url = https://github.com/Leaflet/Leaflet.toolbar.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/draw-toolbar"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/draw-toolbar
+	url = https://github.com/justinmanley/leaflet-draw-toolbar.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/edit"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/edit
+	url = https://github.com/Leaflet/Leaflet.Editable.git
