@@ -770,4 +770,5 @@ return [
     'nativeApps'                => 'Interne Apps',
     'externalApps'              => 'Externe Apps',
     'delete_task'               => 'Lösche Aufgabe:',
+    'refreshPage'               => 'Bitte Seite neu Laden, um die ersten 25 Netze anzuzeigen',
 ];

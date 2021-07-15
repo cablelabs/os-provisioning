@@ -111,7 +111,7 @@
       <li v-cloak v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success" style="flex:1;">{{ trans('view.Menu_Nets') }}</div>
         <div class="m-r-15" v-on:click.stop="setVisibility">
-          <i class="text-white fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
+          <i class="text-light fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
         </div>
         <div class="d-flex align-items-center position-relative" :style="'cursor:pointer;background: #232a2f;border-radius: 9999px;width:3.25rem;height:1.35rem;transition: width .25s;' + (!isVisible ? 'opacity:0;width:0;' : '')" v-on:click="setSearchMode">
           <div class="position-absolute" :style="'background: #8ec73a;border-radius: 9999px;width:1.2rem;height:1.2rem;transition: all .25s;' + ((isSearchMode) ? 'left:31.5px;' : 'left:2px;')"></div>
@@ -120,7 +120,7 @@
         </div>
       </li>
       <div v-show="isSearchMode && isVisible" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;display:none;">
-        <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="Search ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
+        <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="{{ trans('view.Search_EnterKeyword') }} ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
       <template v-if="isVisible">
@@ -141,13 +141,15 @@
               v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
               style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
-                <a href="javascript:;"><i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i></a>
+                <a href="javascript:;" >
+                  <i class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i>
+                </a>
                 <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
                   <span v-text="netelement.name"></span>
                 </a>
               </template>
               <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
-                <i class="fa fa-sitemap m-r-5"></i>
+                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click.prevent="!minified && netelement.hover ? favorNetelement(netelement) : ''" class="fa m-r-5" :class="netelement.hover ? (favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o') : 'fa-sitemap'"></i>
                 <span v-text="netelement.name"></span>
               </a>
               <div v-if="netelement.netelementtype_id == 1" v-on:click="loadClusters(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
@@ -174,6 +176,7 @@
             </transition>
           </li>
         </template>
+        <li v-if="Object.keys(loopNetElements).length === 0 && !isSearchMode && !minified" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.refreshPage')}}</li>
       </template>
     @endif
     {{-- sidebar minify button --}}

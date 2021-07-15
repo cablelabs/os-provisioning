@@ -87,13 +87,13 @@ new Vue({
   },
   data() {
     return {
-      {{-- route: '{{$route_name}}', --}}
       minified: null,
       leaveTimer: null,
       showMinifiedHoverMenu: false,
       showMinifiedHoverNet: false,
       isVisible: true,
       isSearchMode: false,
+      initialNE: true,
       isCollapsed: true,
       isLoading: [],
       lastActive: 'null',
@@ -131,6 +131,7 @@ new Vue({
       this.activeNetelement = localStorage.getItem('sidebar-net')
       this.clickedNetelement = localStorage.getItem('clicked-netelement')
       this.isCollapsed = false
+      this.initialNE = this.favorites.length === 0
     },
     handleMinify(e) {
       let sidebar = document.getElementById('sidebar')
@@ -307,7 +308,6 @@ new Vue({
 
         this.netelements[this.netelements.findIndex(n => n.id === netelement.id)].clusters = response.data
         this.netelements = jQuery.extend(true, [], this.netelements)
-
       })
       .catch((error) => {
           console.error(error)
@@ -323,17 +323,28 @@ new Vue({
       })
       .then(() => {
         if (this.favorites.includes(netelement.id)) {
-          this.netelements.splice(this.netelements.findIndex(n => n.id === netelement.id), 1)
+          this.netelements.splice(this.netelements.findIndex(n => !this.initialNE && n.id === netelement.id), 1)
           return this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
         }
 
-        this.netelements.splice(this.netelements.length, 0, netelement)
+        if (this.netelements.findIndex(n => n.id == netelement.id) === -1) {
+          this.netelements.splice(this.netelements.length, 0, netelement)
+        }
+
         this.favorites.splice(this.favorites.length, 0, netelement.id)
       })
       .catch((error) => {
           console.log(error)
           this.$snotify.error(error.message)
       })
+    },
+    setHover(netelement, state) {
+      if (this.minified) {
+        return
+      }
+
+      netelement.hover = state
+      this.netelements = jQuery.extend(true, [], this.netelements)
     }
   }
 })

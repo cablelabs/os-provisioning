@@ -770,4 +770,5 @@ return [
     'nativeApps'                => 'Native apps',
     'externalApps'              => 'External apps',
     'delete_task'               => 'Delete task:',
+    'refreshPage'               => 'Please reload the page to display the first 25 Nets',
 ];
