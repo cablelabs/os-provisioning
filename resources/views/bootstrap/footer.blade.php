@@ -179,6 +179,7 @@ new Vue({
       sidebar.style.width = this.minified ? '220px' : '60px'
       this.minified = ! this.minified
       this.showMinifiedHoverMenu = this.minified
+      this.isCollapsed = true
       this.netelements.forEach(n => n.isCollapsed = false)
 
       if (this.isVisible && this.isSearchMode) {
@@ -186,7 +187,12 @@ new Vue({
       }
 
       localStorage.setItem('minified-state', this.minified)
-      $(window).trigger('resize');
+      setTimeout(() => {
+        $(window).trigger('resize')
+        if ($('table.datatable').length && ! this.minified) {
+          $('table.datatable').DataTable().responsive.recalc()
+        }
+      }, 200)
     },
     leaveMinifiedSidebar(netelement = 'null') {
       if (netelement !== 'null') {

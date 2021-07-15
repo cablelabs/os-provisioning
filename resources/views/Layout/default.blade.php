@@ -30,7 +30,7 @@
         @include ('Layout.header')
         @include ('bootstrap.sidebar')
 
-        <div id="content" class="d-flex flex-column content p-t-15 p-b-0" style="flex:1;">
+        <div id="content" class="d-flex flex-column content p-t-15 p-b-0" style="flex:1;transition: all .15s">
             @if(session('GlobalNotification'))
                 @foreach (session('GlobalNotification') as $name => $options)
                     <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
