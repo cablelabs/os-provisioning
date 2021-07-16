@@ -181,7 +181,10 @@ new Vue({
         }, 250)
       }
 
-      this.leaveTimer = setTimeout(() => {this.showMinifiedHoverMenu = false; }, 250)
+      this.leaveTimer = setTimeout(() => {
+        this.showMinifiedHoverMenu = false
+        this.isCollapsed = true
+      }, 250)
     },
     toggleNetMinified(netelement) {
       clearTimeout(this.leaveTimer)
@@ -316,6 +319,14 @@ new Vue({
           console.error(error)
           this.$snotify.error(error.message)
       })
+    },
+    directFavor(netelement, event) {
+      if (this.minified || ! netelement.hover) {
+        return
+      }
+
+      event.preventDefault()
+      this.favorNetelement(netelement)
     },
     favorNetelement(netelement) {
       axios({

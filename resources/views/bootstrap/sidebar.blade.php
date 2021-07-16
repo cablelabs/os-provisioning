@@ -54,8 +54,8 @@
           style="z-index:10000;">
           <div class="recolor sidebar-element"
             v-on:click.stop="setMenu('{{ $moduleNameSlug }}')"
-            v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
-            v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar : ''">
+            v-on:mouseEnter="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
+            v-on:mouseLeave="minified ? leaveMinifiedSidebar() : ''">
             <a class="caret-link"
               href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
@@ -74,14 +74,14 @@
         {{-- SubMenu --}}
         @isset ($typearray['submenu'])
           <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
-            <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
+            <ul v-show="showSubMenu('{{ $moduleNameSlug }}')" class="sidebar-hover pl-0 p-b-10 m-0" :class="{'minifiedMenu': (showMinifiedHoverMenu && showSubMenu('{{ $moduleNameSlug }}', true))}" style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
             @foreach ($typearray['submenu'] as $type => $valuearray)
             <li id="menu-{{ Str::slug($type,'_') }}"
-              class="{{ $loop->first ? 'p-t-10' : ''}}"
+              class="p-l-20 {{ $loop->first ? 'p-t-10' : ''}}"
               :class="{active: (lastClicked == 'menu-{{ Str::slug($type,'_') }}')}"
               v-on:click="setSubMenu('menu-{{ Str::slug($type,'_') }}')"
               v-on:mouseEnter.stop="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
-              v-on:mouseLeave.stop="minified ? showMinifiedHoverMenu = false : ''">
+              v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar() : ''">
               <a href="{{ route($valuearray['link']) }}" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
                 <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
                 <span>{{ $type }}</span>
@@ -156,7 +156,7 @@
                 </a>
               </template>
               <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
-                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click.prevent="!minified && netelement.hover ? favorNetelement(netelement) : ''" class="fa m-r-5" :class="netelement.hover ? (favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o') : 'fa-sitemap'"></i>
+                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa m-r-5" :class="netelement.hover ? (favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o') : 'fa-sitemap'"></i>
                 <span v-text="netelement.name"></span>
               </a>
               <div v-if="netelement.netelementtype_id == 1" v-on:click="loadClusters(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
