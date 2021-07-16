@@ -137,6 +137,14 @@ class ContractController extends \BaseController
         $b2 = [
             ['form_type' => 'text', 'name' => 'fax', 'description' => 'Fax'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
+        ];
+
+        if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase') && $model->CccUser) {
+            $model->newsletter = $model->CccUser->newsletter;
+            $b2[] = ['form_type' => 'checkbox', 'name' => 'newsletter', 'description' => trans('messages.getNewsletter')];
+        }
+
+        $b3 = [
             ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
             ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
@@ -191,7 +199,7 @@ class ContractController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
-        return array_merge($a, $b1, $b2, $c, $d);
+        return array_merge($a, $b1, $b2, $b3, $c, $d);
     }
 
     /**

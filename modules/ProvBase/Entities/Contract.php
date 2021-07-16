@@ -39,7 +39,7 @@ class Contract extends \BaseModel
     private $changes_on_daily_conversion = false;
 
     // Via modems -> mtas -> phonenumbers assigned Phonenumbers shown as read-only info field in edit view
-    public $guarded = ['related_phonenrs'];
+    public $guarded = ['newsletter', 'related_phonenrs'];
 
     public const GROUNDS_FOR_DISMISSAL = ['unknown', 'relocation', 'unsatisfied', 'canceled by us', 'deceased'];
 

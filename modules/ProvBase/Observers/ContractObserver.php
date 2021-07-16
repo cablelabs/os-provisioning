@@ -124,6 +124,15 @@ class ContractObserver
         if (multi_array_key_exists(['realty_id', 'apartment_id'], $changed_fields)) {
             $contract->updateAddressFromProperty();
         }
+
+        if (Module::collections()->has('BillingBase') && Module::collections()->has('Ccc') && $contract->CccUser) {
+            $newsletter = \Request::get('newsletter') ?? false;
+
+            if (boolval($contract->CccUser->newsletter) != $newsletter) {
+                $contract->CccUser->newsletter = $newsletter;
+                $contract->CccUser->save();
+            }
+        }
     }
 
     public function deleting($contract)
