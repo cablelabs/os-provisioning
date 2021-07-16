@@ -95,7 +95,8 @@ new Vue({
       isSearchMode: false,
       initialNE: true,
       isCollapsed: true,
-      isLoading: [],
+      loadingClusters: [],
+      loadingFavorites: [],
       lastActive: 'null',
       lastClicked: 'null',
       activeItem: 'null',
@@ -128,10 +129,12 @@ new Vue({
       this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
-      this.activeNetelement = localStorage.getItem('sidebar-net')
+      this.activeNetelement = JSON.parse(localStorage.getItem('sidebar-net'))
       this.clickedNetelement = localStorage.getItem('clicked-netelement')
-      this.isCollapsed = false
       this.initialNE = this.favorites.length === 0
+      this.isCollapsed = false
+
+      this.netelements.forEach(n => n.isCollapsed = n.name !== this.activeNetelement)
     },
     handleMinify(e) {
       let sidebar = document.getElementById('sidebar')
@@ -159,7 +162,7 @@ new Vue({
       this.minified = ! this.minified
       this.showMinifiedHoverMenu = this.minified
       this.isCollapsed = true
-      this.netelements.forEach(n => n.isCollapsed = false)
+      this.netelements.forEach(n => n.isCollapsed = true)
 
       if (this.isVisible && this.isSearchMode) {
         this.setSearchMode()
@@ -176,7 +179,7 @@ new Vue({
     leaveMinifiedSidebar(netelement = 'null') {
       if (netelement !== 'null') {
         return this.leaveTimer = setTimeout(() => {
-          this.netelements.forEach(n => n.isCollapsed = false)
+          this.netelements.forEach(n => n.isCollapsed = true)
           this.showMinifiedHoverNet = false
         }, 250)
       }
@@ -188,7 +191,7 @@ new Vue({
     },
     toggleNetMinified(netelement) {
       clearTimeout(this.leaveTimer)
-      this.netelements.forEach((n) => n.isCollapsed = n.id == netelement.id)
+      this.netelements.forEach((n) => n.isCollapsed = n.id !== netelement.id)
       this.showMinifiedHoverNet = true
     },
     minifiedSidebarNet(netelement, type) {
@@ -198,7 +201,7 @@ new Vue({
 
       if (type == 'enter') {
         this.showMinifiedHoverNet = true
-        netelement.isCollapsed = true
+        netelement.isCollapsed = false
         return clearTimeout(this.leaveTimer)
       }
 
@@ -272,9 +275,10 @@ new Vue({
             }
         })
         .then((response) => {
-            this.searchResults = response.data
+          this.searchResults = response.data
+          this.searchResults.forEach(n => n.isCollapsed = true)
 
-            localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
+          localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
         })
         .catch((error) => {
             console.error(error)
@@ -282,18 +286,23 @@ new Vue({
         })
       }, 500)
     },
-    loadClusters(netelement) {
+    loadCluster(netelement) {
+      netelement.isCollapsed = !netelement.isCollapsed
+
       if (this.minified) {
         this.toggleNetMinified(netelement)
-      } else {
-        netelement.isCollapsed = !netelement.isCollapsed
+      }
+
+      localStorage.setItem('sidebar-net', JSON.stringify(netelement))
+      if(netelement.isCollapsed) {
+        localStorage.removeItem('sidebar-net')
       }
 
       if (netelement.clustersLoaded) {
         return
       }
 
-      this.isLoading.splice(0, 0, netelement.id)
+      this.loadingClusters.push(netelement.id)
 
       axios({
         method: 'post',
@@ -303,15 +312,16 @@ new Vue({
       })
       .then((response) => {
         netelement.clustersLoaded = true
-        this.isLoading.splice(this.isLoading.indexOf(netelement.id), 1)
+        this.loadingClusters.splice(this.loadingClusters.indexOf(netelement.id), 1)
         if (this.isSearchMode) {
           this.searchResults[this.searchResults.findIndex(n => n.id === netelement.id)].clusters = response.data
-          return this.searchResults = jQuery.extend(true, {}, this.searchResults);
+          this.searchResults = jQuery.extend(true, [], this.searchResults)
+          return localStorage.setItem('sidebar-net-searchResults', JSON.stringify(this.searchResults))
         }
 
         this.netelements[this.netelements.findIndex(n => n.id === netelement.id)].clusters = response.data
 
-        if (this.isLoading.length === 0) {
+        if (this.loadingClusters.length === 0) {
           this.netelements = jQuery.extend(true, [], this.netelements)
         }
       })
@@ -329,6 +339,8 @@ new Vue({
       this.favorNetelement(netelement)
     },
     favorNetelement(netelement) {
+      this.loadingFavorites.push(netelement.id)
+
       axios({
         method: 'post',
         url: '/admin/Netelement/' + netelement.id + '/' + (this.favorites.includes(netelement.id) ? 'unfavorite' : 'favorite'),
@@ -336,16 +348,23 @@ new Vue({
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
       })
       .then(() => {
+        this.loadingFavorites.splice(this.loadingFavorites.indexOf(netelement.id), 1)
+
         if (this.favorites.includes(netelement.id)) {
           this.netelements.splice(this.netelements.findIndex(n => !this.initialNE && n.id === netelement.id), 1)
           return this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
         }
 
         if (this.netelements.findIndex(n => n.id == netelement.id) === -1) {
-          this.netelements.splice(this.netelements.length, 0, netelement)
+          this.netelements.push(netelement)
+          this.netelements.sort((a, b) => a.id > b.id)
         }
 
-        this.favorites.splice(this.favorites.length, 0, netelement.id)
+        if (this.loadingFavorites.length === 0) {
+          this.netelements = jQuery.extend(true, [], this.netelements)
+        }
+
+        this.favorites.push(netelement.id)
       })
       .catch((error) => {
           console.log(error)
