@@ -104,8 +104,8 @@ new Vue({
       searchTimeout: null,
       clusterSearch: '',
       searchResults: {},
-      activeNetelement: 'null',
-      clickedNetelement: 'null',
+      activeNetelement: null,
+      clickedNetelement: null,
       netelementIsCollapsed: true,
       netelements: @json($networks ?? new stdClass()),
       favorites: @json($favorites ?? new stdClass()),
@@ -122,6 +122,7 @@ new Vue({
   },
   methods: {
     initSidebar() {
+      this.initialNE = this.favorites.length === 0
       this.minified = localStorage.getItem('minified-state') === 'true'
       this.isVisible = localStorage.getItem('sidebar-net-isVisible') === 'true'
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
@@ -129,12 +130,18 @@ new Vue({
       this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
-      this.activeNetelement = JSON.parse(localStorage.getItem('sidebar-net'))
-      this.clickedNetelement = localStorage.getItem('clicked-netelement')
-      this.initialNE = this.favorites.length === 0
+      this.activeNetelement = localStorage.getItem('sidebar-net')
+      this.clickedNetelement = this.activeNetelement ? localStorage.getItem('clicked-netelement') : null
+
       this.isCollapsed = false
 
-      this.netelements.forEach(n => n.isCollapsed = n.name !== this.activeNetelement)
+      this.netelements.forEach(n => {
+        n.isCollapsed = true
+
+        if (this.activeNetelement &&  this.clickedNetelement && n.id == this.activeNetelement) {
+          this.loadCluster(n)
+        }
+      })
     },
     handleMinify(e) {
       let sidebar = document.getElementById('sidebar')
@@ -293,7 +300,7 @@ new Vue({
         this.toggleNetMinified(netelement)
       }
 
-      localStorage.setItem('sidebar-net', JSON.stringify(netelement))
+      localStorage.setItem('sidebar-net', netelement.id)
       if(netelement.isCollapsed) {
         localStorage.removeItem('sidebar-net')
       }
@@ -352,7 +359,14 @@ new Vue({
 
         if (this.favorites.includes(netelement.id)) {
           this.netelements.splice(this.netelements.findIndex(n => !this.initialNE && n.id === netelement.id), 1)
-          return this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
+          this.favorites.splice(this.favorites.indexOf(netelement.id), 1)
+
+          if (this.activeNetelement = netelement.id) {
+            localStorage.removeItem('sidebar-net')
+            localStorage.removeItem('clicked-netelement')
+          }
+
+          return
         }
 
         if (this.netelements.findIndex(n => n.id == netelement.id) === -1) {
@@ -378,6 +392,9 @@ new Vue({
 
       netelement.hover = state
       this.netelements = jQuery.extend(true, [], this.netelements)
+    },
+    setNetActive(id) {
+      localStorage.setItem('clicked-netelement', id)
     }
   }
 })

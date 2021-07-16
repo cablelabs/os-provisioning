@@ -151,26 +151,26 @@
                   <i v-if="loadingFavorites.includes(netelement.id)" class="caret-link fa fa-circle-o-notch fa-spin m-r-5"></i>
                   <i v-else class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i>
                 </a>
-                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;">
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;" v-on:click="setNetActive(netelement.id)">
                   <span v-text="netelement.name"></span>
                 </a>
               </template>
-              <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;">
+              <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;" v-on:click="setNetActive(netelement.id)">
                 <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa m-r-5" :class="netelement.hover ? (favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o') : 'fa-sitemap'"></i>
                 <span v-text="netelement.name"></span>
               </a>
-              <div v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
+              <a href="javascript:;" v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
                 <i v-if="loadingClusters.includes(netelement.id)" class="fa fa-circle-o-notch fa-spin"></i>
                 <i v-else class="fa fa-caret-right" :class="{'fa-rotate-90': !netelement.isCollapsed && !minified}" style="transition:all .25s;"></i>
-              </div>
+              </a>
             </div>
             <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
               <ul :id="'network_' + netelement.id" v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && !netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverNet && netelement.clustersLoaded)}" :style="(!minified ? 'transition:max-height .3s linear;' : '') + 'overflow:hidden;list-style-type: none;background: #1a2229;'">
                 <template v-for="cluster in netelement.clusters" >
                   <li :id="'cluster_' + cluster.id"
                     :key="cluster.id"
-                    v-on:click="clickedNetelement = cluster.name"
-                    :class="{active: (clickedNetelement== cluster.name), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
+                    v-on:click="setNetActive(cluster.id)"
+                    :class="{active: (clickedNetelement== cluster.id), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
                     v-on:mouseEnter.stop="minified ? minifiedSidebarNet(netelement, 'enter') : ''"
                     v-on:mouseLeave.stop="minified ? minifiedSidebarNet(netelement, 'leave') : ''">
                     <a :href="'/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
