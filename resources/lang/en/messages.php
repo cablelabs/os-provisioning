@@ -255,7 +255,7 @@ return [
     'Not allowed to acces this user' => 'Not allowed to acces this user',
     'log_out'               => 'Log Out',
     'System Log Level'          => 'System Log Level',
-    'Headline 1'                => 'Headline 1',
+    'isAllNetsSidebarEnabled'   => 'Show \'All Nets\'-link in sidebar',
     'Headline 2'                => 'Headline 2',
     'M'                     => 'month|months',
     'Mark solved'           => 'Mark as solved?',

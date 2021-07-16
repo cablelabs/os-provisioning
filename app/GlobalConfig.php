@@ -33,6 +33,15 @@ class GlobalConfig extends BaseModel
         ];
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::updated(function () {
+            cache()->forget('GlobalConfig');
+        });
+    }
+
     // Name of View
     public static function view_headline()
     {
@@ -62,15 +71,27 @@ class GlobalConfig extends BaseModel
      */
     public function version()
     {
-        $version = exec("rpm -q nmsprime-base --queryformat '%{version}'");
-        if (preg_match('/not installed/', $version)) {
-            $branch = exec('cd '.app_path().' && git rev-parse --abbrev-ref HEAD');
-            $commit = exec('cd '.app_path().' && git rev-parse --short HEAD');
-            $github = 'https://github.com/nmsprime/nmsprime/commits/'.exec('cd '.app_path().' && git rev-parse HEAD');
-
-            $version = '<b>GIT</b>: '.$branch.' - '.'<a target=_blank class="text-success" href='.$github.'>'.$commit.'</a>';
+        if (! cache()->has('installType')) {
+            $version = exec("rpm -q nmsprime-base --queryformat '%{version}'");
+            cache(['installType' => preg_match('/not installed/', $version) ? 'git' : $version]);
         }
 
-        return $version;
+        if (($type = cache('installType')) !== 'git') {
+            return  $type;
+        }
+
+        if (cache('gitStats', optional([]))['commitShort'] === exec('cd '.app_path().' && git rev-parse --short HEAD')) {
+            return cache('gitStats');
+        }
+
+        $gitStats = [
+            'branch' => exec('cd '.app_path().' && git rev-parse --abbrev-ref HEAD'),
+            'commitShort' => exec('cd '.app_path().' && git rev-parse --short HEAD'),
+            'commitLong' => exec('cd '.app_path().' && git rev-parse HEAD'),
+            'repo' => exec('cd '.app_path()." && git config --get remote.origin.url | sed -r 's/.*(\\@|\\/\\/)(.*)(\\:|\\/)([^:\\/]*)\\/([^\\/\\.]*)\\.git/https:\\/\\/\\2\\/\\4\\/\\5/' | sed 's/.*\\/\\([^ ]*\\/[^.]*\\).*/\\1/'"),
+        ];
+        cache(compact('gitStats'));
+
+        return $gitStats;
     }
 }

@@ -18,10 +18,11 @@
 
 namespace App\Http\Controllers;
 
-use Str;
-use Module;
-use Bouncer;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\View;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class GlobalConfigController extends BaseController
 {
@@ -32,7 +33,7 @@ class GlobalConfigController extends BaseController
      */
     public function view_form_fields($model = null)
     {
-        return [
+        $ret = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'ISP Name'],
             ['form_type' => 'text', 'name' => 'street', 'description' => 'Street'],
             ['form_type' => 'text', 'name' => 'city', 'description' => 'City'],
@@ -40,13 +41,19 @@ class GlobalConfigController extends BaseController
             ['form_type' => 'text', 'name' => 'mail', 'description' => 'E-Mail Address'],
             ['form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1],
             ['form_type' => 'text', 'name' => 'passwordResetInterval', 'description' => 'Password Reset Interval', 'help' => trans('helper.PasswordReset')],
-            ['form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'],
             ['form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'],
             ['form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')],
             ['form_type' => 'text', 'name' => 'alert1', 'description' => trans('view.Global notification').' - '.trans('view.info')],
             ['form_type' => 'text', 'name' => 'alert2', 'description' => trans('view.Global notification').' - '.trans('view.warning')],
             ['form_type' => 'text', 'name' => 'alert3', 'description' => trans('view.Global notification').' - '.trans('view.critical')],
+            ['form_type' => 'text', 'name' => 'alert3', 'description' => trans('view.Global notification').' - '.trans('view.critical')],
         ];
+
+        if (Module::collections()->has('HfcBase')) {
+            $ret[] = ['form_type' => 'checkbox', 'name' => 'isAllNetsSidebarEnabled', 'description' => 'isAllNetsSidebarEnabled'];
+        }
+
+        return $ret;
     }
 
     /**
@@ -122,6 +129,6 @@ class GlobalConfigController extends BaseController
             $form_fields[$key] = BaseViewController::add_html_string($fields[$key], 'edit');
         }
 
-        return \View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'moduleModels', 'form_fields')));
+        return View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'moduleModels', 'form_fields')));
     }
 }

@@ -537,12 +537,10 @@ class BaseController extends Controller
         $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
 
         // Get Framework Informations
-        $gc = Cache::remember('GlobalConfig', now()->addHour(), function () {
+        $a['globalConfig'] = Cache::rememberForever('GlobalConfig', function () {
             return GlobalConfig::first();
         });
-        $a['framework']['header1'] = $gc->headline1;
-        $a['framework']['header2'] = $gc->headline2;
-        $a['framework']['version'] = $gc->version();
+        $a['version'] = $a['globalConfig']->version();
 
         return $a;
     }

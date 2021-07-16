@@ -27,7 +27,7 @@
 <body {{ isset($body_onload) ? "onload=$body_onload()" : ""}}>
 
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
-        @include ('Layout.header')
+        @include ('bootstrap.menu')
         @include ('bootstrap.sidebar')
 
         <div id="content" class="d-flex flex-column content p-t-15 p-b-0" style="flex:1;transition: all .15s">

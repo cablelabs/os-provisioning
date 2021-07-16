@@ -24,8 +24,15 @@
     <ul class="nav">
       <li class="nav-profile">
         <div class="info">
-          {!! $framework['header2'] !!}
-          <small>Version {!! $framework['version'] !!}</small>
+          {{ $globalConfig->headline2 }}
+          <small>Version
+            @if (is_string($version))
+              {{ $version }}
+            @else
+              <b>GIT</b>: <a target="_blank" class="text-success" href="https://github.com/{{ $version['repo'] }}/tree/{{ $version['branch'] }}">{{ $version['branch'] }}</a> -
+              <a target="_blank" class="text-success" href="https://github.com/{{ $version['repo'] }}/commit/{{ $version['commitLong'] }}">{{ $version['commitShort'] }}</a>
+            @endif
+          </small>
         </div>
       </li>
     </ul>
@@ -124,7 +131,7 @@
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
       <template v-if="isVisible">
-        @if (auth()->user()->isAllNetsSidebarEnabled)
+        @if ($globalConfig->isAllNetsSidebarEnabled)
           <li id="network_overview" class="has-sub">
             <div class="recolor sidebar-element">
               <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">

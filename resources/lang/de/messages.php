@@ -255,7 +255,7 @@ return [
     'Not allowed to acces this user' => 'Zugriff auf diesen Nutzer ist nicht gestattet',
     'log_out'               => 'Ausloggen',
     'System Log Level'          => 'System Logging Stufe',
-    'Headline 1'                => 'Überschrift Kopfzeile',
+    'isAllNetsSidebarEnabled'   => 'Zeige \'Alle Netze\'-Link in Sidebar',
     'Headline 2'                => 'Überschrift Navigationsleiste',
     'M'                     => 'Monat|Monate',
     'Mark solved'           => 'Als gelöst markieren?',
