@@ -88,31 +88,30 @@ new Vue({
   data() {
     return {
       minified: null,
-      leaveTimer: null,
+      leaveTimer: null, // timer for leave and enter minified menu
       showMinifiedHoverMenu: false,
       showMinifiedHoverNet: false,
-      isVisible: true,
+      isVisible: true, // show nets?
       isSearchMode: false,
-      initialNE: true,
-      isCollapsed: true,
-      loadingClusters: [],
-      loadingFavorites: [],
+      initialNE: true, // first 25 Nets - default
+      isCollapsed: true, // show submenu: ul is extended (also for minified)
+      loadingClusters: [], // loading circle for clusters
+      loadingFavorites: [], // loading circle for favoriting
       lastActive: 'null',
       lastClicked: 'null',
       activeItem: 'null',
       clickedItem: 'null',
-      searchTimeout: null,
-      clusterSearch: '',
+      searchTimeout: null, // debounce for search (500ms)
+      clusterSearch: '', // v-model for search
       searchResults: {},
       activeNetelement: null,
       clickedNetelement: null,
-      netelementIsCollapsed: true,
       netelements: @json($networks ?? new stdClass()),
       favorites: @json($favorites ?? new stdClass()),
     }
   },
   computed: {
-    loopNetElements() {
+    loopNetElements() { // variable to hold nets of either search or favorites
       if (this.isSearchMode) {
         return this.searchResults
       }
@@ -123,18 +122,25 @@ new Vue({
   methods: {
     initSidebar() {
       this.initialNE = this.favorites.length === 0
+
+      // load minified state
       this.minified = localStorage.getItem('minified-state') === 'true'
+      // load state of Net toggle
       this.isVisible = localStorage.getItem('sidebar-net-isVisible') === 'true'
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
+
+      // load cached search term and results
       this.clusterSearch = localStorage.getItem('sidebar-net-search')
       this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
+
+      // init Sidebar active/clicked elements
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
       this.lastClicked = this.clickedItem = localStorage.getItem('clicked-item')
       this.activeNetelement = localStorage.getItem('sidebar-net')
       this.clickedNetelement = this.activeNetelement ? localStorage.getItem('clicked-netelement') : null
 
+      // init collapse
       this.isCollapsed = false
-
       this.netelements.forEach(n => {
         n.isCollapsed = true
 
@@ -143,6 +149,10 @@ new Vue({
         }
       })
     },
+    /**
+    * Handles the Click on the minify button. A lot of the logic copied from
+    * color admin due to conflicts.
+    */
     handleMinify(e) {
       let sidebar = document.getElementById('sidebar')
       let pageContainer = document.getElementById('page-container')
@@ -178,11 +188,14 @@ new Vue({
       localStorage.setItem('minified-state', this.minified)
       setTimeout(() => {
         $(window).trigger('resize')
-        if ($('table.datatable').length && ! this.minified) {
+        if ($('table.datatable').length && ! this.minified) { // resize datatables after animation
           $('table.datatable').DataTable().responsive.recalc()
         }
       }, 200)
     },
+    /**
+    * Handles the mouse leave of the minified menu for net and main menu.
+    */
     leaveMinifiedSidebar(netelement = 'null') {
       if (netelement !== 'null') {
         return this.leaveTimer = setTimeout(() => {
@@ -196,11 +209,18 @@ new Vue({
         this.isCollapsed = true
       }, 250)
     },
+    /**
+    * Collapse all nets except the selected one. assuers that only one submenu
+    * is visible to the user.
+    */
     toggleNetMinified(netelement) {
       clearTimeout(this.leaveTimer)
       this.netelements.forEach((n) => n.isCollapsed = n.id !== netelement.id)
       this.showMinifiedHoverNet = true
     },
+    /**
+    * Handles the enter and leave of the minified net menu
+    */
     minifiedSidebarNet(netelement, type) {
       if (! this.minified) {
         return;
@@ -224,6 +244,9 @@ new Vue({
 
       localStorage.setItem('sidebar-net-isSearchMode', this.isSearchMode)
     },
+    /**
+    * Handles the Collapse and expand logic of the main menu (also for minified)
+    */
     setMenu(name) {
       if (name === this.activeItem && ! this.minified) {
         return this.isCollapsed = ! this.isCollapsed
@@ -252,6 +275,9 @@ new Vue({
 
       return this.activeItem == name && ! this.isCollapsed
     },
+    /**
+    * The following methods handle the accordion animation
+    */
     beforeEnter(el) {
       el.style.maxHeight = '0'
     },
@@ -267,6 +293,9 @@ new Vue({
     afterLeave(el) {
       el.style.maxHeight = 1000 + 'px'
     },
+    /**
+    * Ajax Request for Search from Input. (isSearchMode: true)
+    */
     searchForNetOrCluster(event) {
       clearTimeout(this.searchTimeout)
       localStorage.setItem('sidebar-net-search', this.clusterSearch)
@@ -293,6 +322,9 @@ new Vue({
         })
       }, 500)
     },
+    /**
+    * Lazy load Clusters via AJAX and also handles expand/collapse Logic
+    */
     loadCluster(netelement) {
       netelement.isCollapsed = !netelement.isCollapsed
 
@@ -322,7 +354,7 @@ new Vue({
         this.loadingClusters.splice(this.loadingClusters.indexOf(netelement.id), 1)
         if (this.isSearchMode) {
           this.searchResults[this.searchResults.findIndex(n => n.id === netelement.id)].clusters = response.data
-          this.searchResults = jQuery.extend(true, [], this.searchResults)
+          this.searchResults = jQuery.extend(true, [], this.searchResults) // Object deep Copy is necessary to detect changes
           return localStorage.setItem('sidebar-net-searchResults', JSON.stringify(this.searchResults))
         }
 
@@ -337,6 +369,9 @@ new Vue({
           this.$snotify.error(error.message)
       })
     },
+    /**
+    * Helper function to simplify favor action
+    */
     directFavor(netelement, event) {
       if (this.minified || ! netelement.hover) {
         return
