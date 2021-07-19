@@ -256,7 +256,7 @@ return [
     'log_out'               => 'Log Out',
     'System Log Level'          => 'System Log Level',
     'isAllNetsSidebarEnabled'   => 'Show \'All Nets\'-link in sidebar',
-    'Headline'                  => 'Headline Navbar',
+    'Headline 2'                => 'Headline 2',
     'M'                     => 'month|months',
     'Mark solved'           => 'Mark as solved?',
     'missing_product'       => 'Missing Product!',

@@ -17,7 +17,6 @@ class RemoveHeadlineFromGlobalConfigTable extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn('headline1');
-            $table->renameColumn('headline2', 'headline');
             $table->boolean('isAllNetsSidebarEnabled')->default(false);
         });
     }
@@ -31,7 +30,6 @@ class RemoveHeadlineFromGlobalConfigTable extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->string('headline1');
-            $table->renameColumn('headline', 'headline2');
             $table->dropColumn('isAllNetsSidebarEnabled');
         });
     }

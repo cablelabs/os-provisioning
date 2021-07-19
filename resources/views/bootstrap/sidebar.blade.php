@@ -24,7 +24,7 @@
     <ul class="nav">
       <li class="nav-profile">
         <div class="info">
-          {{ $globalConfig->headline }}
+          {{ $globalConfig->headline2 }}
           <small>Version
             @if (is_string($version))
               {{ $version }}

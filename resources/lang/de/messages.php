@@ -256,7 +256,7 @@ return [
     'log_out'               => 'Ausloggen',
     'System Log Level'          => 'System Logging Stufe',
     'isAllNetsSidebarEnabled'   => 'Zeige \'Alle Netze\'-Link in Sidebar',
-    'Headline'                  => 'Überschrift Navigationsleiste',
+    'Headline 2'                => 'Überschrift Navigationsleiste',
     'M'                     => 'Monat|Monate',
     'Mark solved'           => 'Als gelöst markieren?',
     'missing_product'       => 'Fehlendes Produkt!',
