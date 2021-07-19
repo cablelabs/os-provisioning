@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class RemoveHeadlineFromGlobalConfigTable extends BaseMigration
+class AddAllNetsSidebarSwitchToGlobalConfigTable extends BaseMigration
 {
     public $tableName = 'global_config';
     public $migrationScope = 'database';
@@ -16,7 +16,6 @@ class RemoveHeadlineFromGlobalConfigTable extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn('headline1');
             $table->boolean('isAllNetsSidebarEnabled')->default(false);
         });
     }
@@ -29,7 +28,6 @@ class RemoveHeadlineFromGlobalConfigTable extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('headline1');
             $table->dropColumn('isAllNetsSidebarEnabled');
         });
     }
