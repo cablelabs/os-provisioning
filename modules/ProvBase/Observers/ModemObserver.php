@@ -156,6 +156,8 @@ class ModemObserver
             $modem->deleteGenieAcsProvision();
             $modem->deleteGenieAcsPreset();
             $modem->factoryReset();
+            $modem->deleteGenieAcsDevice();
+            $modem->deleteGenieAcsTasks();
         }
 
         $modem->updateRadius();

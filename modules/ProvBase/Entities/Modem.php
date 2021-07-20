@@ -1097,6 +1097,19 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Get all GenieACS tasks for this device.
+     *
+     * @author Roy Schneider
+     * @return string
+     */
+    public function getGenieAcsTasks()
+    {
+        $genieId = rawurlencode($this->getGenieAcsModel('_id'));
+
+        return self::callGenieAcsApi("tasks?query={\"device\":\"$genieId\"}", 'GET');
+    }
+
+    /**
      * Delete GenieACS presets.
      *
      * @author Roy Schneider
@@ -1115,6 +1128,29 @@ class Modem extends \BaseModel
     public function deleteGenieAcsProvision()
     {
         self::callGenieAcsApi("provisions/prov-$this->id", 'DELETE');
+    }
+
+    /**
+     * Delete GenieACS device.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsDevice()
+    {
+        $genieId = rawurlencode($this->getGenieAcsModel('_id'));
+        self::callGenieAcsApi("devices/$genieId", 'DELETE');
+    }
+
+    /**
+     * Delete all GenieACS tasks for this device.
+     *
+     * @author Roy Schneider
+     */
+    public function deleteGenieAcsTasks()
+    {
+        foreach ((array) json_decode($this->getGenieAcsTasks()) as $task) {
+            self::callGenieAcsApi("tasks/$task->_id", 'DELETE');
+        }
     }
 
     /**
@@ -1944,9 +1980,8 @@ class Modem extends \BaseModel
                 $configfile['text'] = [];
             }
 
-            $genieId = rawurlencode($this->getGenieAcsModel('_id'));
-            foreach ((array) json_decode(self::callGenieAcsApi("tasks?query={\"device\":\"$genieId\"}", 'GET')) as $task) {
-                $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name '$task->device'";
+            foreach ((array) json_decode($this->getGenieAcsTasks()) as $task) {
+                $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name $task->device";
             }
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
