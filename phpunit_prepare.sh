@@ -18,6 +18,9 @@ declare -a CMDS=(
 	"php artisan optimize:clear"
 	"php artisan migrate"
 	"php artisan module:migrate"
+	"php artisan queue:restart"
+	"sleep 1"
+	"php artisan queue:checkup"
 	)
 
 clear
