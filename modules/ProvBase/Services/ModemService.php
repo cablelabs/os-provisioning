@@ -18,7 +18,8 @@ class ModemService extends Service
             ->whereNull('modem.deleted_at')
             ->whereNull('contract.deleted_at')
             ->where('contract_start', '<=', date('Y-m-d'))
-            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')))
+            ->orderBy('us_pwr', 'ASC');
         if (isset($options['paginate']) && $options['paginate']) {
             return $query->paginate($options['limit'], ['modem.*']);
         }
