@@ -399,7 +399,7 @@ return [
     'sr_repeat'             => 'Repeat for SEPA-account(s):', // Settlementrun repeat
     'Account Holder'            => 'Account Holder',
     'Account Name'              => 'Account Name',
-    'getNewsletter'             => 'Get newsletters?',
+    'receiveNewsletters'        => 'Should receive newsletters?',
     'Choose Call Data Record template file' => 'Choose Call Data Record template file',
     'Choose invoice template file'          => 'Choose invoice template file',
     'CostCenter'                => 'CostCenter',
