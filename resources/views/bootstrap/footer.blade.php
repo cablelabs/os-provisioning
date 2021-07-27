@@ -83,7 +83,9 @@ new Vue({
       console.error("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
     }
 
-    this.initSidebar()
+    if (document.getElementById('sidebar')) {
+      this.initSidebar()
+    }
   },
   data() {
     return {
