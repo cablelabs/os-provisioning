@@ -1030,3 +1030,15 @@ textarea.select2-search__field {
 .minifiedMenu a {
     display: flex !important;
 }
+
+.toggleWidthStart {
+    opacity: 0;
+    width: 0 !important;
+    margin-left: 0 !important;
+}
+
+.toggleWidthEnd {
+     opacity: 1;
+     width: 3.25rem !important;
+     margin-left: 1rem !important;
+ }

@@ -39,7 +39,7 @@
     {{-- end sidebar user --}}
     {{-- begin sidebar nav --}}
     <ul class="nav">
-      <li class="nav-header" style="border-bottom: 1px solid; font-size: 13px !important; width: 223px;">
+      <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important;">
         <a href="{{route('Apps.active')}}" class="text-success d-inline w-100" style="display: inline-block !important; width: 100%;">{{ trans('messages.nativeApps') }}
           <i class="fa fa-plus"></i>
         </a>
@@ -95,7 +95,7 @@
       @endforeach
       {{-- End Menu --}}
 
-    <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important; width: 223px;">
+    <li class="nav-header mt-4" style="border-top: 1px solid; font-size: 13px !important;">
       <a href="{{route('Apps.active')}}" class="text-success d-inline w-100" style="display: inline-block !important; width: 100%;">{{ trans('messages.externalApps') }}
         <i class="fa fa-plus"></i>
       </a>
@@ -114,16 +114,21 @@
     @endforeach
 
     @if(Module::collections()->has('HfcBase') && auth()->user()->can('view', Modules\HfcBase\Entities\TreeErd::class))
-      <li v-cloak v-show="!minified" class="nav-header align-items-center no-content-pseudo" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
+      <li v-cloak v-show="!minified" class="nav-header align-items-center no-content-pseudo mt-4" style="border-top:1px solid;font-size:13px;width: 100%;display:flex;justify-content:space-between;">
         <div class="text-success" style="flex:1;">{{ trans('view.Menu_Nets') }}</div>
-        <div class="m-r-15" v-on:click.stop="setVisibility">
-          <i class="text-light fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
+        <div v-on:click.stop="setVisibility" style="height:1.35rem;">
+          <i class="text-light m-0 fa" :class="isVisible ? 'fa-eye' : 'fa-eye-slash'" style="cursor: pointer;"></i>
         </div>
-        <div class="d-flex align-items-center position-relative" :style="'cursor:pointer;background: #232a2f;border-radius: 9999px;width:3.25rem;height:1.35rem;transition: width .25s;' + (!isVisible ? 'opacity:0;width:0;' : '')" v-on:click="setSearchMode">
-          <div class="position-absolute" :style="'background: #8ec73a;border-radius: 9999px;width:1.2rem;height:1.2rem;transition: all .25s;' + ((isSearchMode) ? 'left:31.5px;' : 'left:2px;')"></div>
-          <div class="position-absolute" :style="((!isSearchMode) ? 'left:5px;color: #fff;' : 'left:5px;')"><i class="m-0 fa" :class="favorites.length ? 'fa-star' : 'fa-sitemap'"></i></div>
-          <div class="position-absolute" :style="'right:6px;' + ((isSearchMode) ? 'color: #fff;' : '')"><i class="m-0 fa fa-search"></i></div>
-        </div>
+        <transition enter-class="toggleWidthStart" enter-to-class="toggleWidthEnd" leave-class="toggleWidthEnd" leave-to-class="toggleWidthStart">
+          <div v-if="isVisible"
+            class="d-flex align-items-center position-relative"
+            style="cursor:pointer;background: #232a2f;border-radius: 9999px;height:1.35rem;transition: width .25s ease, margin-left .25s ease;width: 3.25rem;margin-left: 1rem;"
+            v-on:click="setSearchMode">
+            <div class="position-absolute" :style="'background: #8ec73a;border-radius: 9999px;width:1.2rem;height:1.2rem;transition: all .25s;' + ((isSearchMode) ? 'left:31.5px;' : 'left:2px;')"></div>
+            <div class="position-absolute" :style="((!isSearchMode) ? 'left:5px;color: #fff;' : 'left:5px;')"><i class="m-0 fa" :class="favorites.length ? 'fa-star' : 'fa-sitemap'"></i></div>
+            <div class="position-absolute" :style="'left:35px;' + ((isSearchMode) ? 'color: #fff;' : '')"><i class="m-0 fa fa-search"></i></div>
+          </div>
+        </transition>
       </li>
       <div v-show="isSearchMode && isVisible" class="my-1 d-flex align-items-center position-relative" style="padding:0.5rem 1.25rem;display:none;">
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="{{ trans('view.Search_EnterKeyword') }} ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
