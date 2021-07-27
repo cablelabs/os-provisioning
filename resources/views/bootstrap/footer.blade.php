@@ -132,8 +132,13 @@ new Vue({
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
 
       // load cached search term and results
-      this.clusterSearch = localStorage.getItem('sidebar-net-search')
-      this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
+      if(localStorage.getItem('sidebar-net-searchResults') !== null) {
+        this.clusterSearch = localStorage.getItem('sidebar-net-search')
+      }
+
+      if(localStorage.getItem('sidebar-net-searchResults') !== null) {
+        this.searchResults = JSON.parse(localStorage.getItem('sidebar-net-searchResults'))
+      }
 
       // init Sidebar active/clicked elements
       this.lastActive = this.activeItem = localStorage.getItem('sidebar-item')
