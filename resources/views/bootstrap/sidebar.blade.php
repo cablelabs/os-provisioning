@@ -134,7 +134,7 @@
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="{{ trans('view.Search_EnterKeyword') }} ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
-      <template v-if="isVisible">
+      <template v-if="!isSearchMode && isVisible">
         @if ($globalConfig->isAllNetsSidebarEnabled)
           <li id="network_overview" class="has-sub">
             <div class="recolor sidebar-element">
