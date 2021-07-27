@@ -19,7 +19,8 @@
       <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
       <meta content="" name="description" />
       <meta content="" name="author" />
-
+      <!-- ================== Pace Loading indicator ================== -->
+      <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
       <!-- ================== BEGIN BASE CSS STYLE ================== -->
       <!-- JQuery UI & Bootstrap -->
       <link href="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.css')}}" rel="stylesheet" />
@@ -52,6 +53,3 @@
       <link href="{{asset('components/nmsprime.css')}}" rel="stylesheet" />
 
       <!-- ================== END BASE CSS STYLE ================== -->
-      <!-- ================== BEGIN BASE JS ================== -->
-      <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
-      <!-- ================== END BASE JS ================== -->
