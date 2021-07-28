@@ -18,6 +18,7 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\RadReply;
 use Modules\ProvBase\Entities\RadIpPool;
 
@@ -33,6 +34,7 @@ class EndpointObserver
     public function created($endpoint)
     {
         self::reserveAddress($endpoint);
+        self::releaseIp($endpoint);
 
         $endpoint->makeDhcp();
         $endpoint->makeNetGwConf();
@@ -104,5 +106,22 @@ class EndpointObserver
 
         // remove reserved ip address from ippool
         RadIpPool::where('framedipaddress', $endpoint->ip)->delete();
+    }
+
+    /**
+     * Release IP of the Modem if it is assigned to an endpoint
+     *
+     * @author Roy Schneider
+     * @param Modules\ProvBase\Entities\Endpoint $endpoint
+     */
+    private static function releaseIp($endpoint)
+    {
+        $lease = $endpoint->modem::searchLease($endpoint->ip);
+        if (! $lease) {
+            return;
+        }
+
+        preg_match('/hardware ethernet (.+?);/', $lease[0], $mac);
+        Modem::where('mac', $mac[1])->first()->restart_modem();
     }
 }
