@@ -772,5 +772,6 @@ return [
     'nativeApps'                => 'Interne Apps',
     'externalApps'              => 'Externe Apps',
     'delete_task'               => 'Lösche Aufgabe:',
-    'refreshPage'               => 'Bitte Seite neu laden, um die ersten 25 Netze anzuzeigen',
+    'refreshPage'               => 'Bitte Seite neu laden, um die ersten 25 Netze anzuzeigen!',
+    'noClusterOrNet'            => 'Zu diesem Suchbegriff wurden keine Netze oder Cluster gefunden!',
 ];

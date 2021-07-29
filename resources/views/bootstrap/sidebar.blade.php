@@ -146,7 +146,7 @@
           </li>
         @endif
         <template v-for="netelement in loopNetElements">
-          <li class="has-sub" :key="netelement.id">
+          <li v-if="!loadingSearch || !isSearchMode" class="has-sub" :key="netelement.id">
             <div v-cloak class="recolor sidebar-element"
               v-on:mouseEnter.stop="minified ? loadCluster(netelement) : ''"
               v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
@@ -166,11 +166,12 @@
               </a>
               <a href="javascript:;" v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
                 <i v-if="loadingClusters.includes(netelement.id)" class="fa fa-circle-o-notch fa-spin"></i>
+                <i v-else-if="netelement.clustersLoaded && !netelement.clusters.length"></i>
                 <i v-else class="fa fa-caret-right" :class="{'fa-rotate-90': !netelement.isCollapsed && !minified}" style="transition:all .25s;"></i>
               </a>
             </div>
             <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
-              <ul :id="'network_' + netelement.id" v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && !netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverNet && netelement.clustersLoaded)}" :style="(!minified ? 'transition:max-height .3s linear;' : '') + 'overflow:hidden;list-style-type: none;background: #1a2229;'">
+              <ul :id="'network_' + netelement.id" v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && netelement.clusters.length && !netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverNet && netelement.clustersLoaded)}" :style="(!minified ? 'transition:max-height .3s linear;' : '') + 'overflow:hidden;list-style-type: none;background: #1a2229;'">
                 <template v-for="cluster in netelement.clusters" >
                   <li :id="'cluster_' + cluster.id"
                     :key="cluster.id"
@@ -189,6 +190,8 @@
           </li>
         </template>
         <li v-if="Object.keys(loopNetElements).length === 0 && !isSearchMode && !minified" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.refreshPage')}}</li>
+        <li v-if="Object.keys(loopNetElements).length === 0 && isSearchMode && clusterSearch.length && !loadingSearch" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.noClusterOrNet')}}</li>
+        <li v-if="isSearchMode && clusterSearch.length && loadingSearch" class="m-l-20 m-t-10 text-center w-75"><i class="fa fa-circle-o-notch fa-spin"></i></li>
       </template>
     @endif
     {{-- sidebar minify button --}}

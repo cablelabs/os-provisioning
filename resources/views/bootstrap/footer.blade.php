@@ -94,6 +94,7 @@ new Vue({
       isCollapsed: true, // show submenu: ul is extended (also for minified)
       loadingClusters: [], // loading circle for clusters
       loadingFavorites: [], // loading circle for favoriting
+      loadingSearch: false, // loading circle for search
       lastActive: 'null',
       lastClicked: 'null',
       activeItem: 'null',
@@ -300,9 +301,14 @@ new Vue({
     */
     searchForNetOrCluster(event) {
       clearTimeout(this.searchTimeout)
+      this.loadingSearch = true
       localStorage.setItem('sidebar-net-search', this.clusterSearch)
 
       this.searchTimeout = setTimeout(() => {
+        if(this.clusterSearch === '') {
+          return
+        }
+
         axios({
             method: 'post',
             url: '/admin/Netelement/netclustersearch',
@@ -316,6 +322,7 @@ new Vue({
           this.searchResults = response.data
           this.searchResults.forEach(n => n.isCollapsed = true)
 
+          this.loadingSearch = false
           localStorage.setItem('sidebar-net-searchResults', JSON.stringify(response.data))
         })
         .catch((error) => {
