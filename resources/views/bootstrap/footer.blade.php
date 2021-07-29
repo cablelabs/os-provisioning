@@ -100,7 +100,7 @@ new Vue({
       clickedItem: 'null',
       searchTimeout: null, // debounce for search (500ms)
       clusterSearch: '', // v-model for search
-      searchResults: {},
+      searchResults: [],
       activeNetelement: null,
       clickedNetelement: null,
       netelements: @json($networks ?? new stdClass()),
@@ -146,7 +146,7 @@ new Vue({
       this.netelements.forEach(n => {
         n.isCollapsed = true
 
-        if (this.activeNetelement &&  this.clickedNetelement && n.id == this.activeNetelement) {
+        if (this.activeNetelement &&  this.clickedNetelement && n.id == this.activeNetelement && !this.isSearchMode) {
           this.loadCluster(n)
         }
       })
