@@ -134,9 +134,9 @@
         <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster" class="form-control" style="padding-left:2rem;" placeholder="{{ trans('view.Search_EnterKeyword') }} ..." aria-label="Search ..." aria-describedby="Search for Net or Cluster">
         <i class="fa fa-search position-absolute" style="left:30px;" ></i>
       </div>
-      <template v-if="!isSearchMode && isVisible">
+      <template v-if="isVisible">
         @if ($globalConfig->isAllNetsSidebarEnabled)
-          <li id="network_overview" class="has-sub">
+          <li v-if="!isSearchMode" id="network_overview" class="has-sub">
             <div class="recolor sidebar-element">
               <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
                 <i class="fa fa-sitemap m-r-5"></i>
