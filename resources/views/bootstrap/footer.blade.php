@@ -437,6 +437,17 @@ new Vue({
       netelement.hover = state
       this.netelements = jQuery.extend(true, [], this.netelements)
     },
+    netElementSearchHoverClass(netelement) {
+      if (netelement.hover) {
+        if (this.loadingFavorites.includes(netelement.id)) {
+          return 'fa-circle-o-notch fa-spin'
+        }
+
+        return this.favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'
+      }
+
+      return 'fa-sitemap'
+    },
     setNetActive(id) {
       localStorage.setItem('clicked-netelement', id)
     }

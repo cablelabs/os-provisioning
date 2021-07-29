@@ -161,7 +161,7 @@
                 </a>
               </template>
               <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;" v-on:click="setNetActive(netelement.id)">
-                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa m-r-5" :class="netelement.hover ? (favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o') : 'fa-sitemap'"></i>
+                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa m-r-5" :class="netElementSearchHoverClass(netelement)"></i>
                 <span v-text="netelement.name"></span>
               </a>
               <a href="javascript:;" v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
