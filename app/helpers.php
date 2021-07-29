@@ -459,6 +459,51 @@ function distanceLatLong($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeT
 }
 
 /**
+ * Check if point is within the boundaries of the given polygon.
+ * Based on: https://stackoverflow.com/a/18190354
+ *
+ * @param array $p point to check
+ * @param array $polygon vertices of polygon outline
+ * @return bool true if point in polygon, otherwise false
+ */
+function pointInPolygon(array $p, array $polygon)
+{
+    // special case: rectangle
+    if (count($polygon) == 2) {
+        $inPolygon = ! (
+            $p[0] > max($polygon[0][0], $polygon[1][0]) ||
+            $p[0] < min($polygon[0][0], $polygon[1][0]) ||
+            $p[1] > max($polygon[0][1], $polygon[1][1]) ||
+            $p[1] < min($polygon[0][1], $polygon[1][1])
+        );
+
+        return $inPolygon;
+    }
+
+    // “real” polygon
+    $c = 0;
+    $p1 = $polygon[0];
+    $n = count($polygon);
+
+    for ($i = 1; $i <= $n; $i++) {
+        $p2 = $polygon[$i % $n];
+        if ($p[1] > min($p1[1], $p2[1]) &&
+            $p[1] <= max($p1[1], $p2[1]) &&
+            $p[0] <= max($p1[0], $p2[0]) &&
+            $p1[1] != $p2[1]) {
+            $xinters = ($p[1] - $p1[1]) * ($p2[0] - $p1[0]) / ($p2[1] - $p1[1]) + $p1[0];
+            if ($p1[0] == $p2[0] || $p[0] <= $xinters) {
+                $c++;
+            }
+        }
+        $p1 = $p2;
+    }
+
+    // even number of edges passed -> point not in the polygon
+    return $c % 2 != 0;
+}
+
+/**
  * Helper to get Syslog entries dependent on what should be searched and discarded
  *
  * @param   search      String      to search
