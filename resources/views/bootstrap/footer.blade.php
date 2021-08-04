@@ -128,7 +128,7 @@ new Vue({
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
 
       // load cached search term and results
-      if(localStorage.getItem('sidebar-net-searchResults') !== null) {
+      if(localStorage.getItem('sidebar-net-search') !== null) {
         this.clusterSearch = localStorage.getItem('sidebar-net-search')
       }
 
@@ -250,14 +250,14 @@ new Vue({
     /**
     * Handles the Collapse and expand logic of the main menu (also for minified)
     */
-    setMenu(name) {
-      if (name === this.activeItem && ! this.minified) {
+    setMenu(name, collapse = true) {
+      if (name === this.activeItem && ! this.minified && collapse) {
         return this.isCollapsed = ! this.isCollapsed
       }
 
       this.activeItem = name
       this.clickedItem = name
-      this.isCollapsed = false
+      this.isCollapsed = !collapse
 
       if (this.minified) {
         clearTimeout(this.leaveTimer)
@@ -269,6 +269,7 @@ new Vue({
     },
     setSubMenu(name) {
       this.clickedItem = name
+
       localStorage.setItem("clicked-item", name)
     },
     showSubMenu(name, minified = false) {

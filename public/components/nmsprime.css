@@ -1042,3 +1042,7 @@ textarea.select2-search__field {
      width: 3.25rem !important;
      margin-left: 1rem !important;
  }
+
+.fixed-top {
+    z-index: 1005;
+}

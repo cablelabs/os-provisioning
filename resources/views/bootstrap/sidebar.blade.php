@@ -56,6 +56,7 @@
             v-on:mouseEnter="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
             v-on:mouseLeave="minified ? leaveMinifiedSidebar() : ''">
             <a class="caret-link"
+              v-on:click="!minified ? setMenu('{{ $moduleNameSlug }}', false) : ''"
               href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
                 <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
