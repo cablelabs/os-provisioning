@@ -52,6 +52,7 @@ return [
 
         'database' => [
             'driver' => 'database',
+            'connection' => 'sqlite-jobs',
             'table' => 'jobs',
             'queue' => 'low',
             'retry_after' => 90,
@@ -103,7 +104,7 @@ return [
     */
 
     'failed' => [
-        'database' => env('DB_CONNECTION', 'mysql'),
+        'database' => 'sqlite-jobs',
         'table' => 'failed_jobs',
     ],
 

@@ -55,6 +55,13 @@ return [
             'prefix' => '',
         ],
 
+        // SQLite database for job management
+        'sqlite-jobs' => [
+            'driver' => 'sqlite',
+            'database' => '/var/www/nmsprime/database/database_jobs.sqlite',
+            'prefix' => '',
+        ],
+
         // NMS Prime default connection
         'mysql' => [
             'driver'    => 'mysql',
