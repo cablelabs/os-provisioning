@@ -69,6 +69,6 @@ class CacheIndexTableCountJob implements ShouldQueue
             cache(['indexTables.'.$table => $count]);
         }
 
-        system('chown -R apache '.storage_path('framework/cache'));
+        system('chown -R apache:apache '.storage_path('framework/cache'));
     }
 }
