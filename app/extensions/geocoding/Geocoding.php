@@ -61,10 +61,21 @@ trait Geocoding
             Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
         }
 
+        // fallback: ask here
+        if (! $geodata) {
+            try {
+                $geodata = $this->geocodeHere();
+            } catch (\Exception $ex) {
+                $msg = 'Error in geocoding against HERE API: '.$ex->getMessage();
+                Session::push('tmp_error_above_form', $msg);
+                Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
+            }
+        }
+
         // fallback: ask google maps
         if (! $geodata) {
             try {
-                $geodata = $this->_geocode_google_maps($save);
+                $geodata = $this->_geocode_google_maps();
             } catch (\Exception $ex) {
                 $msg = 'Error in geocoding against google maps: '.$ex->getMessage();
                 Session::push('tmp_error_above_form', $msg);
@@ -232,6 +243,69 @@ trait Geocoding
         }
 
         return $geodata;
+    }
+
+        /**
+     * Get geodata from google maps
+     *
+     * @author Torsten Schmidt, Patrick Reichel
+     * @return array 	Geodata [lat, lon, source]
+     */
+    protected function geocodeHere()
+    {
+        Log::debug(__METHOD__.' started for '.$this->hostname);
+
+        // don't ask API in testing mode (=faked data)
+        if (env('APP_ENV') == 'testing') {
+            Log::debug('Testing mode – will not ask HERE Geocoding API with faked data');
+
+            return;
+        }
+
+        if (! config('app.hereApiKey', false)) {
+            $message = 'Unable to ask Here Geocoding API – HERE_API_KEY not set';
+            Session::push('tmp_warning_above_form', $message);
+            Log::warning($message);
+
+            return null;
+        }
+
+        $key = config('app.hereApiKey');
+        $className = (new \ReflectionClass($this))->getShortName();
+
+        $houseNr = $this->house_number ?? $this->house_nr;
+        $country_code = $this->country_code ?: GlobalConfig::first()->default_country_code;
+        $address = urlencode($houseNr.' '.$this->street.', '.$this->zip.', '.$country_code);
+        $url = "https://geocode.search.hereapi.com/v1/geocode?apikey=$key&limit=1&q={$address}";
+
+        Log::info("Trying to geocode {$className} {$this->id} against $url");
+        $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
+        $resp = json_decode($resp_json, true);
+
+        if (isset($resp['status']) || ! count($resp['items'])) {
+            $this->geocode_state = $resp['status'] ?? 'HERE API NO RESULTS';
+            Log::warning("HERE geocoding for {$className} {$this->id} failed: {$this->geocode_state}");
+
+            return null;
+        }
+
+        $result = $resp['items'][0];
+
+        if (
+            ! $result['scoring']['queryScore'] == 1.0 ||
+            ! in_array($result['resultType'], ['houseNumber', 'place', 'locality'])
+         ) {
+            $this->geocode_state = 'DATA_VERIFICATION_FAILED';
+            Log::warning("HERE geocoding for {$className} {$this->id} failed: {$this->geocode_state}");
+
+            return null;
+        }
+
+        return [
+            'latitude' => $result['position']['lat'],
+            'longitude' => $result['position']['lng'],
+            'source' => 'HERE Geolocation API',
+        ];
     }
 
     /**
