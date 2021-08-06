@@ -18,10 +18,10 @@
 
 namespace App\extensions\geocoding;
 
-use Log;
-use Session;
 use App\GlobalConfig;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Geocoding API
@@ -38,73 +38,32 @@ trait Geocoding
     private $geocode_state = null;
 
     /**
-     * Modem Geocoding Function
-     * Geocode the modem address value in a geoposition and update values to x,y. Please
-     * note that the function is working in object context, so no addr parameters are required.
+     * Geocode address of a model to a geoposition and update the x,y values of
+     * that model..
      *
-     * @param save: Update Modem x,y value with a save() to DB. Notice this calls Observer !
-     * @return: true on success, false if coding fails. For error log see geocode_last_status()
-     * @author: Torsten Schmidt
-     *
-     * TODO: split in a general geocoding function and a modem specific one
+     * @param bool $save
+     * @return void|array
      */
-    public function geocode($save = true)
+    public function geocode($save = true): ?array
     {
-        $geodata = null;
-
         // first try to get geocoding from OSM
-        try {
-            $geodata = $this->_geocode_osm_nominatim();
-        } catch (\Exception $ex) {
-            $msg = 'Error in geocoding against OSM Nominatim: '.$ex->getMessage();
-            Session::push('tmp_error_above_form', $msg);
-            Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
-        }
+        $geodata = $this->tryGeocode('OSM Nominatim');
 
         // fallback: ask here
         if (! $geodata) {
-            try {
-                $geodata = $this->geocodeHere();
-            } catch (\Exception $ex) {
-                $msg = 'Error in geocoding against HERE API: '.$ex->getMessage();
-                Session::push('tmp_error_above_form', $msg);
-                Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
-            }
+            $geodata = $this->tryGeocode('HERE GeoCoding');
         }
 
         // fallback: ask google maps
         if (! $geodata) {
-            try {
-                $geodata = $this->_geocode_google_maps();
-            } catch (\Exception $ex) {
-                $msg = 'Error in geocoding against google maps: '.$ex->getMessage();
-                Session::push('tmp_error_above_form', $msg);
-                Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
-            }
+            $geodata = $this->tryGeocode('Google GeoCoding');
         }
 
-        if ($geodata) {
-            $this->y = $geodata['latitude'];
-            $this->x = $geodata['longitude'];
-            $this->geocode_source = $geodata['source'];
-            $this->geocode_state = 'OK';
-
-            Log::info('Geocoding successful, result: '.$this->y.','.$this->x.' (source: '.$geodata['source'].')');
-        } else {
-            // no geodata determined
-            if (! \App::runningInConsole()) {
-                // if running interactively: delete probably outdated geodata and inform user
-                $this->y = '';
-                $this->x = '';
-                $this->geocode_source = 'n/a';
-                $message = "Could not determine geo coordinates ($this->geocode_state) – please add manually";
-                Session::push('tmp_error_above_form', $message);
-            } else {
-                // if running from console: preserve existing geodata (could have been be imported or manually set in older times)
-                $this->geocode_source = 'n/a (unchanged existing data)';
-            }
-            Log::warning('geocoding failed');
+        if (! $geodata) {
+            return $this->noGeoPositionFound($save);
         }
+
+        $this->updateGeoPosition($geodata);
 
         if ($save) {
             $this->save();
@@ -114,22 +73,108 @@ trait Geocoding
     }
 
     /**
+     * Call the given GeoCode API and query the position of the given address.
+     *
+     * @param string $api
+     * @return void|array
+     */
+    protected function tryGeocode(string $api): ?array
+    {
+        try {
+            return $this->geocodeVia($api);
+        } catch (\Exception $ex) {
+            $msg = 'Error in geocoding against '.$api.' API: '.$ex->getMessage();
+            Session::push('tmp_error_above_form', $msg);
+            Log::error("$msg (".get_class($ex).' in '.$ex->getFile().' line '.$ex->getLine().')');
+        }
+
+        return null;
+    }
+
+    /**
+     * Generator method to not use dynamic method names as this is easier found via grep and find.
+     *
+     * @param string $api
+     * @return void|array
+     */
+    public function geocodeVia(string $api): ?array
+    {
+        $api = explode(' ', $api)[0];
+
+        if (strtolower($api) === 'here') {
+            return $this->geocodeHere();
+        }
+
+        if (strtolower($api) === 'google') {
+            return $this->geocodeGoogle();
+        }
+
+        return $this->geocodeOsm();
+    }
+
+    /**
+     * Handle the case when no geocosing service provider was able to determine
+     * a position for the given address.
+     *
+     * @param bool $save
+     * @return void
+     */
+    protected function noGeoPositionFound(bool $save): void
+    {
+        // if running from console: preserve existing geodata (could have been be imported or manually set in older times)
+        if (\App::runningInConsole()) {
+            $this->geocode_source = 'n/a (unchanged existing data)';
+            Log::warning('geocoding failed');
+        } else {
+            // if running interactively: delete probably outdated geodata and inform user
+            $this->y = null;
+            $this->x = null;
+            $this->geocode_source = 'n/a';
+
+            $message = "Could not determine geo coordinates ($this->geocode_state) – please add manually";
+            Session::push('tmp_error_above_form', $message);
+            Log::warning('geocoding failed');
+        }
+
+        if ($save) {
+            $this->save();
+        }
+    }
+
+    /**
+     * Update the position data of the given model.
+     *
+     * @param array $geodata
+     * @return void
+     */
+    protected function updateGeoPosition(array $geodata): void
+    {
+        $this->y = $geodata['latitude'];
+        $this->x = $geodata['longitude'];
+        $this->geocode_source = $geodata['source'];
+        $this->geocode_state = 'OK';
+
+        Log::info('Geocoding successful, result: '.$this->y.','.$this->x.' (source: '.$geodata['source'].')');
+    }
+
+    /**
      * Some housenumbers need special handling. This method splits them to the needed parts.
      *
      * @author Patrick Reichel
      */
-    protected function _split_housenumber_for_geocoding($house_number)
+    protected function geocodingSplitHouseNumber($house_number)
     {
         // regex from https://stackoverflow.com/questions/10180730/splitting-string-containing-letters-and-numbers-not-separated-by-any-particular
         return preg_split("/(,?\s+)|((?<=[-\/a-z])(?=\d))|((?<=\d)(?=[-\/a-z]))/i", strtolower($house_number));
     }
 
     /**
-     * Get geodata from OpenStreetMap
+     * Get geodata from OpenStreeMap Nominatiom API
      *
+     * @return void|array
      * @author Patrick Reichel
      */
-    protected function _geocode_osm_nominatim()
+    protected function geocodeOsm(): ?array
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
@@ -157,7 +202,7 @@ trait Geocoding
         // “104 a” or “104a”; there is an 3-years-open bug report: https://trac.openstreetmap.org/ticket/5256
         // so we have to try both variants if the first one does not return a result
         $houseNr = $this->house_number ?? $this->house_nr;
-        $parts = $this->_split_housenumber_for_geocoding($houseNr);
+        $parts = $this->geocodingSplitHouseNumber($houseNr);
 
         if (count($parts) < 2) {
             $housenumber_variants = [$parts[0]];
@@ -245,13 +290,12 @@ trait Geocoding
         return $geodata;
     }
 
-        /**
-     * Get geodata from google maps
+    /**
+     * Get geodata from HERE GeoCoding API
      *
-     * @author Torsten Schmidt, Patrick Reichel
-     * @return array 	Geodata [lat, lon, source]
+     * @return array|null
      */
-    protected function geocodeHere()
+    protected function geocodeHere(): ?array
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
@@ -314,7 +358,7 @@ trait Geocoding
      * @author Torsten Schmidt, Patrick Reichel
      * @return array 	Geodata [lat, lon, source]
      */
-    protected function _geocode_google_maps()
+    protected function gecodeGoogle()
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
