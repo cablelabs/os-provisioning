@@ -245,7 +245,7 @@ trait Geocoding
 
             $matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
             foreach ($geodata_raw as $entry) {
-                $class = $entry['class'] ?? '';
+                $class = Arr::get($entry, 'class', '');
                 $type = Arr::get($entry, 'type', '');
                 $display_name = Arr::get($entry, 'display_name', '');
                 $lat = Arr::get($entry, 'lat', null);
@@ -351,119 +351,85 @@ trait Geocoding
     }
 
     /**
-     * Get geodata from google maps
+     * Get geodata from Google Maps GeoCoding API
      *
+     * @return void
      * @author Torsten Schmidt, Patrick Reichel
-     * @return array 	Geodata [lat, lon, source]
      */
-    protected function gecodeGoogle()
+    protected function geocodeGoogle(): ?array
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
         // don't ask API in testing mode (=faked data)
-        if (env('APP_ENV') == 'testing') {
+        if (config('app.env') == 'testing') {
             Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
 
-            return;
+            return null;
         }
 
-        $geodata = null;
+        if (! $key = config('app.googleApiKey')) {
+            $message = 'Unable to ask Google Geocoding API – GOOGLE_API_KEY not set';
+            Session::push('tmp_warning_above_form', $message);
+            Log::warning($message);
 
-        $country_code = $this->country_code ?: GlobalConfig::first()->default_country_code;
-
-        // beginning on 2018-06-11 geocode api can only be used with an api key (otherwise returning error)
-        // ⇒ https://cloud.google.com/maps-platform/user-guide
-        if (date('c') > '2018-06-10') {
-            if (! env('GOOGLE_API_KEY')) {
-                $message = 'Unable to ask Google Geocoding API – GOOGLE_API_KEY not set';
-                Session::push('tmp_warning_above_form', $message);
-                Log::warning($message);
-
-                return false;
-            }
-            $key = '&key='.$_ENV['GOOGLE_API_KEY'];
-        } else {
-            // Load google key if .ENV is set
-            $key = '';
-            if (env('GOOGLE_API_KEY')) {
-                $key = '&key='.$_ENV['GOOGLE_API_KEY'];
-            }
+            return null;
         }
 
         $className = (new \ReflectionClass($this))->getShortName();
         $houseNr = $this->house_number ?? $this->house_nr;
-
-        // url encode the address
-
-        $address = urlencode($this->street.' '.$houseNr.', '.$this->zip.', '.$country_code);
+        $country_code = $this->country_code ?: GlobalConfig::first()->default_country_code;
+        $address = urlencode($houseNr.' '.$this->street.', '.$this->zip.', '.$country_code);
 
         // google map geocode api url
-        $url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}$key";
-        Log::info("Trying to geocode $className $this->id against $url");
+        $url = "https://maps.google.com/maps/api/geocode/json?sensor=false&address={$address}&key={$key}";
+        Log::info("Trying to geocode {$className} {$this->id} against {$url}");
 
         // get the json response
         $resp_json = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
-
         $resp = json_decode($resp_json, true);
-
         $status = Arr::get($resp, 'status', 'n/a');
 
         // response status will be 'OK', if able to geocode given address
-        if ($status == 'OK') {
-
-            // get the important data
-            $lati = Arr::get($resp, 'results.0.geometry.location.lat', null);
-            $longi = Arr::get($resp, 'results.0.geometry.location.lng', null);
-            $formatted_address = Arr::get($resp, 'results.0.formatted_address', null);
-            $location_type = Arr::get($resp, 'results.0.geometry.location_type', null);
-            $partial_match = Arr::get($resp, 'results.0.partial_match', null);
-
-            $matches = ['ROOFTOP'];
-            $interpolated_matches = ['ROOFTOP', 'RANGE_INTERPOLATED'];
-            // verify if data is complete and a real match
-            if (
-                $lati &&
-                $longi &&
-                $formatted_address &&
-                ! $partial_match &&
-                in_array($location_type, $matches)
-            ) {
-                $geodata = [
-                    'latitude' => $lati,
-                    'longitude' => $longi,
-                    'source' => 'Google Geocoding API',
-                ];
-
-                return $geodata;
-            }
-            // check if partial match (interpolated geocoords seem to be pretty good!)
-            // mark source as tainted to give the user a hint
-            elseif (
-                $lati &&
-                $longi &&
-                $formatted_address &&
-                $partial_match &&
-                in_array($location_type, $interpolated_matches)
-            ) {
-                $geodata = [
-                    'latitude' => $lati,
-                    'longitude' => $longi,
-                    'source' => 'Google Geocoding API (interpolated)',
-                ];
-
-                return $geodata;
-            } else {
-                $this->geocode_state = 'DATA_VERIFICATION_FAILED';
-                Log::warning("Google geocoding for $className $this->id failed: $this->geocode_state");
-
-                return;
-            }
-        } else {
+        if ($status !== 'OK') {
             $this->geocode_state = $status;
-            Log::warning("Google geocoding for $className $this->id failed: $this->geocode_state");
+            Log::warning("Google geocoding for {$className} {$this->id} failed: {$this->geocode_state}");
 
-            return;
+            return null;
         }
+
+        // get the important data
+        $lati = Arr::get($resp, 'results.0.geometry.location.lat', null);
+        $longi = Arr::get($resp, 'results.0.geometry.location.lng', null);
+        $formatted_address = Arr::get($resp, 'results.0.formatted_address', null);
+        $location_type = Arr::get($resp, 'results.0.geometry.location_type', null);
+        $partial_match = Arr::get($resp, 'results.0.partial_match', null);
+
+        $matches = ['ROOFTOP'];
+        $interpolated_matches = ['ROOFTOP', 'RANGE_INTERPOLATED'];
+
+        if (! $lati || ! $longi || ! $formatted_address || ! in_array($location_type, $interpolated_matches)) {
+            $this->geocode_state = 'DATA_VERIFICATION_FAILED';
+            Log::warning("Google geocoding for {$className} {$this->id} failed: {$this->geocode_state}");
+
+            return null;
+        }
+
+        // verify if data is complete and a real match
+        if (! $partial_match && in_array($location_type, $matches)) {
+            return [
+                'latitude' => $lati,
+                'longitude' => $longi,
+                'source' => 'Google Geocoding API',
+            ];
+        }
+
+        // check if partial match (interpolated geocoords seem to be pretty good!)
+        // mark source as tainted to give the user a hint
+        return [
+            'latitude' => $lati,
+            'longitude' => $longi,
+            'source' => 'Google Geocoding API (interpolated)',
+        ];
     }
 
     /**
