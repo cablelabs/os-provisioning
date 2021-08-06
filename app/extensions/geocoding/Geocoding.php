@@ -169,7 +169,7 @@ trait Geocoding
     }
 
     /**
-     * Get geodata from OpenStreeMap Nominatiom API
+     * Get geodata from OpenStreetMap Nominatiom API
      *
      * @return void|array
      * @author Patrick Reichel
@@ -182,18 +182,18 @@ trait Geocoding
         if (env('APP_ENV') == 'testing') {
             Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
 
-            return;
+            return null;
         }
 
         $geodata = null;
         $base_url = 'https://nominatim.openstreetmap.org/search';
 
-        if (! filter_var(env('OSM_NOMINATIM_EMAIL'), FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var(config('app.osmNominatimApiMail'), FILTER_VALIDATE_EMAIL)) {
             $message = 'Unable to ask OpenStreetMap Nominatim API for geocoding – OSM_NOMINATIM_EMAIL not set';
             Session::push('tmp_warning_above_form', $message);
             Log::warning($message);
 
-            return false;
+            return null;
         }
 
         $country_code = $this->country_code ?: GlobalConfig::first()->default_country_code;
@@ -230,24 +230,22 @@ trait Geocoding
             ];
 
             $url = $base_url.'?';
-            if ($params) {
-                $tmp_params = [];
-                foreach ($params as $key => $value) {
-                    array_push($tmp_params, (urlencode($key).'='.urlencode($value)));
-                }
-                $url .= implode('&', $tmp_params);
+
+            $tmp_params = [];
+            foreach ($params as $key => $value) {
+                array_push($tmp_params, (urlencode($key).'='.urlencode($value)));
             }
+            $url .= implode('&', $tmp_params);
 
             $className = (new \ReflectionClass($this))->getShortName();
-            Log::info("Trying to geocode $className $this->id against $url");
+            Log::info("Trying to geocode {$className} {$this->id} against $url");
 
             $geojson = file_get_contents($url, false, stream_context_create(['http'=> ['timeout' => 3]]));
-
             $geodata_raw = json_decode($geojson, true);
 
             $matches = ['building', 'house', 'amenity', 'shop', 'tourism'];
             foreach ($geodata_raw as $entry) {
-                $class = Arr::get($entry, 'class', '');
+                $class = $entry['class'] ?? '';
                 $type = Arr::get($entry, 'type', '');
                 $display_name = Arr::get($entry, 'display_name', '');
                 $lat = Arr::get($entry, 'lat', null);
@@ -282,9 +280,9 @@ trait Geocoding
         }
 
         if (! $geodata) {
-            Log::warning("OSM Nominatim geocoding for $className $this->id failed");
+            Log::warning("OSM Nominatim geocoding for {$className} {$this->id} failed");
 
-            return false;
+            return null;
         }
 
         return $geodata;
@@ -303,7 +301,7 @@ trait Geocoding
         if (env('APP_ENV') == 'testing') {
             Log::debug('Testing mode – will not ask HERE Geocoding API with faked data');
 
-            return;
+            return null;
         }
 
         if (! config('app.hereApiKey', false)) {
