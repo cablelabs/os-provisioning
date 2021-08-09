@@ -57,7 +57,8 @@ class NetElement extends \BaseModel
     {
         $rules = [
             'name' => 'required|string',
-            'pos' => 'nullable|geopos',
+            'lat' => 'nullable|numeric|between:-90,90',
+            'lng' => 'nullable|numeric|between:-180,180',
             'community_ro' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
@@ -126,7 +127,7 @@ class NetElement extends \BaseModel
     public function view_index_label()
     {
         $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.pos', $this->table.'.options'],
+            'index_header' => [$this->table.'.id', 'netelementtype.name', $this->table.'.name', $this->table.'.ip', $this->table.'.lng', $this->table.'.lat', $this->table.'.options'],
             'header' => $this->label(),
             'bsclass' => $this->get_bsclass(),
             'eager_loading' => ['netelementtype:id,name'],
@@ -236,11 +237,10 @@ class NetElement extends \BaseModel
         }
 
         if ($minify) {
-            $query->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'pos']);
+            $query->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
         }
 
         return $query->where($field, $operator, $id)
-            ->orderBy('pos')
             ->withCount([
                 'modems' => function ($query) {
                     $this->excludeCanceledContractsQuery($query);
@@ -536,9 +536,9 @@ class NetElement extends \BaseModel
     {
         return $this->modems()
             ->where('us_pwr', '>', '0')
-            ->where('x', '<>', '0')
-            ->where('y', '<>', '0')
-            ->selectRaw('AVG(us_pwr) as us_pwr_avg, AVG(x) as x_avg, AVG(y) as y_avg, netelement_id')
+            ->where('lng', '<>', '0')
+            ->where('lat', '<>', '0')
+            ->selectRaw('AVG(us_pwr) as us_pwr_avg, AVG(lng) as lng_avg, AVG(lat) as lat_avg, netelement_id')
             ->groupBy('netelement_id');
     }
 
@@ -1070,11 +1070,9 @@ class NetElement extends \BaseModel
      */
     public function getTicketSummary()
     {
-        if ($this->pos) {
-            $pos = explode(',', $this->pos);
-
+        if ($this->lat && $this->lng) {
             $navi = [
-                'link' => "https://www.google.com/maps/dir/my+location/{$pos[1]},{$pos[0]}",
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->lat},{$this->lng}",
                 'icon' => 'fa-location-arrow',
                 'title' => trans('messages.route'),
             ];
@@ -1088,7 +1086,7 @@ class NetElement extends \BaseModel
                 'text' => $this->name,
             ],
             trans('messages.position') => [
-                'text' => $this->pos,
+                'text' => isset($navi) ? "{$this->lng},{$this->lat}" : null,
                 'action' => $navi ?? null,
             ],
             trans('messages.CLUSTER') => [
@@ -1109,7 +1107,7 @@ class NetElement extends \BaseModel
      */
     public function reducedFields()
     {
-        return ['id', 'netelementtype', 'name', 'pos', 'cluster'];
+        return ['id', 'netelementtype', 'name', 'lat', 'lng', 'cluster'];
     }
 
     public function getSnmpValuesStoragePath($ext = '')
