@@ -226,8 +226,15 @@ class NetElement extends \BaseModel
      * @param  Illuminate\Database\Query\Builder  $query
      * @return Illuminate\Database\Query\Builder
      */
-    public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2, $minify = false)
+    public function scopeWithActiveModems($query, $field = 'id', $id = 1, $minify = false)
     {
+        $operator = '=';
+        if ($field == 'all') {
+            $field = 'id';
+            $operator = '>=';
+            $id = 1;
+        }
+
         if ($minify) {
             $query->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'pos']);
         }
