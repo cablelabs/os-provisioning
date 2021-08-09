@@ -718,7 +718,7 @@ class Modem extends \BaseModel
         $comment = '# All Modems (remote agent IDs) without internet access';
         $modems = [];
 
-        foreach (self::where('internet_access', 0)->get() as $modem) {
+        foreach (self::where('internet_access', 0)->whereNotNull('mac')->get() as $modem) {
             $modems[] = 'subclass "blocked" '.$modem->mac.'; # CM id: '.$modem->id;
         }
 
