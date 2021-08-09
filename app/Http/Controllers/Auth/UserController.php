@@ -168,12 +168,12 @@ class UserController extends BaseController
 
     public function updateGeopos()
     {
-        \Log::debug('User '.Request::get('id').' geopos was updated to x='.Request::get('x').' and y='.Request::get('y'));
+        \Log::debug('User '.Request::get('id').' geopos was updated to lng='.Request::get('lng').' and lat='.Request::get('lat'));
 
         User::where('id', Request::get('id'))->update([
             'geopos_updated_at' => date('Y-m-d H:i:s'),
-            'geopos_x' => Request::get('x'),
-            'geopos_y' => Request::get('y'),
+            'lng' => Request::get('lng'),
+            'lat' => Request::get('lat'),
         ]);
     }
 }

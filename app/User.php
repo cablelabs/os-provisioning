@@ -287,7 +287,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function getDistance($latitude, $longitude)
     {
-        return distanceLatLong($this->geopos_y, $this->geopos_x, $latitude, $longitude) / 1000;
+        return distanceLatLong($this->lat, $this->lng, $latitude, $longitude) / 1000;
     }
 
     /**
