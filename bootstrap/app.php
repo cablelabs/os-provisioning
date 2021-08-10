@@ -46,7 +46,16 @@ $env_dir = '/etc/nmsprime/env/';
 
 // read environmental data from files ending with .env
 foreach (scandir($env_dir) as $file) {
-    if (! substr($file, -4) == '.env' || ! is_readable("$env_dir/$file")) {
+    // ignore hidden files
+    if (substr($file, 0, 1) == '.') {
+        continue;
+    }
+    // read only .env files
+    if (substr($file, -4) != '.env') {
+        continue;
+    }
+    // use only readable files
+    if (! is_readable("$env_dir/$file")) {
         continue;
     }
 
