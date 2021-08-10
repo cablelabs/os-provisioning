@@ -449,9 +449,9 @@ trait Geocoding
     {
         $changes = $this->getDirty();
 
-        if ((is_null($this->x) && is_null($this->y)) || ($this->exists && multi_array_key_exists(['street', 'house_nr', 'zip', 'city'], $changes))) {
+        if ((is_null($this->lng) && is_null($this->lat)) || ($this->exists && multi_array_key_exists(['street', 'house_nr', 'zip', 'city'], $changes))) {
             $this->geocode(false);
-        } elseif (multi_array_key_exists(['x', 'y'], $changes)) {
+        } elseif (multi_array_key_exists(['lng', 'lat'], $changes)) {
             $this->geocode_source = \App\BaseModel::getUser();
         }
     }
