@@ -566,10 +566,10 @@ class BaseViewController extends Controller
     public static function geoPosFields($model)
     {
         return "<div class=col-md-3>
-                <input class=form-control name=x type=text value='".$model['x']."' id=x style='background-color:inherit'>
+                <input class=form-control name=x type=text value='".$model['lng']."' id=x style='background-color:inherit'>
             </div>
             <div class=col-md-4>
-                <input class=form-control name=y type=text value='".$model['y']."' id=y style='background-color:inherit'>
+                <input class=form-control name=y type=text value='".$model['lat']."' id=y style='background-color:inherit'>
             </div>";
     }
 

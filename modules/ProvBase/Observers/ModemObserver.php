@@ -87,11 +87,11 @@ class ModemObserver
         // Use Updating to set the geopos before a save() is called.
         // Notice: that we can not call save() in update(). This will re-trigger
         //         the Observer and re-call update() -> endless loop is the result.
-        if ($modem->wasRecentlyCreated && $modem->x && $modem->y && $modem->geocode_source) {
+        if ($modem->wasRecentlyCreated && $modem->lng && $modem->lat && $modem->geocode_source) {
             // do nothing
         } elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
             $modem->geocode(false);
-        } elseif (multi_array_key_exists(['x', 'y'], $diff) && ! \App::runningInConsole()) {
+        } elseif (multi_array_key_exists(['lng', 'lat'], $diff) && ! \App::runningInConsole()) {
             // Manually changed geodata
             // Change geocode_source only from MVC (and do not overwrite data from geocode command)
             $user = \Auth::user();
@@ -104,7 +104,7 @@ class ModemObserver
         // Refresh MPS rules
         // Note: does not perform a save() which could trigger observer.
         if (Module::collections()->has('HfcCustomer')) {
-            if (multi_array_key_exists(['x', 'y'], $diff)) {
+            if (multi_array_key_exists(['lng', 'lat'], $diff)) {
                 \Queue::pushOn('medium', new \Modules\HfcCustomer\Jobs\MpsJob($modem));
             }
         }

@@ -82,7 +82,7 @@ class ModemController extends \BaseController
 
         $pos = explode(',', Request::get('pos'));
         if (count($pos) == 2) {
-            [$model['x'], $model['y']] = $pos;
+            [$model['lng'], $model['lat']] = $pos;
         }
 
         $installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
@@ -109,7 +109,7 @@ class ModemController extends \BaseController
         $cfIds = $this->dynamicDisplayFormFields();
 
         if (Module::collections()->has('HfcCustomer') && $model->exists) {
-            $rect = [round($model->x, 4) - 0.0001, round($model->x, 4) + 0.0001, round($model->y, 4) - 0.0001, round($model->y, 4) + 0.0001];
+            $rect = [round($model->lng, 4) - 0.0001, round($model->lng, 4) + 0.0001, round($model->lat, 4) - 0.0001, round($model->lat, 4) + 0.0001];
             $geopos = link_to_route('CustomerModem.showModems', trans('messages.geopos_x_y'), [$model->id]).'    ('.link_to_route('CustomerRect.show', trans('messages.proximity'), $rect).')';
         } else {
             $geopos = trans('messages.geopos_x_y');

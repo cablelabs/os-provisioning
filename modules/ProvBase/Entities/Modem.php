@@ -1334,7 +1334,7 @@ class Modem extends \BaseModel
             if ($netgw->company == 'Motorola') {
                 $param = [
                     '1.3.6.1.4.1.4981.2.2.2.0',
-                    'x',
+                    'lng',
                     implode(' ', explode(':', $mac)),
                 ];
             }
@@ -1665,8 +1665,8 @@ class Modem extends \BaseModel
     public function proximity_search($radius)
     {
         $ids = [0];
-        foreach (DB::table('modem')->select('id', 'x', 'y')->where('deleted_at', null)->get() as $modem) {
-            if (distanceLatLong($this->y, $this->x, $modem->y, $modem->x) < $radius) {
+        foreach (DB::table('modem')->select('id', 'lng', 'lat')->where('deleted_at', null)->get() as $modem) {
+            if (distanceLatLong($this->lat, $this->lng, $modem->lat, $modem->lng) < $radius) {
                 array_push($ids, $modem->id);
             }
         }
@@ -2501,9 +2501,9 @@ class Modem extends \BaseModel
             ];
         }
 
-        if ($this->x != 0 || $this->y != 0) {
+        if ($this->lng != 0 || $this->lat != 0) {
             $navi = [
-                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->lat},{$this->lng}",
                 'icon' => 'fa-location-arrow',
                 'title' => trans('messages.route'),
             ];
@@ -2542,7 +2542,7 @@ class Modem extends \BaseModel
         return [
             'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
             'street', 'house_number', 'zip', 'city', 'district', 'us_pwr', 'us_snr', 'ds_pwr', '
-            ds_snr', 'x', 'y',
+            ds_snr', 'lng', 'lat',
         ];
     }
 }

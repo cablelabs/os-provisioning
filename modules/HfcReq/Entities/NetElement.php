@@ -292,10 +292,10 @@ class NetElement extends \BaseModel
     public function geoPosModems()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
-            ->select('modem.id', 'modem.x', 'modem.y', 'modem.netelement_id')
+            ->select('modem.id', 'modem.lng', 'modem.lat', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
             ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
-            ->groupBy('modem.x', 'modem.y')
+            ->groupBy('modem.lng', 'modem.lat')
             ->havingRaw('max(us_pwr) > 0 AND min(us_pwr) = 0 AND count > 1')
             ->join('contract', 'contract.id', 'modem.contract_id')
             ->whereNull('modem.deleted_at')

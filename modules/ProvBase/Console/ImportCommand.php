@@ -739,8 +739,8 @@ class ImportCommand extends Command
         $modem->description = $old_modem->beschreibung;
         $modem->internet_access = $old_modem->network_access;
 
-        $modem->x = $old_modem->x / 10000000;
-        $modem->y = $old_modem->y / 10000000;
+        $modem->lng = $old_modem->x / 10000000;
+        $modem->lat = $old_modem->y / 10000000;
 
         $modem->firstname = $new_contract->firstname;
         $modem->lastname = $new_contract->lastname;
