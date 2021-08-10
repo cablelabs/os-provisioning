@@ -1675,9 +1675,9 @@ class Contract extends \BaseModel
             ];
         }
 
-        if ($this->x != 0 || $this->y != 0) {
+        if ($this->lng || $this->lat) {
             $navi = [
-                'link' => "https://www.google.com/maps/dir/my+location/{$this->y},{$this->x}",
+                'link' => "https://www.google.com/maps/dir/my+location/{$this->lat},{$this->lng}",
                 'icon' => 'fa-location-arrow',
                 'title' => trans('messages.route'),
             ];
@@ -1717,7 +1717,7 @@ class Contract extends \BaseModel
     {
         return [
             'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
-            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'x', 'y',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'lng', 'lat',
         ];
     }
 }
