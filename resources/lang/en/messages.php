@@ -789,4 +789,6 @@ return [
     'showOfflineModems'         => 'Show offline modems',
     'modemNotFound'             => 'Modem not found',
     'JsonDecodeFailed'          => 'JSON decode failed',
+    'Latitude'                  => 'Latitude',
+    'Longitude'                 => 'Longitude',
 ];
