@@ -133,8 +133,8 @@ trait Geocoding
             $this->geocode_source = 'n/a (unchanged existing data)';
         } else {
             // if running interactively: delete probably outdated geodata and inform user
-            $this->y = null;
-            $this->x = null;
+            $this->lat = null;
+            $this->lng = null;
             $this->geocode_source = 'n/a';
 
             Session::push('tmp_error_above_form', $message);
@@ -153,12 +153,12 @@ trait Geocoding
      */
     protected function updateGeoPosition(array $geodata): void
     {
-        $this->y = $geodata['latitude'];
-        $this->x = $geodata['longitude'];
+        $this->lat = $geodata['latitude'];
+        $this->lng = $geodata['longitude'];
         $this->geocode_source = $geodata['source'];
         $this->geocode_state = 'OK';
 
-        Log::info('Geocoding successful, result: '.$this->y.','.$this->x.' (source: '.$geodata['source'].')');
+        Log::info('Geocoding successful, result: '.$this->lat.','.$this->lng.' (source: '.$geodata['source'].')');
     }
 
     /**
