@@ -208,7 +208,7 @@ trait Geocoding
             $housenumber_variants = [$parts[0]];
         } else {
             $housenumber_variants = [
-                implode('', $parts),	// more often used according to bug report
+                implode('', $parts),    // more often used according to bug report
                 implode(' ', $parts),
             ];
         }
@@ -221,12 +221,12 @@ trait Geocoding
                 'postalcode' => $this->zip,
                 'city' => $this->city,
                 'country' => $country_code,
-                'email' => env('OSM_NOMINATIM_EMAIL'),	// has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
-                'format' => 'json',			// return format
-                'dedupe' => '1',			// only one geolocation (even if address is split to multiple places)?
-                'polygon' => '0',			// include surrounding polygons?
-                'addressdetails' => '0',	// not available using API
-                'limit' => '1',				// only request one result
+                'email' => env('OSM_NOMINATIM_EMAIL'),  // has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+                'format' => 'json',         // return format
+                'dedupe' => '1',            // only one geolocation (even if address is split to multiple places)?
+                'polygon' => '0',           // include surrounding polygons?
+                'addressdetails' => '0',    // not available using API
+                'limit' => '1',             // only request one result
             ];
 
             $url = $base_url.'?';
@@ -256,7 +256,7 @@ trait Geocoding
 
                     // as both variants can appear in resulting address: check for all of them
                     foreach ($housenumber_variants as $variant) {
-                        if (\Str::contains(strtolower($display_name), $variant)) {	// don't check for startswith; sometimes a company name is added before the house number
+                        if (\Str::contains(strtolower($display_name), $variant)) {  // don't check for startswith; sometimes a company name is added before the house number
                             $geodata = [
                                 'latitude' => $lat,
                                 'longitude' => $lon,
