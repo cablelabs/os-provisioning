@@ -79,19 +79,31 @@ class ConfigfileObserver
         Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'DELETE');
 
         // nothing to do
-        if ($deleted || $configfile->device != 'tr069') {
+        if ($deleted || $configfile->device != 'tr069' || ($entries = $configfile->getMonitoringConfig()) == []) {
             return;
         }
 
-        $prov = [];
-        $conf = $configfile->getMonitoringConfig();
+        $columns = Configfile::getMonitoringColumns();
+        $publish = false;
 
-        $prov = array_map(function ($value) {
-            if (\Str::startsWith($value, ['_', 'Device', 'InternetGatewayDevice'])) {
-                return "declare('$value', {value: Date.now() - (290 * 1000)});";
+        // remove invalid monitoring config entries
+        $entries = array_filter(call_user_func_array('array_merge', $entries), function ($entry) use (&$publish) {
+            if (! is_array($entry) || count($entry) != 3 || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice'])) {
+                return false;
             }
-        }, \Illuminate\Support\Arr::flatten($conf));
 
-        Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', implode("\r\n", $prov));
+            if ($entry[2] === null) {
+                return true;
+            }
+
+            if (is_array($entry[2]) && count($entry[2]) == 3 && in_array($entry[2][1], ['+', '-', '*', '/', '%']) && is_numeric($entry[2][2])) {
+                $publish = true;
+
+                return true;
+            }
+        });
+
+        $view = \View::make('provbase::GenieACS.monitoring', compact('columns', 'entries', 'publish'));
+        Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', strval($view));
     }
 }

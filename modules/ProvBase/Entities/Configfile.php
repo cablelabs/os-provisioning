@@ -563,4 +563,17 @@ class Configfile extends \BaseModel
 
         return $conf;
     }
+
+    /**
+     * Get all available user-settable columns of TimescaleDB
+     *
+     * @author Ole Ernst
+     */
+    public static function getMonitoringColumns(): array
+    {
+        return array_values(array_diff(
+            \DB::connection('pgsql-timescaledb')->getSchemaBuilder()->getColumnListing('modems'),
+            ['time', 'device_id', 'in_octets', 'out_octets']
+        ));
+    }
 }
