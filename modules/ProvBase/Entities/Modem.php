@@ -1074,7 +1074,7 @@ class Modem extends \BaseModel
 
         curl_setopt_array($ch, [
             CURLOPT_URL => "http://localhost:7557/$route",
-            CURLOPT_RETURNTRANSFER => $customRequest == 'GET' ? true : false,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_CUSTOMREQUEST => $customRequest,
             CURLOPT_POSTFIELDS => $data,
@@ -1085,7 +1085,7 @@ class Modem extends \BaseModel
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        // No such device
+        // GenieACS general error
         if ($status == 202) {
             $result = false;
         }
