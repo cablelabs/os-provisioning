@@ -1025,7 +1025,7 @@ class Modem extends \BaseModel
             }
         }
 
-        self::callGenieAcsApi("provisions/prov-$this->id", 'PUT', implode("\r\n", $prov));
+        self::callGenieAcsApi("provisions/prov-$this->id", 'PUT', implode("\n", $prov));
     }
 
     /**
