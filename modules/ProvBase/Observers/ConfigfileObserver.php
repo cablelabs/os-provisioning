@@ -103,7 +103,10 @@ class ConfigfileObserver
             }
         });
 
-        $view = \View::make('provbase::GenieACS.monitoring', compact('columns', 'entries', 'publish'));
-        Modem::callGenieAcsApi("provisions/mon-$configfile->id", 'PUT', strval($view));
+        Modem::callGenieAcsApi(
+            "provisions/mon-{$configfile->id}",
+            'PUT',
+            view('provbase::GenieACS.monitoring', compact('columns', 'entries', 'publish'))->render()
+        );
     }
 }
