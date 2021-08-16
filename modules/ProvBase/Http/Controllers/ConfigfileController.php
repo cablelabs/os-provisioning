@@ -298,7 +298,9 @@ class ConfigfileController extends \BaseController
             $lists[] = $jsonArray;
         }
 
-        return ['lists' => $lists];
+        $columns = Configfile::getMonitoringColumns();
+
+        return compact('lists', 'columns');
     }
 
     /**

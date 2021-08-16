@@ -71,29 +71,9 @@
                             <input type="number" step="0.0001" name="opvalue" v-model="item.opvalue"/>
                             <select name="cvalue" v-model="item.cvalue" v-dispatchsel2>
                                 <option value=""></option>
-                                <option value="maxDsPow">maxDsPow</option>
-                                <option value="avgUsSNR">avgUsSNR</option>
-                                <option value="T4Timeout">T4Timeout</option>
-                                <option value="maxUsPow">maxUsPow</option>
-                                <option value="avgDsPow">avgDsPow</option>
-                                <option value="T3Timeout">T3Timeout</option>
-                                <option value="Uncorrectable">Uncorrectable</option>
-                                <option value="avgUsPow">avgUsPow</option>
-                                <option value="avgMuRef">avgMuRef</option>
-                                <option value="minDsPow">minDsPow</option>
-                                <option value="maxUsSNR">maxUsSNR</option>
-                                <option value="minMuRef">minMuRef</option>
-                                <option value="maxMuRef">maxMuRef</option>
-                                <option value="minUsPow">minUsPow</option>
-                                <option value="avgDsSNR">avgDsSNR</option>
-                                <option value="minUsSNR">minUsSNR</option>
-                                <option value="Corrected">Corrected</option>
-                                <option value="maxDsSNR">maxDsSNR</option>
-                                <option value="minDsSNR">minDsSNR</option>
-                                <option value="ifHCInOctets">ifHCInOctets</option>
-                                <option value="ifHCOutOctets">ifHCOutOctets</option>
-                                <option value="avgDsAttn">avgDsAttn</option>
-                                <option value="avgUsAttn">avgUsAttn</option>
+                                @foreach ($additional_data['columns'] as $column)
+                                    <option value="{{$column}}">{{$column}}</option>
+                                @endforeach
                             </select>
                             <select name="coperator" v-model="item.coperator" v-dispatchsel2>
                                 <option value=""></option>
