@@ -167,8 +167,6 @@ $(document).ready(function() {
     window.JSZip = true
     window.pdfMake = true
 
-    removeInitialOrder()
-
     let order = [
         @if (isset($indexTableInfo['order_by']))
             @foreach ($indexTableInfo['order_by'] as $columnindex => $direction)
@@ -253,45 +251,6 @@ $(document).ready(function() {
     @endif
 
     table.draw()
-
-    /**
-     * Remove sorting (order by statement in query) in huge tables when no filter is set on initialization by
-     * removing order key from browser cache
-     */
-    function removeInitialOrder()
-    {
-        if (! {{ intval($hugeTable) }}) {
-            return;
-        }
-
-        let storageKey = 'DataTables_datatable_/admin/{{$route_name}}';
-        let storage = localStorage.getItem(storageKey);
-
-        if (! storage) {
-            return;
-        }
-
-        storage = JSON.parse(storage);
-
-        if (! storage || storage.search.search) {
-            return;
-        }
-
-        let hasFilter = false;
-        storage.columns.forEach(function (obj) {
-            if (obj.search.search) {
-                hasFilter = true;
-                return;
-            }
-        });
-
-        if (hasFilter) {
-            return;
-        }
-
-        delete storage.order;
-        localStorage.setItem(storageKey, storage);
-    }
 
     function setGlobalFilter(col, search)
     {
