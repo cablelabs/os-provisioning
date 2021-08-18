@@ -1916,8 +1916,9 @@ class Modem extends \BaseModel
         $tickets = $this->tickets;
         $genieCmds = [];
 
+        // Configfile tab
         if ($this->isTR069()) {
-            $prov = json_decode(self::callGenieAcsApi("provisions/?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
+            $prov = json_decode(self::callGenieAcsApi("provisions?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
