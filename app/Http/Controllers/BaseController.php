@@ -1635,35 +1635,24 @@ class BaseController extends Controller
     {
         $model = static::get_model_obj();
         $dt_config = $model->view_index_label();
-
         $header_fields = $dt_config['index_header'];
         $edit_column_data = $dt_config['edit'] ?? [];
         $filter_column_data = $dt_config['filter'] ?? [];
         $eager_loading_tables = $dt_config['eager_loading'] ?? [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
 
-        if (empty($eager_loading_tables)) { //use eager loading only when its needed
-            $request_query = $model::select($dt_config['table'].'.*');
+        $query = $model::select($dt_config['table'].'.*');
 
-            $first_column = head($header_fields);
-            if (strpos($first_column, $dt_config['table'].'.') === 0) {
-                $first_column = substr($first_column, strlen($dt_config['table']) + 1);
-            }
-        } else {
-            $request_query = $model::with($eager_loading_tables)->select($dt_config['table'].'.*'); //eager loading | select($select_column_data);
-            if (Str::startsWith(head($header_fields), $dt_config['table'])) {
-                $first_column = substr(head($header_fields), strlen($dt_config['table']) + 1);
-            } else {
-                $first_column = head($header_fields);
-            }
+        if ($eager_loading_tables) {
+            $query->with($eager_loading_tables);
         }
 
         if (isset($dt_config['scope'])) {
             $scope = $dt_config['scope'];
-            $request_query->$scope();
+            $query->$scope();
         }
 
-        $DT = DataTables::make($request_query)
+        $DT = DataTables::make($query)
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
@@ -1678,6 +1667,8 @@ class BaseController extends Controller
         // ->setFilteredRecords(10000)
         // ->skipTotalRecords()
 
+
+        // TODO: Just set this in where clause in query?
         foreach ($filter_column_data as $column => $custom_query) {
             // backward compatibility – accept strings as input, too
             if (is_string($custom_query)) {
@@ -1693,6 +1684,11 @@ class BaseController extends Controller
 
                 $query->with($custom_query['eagers'])->whereRaw($custom_query['query'], [$keyword]);
             });
+        }
+
+        $first_column = head($header_fields);
+        if (Str::startsWith(head($header_fields), $dt_config['table'])) {
+            $first_column = substr($first_column, strlen($dt_config['table']) + 1);
         }
 
         $DT->editColumn('checkbox', function ($model) {
