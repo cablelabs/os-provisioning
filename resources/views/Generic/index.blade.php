@@ -101,8 +101,8 @@
     @if ($delete_allowed)
         {{ Form::open(array('route' => array($route_name.'.destroy', 0), 'method' => 'delete', 'id' => 'IndexForm')) }}
     @endif
-    {{-- INIT DT --}}
 
+    {{-- INIT DT --}}
     <table class="table table-hover datatable table-bordered d-table" id="datatable">
         {{-- Get Headerdata and translate with translation files --}}
         <thead> {{-- TABLE HEADER --}}
@@ -118,10 +118,10 @@
                 @if (isset($model) && $methodExists && is_array($indexTableInfo) && isset($indexTableInfo['index_header']))
                     @foreach ($indexTableInfo['index_header'] as $field)
                         <th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
-                        @if ((!empty($indexTableInfo['disable_sortsearch'])) && ($indexTableInfo['disable_sortsearch'] == [$field => 'false']))
+                        @if ((! empty($indexTableInfo['disable_sortsearch'])) && ($indexTableInfo['disable_sortsearch'] == [$field => 'false']))
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top"
                                 data-delay='{"show":"250"}' data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
-                        @elseif (!empty($indexTableInfo['help'][$field]))
+                        @elseif (! empty($indexTableInfo['help'][$field]))
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top"
                                 data-delay='{"show":"250"}' data-original-title="{{trans('helper.'.$indexTableInfo['help'][$field])}}"></i>
                         @endif
@@ -130,8 +130,10 @@
                 @endif
             </tr>
         </thead>
+
         <tbody> {{-- Table DATA --}}
         </tbody>
+
         <tfoot> {{-- TABLE FOOTER--}}
         @if (isset($model) && $methodExists)
             <tr>
@@ -149,7 +151,9 @@
             </tr>
         @endif
         </tfoot>
+
     </table>
+
     @if ($delete_allowed)
         {{ Form::close() }}
     @endif
@@ -178,15 +182,15 @@ $(document).ready(function() {
     ];
 
     let table = $('table.datatable').DataTable({
-    {{-- STANDARD CONFIGURATION --}}
+        {{-- STANDARD CONFIGURATION --}}
         {{-- Translate Datatables Base --}}
-            @include('datatables.lang')
+        @include('datatables.lang')
         {{-- Buttons above Datatable for export, print and change Column Visibility --}}
-            @include('datatables.buttons')
+        @include('datatables.buttons')
         {{-- Table Footer Search fields to filter Columnwise and SAVE Filter --}}
-            @include('datatables.colsearch')
+        @include('datatables.colsearch')
         {{-- Show Pagination only when the results do not fit on one page --}}
-            @include('datatables.paginate')
+        @include('datatables.paginate')
         responsive: {
             details: {
                 type: 'column', {{-- auto resize the Table to fit the viewing device --}}
@@ -226,7 +230,7 @@ $(document).ready(function() {
             targets :  "_all",
             className : 'ClickableTd',
         } ],
-    {{-- AJAX CONFIGURATION --}}
+        {{-- AJAX CONFIGURATION --}}
         @if (isset($model) && method_exists( $model, 'view_index_label') )
             processing: true, {{-- show loader--}}
             serverSide: true, {{-- enable Serverside Handling--}}

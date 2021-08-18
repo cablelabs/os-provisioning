@@ -62,5 +62,6 @@ initComplete: function () {
             }
         });
     }
+
     $(this).DataTable().columns.adjust().responsive.recalc();
 },

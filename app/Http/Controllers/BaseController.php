@@ -1711,7 +1711,7 @@ class BaseController extends Controller
             }
 
             return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).'"><strong>'.
-            $model->view_icon().$content.'</strong></a>';
+                $model->view_icon().$content.'</strong></a>';
         });
 
         foreach ($edit_column_data as $column => $functionname) {
