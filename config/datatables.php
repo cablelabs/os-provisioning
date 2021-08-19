@@ -24,6 +24,10 @@ return [
         /*
          * Smart search will enclose search keyword with wildcard string "%keyword%".
          * SQL: column LIKE "%keyword%"
+         *
+         * NOTE: With Datatables v9.18.0 Datatables adds two % symbols to search string in
+         * DataTableAbstract::setupKeyword() and QueryDataTable::prepareKeyword()
+         * This actually should be resolved from v6.16.1 - see https://github.com/yajra/laravel-datatables/issues/665
          */
         'smart' => true,
 

@@ -34,7 +34,8 @@ initComplete: function () {
 
                 input_filter_timeout = setTimeout(function() {
                     // https://datatables.net/reference/api/column().search() - params: input, regex, smart, caseInsen
-                    column.search(val ? val : '', true, false).draw();
+                    // Setting smart search doesn't seem to have an influence when it's already set on server side (datatables.php)
+                    column.search(val ? val : '', false, true).draw();
                 }, 500);
             });
         }
