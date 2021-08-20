@@ -34,10 +34,14 @@ class AddSqliteTablesForJobs extends BaseMigration
     public function up()
     {
         $dbFile = config("database.connections.$this->connection.database");
+        $dbDir = dirname($dbFile);
+
         touch($dbFile);
         chown($dbFile, 'apache');
+        chown($dbDir, 'apache');
         chgrp($dbFile, 'apache');
         chmod($dbFile, 0640);
+        chmod($dbDir, 0755);
 
         Schema::connection($this->connection)->create('jobs', function (Blueprint $table) {
             $table->integer('id');
