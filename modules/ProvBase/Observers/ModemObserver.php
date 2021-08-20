@@ -56,8 +56,8 @@ class ModemObserver
             \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
         }
 
-        if (! $modem->network_access) {
-            Modem::createDhcpBlockedCpesFile();
+        if (! $modem->internet_access) {
+            $modem->blockCpeViaDhcp();
         }
     }
 
@@ -129,11 +129,11 @@ class ModemObserver
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
 
-            if (array_key_exists('internet_access', $diff)) {
-                Modem::createDhcpBlockedCpesFile();
-            }
-
             if (! $modem->wasRecentlyCreated) {
+                if (array_key_exists('internet_access', $diff)) {
+                    $modem->blockCpeViaDhcp(boolval($modem->internet_access));
+                }
+
                 $modem->restart_modem(array_key_exists('mac', $diff));
             }
 
@@ -166,8 +166,8 @@ class ModemObserver
         $modem->updateRadius();
 
         Modem::create_ignore_cpe_dhcp_file();
-        if (! $modem->network_access) {
-            Modem::createDhcpBlockedCpesFile();
+        if (! $modem->internet_access) {
+            $modem->blockCpeViaDhcp(true);
         }
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();

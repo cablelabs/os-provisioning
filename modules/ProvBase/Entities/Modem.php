@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
+use Str;
 use File;
 use Module;
 use App\Sla;
@@ -716,10 +717,45 @@ class Modem extends \BaseModel
         $modems = [];
 
         foreach (self::where('internet_access', 0)->whereNotNull('mac')->get() as $modem) {
-            $modems[] = 'subclass "blocked" '.$modem->mac.'; # CM id: '.$modem->id;
+            $modems[] = $modem->getDhcpBlockedCpeSublass();
         }
 
         File::put(self::BLOCKED_CPE_FILE_PATH, $comment."\n".implode("\n", $modems), true);
+    }
+
+    /**
+     * Add/Remove modem MAC to/from DHCP blocking file - to not hand out IP addresses to CPEs behind that modem
+     */
+    public function blockCpeViaDhcp($unblock = false)
+    {
+        // Add (Block)
+        if (! $unblock) {
+            file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
+
+            return;
+        }
+
+        // Remove (Unblock)
+        $lines = file(self::BLOCKED_CPE_FILE_PATH);
+
+        foreach ($lines as $i => $line) {
+            if (Str::contains($line, $this->mac)) {
+                unset($lines[$i]);
+                File::put(self::BLOCKED_CPE_FILE_PATH, implode($lines), true);
+
+                return;
+            }
+        }
+    }
+
+    /**
+     * Get Subclass statement for DHCP config to block all CPE's behind a modem
+     *
+     * @return string
+     */
+    private function getDhcpBlockedCpeSublass()
+    {
+        return 'subclass "blocked" '.$this->mac.'; # CM id: '.$this->id;
     }
 
     /**

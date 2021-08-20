@@ -1667,7 +1667,6 @@ class BaseController extends Controller
         // ->setFilteredRecords(10000)
         // ->skipTotalRecords()
 
-
         // TODO: Just set this in where clause in query?
         foreach ($filter_column_data as $column => $custom_query) {
             // backward compatibility – accept strings as input, too
