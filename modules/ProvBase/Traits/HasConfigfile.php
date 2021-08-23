@@ -39,28 +39,6 @@ trait HasConfigfile
     }
 
     /**
-     * Make configfiles for all Devices
-     *
-     * @author Patrick Reichel
-     */
-    public function make_configfile_all()
-    {
-        $devices = static::all();
-
-        foreach ($devices as $device) {
-            if ($device->id == 0) {
-                continue;
-            }
-
-            if (! $device->make_configfile()) {
-                Log::warning('failed to build/write configfile for device '.$device->hostname);
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Deletes Configfile of one mta
      */
     public function delete_configfile()
