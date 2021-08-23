@@ -86,8 +86,13 @@ class ConfigfileObserver
         $columns = Configfile::getMonitoringColumns();
         $publish = false;
 
+        $flattenedEntries = [];
+        foreach ($entries as $entry) {
+            $flattenedEntries = array_merge($flattenedEntries, array_values($entry));
+        }
+
         // remove invalid monitoring config entries
-        $entries = array_filter(call_user_func_array('array_merge', $entries), function ($entry) use (&$publish) {
+        $entries = array_filter($flattenedEntries, function ($entry) use (&$publish) {
             if (! is_array($entry) || count($entry) != 3 || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice'])) {
                 return false;
             }
