@@ -507,13 +507,12 @@ class Configfile extends \BaseModel
         // Modem
         foreach (Modem::TYPES as $type) {
             if (! $filter || $filter == $type) {
-                $modems = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')
+                $modemQuery = Modem::join('configfile', 'configfile.id', 'modem.configfile_id')
                     ->where('configfile.device', $type)
                     ->whereNull('configfile.deleted_at')
-                    ->select('modem.*')
-                    ->get();
+                    ->select('modem.*');
 
-                $this->build_configfiles($modems, $type);
+                $this->build_configfiles($modemQuery, $type);
             }
         }
 
@@ -523,27 +522,31 @@ class Configfile extends \BaseModel
                 return;
             }
 
-            $mtas = \Modules\ProvVoip\Entities\Mta::all();
-            $this->build_configfiles($mtas, 'mta');
+            $mtaQuery = \Modules\ProvVoip\Entities\Mta::query();
+            $this->build_configfiles($mtaQuery, 'mta');
         }
     }
 
     /**
      * @param array  Objects of Modem or Mta
      */
-    public function build_configfiles($devices, $type)
+    public function build_configfiles($deviceQuery, $type)
     {
-        $i = 1;
-        $num = count($devices);
         $type = strtoupper($type);
+        $num = (clone $deviceQuery)->count();
 
         \Log::info("Build all $num $type configfiles");
 
-        foreach ($devices as $device) {
-            echo "$type: create config files: $i/$num \r";
-            $i++;
-            $device->make_configfile();
-        }
+        $deviceQuery->chunk(1000, function ($devices) use ($num, $type) {
+            static $i = 1;
+
+            foreach ($devices as $device) {
+                echo "$type: create config files: $i/$num\r";
+                $device->make_configfile();
+
+                $i++;
+            }
+        });
 
         echo "\n";
     }
