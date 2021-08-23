@@ -285,7 +285,7 @@ return [
             'password' => env('TIMESCALE_DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'schema' => 'monitoring',
             'sslmode' => 'prefer',
         ],
 
