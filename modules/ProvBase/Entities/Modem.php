@@ -427,31 +427,29 @@ class Modem extends \BaseModel
     /**
      * Returns the config file entry string for a cable modem in dependency of private or public ip
      *
+     * @param object $conf      Global conf only loaded once to speed up DHCP config building in DhcpCommand
      * @author Nino Ryschawy
      * @return string
      */
-    private function generate_cm_dhcp_entry()
+    private function generate_cm_dhcp_entry($conf = null)
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
-        if (stripos($this->mac, 'ff:') === 0) {
-            return '';
-        }
-
-        if (! $this->mac) {
+        if (stripos($this->mac, 'ff:') === 0 || ! $this->mac) {
             return '';
         }
 
         $ret = 'host '.$this->hostname.' { hardware ethernet '.$this->mac.'; filename "cm/'.$this->hostname.'.cfg"; ddns-hostname "'.$this->hostname.'";';
 
-        if (Module::collections()->has('ProvVoip') && $this->mtas()->pluck('mac')->filter(function ($mac) {
+        if (Module::collections()->has('ProvVoip') && $this->mtas->pluck('mac')->filter(function ($mac) {
             return stripos($mac, 'ff:') !== 0;
         })->count()) {
             if (! Module::collections()->has('ProvHA')) {
-                $ret .= ' option ccc.dhcp-server-1 '.ProvBase::first()->provisioning_server.';';
+                $provServer = $conf ? $conf->provisioning_server : ProvBase::first()->provisioning_server;
+                $ret .= " option ccc.dhcp-server-1 $provServer;";
             } else {
-                $provha = \Modules\ProvHA\Entities\ProvHA::first();
+                $provha = $conf ?: \Modules\ProvHA\Entities\ProvHA::first();
                 $master = $provha->master;
                 $slave = explode(',', $provha->slaves)[0] ?: null;
                 if ('master' == config('provha.hostinfo.ownState')) {
@@ -504,37 +502,34 @@ class Modem extends \BaseModel
     {
         Log::info('dhcp: update '.self::CONF_FILE_PATH.', '.self::CONF_FILE_PATH_PUB);
 
-        $data = '';
-        $data_pub = '';
-
         self::clear_dhcp_conf_files();
 
-        foreach (self::all() as $modem) {
-            if ($modem->id == 0) {
-                continue;
+        $chunksize = 1000;
+        $count = self::count();
+        $rest = $count % $chunksize;
+        $num = round($count / $chunksize) + ($rest ? 1 : 0);
+        $conf = Module::collections()->has('ProvHA') ? \Modules\ProvHA\Entities\ProvHA::first() : ProvBase::first();
+
+        self::with('mtas')->chunk($chunksize, function ($modems) use ($num, $conf) {
+            static $i = 1;
+            $data = $data_pub = '';
+
+            foreach ($modems as $modem) {
+                // All
+                $data .= $modem->generate_cm_dhcp_entry($conf);
+
+                // Public ip
+                if ($modem->public) {
+                    $data_pub .= $modem->generate_cm_dhcp_entry_pub();
+                }
             }
 
-            // all
-            $data .= $modem->generate_cm_dhcp_entry();
+            $i++;
+            echo "$i/$num\r";
 
-            // public ip
-            if ($modem->public) {
-                $data_pub .= $modem->generate_cm_dhcp_entry_pub();
-            }
-        }
-
-        $ret = File::put(self::CONF_FILE_PATH, $data);
-        if ($ret === false) {
-            exit('Error writing to file');
-        }
-
-        $ret = File::append(self::CONF_FILE_PATH_PUB, $data_pub);
-        if ($ret === false) {
-            exit('Error writing to file');
-        }
-
-        // chown for future writes in case this function was called from CLI via php artisan nms:dhcp that changes owner to 'root'
-        system('/bin/chown -R apache /etc/dhcp-nmsprime/');
+            file_put_contents(self::CONF_FILE_PATH, $data, FILE_APPEND | LOCK_EX);
+            file_put_contents(self::CONF_FILE_PATH_PUB, $data_pub, FILE_APPEND | LOCK_EX);
+        });
     }
 
     /**

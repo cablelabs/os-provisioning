@@ -195,20 +195,29 @@ class Mta extends \BaseModel
     {
         self::clear_dhcp_conf_file();
 
-        $data = '';
+        $chunksize = 1000;
+        $count = self::count();
+        $rest = $count % $chunksize;
+        $num = round($count / $chunksize) + ($rest ? 1 : 0);
 
-        foreach (self::all() as $mta) {
-            // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
-            if ($mta->id == 0 || stripos($mta->mac, 'ff:') === 0 || ! $mta->mac) {
-                continue;
+        self::chunk($chunksize, function ($mtas) use ($num) {
+            static $i = 1;
+            $data = '';
+
+            foreach ($mtas as $mta) {
+                // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
+                if (stripos($mta->mac, 'ff:') === 0 || ! $mta->mac) {
+                    continue;
+                }
+
+                $data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$mta->id.'"; }'."\n";
             }
 
-            $data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$mta->id.'"; }'."\n";
-        }
+            $i++;
+            echo "$i/$num\r";
 
-        File::put(self::CONF_FILE_PATH, $data);
-
-        return true;
+            file_put_contents(self::CONF_FILE_PATH, $data, FILE_APPEND | LOCK_EX);
+        });
     }
 
     /**
