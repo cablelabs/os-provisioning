@@ -910,43 +910,9 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Refresh the online state of all PPP device by checking if their last
-     * accounting update was within the last acct_interim_interval seconds
-     *
-     * @author Ole Ernst
-     */
-    public static function refreshPPP()
-    {
-        $hf = array_flip(config('hfcreq.hfParameters'));
-
-        $online = RadAcct::where(
-            'acctupdatetime',
-            '>=',
-            \Carbon\Carbon::now()->subSeconds(ProvBase::first()->acct_interim_interval)
-        )->pluck('username')->unique();
-
-        DB::beginTransaction();
-        // make all ppp devices offline
-        // toBase() is needed since updated_at is ambiguous
-        self::join('configfile', 'configfile.id', 'modem.configfile_id')
-            ->where('configfile.device', 'tr069')
-            ->whereNull('configfile.deleted_at')
-            ->toBase()
-            ->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
-
-        // set all ppp devices online, which sent us an accounting update
-        // in the last acct_interim_interval seconds
-        // for now we set them to a sensible DOCIS US power level to make them green
-        self::whereIn('ppp_username', $online)->update(array_combine($hf, [40, 36, 0, 36]));
-        DB::commit();
-    }
-
-    /**
      * Colorize Modem index table when ProvMon module is missing
      * only for first $count modems as this takes a huge amount of time
      * Use obvious code generated/fixed amount of ds_pwr
-     *
-     * Status of all other modems is set in refreshPPP()
      *
      * @param int $count max count of modems to check
      */
