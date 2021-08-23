@@ -233,6 +233,7 @@ return [
     'modem.us_snr' => 'US SNR / dB',
     'modem.ds_pwr' => 'DS level / dBmV',
     'modem.ds_snr' => 'DS SNR / dB',
+    'modem.phy_updated_at' => 'PHY updated at',
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
     'contract_valid' => 'Contract valid?',

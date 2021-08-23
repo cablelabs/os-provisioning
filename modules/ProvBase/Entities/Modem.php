@@ -128,7 +128,7 @@ class Modem extends \BaseModel
         ];
 
         if (Module::collections()->has('ProvMon')) {
-            $hfParameters = [$this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr'];
+            $hfParameters = [$this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr', $this->table.'.phy_updated_at'];
 
             $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
         }
