@@ -37,6 +37,9 @@ class PhonenumberCommand extends Command
      */
     protected $description = 'Phonenumber Scheduling Command';
 
+    // Global counter variable
+    protected $i;
+
     /**
      * Create a new command instance.
      *
@@ -54,10 +57,18 @@ class PhonenumberCommand extends Command
      */
     public function handle()
     {
-        $phonenumbers = Phonenumber::all();
+        $num = Phonenumber::count();
+        $this->i = 1;
 
-        foreach ($phonenumbers as $phonenumber) {
-            $phonenumber->daily_conversion();
-        }
+        Phonenumber::chunk(10000, function ($phonenumbers) use ($num) {
+            foreach ($phonenumbers as $phonenumber) {
+                $phonenumber->daily_conversion();
+
+                echo "Check phonenumber: $this->i/$num\r";
+                $this->i++;
+            }
+        });
+
+        echo "\n";
     }
 }
