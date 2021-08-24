@@ -791,30 +791,24 @@ class NetElement extends \BaseModel
      */
     public static function relation_index_build_all($call_from_cmd = 0)
     {
-        $netelements = self::all();
-
         \Log::info('nms: build net and cluster index of all tree objects');
 
-        $i = 1;
-        $num = count($netelements);
+        $num = self::count();
 
-        foreach ($netelements as $netelement) {
-            $debug = "nms: netelement - rebuild net and cluster index $i of $num - id ".$netelement->id;
-            \Log::debug($debug);
+        self::chunk(1000, function ($netelements) use ($num) {
+            static $i = 1;
 
-            $netelement->update(['net' => $netelement->get_native_net(),
-                'cluster' => $netelement->get_native_cluster(),
-                'netgw_id' => $netelement->get_native_netgw(), ]);
+            foreach ($netelements as $netelement) {
+                $netelement->update(['net' => $netelement->get_native_net(),
+                    'cluster' => $netelement->get_native_cluster(),
+                    'netgw_id' => $netelement->get_native_netgw(), ]);
 
-            if ($call_from_cmd == 1) {
-                echo "$debug\r";
-            }
-            $i++;
-
-            if ($call_from_cmd == 2) {
+                $debug = "nms: netelement - rebuild net and cluster index $i of $num - id ".$netelement->id;
                 echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->netgw_id;
+
+                $i++;
             }
-        }
+        });
 
         echo "\n";
     }
