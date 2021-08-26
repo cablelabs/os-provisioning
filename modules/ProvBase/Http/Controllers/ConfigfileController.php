@@ -66,8 +66,11 @@ class ConfigfileController extends \BaseController
             ['form_type' => 'select', 'name' => 'firmware', 'description' => 'Choose Firmware/Dialplan File', 'value' => $firmware_files],
             ['form_type' => 'file', 'name' => 'firmware_upload', 'description' => 'or: Upload Firmware/Dialplan File'],
             ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring String', 'hidden' => true],
-            ['form_type' => 'select', 'name' => 'dashboard', 'description' => 'Analysis Dashboard', 'value' => [null => null] + $dashboards],
         ];
+
+        if ($model->device != 'mta') {
+            array_push($form, ['form_type' => 'select', 'name' => 'dashboard', 'description' => 'Analysis Dashboard', 'value' => [null => null] + $dashboards]);
+        }
 
         if (\Route::currentRouteName() == 'Configfile.create') {
             array_push($form, ['form_type' => 'file', 'name' => 'import', 'description' => trans('messages.import'), 'help' => trans('messages.importTree')]);
