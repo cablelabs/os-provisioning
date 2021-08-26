@@ -32,7 +32,7 @@ class UpdateConfigfileAddDashboard extends BaseMigration
     public function up()
     {
         Schema::table($this->tablename, function (Blueprint $table) {
-            $table->string('dashboard')->default('/grafana/d/3-42DM6Gk/modem');
+            $table->string('dashboard')->default('/grafana/d/3-42DM6Gk/cablemodem');
         });
 
         return parent::up();
