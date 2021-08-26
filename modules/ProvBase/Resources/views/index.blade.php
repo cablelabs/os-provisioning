@@ -75,41 +75,81 @@
         </div>
         <div class="row">
             @DivOpen(4)
-            <div class="widget widget-stats bg-blue">
-                {{-- info/data --}}
-                <div class="stats-info text-center">
+                <div class="widget widget-stats bg-blue">
+                    {{-- info/data --}}
+                    <div class="stats-info text-center">
 
-                    {!! HTML::decode (HTML::linkRoute('Modem.firmware',
-                        '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                            <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br>
-                            <span class="username text-ellipsis text-center">Firmwares</span>
-                        </span>'))
-                    !!}
-
-                    @if (Module::collections()->has('HfcCustomer'))
-                        {!! HTML::decode (HTML::linkRoute('CustomerTopo.show_impaired',
+                        {!! HTML::decode (HTML::linkRoute('Modem.firmware',
                             '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                                <i style="font-size: 25px;" class="img-center fa fa-hdd-o text-danger p-10"></i><br>
-                                <span class="username text-ellipsis text-center">'.trans('view.dashboard.impairedModem').'</span>
-                            </span>', ['row' => 'us_pwr', 'lower' => 50]))
+                                <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br>
+                                <span class="username text-ellipsis text-center">Firmwares</span>
+                            </span>'))
                         !!}
-                    @endif
 
-                    {{-- reference link --}}
-                    <div class="stats-link noHover"><a href="#"><br></a></div>
+                        {{-- reference link --}}
+                        <div class="stats-link noHover"><a href="#"><br></a></div>
 
+                    </div>
                 </div>
             @DivClose()
-            </div>
-                <div class="col-md-4">
-                    @include('Generic.widgets.moduleDocu', [ 'urls' => [
-                        'documentation' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/Provisioning',
-                        'youtube' => 'https://youtu.be/RjMlhKQXgU4',
-                        'forum' => 'https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/Provisioning+General',
-                    ]])
-                </div>
+
+            <div class="col-md-4">
+                @include('Generic.widgets.moduleDocu', [ 'urls' => [
+                    'documentation' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/Provisioning',
+                    'youtube' => 'https://youtu.be/RjMlhKQXgU4',
+                    'forum' => 'https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/Provisioning+General',
+                ]])
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                @if (Module::collections()->has('HfcCustomer'))
+                    @section('impaired_modems')
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="impairedModemRow">{{ trans('messages.Sort') }}</label>
+                                <select class="custom-select" id="impairedModemRow">
+                                    <option selected value="us_pwr">US Power</option>
+                                    <option value="ds_pwr">DS Power</option>
+                                    <option value="us_snr">US SNR</option>
+                                    <option value="ds_snr">DS SNR</option>
+                                </select>
+                            </div>
+                            <div class="input-group-prepend" style="margin-top: 20px; margin-bottom: 20px;">
+                                <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="lowerValue">{{ trans('messages.minimum') }}</label>
+                                <input type="number" value="50" class="form-control" id="lowerValue">
+                            </div>
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="upperValue">{{ trans('messages.maximum') }}</label>
+                                <input type="number" value="75" class="form-control" id="upperValue">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="filterImpairedModems()" type="button">{{ trans('view.Button_Search') }}</button>
+                    @stop
+                    @include ('bootstrap.panel', [
+                            'content' => "impaired_modems",
+                            'view_header' => trans('view.dashboard.impairedModem'),
+                            'height' => 'auto',
+                            'i' => '1',
+                        ])
+                @endif
+            </div>
         </div>
+    </div>
 
 @stop
+
+@section('javascript_extra')
+<script type="text/javascript">
+    function filterImpairedModems() {
+        let url = "{!! route('CustomerTopo.show_impaired', ['row' => 'impairedModemRow', 'lower' => 'lowerValue', 'upper' => 'upperValue']) !!}";
+
+        ['impairedModemRow', 'lowerValue', 'upperValue'].forEach( function (attribute) {
+            return url = url.replace(attribute, document.getElementById(attribute).value);
+        });
+
+        document.location.href = url;
+    }
+</script>
+
+@endsection

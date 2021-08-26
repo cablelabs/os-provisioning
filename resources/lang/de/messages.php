@@ -774,4 +774,8 @@ return [
     'delete_task'               => 'Lösche Aufgabe:',
     'refreshPage'               => 'Bitte Seite neu laden, um die ersten 25 Netze anzuzeigen!',
     'noClusterOrNet'            => 'Zu diesem Suchbegriff wurden keine Netze oder Cluster gefunden!',
+    'refreshPage'               => 'Bitte Seite neu laden, um die ersten 25 Netze anzuzeigen',
+    'minimum'                   => 'Minimum',
+    'maximum'                   => 'Maximum',
+    'sort'                      => 'Sortieren nach',
 ];
