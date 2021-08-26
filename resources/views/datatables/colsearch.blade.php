@@ -27,8 +27,34 @@ initComplete: function () {
         input.classList.add('select2');
 
         if ($(this.footer()).hasClass('searchable')){
-            $(input).appendTo($(column.footer()).empty()).on('keyup', function () {
+            $(input).appendTo($(column.footer()).empty()).on('keyup', function (e) {
                 var val = $(this).val();
+
+                if (column.dataSrc() == 'mac' && val.length > 2) {
+                    val = val.replace(/[\.\-]/g, ':');
+                    var inputLength = val.length;
+                    var mac = val.replace(/[\.\:\-]/g, '').match(/([a-f0-9]{1,2})/gi).join(':');
+
+                    // if ':' has been added manually, then search this value
+                    var wrongFormat = /(\:|^)[0-9a-f]{1}\:/gi;
+                    if (inputLength <= mac.length || wrongFormat.test(val)) {
+                        val = mac;
+                    }
+
+                    var caretPosition = this.selectionEnd;
+
+                    $(this).val(val);
+                    column.search(val);
+
+                    // ignore arrow keys and ctrl+v
+                    var code = e.keyCode || e.which
+                    if (code == 8 || code == 46) {
+                        this.selectionEnd = caretPosition;
+                    } else if (code < 37 || code > 40 && code != 86) {
+                        // change caret position if ':' was added via JS
+                        this.selectionEnd = caretPosition + (val.length - inputLength);
+                    }
+                }
 
                 clearTimeout(input_filter_timeout);
 
