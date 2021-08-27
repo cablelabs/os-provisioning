@@ -73,3 +73,6 @@
 [submodule "public/components/assets-admin/plugins/leaflet-plugins/google"]
 	path = public/components/assets-admin/plugins/leaflet-plugins/google
 	url = https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant.git
+[submodule "public/components/assets-admin/plugins/leaflet-plugins/pixi-overlay"]
+	path = public/components/assets-admin/plugins/leaflet-plugins/pixi-overlay
+	url = https://github.com/manubb/Leaflet.PixiOverlay.git
