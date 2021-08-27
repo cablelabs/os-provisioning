@@ -121,19 +121,23 @@ trait Geocoding
      */
     protected function noGeoPositionFound(bool $save): void
     {
+        if (in_array($this->geocode_state, ['OK', 'n/a', 'HERE API NO RESULTS', 'DATA_VERIFICATION_FAILED'])) {
+            $reason = trans("view.geocoding.error.{$this->geocode_state}");
+        }
+
+        $message = trans('view.geocoding.failed', ['reason' => $reason ?? $this->geocode_state]);
+        Log::warning("geocoding failed: {$this->geocode_state}"); //logs should stay in English
+
         // if running from console: preserve existing geodata (could have been be imported or manually set in older times)
         if (\App::runningInConsole()) {
             $this->geocode_source = 'n/a (unchanged existing data)';
-            Log::warning('geocoding failed');
         } else {
             // if running interactively: delete probably outdated geodata and inform user
             $this->y = null;
             $this->x = null;
             $this->geocode_source = 'n/a';
 
-            $message = "Could not determine geo coordinates ($this->geocode_state) – please add manually";
             Session::push('tmp_error_above_form', $message);
-            Log::warning('geocoding failed');
         }
 
         if ($save) {

@@ -678,4 +678,13 @@ return [
             'deceased' => 'verstorben',
         ],
     ],
+    'geocoding' => [
+        'failed' => 'Leider konnten die Daten nicht in Koordinaten umgewandelt werden (:reason) – bitte manuell hinzufügen!',
+        'error' => [
+            'OK' => 'OK!',
+            'n/a' => 'Google API: unbekannte Antwort!',
+            'HERE API NO RESULTS' => 'HERE API: Keine Ergebnisse!',
+            'DATA_VERIFICATION_FAILED' => 'Daten ungültig oder konnten vom Geocoding Dienst nicht aufgelöst werden.',
+        ],
+    ],
 ];
