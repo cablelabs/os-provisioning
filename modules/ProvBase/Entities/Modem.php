@@ -2178,9 +2178,9 @@ class Modem extends \BaseModel
         // start each lease with a line that begins with "lease" and end with a line that begins with "{"
         preg_match_all('/^lease(.*?)(^})/ms', $file, $section);
 
-        // fetch all lines matching hw mac
+        // fetch all lines matching $search
         foreach (array_unique($section[0]) as $s) {
-            if (strpos($s, $search)) {
+            if (strpos($s, $search) && preg_match('/^[^\w\d]/s', \Str::after($s, $search))) {
                 $s = str_replace('  ', '&nbsp;&nbsp;', $s);
 
                 // push matching results
