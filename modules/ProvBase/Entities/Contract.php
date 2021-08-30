@@ -433,7 +433,7 @@ class Contract extends \BaseModel
         // return $this->hasMany(\Modules\BillingBase\Entities\Invoice::class)->where('contract_id', '=', $this->id)->where('settlementrun_id', '!=', [$hide]);
     }
 
-    public function CccUser()
+    public function cccUser()
     {
         return $this->hasOne(\Modules\Ccc\Entities\CccUser::class);
     }

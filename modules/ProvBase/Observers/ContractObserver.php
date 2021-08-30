@@ -66,7 +66,7 @@ class ContractObserver
 
         if (array_key_exists('number', $changed_fields)) {
             // change customer information - take care - this automatically changes login psw of customer
-            if ($customer = $contract->CccUser) {
+            if (Module::collections()->has('BillingBase') && Module::collections()->has('Ccc') && $customer = $contract->cccUser) {
                 $customer->update();
             }
         }
@@ -125,19 +125,19 @@ class ContractObserver
             $contract->updateAddressFromProperty();
         }
 
-        if (Module::collections()->has('BillingBase') && Module::collections()->has('Ccc') && $contract->CccUser) {
+        if (Module::collections()->has('BillingBase') && Module::collections()->has('Ccc') && $contract->cccUser) {
             $newsletter = \Request::get('newsletter') ?? false;
 
-            if (boolval($contract->CccUser->newsletter) != $newsletter) {
-                $contract->CccUser->newsletter = $newsletter;
-                $contract->CccUser->save();
+            if (boolval($contract->cccUser->newsletter) != $newsletter) {
+                $contract->cccUser->newsletter = $newsletter;
+                $contract->cccUser->save();
             }
         }
     }
 
     public function deleting($contract)
     {
-        if ($contract->cccUser) {
+        if (Module::collections()->has('BillingBase') && Module::collections()->has('Ccc') && $contract->cccUser) {
             $contract->cccUser->delete();
         }
     }

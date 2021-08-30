@@ -139,8 +139,8 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address'],
         ];
 
-        if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase') && $model->CccUser) {
-            $model->newsletter = $model->CccUser->newsletter;
+        if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase') && $model->cccUser) {
+            $model->newsletter = $model->cccUser->newsletter;
             $b2[] = ['form_type' => 'checkbox', 'name' => 'newsletter', 'description' => trans('messages.receiveNewsletters')];
         }
 
