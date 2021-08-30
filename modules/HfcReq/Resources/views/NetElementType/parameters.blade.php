@@ -47,7 +47,7 @@
                     data-toggle="tooltip"
                     data-delay='{"show":"250"}'
                     data-placement="top"
-                    form="{{'Parameters'.$class}}"
+                    form="{{$tab['name'].$class}}"
                     style="simple"
                     title="{{ !isset($options['delete_button_text']) ? \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button') : trans($options['delete_button_text']) }}">
                         <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
