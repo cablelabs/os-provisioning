@@ -233,6 +233,7 @@ var app=new Vue({
             params = {};
             for (var key = 1; key < this.lists.length; key++) {
                 var listName = this.lists[key].name;
+                params[listName] = {};
                 for (var i = 0; i < this.lists[key].content.length; i++) {
                     let content = this.lists[key].content[i];
                     let calcOp = content.calcOp;
@@ -251,8 +252,8 @@ var app=new Vue({
                         diagram = [diagramVar, diagramOp, diagramVal];
                     }
 
-                    params[content.name] = [content.id, calc, diagram];
-                    json[listName] = params;
+                    params[listName][content.name] = [content.id, calc, diagram];
+                    json[listName] = params[listName];
                 }
             }
 
