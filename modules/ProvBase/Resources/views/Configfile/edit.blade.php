@@ -60,7 +60,7 @@
                                 <span class="dragdropitemmenubutton" v-on:click="moveItem(key, 0, id)">{{ trans('view.Button_DragDrop DeleteElement') }}</span>
                             </div>
                             <input type="text" name="oname" v-model="item.name"/>
-                            <select name="operator" v-model="item.operator" v-dispatchsel2>
+                            <select name="calcOp" v-model="item.calcOp" v-dispatchsel2>
                                 <option value=""></option>
                                 <option value="+">+</option>
                                 <option value="-">-</option>
@@ -68,14 +68,14 @@
                                 <option value="/">/</option>
                                 <option value="%">%</option>
                             </select>
-                            <input type="number" step="0.0001" name="opvalue" v-model="item.opvalue"/>
-                            <select name="cvalue" v-model="item.cvalue" v-dispatchsel2>
+                            <input type="number" step="0.0001" name="calcVal" v-model="item.calcVal"/>
+                            <select name="diagramVar" v-model="item.diagramVar" v-dispatchsel2>
                                 <option value=""></option>
                                 @foreach ($additional_data['columns'] as $column)
                                     <option value="{{$column}}">{{$column}}</option>
                                 @endforeach
                             </select>
-                            <select name="coperator" v-model="item.coperator" v-dispatchsel2>
+                            <select name="diagramOp" v-model="item.diagramOp" v-dispatchsel2>
                                 <option value=""></option>
                                 <option value="+">+</option>
                                 <option value="-">-</option>
@@ -83,7 +83,7 @@
                                 <option value="/">/</option>
                                 <option value="%">%</option>
                             </select>
-                            <input type="number" step="0.0001" name="copvalue" v-model="item.copvalue"/>
+                            <input type="number" step="0.0001" name="diagramVal" v-model="item.diagramVal"/>
                             </div>
                         </div>
                     </draggable>
@@ -166,12 +166,12 @@ var app=new Vue({
             // move item
             moveId = this.lists[olist].content[id].id;
             moveName = this.lists[olist].content[id].name;
-            moveOperator = '';
-            moveOpValue = '';
-            moveCValue = '';
-            moveCOperator = '';
-            moveCOpValue = '';
-            this.lists[key].content.push({'id': moveId, 'name': moveName, 'operator': moveOperator, 'opvalue': moveOpValue, 'cvalue': moveCValue, 'coperator': moveCOperator, 'copvalue': moveCOpValue});
+            moveCalcOp = '';
+            moveCalcVal = '';
+            moveDiagramVar = '';
+            moveDiagramOp = '';
+            moveDiagramVal = '';
+            this.lists[key].content.push({'id': moveId, 'name': moveName, 'calcOp': moveCalcOp, 'calcVal': moveCalcVal, 'diagramVar': moveDiagramVar, 'diagramOp': moveDiagramOp, 'diagramVal': moveDiagramVal});
             this.lists[olist].content.splice(id, 1);
         },
         addList: function() {
@@ -196,7 +196,7 @@ var app=new Vue({
             for (var i=0;i < this.lists[key].content.length; i++) {
                 moveId = this.lists[key].content[i].id;
                 moveName = this.lists[key].content[i].name;
-                // no operator/opvalue/cvalue
+                // no calcOp/calcVal/diagramVar
                 this.lists[0].content.push({'id': moveId, 'name': moveName});
             }
 
@@ -228,73 +228,35 @@ var app=new Vue({
     updated: function () {
         this.$nextTick(function () {
             $("select").select2();
-            json = '{';
-            for (var key = 1; key<this.lists.length; key++) {
-                if (key > 1) {
-                    json += ',';
-                }
-                json += '"'+this.lists[key].name.replace('"','\\"') + '":{'
 
-                injson = '';
-                try {
-                    for (var i = 0; i < this.lists[key].content.length; i++) {
-                        insertId = this.lists[key].content[i].id.replace('"', '\\"');
-                        insertName = this.lists[key].content[i].name.replace('"', '\\"');
-                        insertOperator = null;
-                        insertOpValue = null;
-                        insertCValue = null;
-                        insertCOperator = null;
-                        insertCOpValue = null;
-                        try {
-                            if (this.lists[key].content[i].operator !== null && this.lists[key].content[i].operator !== '') {
-                                insertOperator = this.lists[key].content[i].operator.replace('"', '\\"');
-                            }
-                        } catch (e) {}
-                        try {
-                            if (this.lists[key].content[i].opvalue !== null && this.lists[key].content[i].opvalue !== '') {
-                                insertOpValue = this.lists[key].content[i].opvalue.toString().replace('"', '\\"');
-                            }
-                        } catch (e) {}
-                        try {
-                            if (this.lists[key].content[i].cvalue !== null && this.lists[key].content[i].cvalue !== '') {
-                                insertCValue = '"' + this.lists[key].content[i].cvalue.toString().replace('"', '\\"') + '"';
-                            }
-                        } catch (e) {}
-                        try {
-                            if (this.lists[key].content[i].coperator !== null && this.lists[key].content[i].coperator !== '') {
-                                insertCOperator = this.lists[key].content[i].coperator.toString().replace('"', '\\"');
-                            }
-                        } catch (e) {}
-                        try {
-                            if (this.lists[key].content[i].copvalue !== null && this.lists[key].content[i].copvalue !== '') {
-                                insertCOpValue = this.lists[key].content[i].copvalue.toString().replace('"', '\\"');
-                            }
-                        } catch (e) {}
+            json = {};
+            params = {};
+            for (var key = 1; key < this.lists.length; key++) {
+                var listName = this.lists[key].name;
+                for (var i = 0; i < this.lists[key].content.length; i++) {
+                    let content = this.lists[key].content[i];
+                    let calcOp = content.calcOp;
+                    let calcVal = content.calcVal;
+                    let diagramVar = content.diagramVar;
+                    let diagramOp = content.diagramOp;
+                    let diagramVal = content.diagramVal;
 
-                        insertOps='null';
-                        if (insertOperator!==null && insertOpValue!==null) {
-                            insertOps='["' + insertOperator + '",' + insertOpValue + ']';
-                        }
-
-                        insertCOps='null';
-                        if (insertCValue!==null && insertCOperator!==null && insertCOpValue!==null) {
-                            insertCOps='[' + insertCValue + ',"' + insertCOperator + '",' + insertCOpValue + ']';
-                        }
-
-                        if (i>0) {
-                            injson += ',';
-                        }
-                        injson += '"' + insertName + '":["' + insertId + '",' + insertOps + ',' + insertCOps + ']';
+                    var calc = null;
+                    if (calcOp !== null && calcVal !== null) {
+                        calc = [calcOp, calcVal];
                     }
+
+                    var diagram = null;
+                    if (diagramVar !== null && diagramOp !== null && diagramVal !== null) {
+                        diagram = [diagramVar, diagramOp, diagramVal];
+                    }
+
+                    params[content.name] = [content.id, calc, diagram];
+                    json[listName] = params;
                 }
-                catch(err) {console.log(err);}
-                injson += '}';
-
-                json += injson;
             }
-            json += '}';
 
-            $('input[name=monitoring]')[0].value = json;
+            $('input[name=monitoring]')[0].value = JSON.stringify(json);
         })
     },
 });
