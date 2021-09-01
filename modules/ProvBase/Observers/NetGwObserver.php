@@ -43,7 +43,7 @@ class NetGwObserver
         }
 
         if (\Module::collections()->has('ProvMon')) {
-            \Artisan::call('nms:cacti', ['--modem-id' => 0, '--netgw-id' => $netgw->id]);
+            \Artisan::call('nms:cacti', ['--netgw-id' => $netgw->id]);
         }
 
         $netgw->makeDhcpConf();

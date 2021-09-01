@@ -51,11 +51,6 @@ class ModemObserver
 
         $modem->save();  // forces to call the updating() and updated() method of the observer !
 
-        if (Module::collections()->has('ProvMon')) {
-            Log::info("Create cacti diagrams for modem: $modem->hostname");
-            \Artisan::call('nms:cacti', ['--netgw-id' => 0, '--modem-id' => $modem->id]);
-        }
-
         if (! $modem->internet_access) {
             $modem->blockCpeViaDhcp();
         }
