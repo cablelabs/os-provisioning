@@ -35,7 +35,7 @@
         $leftMdSizeLg -= $mdSizes['rightRightLg'];
     }
 
-    if (\Request::route()->getName() == 'TreeTopo.show') {
+    if (in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams'])) {
         $flex = 'flex:1;';
     }
 @endphp
@@ -88,7 +88,7 @@
                 </div>
                 @endif
                 <div class="d-flex flex-wrap" style="display:flex;flex: 1;">
-                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || \Request::route()->getName() == 'TreeTopo.show') ? 'display:flex;flex: 1;' : '' }}">
+                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams'])) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>
                     @yield('content_right')
