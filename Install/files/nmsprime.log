@@ -23,3 +23,14 @@
         pkill -f "artisan queue:work" || true
     endscript
 }
+
+/var/www/nmsprime/storage/logs/worker.log {
+    monthly
+    missingok
+    rotate 3
+    notifempty
+    create 644 root apache
+    postrotate
+        pkill -f "artisan queue:work" || true
+    endscript
+}

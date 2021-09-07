@@ -97,8 +97,6 @@ class Kernel extends ConsoleKernel
         $subhash = substr($hash, -2);   // [00..ff] => [0..255]
         $time_offset = hexdec($subhash) % 32;    // offset in [0..31] minutes
 
-        $schedule->command('queue:checkup')->everyMinute();
-
         // Remove all Log Entries older than 90 days
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
