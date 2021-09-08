@@ -107,12 +107,14 @@
                     @section('impaired_modems')
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="impairedModemRow">{{ trans('messages.Sort') }}</label>
+                                <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="impairedModemRow">{{ trans('messages.sort') }}</label>
                                 <select class="custom-select" id="impairedModemRow">
-                                    <option selected value="us_pwr">US Power</option>
-                                    <option value="ds_pwr">DS Power</option>
-                                    <option value="us_snr">US SNR</option>
-                                    <option value="ds_snr">DS SNR</option>
+                                    @foreach (config('hfcreq.hfParameters') as $value => $name)
+                                        @if ($loop->first)
+                                            <option selected value="{{ $value }}">{{ $name }}</option>
+                                        @endif
+                                        <option value="{{ $value }}">{{ $name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="input-group-prepend" style="margin-top: 20px; margin-bottom: 20px;">

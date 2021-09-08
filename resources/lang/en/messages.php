@@ -777,5 +777,5 @@ return [
     'refreshPage'               => 'Please reload the page to display the first 25 Nets',
     'minimum'                   => 'minimum',
     'maximum'                   => 'maximum',
-    'Sort'                      => 'Sort by',
+    'sort'                      => 'Sort by',
 ];
