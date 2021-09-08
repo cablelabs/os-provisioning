@@ -124,7 +124,7 @@ class EndpointObserver
             return;
         }
 
-        preg_match('/hardware ethernet (.+?);/', $lease[0], $mac);
+        preg_match('/hw_mac = "(.+?)";/', $lease[0], $mac);
         Modem::where('mac', $mac[1])->first()->restart_modem();
     }
 }
