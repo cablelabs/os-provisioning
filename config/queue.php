@@ -54,7 +54,7 @@ return [
             'driver' => 'database',
             'connection' => 'sqlite-jobs',
             'table' => 'jobs',
-            'queue' => 'low',
+            'queue' => 'medium',
             'retry_after' => 90,
         ],
 

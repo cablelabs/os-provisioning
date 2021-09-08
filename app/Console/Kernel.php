@@ -189,10 +189,10 @@ class Kernel extends ConsoleKernel
             // important!! daily conversion must run BEFORE monthly conversion
             // jobs on same queue should be processed sequentially (AFAIR) - but to force the order we add runtimes
             $schedule->call(function () {
-                Queue::push(new \Modules\ProvBase\Jobs\ContractJob('daily'));
+                Queue::pushOn('low', new \Modules\ProvBase\Jobs\ContractJob('daily'));
             })->daily()->at('00:03');
             $schedule->call(function () {
-                Queue::push(new \Modules\ProvBase\Jobs\ContractJob('monthly'));
+                Queue::pushOn('low', new \Modules\ProvBase\Jobs\ContractJob('monthly'));
             })->monthly()->at('00:33');
 
             $schedule->call(function () {
@@ -240,7 +240,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:cacti')->daily();
         } else {
             $schedule->call(function () {
-                \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\SetCableModemsOnlineStatusJob());
+                Queue::pushOn('medium', new \Modules\ProvBase\Jobs\SetCableModemsOnlineStatusJob());
             })->everyFiveMinutes();
         }
 
