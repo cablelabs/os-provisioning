@@ -1148,8 +1148,8 @@ class Modem extends \BaseModel
      */
     public function deleteGenieAcsTasks()
     {
-        foreach ((array) json_decode($this->getGenieAcsTasks()) as $task) {
-            self::callGenieAcsApi("tasks/$task->_id", 'DELETE');
+        foreach (json_decode($this->getGenieAcsTasks(), true) as $task) {
+            self::callGenieAcsApi("tasks/{$task['_id']}", 'DELETE');
         }
     }
 
@@ -1980,8 +1980,8 @@ class Modem extends \BaseModel
                 $configfile['text'] = [];
             }
 
-            foreach ((array) json_decode($this->getGenieAcsTasks()) as $task) {
-                $genieCmds["tasks/$task->_id"] = trans('messages.delete_task')." $task->name $task->device";
+            foreach (json_decode($this->getGenieAcsTasks(), true) as $task) {
+                $genieCmds["tasks/{$task['_id']}"] = trans('messages.delete_task')." {$task['name']} {$task['device']}";
             }
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
