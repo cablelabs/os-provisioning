@@ -2180,7 +2180,7 @@ class Modem extends \BaseModel
 
         // fetch all lines matching $search
         foreach (array_unique($section[0]) as $s) {
-            if (strpos($s, $search) && preg_match('/^[^\w\d]/s', \Str::after($s, $search))) {
+            if (strpos($s, $search)) {
                 $s = str_replace('  ', '&nbsp;&nbsp;', $s);
 
                 // push matching results

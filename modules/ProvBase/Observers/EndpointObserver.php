@@ -116,7 +116,7 @@ class EndpointObserver
      */
     private static function releaseIp($endpoint)
     {
-        $lease = $endpoint->modem::searchLease($endpoint->ip);
+        $lease = $endpoint->modem::searchLease($endpoint->ip.' ');
         $validation['text'] = $lease;
         $validation = Modem::validateLease($validation);
 

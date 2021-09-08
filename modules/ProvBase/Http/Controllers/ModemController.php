@@ -643,7 +643,7 @@ class ModemController extends \BaseController
             $ping = null;
         }
 
-        $lease['text'] = Modem::searchLease("mta-$mta->id");
+        $lease['text'] = Modem::searchLease("mta-$mta->id.");
         $lease = Modem::validateLease($lease, $type);
 
         $configfile = Modem::getConfigfileText("/tftpboot/mta/$mta->hostname");
