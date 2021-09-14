@@ -2190,27 +2190,26 @@ class Modem extends \BaseModel
             }
         }
 
-        // handle multiple lease entries
-        // actual strategy: if possible grep active lease, otherwise return all entries
-        //                  in reverse ordered format from dhcpd.leases
-        if (count($ret) < 2) {
+        if (count($ret) <= 1) {
             return $ret;
         }
 
-            foreach ($ret as $text) {
-                if (preg_match('/starts \d ([^;]+);.*;binding state active;/', $text, $match)) {
-                    $start[] = $match[1];
-                    $lease[] = $text;
-                }
+        // handle multiple lease entries
+        // actual strategy: if possible grep active lease, otherwise return all entries
+        //                  in reverse ordered format from dhcpd.leases
+        foreach ($ret as $text) {
+            if (preg_match('/starts \d ([^;]+);.*;binding state active;/', $text, $match)) {
+                $start[] = $match[1];
+                $lease[] = $text;
             }
+        }
 
-            if (isset($start)) {
-                // return the most recent active lease
-                natsort($start);
-                end($start);
+        if (isset($start)) {
+            // return the most recent active lease
+            natsort($start);
+            end($start);
 
-                return [$lease[key($start)]];
-            }
+            return [$lease[key($start)]];
         }
 
         return $ret;
