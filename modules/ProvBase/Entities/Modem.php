@@ -2165,7 +2165,7 @@ class Modem extends \BaseModel
      *
      * @return array    of lease entry strings
      */
-    public static function searchLease(string $search, $findAll = false): array
+    public static function searchLease(string $search): array
     {
         $ret = [];
 
@@ -2173,13 +2173,15 @@ class Modem extends \BaseModel
             return $ret;
         }
 
-        // parse dhcpd.lease file
-        $file = file_get_contents('/var/lib/dhcpd/dhcpd.leases');
+        // Quickly filter lease file - as of now a lease entry has max 27 lines - we just extract some more lines in case sth changes there and it's not adapated here
+        $filename = '/var/lib/dhcpd/dhcpd.leases';
+        exec('grep -A40 -B40 '.escapeshellarg($search).' '.$filename, $filteredContent);
+
         // start each lease with a line that begins with "lease" and end with a line that begins with "{"
-        preg_match_all('/^lease(.*?)(^})/ms', $file, $section);
+        preg_match_all('/^lease(.*?)(^})/ms', implode("\n", $filteredContent), $leases);
 
         // fetch all lines matching $search
-        foreach (array_unique($section[0]) as $s) {
+        foreach (array_unique($leases[0]) as $s) {
             if (strpos($s, $search)) {
                 $s = str_replace('  ', '&nbsp;&nbsp;', $s);
 
@@ -2188,15 +2190,13 @@ class Modem extends \BaseModel
             }
         }
 
-        // return all lease entries
-        if ($findAll) {
-            return $ret;
-        }
-
         // handle multiple lease entries
         // actual strategy: if possible grep active lease, otherwise return all entries
         //                  in reverse ordered format from dhcpd.leases
-        if (count($ret) > 1) {
+        if (count($ret) < 2) {
+            return $ret;
+        }
+
             foreach ($ret as $text) {
                 if (preg_match('/starts \d ([^;]+);.*;binding state active;/', $text, $match)) {
                     $start[] = $match[1];
