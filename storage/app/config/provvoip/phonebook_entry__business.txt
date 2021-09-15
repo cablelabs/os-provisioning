@@ -2728,6 +2728,7 @@ Automatisierungslösungen für die Lebensmittelindustrie
 Automatisierungssysteme
 Automatisierungstechnik
 Automatisierungstechniker
+Automatisierungsunternehmen
 Automechaniker
 Automietwerkstatt
 Automobilagentur
@@ -5991,6 +5992,7 @@ Burnoutprävention
 Büro für agrarökonomische Gutachten
 Büro für Agrarwissenschaft
 Büro für angewandte Geowissenschaften
+Büro für angewandte Tierökologie
 Büro für Anlagentechnik
 Büro für Arbeitsingenieurwesen
 Büro für Arbeitssicherheit
@@ -7390,6 +7392,7 @@ Dienste für Menschen mit Behinderung
 Diensthundeschule
 Dienstleister der Industrie
 Dienstleister für Beräumung
+Dienstleister für Reinigungen
 Dienstleister für Unternehmen
 Dienstleister für Veranstaltungstechnik
 Dienstleister für Wohnungsberäumung
@@ -17551,6 +17554,7 @@ Innovative Werkzeugtechnik
 Innungsschule
 Inraumkonzept der Büroeinrichter
 Inraumkonzept für Büromöbeleinrichtungen
+Insektenbekämpfung
 Insektenfarm
 Insektengitterbau
 Insektenschutz
@@ -20860,6 +20864,7 @@ Kulturreferentin
 Kulturreisen
 Kulturreiseveranstalter
 Kulturwissenschaftlerin
+Kunden-Center
 Kundenberater
 Kundenberaterin
 Kundenberatung
@@ -28344,6 +28349,7 @@ Printwerkstatt
 Privatbankier
 Privatdozent
 Privatdozentin
+Private Arztpraxis
 Privatlehrer
 Privatlehrer für Naturwissenschaften
 Privatlehrerin
@@ -32545,6 +32551,7 @@ Service für Schwimmbadtechnik
 Service für Telekommunikationssysteme
 Service für Windkraftanlagen
 Service von Verpflegungsautomaten
+Service-Center
 Servicebau
 Serviceberater
 Serviceberatung
@@ -35065,6 +35072,7 @@ Tagespflege
 Tagespflege für Menschen mit Demenz
 Tagespflege für Senioren
 Tagespflegeheim
+Tagespflegestätte
 Tagesschönheitsfarm
 Tagesschule
 Tagesstätte für behinderte Kinder
@@ -36976,6 +36984,7 @@ Typographik
 Übersetzer für Bulgarisch
 Übersetzer für Chinesisch
 Übersetzer für Englisch
+Übersetzer für Englisch-Französisch
 Übersetzer für Französisch
 Übersetzer für Hebräisch
 Übersetzer für Italienisch
@@ -37889,6 +37898,7 @@ Verkauf von textile Spielwaren
 Verkauf von Tierbedarf
 Verkauf von Tierfrischnahrung
 Verkauf von Tierzuchtgeräten
+Verkauf von Trainingsgeräten
 Verkauf von Trapezblechen
 Verkauf von Trödelartikel
 Verkauf von Unterhaltungselektronik
@@ -40884,10 +40894,8 @@ Zerkleinerungssysteme
 Zerkleinerungstechnik
 Zerlegearbeiten
 Zerlegebetrieb
-Zerspannungsbetrieb
-Zerspannungsmechaniker
-Zerspannungsmechanikerin
 Zerspantechnik
+Zerspanungsbetrieb
 Zerspanungslogistik
 Zerspanungsmechaniker
 Zerspanungsmechanikerin
