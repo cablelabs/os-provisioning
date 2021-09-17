@@ -201,7 +201,8 @@ class LoginController extends Controller
             return route('TicketReceiver.index');
         }
 
-        if ($user->initial_dashboard !== '') {
+        // Empty string is legacy and should be removed in the future #Laravel8
+        if ($user->initial_dashboard && $user->initial_dashboard !== '') {
             return route($user->initial_dashboard);
         }
 
