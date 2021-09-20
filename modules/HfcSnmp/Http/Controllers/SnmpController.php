@@ -628,20 +628,20 @@ class SnmpController extends \BaseController
         $oid = $param->oid;
         $results = $res = $diff_param = $divisions = [];
         $relation = $param->children()
-            ->where('third_dimension', '=', $this->index ? 1 : 0)
             ->with('oid')
             ->join('oid as o', 'o.id', '=', 'parameter.oid_id')
             ->select('parameter.*', 'o.oid as oidoid')
             ->orderBy('third_dimension')->orderBy('html_id')->orderBy('parameter.id')->get();
 
         $param->setRelation('children', $relation);
+        $paramSingleDim = $param->children->where('third_dimension', '=', $this->index ? 1 : 0);
 
         // exact defined table via SubOIDs
-        if (! $param->children->isEmpty()) {
-            foreach ($param->children as $param) {
+        if (! $paramSingleDim->isEmpty()) {
+            foreach ($paramSingleDim as $parameter) {
                 // Note: snmpwalk -CE ends on this OID - makes it much faster
                 // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->netelement->community().' '.$this->netelement->ip.' '.$oid->oid, $results);
-                $results += $this->snmp_walk($param->oid, $indices);
+                $results += $this->snmp_walk($parameter->oid, $indices);
             }
         }
         // standard table OID (all suboids(columns) and elements (rows))
