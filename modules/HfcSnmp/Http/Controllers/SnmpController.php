@@ -325,8 +325,15 @@ class SnmpController extends \BaseController
 
                 $subparam = null;
                 foreach ($results as $oid => $value) {
-                    $index = strrchr($oid, '.');                                // row in table
-                    $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
+                    if (strpos($oid, $param->oid->oid.'.1.') !== false) {
+                        $entry = substr($oid, strlen($param->oid->oid.'.1.'));
+                        $suboid = $param->oid->oid.'.1.'.substr($entry, 0, strpos($entry, '.'));
+                        $index = substr($oid, strlen($suboid));
+                    } else {
+                        // Support for self created tables with suboids not being a leaf of the table OID (could even be from another MIB)
+                        $index = strrchr($oid, '.');                                // row in table
+                        $suboid = substr($oid, 0, strlen($oid) - strlen($index));   // column in table
+                    }
 
                     if (! $subparam || $subparam->oid != $suboid) {
                         if ($param->children->isEmpty()) {

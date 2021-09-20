@@ -119,7 +119,11 @@
                 <tbody>
                     @foreach ($table['body'] as $i => $row)
                         <tr>
-                            <?php $i = str_replace('.', '', $i) ?>
+                            <?php
+                                if ($i[0] == '.') {
+                                    $i = substr($i, 1);
+                                }
+                            ?>
                             <td> {!! isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['paramId'], $i]) : $i !!} </td>
                             @foreach ($row as $col)
                                 <td align="center" style="padding: 4px"> {!! $col !!} </td>
