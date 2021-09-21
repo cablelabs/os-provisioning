@@ -160,7 +160,7 @@ class ImportTvCustomersCommand extends Command
     /**
      * Create new Contract or return existing one
      *
-     * @return object  New created contract or if found the already existing one
+     * @return object New created contract or if found the already existing one
      */
     private function _add_contract($line)
     {
@@ -247,7 +247,7 @@ class ImportTvCustomersCommand extends Command
     /**
      * Check if already a (n internet) contract exists for this customer
      *
-     * @return object  contract if exists, otherwise null or []
+     * @return object contract if exists, otherwise null or []
      */
     private function contract_exists($number, $firstname, $lastname, $street, $city)
     {

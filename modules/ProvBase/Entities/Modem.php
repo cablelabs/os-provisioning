@@ -170,6 +170,7 @@ class Modem extends \BaseModel
 
     /**
      * Return Fontawesome emoji class, and Bootstrap text color
+     *
      * @return array
      */
     public function getFaSmileClass()
@@ -204,6 +205,7 @@ class Modem extends \BaseModel
 
     /**
      * Formatted attribute of support state.
+     *
      * @return string
      */
     public function getFormattedSupportStateAttribute()
@@ -254,7 +256,7 @@ class Modem extends \BaseModel
     /**
      * Format Contracts for edit view select field and allow for seeaching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Contracts(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -427,8 +429,10 @@ class Modem extends \BaseModel
     /**
      * Returns the config file entry string for a cable modem in dependency of private or public ip
      *
-     * @param object $conf      Global conf only loaded once to speed up DHCP config building in DhcpCommand
+     * @param  object  $conf  Global conf only loaded once to speed up DHCP config building in DhcpCommand
+     *
      * @author Nino Ryschawy
+     *
      * @return string
      */
     private function generate_cm_dhcp_entry($conf = null)
@@ -914,7 +918,7 @@ class Modem extends \BaseModel
      * only for first $count modems as this takes a huge amount of time
      * Use obvious code generated/fixed amount of ds_pwr
      *
-     * @param int $count max count of modems to check
+     * @param  int  $count  max count of modems to check
      */
     public static function setCableModemsOnlineStatus($count = 0)
     {
@@ -947,8 +951,9 @@ class Modem extends \BaseModel
      * Create Provision from configfile.text.
      *
      * @author Roy Schneider
-     * @param string $text
-     * @param array $events
+     *
+     * @param  string  $text
+     * @param  array  $events
      * @return bool
      */
     public function createGenieAcsProvisions($text, $events = [])
@@ -1029,9 +1034,10 @@ class Modem extends \BaseModel
      * Call API of GenieACS via PHP Curl.
      *
      * @author Roy Schneider
-     * @param string $route
-     * @param string $customRequest
-     * @param string $data
+     *
+     * @param  string  $route
+     * @param  string  $customRequest
+     * @param  string  $data
      * @return mixed $result
      */
     public static function callGenieAcsApi($route, $customRequest, $data = null, $header = [])
@@ -1062,7 +1068,7 @@ class Modem extends \BaseModel
     /**
      * Get decoded json object of device from GenieACS via API.
      *
-     * @param string $projection
+     * @param  string  $projection
      * @return mixed
      *
      * @author Ole Ernst
@@ -1100,6 +1106,7 @@ class Modem extends \BaseModel
      * Get all GenieACS tasks for this device.
      *
      * @author Roy Schneider
+     *
      * @return string
      */
     public function getGenieAcsTasks()
@@ -1157,7 +1164,7 @@ class Modem extends \BaseModel
      * Get NETGW a CM is registered on
      *
      * @param  string 	ip 		address of cm
-     * @return object 	NETGW
+     * @return object NETGW
      *
      * @author Nino Ryschawy
      */
@@ -1182,7 +1189,7 @@ class Modem extends \BaseModel
     /**
      * Get all used firmwares of specified modem(s)
      *
-     * @param string $id Modem identifier (all modems if $id is null)
+     * @param  string  $id  Modem identifier (all modems if $id is null)
      * @return array Hierarchical object (vendor->model->sw_rev) of all used firmwares
      *
      * @author Ole Ernst
@@ -1667,8 +1674,8 @@ class Modem extends \BaseModel
      * relevant attribute was modified.
      *
      * @return 1 if reset via Modem or original mac is needed (mac was changed)
-     *		  -1 for reset via NETGW (faster),
-     *		   0 if no restart is needed
+     *           -1 for reset via NETGW (faster),
+     *           0 if no restart is needed
      *
      * @author Ole Ernst, Nino Ryschawy
      *
@@ -1723,6 +1730,7 @@ class Modem extends \BaseModel
      * Get list of apartments for select field of edit view
      *
      * @author Nino Ryschawy
+     *
      * @return array
      */
     public function getApartmentsList()
@@ -1808,8 +1816,8 @@ class Modem extends \BaseModel
     /**
      * Check if modem throughput is provisioned via PPP(oE)
      *
-     * @return  true if PPP(oE) is used
-     *          false if PPP(oE) is not used
+     * @return true if PPP(oE) is used
+     *              false if PPP(oE) is not used
      *
      * @author Ole Ernst
      */
@@ -1821,8 +1829,8 @@ class Modem extends \BaseModel
     /**
      * Check if modem is provisioned via TR069
      *
-     * @return  true if TR069 is used
-     *          false if TR069 is not used
+     * @return true if TR069 is used
+     *              false if TR069 is not used
      *
      * @author Ole Ernst
      */
@@ -2083,8 +2091,9 @@ class Modem extends \BaseModel
      * Get contents, mtime of configfile and warn if it is outdated
      *
      * @author  Ole Ernst
+     *
      * @param   path    String  Path of the configfile excluding its extension
-     * @return  array
+     * @return array
      */
     public static function getConfigfileText($path)
     {
@@ -2108,8 +2117,10 @@ class Modem extends \BaseModel
      * Get IP of Modem and ping it for Analysis page.
      *
      * @param   object \Modules\Provbase\Entities\Provbase - to reduce amount of DB queries when looping over all modems
+     *
      * @author  Roy Schneider
-     * @return  array
+     *
+     * @return array
      */
     public function onlineStatus($conf = null)
     {
@@ -2163,7 +2174,7 @@ class Modem extends \BaseModel
      * TODO: make a seperate class for dhcpd
      * lease stuff (search, replace, ..)
      *
-     * @return array    of lease entry strings
+     * @return array of lease entry strings
      */
     public static function searchLease(string $search): array
     {
@@ -2409,7 +2420,7 @@ class Modem extends \BaseModel
      * Determine modem status of internet access and telephony for analysis dashboard
      *
      * @param array     Lines of Configfile
-     * @return array    Color & status text
+     * @return array Color & status text
      */
     public function servicesStatus($config)
     {

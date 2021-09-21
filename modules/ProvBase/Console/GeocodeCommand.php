@@ -63,6 +63,7 @@ class GeocodeCommand extends Command
      * This method takes care for usage policies of OSM/google (meaning that this has not to be handled in Modem::geocode()
      *
      * @return mixed
+     *
      * @author Torsten Schmidt, Patrick Reichel
      */
     public function handle()

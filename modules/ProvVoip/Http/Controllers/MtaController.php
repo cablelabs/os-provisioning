@@ -83,6 +83,7 @@ class MtaController extends \BaseController
      *
      * @param Modules\ProvVoip\Entities\Mta
      * @return array
+     *
      * @author Roy Schneider
      */
     protected function editTabs($model)

@@ -105,6 +105,7 @@ class NetGw extends \BaseModel
 
     /**
      * Return Fontawesome emoji class, and Bootstrap text color
+     *
      * @return array
      */
     public function getFaSmileClass()
@@ -127,6 +128,7 @@ class NetGw extends \BaseModel
 
     /**
      * Formatted attribute of support state.
+     *
      * @return string
      */
     public function getFormattedSupportStateAttribute()

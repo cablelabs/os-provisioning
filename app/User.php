@@ -243,7 +243,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     /**
      * Checks if this is the first own Login of a User.
      *
-     * @param App\User $user
+     * @param  App\User  $user
      * @return bool
      */
     public function isFirstLogin(): bool
@@ -254,8 +254,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     /**
      * Checks if the password of the current user is expired.
      *
-     * @param App\User $user
-     * @param Carbon\Carbon $now
+     * @param  App\User  $user
+     * @param  Carbon\Carbon  $now
      * @return bool
      */
     public function isPasswordExpired(): bool
@@ -281,9 +281,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      * Use NmsPrime Helperfunction to calculate geographical distance between
      * two coordinates.
      *
-     * @param float $latitude
-     * @param float $longitude
-     *
+     * @param  float  $latitude
+     * @param  float  $longitude
      * @return float [km]
      */
     public function getDistance($latitude, $longitude)

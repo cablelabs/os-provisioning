@@ -191,7 +191,7 @@ class IpPoolController extends \BaseController
     }
 
     /**
-     * @return mixed    string 4|6 or null if no valid ip
+     * @return mixed string 4|6 or null if no valid ip
      */
     public static function getVersion($ip)
     {

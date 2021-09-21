@@ -456,7 +456,7 @@ class ImportNetUserCommand extends Command
      * Extract Cable Modem data rates from configfile
      *
      * @param  string   Modem Configfile
-     * @return array    Datarates [DS, US]
+     * @return array Datarates [DS, US]
      */
     public static function get_modem_data_rates($config)
     {

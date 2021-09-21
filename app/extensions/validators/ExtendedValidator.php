@@ -97,6 +97,7 @@ class ExtendedValidator
      * Check if ip ($value) is larger than the one specified in $parameters
      *
      * @author Nino Ryschawy
+     *
      * @return bool
      */
     public function ipLarger($attribute, $value, $parameters)
@@ -143,6 +144,7 @@ class ExtendedValidator
      * Check if value is a valid IP netmask
      *
      * @author Nino Ryschawy
+     *
      * @return bool
      */
     public function netmask($attribute, $value, $parameters)

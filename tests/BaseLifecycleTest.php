@@ -436,7 +436,6 @@ class BaseLifecycleTest extends TestCase
      * Helper to add ID of a currently created entity to the static array
      *
      * @param $uri The URI to be used; in most cases you will us $this->currentUri
-     *
      * @return $id if one has been created else null
      *
      * @author Patrick Reichel

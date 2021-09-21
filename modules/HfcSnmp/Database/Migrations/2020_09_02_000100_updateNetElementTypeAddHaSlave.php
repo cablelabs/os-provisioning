@@ -27,6 +27,7 @@ class UpdateNetElementTypeAddHaSlave extends Migration
      * Run the migrations.
      *
      * @author Patrick Reichel, adapted from Nino
+     *
      * @return void
      */
     public function up()

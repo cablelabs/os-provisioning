@@ -224,6 +224,7 @@ class BaseRoute
      * like prefix and as statement we MUST use.
      *
      * @author Torsten Schmidt
+     *
      * @param  array  $attributes
      * @param  \Closure  $callback
      * @return void

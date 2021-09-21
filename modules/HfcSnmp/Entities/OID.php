@@ -155,7 +155,7 @@ class OID extends \BaseModel
     /**
      * Return SNMP OID Type Character from Syntax String (for OID Type field)
      *
-     * @return string 	Enum for OIDs SNMP Type
+     * @return string Enum for OIDs SNMP Type
      */
     public static function get_oid_type($string)
     {
@@ -188,7 +188,7 @@ class OID extends \BaseModel
      * Return value set from Syntax field of OID or Start & Endvalue
      *
      * @param 	string 			Syntax field
-     * @return 	string|array
+     * @return string|array
      */
     public static function get_value_set($string)
     {

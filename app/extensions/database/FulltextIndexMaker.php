@@ -19,6 +19,7 @@ class FulltextIndexMaker
 {
     /**
      * include this in your migrations file to build FULLTEXT indexes
+     *
      * @author Patrick Reichel
      */
 
@@ -27,6 +28,7 @@ class FulltextIndexMaker
 
     /**
      * Constructor.
+     *
      * @param $tablename database table to build the index in
      */
     public function __construct($tablename)

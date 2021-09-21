@@ -209,6 +209,7 @@ class PhonebookEntryController extends \BaseController
      * Get all management jobs for envia TEL
      *
      * @author Patrick Reichel
+     *
      * @param $phonebookentry current phonebookentry object
      * @return array containing linktexts and URLs to perform actions against REST API
      */

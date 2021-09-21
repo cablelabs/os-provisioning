@@ -184,6 +184,7 @@ class ModemController extends \BaseController
      * Change form fields based on selected configfile device (cm || tr069)
      *
      * @author Roy Schneider
+     *
      * @return array with array of all ids from configfile of device cm or tr069 and string of ids from configfile of device cm/tr069
      */
     public function dynamicDisplayFormFields()
@@ -195,6 +196,7 @@ class ModemController extends \BaseController
      * Get all management jobs for envia TEL
      *
      * @author Patrick Reichel
+     *
      * @param $modem current modem object
      * @return array containing linktexts and URLs to perform actions against REST API
      */
@@ -740,7 +742,7 @@ class ModemController extends \BaseController
      * called in analysis.blade.php in javascript content
      *
      * @param   ip          String
-     * @return  response    Stream
+     * @return response Stream
      *
      * @author Nino Ryschawy
      */

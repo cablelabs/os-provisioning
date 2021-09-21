@@ -186,6 +186,7 @@ class PhonenumberController extends \BaseController
      * Get all management jobs for envia TEL
      *
      * @author Patrick Reichel
+     *
      * @param $phonenumber current phonenumber object
      * @return array containing linktexts and URLs to perform actions against REST API
      */

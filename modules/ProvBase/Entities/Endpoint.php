@@ -31,6 +31,7 @@ class Endpoint extends \BaseModel
      * if you want to change anything here
      *
      * @author Nino Ryschawy
+     *
      * @return array
      */
     public function rules()
@@ -372,7 +373,8 @@ class Endpoint extends \BaseModel
      * Get next hostname for a new Endpoint that shall be created via GUI
      *
      * @author Nino Ryschawy
-     * @return string  e.g. cpe-100010-2 | null when used in place where Request doesn't contain modem_id
+     *
+     * @return string e.g. cpe-100010-2 | null when used in place where Request doesn't contain modem_id
      */
     public static function getNewHostname()
     {

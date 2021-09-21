@@ -25,12 +25,12 @@ class Sla extends BaseModel
     public $table = 'sla';
 
     /**
-     * @var array  Name/Size of existing service level agreements
+     * @var array Name/Size of existing service level agreements
      */
     public static $names = ['s', 'm', 'l', 'xl', 'xxl'];
 
     /**
-     * @var array  Conditions of existing service level agreements
+     * @var array Conditions of existing service level agreements
      */
     public static $conditions = [
         'total outage' => ['time' => '24x7', 'Response time' => '<b><2h</b>', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],

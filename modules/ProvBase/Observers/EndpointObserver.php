@@ -112,7 +112,8 @@ class EndpointObserver
      * Release IP of the Modem if it is assigned to an endpoint
      *
      * @author Roy Schneider
-     * @param Modules\ProvBase\Entities\Endpoint $endpoint
+     *
+     * @param  Modules\ProvBase\Entities\Endpoint  $endpoint
      */
     private static function releaseIp($endpoint)
     {

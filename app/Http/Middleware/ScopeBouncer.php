@@ -33,7 +33,7 @@ class ScopeBouncer
     /**
      * Constructor.
      *
-     * @param \Silber\Bouncer\Bouncer  $bouncer
+     * @param  \Silber\Bouncer\Bouncer  $bouncer
      */
     public function __construct(Bouncer $bouncer)
     {

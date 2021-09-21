@@ -133,7 +133,7 @@ class Contract extends \BaseModel
     }
 
     /**
-     * @return string  Bootstrap Color Class
+     * @return string Bootstrap Color Class
      */
     public function get_bsclass()
     {
@@ -492,6 +492,7 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+     *
      * @return current customer number
      */
     public function customer_number()
@@ -512,6 +513,7 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @todo: in this first step the relation is hardcoded within the function. Later on we have to check the mapping against the configuration.
+     *
      * @return current customer number
      */
     public function customer_number_legacy()
@@ -609,6 +611,7 @@ class Contract extends \BaseModel
      *      https://devel.roetzer-engineering.com/confluence/display/LAR/Contract+-+Daily+conversion for further documentation
      *
      * @return none
+     *
      * @author Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
     public function daily_conversion()
@@ -847,6 +850,7 @@ class Contract extends \BaseModel
      * An email index of 0 means disabled, 1 is the primary email address.
      *
      * @return none
+     *
      * @author Ole Ernst
      */
     protected function _update_email_index()
@@ -893,6 +897,7 @@ class Contract extends \BaseModel
      * To write long term changes to DB we have to check all items in this monthly conversion.
      *
      * @return none
+     *
      * @author Torsten Schmidt, Patrick Reichel
      */
     public function monthly_conversion()
@@ -935,8 +940,7 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
-     *
-     * @return object 	item
+     * @return object item
      */
     public function get_valid_tariff($type)
     {
@@ -951,7 +955,6 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
-     *
      * @return number of active items for given type and this contract
      */
     public function get_valid_tariff_count($type)
@@ -965,10 +968,9 @@ class Contract extends \BaseModel
      * @author Nino Ryschawy, Patrick Reichel
      *
      * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
-     *
      * @return array containing two values:
-     *	'item' => the last startet tariff (item object)
-     *	'count' => integer
+     *               'item' => the last startet tariff (item object)
+     *               'count' => integer
      */
     protected function _get_valid_tariff_item_and_count($type)
     {
@@ -1039,7 +1041,6 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @param $items iterable (array, Collection) containing items
-     *
      * @return null
      */
     public function update_product_related_data()
@@ -1123,9 +1124,8 @@ class Contract extends \BaseModel
      * @author Patrick Reichel
      *
      * @param $item to be analyzed
-     *
      * @return null
-     * Sets global var $changes_on_daily_conversion when contract data has changed
+     *              Sets global var $changes_on_daily_conversion when contract data has changed
      */
     protected function _update_product_related_current_data($item)
     {
@@ -1161,9 +1161,8 @@ class Contract extends \BaseModel
      * @author Patrick Reichel, Nino Ryschawy
      *
      * @param $item to be analyzed
-     *
      * @return null
-     * Sets global var $changes_on_daily_conversion when contract data has changed
+     *              Sets global var $changes_on_daily_conversion when contract data has changed
      */
     protected function _update_product_related_future_data($item)
     {
@@ -1253,7 +1252,7 @@ class Contract extends \BaseModel
     /**
      * Returns start time of item - Note: contract_start field has higher priority than created_at
      *
-     * @return int 		time in seconds after 1970
+     * @return int time in seconds after 1970
      */
     public function get_start_time()
     {
@@ -1265,7 +1264,7 @@ class Contract extends \BaseModel
     /**
      * Returns start time of item - Note: contract_start field has higher priority than created_at
      *
-     * @return int 		time in seconds after 1970
+     * @return int time in seconds after 1970
      */
     public function get_end_time()
     {
@@ -1300,7 +1299,7 @@ class Contract extends \BaseModel
      *
      * @param 	string 		Timespan - LAST (!!) 'year'/'month' or 'now
      * @param 	int 	If Set only Mandates related to specific SepaAccount are considered (related via CostCenter)
-     * @return 	object 		Valid Sepa Mandate with latest start date
+     * @return object Valid Sepa Mandate with latest start date
      *
      * @author Nino Ryschawy
      */
@@ -1348,8 +1347,8 @@ class Contract extends \BaseModel
      *
      * @param string 	Date for that cancelation dates shall be retrieved: e.g. for today (for alert in observer)
      *                  or last day of last month (settlement run)
-     * @return array 	case 1: default
-     *                  case 2: contract was already canceled (important for settlement run) - 'canceled_to' is set
+     * @return array case 1: default
+     *               case 2: contract was already canceled (important for settlement run) - 'canceled_to' is set
      *
      * NOTE: if date is last day of last month it's automatically assumed that cancelation dates are requested for/from the settlement run
      */
@@ -1463,7 +1462,8 @@ class Contract extends \BaseModel
      * Check if the Contract has Debts that exceed the threshholds of the module configuration and therefore the internet has to be blocked
      *
      * @author Nino Ryschawy
-     * @return bool     internet should be blocked
+     *
+     * @return bool internet should be blocked
      */
     public function blockInetFromDebts()
     {
@@ -1518,6 +1518,7 @@ class Contract extends \BaseModel
      *  true if realty of contract belongs to a contract
      *
      * @author Nino Ryschawy
+     *
      * @return bool
      */
     public function belongsToGroupContract()

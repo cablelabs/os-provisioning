@@ -279,7 +279,7 @@ class Phonenumber extends \BaseModel
     /**
      * Format MTAs for select 2 field and allow for seaching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Mtas(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -356,7 +356,7 @@ class Phonenumber extends \BaseModel
      * @param	$withTrashed boolean; if true return also soft deleted orders; default is false
      * @param	$whereStatement raw SQL query; default is returning of all orders
      *				Attention: Syntax of given string has to meet SQL syntax!
-     * @return	EnviaOrders if module ProvVoipEnvia is enabled, else “null”
+     * @return EnviaOrders if module ProvVoipEnvia is enabled, else “null”
      *
      * @author Patrick Reichel
      */
@@ -390,7 +390,6 @@ class Phonenumber extends \BaseModel
      *			null if module ProvVoipEnvia is disabled
      *			false if there is no envia TEL contract
      *			external_contract_id for the contract the number belongs to
-     *
      *
      * @author Patrick Reichel
      */

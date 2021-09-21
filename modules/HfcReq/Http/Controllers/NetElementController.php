@@ -167,6 +167,7 @@ class NetElementController extends BaseController
      * Show tabs in Netelement edit page.
      *
      * @author Roy Schneider
+     *
      * @param Modules\HfcReq\Entities\NetElement
      * @return array
      */

@@ -20,6 +20,7 @@
  * V1 Trait
  *
  * @author     Esben Petersen
+ *
  * @link       https://github.com/esbenp/bruno/blob/master/src/LaravelController.php
  */
 
@@ -34,14 +35,16 @@ trait V1Trait
 {
     /**
      * Defaults
+     *
      * @var array
      */
     protected $defaults = [];
 
     /**
      * Create a json response
+     *
      * @param  mixed  $data
-     * @param  int $statusCode
+     * @param  int  $statusCode
      * @param  array  $headers
      * @return JsonResponse
      */
@@ -56,9 +59,10 @@ trait V1Trait
 
     /**
      * Parse data using Data Parser
-     * @param  mixed $data
+     *
+     * @param  mixed  $data
      * @param  array  $options
-     * @param  string $key
+     * @param  string  $key
      * @return array|LengthAwarePaginator
      */
     protected function parseData($data, array $options, $key = null)
@@ -78,7 +82,8 @@ trait V1Trait
 
     /**
      * Page sort
-     * @param array $sort
+     *
+     * @param  array  $sort
      * @return array
      */
     protected function parseSort(array $sort): array
@@ -97,6 +102,7 @@ trait V1Trait
 
     /**
      * Parse include strings into resource and modes
+     *
      * @param  array  $includes
      * @return array The parsed resources and their respective modes
      */
@@ -122,7 +128,7 @@ trait V1Trait
     }
 
     /**
-     * @param array $filter_groups
+     * @param  array  $filter_groups
      * @return array
      */
     protected function parseFilterGroups(array $filter_groups): array
@@ -154,7 +160,7 @@ trait V1Trait
     }
 
     /**
-     * @param null $request
+     * @param  null  $request
      * @return array
      */
     protected function parseResourceOptions($request = null): array

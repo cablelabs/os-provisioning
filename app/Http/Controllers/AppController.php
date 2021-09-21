@@ -24,6 +24,7 @@ class AppController extends BaseController
      * Returns view of all installed/not installed apps.
      *
      * @author Roy Schneider
+     *
      * @return View
      */
     public function showApps()
@@ -40,7 +41,8 @@ class AppController extends BaseController
      * Create array of enabled/disabled modules.
      *
      * @author Roy Schneider
-     * @param  Nwidart\Modules $installed
+     *
+     * @param  Nwidart\Modules  $installed
      * @return array $apps
      */
     public function getNativeApps($installed)
@@ -66,8 +68,9 @@ class AppController extends BaseController
      * Generate link to dashboard of the Module or to nmsprime.com.
      *
      * @author Roy Schneider
-     * @param  Nwidart\Modules $installed
-     * @param  string $state
+     *
+     * @param  Nwidart\Modules  $installed
+     * @param  string  $state
      * @return string $route
      */
     private function getAppLink($module, $state)
@@ -86,6 +89,7 @@ class AppController extends BaseController
      * Create array of enabled/disabled modules.
      *
      * @author Roy Schneider
+     *
      * @return array $tabs
      */
     public function prepareTabs()

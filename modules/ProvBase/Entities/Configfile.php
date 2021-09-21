@@ -89,6 +89,7 @@ class Configfile extends \BaseModel
      * Searches children of a parent configfile recursivly to build the whole tree structure of all confifgfiles
      *
      * @author Nino Ryschawy
+     *
      * @param bool variable - if 1 all modems and mtas that belong to the configfile (and their children) are built
      */
     public function search_children($build = 0)
@@ -113,6 +114,7 @@ class Configfile extends \BaseModel
 
     /**
      * Returns all available files (via directory listing)
+     *
      * @author Patrick Reichel
      */
     public static function getFiles($folders)
@@ -179,8 +181,9 @@ class Configfile extends \BaseModel
     /**
      * Format Configfile parents for select 2 field and allow for seeaching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @request param model - the id of the model to edit or null if in create context
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -205,6 +208,7 @@ class Configfile extends \BaseModel
      *   without recursive objects
      *
      * @todo atm $modem and $provbase is used because of the $$ and should be refactored
+     *
      * @param sw_up 	Bool 	true if Software upgrade statement is already set -> then the next one is discarded (child CF has priority)
      */
     private function __text_make($device, $type, $sw_up = false)
@@ -479,6 +483,7 @@ class Configfile extends \BaseModel
      * still assigned to a modem or mta
      *
      * @author Ole Ernst, Nino Ryschawy
+     *
      * @return array
      */
     public static function undeletables()

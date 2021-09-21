@@ -225,7 +225,7 @@ class NetElement extends \BaseModel
     /**
      * Scope to receive active connected Modems with several important counts.
      *
-     * @param Illuminate\Database\Query\Builder $query
+     * @param  Illuminate\Database\Query\Builder  $query
      * @return Illuminate\Database\Query\Builder
      */
     public function scopeWithActiveModems($query, $field = 'id', $operator = '>', $id = 2, $minify = false)
@@ -257,7 +257,7 @@ class NetElement extends \BaseModel
      * This is an extension of scopeWithActiveModems's withCount() method to exclude all modems of canceled contracts
      * Note: This is not a scope and can not be used as one - this is because withCount method automatically joins named table (modem) and for a scope it would have to be joined here as well - join it twice doesnt work!
      *
-     * @param Illuminate\Database\Query\Builder $query
+     * @param  Illuminate\Database\Query\Builder  $query
      * @return Illuminate\Database\Query\Builder
      */
     private function excludeCanceledContractsQuery($query)
@@ -481,7 +481,7 @@ class NetElement extends \BaseModel
     /**
      * Tries to get the amount of affected modems of the related NetElement.
      *
-     * @param \Illuminate\Database\Eloquent\Collection $netelements
+     * @param  \Illuminate\Database\Eloquent\Collection  $netelements
      * @return int
      */
     public function affectedModemsCount($netelements)
@@ -599,8 +599,9 @@ class NetElement extends \BaseModel
     /**
      * Format Parent (NetElements) for Select 2 field and allow for searching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @request param model The id of the model or null if in create context
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -626,8 +627,9 @@ class NetElement extends \BaseModel
      * Format Provisioning Device Connection for Select 2 field and allow for
      * searching. Depending on NetElemetType id the relation differs.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @request param netelementtype_id The NetElemetType id in create context
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2ProvDevice(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -643,7 +645,7 @@ class NetElement extends \BaseModel
     /**
      * Format NetElemetType for Select 2 field and allow for searching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Netelementtypes(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -714,6 +716,7 @@ class NetElement extends \BaseModel
 
     /**
      * Returns all available firmware files (via directory listing)
+     *
      * @author Patrick Reichel
      */
     public function kml_files()
@@ -883,6 +886,7 @@ class NetElement extends \BaseModel
      * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port, 10 = NMSPrime slave
      *
      * @return array
+     *
      * @author Roy Schneider, Nino Ryschawy
      */
     public function tabs()
@@ -949,6 +953,7 @@ class NetElement extends \BaseModel
      *
      * @param string
      * @return string
+     *
      * @author Roy Schneider
      */
     private function getModemIdFromHostname($hostname)
@@ -966,6 +971,7 @@ class NetElement extends \BaseModel
      * Get the IP address if set, otherwise return IP address of parent NetGw
      *
      * @return string: IP address (null if not found)
+     *
      * @author Ole Ernst
      */
     private function _get_ip()
@@ -1130,6 +1136,7 @@ class NetElement extends \BaseModel
      * Return the Community String for Read-Only or Read-Write Access
      *
      * @param   access  String  'ro' or 'rw'
+     *
      * @author  Nino Ryschawy
      */
     public function community($access = 'ro')

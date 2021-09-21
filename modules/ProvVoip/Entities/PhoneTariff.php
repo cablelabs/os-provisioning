@@ -100,7 +100,6 @@ class PhoneTariff extends \BaseModel
      * @author Patrick Reichel
      *
      * @param $type The tariff type as string (currently purchase and sale).
-     *
      * @return array with phonetariff.id=>phonetariff.name
      */
     private static function __get_tariffs($types)

@@ -73,6 +73,7 @@ class StorageCleaner extends Command
      * Populate the instance array holding age thresholds for compressing/deleting.
      *
      * @TODO these thresholds are hardcoded in this first step – later on this should be configurable using .env or GlobalConfig
+     *
      * @author Patrick Reichel
      */
     protected function _prepare_metadata()

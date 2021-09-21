@@ -461,7 +461,7 @@ class ImportCommand extends Command
      * @param 	cluster_id 		Integer
      * @parma 	$net 			0/1 		Switch: 0 - return cluster id, 1 - return net id
      *
-     * @return 	int
+     * @return int
      */
     private function map_cluster_id($cluster_id, $net = 0)
     {

@@ -114,7 +114,7 @@ class MibFile extends \BaseModel
      * Create OID Database Entries from parsing snmptranslate outputs of all OIDs of the MIB
      * Extract informations of OID: name, syntax, access, type, values, description, ...
      *
-     * @return  0  on success, Redirect::back Object on Error
+     * @return0 on success, Redirect::back Object on Error
      *
      * @author Nino Ryschawy
      */

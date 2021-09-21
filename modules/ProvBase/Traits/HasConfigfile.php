@@ -19,7 +19,7 @@ trait HasConfigfile
     /**
      * Format Configfiles for select 2 field and allow for seaching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Configfiles(?string $search): \Illuminate\Database\Eloquent\Builder

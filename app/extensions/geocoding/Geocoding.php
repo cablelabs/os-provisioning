@@ -41,7 +41,7 @@ trait Geocoding
      * Geocode address of a model to a geoposition and update the x,y values of
      * that model..
      *
-     * @param bool $save
+     * @param  bool  $save
      * @return void|array
      */
     public function geocode($save = true): ?array
@@ -75,7 +75,7 @@ trait Geocoding
     /**
      * Call the given GeoCode API and query the position of the given address.
      *
-     * @param string $api
+     * @param  string  $api
      * @return void|array
      */
     protected function tryGeocode(string $api): ?array
@@ -94,7 +94,7 @@ trait Geocoding
     /**
      * Generator method to not use dynamic method names as this is easier found via grep and find.
      *
-     * @param string $api
+     * @param  string  $api
      * @return void|array
      */
     public function geocodeVia(string $api): ?array
@@ -116,7 +116,7 @@ trait Geocoding
      * Handle the case when no geocosing service provider was able to determine
      * a position for the given address.
      *
-     * @param bool $save
+     * @param  bool  $save
      * @return void
      */
     protected function noGeoPositionFound(bool $save): void
@@ -148,7 +148,7 @@ trait Geocoding
     /**
      * Update the position data of the given model.
      *
-     * @param array $geodata
+     * @param  array  $geodata
      * @return void
      */
     protected function updateGeoPosition(array $geodata): void
@@ -176,6 +176,7 @@ trait Geocoding
      * Get geodata from OpenStreetMap Nominatiom API
      *
      * @return void|array
+     *
      * @author Patrick Reichel
      */
     protected function geocodeOsm(): ?array
@@ -358,6 +359,7 @@ trait Geocoding
      * Get geodata from Google Maps GeoCoding API
      *
      * @return void
+     *
      * @author Torsten Schmidt, Patrick Reichel
      */
     protected function geocodeGoogle(): ?array

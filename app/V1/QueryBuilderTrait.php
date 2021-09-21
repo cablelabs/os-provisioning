@@ -20,6 +20,7 @@
  * Query Builder Trait
  *
  * @author     Esben Petersen
+ *
  * @link       https://github.com/esbenp/bruno/blob/master/src/EloquentBuilderTrait.php
  */
 
@@ -36,7 +37,8 @@ trait QueryBuilderTrait
 {
     /**
      * Apply resource options to a query builder
-     * @param  Builder $queryBuilder
+     *
+     * @param  Builder  $queryBuilder
      * @param  array  $options
      * @return Builder
      */
@@ -91,9 +93,9 @@ trait QueryBuilderTrait
     }
 
     /**
-     * @param Builder $queryBuilder
-     * @param array $filterGroups
-     * @param array $previouslyJoined
+     * @param  Builder  $queryBuilder
+     * @param  array  $filterGroups
+     * @param  array  $previouslyJoined
      * @return array
      */
     protected function applyFilterGroups(Builder $queryBuilder, array $filterGroups = [], array $previouslyJoined = [])
@@ -118,10 +120,10 @@ trait QueryBuilderTrait
     }
 
     /**
-     * @param Builder $queryBuilder
-     * @param array $filter
-     * @param bool|false $or
-     * @param array $joins
+     * @param  Builder  $queryBuilder
+     * @param  array  $filter
+     * @param  bool|false  $or
+     * @param  array  $joins
      */
     protected function applyFilter(Builder $queryBuilder, array $filter, $or, array &$joins)
     {
@@ -235,9 +237,9 @@ trait QueryBuilderTrait
     }
 
     /**
-     * @param Builder $queryBuilder
-     * @param array $sorting
-     * @param array $previouslyJoined
+     * @param  Builder  $queryBuilder
+     * @param  array  $sorting
+     * @param  array  $previouslyJoined
      * @return array
      */
     protected function applySorting(Builder $queryBuilder, array $sorting, array $previouslyJoined = [])
@@ -285,7 +287,7 @@ trait QueryBuilderTrait
     }
 
     /**
-     * @param Builder $queryBuilder
+     * @param  Builder  $queryBuilder
      * @param $key
      */
     private function joinRelatedModelIfExists(Builder $queryBuilder, $key)

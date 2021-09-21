@@ -35,7 +35,7 @@ class ContractController extends \BaseController
     /**
      * defines the formular fields for the edit and create view
      *
-     * @return 	array
+     * @return array
      */
     public function view_form_fields($model = null)
     {
@@ -206,6 +206,7 @@ class ContractController extends \BaseController
      * Get all management jobs for envia TEL
      *
      * @author Patrick Reichel
+     *
      * @param $contract current contract object
      * @return array containing linktexts and URLs to perform actions against REST API
      */

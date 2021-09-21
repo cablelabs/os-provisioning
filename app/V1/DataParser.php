@@ -20,6 +20,7 @@
  * Data Parser
  *
  * @author     Esben Petersen
+ *
  * @link       https://github.com/esbenp/architect/blob/master/src/Architect.php
  */
 
@@ -32,9 +33,10 @@ class DataParser
 {
     /**
      * Parse a collection using given modes.
-     * @param  mixed $data The collection to be parsed
-     * @param  array  $modes The modes to be used, format is ['relation' => 'mode']
-     * @param  string $key A key to hoist the collection into the root array
+     *
+     * @param  mixed  $data  The collection to be parsed
+     * @param  array  $modes  The modes to be used, format is ['relation' => 'mode']
+     * @param  string  $key  A key to hoist the collection into the root array
      * @return array
      */
     public function parseData($data, array $modes, $key = null)
@@ -62,10 +64,11 @@ class DataParser
 
     /**
      * Parse a collection using given modes
+     *
      * @param  array  $modes
-     * @param  mixed $collection
-     * @param  array $root
-     * @param  string $fullPropertyPath
+     * @param  mixed  $collection
+     * @param  array  $root
+     * @param  string  $fullPropertyPath
      * @return mixed
      */
     private function parseCollection(array $modes, $collection, &$root, $fullPropertyPath = '')
@@ -85,10 +88,11 @@ class DataParser
 
     /**
      * Parse a single resource using given modes
+     *
      * @param  array  $modes
-     * @param  mixed $resource
-     * @param  array $root
-     * @param  string $fullPropertyPath
+     * @param  mixed  $resource
+     * @param  array  $root
+     * @param  string  $fullPropertyPath
      * @return mixed
      */
     private function parseResource(array $modes, &$resource, &$root, $fullPropertyPath = '')
@@ -164,6 +168,7 @@ class DataParser
 
     /**
      * Is the variable a primitive type
+     *
      * @param  mixed  $input
      * @return bool
      */
@@ -174,6 +179,7 @@ class DataParser
 
     /**
      * Is the input a collection of resources?
+     *
      * @param  mixed  $input
      * @return bool
      */

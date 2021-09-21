@@ -140,8 +140,8 @@ class BaseModel extends Eloquent
      * Use PHP Reflection API to receive the default of a given Property.
      * CAUTION this returns not the current state of the property.
      *
-     * @param string $class Basename of class or fully qualified classname
-     * @param string $property Property you want to receive the default value for
+     * @param  string  $class  Basename of class or fully qualified classname
+     * @param  string  $property  Property you want to receive the default value for
      * @return mixed
      */
     public function getDefaultProperty(string $class, string $property)
@@ -184,7 +184,7 @@ class BaseModel extends Eloquent
      * the view_has_many() method and adds a relationship panel to the edit
      * blade.
      *
-     * @param array $ret
+     * @param  array  $ret
      * @return void
      */
     public function addViewHasManyTickets(&$ret)
@@ -228,7 +228,6 @@ class BaseModel extends Eloquent
      *
      *	@param name column name of your database defined as enum
      *	@param with_empty_option should an empty option be added?
-     *
      *	@return array with available enum options
      */
     public static function getPossibleEnumValues($name, $with_empty_option = false)
@@ -264,6 +263,7 @@ class BaseModel extends Eloquent
      *
      * @param $table database to get index columns from
      * @return comma separated string of columns
+     *
      * @author Patrick Reichel
      */
     protected function _getFulltextIndexColumns($table)
@@ -311,6 +311,7 @@ class BaseModel extends Eloquent
      *	you have to logout & login to rebuild the array again
      *
      * @return array of all models except base models
+     *
      * @author Patrick Reichel,
      *         Torsten Schmidt: add modules path
      */
@@ -393,6 +394,7 @@ class BaseModel extends Eloquent
      *
      * @param table database table to get structure from
      * @return comma separated string of columns
+     *
      * @author Patrick Reichel
      */
     public static function getTableColumns($table)
@@ -410,10 +412,11 @@ class BaseModel extends Eloquent
 
     /**
      * Generic function to build a list with key of id
-     * @param 	array 			$array 	 		list of Models/Objects
+     *
+     * @param  array  $array  list of Models/Objects
      * @param 	String/Array 	$column 		sql column name(s) that contain(s) the description of the entry
-     * @param 	bool 			$empty_option 	true it first entry shall be empty
-     * @return  array 			$ret 			list
+     * @param  bool  $empty_option  true it first entry shall be empty
+     * @return array $ret 			list
      */
     public function html_list($array, $columns, $empty_option = false, $separator = '--')
     {
@@ -445,12 +448,12 @@ class BaseModel extends Eloquent
     /**
      * Generic function to build a list with key of id and usage count.
      *
-     * @param array         $array          list of Models/Objects
+     * @param  array  $array  list of Models/Objects
      * @param String/Array  $column         sql column name(s) that contain(s) the description of the entry
-     * @param bool          $empty_option   true it first entry shall be empty
-     * @param string        $colname        the column to count
-     * @param string        $count_at       the database table to count at
-     * @return array        $ret            list
+     * @param  bool  $empty_option  true it first entry shall be empty
+     * @param  string  $colname  the column to count
+     * @param  string  $count_at  the database table to count at
+     * @return array $ret            list
      *
      * @author Patrick Reichel
      */
@@ -597,6 +600,7 @@ class BaseModel extends Eloquent
 
     /**
      * Local Helper to differ between soft- and force-deletes
+     *
      * @return type mixed
      */
     protected function _delete()
@@ -710,8 +714,7 @@ class BaseModel extends Eloquent
      * @param 	timespan 		String		Yearly|Quarterly|Monthly|Now => Enum of Product->billing_cycle
      * @param 	time 			Integer 	Seconds since 1970 - check for timespan of specific point of time
      * @param 	start_end_ts 	Array 		UTC Timestamps [start, end] (in sec)
-     *
-     * @return 	bool  			true, if model had valid dates during last month / year or is actually valid (now)
+     * @return bool true, if model had valid dates during last month / year or is actually valid (now)
      *
      * @author Nino Ryschawy
      */
@@ -755,12 +758,11 @@ class BaseModel extends Eloquent
     /**
      * Helper to show info line above index_list|form depending on previous URL.
      *
-     * @param string    $msg    The message to be shown
-     * @param string    $type   The type [info|success|warning|error], default is 'info'
-     * @param string    $place  Where to show the message above [index_list, form, relations];
-     *                              if not given try to determine from previous URL
-     *
-     * @return bool  true if message could be generated, false else
+     * @param  string  $msg  The message to be shown
+     * @param  string  $type  The type [info|success|warning|error], default is 'info'
+     * @param  string  $place  Where to show the message above [index_list, form, relations];
+     *                         if not given try to determine from previous URL
+     * @return bool true if message could be generated, false else
      *
      * @author Patrick Reichel
      */

@@ -20,6 +20,7 @@
  * Service
  *
  * @author     Esben Petersen
+ *
  * @link       https://github.com/esbenp/larapi/blob/master/api/Users/Services/UserService.php
  */
 

@@ -136,6 +136,7 @@ function sanitize_filename($string)
  * Check if at least one of the needle array keys exists in the haystack array
  *
  * @return true if one array key of needle array exists in haystack array, false otherwise
+ *
  * @author Nino Ryschawy
  */
 function multi_array_key_exists($needles, $haystack)
@@ -190,7 +191,7 @@ function escape_latex_special_chars($string)
  * @param 	mixed  		source files
  * @param 	string 		target filename
  * @param 	bool 		run processes multithreaded in background
- * @return 	int 	    PID (process ID of background process) if parallel is true, otherwise 0
+ * @return int PID (process ID of background process) if parallel is true, otherwise 0
  */
 function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
 {
@@ -221,7 +222,7 @@ function concat_pdfs($sourcefiles, $target_fn, $multithreaded = false)
  *
  * @param string 	directory & filename
  * @param bool 	 	start latex process in background (for faster SettlementRun)
- * @return int      return value of pdflatex - 0 on success
+ * @return int return value of pdflatex - 0 on success
  */
 function pdflatex($dir, $filename, $background = false)
 {
@@ -253,7 +254,7 @@ function pdflatex($dir, $filename, $background = false)
  * @param int       pdflatex return code
  * @param bool      log message or not
  * @param string    path of file
- * @return string   message
+ * @return string message
  */
 function pdflatex_error_msg($code, $log = false, $filename = '')
 {
@@ -300,7 +301,7 @@ function number_format_lang($number)
  * two letters language ISO 639-1 code of a supported language. The default
  * is set to English, when no other configuration in 'app/config' is set.
  *
- * @param string|null $locale
+ * @param  string|null  $locale
  * @return string
  */
 function checkLocale($locale = null): string
@@ -425,7 +426,7 @@ function humanFilesize($bytes, $dec = 2)
 /**
  * Negates all values that are given as parameter
  *
- * @param int ...$values
+ * @param  int  ...$values
  * @return array
  */
 function negate(int ...$values): array
@@ -439,11 +440,10 @@ function negate(int ...$values): array
  * Optimized algorithm from http://www.codexworld.com
  * see https://stackoverflow.com/a/40929293
  *
- * @param float $latitudeFrom
- * @param float $longitudeFrom
- * @param float $latitudeTo
- * @param float $longitudeTo
- *
+ * @param  float  $latitudeFrom
+ * @param  float  $longitudeFrom
+ * @param  float  $latitudeTo
+ * @param  float  $longitudeTo
  * @return float [m]
  */
 function distanceLatLong($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
@@ -462,8 +462,8 @@ function distanceLatLong($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeT
  * Check if point is within the boundaries of the given polygon.
  * Based on: https://stackoverflow.com/a/18190354
  *
- * @param array $p point to check
- * @param array $polygon vertices of polygon outline
+ * @param  array  $p  point to check
+ * @param  array  $polygon  vertices of polygon outline
  * @return bool true if point in polygon, otherwise false
  */
 function pointInPolygon(array $p, array $polygon)
@@ -508,7 +508,7 @@ function pointInPolygon(array $p, array $polygon)
  *
  * @param   search      String      to search
  * @param   grep_pipes  String      restrict matches
- * @return  array
+ * @return array
  *
  * Attention: grep_pipes must not contain user input!
  */

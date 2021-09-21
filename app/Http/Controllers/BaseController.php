@@ -96,7 +96,7 @@ class BaseController extends Controller
      *
      * NOTE: upload field has to be named like the corresponding select field of the upload field
      *
-     * @var array 	['upload_field' => 'relative storage path']
+     * @var array ['upload_field' => 'relative storage path']
      */
     protected $file_upload_paths = [];
 
@@ -318,9 +318,10 @@ class BaseController extends Controller
      * Merge defined tabs from editTabs() and view_has_many()
      *
      * @author Nino Ryschawy
+     *
      * @param relations  from view_has_many()
      * @param tabs       from editTabs()
-     * @return array     tabs for split-no-panel.blade and edit.blade
+     * @return array tabs for split-no-panel.blade and edit.blade
      */
     protected function prepare_tabs($relations, $tabs)
     {
@@ -359,6 +360,7 @@ class BaseController extends Controller
      *
      * @param base_field Input field to be processed
      * @param dst_path Path to move uploaded file in
+     *
      * @author Patrick Reichel
      */
     protected function handle_file_upload($base_field, $dst_path)
@@ -549,6 +551,7 @@ class BaseController extends Controller
      * Create array of external apps.
      *
      * @author Roy Schneider
+     *
      * @return array $apps
      */
     public function getExternalApps()
@@ -575,6 +578,7 @@ class BaseController extends Controller
      * Perform a global search.
      *
      * @return Illuminate\Support\Facades\View
+     *
      * @author Roy Schneider
      */
     protected function globalSearch($fromTags = null)
@@ -618,6 +622,7 @@ class BaseController extends Controller
      *
      * @param $query String
      * @return array|null
+     *
      * @author Roy Schneider
      */
     protected function getGlobalSearchQuery($query)
@@ -635,6 +640,7 @@ class BaseController extends Controller
      * @param $attribute String
      * @param $name String
      * @return stdClass
+     *
      * @author Roy Schneider
      */
     protected function getTableWithColumn($attribute, $name)
@@ -659,6 +665,7 @@ class BaseController extends Controller
      * @param $query String query to search for
      * @param $models Illuminate\Support\Collection with models to search in
      * @return $result array of collections of models with $query in any column
+     *
      * @author Roy Schneider
      */
     protected function globalSearchResults($query, $models)
@@ -718,7 +725,6 @@ class BaseController extends Controller
      *
      * @param $options the options array generated from database
      * @param $first_value value to be set at $options[0] – defaults to empty string
-     *
      * @return $options array with 0 element on first position
      */
     protected function _add_empty_first_element_to_options($options, $first_value = '')
@@ -832,6 +838,7 @@ class BaseController extends Controller
      *  This replaces the html form field by multiple fields expressing the input fields that the html field contains
      *
      * @author Nino Ryschawy
+     *
      * @return array
      */
     private function apiHandleHtmlFields($fields)
@@ -876,6 +883,7 @@ class BaseController extends Controller
 
     /**
      * Generic store function - stores an object of the calling model
+     *
      * @param redirect: if set to false returns id of the new created object (default: true)
      * @return: html redirection to edit page (or if param $redirect is false the new added object id)
      */
@@ -1213,7 +1221,7 @@ class BaseController extends Controller
     /**
      * Removes a specified model object from storage
      *
-     * @param  int  $id: bulk delete if == 0
+     * @param  int  $id:  bulk delete if == 0
      * @return Response
      */
     public function destroy($id)
@@ -1306,7 +1314,7 @@ class BaseController extends Controller
      *
      * @param 	id 			Integer 	Model ID the relational model is attached to
      * @param 	function 	String 		Function Name of the N-M Relation
-     * @return 	Response 	Object 		Redirect back
+     * @return Response Object 		Redirect back
      *
      * @author Nino Ryschawy
      */
@@ -1562,7 +1570,7 @@ class BaseController extends Controller
      * Return a List of Filenames (e.g. PDF Logos, Tex Templates)
      *
      * @param 	dir 	Directory name relative to storage/app/config/
-     * @return  array 	of Filenames
+     * @return array of Filenames
      *
      * @author 	Nino Ryschawy
      */
@@ -1582,7 +1590,7 @@ class BaseController extends Controller
      *
      * @author Nino Ryschawy
      *
-     * @return array 		Last Log entry first
+     * @return array Last Log entry first
      */
     public static function get_logs($filename, $severity_level = Logger::DEBUG)
     {
@@ -1611,6 +1619,7 @@ class BaseController extends Controller
      * calls view_index_label() which determines how datatables are configured
      * you can find examples in every model with index page
      * Documentation is written here, because this seems like the first place to look for it
+     *
      * @param table - tablename of model
      * @param index_header - array like [$table.'.column1' , $table.'.column2', ..., 'foreigntable1.column1', 'foreigntable2.column1', ..., 'customcolumn']
      * order in index_header is important and datatables will have the column order given here
@@ -1622,7 +1631,6 @@ class BaseController extends Controller
      * @param eager_loading array like [foreigntable1, foreigntable2, ...] - eager load foreign tables
      * @param order_by array like ['0' => 'asc'] - order table by id in ascending order, ['1' => 'desc'] - order table after first column in descending order
      * @param disable_sortsearch array like ['customcolumn' => 'false'] disables sorting & searching for the chosen column (e.g. when it is impossible) => prevent errors
-     *
      * @return \Illuminate\Http\JsonResponse
      *
      * @author Christian Schramm
@@ -1778,7 +1786,7 @@ class BaseController extends Controller
      *
      * example implementation can be found in Modem(Controller)
      *
-     * @param string $relation
+     * @param  string  $relation
      * @return \Illuminate\Pagination\Paginator
      */
     public function select2Ajax(string $relation)
@@ -1804,10 +1812,10 @@ class BaseController extends Controller
      * Prepare the preselected model for the select 2 field. Currently only
      * single select is supported.
      *
-     * @param BaseModel|null $model model in edit view, null in create context
-     * @param string $class unqualified name of the Class
-     * @param string|null $field Name of the input field
-     * @param string|null $fn Name of the relation(function)
+     * @param  BaseModel|null  $model  model in edit view, null in create context
+     * @param  string  $class  unqualified name of the Class
+     * @param  string|null  $field  Name of the input field
+     * @param  string|null  $fn  Name of the relation(function)
      * @return array
      */
     protected function setupSelect2Field($model, string $class, string $field = null, string $fn = null): array
@@ -1847,8 +1855,8 @@ class BaseController extends Controller
      *
      * for example implementations look into Contract.
      *
-     * @param int $model id of the model
-     * @param string $relationClass unqualified class name of the relation
+     * @param  int  $model  id of the model
+     * @param  string  $relationClass  unqualified class name of the relation
      * @return void
      */
     public function getRelationDatatable($model, $relationClass)
@@ -1903,6 +1911,7 @@ class BaseController extends Controller
      * Show error message when user clicks on analysis page and ProvMon module is not installed/active
      *
      * @author Nino Ryschawy
+     *
      * @return View
      */
     public function missingModule($module)

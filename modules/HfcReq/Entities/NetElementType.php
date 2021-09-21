@@ -140,8 +140,9 @@ class NetElementType extends \BaseModel
     /**
      * Format Parent (NetElementTypes) for Select 2 field and allow searching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @request param model The id of the model or null if in create context
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Parent(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -158,7 +159,7 @@ class NetElementType extends \BaseModel
     /**
      * Format OIDs for Select 2 field and allow for searching.
      *
-     * @param string|null $search
+     * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function select2Oids(?string $search): \Illuminate\Database\Eloquent\Builder
@@ -200,6 +201,7 @@ class NetElementType extends \BaseModel
      * Only deletable if there is no netelement assigned.
      *
      * @author Roy Schneider
+     *
      * @return array
      */
     public static function undeletables()
