@@ -649,6 +649,7 @@ return [
     'noReplyName'               => 'Name of noreply E-mail',
     'distanceWeight'            => 'Distance weight',
     'modemcountWeight'          => 'Modemcount weight',
+    'open' => 'open',
     'openticketsWeight'         => 'Technician workload weight',
     'No Description provided!'  => 'No Description provided!',
     'deleteSettlementRun'       => 'Deleting settlementrun :time...',

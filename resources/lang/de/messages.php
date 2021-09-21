@@ -649,6 +649,7 @@ return [
     'noReplyName'               => 'Name der Noreply E-mail',
     'distanceWeight'            => 'Wichtung der Entfernung',
     'modemcountWeight'          => 'Wichtung der Modemanzahl',
+    'open' => 'offen',
     'openticketsWeight'         => 'Wichtung der Technikerarbeitslast',
     'No Description provided!'  => 'Keine Beschreibung hinterlegt',
     'deleteSettlementRun'       => 'Abrechnungslauf :time wird gelöscht...',
