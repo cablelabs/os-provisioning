@@ -653,7 +653,7 @@ class BaseViewController extends Controller
 
         $name = 'Workforce';
 
-        $menu[$name]['link'] = 'CustomerModem.showWorkforce';
+        $menu[$name]['link'] = 'WorkForce.index';
         $menu[$name]['icon'] = 'icon-workforce.png';
     }
 

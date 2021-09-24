@@ -71,29 +71,44 @@ abstract class BaseTopographyController extends BaseController
                 }
             });
 
-        return [
+        return cache(['kml' => [
             'points' => $points,
             'lines' => $lines,
-        ];
+        ]]);
     }
 
     /**
-     * retrieve file if existent, this can be only used by authenticated and
-     * authorized users (see corresponding Route::get in Http/routes.php)
+     * Get position data for all Tickets with a valid position.
      *
-     * @author Ole Ernst
-     *
-     * @param string $type filetype, either kml or svg
-     * @param string $filename name of the file
-     * @return mixed
+     * @return \Illuminate\Support\Collection
      */
-    public function getKML($type, $filename)
+    protected function getTicketMapData()
     {
-        $path = storage_path("app/data/hfcbase/$type/$filename");
-        if (file_exists($path)) {
-            return \Response::file($path);
-        } else {
-            return \App::abort(404);
+        if (! Module::collections()->has('Ticketsystem')) {
+            return collect();
         }
+
+        $lookup = [
+            \Modules\Ticketsystem\Entities\Ticket::STATES['New'] => 0,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['Paused'] => 1,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['In Progress'] => 1,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'] => 2,
+        ];
+
+        return \Modules\Ticketsystem\Entities\Ticket::with('ticketable', 'users:first_name,last_name')
+            ->where('state', '!=', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
+            ->orWhere(function ($query) {
+                $query->where('state', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
+                    ->where('updated_at', '>=', now()->subMinutes(5));
+            })
+            ->get(['id', 'name', 'priority', 'description', 'state', 'ticketable_id', 'ticketable_type'])
+            ->filter->hasValidPositionData()
+            ->map->setPositionData()
+            ->map(function ($ticket) use ($lookup) {
+                $ticket->icon = $lookup[$ticket->state];
+                $ticket->link = route('Ticket.edit', $ticket['id']);
+
+                return $ticket;
+            });
     }
 }
