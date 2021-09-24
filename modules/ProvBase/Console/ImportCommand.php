@@ -40,7 +40,7 @@ class ImportCommand extends Command
      *
      * @var string
      */
-    protected $name = 'nms:import';
+    protected $name = 'import:km3';
 
     /**
      * The console command description.

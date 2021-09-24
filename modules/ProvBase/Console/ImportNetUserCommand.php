@@ -36,7 +36,7 @@ class ImportNetUserCommand extends Command
      *
      * @var string
      */
-    protected $name = 'nms:importNetUser';
+    protected $name = 'import:netuser';
 
     /**
      * The console command description.

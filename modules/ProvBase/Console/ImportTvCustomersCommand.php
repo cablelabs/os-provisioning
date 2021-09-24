@@ -33,7 +33,7 @@ class ImportTvCustomersCommand extends Command
      *
      * @var string
      */
-    protected $name = 'nms:importTV';
+    protected $name = 'import:tv';
 
     /**
      * The console command description.
