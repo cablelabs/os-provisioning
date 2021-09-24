@@ -47,7 +47,7 @@ class NetElementController extends BaseController
     public function view_form_fields($netelement = null)
     {
         $netelement = $netelement ?: new NetElement;
-        $kml_files = $netelement->kml_files();
+        $geojsonFiles = $netelement->geojsonFiles();
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
@@ -103,8 +103,8 @@ class NetElementController extends BaseController
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 
-            ['form_type' => 'select', 'name' => 'kml_file', 'description' => 'Choose KML file', 'value' => $kml_files],
-            ['form_type' => 'file', 'name' => 'kml_file_upload', 'description' => 'or: Upload KML file', 'space' => 1],
+            ['form_type' => 'select', 'name' => 'geojson', 'description' => 'Choose GPS file', 'value' => $geojsonFiles],
+            ['form_type' => 'file', 'name' => 'geojson_upload', 'description' => 'or: Upload GPS file', 'help' => trans('helper.gpsUpload'), 'space' => 1],
 
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
@@ -189,8 +189,8 @@ class NetElementController extends BaseController
      */
     public function store($redirect = true)
     {
-        // check and handle uploaded KML files
-        $this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
+        // check and handle uploaded GPS files
+        $this->handle_file_upload('geojson', storage_path('app/'.NetElement::GPS_FILE_PATH));
 
         return parent::store();
     }
@@ -200,8 +200,8 @@ class NetElementController extends BaseController
      */
     public function update($id)
     {
-        // check and handle uploaded KML files
-        $this->handle_file_upload('kml_file', storage_path(static::get_model_obj()->kml_path));
+        // check and handle uploaded GPS files
+        $this->handle_file_upload('geojson', storage_path('app/'.NetElement::GPS_FILE_PATH));
 
         return parent::update($id);
     }

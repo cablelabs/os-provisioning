@@ -34,7 +34,7 @@ return [
     'Birthday'                  => 'Geburtstag',
     'Business'                  => 'Berufs-/Geschäftsbezeichnung',
     'City'                      => 'Stadt',
-    'Choose KML file'           => 'Wähle KML file',
+    'Choose GPS file'           => 'Wähle GPS Datei',
     'Company'                   => 'Firma',
     'Connection type'           => 'Anschlusstyp',
     'conninfo' => [
@@ -175,7 +175,7 @@ return [
     'Number'                    => 'Nummer',
     'Number usage'              => 'Kennzeichnung, wie Nummer genutzt wird',
     'Options'                   => 'Optionen',
-    'or: Upload KML file'       => 'oder lade KML hoch',
+    'or: Upload GPS file'       => 'oder lade eine GPS-Datei hoch',
     'Other name suffix'         => 'Sonstiger Namenszusatz',
     'Parent Device Type'        => 'Eltern Gerätetyp',
     'Parent Object'             => 'Eltern Objekt',

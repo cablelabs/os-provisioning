@@ -98,6 +98,7 @@ return [
     'netelementtype_reload'         => 'In Seconds. Zero to deactivate autoreload. Decimals possible.',
     'netelementtype_time_offset'    => 'In Seconds. Decimals possible.',
     'undeleteables'                 => 'Net & Cluster can not be changed due to there relevance for all the Entity Relation Diagrams',
+    'gpsUpload'                     => 'Has to be a GPS file of type WKT, EWKT, WKB, EWKB, GeoJSON, KML, GPX or GeoRSS',
 
     /*
      * MODULE: HfcSnmp

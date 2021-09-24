@@ -34,7 +34,7 @@ return [
     'Birthday'                  => 'Birthday',
     'Business'                  => 'Business',
     'City'                      => 'City',
-    'Choose KML file'           => 'Choose KML file',
+    'Choose GPS file'           => 'Choose GPS file',
     'Company'                   => 'Company',
     'Connection type'           => 'Connection type',
     'conninfo' => [
@@ -175,7 +175,7 @@ return [
     'Number'                    => 'Number',
     'Number usage'              => 'Number usage',
     'Options'                   => 'Options',
-    'or: Upload KML file'       => 'or: Upload KML file',
+    'or: Upload GPS file'       => 'or: Upload GPS file',
     'Other name suffix'         => 'Other name suffix',
     'Parent Device Type'        => 'Parent Device Type',
     'Parent Object'             => 'Parent Object',

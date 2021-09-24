@@ -21,6 +21,7 @@ namespace Modules\HfcReq\Entities;
 use Auth;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\SnmpAccessException;
 
@@ -32,6 +33,11 @@ class NetElement extends \BaseModel
     protected $delete_children = false;
 
     public const SNMP_VALUES_STORAGE_REL_DIR = 'data/hfc/snmpvalues/';
+
+    /**
+     * Storage for KML, GPX and other GPS based files, that contain topography information
+     */
+    public const GPS_FILE_PATH = 'data/hfcbase/gpsData';
 
     // The associated SQL table for this Model
     public $table = 'netelement';
@@ -47,7 +53,6 @@ class NetElement extends \BaseModel
      */
     protected $connection = 'mysql';
 
-    public $kml_path = 'app/data/hfcbase/kml_static';
     private $max_parents = 50;
 
     public $snmpvalues = ['attributes' => [], 'original' => []];
@@ -63,6 +68,7 @@ class NetElement extends \BaseModel
             'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset' => 'nullable|numeric|between:-99.9,99.9',
+            'geojson_upload' => 'nullable|file|mimes:wkt,ewkt,wkb,ewkb,geojson,json,kml,gpx,georss',
         ];
 
         return $rules;
@@ -716,25 +722,20 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Returns all available firmware files (via directory listing)
+     * Returns all available GEOJSON Files
      *
-     * @author Patrick Reichel
+     * @author Christian Schramm
      */
-    public function kml_files()
+    public function geojsonFiles()
     {
-        // get all available files
-        $kml_files_raw = glob(storage_path($this->kml_path.'/*'));
-        $kml_files = [null => 'None'];
-        // extract filename
-        foreach ($kml_files_raw as $file) {
-            if (is_file($file)) {
-                $parts = explode('/', $file);
-                $filename = array_pop($parts);
-                $kml_files[$filename] = $filename;
-            }
-        }
-
-        return $kml_files;
+        return collect(File::files(storage_path('app/'.self::GPS_FILE_PATH)))
+            ->filter(function ($file) {
+                return $file->getExtension() === 'geojson';
+            })
+            ->map(function ($file) {
+                return explode('.', $file->getFilename())[0];
+            })
+            ->prepend(trans('messages.None'), null);
     }
 
     /*
@@ -771,12 +772,6 @@ class NetElement extends \BaseModel
     public function get_native_netgw()
     {
         return $this->_get_native_helper('NetGw');
-    }
-
-    // TODO: depracted, remove
-    public function get_layer_level($layer = '')
-    {
-        return 0;
     }
 
     /**
