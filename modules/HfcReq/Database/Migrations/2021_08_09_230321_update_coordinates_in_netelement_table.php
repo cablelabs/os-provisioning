@@ -17,8 +17,8 @@
  */
 
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Modules\HfcReq\Entities\NetElement;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateCoordinatesInNetelementTable extends BaseMigration
 {
