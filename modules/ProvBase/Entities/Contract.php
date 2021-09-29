@@ -54,11 +54,12 @@ class Contract extends \BaseModel
             'number2' => 'nullable|string|unique:contract,number2,'.$id.',id,deleted_at,NULL',
             'number3' => 'nullable|string|unique:contract,number3,'.$id.',id,deleted_at,NULL',
             // 'number4' => 'string|unique:contract,number4,'.$id.',id,deleted_at,NULL', 	// old customer number must not be unique!
+            'salutation' => 'required',
             'company' => 'required_if:salutation,placeholder_salutations_institution',
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
             'email' => 'nullable|email',
-            'birthday' => 'nullable|date_format:Y-m-d',
+            'birthday' => 'nullable|required_if:salutation,placeholder_salutations_person|date_format:Y-m-d',
             'contract_start' => 'date_format:Y-m-d',
             'contract_end' => 'nullable|date_format:Y-m-d', // |after:now -> implies we can not change stuff in an out-dated contract
         ];
