@@ -35,3 +35,14 @@
         /opt/rh/rh-php73/root/usr/bin/php artisan queue:restart || true
     endscript
 }
+
+/var/www/nmsprime/storage/logs/websockets.log {
+    monthly
+    missingok
+    rotate 3
+    notifempty
+    create 644 apache apache
+    postrotate
+        /opt/rh/rh-php73/root/usr/bin/php artisan websockets:restart || true
+    endscript
+}
