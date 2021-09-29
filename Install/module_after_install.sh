@@ -8,8 +8,6 @@ rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/rh/rh-php73/root/usr/bin/php artisan config:cache
 /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
 /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
-#/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
-pkill -f "artisan queue:work"
 /opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
 /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
 /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
@@ -17,6 +15,10 @@ pkill -f "artisan queue:work"
 
 # on HA machines: clean up
 [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/rh/rh-php73/root/usr/bin/php artisan provha:clean_up_slave
+
+# restart laravel background jobs (to make use of new code)
+/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
+/opt/rh/rh-php73/root/usr/bin/php artisan websockets:restart
 
 systemctl reload httpd
 

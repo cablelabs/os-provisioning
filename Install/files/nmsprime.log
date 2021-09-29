@@ -7,7 +7,8 @@
     notifempty
     create 644 apache apache
     postrotate
-        pkill -f "artisan queue:work" || true
+        /opt/rh/rh-php73/root/usr/bin/php artisan queue:restart || true
+        /opt/rh/rh-php73/root/usr/bin/php artisan websockets:restart || true
     endscript
 }
 
@@ -20,7 +21,7 @@
     notifempty
     create 644 apache apache
     postrotate
-        pkill -f "artisan queue:work" || true
+        /opt/rh/rh-php73/root/usr/bin/php artisan queue:restart || true
     endscript
 }
 
@@ -31,6 +32,6 @@
     notifempty
     create 644 root apache
     postrotate
-        pkill -f "artisan queue:work" || true
+        /opt/rh/rh-php73/root/usr/bin/php artisan queue:restart || true
     endscript
 }

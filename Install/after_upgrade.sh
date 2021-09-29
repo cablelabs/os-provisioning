@@ -10,8 +10,9 @@ chown -R apache storage bootstrap/cache
 systemctl restart nmsprimed
 systemd-tmpfiles --create
 
-# reread and deploy supervisor config
+# reread supervisor config and restart affected processes
 /usr/bin/supervisorctl update
 
-# restart all jobs to make sure all workers use current code
-/usr/bin/supervisorctl restart all
+# restart all laravel background jobs to make sure all workers use current code
+/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
+/opt/rh/rh-php73/root/usr/bin/php artisan websockets:restart

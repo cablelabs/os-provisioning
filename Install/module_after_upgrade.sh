@@ -35,8 +35,6 @@ if [ $lastModule -eq 1 ]; then
     /opt/rh/rh-php73/root/usr/bin/php artisan migrate
     /opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
     /opt/rh/rh-php73/root/usr/bin/php artisan module:publish
-    #/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
-    pkill -f "artisan queue:work"
     /opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
     /opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
     /opt/rh/rh-php73/root/usr/bin/php artisan route:cache
@@ -47,6 +45,13 @@ if [ $lastModule -eq 1 ]; then
 
     # on HA machines: process migrations
     [ -e /var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php ] && /opt/rh/rh-php73/root/usr/bin/php artisan provha:migrate_slave
+
+    # reread supervisor config and restart affected processes
+    /usr/bin/supervisorctl update
+
+    # restart laravel background jobs (to make use of new code)
+    /opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
+    /opt/rh/rh-php73/root/usr/bin/php artisan websockets:restart
 
     # finally: rebuild dhcpd/named config
     /opt/rh/rh-php73/root/usr/bin/php artisan nms:dhcp
