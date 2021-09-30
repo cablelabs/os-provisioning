@@ -175,7 +175,7 @@ class ImportTvCustomersCommand extends Command
         $city = $arr[0];
         $district = isset($arr[1]) ? $arr[1] : '';
 
-        $contract = $this->contract_exists($number, $firstname, $lastname, $street, $city);
+        $contract = self::contractExists($number, $firstname, $lastname, $street, $city);
         // if existing contract was found update the contact and return it
         if ($contract) {
             if ($this->option('ag')) {
@@ -249,7 +249,7 @@ class ImportTvCustomersCommand extends Command
      *
      * @return object contract if exists, otherwise null or []
      */
-    private function contract_exists($number, $firstname, $lastname, $street, $city)
+    public static function contractExists($number, $firstname, $lastname, $street, $city)
     {
         $contract = Contract::where('number', '=', $number)->first();
 
@@ -269,7 +269,7 @@ class ImportTvCustomersCommand extends Command
             // TODO: Check if customer/name & address already exists with another contract number
             $contract = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
                 // make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
-                ->whereIn('street', [$street, str_replace('traße', 'tr.', $street)])
+                ->whereIn('street', [$street, str_replace(['trasse', 'traße'], 'tr.', $street)])
                 ->where('city', '=', $city)->first();
 
             if ($contract) {
