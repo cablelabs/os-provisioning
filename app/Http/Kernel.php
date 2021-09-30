@@ -56,8 +56,8 @@ class Kernel extends HttpKernel
 
         'api' => [
             'bindings',
-            \App\Http\Middleware\SetLanguage::class,
             'auth.nmsapi',
+            \App\Http\Middleware\SetLanguage::class,
         ],
     ];
 
