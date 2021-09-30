@@ -32,7 +32,14 @@
 <script language="javascript">
 
 $('#netelementtype_id').change(function() {
-	location.href = location.href + "?&netelementtype_id=" + document.getElementById("netelementtype_id").options[document.getElementById("netelementtype_id").selectedIndex].value;
+    let url = new URL(location)
+    let urlParams = new URLSearchParams(location.search)
+    let selectfield = document.getElementById("netelementtype_id")
+
+    urlParams.set('netelementtype_id', selectfield.options[selectfield.selectedIndex].value)
+    url.search = urlParams.toString()
+
+    location.href = url
 });
 
 </script>

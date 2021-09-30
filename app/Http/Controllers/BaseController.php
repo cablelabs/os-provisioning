@@ -1824,9 +1824,14 @@ class BaseController extends Controller
         $lowerField = strtolower($class);
         $field = $field ?? "{$lowerField}_id";
         $placeholder = trans('view.select.base', ['model' => trans("view.select.{$class}")]);
+        $isSetViaRequest = request($field) && array_key_exists($class, $models = session('models'));
 
         if ($model->exists) {
             $fn = $fn ?? $lowerField;
+
+            if ($isSetViaRequest) {
+                return $this->select2ViaRequestParam($models, $model, $class, $field, $placeholder);
+            }
 
             return [
                 null => $placeholder,
@@ -1834,16 +1839,31 @@ class BaseController extends Controller
             ];
         }
 
-        if (request($field) && array_key_exists($class, $models = session('models'))) {
-            $model = $models[$class]::findOrFail(request($field));
-
-            return [
-                null => $placeholder,
-                $model->id => $model->label(),
-            ];
+        if ($isSetViaRequest) {
+            return $this->select2ViaRequestParam($models, $model, $class, $field, $placeholder);
         }
 
         return [null => $placeholder];
+    }
+
+    /**
+     * Set the Select 2 Key/Value via Request (GET) Parameter
+     *
+     * @param  array  $models
+     * @param  BaseModel  $model
+     * @param  string  $class
+     * @param  string  $field
+     * @param  string  $placeholder
+     * @return array
+     */
+    protected function select2ViaRequestParam(array $models, BaseModel $model, string $class, string $field, string $placeholder): array
+    {
+        $model = $models[$class]::findOrFail(request($field));
+
+        return [
+            null => $placeholder,
+            $model->id => $model->label(),
+        ];
     }
 
     /**
