@@ -643,6 +643,23 @@ class NetElement extends \BaseModel
     }
 
     /**
+     * Format Netelements for Select 2 field and allow for searching.
+     *
+     * @param  string|null  $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Netelements(?string $search): \Illuminate\Database\Eloquent\Builder
+    {
+        return NetElement::select('netelement.id')
+            ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
+            ->selectRaw('CONCAT(nt.name,\': \', netelement.name) as text')
+            ->when($search, function ($query, $search) {
+                return $query->where('netelement.name', 'like', "%{$search}%")
+                    ->orWhere('nt.name', 'like', "%{$search}%");
+            });
+    }
+
+    /**
      * Format NetElemetType for Select 2 field and allow for searching.
      *
      * @param  string|null  $search
