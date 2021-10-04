@@ -18,6 +18,7 @@
 
 namespace Modules\ProvBase\Console;
 
+use App\ImportTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Modules\BillingBase\Entities\Item;
@@ -28,6 +29,8 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class ImportTvCustomersCommand extends Command
 {
+    use ImportTrait;
+
     /**
      * The console command name.
      *
@@ -41,8 +44,6 @@ class ImportTvCustomersCommand extends Command
      * @var string
      */
     protected $description = 'import Customers from CSV and add TV Tarif';
-
-    public $important_todos = '';
 
     /**
      * Column Number and Description for easy Adaption
@@ -152,9 +153,7 @@ class ImportTvCustomersCommand extends Command
             $this->_add_sepa_mandate($c, $line);
         }
 
-        if ($this->important_todos) {
-            echo $this->important_todos."\n";
-        }
+        $this->printImportantTodos();
     }
 
     /**
@@ -175,7 +174,7 @@ class ImportTvCustomersCommand extends Command
         $city = $arr[0];
         $district = isset($arr[1]) ? $arr[1] : '';
 
-        $contract = self::contractExists($number, $firstname, $lastname, $street, $city);
+        $contract = $this->contractExists($number, $firstname, $lastname, $street, $city);
         // if existing contract was found update the contact and return it
         if ($contract) {
             if ($this->option('ag')) {
@@ -244,44 +243,6 @@ class ImportTvCustomersCommand extends Command
         return $contract;
     }
 
-    /**
-     * Check if already a (n internet) contract exists for this customer
-     *
-     * @return object contract if exists, otherwise null or []
-     */
-    public static function contractExists($number, $firstname, $lastname, $street, $city)
-    {
-        $contract = Contract::where('number', '=', $number)->first();
-
-        if ($contract) {
-            // Check if name and address differs - could be a different customer
-            // Attention: strtolower doesn't work for ÄÖÜ, but i dont know if a street begins with such a char
-            if ($contract->firstname != $firstname || $contract->lastname != $lastname || strtolower($contract->street) != strtolower($street)) {
-                $msg = "Vertragsnummer $number existiert bereits, aber Name, Straße oder Stadt weichen ab - Bitte korrigieren Sie die Daten!";
-                Log::warning($msg);
-                $this->important_todos .= "\n$msg";
-
-                return $contract;
-            }
-
-            Log::notice("Vertrag $number existiert bereits übereinstimmend ($firstname $lastname) - füge nur TV Tarif hinzu");
-        } else {
-            // TODO: Check if customer/name & address already exists with another contract number
-            $contract = Contract::where('firstname', '=', $firstname)->where('lastname', '=', $lastname)
-                // make Straße or Str. respective ..straße or ..str. indifferent on searching in DB
-                ->whereIn('street', [$street, str_replace(['trasse', 'traße'], 'tr.', $street)])
-                ->where('city', '=', $city)->first();
-
-            if ($contract) {
-                // $msg = "Customer $number is probably already added with different contract number [$contract->number] (found same name [$firstname $lastname], city & street [$street]). Check this manually!";
-                $msg = "Kunde $number existiert bereits unter der Vertragsnummer $contract->number (selber Name, Stadt, Straße: , $city, $street gefunden). Füge nur TV Tarif hinzu.";
-                Log::notice($msg);
-            }
-        }
-
-        return $contract;
-    }
-
     public static function map_academic_degree($string)
     {
         if (strpos($string, 'Prof') !== false) {
@@ -341,7 +302,7 @@ class ImportTvCustomersCommand extends Command
             case self::TV_CHARGE1: $product_id = self::PRODUCT_ID1; break;
             default:
                 $msg = "Contract $contract->number is charged with $amount EUR. Please add Tariff manually!";
-                $this->important_todos .= "\n$msg";
+                $this->importantTodos[] = $msg;
                 Log::warning($msg);
 
                 return;
@@ -371,7 +332,7 @@ class ImportTvCustomersCommand extends Command
         $product_id = 0;
         foreach (self::CREDITS_WATT as $watt => $prod_id) {
             if ($watt_amount == $watt) {
-                $this->important_todos .= "\nPlease check if contract $contract->number has correct credit assigned! (multiple possible)";
+                $this->importantTodos[] = "Please check if contract $contract->number has correct credit assigned! (multiple possible)";
 
                 $product_id = $prod_id;
                 break;
@@ -379,7 +340,7 @@ class ImportTvCustomersCommand extends Command
         }
 
         if (! $product_id) {
-            $this->important_todos .= "\nContract $contract->number [Old Contract Nr ".$line[self::C_NR]."] has credit of $credit € [Watt: $watt_amount]. Please add credit manually!";
+            $this->importantTodos[] = "Contract $contract->number [Old Contract Nr ".$line[self::C_NR]."] has credit of $credit € [Watt: $watt_amount]. Please add credit manually!";
 
             return;
         }
@@ -400,7 +361,7 @@ class ImportTvCustomersCommand extends Command
         // $credit_amount = trim($credit_amount);
 
         if (date('Y') == date('Y', strtotime($contract->contract_start)) || date('Y') == date('Y', strtotime($contract->contract_end))) {
-            $this->important_todos .= "\nPlease check Amplifier credit for Contract $contract->number as it's calculated partly for the year";
+            $this->importantTodos[] = "Please check Amplifier credit for Contract $contract->number as it's calculated partly for the year";
         }
 
         Item::create([
