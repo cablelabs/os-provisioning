@@ -19,20 +19,21 @@
         "markrogoyski/ipv4-subnet-calculator": "3.*",
         "nwidart/laravel-modules": "^6.0",
         "doctrine/dbal": "^2.7",
-        "silber/bouncer": "v1.0.0-rc.9",
+        "silber/bouncer": "v1.0.0-rc.10",
         "kingsquare/php-mt940": "^1.5",
         "fideloper/proxy": "^4.4",
         "phpseclib/phpseclib": "~2.0",
         "intervention/validation": "^2.6",
         "kalnoy/nestedset": "^5.0",
         "beyondcode/laravel-websockets": "^1.12",
-        "pusher/pusher-php-server": "~3.0"
+        "pusher/pusher-php-server": "~4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.0",
-        "phpspec/phpspec": "~6.1",
-        "laravel/tinker": "^1.0",
-        "fzaninotto/faker": "~1.9.1"
+        "fakerphp/faker": "^1.9.1",
+        "mockery/mockery": "^1.4.2",
+        "nunomaduro/collision": "^3.0",
+        "laravel/tinker": "^2.0",
+        "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
         "classmap": [
