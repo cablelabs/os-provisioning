@@ -450,6 +450,19 @@ class ModemController extends \BaseController
         return $this->response($parsedData);
     }
 
+    public function apiGetModemsOfSameLocation($ver, $id)
+    {
+        if ($ver !== '1') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+        $resourceOptions = $this->parseResourceOptions();
+        $service = new ModemService(new Repository(static::get_model_obj()));
+        $data = $service->getModemsOfSameLocation($id, $resourceOptions);
+        $parsedData = $this->parseData($data, $resourceOptions);
+
+        return $this->response($parsedData);
+    }
+
     /**
      * Set nullable fields.
      *

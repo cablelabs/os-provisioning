@@ -62,6 +62,11 @@ BaseRoute::group([], function () {
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@apiGeoPos',
             'middleware' => ['api', 'can:view,Modules\ProvBase\Entities\Modem'],
         ]);
+        Route::get('modem/{Modem}/same-location-modems', [
+            'as' => 'Modem.apiGetModemsOfSameLocation',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@apiGetModemsOfSameLocation',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
         Route::get('Modem/{Modem}/restart', [
             'as' => 'Modem.api_restart',
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_restart',

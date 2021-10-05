@@ -26,4 +26,24 @@ class ModemService extends Service
 
         return $query->get();
     }
+
+    public function getModemsOfSameLocation(int $modem_id, $options =[]){
+        $modem = $this->repository->getById($modem_id, $options);
+        $query = $this->repository->createBaseBuilder($options);
+        $query->select('modem.*')
+            ->join('contract', 'contract.id', 'modem.contract_id')
+            ->whereNull('modem.deleted_at')
+            ->whereNull('contract.deleted_at')
+            ->where('modem.x', $modem->x)
+            ->where('modem.y', $modem->y)
+            ->where('contract_start', '<=', date('Y-m-d'))
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')))
+            ->orderBy('us_pwr', 'DESC');
+
+        if (isset($options['paginate']) && $options['paginate']) {
+            return $query->paginate($options['limit'], ['modem.*']);
+        }
+
+        return $query->get();
+    }
 }
