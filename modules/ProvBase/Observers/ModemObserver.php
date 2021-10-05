@@ -151,14 +151,14 @@ class ModemObserver
 
         // update modem address is pgsql (used by grafana)
         if (multi_array_key_exists([
-                    'company',
-                    'firstname',
-                    'lastname',
-                    'street',
-                    'house_number',
-                    'zip',
-                    'city',
-                    'district',
+            'company',
+            'firstname',
+            'lastname',
+            'street',
+            'house_number',
+            'zip',
+            'city',
+            'district',
         ], $diff)) {
             \Queue::pushOn('low', new \Modules\ProvMon\Jobs\PushModemAddressToPostgresql($modem->id));
         }
