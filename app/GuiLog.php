@@ -135,7 +135,7 @@ class GuiLogWriter
      * Private unserialize method to prevent unserializing of the *Singleton*
      * instance.
      */
-    private function __wakeup()
+    public function __wakeup()
     {
     }
 
