@@ -1,4 +1,4 @@
-source scl_source enable rh-php73
+module load php80
 
 # change owner
 chown -R apache:dhcpd /etc/dhcp-nmsprime
