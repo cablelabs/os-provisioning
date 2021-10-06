@@ -25,20 +25,17 @@
             <i class="fa fa-question fa-2x" aria-hidden="true"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            <?php
-                if (isset($documentation))
-                    $help = config('documentation.'.strtolower($documentation));
-                else
-                    $help = $view_help;
-            ?>
+            @php
+                $help = (isset($documentation)) ? config('documentation.'.strtolower($documentation)) : $view_help;
+            @endphp
 
-            @if ($help['doc'])
+            @if ($help && $help['doc'])
             <a class="dropdown-item" href="{{$help['doc']}}" target="_blank">Documentation</a>
             @endif
-            @if ($help['url'])
+            @if ($help && $help['url'])
             <a class="dropdown-item" href="{{$help['url']}}" target="_blank">URL</a>
             @endif
-            @if ($help['youtube'])
+            @if ($help && $help['youtube'])
             <a class="dropdown-item" href="{{$help['youtube']}}" target="_blank">Youtube</a>
             @endif
             <div class="dropdown-divider"></div>

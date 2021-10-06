@@ -44,7 +44,11 @@ return [
         'youtube' => 'https://www.youtube.com/watch?v=t-PFsy42cI0',
         'url' => null, ],
 
-    'domain' => null, // todo
+    'domain' => [ // todo
+        'doc' => null,
+        'youtube' => null,
+        'url' => null,
+    ],
 
     'endpoint' => ['doc' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/IP+address+assignment',
         'youtube' => 'https://www.youtube.com/watch?v=D3m8RyKnO38',

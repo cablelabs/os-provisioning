@@ -109,12 +109,10 @@ class NamespaceController
 
         if (static::is_module_context()) {
             return static::__module_get_mvc_namespace().'\\Entities\\'.$pure_model;
-        } else {
-            if (is_null($pure_model)) {
-                return;
-            } else {
-                return  'App\\'.$pure_model;
-            }
+        }
+
+        if (! is_null($pure_model)) {
+            return 'App\\'.$pure_model;
         }
     }
 
