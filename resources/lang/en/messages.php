@@ -107,6 +107,7 @@ return [
     'Floor'                     => 'Floor',
     'Force Restart'             => 'Force Restart',
     'Geocode origin'            => 'Geocode origin',
+    'Group Contract'            => 'Group Contract',
     'Headend'                   => 'Headend',
     'House number'              => 'House number',
     'IBAN'                      => 'IBAN',

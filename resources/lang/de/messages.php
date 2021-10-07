@@ -107,6 +107,7 @@ return [
     'Floor'                     => 'Etage',
     'Force Restart'             => 'Neustart erzwingen',
     'Geocode origin'            => 'Herkunft der Geodaten',
+    'Group Contract'            => 'Gruppenvertrag',
     'Headend'                   => 'Kopfstelle',
     'House number'              => 'Hausnummer',
     'IBAN'                      => 'IBAN',

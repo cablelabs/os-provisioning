@@ -129,7 +129,7 @@ class Contract extends \BaseModel
 
     public function isGroupContractAsString()
     {
-        return $this->isGroupContract() ? trans('view.true') : trans('view.false');
+        return $this->group_contract ? trans('view.true') : trans('view.false');
     }
 
     /**
@@ -139,7 +139,7 @@ class Contract extends \BaseModel
     {
         $bsclass = 'success';
 
-        if ($this->isGroupContract()) {
+        if ($this->group_contract) {
             return 'info';
         }
 
@@ -195,27 +195,21 @@ class Contract extends \BaseModel
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
             if (Module::collections()->has('PropertyManagement')) {
-                if ($this->contact_id || $this->apartment_id) {
-                    $ret['Edit']['Modem']['options']['hide_delete_button'] = 1;
+                if ($this->group_contract) {
                     $ret['Edit']['Modem']['options']['hide_create_button'] = 1;
-                    $infoKey = $this->contact_id ? 'groupContract.modem' : 'tvContract';
-                    $ret['Edit']['Modem']['info'] = trans("propertymanagement::messages.$infoKey");
-                }
+                    $ret['Edit']['Modem']['info'] = trans('propertymanagement::messages.groupContract.modem');
 
-                // Check if contract belongs to a group contract
-                $groupContract = $this->belongsToGroupContract();
-                if ($groupContract) {
-                    $msg = $groupContract === true ? trans('propertymanagement::messages.groupContract.item') : trans('propertymanagement::messages.groupContract.probably');
-
-                    $ret['Edit']['Item']['info'] = $msg;
-                    $ret['Billing']['Item']['info'] = $msg;
-                }
-
-                // Check if contract is a group contract
-                if ($this->isGroupContract()) {
                     $tabName = trans('propertymanagement::view.propertyManagement');
                     $ret[$tabName]['Realty']['class'] = 'Realty';
                     $ret[$tabName]['Realty']['relation'] = $this->realties;
+                }
+
+                // Display info that TV fees are potentially charged by group contract if this contract belongs to one
+                $belongsToGroupContract = $this->belongsToGroupContract();
+                if ($belongsToGroupContract) {
+                    $msg = trans('propertymanagement::messages.groupContract.item');
+                    $ret['Edit']['Item']['info'] = $msg;
+                    $ret['Billing']['Item']['info'] = $msg;
                 }
             }
 
@@ -240,7 +234,7 @@ class Contract extends \BaseModel
         }
 
         if (Module::collections()->has('ProvVoipEnvia') &&
-            (! Module::collections()->has('PropertyManagement') || (! $this->isGroupContract() && ! $this->apartment_id))) {
+            (! Module::collections()->has('PropertyManagement') || (! $this->group_contract))) {
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -1571,18 +1565,9 @@ class Contract extends \BaseModel
         ]);
     }
 
-    public function isGroupContract()
-    {
-        if (! \Module::collections()->has('PropertyManagement')) {
-            return false;
-        }
-
-        return $this->contact_id ? true : false;
-    }
-
     public function groupContractFilterQuery()
     {
-        return "id in (SELECT id from contract WHERE IF(contact_id is null, '".trans('view.false')."', '".trans('view.true')."') like ?)";
+        return "id in (SELECT id from contract WHERE IF(group_contract = 0, '".trans('view.false')."', '".trans('view.true')."') like ?)";
     }
 
     /**
