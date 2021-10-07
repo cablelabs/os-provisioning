@@ -151,7 +151,11 @@ class ModemController extends \BaseController
         ];
 
         if (Module::collections()->has('PropertyManagement')) {
-            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'value' => $model->getApartmentsList(), 'hidden' => 0, 'help' => trans('propertymanagement::help.apartmentList')];
+            $c[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'hidden' => 0,
+                'value' => $this->setupSelect2Field($model, 'Apartment'), 'help' => trans('propertymanagement::help.apartmentList'),
+                'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true',
+                    'ajax-route' => route('Apartment.select2', ['relation' => 'apartments'])
+                ]];
         } else {
             $c[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number'];
         }

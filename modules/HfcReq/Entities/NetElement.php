@@ -650,7 +650,7 @@ class NetElement extends \BaseModel
      */
     public function select2Netelements(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        return NetElement::select('netelement.id')
+        return self::select('netelement.id')
             ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
             ->selectRaw('CONCAT(nt.name,\': \', netelement.name) as text')
             ->when($search, function ($query, $search) {
@@ -672,27 +672,6 @@ class NetElement extends \BaseModel
                 return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('version', 'like', "%{$search}%");
             });
-    }
-
-    public function getApartmentsList()
-    {
-        $apartments = \Modules\PropertyManagement\Entities\Apartment::leftJoin('netelement as n', 'apartment.id', 'n.apartment_id')
-            ->whereNull('n.deleted_at')
-            ->where(function ($query) {
-                $query
-                    ->whereNull('n.id')
-                    ->orWhere('apartment.id', $this->apartment_id);
-            })
-            ->select('apartment.*')
-            ->get();
-
-        $list[null] = null;
-
-        foreach ($apartments as $apartment) {
-            $list[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
-        }
-
-        return $list;
     }
 
     // TODO: rename, avoid recursion

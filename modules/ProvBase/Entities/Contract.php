@@ -1571,34 +1571,6 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Get list of Apartments for select field of edit view
-     *
-     * @return array
-     */
-    public function getSelectableApartments()
-    {
-        if (! \Module::collections()->has('PropertyManagement')) {
-            return [];
-        }
-
-        // All Apartments without Modems
-        // TODO: Filter all Apartments with a valid Contract?
-        $apartments = DB::table('apartment')->leftJoin('modem', 'modem.apartment_id', 'apartment.id')
-            ->join('realty', 'realty.id', 'apartment.realty_id')
-            ->whereNull('modem.id')
-            ->whereNull('modem.deleted_at')
-            ->select('apartment.*', 'realty.street', 'realty.house_nr', 'realty.city')
-            ->get();
-
-        $arr[null] = null;
-        foreach ($apartments as $apartment) {
-            $arr[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
-        }
-
-        return $arr;
-    }
-
-    /**
      * Compose list of ordered Realties belonging to a group Contract to be displayed on an Invoice
      *
      * @return array

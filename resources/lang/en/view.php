@@ -361,8 +361,10 @@ return [
 
     // Select Fields
     'select' => [
+        'Apartment' => 'an apartment',
         'base' => 'Please choose :model!',
         'Configfile' => 'a Configfile',
+        'Contact' => 'a contact',
         'Contract' => 'a Contract',
         'Mta' => 'a MTA',
         'NetElement' => 'a NetElement',

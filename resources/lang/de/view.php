@@ -361,8 +361,10 @@ return [
 
     // Select Fields
     'select' => [
+        'Apartment' => 'eine Wohnung',
         'base' => 'Bitte wählen Sie :model aus!',
         'Configfile' => 'eine Konfigurationsdatei',
+        'Contact' => 'einen Ansprechpartner',
         'Contract' => 'einen Vertrag',
         'Mta' => 'ein MTA',
         'NetElement' => 'ein Netzelement',
