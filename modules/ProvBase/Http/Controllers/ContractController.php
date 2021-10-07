@@ -275,20 +275,6 @@ class ContractController extends \BaseController
 
     public function prepare_rules($rules, $data)
     {
-        if (\Module::collections()->has('PropertyManagement')) {
-            // Only group contracts without modems can belong to a Contact directly - with CMs contact_id must be null
-            if (isset($data['contact_id']) && $data['contact_id'] && isset($data['id'])) {
-                $modems = Contract::join('modem', 'modem.contract_id', 'contract.id')
-                    ->where('contract.id', $data['id'])
-                    ->whereNull('modem.deleted_at')
-                    ->count();
-
-                if ($modems) {
-                    $rules['contact_id'] = 'empty';
-                }
-            }
-        }
-
         foreach ($rules as $name => $rule) {
             $rules[$name] = str_replace('placeholder_salutations_person', implode(',', $this->getSalutationOptionsPerson()), $rules[$name]);
             $rules[$name] = str_replace('placeholder_salutations_institution', implode(',', $this->getSalutationOptionsInstitution()), $rules[$name]);
