@@ -84,14 +84,7 @@ class ContractController extends \BaseController
             ['form_type' => 'select', 'name' => 'academic_degree', 'description' => 'Academic Degree', 'value' => $model->getAcademicDegreeOptions()],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => ['Modem'], 'space' => '1'],
-            // array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'autocomplete' => [], 'html' => "<div class=col-md-12 style='background-color:whitesmoke'>
-            //     <div class='form-group row'>
-            //         <label for=street class='col-md-4 control-label' style='margin-top: 10px;'>Street * and House Number *</label>
-            //             <div class=col-md-5>
-            //                 <input class='form-control' name='street' type=text value='${model['street']}' id='street' style='background-color:whitesmoke'>
-            //             </div>"], $selectPropertyMgmt),
-            // array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => ['Modem'], 'html' => "<div class=col-md-2><input class='form-control' name='house_number' type=text value='".$model['house_number']."' id='house_number' style='background-color:whitesmoke'></div>
-            //     </div></div>"], $selectPropertyMgmt),
+
             array_merge(['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'house_number', 'description' => 'House Number', 'create' => ['Modem']], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
@@ -138,9 +131,7 @@ class ContractController extends \BaseController
         $b3 = [
             ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
-            ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
-            ['form_type' => 'select', 'name' => 'ground_for_dismissal', 'description' => trans('view.contract.groundForDismissal'),
-                'value' => array_merge([null => null], $reasons), ],
+            ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => 1],
         ];
 
         if (Module::collections()->has('BillingBase')) {
@@ -156,11 +147,8 @@ class ContractController extends \BaseController
                 ['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'create' => ['Modem'], 'hidden' => 1],
             ];
 
-            if (cache('billingBase')->show_ags) {
-                $c[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
-            }
+            $c[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => selectList('salesman', ['firstname', 'lastname'], true, ' - ')];
 
-            $c[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => selectList('salesman', ['firstname', 'lastname'], true, ' - '), 'space' => '1'];
         } else {
             $qoss = Qos::all();
 
@@ -179,7 +167,7 @@ class ContractController extends \BaseController
                     ['form_type' => 'select', 'name' => 'purchase_tariff', 'description' => 'Purchase tariff', 'value' => $purchase_tariffs],
                     ['form_type' => 'select', 'name' => 'voip_id', 'description' => 'Sale tariff', 'value' => $sales_tariffs],
                     ['form_type' => 'text', 'name' => 'next_purchase_tariff', 'description' => 'Purchase tariff next month', 'value' => $purchase_tariffs],
-                    ['form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Sales tariff next month', 'value' => $sales_tariffs, 'space' => '1'],
+                    ['form_type' => 'text', 'name' => 'next_voip_id', 'description' => 'Sales tariff next month', 'value' => $sales_tariffs],
                 ];
 
                 $c = array_merge($c, $c2);
@@ -195,8 +183,13 @@ class ContractController extends \BaseController
             $c[array_key_last($c)]['space'] = 1;
         }
 
+        if (cache('billingBase')->show_ags) {
+            $c[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
+        }
 
         $d = [
+            ['form_type' => 'select', 'name' => 'ground_for_dismissal', 'description' => trans('view.contract.groundForDismissal'),
+                'value' => array_merge([null => null], $reasons), ],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
 
