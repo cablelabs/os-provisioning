@@ -20,6 +20,6 @@
 
 @section ('javascript_extra')
     @if (Module::collections()->has('PropertyManagement'))
-        @include('provbase::Modem.hideAddress')
+        @include('provbase::Contract.hideAddress')
     @endif
 @stop

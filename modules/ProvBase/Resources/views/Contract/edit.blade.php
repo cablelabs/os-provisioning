@@ -16,19 +16,10 @@
  * limitations under the License.
  */
 ?>
-<script type="text/javascript">
+@extends ('Generic.edit')
 
-    function showFields() {
-        if ($('#apartment_id').val() == '') {
-            $(".noApartment").show();
-        } else {
-            $(".noApartment").hide();
-        }
-    }
-
-    showFields();
-
-    $('#apartment_id').change(function() {
-        showFields();
-    });
-</script>
+@section ('javascript_extra')
+    @if (Module::collections()->has('PropertyManagement'))
+        @include('provbase::Contract.hideAddress')
+    @endif
+@stop

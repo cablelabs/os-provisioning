@@ -67,15 +67,7 @@ class ContractController extends \BaseController
 
         $selectPropertyMgmt = [];
         if (Module::collections()->has('PropertyManagement')) {
-            $hasModems = $model->modems->count() ? true : false;
-            $selectPropertyMgmt = ! $hasModems ? ['select' => 'noApartment'] : [];
-
-            // Only group Contracts are assigned to a Contact
-            $contacts = DB::table('contact')->where('administration', 1)->whereNull('deleted_at')->get();
-            $contactList[null] = null;
-            foreach ($contacts as $contact) {
-                $contactList[$contact->id] = \Modules\PropertyManagement\Entities\Contact::labelFromData($contact);
-            }
+            $selectPropertyMgmt = ['select' => 'noApartment'];
         }
 
         // label has to be the same like column in sql table
