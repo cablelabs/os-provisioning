@@ -1810,7 +1810,7 @@ class Modem extends \BaseModel
 
         $arr[null] = null;
         foreach ($apartments as $apartment) {
-            $arr[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
+            $arr[$apartment->id] = $apartment->label();
         }
 
         return $arr;
