@@ -148,7 +148,6 @@ class ContractController extends \BaseController
             ];
 
             $c[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => selectList('salesman', ['firstname', 'lastname'], true, ' - ')];
-
         } else {
             $qoss = Qos::all();
 
