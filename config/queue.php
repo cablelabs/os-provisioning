@@ -55,7 +55,7 @@ return [
             'connection' => env('QUEUE_DRIVER_DATABASE_CONNECTION', 'mysql'),
             'table' => 'jobs',
             'queue' => 'medium',
-            'retry_after' => 90,
+            'retry_after' => 10101, // should be slightly greater than “--timeout” value in supervisord config
         ],
 
         'beanstalkd' => [
