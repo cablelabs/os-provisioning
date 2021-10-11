@@ -210,6 +210,7 @@ return [
     'Header_Ticket'             => 'Ticket|Tickets',
     'Header_EditTicket'         => 'Edit Ticket',
     'Header_TicketType'         => 'Ticket Types',
+    'Header_TicketReceiver'     => 'Ticket Receiver',
     //HFC
     //Topography
     'Header_Topography - Modems'=> 'Topography - Modems',
