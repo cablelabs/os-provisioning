@@ -591,12 +591,11 @@ class BaseViewController extends Controller
         $menu = [];
         $configMenuItemKey = 'MenuItems';
 
-        $globalPages = config('base.'.$configMenuItemKey);
-
         $menu['Global']['icon'] = 'fa-globe';
         $menu['Global']['link'] = config('base.link');
         $menu['Global']['translated_name'] = trans('view.Global');
-        foreach ($globalPages as $page => $settings) {
+
+        foreach (config('base.'.$configMenuItemKey) as $page => $settings) {
             if (Bouncer::can('view', $settings['class'])) {
                 $menuItem = static::translate_view($page, 'Menu');
                 $menu['Global']['submenu'][$menuItem] = $settings;
@@ -627,6 +626,8 @@ class BaseViewController extends Controller
                 }
             }
         }
+
+        $menu = array_filter($menu, fn ($item) => isset($item['submenu']));
 
         self::addWorkforceMenuEntry($menu);
 
