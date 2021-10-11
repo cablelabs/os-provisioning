@@ -29,7 +29,7 @@ $rpm_dir = $argv[3];
  * Parse Config for FPM
  * Requires Install/config.cfg
  */
-function config($dir_root, $module = 'base', $options = '')
+function getConfig($dir_root, $module = 'base', $options = '')
 {
     $dir = $dir_root.'/Install';
     $file = $dir.'/config.cfg';
@@ -110,7 +110,7 @@ function fpm($dir, $version, $rpm_dir, $module = 'base', $options = '')
     if ($module === 'Debug') {
         $config = '-n debug-nmsprime --description "NMS Prime Debug Package" .git/=/var/www/nmsprime/.git .gitignore=/var/www/nmsprime/.gitignore';
     } else {
-        $config = config($dir, $module, $options);
+        $config = getConfig($dir, $module, $options);
     }
 
     if (! $config) {
