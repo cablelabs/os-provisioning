@@ -80,7 +80,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // A mysql root connection
@@ -104,7 +104,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // Config Host connection.
@@ -126,7 +126,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // mysql cacti connection
@@ -147,7 +147,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // for km3 import command only
@@ -182,7 +182,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
-            'engine' => null,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         'sqlsrv' => [
@@ -213,6 +213,7 @@ return [
             'collation' => 'latin1_swedish_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // mysql icinga/nagios connection
@@ -232,6 +233,7 @@ return [
             'collation' => 'latin1_swedish_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         // mysql freeradius connection
@@ -251,6 +253,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         'mysql-netuser' => [
@@ -263,6 +266,7 @@ return [
             'collation' => 'latin1_swedish_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         'mysql-kea' => [
@@ -275,6 +279,7 @@ return [
             'collation' => 'latin1_swedish_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
         'pgsql-timescaledb' => [
