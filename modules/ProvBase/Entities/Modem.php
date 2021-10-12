@@ -725,20 +725,23 @@ class Modem extends \BaseModel
     /**
      * Add/Remove modem MAC to/from DHCP blocking file - to not hand out IP addresses to CPEs behind that modem
      */
-    public function blockCpeViaDhcp($unblock = false)
+    public function blockCpeViaDhcp($unblock = false, $macChanged = false)
     {
         // Add (Block)
         if (! $unblock) {
             file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
 
-            return;
+            if (! $macChanged) {
+                return;
+            }
         }
 
         // Remove (Unblock)
         $lines = file(self::BLOCKED_CPE_FILE_PATH);
+        $mac = $macChanged ? $this->getOriginal('mac') : $this->mac;
 
         foreach ($lines as $i => $line) {
-            if (Str::contains($line, $this->mac)) {
+            if (Str::contains($line, $mac)) {
                 unset($lines[$i]);
                 File::put(self::BLOCKED_CPE_FILE_PATH, implode($lines), true);
 

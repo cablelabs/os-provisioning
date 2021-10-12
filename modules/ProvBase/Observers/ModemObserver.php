@@ -125,11 +125,13 @@ class ModemObserver
             $modem->make_dhcp_cm();
 
             if (! $modem->wasRecentlyCreated) {
-                if (array_key_exists('internet_access', $diff)) {
-                    $modem->blockCpeViaDhcp(boolval($modem->internet_access));
+                $macChanged = array_key_exists('mac', $diff);
+
+                if (multi_array_key_exists(['internet_access', 'mac'], $diff)) {
+                    $modem->blockCpeViaDhcp(boolval($modem->internet_access), $macChanged);
                 }
 
-                $modem->restart_modem(array_key_exists('mac', $diff));
+                $modem->restart_modem($macChanged);
             }
 
             $modem->make_configfile();
