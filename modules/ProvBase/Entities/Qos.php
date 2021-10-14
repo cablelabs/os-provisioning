@@ -112,7 +112,7 @@ class Qos extends \BaseModel
 
         $relatedProducts = $this->products()->whereNull('product.deleted_at')->count();
 
-        return $this->index_delete_disabled = $relatedProducts >= 0;
+        return $this->index_delete_disabled = $relatedProducts > 0;
     }
 
     /**
