@@ -13,9 +13,12 @@ return [
     |
     */
 
-    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
-    'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
-    'NoRoles' => 'No tienes ningún rol asociado con su cuenta!. Por favor, póngase en contacto con su administrador.',
+    'failed' => 'These credentials do not match our records.',
+    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.',
 
-    'EnviaOrderDocument' => 'El acceso a EnviaOrderDocument no está permitido. \n Es posible que falten permisos para ProvVoipEnvia - Póngase en contacto con su administrador.',
+    'accessDenied'      => 'Access Denied',
+    'permissionDenied'  => 'Permission Denied',
+    'This action is unauthorized.' => 'This action is unauthorized',
+    'EnviaOrderDocument' => 'Access to EnviaOrderDocument not allowed.\nYou might be missing Permissions for ProvVoipEnvia - Please contact your administrator.',
 ];
