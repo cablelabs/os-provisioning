@@ -166,7 +166,11 @@ class IpPoolController extends \BaseController
             $rules['type'] = 'In:CPEPub';
 
             foreach (['prefix', 'prefix_len', 'delegated_len'] as $rkey) {
-                $rules[$rkey] .= '|required';
+                if (isset($rules[$rkey])) {
+                    $rules[$rkey] .= '|required';
+                } else {
+                    $rules[$rkey] = 'required';
+                }
             }
         }
 
