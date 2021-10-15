@@ -1268,18 +1268,19 @@ class BaseController extends Controller
         }
         $obj = isset($obj) ? $obj : static::get_model_obj();
         $class = NamespaceController::get_route_name();
+        $translatedClass = trans("messages.$class");
 
         if (! $deleted && ! $obj->force_delete) {
             $color = 'danger';
-            $message = trans('messages.base.delete.fail', ['model' => $class, 'id' => '']);
+            $message = trans('messages.base.delete.fail', ['model' => $translatedClass, 'id' => '']);
             $obj->addAboveMessage($message, 'error');
         } elseif (($deleted == $to_delete) || $obj->force_delete) {
             $color = 'success';
-            $message = trans('messages.base.delete.success', ['model' => $class, 'id' => '']);
+            $message = trans('messages.base.delete.success', ['model' => $translatedClass, 'id' => '']);
             $obj->addAboveMessage($message, 'success');
         } else {
             $color = 'warning';
-            $message = trans('messages.base.delete.multiSuccess', ['deleted' => $deleted, 'to_delete' => $to_delete, 'model' => $class]);
+            $message = trans('messages.base.delete.multiSuccess', ['deleted' => $deleted, 'to_delete' => $to_delete, 'model' => $translatedClass]);
             $obj->addAboveMessage($message, 'warning');
         }
 
