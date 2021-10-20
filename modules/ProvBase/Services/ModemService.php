@@ -27,7 +27,8 @@ class ModemService extends Service
         return $query->get();
     }
 
-    public function getModemsOfSameLocation(int $modem_id, $options =[]){
+    public function getModemsOfSameLocation(int $modem_id, $options = [])
+    {
         $modem = $this->repository->getById($modem_id, $options);
         $query = $this->repository->createBaseBuilder($options);
         $query->select('modem.*')
