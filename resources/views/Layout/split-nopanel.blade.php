@@ -35,7 +35,7 @@
         $leftMdSizeLg -= $mdSizes['rightRightLg'];
     }
 
-    if (in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams'])) {
+    if (in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams', 'VicinityGraph.show'])) {
         $flex = 'flex:1;';
     }
 @endphp
