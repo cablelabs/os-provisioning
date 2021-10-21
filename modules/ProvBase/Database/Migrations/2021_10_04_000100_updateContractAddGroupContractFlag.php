@@ -30,7 +30,7 @@ class UpdateContractAddGroupContractFlag extends BaseMigration
     public function up()
     {
         Schema::table('contract', function (Blueprint $table) {
-            $table->boolean('group_contract');
+            $table->boolean('group_contract')->nullable();
         });
     }
 
