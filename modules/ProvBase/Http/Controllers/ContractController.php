@@ -100,8 +100,8 @@ class ContractController extends \BaseController
             $a[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'hidden' => 0,
                 'value' => $this->setupSelect2Field($model, 'Apartment'),
                 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true',
-                    'ajax-route' => route('Apartment.select2', ['relation' => 'apartments'])
-                ]];
+                    'ajax-route' => route('Apartment.select2', ['relation' => 'apartments']), ],
+            ];
         } else {
             $a[] = ['form_type' => 'text', 'name' => 'apartment_nr', 'description' => 'Apartment number'];
         }
@@ -177,7 +177,8 @@ class ContractController extends \BaseController
             $c[] = ['form_type' => 'checkbox', 'name' => 'group_contract', 'description' => 'Group Contract', 'checked' => 1, 'space' => 1];
             $c[] = ['form_type' => 'select', 'name' => 'contact_id', 'description' => 'Contact',
                 'value' => $this->setupSelect2Field($model, 'Contact'),
-                'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('Contact.select2', ['relation' => 'contacts'])]];
+                'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('Contact.select2', ['relation' => 'contacts'])],
+            ];
         } else {
             $c[array_key_last($c)]['space'] = 1;
         }
