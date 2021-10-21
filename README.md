@@ -40,7 +40,7 @@ For more information head over to the NMS Prime [Official Documentation](https:/
 
 ## Architectural Concepts
 
-NMS Prime is based on the [Laravel](https://laravel.com/) framework and uses [PHP 7](https://php.net) for the back end and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme for the front end.
+NMS Prime is based on the [Laravel](https://laravel.com/) framework and uses [PHP 8](https://php.net) for the back end and a modern and responsive [Bootstrap](http://getbootstrap.com/) theme for the front end.
 
 It is tested and developed under CentOS 7 (RHEL 7).
 
@@ -77,7 +77,10 @@ Afterwards the NMS Prime RPM packages are replaced with the GIT repository by is
 ```bash
 for module in $(rpm -qa "nmsprime-*" | grep -v '^nmsprime-repos'); do rpm -e --justdb --noscripts --nodeps "$module"; done
 
-yum install composer git
+yum install git
+
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 cd /var/www
 git clone https://github.com/cablelabs/os-provisioning nmsprimeGit
@@ -92,17 +95,17 @@ for module in $(ls -1 modules | grep -v '^HfcReq$\|^HfcSnmp$\|^NmsMail$\|^ProvBa
 
 COMPOSER_MEMORY_LIMIT=-1 composer update
 
-/opt/rh/rh-php73/root/usr/bin/php artisan config:cache
-/opt/rh/rh-php73/root/usr/bin/php artisan clear-compiled
-/opt/rh/rh-php73/root/usr/bin/php artisan optimize
-/opt/rh/rh-php73/root/usr/bin/php artisan migrate
-/opt/rh/rh-php73/root/usr/bin/php artisan module:migrate
-/opt/rh/rh-php73/root/usr/bin/php artisan module:publish
-/opt/rh/rh-php73/root/usr/bin/php artisan queue:restart
-/opt/rh/rh-php73/root/usr/bin/php artisan bouncer:clean
-/opt/rh/rh-php73/root/usr/bin/php artisan auth:nms
-/opt/rh/rh-php73/root/usr/bin/php artisan route:cache
-/opt/rh/rh-php73/root/usr/bin/php artisan view:clear
+/opt/remi/php80/root/usr/bin/php artisan config:cache
+/opt/remi/php80/root/usr/bin/php artisan clear-compiled
+/opt/remi/php80/root/usr/bin/php artisan optimize
+/opt/remi/php80/root/usr/bin/php artisan migrate
+/opt/remi/php80/root/usr/bin/php artisan module:migrate
+/opt/remi/php80/root/usr/bin/php artisan module:publish
+/opt/remi/php80/root/usr/bin/php artisan queue:restart
+/opt/remi/php80/root/usr/bin/php artisan bouncer:clean
+/opt/remi/php80/root/usr/bin/php artisan auth:nms
+/opt/remi/php80/root/usr/bin/php artisan route:cache
+/opt/remi/php80/root/usr/bin/php artisan view:clear
 ```
 
 ---
