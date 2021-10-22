@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -275,6 +275,38 @@ return [
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
+        // New nmsprime Postgres default connection
+        'pgsql' => [
+            'driver'   => 'pgsql',
+            'host'     => explode(',', str_replace(' ', '', env('DB_HOST', 'localhost'))),
+            'database'  => env('DB_DATABASE', 'nmsprime'),
+            'username'  => env('DB_USERNAME', 'nmsprime'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'nmsprime',
+            'sslmode' => 'prefer',
+        ],
+
+        'pgsql-ccc' => [
+            'driver'   => 'pgsql',
+            'read'      => [
+                'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
+            ],
+            'write'      => [
+                'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
+            ],
+            'sticky' => true,
+            'database'  => env('CCC_DB_DATABASE', env('DB_DATABASE', 'forge')),
+            'username'  => env('CCC_DB_USERNAME', env('DB_USERNAME', '')),
+            'password'  => env('CCC_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('CCC_DB_SOCKET', env('DB_SOCKET', '')),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'nmsprime_ccc',
+            'sslmode' => 'prefer',
+        ],
+
         'pgsql-timescaledb' => [
             'driver'   => 'pgsql',
             'host'     => env('TIMESCALE_DB_HOST', 'localhost'),
@@ -286,7 +318,6 @@ return [
             'schema' => 'monitoring',
             'sslmode' => 'prefer',
         ],
-
     ],
 
     /*

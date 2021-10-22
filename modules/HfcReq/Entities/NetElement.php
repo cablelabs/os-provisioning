@@ -51,7 +51,7 @@ class NetElement extends \BaseModel
      *
      * @var string
      */
-    protected $connection = 'mysql';
+    protected $connection = 'pgsql';
 
     private $max_parents = 50;
 
