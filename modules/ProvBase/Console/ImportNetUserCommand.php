@@ -112,8 +112,8 @@ class ImportNetUserCommand extends Command
                 ->whereRaw($cluster_filter)
                 ->where(function ($query) {
                     $query
-                    ->whereRaw("cm_adr.strasse like '%Flo%m%hle%'")
-                    ->orWhereRaw("cm_adr.ort like '%/OT Flo%'");
+                    ->where('cm_adr.strasse', 'like', '%Flo%m%hle%')
+                    ->orWhere('cm_adr.ort', 'like', '%/OT Flo%');
                 });
         };
 

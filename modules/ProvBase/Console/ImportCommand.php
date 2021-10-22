@@ -236,10 +236,10 @@ class ImportCommand extends Command
              */
             $modems = $km3->table(\DB::raw('tbl_modem m, tbl_adressen a, tbl_configfiles c'))
                     ->selectRaw('m.*, a.*, m.id as id, c.name as cf_name')
-                    ->where('m.vertrag', '=', $contract->id)
-                    ->whereRaw('m.adresse = a.id')
-                    ->whereRaw('m.configfile = c.id')
-                    ->where('m.deleted', '=', 'false')->get();
+                    ->where('m.vertrag', $contract->id)
+                    ->where('m.adresse', 'a.id')
+                    ->where('m.configfile', 'c.id')
+                    ->where('m.deleted', 'false')->get();
 
             foreach ($modems as $modem) {
                 $m = $this->add_modem($c, $modem, $km3);
@@ -1004,9 +1004,9 @@ class ImportCommand extends Command
                 continue;
             }
 
-            $mandate_old = $db_con->table(\DB::raw('tbl_sepamandate s, tbl_lastschriftkonten l'))
-                    ->selectRaw('s.*, l.*, l.id as id')
-                    ->whereRaw('s.id = l.sepamandat')
+            $mandate_old = $db_con->table('tbl_sepamandate as s')
+                    ->join('tbl_lastschriftkonten as l', 's.id', '=', 'l.sepamandat')
+                    ->select('s.*', 'l.*', 'l.id as id')
                     ->where('l.iban', '=', $m->iban)
                     ->where('s.deleted', '=', 'false')
                     ->where('l.deleted', '=', 'false')
