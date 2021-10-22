@@ -237,20 +237,28 @@ class BaseModel extends Eloquent
         $instance = new static;
 
         // get metadata for the given column and extract enum options
-        $type = DB::select(DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"'))[0]->Type;
+        // Schema::getColumnType($instance->getTable(), $name); is not yet supported (Laravel v6.0) - throws exception - L8.1 probably supports it
+        if (config('database.default') == 'pgsql') {
+            $range = DB::select('SELECT enum_range(NULL::'.$instance->getTable().'_'.$name.')')[0]->enum_range;
 
-        // create array with enum values (all values in brackets after “enum”)
-        preg_match('/^enum\((.*)\)$/', $type, $matches);
+            $values = str_replace(['{', '}'], '', $range);
+        } else {
+            // MySQL
+            $type = DB::select(DB::raw('SHOW COLUMNS FROM '.$instance->getTable().' WHERE Field = "'.$name.'"'))[0]->Type;
+
+            // create array with enum values (all values in brackets after “enum”)
+            preg_match('/^enum\((.*)\)$/', $type, $matches);
+            $values = $matches[1];
+        }
 
         $enum_values = [];
-
         // add an empty option if wanted
         if ($with_empty_option) {
             $enum_values[0] = '';
         }
 
         // add options extracted from database
-        foreach (explode(',', $matches[1]) as $value) {
+        foreach (explode(',', $values) as $value) {
             $v = trim($value, "'");
             $enum_values[$v] = $v;
         }
@@ -400,15 +408,14 @@ class BaseModel extends Eloquent
      */
     public static function getTableColumns($table)
     {
-        $tmp_res = [];
-        $cols = DB::select(DB::raw('SHOW COLUMNS FROM '.$table));
+        $columns = [];
+        $cols = Schema::getColumnListing($table);
+
         foreach ($cols as $col) {
-            array_push($tmp_res, $table.'.'.$col->Field);
+            $columns[] = $table.'.'.$col;
         }
 
-        $fields = implode(',', $tmp_res);
-
-        return $fields;
+        return implode(',', $columns);
     }
 
     /**
@@ -538,16 +545,9 @@ class BaseModel extends Eloquent
             'voip_id',
         ];
 
-        // this is the variable that holds table names in $table returned by DB::select('SHOW TABLES')
-        // named dynamically containing the database name
-        $tables_var_name = 'Tables_in_'.ENV('DB_DATABASE');
-
         // Lookup all SQL Tables
-        foreach (DB::select('SHOW TABLES') as $table) {
-            $tablename = $table->{$tables_var_name};
-
-            // Get SQL columns for current table
-            foreach (Schema::getColumnListing($tablename) as $column) {
+        foreach (DB::getDoctrineSchemaManager()->listTableNames() as $table) {
+            foreach (Schema::getColumnListing($table) as $column) {
                 if ($column != $this->table.'_id') {
                     continue;
                 }
@@ -556,10 +556,10 @@ class BaseModel extends Eloquent
                     continue;
                 }
 
-                $children = DB::table($tablename)->where($column, $this->id)->get();
+                $children = DB::table($table)->where($column, $this->id)->get();
 
                 foreach ($children as $child) {
-                    $class_child_name = $this->_guess_model_name($tablename);
+                    $class_child_name = $this->_guess_model_name($table);
 
                     // check if we got a model name
                     if ($class_child_name) {
@@ -574,7 +574,7 @@ class BaseModel extends Eloquent
                     }
 
                     // seems to be a n:m relation
-                    $parts = $tablename == 'ticket_type_ticket' ? ['ticket_type', 'ticket'] : explode('_', $tablename);
+                    $parts = $table == 'ticket_type_ticket' ? ['ticket_type', 'ticket'] : explode('_', $table);
                     foreach ($parts as $part) {
                         $class_child_name = $this->_guess_model_name($part);
 
