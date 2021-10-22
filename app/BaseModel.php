@@ -51,6 +51,7 @@ class BaseModel extends Eloquent
     public $observer_enabled = true;
 
     protected $connection = 'pgsql';
+    protected $dateFormat = 'Y-m-d H:i:sO';
 
     /**
      * View specific stuff
