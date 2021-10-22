@@ -514,7 +514,8 @@ class Modem extends \BaseModel
         $num = round($count / $chunksize) + ($rest ? 1 : 0);
         $conf = Module::collections()->has('ProvHA') ? \Modules\ProvHA\Entities\ProvHA::first() : ProvBase::first();
 
-        self::with('mtas')->chunk($chunksize, function ($modems) use ($num, $conf) {
+        echo '0/'.$count."\r";
+        self::with('mtas')->chunk($chunksize, function ($modems) use ($count, $conf, $chunksize) {
             static $i = 1;
             $data = $data_pub = '';
 
@@ -528,8 +529,8 @@ class Modem extends \BaseModel
                 }
             }
 
+            echo $i * $chunksize.'/'.$count."\r";
             $i++;
-            echo "$i/$num\r";
 
             file_put_contents(self::CONF_FILE_PATH, $data, FILE_APPEND | LOCK_EX);
             file_put_contents(self::CONF_FILE_PATH_PUB, $data_pub, FILE_APPEND | LOCK_EX);
