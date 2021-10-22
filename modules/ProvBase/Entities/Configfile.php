@@ -32,10 +32,8 @@ class Configfile extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        $id = $this->id;
-
         return [
-            'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required_without:import|unique:configfile,name,'.($this->id ?: 0).',id,deleted_at,NULL',
             'text' => 'docsis',
             // docsDevSwFilename is SnmpAdminString (SIZE (0..64))
             // including foldername 'dialplan/' there are 55 characters left

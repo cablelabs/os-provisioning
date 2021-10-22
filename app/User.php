@@ -144,12 +144,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     public function rules()
     {
-        $id = $this->id;
-
         return [
             'email' => 'nullable|email',
             'phonenumber' => 'nullable|numeric',
-            'login_name' => 'required|unique:users,login_name,'.$id.',id,deleted_at,NULL',
+            'login_name' => 'required|unique:users,login_name,'.($this->id ?: 0).',id,deleted_at,NULL',
             'password' => 'sometimes|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|confirmed',
             'password_confirmation' => 'min:8|required_with:password|same:password',
         ];

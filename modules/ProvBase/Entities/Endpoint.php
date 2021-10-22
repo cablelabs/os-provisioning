@@ -36,7 +36,7 @@ class Endpoint extends \BaseModel
      */
     public function rules()
     {
-        $id = $this->id;
+        $id = $this->id ?: 0;
         $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
 
         // Hostname/MAC must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work

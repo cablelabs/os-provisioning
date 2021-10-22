@@ -45,12 +45,10 @@ class NetGw extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        $id = $this->id;
-
         $types = implode(',', self::TYPES);
 
         return [
-            'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
+            'hostname' => 'required|unique:netgw,hostname,'.($this->id ?: 0).',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
             'company' => 'required',
             'type' => "required|in:$types",
             'coa_port' => 'nullable|numeric|min:1|max:65535',

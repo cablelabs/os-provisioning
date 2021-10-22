@@ -26,13 +26,11 @@ class PhoneTariff extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        $id = $this->id;
-
         // Port unique in the appropriate mta (where mta_id=mta_id and deleted_at=NULL)
 
         return [
             'external_identifier' => 'required',
-            'name' => 'required|unique:phonetariff,name,'.$id.',id,deleted_at,NULL',
+            'name' => 'required|unique:phonetariff,name,'.($this->id ?: 0).',id,deleted_at,NULL',
             'usable' => 'required|boolean',
         ];
     }

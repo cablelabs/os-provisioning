@@ -121,7 +121,7 @@ class MtaController extends \BaseController
         $modem = Modem::where('id', $data['modem_id'])->with('configfile')->first();
 
         if ($modem->configfile->device == 'cm') {
-            $id = $data['id'] ?? null;
+            $id = $data['id'] ?? 0;
             $rules['mac'][] = 'required';
             $rules['mac'][] = 'unique:mta,mac,'.$id.',id,deleted_at,NULL'; //|unique:mta,mac',
         }

@@ -47,7 +47,7 @@ class Contract extends \BaseModel
     // TODO: dependencies of active modules (billing)
     public function rules()
     {
-        $id = $this->id;
+        $id = $this->id ?: 0;
 
         $rules = [
             'number' => 'string|unique:contract,number,'.$id.',id,deleted_at,NULL',

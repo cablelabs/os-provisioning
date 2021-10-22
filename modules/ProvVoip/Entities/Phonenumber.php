@@ -35,7 +35,7 @@ class Phonenumber extends \BaseModel
             'mta_id' => ['required', 'exists:mta,id,deleted_at,NULL', 'min:1'],
             'port' => ['required', 'numeric', 'min:1'],
             // inject id to rules (so it is passed to prepare_rules)
-            'id' => $this->id,
+            'id' => $this->id ?: 0,
             /* 'active' => ['required', 'boolean'], */
             // TODO: check if password is secure and matches needs of external APIs (e.g. envia TEL)
         ];

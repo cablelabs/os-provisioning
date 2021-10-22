@@ -34,16 +34,14 @@ class Indices extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        $id = $this->id;
-
-        if (\Request::filled('netelement_id')) {
-            return [
-                // netelement_id & parameter_id combination must be unique
-                'parameter_id' => 'unique:indices,parameter_id,'.$id.',id,deleted_at,NULL,netelement_id,'.\Request::input('netelement_id'),
-            ];
+        if (! \Request::filled('netelement_id')) {
+            return [];
         }
 
-        return [];
+        return [
+            // netelement_id & parameter_id combination must be unique
+            'parameter_id' => 'unique:indices,parameter_id,'.($this->id ?: 0).',id,deleted_at,NULL,netelement_id,'.\Request::input('netelement_id'),
+        ];
     }
 
     // Name of View

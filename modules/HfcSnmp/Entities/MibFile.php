@@ -36,10 +36,8 @@ class MibFile extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
-        $id = $this->id;
-
         return [
-            'filename' => 'unique:mibfile,filename,'.$id.',id,deleted_at,NULL',
+            'filename' => 'unique:mibfile,filename,'.($this->id ?: 0).',id,deleted_at,NULL',
         ];
     }
 
