@@ -1401,12 +1401,7 @@ class Contract extends \BaseModel
             ->join('product as p', 'item.product_id', '=', 'p.id')
             ->select('item.*', 'p.type', 'p.bundled_with_voip', 'p.name')
             ->whereIn('type', ['Internet', 'Voip', 'TV'])
-            ->where(function ($query) use ($date) {
-                $query
-                ->where('item.valid_to', '>=', $date)
-                ->orWhereNull('item.valid_to')
-                ->orWhere('item.valid_to', '=', '');
-            })
+            ->where(whereLaterOrEqual('item.valid_to', $date))
             ->orderBy('item.valid_from', 'desc')
             ->with('product')
             ->get();
