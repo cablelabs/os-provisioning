@@ -132,7 +132,7 @@ class GuiLogWriter
     }
 
     /**
-     * Private unserialize method to prevent unserializing of the *Singleton*
+     * Public unserialize method to prevent unserializing of the *Singleton*
      * instance.
      */
     public function __wakeup()
