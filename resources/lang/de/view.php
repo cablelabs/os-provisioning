@@ -501,6 +501,7 @@ return [
     'Ability' => [
         'Abilities'         => 'Berechtigungen',
         'Ability'           => 'Berechtigung',
+        'Access Workforce Dashboard' => 'Zugriff auf Workforce Kommandozentrale',
         'Allow'             => 'Erlauben',
         'All abilities'     => 'Alle Fähigkeiten',
         'Allow to'          => 'Erlaube',

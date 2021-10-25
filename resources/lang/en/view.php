@@ -501,6 +501,7 @@ return [
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
+        'Access Workforce Dashboard' => 'Access to Workforce Command Center',
         'Allow'             => 'Allow',
         'All abilities'     => 'All Abilities',
         'Allow to'          => 'Allow to',

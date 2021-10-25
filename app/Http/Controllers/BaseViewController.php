@@ -643,7 +643,11 @@ class BaseViewController extends Controller
      */
     private static function addWorkforceMenuEntry(&$menu)
     {
-        if (! Module::collections()->has('HfcCustomer') || ! Module::collections()->has('Ticketsystem')) {
+        if (
+            ! Module::collections()->has('HfcCustomer') ||
+            ! Module::collections()->has('Ticketsystem') ||
+            Bouncer::cannot('access workforce dashboard')
+        ) {
             return;
         }
 
