@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use App\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -35,6 +36,12 @@ class SetDefaultToInitialDashboard extends BaseMigration
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->string('initial_dashboard')->nullable()->change();
         });
+
+        User::whereNull('initial_dashboard')
+            ->orWhere('initial_dashboard', '')
+            ->update([
+                'initial_dashboard' => null,
+            ]);
     }
 
     /**
