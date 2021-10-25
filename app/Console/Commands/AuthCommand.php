@@ -69,38 +69,30 @@ class AuthCommand extends Command
                 'title' => 'See income chart',
                 'only_owned' => '0',
             ],
-        ])->pipe(function ($collection) {
-            if (Module::collections()->has('ProvBase')) {
-                $collection = $collection->concat([
-                    [
-                        'name' => 'view_analysis_pages_of',
-                        'title' => 'View analysis pages of modems',
-                        'entity_type' => \Modules\ProvBase\Entities\Modem::class,
-                        'only_owned'  =>'0',
-                    ],
-                    [
-                        'name' => 'view_analysis_pages_of',
-                        'title' => 'View analysis pages of netgw',
-                        'entity_type' => \Modules\ProvBase\Entities\NetGw::class,
-                        'only_owned'  =>'0',
-                    ],
-                ]);
-            }
-
-            return $collection;
-        })->pipe(function ($collection) {
-            if (Module::collections()->has('BillingBase')) {
-                $collection = $collection->concat([
-                    [
-                        'name' => 'download',
-                        'title' => 'Download settlement runs',
-                        'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
-                        'only_owned' =>'0',
-                    ],
-                ]);
-            }
-
-            return $collection;
+        ])->when(Module::collections()->has('ProvBase'), function ($collection) {
+            return $collection->concat([
+                [
+                    'name' => 'view_analysis_pages_of',
+                    'title' => 'View analysis pages of modems',
+                    'entity_type' => \Modules\ProvBase\Entities\Modem::class,
+                    'only_owned'  =>'0',
+                ],
+                [
+                    'name' => 'view_analysis_pages_of',
+                    'title' => 'View analysis pages of netgw',
+                    'entity_type' => \Modules\ProvBase\Entities\NetGw::class,
+                    'only_owned'  =>'0',
+                ],
+            ]);
+        })->when(Module::collections()->has('BillingBase'), function ($collection) {
+            return $collection->concat([
+                [
+                    'name' => 'download',
+                    'title' => 'Download settlement runs',
+                    'entity_type' => \Modules\BillingBase\Entities\SettlementRun::class,
+                    'only_owned' =>'0',
+                ],
+            ]);
         });
     }
 
@@ -151,14 +143,10 @@ class AuthCommand extends Command
      */
     protected function resetAdminRole(): void
     {
-        $this->setVerbosity('v');
-
         Bouncer::allow('admin')->everything();
         Bouncer::unforbid('admin')->everything();
 
-        $this->line('Admin Role reset.');
-
-        $this->setVerbosity('normal');
+        $this->info('Admin Role reset.', 'v');
     }
 
     /**
@@ -168,18 +156,12 @@ class AuthCommand extends Command
      */
     protected function resetUserPermissions(): void
     {
-        $this->setVerbosity('vv');
-
         foreach (User::all() as $user) {
             Bouncer::allow($user)->toOwn(User::class);
-            $this->line($user->login_name.' was given Permission to edit its own Model.');
+            $this->comment($user->login_name.' was given Permission to edit its own Model.', 'vv');
         }
 
-        $this->setVerbosity('v');
-
-        $this->line('User Permissions reset.');
-
-        $this->setVerbosity('normal');
+        $this->info('User Permissions reset.', 'v');
     }
 
     /**
@@ -189,18 +171,11 @@ class AuthCommand extends Command
      */
     protected function resetCustomAbilities(): void
     {
-        $this->setVerbosity('vv');
-
         foreach (self::customAbilities() as $ability) {
             $ability = Ability::firstOrCreate($ability);
-
-            $this->line("Ability {$ability->title} processed. It has id {$ability->id}");
+            $this->comment("Ability {$ability->title} processed. It has id {$ability->id}", 'vv');
         }
 
-        $this->setVerbosity('v');
-
-        $this->line('Custom Abilities reset.');
-
-        $this->setVerbosity('normal');
+        $this->info('Custom Abilities reset.', 'v');
     }
 }
