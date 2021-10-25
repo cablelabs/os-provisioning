@@ -26,7 +26,7 @@
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             @php
-                $help = (isset($documentation)) ? config('documentation.'.strtolower($documentation)) : $view_help;
+                $help = isset($documentation) ? config('documentation.'.strtolower($documentation)) : $view_help;
             @endphp
 
             @if ($help && $help['doc'])
