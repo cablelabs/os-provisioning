@@ -798,12 +798,16 @@ class NetElement extends \BaseModel
             static $i = 1;
 
             foreach ($netelements as $netelement) {
-                $netelement->update(['net' => $netelement->get_native_net(),
+                $data = [
+                    'net' => $netelement->get_native_net(),
                     'cluster' => $netelement->get_native_cluster(),
-                    'netgw_id' => $netelement->get_native_netgw(), ]);
+                    'netgw_id' => $netelement->get_native_netgw(),
+                ];
+
+                $netelement->update($data);
 
                 $debug = "nms: netelement - rebuild net and cluster index $i of $num - id ".$netelement->id;
-                echo "\n$debug - net:".$netelement->net.', clu:'.$netelement->cluster.', netgw:'.$netelement->netgw_id;
+                echo "\n$debug - net:".$data['net'].', clu:'.$data['cluster'].', netgw:'.$data['netgw_id'];
 
                 $i++;
             }
