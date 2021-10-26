@@ -30,7 +30,7 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 @if (! $routeExists)
 <div class="label label-danger m-l-5">
 @endif
- {{$pool->net.$pool->maskToCidr().' via '.($pool->version == '4' ? $view_var->ip : $view_var->ipv6)}}
+ {{$pool->net.' via '.($pool->version == '4' ? $view_var->ip : $view_var->ipv6)}}
 @if (! $routeExists)
 </div>
 @endif

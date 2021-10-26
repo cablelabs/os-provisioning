@@ -577,19 +577,15 @@ class NetGw extends \BaseModel
 
         foreach ($ippools as $pool) {
             $active = $pool->active;
-            $subnet = $pool->net;
-            $netmask = $pool->netmask;
+            $subnet = strstr($pool->net, '/', true);
             $broadcast_addr = $pool->broadcast_ip;
             $ranges = $pool->getRanges();
-            $router = $pool->router_ip;
-            $type = $pool->type;
-            $options = $pool->optional;
             $dns['1'] = $pool->dns1_ip;
             $dns['2'] = $pool->dns2_ip;
             $dns['3'] = $pool->dns3_ip;
 
-            $data = "\n\t".'subnet '.$subnet.' netmask '.$netmask."\n\t".'{';
-            $data .= "\n\t\t".'option routers '.$router.';';
+            $data = "\n\t".'subnet '.$subnet.' netmask '.$pool->netmask."\n\t".'{';
+            $data .= "\n\t\t".'option routers '.$pool->router_ip.';';
             if ($broadcast_addr != '') {
                 $data .= "\n\t\t".'option broadcast-address '.$broadcast_addr.';';
             }
@@ -613,7 +609,7 @@ class NetGw extends \BaseModel
                 }
 
                 if ($active) {
-                    switch ($type) {
+                    switch ($pool->type) {
                         case 'CM':
                             $data .= "\n\t\t\t".'allow members of "CM";';
                             $data .= "\n\t\t\t".'deny unknown-clients;';
@@ -648,13 +644,13 @@ class NetGw extends \BaseModel
             }
 
             // append additional options
-            if ($options) {
-                $data .= "\n\n\t\t".$options;
+            if ($pool->optional) {
+                $data .= "\n\n\t\t".$pool->optional;
             }
 
             $data .= "\n\t".'}'."\n";
 
-            $data .= "\n\tsubnet $router netmask 255.255.255.255\n\t{";
+            $data .= "\n\tsubnet $pool->router_ip netmask 255.255.255.255\n\t{";
             $data .= "\n\t\tallow leasequery;";
             $data .= "\n\t}\n";
 
@@ -707,7 +703,7 @@ class NetGw extends \BaseModel
         $subnets = [];
 
         foreach ($pools as $pool) {
-            $subnet = "\t\t{\n\t\t\t".'"subnet": "'.$pool->net.$pool->netmask.'",';
+            $subnet = "\t\t{\n\t\t\t".'"subnet": "'.$pool->net.'",';
             $subnet .= "\n\t\t\t".'"pools": [ { "pool": "'.$pool->ip_pool_start.'-'.$pool->ip_pool_end.'" } ]';
 
             // Note: Source address of relay forward message (solicit, request) must either be inside the range of the subnet

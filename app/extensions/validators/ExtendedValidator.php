@@ -80,17 +80,132 @@ class ExtendedValidator
      */
     public function validateIpInRange($attribute, $value, $parameters)
     {
-        // calculate netmask for cidr notation (e.g.: 10.0.0.0/21)
-        $netmask = ip2long($parameters[1]);
-        $base = ip2long('255.255.255.255');
-        // $prefix = 32-log(($netmask ^ $base)+1,2);
+        preg_match('/\/\d{1,3}$/', $parameters[0], $match);
 
-        $ip = ip2long($value);
-        $start = ip2long($parameters[0]);
-        // $end = $start + (1 << (32 - $prefix)) -1;
-        $end = $start + (1 << log(($netmask ^ $base) + 1, 2)) - 1;
+        if (! $match) {
+            return false;
+        }
 
-        return $ip >= $start && $ip <= $end;
+        $ips = $this->getFirstAndLastIpFromPrefix($parameters[0]);
+
+        return $this->isIpBetweenRange($value, $ips['first'], $ips['last']);
+    }
+
+    /**
+     * See https://sizeofint.com/check-ip-is-in-range-between-start-ip-and-end-ip-ipv6-compatible-way-using-php/
+     */
+    public function isIpBetweenRange($ip, $startIp, $endIp)
+    {
+       return inet_pton($ip) >= inet_pton($startIp) && inet_pton($ip) <= inet_pton($endIp);
+    }
+
+    /**
+     * @param string e.g. 100.64.0.0/24 or fd00::/48
+     *
+     * @return array|null
+     */
+    public function getFirstAndLastIpFromPrefix($prefix)
+    {
+        preg_match('/\/\d{1,3}$/', $prefix, $match);
+
+        if (! $match) {
+            return;
+        }
+
+        $version = \Modules\ProvBase\Entities\IpPool::getIpVersion($prefix);
+
+        if ($version == '4') {
+            return $this->getFirstAndLastIpv4FromPrefix($prefix);
+        } elseif ($version == '6') {
+            return $this->getFirstAndLastIpv6FromPrefix($prefix);
+        }
+    }
+
+    /**
+     * Get first and last IP from IPv6 subnet
+     *
+     * See https://stackoverflow.com/questions/4931721/getting-list-ips-from-cidr-notation-in-php
+     */
+    public function getFirstAndLastIpv4FromPrefix($prefix): array
+    {
+        $cidr = explode('/', $prefix);
+
+        $range['first'] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
+        $range['last'] = long2ip((ip2long($range['first'])) + pow(2, (32 - (int)$cidr[1])) - 1);
+
+        return $range;
+    }
+
+    /**
+     * Get first and last IP from IPv6 subnet
+     *
+     * This is definitely not the fastest way to do it!
+     *
+     * See https://stackoverflow.com/questions/10085266/php5-calculate-ipv6-range-from-cidr-prefix/10086404#10086404
+     */
+    public function getFirstAndLastIpv6FromPrefix($prefix): array
+    {
+        // Split in address and prefix length
+        list($addr_given_str, $prefixlen) = explode('/', $prefix);
+
+        // Parse the address into a binary string
+        $addr_given_bin = inet_pton($addr_given_str);
+
+        // Convert the binary string to a string with hexadecimal characters
+        $addr_given_hex = bin2hex($addr_given_bin);
+
+        // Overwriting first address string to make sure notation is optimal
+        $addr_given_str = inet_ntop($addr_given_bin);
+
+        // Calculate the number of 'flexible' bits
+        $flexbits = 128 - $prefixlen;
+
+        // Build the hexadecimal strings of the first and last addresses
+        $addr_hex_first = $addr_given_hex;
+        $addr_hex_last = $addr_given_hex;
+
+        // We start at the end of the string (which is always 32 characters long)
+        $pos = 31;
+        while ($flexbits > 0) {
+            // Get the characters at this position
+            $orig_first = substr($addr_hex_first, $pos, 1);
+            $orig_last = substr($addr_hex_last, $pos, 1);
+
+            // Convert them to an integer
+            $origval_first = hexdec($orig_first);
+            $origval_last = hexdec($orig_last);
+
+            // First address: calculate the subnet mask. min() prevents the comparison from being negative
+            $mask = 0xf << (min(4, $flexbits));
+
+            // AND the original against its mask
+            $new_val_first = $origval_first & $mask;
+
+            // Last address: OR it with (2^flexbits)-1, with flexbits limited to 4 at a time
+            $new_val_last = $origval_last | (pow(2, min(4, $flexbits)) - 1);
+
+            // Convert them back to hexadecimal characters
+            $new_first = dechex($new_val_first);
+            $new_last = dechex($new_val_last);
+
+            // And put those character back in their strings
+            $addr_hex_first = substr_replace($addr_hex_first, $new_first, $pos, 1);
+            $addr_hex_last = substr_replace($addr_hex_last, $new_last, $pos, 1);
+
+            // We processed one nibble, move to previous position
+            $flexbits -= 4;
+            $pos -= 1;
+        }
+
+        // Convert the hexadecimal strings to a binary string
+        $addr_bin_first = hex2bin($addr_hex_first);
+        $addr_bin_last = hex2bin($addr_hex_last);
+
+        // And create an IPv6 address from the binary string
+        return [
+            'first' => inet_ntop($addr_bin_first),
+            'last' => inet_ntop($addr_bin_last),
+        ];
     }
 
     /**
@@ -102,13 +217,7 @@ class ExtendedValidator
      */
     public function ipLarger($attribute, $value, $parameters)
     {
-        // IPv6
-        if (filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            return $this->inetPtoi($value) > $this->inetPtoi($parameters[0]);
-        }
-
-        // IPv4
-        return ip2long($value) > ip2long($parameters[0]);
+        return inet_pton($value) > inet_pton($parameters[0]);
     }
 
     /**
@@ -141,28 +250,28 @@ class ExtendedValidator
     }
 
     /**
-     * Check if value is a valid IP netmask
-     *
-     * @author Nino Ryschawy
-     *
-     * @return bool
+     * Check if value is a valid IP (v4 or v6) with netmask in CIDR format
      */
-    public function netmask($attribute, $value, $parameters)
+    public function validateNet($attribute, $value, $parameters)
     {
-        $netmask = str_replace(' ', '', $value);
+        // Regex IPv4: regex:/^([0-9]{1,3}\.){3}([0-9]{1,3})\/\d{1,2}$/
+        preg_match('/\/\d{1,3}$/', $value, $match);
 
-        // Allow cidr notation
-        if (\Modules\ProvBase\Entities\IpPool::isCidrNotation($netmask)) {
-            return true;
+        if (! $match) {
+            return false;
         }
 
-        $netmask = ip2long($netmask);
-        $base = ip2long('255.255.255.255');
-        $prefix = log(($netmask ^ $base) + 1, 2);
+        $range = $this->getFirstAndLastIpFromPrefix($value);
 
-        $number = (int) (10000 * $prefix);
+        if (! $range) {
+            return false;
+        }
 
-        return is_int($number /= 10000);
+        if ($range['first'] != explode('/', $value)[0]) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

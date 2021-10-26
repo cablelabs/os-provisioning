@@ -126,14 +126,19 @@ class Endpoint extends \BaseModel
     }
 
     /**
-     * @return obj \Modules\ProvBase\Entities\NetGw
+     * @return obj|null \Modules\ProvBase\Entities\NetGw
      */
     public function netGw()
     {
+        if (! $this->ip) {
+            return;
+        }
+
         $query = NetGw::join('ippool as i', 'netgw.id', 'i.netgw_id')
             ->where('i.type', 'CPEPub')
-            ->whereRaw('INET_ATON("'.$this->ip.'") BETWEEN INET_ATON(i.ip_pool_start) AND INET_ATON(i.ip_pool_end)')
-            ->select('netgw.*', 'i.net', 'i.netmask', 'i.ip_pool_start', 'i.ip_pool_end');
+            ->where('i.ip_pool_start', '<=', $this->ip)
+            ->where('i.ip_pool_end', '>=', $this->ip)
+            ->select('netgw.*', 'i.net', 'i.ip_pool_start', 'i.ip_pool_end');
 
         return $query->first();
 

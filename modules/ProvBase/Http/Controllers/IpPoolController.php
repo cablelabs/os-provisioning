@@ -53,7 +53,7 @@ class IpPoolController extends \BaseController
             $type = (isset($_GET['type']) ? $_GET['type'] : 'CM');
 
             // get last ip pools ordered desc by net, which means get last added ip pool
-            $ippools = IpPool::where('type', '=', $type)->orderBy(\DB::raw('INET_ATON(net)'), 'DESC')->get();
+            $ippools = IpPool::where('type', '=', $type)->orderBy('net', 'DESC')->get();
 
             // check if we still have pools in DB
             if ($ippools->count() > 0) {
@@ -68,12 +68,12 @@ class IpPoolController extends \BaseController
                 $init_values['dns3_ip'] = $last_ippool->dns3_ip;
             } else {
                 switch ($type) { // if not: add default net, depending on type
-                case 'CM':      $next_net = env('IP_CM_DEFAULT_NET', '10.0.0.0'); break;
-                case 'CPEPriv': $next_net = env('IP_CPE_PRIV_DEFAULT_NET', '100.64.0.0'); $init_values['dns1_ip'] = '8.8.8.8'; break;
-                case 'CPEPub':  $next_net = env('IP_CPE_PUB_DEFAULT_NET', '192.168.100.0'); $init_values['dns1_ip'] = '8.8.8.8'; break;
-                case 'MTA':     $next_net = env('IP_MTA_DEFAULT_NET', '100.96.0.0'); $init_values['dns1_ip'] = \Modules\ProvBase\Entities\ProvBase::first()->provisioning_server; break;
-                default: $next_net = '192.168.200.0'; break;
-            }
+                    case 'CM':      $next_net = env('IP_CM_DEFAULT_NET', '10.0.0.0'); break;
+                    case 'CPEPriv': $next_net = env('IP_CPE_PRIV_DEFAULT_NET', '100.64.0.0'); $init_values['dns1_ip'] = '8.8.8.8'; break;
+                    case 'CPEPub':  $next_net = env('IP_CPE_PUB_DEFAULT_NET', '192.168.100.0'); $init_values['dns1_ip'] = '8.8.8.8'; break;
+                    case 'MTA':     $next_net = env('IP_MTA_DEFAULT_NET', '100.96.0.0'); $init_values['dns1_ip'] = \Modules\ProvBase\Entities\ProvBase::first()->provisioning_server; break;
+                    default: $next_net = '192.168.200.0'; break;
+                }
             }
 
             // Get default IP net size, like 255.255.255.0 = /24
@@ -89,8 +89,7 @@ class IpPoolController extends \BaseController
             $sub = new \IPv4\SubnetCalculator($next_net, $size);
 
             $init_values += [
-                'net' => $sub->getNetworkPortion(),
-                'netmask' => $sub->getSubnetMask(),
+                'net' => $sub->getNetworkPortion().'/'.$size,
                 'ip_pool_start' => long2ip(ip2long($sub->getIPAddressRange()[0]) + 1), // first ip + 1
                 'ip_pool_end' => long2ip(ip2long($sub->getIPAddressRange()[1]) - 2), // last ip -2
                 'router_ip' => long2ip(ip2long($sub->getIPAddressRange()[1]) - 1), // last ip -1
@@ -100,13 +99,12 @@ class IpPoolController extends \BaseController
 
         // label has to be the same like column in sql table
         $ret_tmp = [
-            ['form_type' => 'select', 'name' => 'netgw_id', 'description' => 'NetGw Hostname', 'value' => $model->html_list($model->netgw_hostnames(), 'hostname'), 'hidden' => 1],
+            ['form_type' => 'select', 'name' => 'netgw_id', 'description' => 'NetGw Hostname', 'value' => selectList('netgw', 'hostname'), 'hidden' => 1],
             ['form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => $types,
                 'options' => ['translate' => true], 'help' => trans('provbase::help.type'),
                 'select' => array_combine($typesKeys, $typesKeys), ],
             ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true],
-            ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net')],
-            ['form_type' => 'text', 'name' => 'netmask', 'description' => 'Netmask', 'options' => ['placeholder' => '255.255.0.0 | /16']],
+            ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net'), 'options' => ['placeholder' => '192.168.0.0/23 | fd00:1::/48']],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
             ['form_type' => 'text', 'name' => 'ip_pool_end', 'description' => 'Last IP'],
             ['form_type' => 'ip', 'name' => 'router_ip', 'description' => 'Router IP'],
@@ -114,9 +112,9 @@ class IpPoolController extends \BaseController
             ['form_type' => 'text', 'name' => 'dns1_ip', 'description' => 'DNS1 IP'],
             ['form_type' => 'text', 'name' => 'dns2_ip', 'description' => 'DNS2 IP'],
             ['form_type' => 'text', 'name' => 'dns3_ip', 'description' => 'DNS3 IP'],
-            ['form_type' => 'text', 'name' => 'prefix', 'description' => 'Prefix (IPv6)', 'select' => 'CPEPub'],
-            ['form_type' => 'text', 'name' => 'prefix_len', 'description' => 'Prefix length (IPv6)', 'select' => 'CPEPub'],
-            ['form_type' => 'text', 'name' => 'delegated_len', 'description' => 'Delegated length (IPv6)', 'select' => 'CPEPub'],
+            ['form_type' => 'text', 'name' => 'prefix', 'description' => 'Prefix (IPv6)', 'select' => 'CPEPub', 'options' => ['placeholder' => 'fd00:1::']],
+            ['form_type' => 'text', 'name' => 'prefix_len', 'description' => 'Prefix length (IPv6)', 'select' => 'CPEPub', 'options' => ['placeholder' => '/48']],
+            ['form_type' => 'text', 'name' => 'delegated_len', 'description' => 'Delegated length (IPv6)', 'select' => 'CPEPub', 'options' => ['placeholder' => '/48']],
             ['form_type' => 'textarea', 'name' => 'optional', 'description' => 'Additional Options'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
@@ -133,89 +131,15 @@ class IpPoolController extends \BaseController
         return $ret;
     }
 
-    /**
-     * Replaces the placeholders (named like the array key inside the data array/sql columns)
-     * in the rules array with the needed data of the data array;
-     *
-     * used in own validation
-     *
-     * @author Nino Ryschawy
-     */
-    public function prepare_rules($rules, $data)
-    {
-        // Replace placeholder in rules by data e.g. net in ip_pool_start rule by $data['net']
-        $rulesWithPlaceholders = ['ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip'];
-        foreach ($rulesWithPlaceholders as $rkey) {
-            $description = implode('|', $rules[$rkey]);
-
-            foreach ($data as $key => $value) {
-                if (($pos = strpos($description, $key)) && substr($description, $pos - 1, 1) != '|') {
-                    $rules[$rkey] = preg_replace("/$key\b/", "$value", $rules[$rkey]);
-                }
-            }
-        }
-
-        // Add ip rule with version dependent on net to the beginning
-        $rulesToAddIpRule = array_merge($rulesWithPlaceholders, ['net', 'dns1_ip', 'dns2_ip', 'dns3_ip']);
-        foreach ($rulesToAddIpRule as $rkey) {
-            $rule = $data['version'] ? 'ipv'.$data['version'] : 'ip';
-            isset($rules[$rkey]) ? array_push($rules[$rkey], $rule) : $rules[$rkey] = [$rule];
-        }
-
-        if ($data['version'] == '6') {
-            $rules['type'] = ['In:CPEPub'];
-
-            foreach (['prefix', 'prefix_len', 'delegated_len'] as $rkey) {
-                isset($rules[$rkey]) ? array_unshift($rules[$rkey], 'required') : $rules[$rkey] = ['required'];
-            }
-        }
-
-        return $rules;
-    }
-
     public function prepare_input($data)
     {
-        $data['version'] = self::getVersion($data['net']);
+        $data['version'] = IpPool::getIpVersion($data['net']);
 
-        // Convert cidr netmask for IPv4
-        if ($data['version'] == '4' && IpPool::isCidrNotation($data['netmask'])) {
-            $data['netmask'] = self::cidrToMask($data['netmask']);
-        }
-
-        $fields = ['net', 'netmask', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip'];
+        $fields = ['net', 'ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip'];
         foreach ($fields as $key) {
             $data[$key] = str_replace(' ', '', $data[$key]);
         }
 
         return parent::prepare_input($data);
-    }
-
-    /**
-     * @return mixed string 4|6 or null if no valid ip
-     */
-    public static function getVersion($ip)
-    {
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            return '6';
-        }
-
-        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            return '4';
-        }
-    }
-
-    /**
-     * Convert netmask in CIDR notation to dotted decimal notation
-     *
-     * See https://stackoverflow.com/questions/5710860/php-cidr-prefix-to-netmask
-     *
-     * @param string
-     * @return string
-     */
-    public static function cidrToMask($netmask)
-    {
-        $int = str_replace('/', '', $netmask);
-
-        return long2ip(-1 << (32 - (int) $int));
     }
 }

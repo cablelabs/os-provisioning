@@ -26,25 +26,52 @@ class IpPool extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'ippool';
 
+    public const CIDR_REGEX = '/^\/\d{1,3}$/';
+
     // Add your validation rules here
     public function rules()
     {
+        $data = \Request::all();
+        $net = $data['net'] ?? '';
+
         // Check out ExtendedValidator.php for own validations! (ip_larger, netmask)
         // Note: ip rule is added in IpPoolController
         // TODO: Take care of IpPoolController::prepare_rules() when adding new rules!
-        return [
+        $rules = [
             'net' => ['required', 'dhcp_config'],
-            'netmask' => ['required', 'netmask'],     // netmask must not be in first place!
-            'ip_pool_start' => ['required', 'ip_in_range:net,netmask', 'ip_larger:net'],
-            'ip_pool_end' => ['required', 'ip_in_range:net,netmask', 'ip_larger:ip_pool_start'],
-            'router_ip' => ['required', 'ip_in_range:net,netmask'],
-            'broadcast_ip' => ['nullable', 'ip_in_range:net,netmask', 'ip_larger:ip_pool_end'],
+            // 'netmask' => 'required|netmask',     // netmask must not be in first place!
+            'ip_pool_start' => ['required', 'ip_in_range:'.$net],
+            'ip_pool_end' => ['required', 'ip_in_range:'.$net, 'ip_larger:'.($data['ip_pool_start'] ?? '')],
+            'router_ip' => ['required', 'ip_in_range:'.$net],
+            'broadcast_ip' => ['nullable', 'ip_in_range:'.$net, 'ip_larger:'.($data['ip_pool_end'] ?? '')],
             'dns1_ip' => ['nullable'],
             'dns2_ip' => ['nullable'],
             'dns3_ip' => ['nullable'],
-            'prefix_len' => ['netmask'],
-            'delegated_len' => ['netmask'],
+            'prefix' => ['nullable', 'ipv6'],
+            'prefix_len' => ['nullable', 'regex:'.self::CIDR_REGEX],
+            'delegated_len' => ['nullable', 'regex:'.self::CIDR_REGEX],
         ];
+
+        if (! $data) {
+            return $rules;
+        }
+
+        $data['version'] = self::getIpVersion($net);
+
+        $addIpRule = ['ip_pool_start', 'ip_pool_end', 'router_ip', 'dns1_ip', 'dns2_ip', 'dns3_ip'];
+        foreach ($addIpRule as $key) {
+            $rules[$key][] = $data['version'] ? 'ipv'.$data['version'] : 'ip';
+        }
+
+        if ($data['version'] == '6') {
+            $rules['type'] = 'In:CPEPub';
+
+            foreach (['prefix', 'prefix_len', 'delegated_len'] as $key) {
+                $rules[$key][] = 'required';
+            }
+        }
+
+        return $rules;
     }
 
     // Name of View
@@ -66,8 +93,8 @@ class IpPool extends \BaseModel
         $bsclass = $this->get_bsclass();
 
         return ['table' => $this->table,
-            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', 'version', $this->table.'.net', $this->table.'.netmask', $this->table.'.router_ip', $this->table.'.description'],
-            'header' =>  $this->type.': '.$this->net.' '.$this->netmask,
+            'index_header' => [$this->table.'.id', 'netgw.hostname', $this->table.'.type', 'version', $this->table.'.net', $this->table.'.router_ip', $this->table.'.description'],
+            'header' =>  $this->type.': '.$this->net,
             'bsclass' => $bsclass,
             'eager_loading' => ['netgw'], ];
     }
@@ -90,29 +117,55 @@ class IpPool extends \BaseModel
     }
 
     /**
-     * Returns all netgw hostnames for ip pools as an array
+     * @return mixed string 4|6 or null if no valid ip
      */
-    public function netgw_hostnames()
+    public static function getIpVersion($ip)
     {
-        return DB::table('netgw')->select('id', 'hostname')->get();
+        if (strpos($ip, '/')) {
+            $ip = strstr($ip, '/', true);
+        }
+
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return '6';
+        }
+
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return '4';
+        }
     }
 
     /**
      * Convert IpPool netmask to CIDR notation
      * e.g. 255.255.255.240 will return /28
      *
+     * Attention: This only works for ipv4
+     *
      * @return string
      */
     public function maskToCidr()
     {
-        if (self::isCidrNotation($this->netmask)) {
-            return $this->netmask;
+        $netmask = $this->getAttributes()['netmask'];
+
+        if (self::isCidrNotation($netmask)) {
+            return $netmask;
         }
 
-        $long = ip2long($this->netmask);
+        $long = ip2long($netmask);
         $base = ip2long('255.255.255.255');
 
         return '/'.(string) (32 - log(($long ^ $base) + 1, 2));
+    }
+
+    public function getNetmaskAttribute(): string
+    {
+        $net = strstr($this->net, '/', true);
+        $bits = substr($this->net, strlen($net) + 1);
+
+        if (filter_var($net, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return '/'.$bits;
+        }
+
+        return long2ip(-1 << (32 - (int) $bits));
     }
 
     /**
@@ -123,7 +176,7 @@ class IpPool extends \BaseModel
      */
     public static function isCidrNotation($netmask)
     {
-        return preg_match('/^\/\d{1,3}$/', $netmask);
+        return preg_match(self::CIDR_REGEX, $netmask);
     }
 
     /**
@@ -148,7 +201,7 @@ class IpPool extends \BaseModel
             $ip = $netgw->ipv6;
         }
 
-        return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.$this->maskToCidr().' via '.$ip)) != 0;
+        return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.' via '.$ip)) != 0;
     }
 
     /*
@@ -219,7 +272,7 @@ class IpPool extends \BaseModel
         }
 
         // TODO: filter endpoints by DB query with INET_ATON
-        $endpoints = Endpoint::where('fixed_ip', '=', '1')->get();
+        $endpoints = Endpoint::where('fixed_ip', '1')->get();
 
         if ($endpoints->count() == 0) {
             return $empty;

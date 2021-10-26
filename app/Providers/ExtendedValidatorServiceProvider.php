@@ -43,7 +43,7 @@ class ExtendedValidatorServiceProvider extends ServiceProvider
         $this->app['validator']->extend('ip_in_range', 'App\extensions\validators\ExtendedValidator@validateIpInRange');
         $this->app['validator']->extend('ip_larger', 'App\extensions\validators\ExtendedValidator@ipLarger');
         $this->app['validator']->extend('mac', 'App\extensions\validators\ExtendedValidator@validateMac');
-        $this->app['validator']->extend('netmask', 'App\extensions\validators\ExtendedValidator@netmask');
+        $this->app['validator']->extend('net', 'App\extensions\validators\ExtendedValidator@validateNet');
         $this->app['validator']->extend('not_null', 'App\extensions\validators\ExtendedValidator@notNull');
         $this->app['validator']->extend('null_if', 'App\extensions\validators\ExtendedValidator@nullIf');
         $this->app['validator']->extend('phonebook_one_character_option', 'App\extensions\validators\ExtendedValidator@validatePhonebookOneCharacterOption');

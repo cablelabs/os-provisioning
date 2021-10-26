@@ -150,6 +150,7 @@ return [
     'ip_in_range'          => 'Die angegebene IP-Adresse ist nicht innerhalb des spezifizierten Bereichs',
     'ip_larger'            => 'Die angegebene IP-Adresse muss aufgrund der Angaben aus anderen Feldern eine höhere Nummer besitzen',
     'mac'                  => ':attribute muss eine gültige MAC-Adresse in der Form \\\'aa:bb:cc:dd:ee:ff\\\' sein',
+    'net'                  => 'Bitte geben Sie die Netzadresse (erste mögliche IP des Bereiches) mit Netzmaske im CIDR Format an.',
     'netmask'              => 'Die angegebene Netzmaske ist nicht korrekt',
     'not_null'             => 'Dieses Feld muss ausgefüllt sein (nicht 0)',
     'null_if'              => 'Wert muss 0 sein',
