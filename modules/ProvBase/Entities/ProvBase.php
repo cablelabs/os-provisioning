@@ -244,11 +244,13 @@ class ProvBase extends \BaseModel
         }
         $dhcp_fqdn .= '\\000';
 
+        $leaseLimit = $this->max_cpe ?: 4;
+
         $data .= "\n# CLASS Specs for CM, MTA, CPE\n";
         $data .= 'class "CM" {'."\n\t".'match if (substring(option vendor-class-identifier,0,6) = "docsis");'."\n\toption ccc.dhcp-server-1 0.0.0.0;\n\tddns-updates on;\n}\n\n";
         $data .= 'class "MTA" {'."\n\t".'match if (substring(option vendor-class-identifier,0,4) = "pktc");'."\n\t".'option ccc.provision-server 0 "'.$dhcp_fqdn.'"; # number of letters before every through dot seperated word'."\n\t".'option ccc.realm "\005BASIC\0011\000";'."\n\tddns-updates on;\n}\n\n";
-        $data .= 'class "Client" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'spawn with binary-to-ascii(16, 8, ":", substring(option agent.remote-id, 0, 6)); # create a sub-class automatically'."\n\t".'lease limit 4; # max 4 private cpe per cm'."\n}\n\n";
-        $data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\t".'lease limit 4; # max 4 public cpe per cm'."\n}\n\n";
+        $data .= 'class "Client" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'spawn with binary-to-ascii(16, 8, ":", substring(option agent.remote-id, 0, 6)); # create a sub-class automatically'."\n\tlease limit $leaseLimit; # max $leaseLimit private cpe per cm\n}\n\n";
+        $data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\tlease limit $leaseLimit; # max $leaseLimit public cpe per cm\n}\n\n";
         $data .= "# All CPEs of modems without internet access - will be defined as subclass\n";
         $data .= 'class "blocked" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\tmatch pick-first-value (option agent.remote-id);\n\tdeny booting;\n}\n\n";
 
