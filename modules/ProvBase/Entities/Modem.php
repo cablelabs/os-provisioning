@@ -2022,7 +2022,9 @@ class Modem extends \BaseModel
 
         // Log dhcp (discover, ...), tftp (configfile or firmware)
         // NOTE: This function takes a long time if syslog file is large - 0.4 to 0.6 sec
-        $search = $ip ? "$mac|$this->hostname[^0-9]|$ip " : "$mac|$this->hostname[^0-9]";
+        $search = $mac ? "$mac|" : '';
+        $search .= "$this->hostname[^0-9]";
+        $search .= $ip ? "|$ip " : '';
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
         $lease['text'] = self::searchLease("hardware ethernet $mac");
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
