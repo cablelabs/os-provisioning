@@ -6,12 +6,13 @@ fi
 hostname="$1"
 username="$2"
 password="$3"
-vlan="$4"
+port="$4"
+vlan="$5"
 
 interfaces=$(expect <<- EOF |
 set timeout 5
 
-spawn ssh "$username@$hostname"
+spawn ssh -p "$port" "$username@$hostname"
 expect "*assword:"
 send "$password\n"
 expect "*#"
@@ -41,7 +42,7 @@ done <<< "$interfaces"
 expect <<- EOF
 set timeout 5
 
-spawn ssh "$username@$hostname"
+spawn ssh -p "$port" "$username@$hostname"
 expect "*assword:"
 send "$password\n"
 expect "*#"

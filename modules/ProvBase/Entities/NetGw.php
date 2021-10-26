@@ -50,6 +50,7 @@ class NetGw extends \BaseModel
             'company' => 'required',
             'type' => "required|in:$types",
             'coa_port' => 'nullable|numeric|min:1|max:65535',
+            'ssh_port' => 'nullable|numeric|min:1|max:65535',
         ];
     }
 
@@ -736,9 +737,10 @@ class NetGw extends \BaseModel
             return;
         }
 
+        $port = $this->ssh_port ?? 22;
         $vlan = env('CUSTOMER_VLAN', '101');
 
         // run script in background since this function is called from Kernel.php
-        exec("bash \"$script\" \"$this->ip\" \"$this->username\" \"$this->password\" \"$vlan\" > /dev/null &");
+        exec("bash \"$script\" \"$this->ip\" \"$this->username\" \"$this->password\" \"$port\" \"$vlan\" > /dev/null &");
     }
 }
