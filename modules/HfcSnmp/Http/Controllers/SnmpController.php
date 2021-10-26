@@ -32,7 +32,7 @@ use App\Http\Controllers\BaseViewController;
 
 class SnmpController extends \BaseController
 {
-    private $timeout = 300000;
+    private $timeout = 1000000;
     private $retry = 1;
 
     /**
