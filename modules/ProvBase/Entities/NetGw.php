@@ -328,10 +328,8 @@ class NetGw extends \BaseModel
      */
     public function prep_rfcard_page()
     {
-        $netelement = $this->netelement;
-
         $clusters = [];
-        if ($netelement) {
+        if (\Module::collections()->has('HfcReq') && $netelement = $this->netelement) {
             foreach (\Modules\HfcReq\Entities\NetElement::where('netgw_id', $netelement->id)->get() as $ne) {
                 if ($ne->get_base_netelementtype() == 2) {
                     $clusters[$ne->id] = $ne;
