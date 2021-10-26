@@ -680,6 +680,7 @@ return [
             'unsatisfied' => 'unzufrieden',
             'canceled by us' => 'von uns gekündigt',
             'deceased' => 'verstorben',
+            'competitor' => 'Mitbewerber',
         ],
     ],
     'geocoding' => [
