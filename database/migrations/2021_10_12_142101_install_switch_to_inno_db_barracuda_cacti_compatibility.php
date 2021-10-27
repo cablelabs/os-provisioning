@@ -45,7 +45,7 @@ class InstallSwitchToInnoDbBarracudaCactiCompatibility extends BaseMigration
         // persist variables in mariadb config
         $mariaConf = File::get('/etc/my.cnf.d/server.cnf');
 
-        if (Str::contains($mariaConf, 'innodb_file_format=Barracuda')) {
+        if (! Str::contains($mariaConf, 'innodb_file_format=Barracuda')) {
             $mariaConf = Str::replaceFirst("[mariadb]\n",
                     "[mariadb]\n".
                     "innodb_file_format=Barracuda\n".
