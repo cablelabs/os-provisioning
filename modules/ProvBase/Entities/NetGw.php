@@ -43,7 +43,7 @@ class NetGw extends \BaseModel
     {
         $id = $this->id;
 
-        $types = implode(self::TYPES, ',');
+        $types = implode(',', self::TYPES);
 
         return [
             'hostname' => 'required|unique:netgw,hostname,'.$id.',id,deleted_at,NULL',  	// unique: table, column, exception , (where clause)
