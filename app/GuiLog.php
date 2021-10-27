@@ -82,16 +82,18 @@ class GuiLog extends \BaseModel
     }
 
     /**
-     * Delete all LogEntries older than a specific timespan - default 2 years
-     * Hard Delete all Entries older than 3 years
+     * Delete all LogEntries older than a specific timespan - default 4 years
+     * Hard Delete all Entries older than 6 years
      */
-    public static function cleanup($months = 24)
+    public static function cleanup($months = 48)
     {
-        \Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$months.' months - (hard delete older than 3 years)');
+        \Log::notice('GuiLog: Execute cleanup() - Delete Log entries older than '.$months.' months - (hard delete older than '.(($months + 24) / 12).' years)');
 
-        self::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL '.$months.' MONTH)'))->delete();
-        self::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 36 MONTH)'))->forceDelete();
-        // GuiLog::where('created_at', '<', \DB::raw('DATE_SUB(NOW(), INTERVAL 3 MINUTE)'))->delete();
+        $softDeleteDate = \Carbon\Carbon::now()->subMonths($months);
+        $hardDeleteDate = $softDeleteDate->subMonths(24);
+
+        self::where('created_at', '<', $softDeleteDate->toDateString())->delete();
+        self::where('created_at', '<', $hardDeleteDate->toDateString())->forceDelete();
     }
 
     public static function log_changes($data)
