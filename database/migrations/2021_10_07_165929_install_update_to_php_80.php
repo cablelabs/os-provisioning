@@ -54,6 +54,7 @@ class InstallUpdateToPhp80 extends BaseMigration
 
             $ini = file_get_contents($file);
             $ini .= ";JIT Compiler\nopcache.jit_buffer_size=100M\nopcache.jit=tracing\n";
+            file_put_contents($file, $ini);
         }
 
         system('systemctl restart php80-php-fpm.service');
