@@ -24,6 +24,7 @@ use File;
 use Module;
 use App\Sla;
 use Request;
+use Session;
 use Storage;
 use Acme\php\ArrayHelper;
 use Illuminate\Support\Facades\Log;
@@ -563,7 +564,7 @@ class Modem extends \BaseModel
             // get all configfiles with NetworkAccess enabled
             exec('grep "^[[:blank:]]*NetworkAccess[[:blank:]]*1" /tftpboot/cm/*.conf', $enabled_configs, $ret);
             if ($ret > 0) {
-                \Log::error('Error getting config files with NetworkAccess enabled in '.__METHOD__);
+                Log::error('Error getting config files with NetworkAccess enabled in '.__METHOD__);
             }
 
             $hostnames = [];
@@ -1265,7 +1266,7 @@ class Modem extends \BaseModel
         if ($this->isTR069()) {
             $id = rawurlencode($this->getGenieAcsModel('_id'));
             if (! $id) {
-                \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
+                Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
 
                 return;
             }
@@ -1279,12 +1280,12 @@ class Modem extends \BaseModel
 
             $success = self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', "{ \"name\" : \"$action\" }");
             if (! $success) {
-                \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
+                Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
 
                 return;
             }
 
-            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
+            Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
 
             return;
         }
@@ -1302,7 +1303,7 @@ class Modem extends \BaseModel
             }
 
             if ($fqdn == $ip) {
-                \Session::push('tmp_warning_above_form', trans('messages.modem_restart_warning_dns'));
+                Session::push('tmp_warning_above_form', trans('messages.modem_restart_warning_dns'));
                 throw new \Exception(trans('messages.modem_restart_warning_dns'));
             }
 
@@ -1341,27 +1342,27 @@ class Modem extends \BaseModel
             snmpset($netgw->ip, $netgw->get_rw_community(), $param[0], $param[1], $param[2], 300000, 1);
 
             // success message
-            \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
+            Session::push('tmp_info_above_form', trans('messages.modem_restart_success_netgw'));
         } catch (\Exception $e) {
-            \Log::error("Could not delete $this->hostname from NETGW ('".$e->getMessage()."'). Let's try to restart it directly.");
+            Log::error("Could not delete $this->hostname from NETGW ('".$e->getMessage()."'). Let's try to restart it directly.");
 
             try {
                 // restart modem - DOCS-CABLE-DEV-MIB::docsDevResetNow
                 snmpset($fqdn, $config->rw_community, '1.3.6.1.2.1.69.1.1.3.0', 'i', '1', 300000, 1);
 
                 // success message - make it a warning as sth is wrong when it's not already restarted by NETGW??
-                \Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
+                Session::push('tmp_info_above_form', trans('messages.modem_restart_success_direct'));
             } catch (\Exception $e) {
-                \Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
+                Log::error("Could not restart $this->hostname directly ('".$e->getMessage()."')");
 
                 if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) ||
                     (strpos($e->getMessage(), 'snmpset(): No response from') !== false)) ||
                     // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
                     (strpos($e->getMessage(), 'noSuchName') !== false)) {
-                    \Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
+                    Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
                 } else {
                     // Inform and log for all other exceptions
-                    \Session::push('tmp_error_above_form', \App\Http\Controllers\BaseViewController::translate_label('Unexpected exception').': '.$e->getMessage());
+                    Session::push('tmp_error_above_form', \App\Http\Controllers\BaseViewController::translate_label('Unexpected exception').': '.$e->getMessage());
                 }
             }
         }
@@ -1394,7 +1395,7 @@ class Modem extends \BaseModel
 
         // no NetGw of PPP session found, NetGw has no NAS assigned, NAS has no secret or Change of Authorization port not set
         if (! $netgw || ! $netgw->nas || ! $netgw->nas->secret || ! $netgw->coa_port) {
-            \Session::push('tmp_warning_above_form', trans('messages.modem_disconnect_radius_warning'));
+            Session::push('tmp_warning_above_form', trans('messages.modem_disconnect_radius_warning'));
 
             return false;
         }
@@ -1406,12 +1407,12 @@ class Modem extends \BaseModel
         exec($cmd, $out, $ret);
 
         if ($ret !== 0) {
-            \Session::push('tmp_error_above_form', implode('<br>', $out));
+            Session::push('tmp_error_above_form', implode('<br>', $out));
 
             return false;
         }
 
-        \Session::push('tmp_info_above_form', trans('messages.modem_disconnect_radius_success'));
+        Session::push('tmp_info_above_form', trans('messages.modem_disconnect_radius_success'));
 
         return true;
     }

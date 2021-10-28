@@ -20,6 +20,7 @@ namespace Modules\ProvVoip\Entities;
 
 use Log;
 use File;
+use Session;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Traits\HasConfigfile;
@@ -301,16 +302,16 @@ class Mta extends \BaseModel
                 // PKTC-IETF-MTA-MIB::pktcMtaDevResetNow
                 snmp2_set($fqdn, 'private', '1.3.6.1.2.1.140.1.1.1.0', 'i', '1', 300000, 1);
             } catch (\Exception $e) {
-                \Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
+                Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
 
                 // only ignore error with this error message (catch exception with this string)
                 if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false))) {
-                    \Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
+                    Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
                 } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
-                    \Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
+                    Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
                 // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
                 } else {
-                    \Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
+                    Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
                 }
             }
 
