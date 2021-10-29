@@ -780,4 +780,5 @@ return [
     'minimum'                   => 'Minimum',
     'maximum'                   => 'Maximum',
     'sort'                      => 'Sortieren nach',
+    'showOfflineModems'         => 'Offline Modems anzeigen',
 ];

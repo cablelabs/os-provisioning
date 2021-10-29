@@ -127,6 +127,7 @@
                             </div>
                         </div>
                         <button class="btn btn-primary" onclick="filterImpairedModems()" type="button">{{ trans('view.Button_Search') }}</button>
+                        <a href="{!! route('CustomerTopo.show_impaired', ['offline']) !!}" class="btn btn-secondary" type="button" style="float: right;">{{ trans('messages.showOfflineModems') }}</a>
                     @stop
                     @include ('bootstrap.panel', [
                             'content' => "impaired_modems",
