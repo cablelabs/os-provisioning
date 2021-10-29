@@ -431,7 +431,7 @@ class NetGw extends \BaseModel
             return strval($freq / 1000000);
         }, $freqs);
         $ips = array_map(function ($hex) {
-            return long2ip(hexdec($hex));
+            return long2ip(hexdec(str_replace('.', '', $hex)));
         }, $ips);
 
         foreach ($ips as $ipIdx => $ip) {

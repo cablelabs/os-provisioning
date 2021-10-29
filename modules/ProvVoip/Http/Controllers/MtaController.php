@@ -48,7 +48,7 @@ class MtaController extends \BaseController
 //                        $mac = $last_mta->mac;
 //                    }
                     if ($mac) {
-                        $dec_mac = hexdec($mac);
+                        $dec_mac = hexdec(str_replace([':', '.', '-'], '', $mac));
                         $dec_mac++;
                         $mac = rtrim(strtoupper(chunk_split(str_pad(dechex($dec_mac), 12, '0', STR_PAD_LEFT), 2, ':')), ':');
                     }
