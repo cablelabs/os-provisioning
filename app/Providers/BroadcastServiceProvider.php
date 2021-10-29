@@ -30,5 +30,9 @@ class BroadcastServiceProvider extends ServiceProvider
 
             return ['id' => $user->id, 'name' => $user->login_name];
         });
+
+        Broadcast::channel('realtimevalues.{modemId}', function ($user) {
+            return ['id' => $user->id, 'name' => $user->login_name];
+        });
     }
 }
