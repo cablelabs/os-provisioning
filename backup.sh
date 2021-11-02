@@ -121,6 +121,7 @@ for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
 	mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/root/$db_dir/${auths[0]}.sql.gz"
 done
 
+# see aws.sh for an alternative, if the dump gets too large at some point in time
 su - postgres -c '/usr/pgsql-13/bin/pg_dump -Fc nmsprime' > "/root/$db_dir/nmsprime.psql"
 
 tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform=$(IFS=';'; echo "${transform[*]}") --hard-dereference -cz "${static[@]}" "${files[@]}" 2> /root/backup-nmsprime.txt
