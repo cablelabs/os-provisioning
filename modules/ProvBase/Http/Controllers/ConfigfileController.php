@@ -50,7 +50,10 @@ class ConfigfileController extends \BaseController
         $firmware_files = Configfile::getFiles($folders);
 
         try {
-            $dashboards = collect(json_decode(file_get_contents('http://localhost:3001/api/search?type=dash-db'), true))
+            $auth = base64_encode(config('provmon.grafanaUsername').':'.config('provmon.grafanaPassword'));
+            $ctx = stream_context_create(['http' => ['header' => "Authorization: Basic $auth"]]);
+
+            $dashboards = collect(json_decode(file_get_contents('http://localhost:3001/api/search?type=dash-db', false, $ctx), true))
                 ->pluck('title', 'url')
                 ->toArray();
         } catch (\Exception $e) {
