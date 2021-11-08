@@ -114,11 +114,10 @@
 @section('content_ping')
 
     @if ($ping)
-        <?php
-            $color = isset($ping[1]) ? "success" : "warning";
-            $text  = isset($ping[1]) ? "$type is Online" : trans('messages.device_probably_online', ['type' => $type]);
-        ?>
-        <font color="{{$color}}"><b>{{$text}}</b></font><br>
+        <font color="{{ isset($ping[1]) ? "success" : "warning" }}">
+            <b>{{ isset($ping[1]) ? "$type is Online" : trans('messages.device_probably_online', ['type' => $type]) }}</b>
+        </font>
+        <br>
         <table>
             @foreach ($ping as $line)
                 <tr><td><font color="grey">{{$line}}</font></td></tr>
@@ -126,7 +125,6 @@
         </table>
     @else
         <font color="red">{{$type}} is Offline</font> <br>
-        <font color="grey">{{$ping[5]}}</font>
     @endif
 
 @stop
