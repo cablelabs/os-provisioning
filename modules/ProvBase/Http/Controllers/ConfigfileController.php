@@ -287,7 +287,7 @@ class ConfigfileController extends \BaseController
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
                 foreach ($jsonArray as $jKey => $jElement) {
-                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0], 'calcOp' => $jElement[1][0], 'calcVal' => $jElement[1][1], 'diagramVar' => $jElement[2][0], 'diagramOp' => $jElement[2][1], 'diagramVal' => $jElement[2][2]];
+                    $jsonArrayPage[$listCounter]['content'][] = ['name' => $jKey, 'id' => $jElement[0] ?? null, 'calcOp' => $jElement[1][0] ?? null, 'calcVal' => $jElement[1][1] ?? null, 'diagramVar' => $jElement[2][0] ?? null, 'diagramOp' => $jElement[2][1] ?? null, 'diagramVal' => $jElement[2][2] ?? null];
                 }
                 $listCounter++;
             }
