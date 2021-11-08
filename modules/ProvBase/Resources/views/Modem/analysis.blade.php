@@ -26,6 +26,9 @@
     @if ($dash)
         <div class="{{ count($dash) == 1 ? 'col-sm-10 col-xl-11 order-2' : '' }} ">
             @foreach ($dash as $key => $info)
+                @if (! $info)
+                    @continue
+                @endif
                 <div class="alert alert-{{$info['bsclass']}} fade show">
                     <div>
                         {{ $info['text'] }}

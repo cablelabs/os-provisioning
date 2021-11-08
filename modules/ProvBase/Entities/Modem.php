@@ -881,7 +881,7 @@ class Modem extends \BaseModel
         $settings = json_decode($json[1] ?? null, true);
 
         $events = [];
-        if ($settings['EVENT']) {
+        if (isset($settings['EVENT'])) {
             foreach ($settings['EVENT'] as $value) {
                 if (! $value) {
                     continue;
