@@ -84,6 +84,32 @@
                                 <option value="%">%</option>
                             </select>
                             <input type="number" step="0.0001" name="diagramVal" v-model="item.diagramVal"/>
+
+                            <span>
+                                <input title="Colorize?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.colorize" onchange="$(this).next().toggleClass('d-none')">
+                                <span class="colorizeParamsSpan">
+                                    @php
+                                        $tmpHelpTemplate = 'optional: Threshold(s) for %s (%s) – e.g. “..10” or “-1.5..1.5” or “-20..-10;10..20” or “20..”';
+                                        $tmpHelp = sprintf($tmpHelpTemplate, 'critical', 'orange');
+                                    @endphp
+                                    <input type="text" name="colorDanger" style="background-color: #ffddbb;" placeholder="{{ $tmpHelp }}" title="{{ $tmpHelp }}" v-model="item.colorDanger"/>
+                                    @php
+                                        $tmpHelp = sprintf($tmpHelpTemplate, 'warning', 'yellow');
+                                    @endphp
+                                    <input type="text" name="colorWarning" style="background-color: #ffffdd;" placeholder="{{ $tmpHelp }}" title="{{ $tmpHelp }}" v-model="item.colorWarning"/>
+                                    @php
+                                        $tmpHelp = sprintf($tmpHelpTemplate, 'success', 'green');
+                                    @endphp
+                                    <input type="text" name="colorSuccess" style="background-color: #ddffdd;" placeholder="{{ $tmpHelp }}" title="{{ $tmpHelp }}" v-model="item.colorSuccess"/>
+                                    <select name="valueType" v-model="item.valueType" title="Usage e.g. in topo map" v-dispatchsel2>
+                                        <option value=""></option>
+                                        <option value="us_pwr">Upstream power</option>
+                                        <option value="us_snr">Upstream noise</option>
+                                        <option value="ds_pwr">Downstream power</option>
+                                        <option value="ds_snr">Downstream noise</option>
+                                    </select>
+                                </span>
+                            </span>
                             </div>
                         </div>
                     </draggable>
@@ -128,6 +154,15 @@
 @section('javascript_extra')
 @if (multi_array_key_exists(['lists'], $additional_data))
 <script>
+
+// hide coloring related inputs if checkbox not checked
+$(document).ready(function()
+{
+    $('input[class=toggleColorizeParams]').each(function () {
+        if (!$(this).is(':checked')) {$(this).next().toggleClass('d-none')};
+    });
+});
+
 Vue.directive('dispatchsel2', {
     inserted: function(app) {
         $(app).on('select2:select', function() {
@@ -171,7 +206,23 @@ var app=new Vue({
             moveDiagramVar = '';
             moveDiagramOp = '';
             moveDiagramVal = '';
-            this.lists[key].content.push({'id': moveId, 'name': moveName, 'calcOp': moveCalcOp, 'calcVal': moveCalcVal, 'diagramVar': moveDiagramVar, 'diagramOp': moveDiagramOp, 'diagramVal': moveDiagramVal});
+            moveColorDanger = '';
+            moveColorWarning = '';
+            moveColorSuccess = '';
+            this.lists[key].content.push({
+                    'id': moveId,
+                    'name': moveName,
+                    'calcOp': moveCalcOp,
+                    'calcVal': moveCalcVal,
+                    'diagramVar': moveDiagramVar,
+                    'diagramOp': moveDiagramOp,
+                    'diagramVal': moveDiagramVal,
+                    'colorize': moveColorize,
+                    'colorDanger': moveColorDanger,
+                    'colorWarning': moveColorWarning,
+                    'colorSuccess': moveColorSuccess,
+                    'valueType': moveColorSuccess
+                });
             this.lists[olist].content.splice(id, 1);
         },
         addList: function() {
@@ -241,6 +292,11 @@ var app=new Vue({
                     let diagramVar = content.diagramVar;
                     let diagramOp = content.diagramOp;
                     let diagramVal = content.diagramVal;
+                    let colorize = content.colorize;
+                    let colorDanger = content.colorDanger;
+                    let colorWarning = content.colorWarning;
+                    let colorSuccess = content.colorSuccess;
+                    let valueType = content.valueType;
 
                     var calc = null;
                     if (calcOp !== null && calcVal !== null) {
@@ -252,7 +308,7 @@ var app=new Vue({
                         diagram = [diagramVar, diagramOp, diagramVal];
                     }
 
-                    params[listName][content.name] = [content.id, calc, diagram];
+                    params[listName][content.name] = [content.id, calc, diagram, [colorize, colorDanger, colorWarning, colorSuccess, valueType]];
                     json[listName] = params[listName];
                 }
             }
