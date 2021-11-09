@@ -4461,6 +4461,7 @@ Berufsförderungsdienst
 Berufsförderungsinstitut
 Berufsförderungswerk
 Berufsfortbildungsstätte
+BerufsGeschaeftsbezeichnung
 Berufsimkerei
 Berufskleiderfabrikation
 Berufskleidungsmietservice
@@ -4785,6 +4786,7 @@ Betriebssicherheitstechnik
 Betriebstechniker
 Betriebstechnikerin
 Betriebsüberwachung
+Betriebsverpflegung
 Betriebswirt
 Betriebswirt des Handwerks
 Betriebswirt für betriebliche Altersversorgung
@@ -6588,6 +6590,7 @@ Coach für Bewusstseinstraining
 Coach für Business English
 Coach für Kinder und Jugendliche
 Coach für Nordic Walking
+Coach für Yoga
 Coach im Gesundheitswesen
 Coaching
 Coaching für Associates
@@ -30522,6 +30525,7 @@ Sachverständige für Verkehrswertermittlung
 Sachverständige für Wärme- Kälte- und Schallschutz
 Sachverständige für Wertermittlung
 Sachverständige für Zupfinstrumentenmacherhandwerk
+Sachverständige öbuv für Immobilienwertermittlungen
 Sachverständigenausrüster
 Sachverständigenbüro
 Sachverständigenbüro für Anlagensicherheit
