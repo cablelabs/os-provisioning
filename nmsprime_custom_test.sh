@@ -13,10 +13,12 @@ rm -f phpunit/*.htm
 DEBUG=" --debug"
 DEBUG=""
 
-PHPUNIT="source scl_source enable rh-php71; vendor/bin/phpunit"
+PHPUNIT="source scl_source enable php80; vendor/bin/phpunit"
+PHPUNIT="vendor/bin/phpunit"
 
 OPTS=""
 OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure --bootstrap /var/www/nmsprime/bootstrap/autoload.php"
+OPTS=" --testdox-html $LOGFILE --colors --stop-on-failure"
 
 # if empty: run all tests
 # can be used on developing tests (you don't want to run the complete test suite in this case)
@@ -37,6 +39,7 @@ TESTS=" modules/ProvVoip/Tests/PhoneTariffLifecycleTest.php"
 TESTS=" modules/BillingBase/Tests/ItemLifecycleTest.php"
 TESTS=" modules/BillingBase/Tests/ProductLifecycleTest.php"
 
+TESTS=" tests/BaseViewControllerTest.php"
 
 touch $LOGFILE $OUTFILE
 chmod 666 $LOGFILE $OUTFILE
@@ -47,7 +50,9 @@ CMD="$PHPUNIT$OPTS$DEBUG$TESTS | tee $OUTFILE"
 
 clear
 echo
-echo $CMD
+echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------"
+echo "Executing “$CMD”…"
+echo "--------------------------------------------------------------------------------"
 echo
 eval $CMD
 

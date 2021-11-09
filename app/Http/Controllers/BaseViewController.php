@@ -1008,4 +1008,97 @@ class BaseViewController extends Controller
 
         return $toString ? $colors[$ret] : $ret;
     }
+
+    /**
+     * @param  string|int|float  $value  the value to be evaluated
+     * @param  string  $thresholds  someting like “..10” or “-1.5..1.5” or “-20..-10;10..20”
+     * @return bool True if value in thresholds else false
+     *
+     * @throws \Exception if value not null and not numeric
+     *
+     * @author Patrick Reichel
+     */
+    public static function valueInThresholdString($value, $thresholds)
+    {
+        if (is_null($value)) {
+            return false;
+        }
+
+        if (! is_numeric($value)) {
+            throw new \Exception("Given value ($value) is not numeric");
+        }
+
+        $value = floatval($value);
+
+        if (is_null($thresholds)) {
+            return false;
+        }
+
+        $thresholds = explode(';', $thresholds);
+        foreach ($thresholds as $threshold) {
+            $minmax = explode('..', trim($threshold));
+            $min = ('' == trim($minmax[0])) ? -PHP_FLOAT_MAX : floatval(trim($minmax[0])); // attention: PHP_FLOAT_MIN is greater than zero!
+            $max = ('' == trim($minmax[1])) ? PHP_FLOAT_MAX : floatval(trim($minmax[1]));
+            if (($value >= $min) && ($value <= $max)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  string  $type  the type of the value
+     * @param  int|float  $value  The (measured) value to be used for coloring
+     * @param  array  $ruleset  Contains the thresholds for success, warning and danger
+     *
+     * @author Patrick Reichel
+     */
+    public static function getQualityColorTR069($type, $value, $monitoringConfig, $toString)
+    {
+        $colors = [
+            0 => 'success',
+            1 => 'warning',
+            2 => 'danger',
+            3 => '',
+        ];
+        $ret = 3;
+
+        if (is_null($value)) {
+            return $toString ? $colors[$ret] : $ret;
+        }
+
+        // extract all threshold setting for the given $entryType (e.g. us_snr)
+        $thresholds = [
+            0 => [],    // success
+            1 => [],    // warning
+            2 => [],    // danger
+        ];
+        foreach (($monitoringConfig ?? []) as $monitoringConfigGroup) {
+            foreach ($monitoringConfigGroup as $monitoringConfigEntry) {
+                // check if checkbox has been checked
+                if (! ($monitoringConfigEntry[3][0] ?? false)) {
+                    continue;
+                }
+                $entryType = $monitoringConfigEntry[3][4] ?? '';
+                if ($type == $entryType) {
+                    $thresholds[2][] = $monitoringConfigEntry[3][1] ?? null;
+                    $thresholds[1][] = $monitoringConfigEntry[3][2] ?? null;
+                    $thresholds[0][] = $monitoringConfigEntry[3][3] ?? null;
+                }
+            }
+        }
+
+        // check first for danger, then for warning and last for success state
+        // most critical color wins
+        for ($i = 2; $i--; $i <= 0) {
+            foreach ($thresholds[$i] as $threshold) {
+                if (self::valueInThresholdString($value, $threshold)) {
+                    return $toString ? $colors[$i] : $i;
+                }
+            }
+        }
+
+        return $toString ? $colors[$ret] : $ret;
+    }
 }
