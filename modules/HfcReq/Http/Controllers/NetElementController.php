@@ -18,29 +18,13 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
-use View;
 use Illuminate\Http\Request;
 use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseController;
 use Modules\HfcReq\Entities\NetElementType;
-use App\Http\Controllers\BaseViewController;
 
 class NetElementController extends BaseController
 {
-    public function index()
-    {
-        $model = static::get_model_obj();
-        $headline = BaseViewController::translate_view($model->view_headline(), 'Header', 2);
-        $view_header = BaseViewController::translate_view('Overview', 'Header');
-        $create_allowed = $this->index_create_allowed;
-        $delete_allowed = $this->index_delete_allowed;
-        $methodExists = method_exists($model, 'view_index_label');
-        $indexTableInfo = $methodExists ? $model->view_index_label() : [];
-        $hugeTable = $model->hasHugeIndexTable();
-
-        return View::make('Generic.index', $this->compact_prep_view(compact('headline', 'hugeTable', 'view_header', 'model', 'create_allowed', 'delete_allowed', 'methodExists', 'indexTableInfo')));
-    }
-
     /**
      * defines the formular fields for the edit and create view
      */
