@@ -257,6 +257,25 @@ function rezizeTextareas() {
   });
 }
 
+function redirect(i18nAll)
+{
+    let select = document.getElementById('show-value')
+    let text = select.options[select.selectedIndex].text
+    let url = window.location.href
+
+    if (text == i18nAll) {
+        return window.location.href = url.search(/model=/) == -1 ? url : url.replace(/\??&?model=\w+[^?&]+/, '')
+    }
+
+    if (url.search(/model=/) == -1) {
+      let concat = url.search(/[?]/) != -1 ? '&' :'?'
+
+      return window.location.href = url + concat + 'model=' + text
+    }
+
+    window.location.href = url.replace(/model=\w+[^?&]+/, 'model=' + text)
+}
+
 /*
  * Init form range slider
  */
