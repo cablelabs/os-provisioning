@@ -262,8 +262,9 @@ return [
     |
     */
     'osmNominatimApiMail' => env('OSM_NOMINATIM_EMAIL'),
-    'hereApiKey' => env('HERE_API_KEY'),
     'googleApiKey' => env('GOOGLE_API_KEY'),
+    'hereApiKey' => env('HERE_GEOCODE_API_KEY'),
+    'hereMapApiKey' => env('HERE_MAP_API_KEY'),
     'adminPort' => env('HTTPS_ADMIN_PORT', 8080),
     'cccPort' => env('HTTPS_CCC_PORT', 443),
     'mpsMprSubareas' => intval(env('MPS_MPR_SUBAREAS', 20000)),
