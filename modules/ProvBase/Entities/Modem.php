@@ -188,7 +188,7 @@ class Modem extends \BaseModel
 
     public function get_contract_valid()
     {
-        return $this->contract->isValid('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
+        return $this?->contract->isValid('Now') ? \App\Http\Controllers\BaseViewController::translate_label('yes') : \App\Http\Controllers\BaseViewController::translate_label('no');
     }
 
     public function getSupportState()
