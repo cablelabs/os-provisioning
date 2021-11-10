@@ -245,9 +245,8 @@ class NetElement extends \BaseModel
      * @param  Illuminate\Database\Query\Builder  $query
      * @return Illuminate\Database\Query\Builder
      */
-    public function scopeWithActiveModems($query, $field = 'id', $id = 1, $minify = false)
+    public function scopeWithActiveModems($query, $field = 'id', $operator = '=', $id = 1, $minify = false)
     {
-        $operator = '=';
         if ($field == 'all') {
             $field = 'id';
             $operator = '>=';
@@ -255,7 +254,7 @@ class NetElement extends \BaseModel
         }
 
         if ($minify) {
-            $query->select(['id', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
+            $query->select(['id', '_lft', '_rgt', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
         }
 
         return $query->where($field, $operator, $id)
@@ -697,18 +696,25 @@ class NetElement extends \BaseModel
             });
     }
 
-    // TODO: rename, avoid recursion
-    public function get_non_location_parent($layer = '')
+    public function getApartmentsList()
     {
-        return $this->parent;
+        $apartments = \Modules\PropertyManagement\Entities\Apartment::leftJoin('netelement as n', 'apartment.id', 'n.apartment_id')
+            ->whereNull('n.deleted_at')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('n.id')
+                    ->orWhere('apartment.id', $this->apartment_id);
+            })
+            ->select('apartment.*')
+            ->get();
 
-        $p = $this->parent;
+        $list[null] = null;
 
-        if ($p->type == 'LOCATION') {
-            return get_non_location_parent($p);
-        } else {
-            return $p;
+        foreach ($apartments as $apartment) {
+            $list[$apartment->id] = \Modules\PropertyManagement\Entities\Apartment::labelFromData($apartment);
         }
+
+        return $list;
     }
 
     /**
@@ -1158,7 +1164,7 @@ class NetElement extends \BaseModel
         }
 
         if (! $community) {
-            Log::error("community {$access} for Netelement $this->id is not set!");
+            \Log::error("community {$access} for Netelement $this->id is not set!");
 
             throw new SnmpAccessException(trans('messages.NoSnmpAccess', ['access' => $access, 'name' => $this->name]));
         }
