@@ -193,6 +193,18 @@ class NetElement extends \BaseModel
         return $this->get_bsclass();
     }
 
+    public function mapColor()
+    {
+        $lookup = [
+            'success' => 'green',
+            'info'  => 'yellow',
+            'warning' => 'yellow',
+            'danger' => 'red',
+        ];
+
+        return $lookup[$this->bsClass];
+    }
+
     public function label()
     {
         if (! $this->netelementtype) {
