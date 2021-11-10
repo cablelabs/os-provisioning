@@ -26,7 +26,8 @@
         "intervention/validation": "^2.6",
         "kalnoy/nestedset": "^5.0",
         "beyondcode/laravel-websockets": "^1.12",
-        "pusher/pusher-php-server": "~4.0"
+        "pusher/pusher-php-server": "~4.0",
+        "phayes/geophp": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

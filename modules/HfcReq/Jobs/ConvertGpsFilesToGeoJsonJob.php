@@ -59,7 +59,6 @@ class ConvertGpsFilesToGeoJsonJob //implements ShouldQueue
      * Create a new job instance.
      *
      * @param  \SplFileInfo|array|\Illuminate\Support\Collection  $files
-     *
      * @return void
      */
     public function __construct($files)
@@ -122,7 +121,5 @@ class ConvertGpsFilesToGeoJsonJob //implements ShouldQueue
 
             array_push($output['features']['geometry']['coordinates'], $shape['components']);
         }
-
-
     }
 }

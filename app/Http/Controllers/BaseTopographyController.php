@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use geoPHP;
-use Spinen\Geometry\GeometryFacade as Geometry;
+use Nwidart\Modules\Facades\Module;
 
 abstract class BaseTopographyController extends BaseController
 {
@@ -16,13 +16,12 @@ abstract class BaseTopographyController extends BaseController
 
     protected $edit_left_md_size = 12;
 
-    /*
-    @author: John Adebayo
-    Private property determines the range of intensity of the Heatmap, for the amplitude values
-    of the modem
-    $min_value is the minimum for the database query
-    $max_value is the max for the database query
-    */
+    /**
+     * Determines the range of intensity of the Heatmap, for the amplitude values of the modem
+     *
+     * @var int minHeatIntensity is the minimum for the database query
+     * @var int maxHeatIntensity is the max for the database query
+     */
     protected $minHeatIntensity = 0;
     protected $maxHeatIntensity = 5;
 
@@ -35,30 +34,33 @@ abstract class BaseTopographyController extends BaseController
     }
 
     /**
-     * KML Upload Array: Generate the KML file array
+     * Generate GeoJson Data from Netelement Files
      *
-     * @param \Illumnate\Database\Eloqunt\Collection $netelements
+     * @param  \Illumnate\Database\Eloqunt\Collection  $netelements
      * @return Collection KML files, like ['file', 'descr']
      *
-     * @author Torsten Schmidt, Christian Schramm
+     * @author Christian Schramm
      */
-    protected function parseKmlFiles($netElements)
+    protected function parseGeoFiles($netElements)
     {
         $points = [];
         $lines = ['type' => 'FeatureCollection', 'features' => []];
+        if ($chache = cache('kml')) {
+            return $chache;
+        }
 
-        $netElements->where('kml_file', '!=', '')
+        $netElements->whereNotNull('kml_file')
             ->unique('kml_file')
             ->each(function ($netElement) use (&$points, &$lines) {
-                $kml = geoPHP::load(file_get_contents(storage_path("app/data/hfcbase/kml_static/".basename($netElement->kml_file))), 'kml');
+                $kml = geoPHP::load(file_get_contents(storage_path('app/data/hfcbase/gpsData/'.$netElement->kml_file)), 'kml');
 
                 foreach ($kml->asArray() as $shape) {
-                    if (!isset($shape['type']) || ($shape['type'] == 'LineString' && count($shape['components']) < 2)) {
+                    if (! isset($shape['type']) || ($shape['type'] == 'LineString' && ! count($shape['components']))) {
                         continue;
                     }
 
                     if ($shape['type'] == 'LineString') {
-                        array_push($lines['features'], ['type' => 'Feature', 'properties' => ['test' => '1'], 'geometry' => ['type' => 'LineString', "coordinates" => $shape['components']]]);
+                        array_push($lines['features'], ['type' => 'Feature', 'properties' => [], 'geometry' => ['type' => 'LineString', 'coordinates' => $shape['components']]]);
                         continue;
                     }
 
