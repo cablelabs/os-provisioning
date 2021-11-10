@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 

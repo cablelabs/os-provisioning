@@ -17,7 +17,6 @@
  */
 
 use Illuminate\Support\Facades\Schema;
-use Modules\ProvBase\Entities\Contract;
 use Illuminate\Database\Schema\Blueprint;
 
 class UpdateCoordinatesInContractTable extends BaseMigration
@@ -34,16 +33,8 @@ class UpdateCoordinatesInContractTable extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('x', 'lng');
-            $table->renameColumn('y', 'lat');
+            $table->dropColumn(['x', 'y']);
         });
-
-        Schema::table($this->tableName, function (Blueprint $table) {
-            $table->decimal('lng', 9, 6)->default(null)->nullable()->change();
-            $table->decimal('lat', 9, 6)->default(null)->nullable()->change();
-        });
-
-        Contract::where('lng', 0)->where('lat', 0)->update(['lng' => null, 'lat' => null]);
     }
 
     /**
@@ -54,8 +45,8 @@ class UpdateCoordinatesInContractTable extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('lng', 'x');
-            $table->renameColumn('lat', 'y');
+            $table->decimal('x', 9, 6)->nullable();
+            $table->decimal('y', 9, 6)->nullable();
         });
     }
 }
