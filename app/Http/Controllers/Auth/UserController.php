@@ -20,11 +20,11 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use Bouncer;
-use Request;
 use Session;
 use App\Role;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BaseViewController;
 
@@ -166,14 +166,18 @@ class UserController extends BaseController
         return redirect()->back();
     }
 
-    public function updateGeopos()
+    public function updateGeopos(Request $request)
     {
-        \Log::debug('User '.Request::get('id').' geopos was updated to lng='.Request::get('lng').' and lat='.Request::get('lat'));
+        $user = $request->user();
 
-        User::where('id', Request::get('id'))->update([
-            'geopos_updated_at' => date('Y-m-d H:i:s'),
-            'lng' => Request::get('lng'),
-            'lat' => Request::get('lat'),
+        $success = $user->update([
+            'geopos_updated_at' => now(),
+            'lng' => $request->lng,
+            'lat' => $request->lat,
         ]);
+
+        \Log::debug("Position of {$user->login_name} (id: {$user->id}) was ".
+            "updated to lng={$request->lng} and lat={$request->lat}",
+            ['success' => $success]);
     }
 }

@@ -17,7 +17,7 @@
  */
 ?>
 <!-- Get users geoposition when last update was more than 10 min ago -->
-@if (\Module::collections()->has('HfcCustomer') && (time() - strtotime(\Auth::user()->geopos_updated_at)) > 10*60)
+@if (\Module::collections()->has('HfcCustomer') && (now()->subMinutes(10)->gte(auth()->user()->geopos_updated_at)))
 
 <script>
 
@@ -28,10 +28,9 @@
             url: '{{ route("user.updateGeopos") }}',
             timeout: 500,
             data: {
-                _token: "{{\Session::get('_token')}}",
-                id: '{{ \Auth::user()->id }}',
-                x: pos.coords.longitude,
-                y: pos.coords.latitude,
+                _token: '{{ csrf_token() }}',
+                lat: pos.coords.longitude,
+                lng: pos.coords.latitude,
             },
         });
     }

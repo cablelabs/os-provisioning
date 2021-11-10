@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateCoordinatesInUsersTable extends BaseMigration
 {
-    protected $tableName =  'users';
+    protected $tableName = 'users';
     public $migrationScope = 'database';
 
     /**

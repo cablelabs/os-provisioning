@@ -85,19 +85,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      *
      * @var array
      */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'login_name',
-        'email',
-        'phonenumber',
-        'password',
-        'language',
-        'active',
-        'password_changed_at',
-        'initial_dashboard',
-        'hasTruck',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
