@@ -748,7 +748,7 @@ class NetElement extends \BaseModel
     {
         return collect(File::files(storage_path('app/'.self::GPS_FILE_PATH)))
             ->filter(function ($file) {
-                return $file->getExtension() === 'geojson';
+                return in_array(strtolower($file->getExtension()), ['geojson', 'json']);
             })
             ->map(function ($file) {
                 return explode('.', $file->getFilename())[0];
