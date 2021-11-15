@@ -71,6 +71,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'erd' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/hfcbase/erd'),
+            'url' => env('APP_URL').'/storage/hfcbase/erd',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID', 'your-key'),
