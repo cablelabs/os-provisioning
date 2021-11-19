@@ -210,6 +210,7 @@ return [
     'Header_Ticket'             => 'Ticket|Tickets',
     'Header_EditTicket'         => 'Editar Ticket',
     'Header_TicketType'         => 'Ticket Types',
+    'Header_TicketReceiver'     => 'Ticket Receiver',
     //HFC
     //Topography
     'Header_Topography - Modems'=> 'Topografia - Modems',
@@ -361,8 +362,10 @@ return [
 
     // Select Fields
     'select' => [
+        'Apartment' => 'an apartment',
         'base' => 'Please choose :model!',
         'Configfile' => 'a Configfile',
+        'Contact' => 'a contact',
         'Contract' => 'a Contract',
         'Mta' => 'a MTA',
         'NetElement' => 'a NetElement',
@@ -499,6 +502,7 @@ return [
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
+        'Access Workforce Dashboard' => 'Access to Workforce Command Center',
         'Allow'             => 'Allow',
         'All abilities'     => 'All Abilities',
         'Allow to'          => 'Allow to',
@@ -676,6 +680,7 @@ return [
             'unsatisfied' => 'unsatisfied',
             'canceled by us' => 'canceled by us',
             'deceased' => 'deceased',
+            'competitor' => 'competitor',
         ],
     ],
     'geocoding' => [
