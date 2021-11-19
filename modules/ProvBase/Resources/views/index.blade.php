@@ -112,8 +112,9 @@
                                     @foreach (config('hfcreq.hfParameters') as $value => $name)
                                         @if ($loop->first)
                                             <option selected value="{{ $value }}">{{ $name }}</option>
+                                        @else
+                                            <option value="{{ $value }}">{{ $name }}</option>
                                         @endif
-                                        <option value="{{ $value }}">{{ $name }}</option>
                                     @endforeach
                                 </select>
                             </div>
