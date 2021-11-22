@@ -1,5 +1,7 @@
 # source environment variables to use php 7.3
+source /etc/profile.d/modules.sh
 module load php80
+
 
 cd '/var/www/nmsprime'
 

@@ -1,3 +1,4 @@
+source /etc/profile.d/modules.sh
 module load php80
 
 # change owner
