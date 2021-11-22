@@ -259,6 +259,7 @@ return [
     'Delete'                    => 'Lösche',
     'Help'                      => 'Hilfe',
     'Not allowed to acces this user' => 'Zugriff auf diesen Nutzer ist nicht gestattet',
+    'proximityNeedsId' => 'Bitte einen ID-Parameter für die Umgebungssuche angeben!',
     'log_out'               => 'Ausloggen',
     'System Log Level'          => 'System Logging Stufe',
     'isAllNetsSidebarEnabled'   => 'Zeige \'Alle Netze\'-Link in Sidebar',

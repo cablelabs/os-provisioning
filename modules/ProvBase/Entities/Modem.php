@@ -1664,14 +1664,9 @@ class Modem extends \BaseModel
 
     public function proximity_search($radius)
     {
-        $ids = [0];
-        foreach (DB::table('modem')->select('id', 'lng', 'lat')->where('deleted_at', null)->get() as $modem) {
-            if (distanceLatLong($this->lat, $this->lng, $modem->lat, $modem->lng) < $radius) {
-                array_push($ids, $modem->id);
-            }
-        }
-
-        return $ids;
+        return Modem::select('id', 'lng', 'lat')->get()
+            ->filter(fn ($modem) => distanceLatLong($this->lat, $this->lng, $modem->lat, $modem->lng) < $radius)
+            ->pluck('id');
     }
 
     /**

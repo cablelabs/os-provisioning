@@ -259,6 +259,7 @@ return [
     'Delete'                    => 'Delete',
     'Help'                      => 'Help',
     'Not allowed to acces this user' => 'Not allowed to acces this user',
+    'proximityNeedsId' => 'Please provide an ID for the proximity search!',
     'log_out'               => 'Log Out',
     'System Log Level'          => 'System Log Level',
     'isAllNetsSidebarEnabled'   => 'Show \'All Nets\'-link in sidebar',
