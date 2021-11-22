@@ -606,7 +606,7 @@ class BaseViewController extends Controller
         foreach ($modules as $name => $module) {
             $config = config($module->getLowerName());
 
-            if (empty($config[$configMenuItemKey])) {
+            if (! isset($config[$configMenuItemKey])) {
                 continue;
             }
 
@@ -619,6 +619,10 @@ class BaseViewController extends Controller
             $menu[$name]['link'] = $config['link'] ?? null;
             $menu[$name]['translated_name'] = static::translate_view($name, 'Menu');
 
+            if (empty($config[$configMenuItemKey])) {
+                continue;
+            }
+
             foreach ($config[$configMenuItemKey] as $page => $settings) {
                 if (Bouncer::can('view', $settings['class'])) {
                     $menuItem = static::translate_view($page, 'Menu');
@@ -627,34 +631,11 @@ class BaseViewController extends Controller
             }
         }
 
-        $menu = array_filter($menu, fn ($item) => isset($item['submenu']));
-
-        self::addWorkforceMenuEntry($menu);
+        $menu = array_filter($menu, fn ($item) => isset($item['submenu']) || $item['link'] == 'Workforce.index');
 
         Session::put('menu', $menu);
 
         return $menu;
-    }
-
-    /**
-     * Temporary function to add menu entry while code is not outsourced to separate module
-     *
-     * TODO: Remove when workforce module was created
-     */
-    private static function addWorkforceMenuEntry(&$menu)
-    {
-        if (
-            ! Module::collections()->has('HfcCustomer') ||
-            ! Module::collections()->has('Ticketsystem') ||
-            Bouncer::cannot('access workforce dashboard')
-        ) {
-            return;
-        }
-
-        $name = 'Workforce';
-
-        $menu[$name]['link'] = 'WorkForce.index';
-        $menu[$name]['icon'] = 'icon-workforce.png';
     }
 
     /**
