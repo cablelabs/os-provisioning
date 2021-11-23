@@ -74,7 +74,7 @@ class SnmpController extends \BaseController
      *
      * @author Torsten Schmidt, Nino Ryschawy
      */
-    public function init($netelement = null, $paramId, $index = 0)
+    public function init($netelement = null, $paramId = 0, $index = 0)
     {
         $this->netelement = $netelement;
         $this->index = $index ? [$index] : 0;
