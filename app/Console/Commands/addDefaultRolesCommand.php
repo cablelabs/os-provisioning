@@ -172,6 +172,7 @@ class addDefaultRolesCommand extends Command
                 'HfcCustomer'		=> ['view'],
                 'HfcReq' 			=> ['view'],
                 'ProvVoipEnvia'		=> ['view'],
+                'Workforce'         => ['view'],
             ],
             'models' => [
                 'Role' 					=> ['view'],

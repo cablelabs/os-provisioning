@@ -258,6 +258,9 @@ return [
     'Header_SubNetElement'      => 'Untergeordnete Netzelemente',
     'Header_tap'                => 'Steuerbarer Abzweiger-Port',
 
+    // Workforce
+    'Header_Workforce'          => 'Workforce Kommandozentrale',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index
@@ -506,7 +509,6 @@ return [
     'Ability' => [
         'Abilities'         => 'Berechtigungen',
         'Ability'           => 'Berechtigung',
-        'Access Workforce Dashboard' => 'Zugriff auf Workforce Kommandozentrale',
         'Allow'             => 'Erlauben',
         'All abilities'     => 'Alle Fähigkeiten',
         'Allow to'          => 'Erlaube',
@@ -544,6 +546,7 @@ return [
         'View analysis pages of netgw' => 'Analyseseite der NetGws aufrufen',
         'View everything'   => 'Alle Seiten ansehen',
         'VoipMon'           => 'Voip Monitor',
+        'Workforce'         => 'Workforce',
     ],
     'analysis' => 'Analyse',
     'Assign' => ':model hinzufügen',

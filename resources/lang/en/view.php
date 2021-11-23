@@ -258,6 +258,9 @@ return [
     'Header_SubNetElement'      => 'Subordinated Netelements',
     'Header_tap'                => 'Controllable tap port',
 
+    // Workforce
+    'Header_Workforce'          => 'Workforce Command Center',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index
@@ -506,7 +509,6 @@ return [
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
-        'Access Workforce Dashboard' => 'Access to Workforce Command Center',
         'Allow'             => 'Allow',
         'All abilities'     => 'All Abilities',
         'Allow to'          => 'Allow to',
@@ -544,6 +546,7 @@ return [
         'View analysis pages of netgw' => 'View Analysis Pages of NetGw',
         'View everything'   => 'View Everything',
         'VoipMon'           => 'Voip Monitor',
+        'Workforce'         => 'Workforce',
     ],
     'analysis' => 'Analysis',
     'Assign' => 'Assign :model',

@@ -93,14 +93,6 @@ class AuthCommand extends Command
                     'only_owned' =>'0',
                 ],
             ]);
-        })->when(Module::collections()->has(['Workforce']), function ($collection) {
-            return $collection->concat([
-                [
-                    'name' => 'access workforce dashboard',
-                    'title' => 'Access Workforce Dashboard',
-                    'only_owned' =>'0',
-                ],
-            ]);
         });
     }
 
