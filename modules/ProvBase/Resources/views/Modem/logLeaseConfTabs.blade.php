@@ -60,13 +60,23 @@
                 $blade_type = 'form';
             ?>
             @include('Generic.above_infos')
-
-            {!! Form::open(array('route' => ['Modem.genieTask', $modem->id], 'method' => 'POST')) !!}
-            <div class="row">
-            {!! Form::select('task', $genieCmds) !!}
-            {!! Form::submit(trans('view.Button_Submit'), ['style' => 'simple', 'class' => 'btn-danger']) !!}
-            </div>
-            {!! Form::close() !!}
+            <form v-on:submit.prevent="updateGenieTasks">
+                <script type="text/x-template" id="select2-template">
+                    <select>
+                        <slot></slot>
+                    </select>
+                </script>
+                <div class="row d-flex">
+                    <div style="flex:1;">
+                        <select2 v-model="selected" v-on:input="setTask">
+                            <template v-for="option in options">
+                                <option :value="option.task" v-text="option.name"></option>
+                            </template>
+                        </select2>
+                    </div>
+                    <button type="submit" class="btn btn-danger" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
+                </div>
+            </form>
         @endif
         @foreach ($configfile['text'] as $line)
             <table>

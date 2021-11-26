@@ -22,6 +22,7 @@
 <script src="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/Abilities/axios.min.js')}}"></script>
+<script src="{{asset('components/assets-admin/plugins/vue-snotify/snotify.min.js')}}"></script>
 
 {{-- When in Development use this Version
   <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>

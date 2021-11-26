@@ -27,8 +27,8 @@
 
 @section ('content_left')
 
-<div class="row">
-
+<div id="vue-body" class="row">
+    <vue-snotify></vue-snotify>
     {{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 
     <div class="col-md-7 ui-sortable">

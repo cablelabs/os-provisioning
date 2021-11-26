@@ -781,4 +781,6 @@ return [
     'maximum'                   => 'maximum',
     'sort'                      => 'Sort by',
     'showOfflineModems'         => 'Show offline modems',
+    'modemNotFound'             => 'Modem not found',
+    'JsonDecodeFailed'          => 'JSON decode failed',
 ];

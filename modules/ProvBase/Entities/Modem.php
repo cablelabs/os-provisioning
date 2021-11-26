@@ -1996,6 +1996,11 @@ class Modem extends \BaseModel
             foreach (json_decode($this->getGenieAcsTasks(), true) as $task) {
                 $genieCmds["tasks/{$task['_id']}"] = trans('messages.delete_task')." {$task['name']} {$task['device']}";
             }
+
+            foreach ($genieCmds as $cmd => $name) {
+                $genieCmds[] = ['task' => $cmd, 'name' => $name];
+                unset($genieCmds[$cmd]);
+            }
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }

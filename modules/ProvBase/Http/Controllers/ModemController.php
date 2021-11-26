@@ -295,28 +295,25 @@ class ModemController extends \BaseController
      * Perform GenieACS task
      *
      * @author Ole Ernst
+     *
+     * @return string
      */
     public static function genieTask($id)
     {
         if (! $modem = Modem::find($id)) {
-            Session::push('tmp_error_above_form', 'Modem not found');
-
-            return \Redirect::back();
+            return trans('messages.modemNotFound');
         }
 
         $task = Request::get('task');
 
         if (\Str::startsWith($task, 'tasks/')) {
             Modem::callGenieAcsApi($task, 'DELETE');
-            Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
-            return \Redirect::back();
+            return trans('messages.modemAnalysis.actionExecuted');
         }
 
         if (json_decode($task) === null) {
-            Session::push('tmp_error_above_form', 'JSON decode failed');
-
-            return \Redirect::back();
+            return trans('messages.JsonDecodeFailed');
         }
 
         $id = rawurlencode($modem->getGenieAcsModel('_id'));
@@ -325,16 +322,13 @@ class ModemController extends \BaseController
         foreach (['factoryReset', 'reboot'] as $action) {
             if ($taskDecode === ['name' => $action] &&
                 json_decode(Modem::callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
-                Session::push('tmp_info_above_form', $action.trans('messages.modemAnalysis.actionAlreadyScheduled'));
-
-                return \Redirect::back();
+                return $action.trans('messages.modemAnalysis.actionAlreadyScheduled');
             }
         }
 
         Modem::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
-        Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
-        return \Redirect::back();
+        return trans('messages.modemAnalysis.actionExecuted');
     }
 
     /**
