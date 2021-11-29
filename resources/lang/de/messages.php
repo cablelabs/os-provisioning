@@ -17,6 +17,7 @@ return [
     'Address Line 2'            => 'Adresszeile 2',
     'Address Line 3'            => 'Adresszeile 3',
     'Amount'                    => 'Betrag',
+    'Apartment'                 => 'Wohnung',
     'Apartment number'          => 'Wohnungsnummer',
     'Assigned'                  => 'Zugewiesen -',
     'BIC'                       => 'BIC',
