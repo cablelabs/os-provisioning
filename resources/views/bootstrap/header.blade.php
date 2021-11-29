@@ -19,6 +19,7 @@
       <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
       <meta content="" name="description" />
       <meta content="" name="author" />
+      <meta content="{{ csrf_token() }}" name="csrf-token" />
       <!-- ================== Pace Loading indicator ================== -->
       <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
       <!-- ================== BEGIN BASE CSS STYLE ================== -->

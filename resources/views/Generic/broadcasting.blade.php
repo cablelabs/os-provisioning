@@ -1,8 +1,7 @@
 <script type="module">
     import Echo from "{{ asset('vendor/echo.js') }}"
 
-    var config = "{{ json_encode(config('broadcasting.connections.pusher')) }}"
-    config = JSON.parse(config.replace(/&quot;/ig,'"'))
+    var config = @json(config('broadcasting.connections.pusher'));
 
     window.echo = new Echo({
         broadcaster: 'pusher',
