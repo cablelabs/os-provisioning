@@ -159,16 +159,20 @@
 			{
 				\ifthenelse{\equal{{canceled\_to}}{}}
 				{
-					\begin{tabular} {@{}ll}
-						% Vertragsbeginn: {start\_of\_term}\\
-						Tariflaufzeit: & {maturity}\\
-						Nächstmögliches Laufzeitende: & {end\_of\_term}\\
-						Kündigungsfrist: & {period\_of\_notice}\\
-						Spätester Kündigungszeitpunkt: & {last\_cancel\_date}\\
-					\end{tabular}
+					\ifthenelse{\equal{{isInMinDuration}}{false}} {
+						Kündigungsfrist: 1 Monat\\
+					} { %else
+						\begin{tabular} {@{}ll}
+							% Vertragsbeginn: {start\_of\_term}\\
+							Tariflaufzeit: & {maturity}\\
+							Nächstmögliches Laufzeitende: & {end\_of\_term}\\
+							Kündigungsfrist: & {period\_of\_notice}\\
+							Spätester Kündigungszeitpunkt: & {last\_cancel\_date}\\
+						\end{tabular}
+					}
+				} { %else
+					Der Vertrag wurde gekündigt zum: {canceled\_to}.
 				}
-				%else
-				{Der Vertrag wurde gekündigt zum: {canceled\_to}.}
 			}
 		\end{flushleft}
 
