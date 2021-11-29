@@ -137,6 +137,11 @@ class NetElementType extends \BaseModel
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    public function base()
+    {
+        return $this->belongsTo(self::class, 'base_type');
+    }
+
     /**
      * Format Parent (NetElementTypes) for Select 2 field and allow searching.
      *
