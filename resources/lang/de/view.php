@@ -64,6 +64,7 @@ return [
     'Menu_Qos'                  => 'QoS',
     'Menu_NetGws'               => 'NetGws',
     'Menu_Ip-Pools'             => 'IP-Bereiche',
+    'Menu_Items'                => 'Posten',
     'Menu_OverdueDebts'         => 'Offene Posten',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Liegenschafts - Verwaltung',

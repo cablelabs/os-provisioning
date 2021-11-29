@@ -64,6 +64,7 @@ return [
     'Menu_Qos'                  => 'QoS',
     'Menu_NetGws'               => 'NetGws',
     'Menu_Ip-Pools'             => 'IP-Pools',
+    'Menu_Items'                => 'Items',
     'Menu_OverdueDebts'         => 'Overdue debts',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Property Management',
