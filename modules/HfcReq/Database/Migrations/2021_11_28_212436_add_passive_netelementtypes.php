@@ -15,11 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Modules\HfcReq\Entities\NetElementType;
-
 class AddPassiveNetelementtypes extends BaseMigration
 {
     public $migrationScope = 'database';
