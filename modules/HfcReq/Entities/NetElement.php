@@ -97,11 +97,9 @@ class NetElement extends \BaseModel
         // 	$ret['Edit']['Modem']['relation'] = $this->modems;
         // }
 
-        if (Module::collections()->has('HfcCustomer')) {
-            if ($this->netelementtype->base_type_id != 9) {
-                $ret['Edit']['Mpr']['class'] = 'Mpr';
-                $ret['Edit']['Mpr']['relation'] = $this->mprs;
-            }
+        if (Module::collections()->has('HfcCustomer') && $this->netelementtype->base_type_id != array_search('Tap-Port', NetelementType::$undeletables)) {
+            $ret['Edit']['Mpr']['class'] = 'Mpr';
+            $ret['Edit']['Mpr']['relation'] = $this->mprs;
         }
 
         if (Module::collections()->has('HfcSnmp')) {
@@ -113,7 +111,7 @@ class NetElement extends \BaseModel
             // see NetElementController@controlling_edit for Controlling Tab!
         }
 
-        if ($this->netelementtype->base_type_id == 8) {
+        if ($this->netelementtype->base_type_id == array_search('Tap', NetelementType::$undeletables)) {
             $ret['Edit']['SubNetElement']['class'] = 'NetElement';
             $ret['Edit']['SubNetElement']['relation'] = $this->children;
         }
@@ -378,7 +376,7 @@ class NetElement extends \BaseModel
      */
     public function provDevice()
     {
-        if ($this->netelementtype->base_type_id == 3) {
+        if ($this->netelementtype->base_type_id === array_search('NetGw', NetelementType::$undeletables)) {
             return $this->belongsTo(\Modules\ProvBase\Entities\NetGw::class);
         }
 
@@ -585,7 +583,7 @@ class NetElement extends \BaseModel
             if (! $parent) {
                 break;
             }
-        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != 3);
+        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != array_search('NetGw', NetelementType::$undeletables));
 
         return $parent;
     }
@@ -634,7 +632,7 @@ class NetElement extends \BaseModel
      */
     public function select2ProvDevice(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        $class = 'Modules\\ProvBase\\Entities\\'.(request('base_type_id') == 3 ? 'NetGw' : 'Modem');
+        $class = 'Modules\\ProvBase\\Entities\\'.(request('base_type_id') == array_search('NetGw', NetelementType::$undeletables) ? 'NetGw' : 'Modem');
 
         return $class::select('id', 'hostname as text')
             ->when($search, function ($query, $search) {
@@ -837,7 +835,7 @@ class NetElement extends \BaseModel
             return false;
         }
 
-        return $this->netelementtype->base_type_id == 3; // 3 .. is base element for netgw
+        return $this->netelementtype->base_type_id == array_search('NetGw', NetelementType::$undeletables);
     }
 
     /**

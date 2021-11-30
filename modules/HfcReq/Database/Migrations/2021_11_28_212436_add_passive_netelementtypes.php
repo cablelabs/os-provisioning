@@ -28,10 +28,10 @@ class AddPassiveNetelementtypes extends BaseMigration
      */
     public function up()
     {
-        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, base_type) VALUES (10, NOW(), NOW(), 'Passives', 10)");
-        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (11, NOW(), NOW(), 'Splitter', 10, 10)");
-        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (12, NOW(), NOW(), 'Amplifier', 10, 10)");
-        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (13, NOW(), NOW(), 'Node', 10, 10)");
+        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, base_type) VALUES (11, NOW(), NOW(), 'Passives', 11)");
+        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (12, NOW(), NOW(), 'Splitter', 11, 11)");
+        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (13, NOW(), NOW(), 'Amplifier', 11, 11)");
+        DB::statement("INSERT INTO $this->tableName (id, created_at, updated_at, name, parent_id, base_type) VALUES (14, NOW(), NOW(), 'Node', 11, 11)");
     }
 
     /**
@@ -41,6 +41,6 @@ class AddPassiveNetelementtypes extends BaseMigration
      */
     public function down()
     {
-        DB::statement("DELETE FROM $this->tableName WHERE id in (10,11,12,13)");
+        DB::statement("DELETE FROM $this->tableName WHERE id in (11,12,13,14)");
     }
 }
