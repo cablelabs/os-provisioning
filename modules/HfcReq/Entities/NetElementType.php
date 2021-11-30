@@ -137,9 +137,9 @@ class NetElementType extends \BaseModel
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function base()
+    public function baseType()
     {
-        return $this->belongsTo(self::class, 'base_type');
+        return $this->belongsTo(self::class, 'base_type_id');
     }
 
     /**

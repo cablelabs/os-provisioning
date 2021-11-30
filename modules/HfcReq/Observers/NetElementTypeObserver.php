@@ -25,7 +25,7 @@ class NetElementTypeObserver
     public function created($netElementType)
     {
         NetElementType::where('id', $netElementType->id)
-            ->update(['base_type' => $this->getBaseType($netElementType)]);
+            ->update(['base_type_id' => $this->getBaseType($netElementType)]);
     }
 
     public function updating($netElementType)
@@ -34,7 +34,7 @@ class NetElementTypeObserver
             return;
         }
 
-        $netElementType->base_type = $this->getBaseType($netElementType);
+        $netElementType->base_type_id = $this->getBaseType($netElementType);
     }
 
     public function deleting($netElementType)

@@ -51,8 +51,8 @@ class NetElementController extends BaseController
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
-        $type = NetElementType::find(request('netelementtype_id'))->base_type ??
-            ($netelement->exists ? $netelement->netelementtype->base_type : null);
+        $type = NetElementType::find(request('netelementtype_id'))->base_type_id ??
+            ($netelement->exists ? $netelement->netelementtype->base_type_id : null);
 
         $hidden4TapPort = $hidden4Tap = 0;
         $addressDesc1 = 'Address Line 1';
@@ -96,7 +96,7 @@ class NetElementController extends BaseController
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'link', 'description' => 'ERD Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
-            ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'provDevice', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['base_type' => $type, 'relation' => 'provDevice'])]],
+            ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'provDevice', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['base_type_id' => $type, 'relation' => 'provDevice'])]],
             ['form_type' => 'text', 'name' => 'pos', 'description' => 'Geoposition', 'hidden' => $hidden4TapPort],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
