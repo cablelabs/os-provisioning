@@ -213,7 +213,8 @@ class NetElementType extends \BaseModel
         11 => 'Passives',
         12 => 'Splitter',
         13 => 'Amplifier',
-        14 => 'Node'];
+        14 => 'Node',
+    ];
 
     /**
      * Must be defined to disable delete Checkbox on index tree view.
