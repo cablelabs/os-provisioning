@@ -14,7 +14,7 @@
         "digitick/sepa-xml": "1.*",
         "globalcitizen/php-iban": "4.*",
         "box/spout": "^3.0",
-        "madnest/madzipper": "dev-master",
+        "nmsprime/madzipper": "1.1.*",
         "yajra/laravel-datatables-oracle": "9.*",
         "markrogoyski/ipv4-subnet-calculator": "3.*",
         "nwidart/laravel-modules": "^6.0",
