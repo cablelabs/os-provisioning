@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use geoPHP;
+use geoPHP\geoPHP;
 use Nwidart\Modules\Facades\Module;
 
 abstract class BaseTopographyController extends BaseController
@@ -45,17 +45,23 @@ abstract class BaseTopographyController extends BaseController
     {
         $points = [];
         $lines = ['type' => 'FeatureCollection', 'features' => []];
-        if ($chache = cache('kml')) {
-            return $chache;
-        }
 
-        $netElements->whereNotNull('kml_file')
-            ->unique('kml_file')
+        $netElements->whereNotNull('geojson')
+            ->unique('geojson')
             ->each(function ($netElement) use (&$points, &$lines) {
-                $kml = geoPHP::load(file_get_contents(storage_path('app/data/hfcbase/gpsData/'.$netElement->kml_file)), 'kml');
+                $kml = geoPHP::load(file_get_contents(storage_path('app/data/hfcbase/gpsData/'.$netElement->geojson)), 'kml');
 
                 foreach ($kml->asArray() as $shape) {
-                    if (! isset($shape['type']) || ($shape['type'] == 'LineString' && ! count($shape['components']))) {
+                    if (! isset($shape['type']) || ($shape['type'] == 'LineString' && in_array(count($shape['components']), [0, 1]))) {
+                        \Log::info("Skipping corrupted shape of KML", $shape);
+                        continue;
+                    }
+
+                    if ($shape['type'] == 'GeometryCollection') {
+                        foreach ($shape['components'] as $component) {
+                            array_push($lines['features'], ['type' => 'Feature', 'properties' => [], 'geometry' => ['type' => 'LineString', 'coordinates' => $component['components']]]);
+                        }
+
                         continue;
                     }
 
@@ -73,10 +79,10 @@ abstract class BaseTopographyController extends BaseController
                 }
             });
 
-        return cache(['kml' => [
+        return [
             'points' => $points,
             'lines' => $lines,
-        ]]);
+        ];
     }
 
     /**
