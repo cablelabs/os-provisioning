@@ -53,7 +53,7 @@ abstract class BaseTopographyController extends BaseController
 
                 foreach ($kml->asArray() as $shape) {
                     if (! isset($shape['type']) || ($shape['type'] == 'LineString' && in_array(count($shape['components']), [0, 1]))) {
-                        \Log::info("Skipping corrupted shape of KML", $shape);
+                        \Log::info('Skipping corrupted shape of KML', $shape);
                         continue;
                     }
 
