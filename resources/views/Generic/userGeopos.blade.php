@@ -29,8 +29,8 @@
             timeout: 500,
             data: {
                 _token: '{{ csrf_token() }}',
-                lat: pos.coords.longitude,
-                lng: pos.coords.latitude,
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
             },
         });
     }
