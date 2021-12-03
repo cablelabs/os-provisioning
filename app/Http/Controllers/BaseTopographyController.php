@@ -119,4 +119,14 @@ abstract class BaseTopographyController extends BaseController
                 return $ticket;
             });
     }
+
+    public function mapFitBounds($elements)
+    {
+        return [
+            'maxLat' => $elements->max('lat'),
+            'maxLng' => $elements->max('lng'),
+            'minLat' => $elements->min('lat'),
+            'minLng' => $elements->min('lng'),
+        ];
+    }
 }
