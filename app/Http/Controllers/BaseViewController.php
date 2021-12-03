@@ -896,8 +896,12 @@ class BaseViewController extends Controller
      *
      * @author: Ole Ernst
      */
-    private static function colorize($val, $limit, $inv = false)
+    private static function colorize($val, $limit, bool $withCritical = true, bool $inv = false)
     {
+        if ($withCritical && $val == 0) {
+            return -1;
+        }
+
         if ($val < $limit[0] || (isset($limit[3]) && $val > $limit[3])) {
             return $inv ? 0 : 2;
         }
@@ -937,12 +941,12 @@ class BaseViewController extends Controller
 
         switch ($entity) {
         case 'Rx Power dBmV':
-            $ret = self::colorize($val, [-3, -1, 15, 20]);
+            $ret = self::colorize($val, [-3, -1, 15, 20], false);
             break;
         case 'pwr':
         case 'Power dBmV':
             if ($dir == 'ds') {
-                $ret = self::colorize($val, [-20, -10, 15, 20]);
+                $ret = self::colorize($val, [-20, -10, 15, 20], false);
             }
             if ($dir == 'us') {
                 $ret = self::colorize($val, [22, 27, 50, 56]);
@@ -955,7 +959,7 @@ class BaseViewController extends Controller
             $ret = self::colorize($val, [20, 30]);
             break;
         case 'Avg Utilization %':
-            $ret = self::colorize($val, [0, 0, 70, 90]);
+            $ret = self::colorize($val, [0, 0, 70, 90], false);
             break;
         case 'snr':
         case 'SNR dB':
@@ -982,7 +986,7 @@ class BaseViewController extends Controller
         // ds_us modem property in CustomerTopoController
         case 'us':
             if ($dir == 'ds') {
-                $ret = self::colorize($val, [5, 12], true);
+                $ret = self::colorize($val, [5, 12], false, true);
             }
             break;
         }
