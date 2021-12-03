@@ -1664,7 +1664,14 @@ class Modem extends \BaseModel
 
     public function proximity_search($radius)
     {
-        return Modem::select('id', 'lng', 'lat')->get()
+        $distance = $radius * ((1 / ((2 * M_PI / 360) * 6378.137)) / 1000);
+
+        return Modem::select('id', 'lng', 'lat')
+            ->where('lng', '>', $this->lng - $distance / cos($this->lat * (M_PI / 180)))
+            ->where('lng', '<', $this->lng + $distance / cos($this->lat * (M_PI / 180)))
+            ->where('lat', '>', $this->lat - $distance)
+            ->where('lat', '<', $this->lat + $distance)
+            ->get()
             ->filter(fn ($modem) => distanceLatLong($this->lat, $this->lng, $modem->lat, $modem->lng) < $radius)
             ->pluck('id');
     }
