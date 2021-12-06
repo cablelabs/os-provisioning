@@ -85,7 +85,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $guarded = ['roles_ids'];
 
     /**
      * The attributes that should be hidden for arrays.
