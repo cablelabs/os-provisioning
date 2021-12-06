@@ -37,7 +37,6 @@ class Configfile extends \BaseModel
         return [
             'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',
-            'dashboard' => 'required',
         ];
     }
 

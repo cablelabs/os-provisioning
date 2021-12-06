@@ -91,6 +91,10 @@ class ConfigfileController extends \BaseController
     {
         $rules['text'] .= ':'.$data['device'];
 
+        if ($data['device'] != 'mta') {
+            $rules['dashboard'] = 'required';
+        }
+
         return $rules;
     }
 
