@@ -35,7 +35,18 @@
         $leftMdSizeLg -= $mdSizes['rightRightLg'];
     }
 
-    if (in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams', 'CustomerRect.show', 'CustomerTopo.show_impaired', 'VicinityGraph.show'])) {
+    $fullscreenRoutes = [
+        'TreeTopo.show',
+        'CustomerModem.showDiagrams',
+        'CustomerRect.show',
+        'CustomerPoly.show',
+        'CustomerTopo.show_impaired',
+        'CustomerModem.showModems',
+        'CustomerTopo.show_prox',
+        'VicinityGraph.show'
+    ];
+
+    if (in_array(\Request::route()->getName(), $fullscreenRoutes)) {
         $flex = 'flex:1;';
     }
 @endphp
@@ -88,7 +99,7 @@
                 </div>
                 @endif
                 <div class="d-flex flex-wrap" style="display:flex;flex: 1;">
-                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), ['TreeTopo.show', 'CustomerModem.showDiagrams', 'CustomerRect.show', 'CustomerTopo.show_impaired', 'VicinityGraph.show'])) ? 'display:flex;flex: 1;' : '' }}">
+                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>
                     @yield('content_right')
