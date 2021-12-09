@@ -29,10 +29,11 @@ $rpm_dir = $argv[3];
  * Parse Config for FPM
  * Requires Install/config.cfg
  */
-function getConfig($dir_root, $module = 'base', $options = '')
+function getConfig($dir_root, $rpm_dir, $module = 'base', $options = '')
 {
     $dir = $dir_root.'/Install';
     $file = $dir.'/config.cfg';
+    $os_license = 'ASL 2.0';
 
     // Config Exists ?
     if (! file_exists($file)) {
@@ -50,6 +51,12 @@ function getConfig($dir_root, $module = 'base', $options = '')
 
     if (isset($cfg['description'])) {
         $description = ' --description "'.$cfg['description'].'"';
+    }
+
+    if (isset($cfg['license']) && $cfg['license'] == $os_license) {
+        $rpm_dir .= '/os';
+    } else {
+        $rpm_dir .= '/prime';
     }
 
     if (isset($cfg['depends'])) {
@@ -99,7 +106,7 @@ function getConfig($dir_root, $module = 'base', $options = '')
     $scripts .= " --after-upgrade /tmp/fpm-$module-au.txt";
 
     // config fil
-    return $depends.' '.$name.' '.$description.' '.$exclude.' '.$configfiles.' '.$scripts.' '.$options.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
+    return '-p '.$rpm_dir.' '.$depends.' '.$name.' '.$description.' '.$exclude.' '.$configfiles.' '.$scripts.' '.$options.' '.$cf.' '.$dir_root.'/'.'='.$dest.' '.$f;
 }
 
 /*
@@ -107,17 +114,13 @@ function getConfig($dir_root, $module = 'base', $options = '')
  */
 function fpm($dir, $version, $rpm_dir, $module = 'base', $options = '')
 {
-    if ($module === 'Debug') {
-        $config = '-n debug-nmsprime --description "NMS Prime Debug Package" .git/=/var/www/nmsprime/.git .gitignore=/var/www/nmsprime/.gitignore';
-    } else {
-        $config = getConfig($dir, $module, $options);
-    }
+    $config = getConfig($dir, $rpm_dir, $module, $options);
 
     if (! $config) {
         return false;
     }
 
-    return 'fpm -s dir -t rpm -v '.$version.' '.' --architecture all --force --verbose -p '.$rpm_dir.' '.$config;
+    return 'fpm -s dir -t rpm -v '.$version.' '.' --architecture all --force --verbose '.$config;
 }
 
 /*
@@ -135,11 +138,6 @@ function call($cmd, $module = 'Base')
  * Build Main package
  */
 call(fpm($dir, $version, $rpm_dir));
-
-/*
- * Build Debug package, containing the .git folder
- */
-call(fpm($dir, $version, $rpm_dir, 'Debug'), 'Debug');
 
 /*
  * Foreach Module
