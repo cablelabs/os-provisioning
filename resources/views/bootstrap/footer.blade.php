@@ -73,39 +73,72 @@ $(document).ready(function() {
 });
 
 Vue.component("select2", {
-    props: ["options", "value"],
+    props: {
+      options: [Object, Array],
+      initialValue: String,
+      multiple: {
+        type: Boolean,
+        default: false
+      }
+    },
     template: "#select2-template",
-    mounted: function() {
-        var vm = this
+    mounted() {
+        this.select = $(this.$el)
+        this.value = this.multiple ? [this.initialValue] : this.initialValue
 
-        $(this.$el)
-        // init select2
-        .select2({ data: this.options })
-        .val(this.value)
-        .trigger("change")
-        // emit event on change.
-        .on("change", function() {
-          vm.$emit("input", this.value)
-        })
+        this.select.select2({
+          data: this.options,
+          multiple: this.multiple
+        }).val(this.value)
+        .trigger('change')
+
+        if (! this.multiple) {
+          return this.select.on('change', (e) => this.$emit("input", this.value))
+        }
+
+        this.select.on('select2:select', (e) => this.selected(e.params.data.id))
+        this.select.on('select2:unselect', (e) => this.unselected(e.params.data.id))
+    },
+    data() {
+      return {
+        select: undefined,
+        value: undefined,
+        i18nAll: '{{ trans('messages.all') }}'
+      }
+    },
+    methods: {
+      selected: function (value) {
+        if (value == this.i18nAll) {
+          this.value = []
+        }
+
+        if (value != this.i18nAll && this.value.includes(this.i18nAll)) {
+          this.value.splice(this.value.indexOf(this.i18nAll), 1)
+        }
+
+        this.value.push(value)
+        this.publishChanges()
+      },
+      unselected: function (value) {
+        if (value == this.i18nAll) {
+          return this.$emit("input", [])
+        }
+
+        this.value.splice(this.value.indexOf(value), 1)
+        this.publishChanges()
+      },
+      publishChanges: function () {
+        this.$emit("input", this.value)
+        this.select.val(this.value).trigger("change")
+      }
     },
     watch: {
-        value: function(value) {
-            // update value
-            $(this.$el)
-            .val(value)
-            .trigger("change")
-        },
         options: function(options) {
-            // update options
-            $(this.$el)
-            .empty()
-            .select2({ data: options })
+          this.select.empty().select2({ data: options })
         }
     },
-    destroyed: function() {
-        $(this.$el)
-        .off()
-        .select2("destroy")
+    destroyed() {
+      this.select.off().select2("destroy")
     }
 })
 
