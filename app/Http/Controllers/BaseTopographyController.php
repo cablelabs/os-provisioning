@@ -3,19 +3,12 @@
 namespace App\Http\Controllers;
 
 use geoPHP\geoPHP;
+use Illuminate\Support\Collection;
 use Nwidart\Modules\Facades\Module;
+use Modules\Ticketsystem\Entities\Ticket;
 
 abstract class BaseTopographyController extends BaseController
 {
-    /**
-     * HTML link Target
-     *
-     * @var string
-     */
-    protected $htmlTarget = 'blank';
-
-    protected $edit_left_md_size = 12;
-
     /**
      * Determines the range of intensity of the Heatmap, for the amplitude values of the modem
      *
@@ -25,23 +18,15 @@ abstract class BaseTopographyController extends BaseController
     protected $minHeatIntensity = 0;
     protected $maxHeatIntensity = 5;
 
-    /*
-     * Constructor: Set local vars
-     */
-    public function __construct()
-    {
-        return parent::__construct();
-    }
-
     /**
      * Generate GeoJson Data from Netelement Files
      *
-     * @param  \Illumnate\Database\Eloqunt\Collection  $netelements
-     * @return Collection KML files, like ['file', 'descr']
+     * @param  Collection  $netelements
+     * @return array GPS files, like ['file', 'descr']
      *
      * @author Christian Schramm
      */
-    protected function parseGeoFiles($netElements)
+    protected function parseGeoFiles(Collection $netElements): array
     {
         $points = [];
         $lines = ['type' => 'FeatureCollection', 'features' => []];
@@ -88,25 +73,25 @@ abstract class BaseTopographyController extends BaseController
     /**
      * Get position data for all Tickets with a valid position.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    protected function getTicketMapData()
+    protected function getTicketMapData(): Collection
     {
         if (! Module::collections()->has('Ticketsystem')) {
             return collect();
         }
 
         $lookup = [
-            \Modules\Ticketsystem\Entities\Ticket::STATES['New'] => 0,
-            \Modules\Ticketsystem\Entities\Ticket::STATES['Paused'] => 1,
-            \Modules\Ticketsystem\Entities\Ticket::STATES['In Progress'] => 1,
-            \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'] => 2,
+            Ticket::STATES['New'] => 0,
+            Ticket::STATES['Paused'] => 1,
+            Ticket::STATES['In Progress'] => 1,
+            Ticket::STATES['Closed'] => 2,
         ];
 
-        return \Modules\Ticketsystem\Entities\Ticket::with('ticketable', 'users:first_name,last_name')
-            ->where('state', '!=', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
+        return Ticket::with('ticketable', 'users:first_name,last_name')
+            ->where('state', '!=', Ticket::STATES['Closed'])
             ->orWhere(function ($query) {
-                $query->where('state', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
+                $query->where('state', Ticket::STATES['Closed'])
                     ->where('updated_at', '>=', now()->subMinutes(5));
             })
             ->get(['id', 'name', 'priority', 'description', 'state', 'ticketable_id', 'ticketable_type'])
@@ -120,7 +105,13 @@ abstract class BaseTopographyController extends BaseController
             });
     }
 
-    public function mapFitBounds($elements)
+    /**
+     * Set view bounds for initial map view
+     *
+     * @param  Collection  $elements
+     * @return void
+     */
+    public function mapFitBounds(Collection $elements): array
     {
         return [
             'maxLat' => $elements->max('lat'),
