@@ -87,7 +87,8 @@ class ModemController extends \BaseController
             $model->fill(Modem::where([['lng', $model['lng']], ['lat', $model['lat']]])
                 ->select('street', 'house_number', 'zip', 'city', 'district', 'country_code')
                 ->first()
-                ->getAttributes()
+                ?->getAttributes()
+                ?? []
             );
         }
 
