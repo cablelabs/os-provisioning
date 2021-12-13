@@ -933,7 +933,13 @@ class BaseViewController extends Controller
     public static function getQualityColor($dir, $mod, $entity, $val, $toString)
     {
         $ret = 3;
-        $colors = ['success', 'warning', 'danger', ''];
+        $colors = [
+            -1 => 'danger',
+            0 => 'success',
+            1 => 'warning',
+            2 => 'bg-orange-lighter',
+            3 => '',
+        ];
 
         if ($val === 'n/a') {
             return $toString ? $colors[$ret] : $ret;
