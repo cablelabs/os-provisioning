@@ -401,15 +401,26 @@ class BaseController extends Controller
     }
 
     /**
+     * Accessor for File Upload Paths
+     *
+     * @return array
+     */
+    protected function getFileUploadPaths(): array
+    {
+        return $this->file_upload_paths;
+    }
+
+    /**
      * Handle file uploads generically in store and update function
      *
-     * NOTE: use global Variable 'file_upload_paths' in Controller to specify DB column and storage path
+     * NOTE: use Accessor getFileUploadPaths() or protected property file_upload_paths
+     * in Controller to specify DB column and storage path
      *
      * @param array 	Input data array passed by reference
      */
-    private function _handle_file_upload(&$data)
+    protected function doFileUploads(&$data)
     {
-        foreach ($this->file_upload_paths as $column => $path) {
+        foreach ($this->getFileUploadPaths() as $column => $path) {
             $filename = $this->handle_file_upload($column, storage_path($path));
 
             if ($filename !== null) {
@@ -909,7 +920,7 @@ class BaseController extends Controller
         $data = $controller->prepare_input_post_validation($data);
 
         // Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
-        $this->_handle_file_upload($data);
+        $this->doFileUploads($data);
 
         $obj = $obj::create($data);
 
@@ -1035,7 +1046,7 @@ class BaseController extends Controller
         }
 
         // Handle file uploads generically - this must happen after the validation as moving the file before leads always to validation error
-        $this->_handle_file_upload($data);
+        $this->doFileUploads($data);
         $data = $controller->prepare_input_post_validation($data);
 
         // update timestamp, this forces to run all observer's

@@ -26,12 +26,23 @@ use Modules\HfcReq\Entities\NetElementType;
 class NetElementController extends BaseController
 {
     /**
+     * Accessor for File Upload Paths
+     *
+     * @return array
+     */
+    protected function getFileUploadPaths(): array
+    {
+        return [
+            'infrastructure_file' => NetElement::GPS_FILE_PATH,
+        ];
+    }
+
+    /**
      * defines the formular fields for the edit and create view
      */
     public function view_form_fields($netelement = null)
     {
         $netelement = $netelement ?: new NetElement;
-        $geojsonFiles = $netelement->geojsonFiles();
 
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
@@ -69,12 +80,9 @@ class NetElementController extends BaseController
             $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array($type)];
         }
 
-        /*
-         * return
-         */
         $a = [
             ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $this->setupSelect2Field($netelement, 'NetElementType'), 'hidden' => 0, 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['relation' => 'netelementtypes'])]],
-            ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
+            ['form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'space' => 1],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
@@ -84,11 +92,11 @@ class NetElementController extends BaseController
             ['form_type' => 'text', 'name' => 'lng', 'description' => 'Longitude', 'hidden' => $hidden4TapPort],
             ['form_type' => 'text', 'name' => 'lat', 'description' => 'Latitude', 'hidden' => $hidden4TapPort],
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
-            array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap]),
+            array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap, 'space' => 1]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
 
-            ['form_type' => 'select', 'name' => 'geojson', 'description' => 'Choose GPS file', 'value' => $geojsonFiles],
-            ['form_type' => 'file', 'name' => 'geojson_upload', 'description' => 'or: Upload GPS file', 'help' => trans('helper.gpsUpload'), 'space' => 1],
+            ['form_type' => 'select', 'name' => 'infrastructure_file', 'description' => 'Choose Infrastructure file', 'value' => $netelement->infrastructureGpsFiles()],
+            ['form_type' => 'file', 'name' => 'infrastructure_file_upload', 'description' => 'or: Upload Infrastructure file', 'help' => trans('helper.gpsUpload'), 'space' => 1],
 
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
@@ -166,28 +174,6 @@ class NetElementController extends BaseController
         $tabs[] = $defaultTabs[1];
 
         return $tabs;
-    }
-
-    /**
-     * Overwrites the base method to handle file uploads
-     */
-    public function store($redirect = true)
-    {
-        // check and handle uploaded GPS files
-        $this->handle_file_upload('geojson', storage_path('app/'.NetElement::GPS_FILE_PATH));
-
-        return parent::store();
-    }
-
-    /**
-     * Overwrites the base method to handle file uploads
-     */
-    public function update($id)
-    {
-        // check and handle uploaded GPS files
-        $this->handle_file_upload('geojson', storage_path('app/'.NetElement::GPS_FILE_PATH));
-
-        return parent::update($id);
     }
 
     public function favorite($netelement)

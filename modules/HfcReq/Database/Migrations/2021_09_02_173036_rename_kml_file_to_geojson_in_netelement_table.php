@@ -36,7 +36,7 @@ class RenameKmlFileToGeojsonInNetelementTable extends BaseMigration
         NetElement::where('kml_file', '')->update(['kml_file' => null]);
 
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('kml_file', 'geojson');
+            $table->renameColumn('kml_file', 'infrastructure_file');
         });
     }
 
@@ -48,7 +48,7 @@ class RenameKmlFileToGeojsonInNetelementTable extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('geojson', 'kml_file');
+            $table->renameColumn('infrastructure_file', 'kml_file');
         });
     }
 }

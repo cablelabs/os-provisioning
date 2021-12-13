@@ -188,6 +188,7 @@ return [
         'firstname' => 'Vorname',
         'gender' => 'Geschlecht',
         'hour' => 'Stunde',
+        'infrastructure_file_upload' => 'Infrastruktur-Datei',
         'last_name' => 'Nachname',
         'lastname' => 'Nachname',
         'minute' => 'Minute',

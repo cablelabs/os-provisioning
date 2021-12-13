@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use geoPHP\geoPHP;
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Facades\Module;
+use Modules\HfcReq\Entities\NetElement;
 use Modules\Ticketsystem\Entities\Ticket;
 
 abstract class BaseTopographyController extends BaseController
@@ -19,10 +20,10 @@ abstract class BaseTopographyController extends BaseController
     protected $maxHeatIntensity = 5;
 
     /**
-     * Generate GeoJson Data from Netelement Files
+     * Convert Infrastructure Data from Netelement Files to GeoJSON
      *
      * @param  Collection  $netelements
-     * @return array GPS files, like ['file', 'descr']
+     * @return array GeoJSON Data seperated in Lines and points
      *
      * @author Christian Schramm
      */
@@ -31,10 +32,10 @@ abstract class BaseTopographyController extends BaseController
         $points = [];
         $lines = ['type' => 'FeatureCollection', 'features' => []];
 
-        $netElements->whereNotNull('geojson')
-            ->unique('geojson')
+        $netElements->whereNotNull('infrastructure_file')
+            ->unique('infrastructure_file')
             ->each(function ($netElement) use (&$points, &$lines) {
-                $kml = geoPHP::load(file_get_contents(storage_path('app/data/hfcbase/gpsData/'.$netElement->geojson)), 'kml');
+                $kml = geoPHP::load(file_get_contents(storage_path(NetElement::GPS_FILE_PATH."/{$netElement->infrastructure_file}")), explode('.', $netElement->infrastructure_file)[1]);
 
                 foreach ($kml->asArray() as $shape) {
                     if (! isset($shape['type']) || ($shape['type'] == 'LineString' && in_array(count($shape['components']), [0, 1]))) {

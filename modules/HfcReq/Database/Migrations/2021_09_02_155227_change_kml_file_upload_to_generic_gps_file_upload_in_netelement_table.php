@@ -31,7 +31,7 @@ class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMig
     public function up()
     {
         $filesystem = new Filesystem();
-        $filesystem->moveDirectory(storage_path('app/data/hfcbase/kml_static'), storage_path('app/data/hfcbase/gpsData'));
+        $filesystem->moveDirectory(storage_path('app/data/hfcbase/kml_static'), storage_path('app/data/hfcbase/infrastructureFiles'));
     }
 
     /**
@@ -42,6 +42,6 @@ class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMig
     public function down()
     {
         $filesystem = new Filesystem();
-        $filesystem->moveDirectory(storage_path('app/data/hfcbase/gpsData'), storage_path('app/data/hfcbase/kml_static'));
+        $filesystem->moveDirectory(storage_path('app/data/hfcbase/infrastructureFiles'), storage_path('app/data/hfcbase/kml_static'));
     }
 }

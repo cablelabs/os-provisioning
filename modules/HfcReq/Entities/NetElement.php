@@ -37,7 +37,7 @@ class NetElement extends \BaseModel
     /**
      * Storage for KML, GPX and other GPS based files, that contain topography information
      */
-    public const GPS_FILE_PATH = 'data/hfcbase/gpsData';
+    public const GPS_FILE_PATH = 'app/data/hfcbase/infrastructureFiles';
 
     // The associated SQL table for this Model
     public $table = 'netelement';
@@ -68,7 +68,7 @@ class NetElement extends \BaseModel
             'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
             'agc_offset' => 'nullable|numeric|between:-99.9,99.9',
-            'geojson_upload' => 'nullable|file|mimes:wkt,ewkt,wkb,ewkb,geojson,json,kml,gpx,georss',
+            'infrastructure_file_upload' => 'nullable|file|mimes:wkt,ewkt,wkb,ewkb,geojson,json,kml,kmx,gpx,georss,xml',
         ];
 
         return $rules;
@@ -740,20 +740,15 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Returns all available GEOJSON Files
+     * Returns all available Infrastructure GPS Files
      *
      * @author Christian Schramm
      */
-    public function geojsonFiles()
+    public function infrastructureGpsFiles()
     {
-        return collect(File::files(storage_path('app/'.self::GPS_FILE_PATH)))
-            ->filter(function ($file) {
-                return in_array(strtolower($file->getExtension()), ['geojson', 'json']);
-            })
-            ->map(function ($file) {
-                return explode('.', $file->getFilename())[0];
-            })
-            ->prepend(trans('messages.None'), null);
+        return collect(File::files(storage_path(self::GPS_FILE_PATH)))
+            ->mapWithKeys(fn ($file) => [$file->getFilename() => $file->getFilename()])
+            ->prepend(trans('messages.None'));
     }
 
     /*
