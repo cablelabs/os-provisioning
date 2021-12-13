@@ -111,7 +111,7 @@ class NetElementController extends BaseController
         $b = [];
         if (\Module::collections()->has('PropertyManagement') && $type == 9) {
             $b[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'hidden' => 0,
-                'value' => $this->setupSelect2Field($model, 'Apartment'), 'help' => trans('propertymanagement::help.apartmentList'),
+                'value' => $this->setupSelect2Field($netelement, 'Apartment'), 'help' => trans('propertymanagement::help.apartmentList'),
                 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true',
                     'ajax-route' => route('Apartment.select2', ['relation' => 'apartments']), ],
             ];
