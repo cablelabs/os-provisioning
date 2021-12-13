@@ -31,7 +31,7 @@ class SetParentNullWhenDeletedOrNotexistingNetelementAtNetelementTable extends B
     {
         //Set parent_id null for trashed netelements
         $deleted_netelements = NetElement::onlyTrashed()->get();
-        NetElement::whereIn('parent_id', $deleted_netelements)
+        NetElement::whereIn('parent_id', $deleted_netelements->pluck('id'))
             ->whereNotNull('parent_id')
             ->update(['parent_id' => null]);
 
