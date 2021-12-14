@@ -687,9 +687,9 @@ class BaseModel extends Eloquent
 
     public static function destroy($ids)
     {
-        if (! $this->writeAllowed()) {
-            return false;
-        }
+        // checking if deletion is allowed is done in the delete method
+        // so we don't have to check here
+
         $instance = new static;
 
         foreach ($ids as $id => $help) {
