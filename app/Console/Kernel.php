@@ -213,27 +213,13 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:agc')->everyMinute();
         }
 
-        // Clean Up of HFC Base
         if (\Module::collections()->has('HfcBase')) {
             $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
 
-            // Rebuid all Configfiles
+            // Clean Up of HFC Base
             $schedule->call(function () {
-                \Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeTopographyController::$path_rel);
                 \Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeErdController::$path_rel);
             })->hourly();
-        }
-
-        // Clean Up of HFC Customer
-        if (\Module::collections()->has('HfcCustomer')) {
-            // Rebuid all Configfiles
-            $schedule->call(function () {
-                \Storage::deleteDirectory(\Modules\HfcCustomer\Http\Controllers\CustomerTopoController::$path_rel);
-            })->hourly();
-
-            // Modem Positioning System
-            // TODO: this can be removed in nmsprime > 2.6.0
-            $schedule->command('nms:mps')->dailyAt('00:23');
         }
 
         if (\Module::collections()->has('ProvMon')) {
