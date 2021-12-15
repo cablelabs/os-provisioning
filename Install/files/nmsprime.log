@@ -18,7 +18,6 @@
     monthly
     missingok
     rotate 6
-    notifempty
     create 644 apache apache
     postrotate
         /opt/remi/php80/root/usr/bin/php artisan queue:restart || true
