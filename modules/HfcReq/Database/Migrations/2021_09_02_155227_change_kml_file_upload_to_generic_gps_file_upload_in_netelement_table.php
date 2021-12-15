@@ -18,6 +18,7 @@
  */
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Artisan;
 
 class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMigration
 {
@@ -32,6 +33,9 @@ class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMig
     {
         $filesystem = new Filesystem();
         $filesystem->moveDirectory(storage_path('app/data/hfcbase/kml_static'), storage_path('app/data/hfcbase/infrastructureFiles'));
+
+        // Make ERD files of "old" ERD publicly accessible
+        Artisan::call('storage:link');
     }
 
     /**
