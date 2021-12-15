@@ -60,6 +60,7 @@ return [
         'taxIncl' => 'tax included',
     ],
     'Contracts'                 => 'Contracts',
+    'createPostInvoicesFailed' => 'The creation of the postal invoices PDF has failed. Please try again or refer to your admin.',
     'International prefix'      => 'International prefix',
     'Country code'              => 'Country code',
     // Descriptions of Form Fields in Edit/Create
