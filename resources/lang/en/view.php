@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'buttons' => [
+        'revertDebtUpload' => 'Revert Debt Upload',
+    ],
     //SEARCH
     'Search_EnterKeyword'       => 'Enter Keyword',
     'Search_MatchesFor'         => 'Matches for',

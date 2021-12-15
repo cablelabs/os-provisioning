@@ -70,6 +70,9 @@ return [
     'accCmd_processing'     => 'Der Abrechnungslauf wird erstellt. Bitte warten Sie bis der Prozess abgeschlossen ist.',
     'Date of installation address change'   => 'Datum der Änderung der Installationsadresse',
     'Date of value'             => 'Buchungstag',
+    'debt' => [
+        'revert' => 'Lösche offene Posten',
+    ],
     'Debt'                      => 'Offener Posten',
     'Debt to clear'             => 'Zu verrechnender OP',
     'Debt Management Type'      => 'Form der OP-Verwaltung',

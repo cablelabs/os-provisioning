@@ -70,6 +70,9 @@ return [
     'accCmd_processing'     => 'The SettlementRun is executed. Please wait until this process has finished.',
     'Date of installation address change'   => 'Date of installation address change',
     'Date of value'             => 'Date of value',
+    'debt' => [
+        'revert' => 'Delete debts',
+    ],
     'Debt'                      => 'Debt',
     'Debt to clear'             => 'Debt to clear',
     'Debt Management Type'      => 'Debt Management Type',

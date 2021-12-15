@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'buttons' => [
+        'revertDebtUpload' => 'OP Upload rückgängig machen',
+    ],
     //SEARCH
     'Search_EnterKeyword'       => 'Suchbegriff eingeben',
     'Search_MatchesFor'         => 'Ergebnisse für',
