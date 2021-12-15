@@ -992,7 +992,7 @@ class BaseViewController extends Controller
         // ds_us modem property in CustomerTopoController
         case 'us':
             if ($dir == 'ds') {
-                $ret = self::colorize($val, [5, 12], false, true);
+                $ret = self::colorize($val, [-12, -5, 5, 12], false);
             }
             break;
         }
