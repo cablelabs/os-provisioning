@@ -58,7 +58,7 @@
 
 
 <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
-<script src="{{asset('components/nmsprime.js')}}"></script>
+<script src="{{asset('components/nmsprime.js?ver=211215')}}"></script>
 <!-- ================== END PAGE LEVEL JS ================== -->
 
 <script language="javascript">
