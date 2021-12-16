@@ -83,12 +83,13 @@ return [
         'billing_month' => 'Billing month',
     ],
     'debt' => [
+        'bank_fee' => 'Bank fee',
         'date' => 'Date',
         'due_date' => 'Due date',
+        'extra_fee' => 'Extra fee',
         'indicator' => 'Dunning indicator',
         'missing_amount' => 'Missing amount',
         'number' => 'debt number',
-        'total_fee' => 'Fee',
         'voucher_nr' => 'Voucher nr',
     ],
     //Invoices
@@ -337,4 +338,5 @@ return [
     ],
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
+    'total_fee' => 'Fee',
 ];

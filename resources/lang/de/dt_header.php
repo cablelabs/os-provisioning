@@ -83,12 +83,13 @@ return [
         'billing_month' => 'Abrechnungsmonat',
     ],
     'debt' => [
+        'bank_fee' => 'Bankgebühr',
+        'extra_fee' => 'Zusatzgebühr',
         'date' => 'Belegdatum',
         'due_date' => 'Fälligkeitsdatum',
         'indicator' => 'Mahnkennzeichen',
         'missing_amount' => 'Ausstand',
         'number' => 'OP-Nummer',
-        'total_fee' => 'Gebühren',
         'voucher_nr' => 'Belegnr',
     ],
     //Invoices
@@ -336,4 +337,5 @@ return [
     ],
     'assigned_users' => 'Bearbeiter',
     'tickettypes.name' => 'Typ',
+    'total_fee' => 'Gebühren',
 ];

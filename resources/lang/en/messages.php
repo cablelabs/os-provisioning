@@ -482,6 +482,7 @@ return [
     'MandateDate'           => 'MandateDate',
     'Commission in %'       => 'Commission in %',
     'Total' => 'Total',
+    'Extra fee'             => 'Extra fee',
     'Total fee'             => 'Total fee',
     'Commission Amount'     => 'Commission Amount',
     'Zip Files'             => 'Zip Files',

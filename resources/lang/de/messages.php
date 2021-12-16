@@ -482,6 +482,7 @@ return [
     'MandateDate'   => 'SEPA Mandatsdatum',
     'Commission in %'       => 'Provision in %',
     'Total' => 'Absolut',
+    'Extra fee'             => 'Zusätzliche Gebühr',
     'Total fee'             => 'Gebühren gesamt',
     'Commission Amount'     => 'Provision',
     'Zip Files'             => 'ZIP Dateien',

@@ -1,7 +1,11 @@
 <?php
 
 return [
-    /*
+  'debt' => [
+    'totalFee' => 'Deprecated. Just used to show the old total fee that is now determined by the sum of bank and extra fee. The field will probably be removed in future to reduce redundant informations.',
+  ],
+
+  /*
   * Authentication and Base
   */
     'translate'                 => 'You can help translating NMS PRIME at',

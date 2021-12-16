@@ -1,7 +1,11 @@
 <?php
 
 return [
-    /*
+  'debt' => [
+    'totalFee' => 'Veraltete Anzeige. Dient nur der Anzeige der bisher genutzten Gesamtgebühr. Diese wird jetzt aus der Summe von Bank- und zusätzlicher Gebühr berechnet und in Zukunft wegen Redundanz nicht mehr angezeigt.',
+  ],
+
+  /*
   * Authentication and Base
   */
     'translate'                 => 'Sie können dabei helfen NMS Prime zu übersetzen. Besuchen Sie:',
