@@ -37,8 +37,8 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration
             $table->string('icon_name');
             $table->integer('pre_conf_oid_id');
             $table->string('pre_conf_value');
-            $table->integer('pre_conf_time_offset'); 		// in microsec
-            $table->float('page_reload_time'); 				// in sec
+            $table->integer('pre_conf_time_offset');        // in microsec
+            $table->float('page_reload_time');              // in sec
         });
 
         // Set Default Entries
@@ -47,9 +47,11 @@ class RenameDeviceTypetoNetElementTypeTable extends BaseMigration
         // delete entries first
         NetElementType::truncate();
 
-        foreach ($defaults as $d) {
-            is_array($d) ? NetElementType::create(['name' => $d[0], 'parent_id' => $d[1]]) : NetElementType::create(['name' => $d]);
-        }
+        NetElementType::withoutEvents(function () use ($defaults) {
+            foreach ($defaults as $d) {
+                is_array($d) ? NetElementType::create(['name' => $d[0], 'parent_id' => $d[1]]) : NetElementType::create(['name' => $d]);
+            }
+        });
 
         $this->set_fim_fields(['name', 'vendor', 'description']);
 
