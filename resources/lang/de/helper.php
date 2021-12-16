@@ -2,6 +2,7 @@
 
 return [
   'debt' => [
+    'amount' => 'Postiv wenn Kunde Geld abgezogen wird, negativ wenn Kunde einzahlt',
     'totalFee' => 'Veraltete Anzeige. Dient nur der Anzeige der bisher genutzten Gesamtgebühr. Diese wird jetzt aus der Summe von Bank- und zusätzlicher Gebühr berechnet und in Zukunft wegen Redundanz nicht mehr angezeigt.',
   ],
 
