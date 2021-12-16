@@ -402,8 +402,7 @@ class ModemController extends \BaseController
 
         $data = [];
         if (Module::collections()->has('ProvMon') && Request::get('verbose') == 'true') {
-            $ctrl = new \Modules\ProvMon\Http\Controllers\ProvMonController();
-            $data['data'] = $ctrl->analyses($id, true);
+            $data['data'] = $this->analysis($id, true);
         }
 
         $domain_name = ProvBase::first()->domain_name;
