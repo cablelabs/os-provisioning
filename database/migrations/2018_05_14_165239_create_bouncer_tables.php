@@ -31,121 +31,117 @@ class CreateBouncerTables extends Migration
      */
     public function up()
     {
-        DB::transaction(function () {
-            Schema::rename('authusers', 'users');
-            Schema::table('guilog', function (Blueprint $table) {
-                $table->renameColumn('authuser_id', 'user_id');
-            });
-            DB::statement('ALTER TABLE `authrole` ENGINE=InnoDB;');
-            DB::statement('ALTER TABLE `users` ENGINE=InnoDB;');
+        Schema::rename('authusers', 'users');
+        Schema::table('guilog', function (Blueprint $table) {
+            $table->renameColumn('authuser_id', 'user_id');
+        });
+        DB::statement('ALTER TABLE `authrole` ENGINE=InnoDB;');
+        DB::statement('ALTER TABLE `users` ENGINE=InnoDB;');
+
+        Schema::create(Models::table('abilities'), function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 150);
+            $table->string('title')->nullable();
+            $table->integer('entity_id')->unsigned()->nullable();
+            $table->string('entity_type', 150)->nullable();
+            $table->boolean('only_owned')->default(false);
+            $table->integer('scope')->nullable()->index();
+            $table->timestamps();
+            $table->softDeletes();
         });
 
-        DB::transaction(function () {
-            Schema::create(Models::table('abilities'), function (Blueprint $table) {
-                $table->increments('id');
-                $table->string('name', 150);
-                $table->string('title')->nullable();
-                $table->integer('entity_id')->unsigned()->nullable();
-                $table->string('entity_type', 150)->nullable();
-                $table->boolean('only_owned')->default(false);
-                $table->integer('scope')->nullable()->index();
-                $table->timestamps();
-                $table->softDeletes();
-            });
+        Schema::create(Models::table('roles'), function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name', 150);
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            $table->integer('rank')->unsigned();
+            $table->integer('level')->unsigned()->nullable();
+            $table->integer('scope')->nullable()->index();
+            $table->timestamps();
+            $table->softDeletes();
 
-            Schema::create(Models::table('roles'), function (Blueprint $table) {
-                $table->increments('id');
-                $table->string('name', 150);
-                $table->string('title')->nullable();
-                $table->string('description')->nullable();
-                $table->integer('rank')->unsigned();
-                $table->integer('level')->unsigned()->nullable();
-                $table->integer('scope')->nullable()->index();
-                $table->timestamps();
-                $table->softDeletes();
+            $table->unique(
+                ['name', 'scope'],
+                'roles_name_unique'
+            );
+        });
 
-                $table->unique(
-                    ['name', 'scope'],
-                    'roles_name_unique'
-                );
-            });
+        Schema::create(Models::table('assigned_roles'), function (Blueprint $table) {
+            $table->integer('role_id')->unsigned()->index();
+            $table->integer('entity_id')->unsigned();
+            $table->string('entity_type', 150);
+            $table->integer('scope')->nullable()->index();
+            $table->timestamps();
 
-            Schema::create(Models::table('assigned_roles'), function (Blueprint $table) {
-                $table->integer('role_id')->unsigned()->index();
-                $table->integer('entity_id')->unsigned();
-                $table->string('entity_type', 150);
-                $table->integer('scope')->nullable()->index();
-                $table->timestamps();
+            $table->index(
+                ['entity_id', 'entity_type', 'scope'],
+                'assigned_roles_entity_index'
+            );
 
-                $table->index(
-                    ['entity_id', 'entity_type', 'scope'],
-                    'assigned_roles_entity_index'
-                );
+            $table->foreign('role_id')
+                ->references('id')->on(Models::table('roles'))
+                ->onUpdate('cascade')->onDelete('cascade');
+        });
 
-                $table->foreign('role_id')
-                      ->references('id')->on(Models::table('roles'))
-                      ->onUpdate('cascade')->onDelete('cascade');
-            });
+        Schema::create(Models::table('permissions'), function (Blueprint $table) {
+            $table->integer('ability_id')->unsigned()->index();
+            $table->integer('entity_id')->unsigned();
+            $table->string('entity_type', 150);
+            $table->boolean('forbidden')->default(false);
+            $table->integer('scope')->nullable()->index();
+            $table->timestamps();
 
-            Schema::create(Models::table('permissions'), function (Blueprint $table) {
-                $table->integer('ability_id')->unsigned()->index();
-                $table->integer('entity_id')->unsigned();
-                $table->string('entity_type', 150);
-                $table->boolean('forbidden')->default(false);
-                $table->integer('scope')->nullable()->index();
-                $table->timestamps();
+            $table->index(
+                ['entity_id', 'entity_type', 'scope'],
+                'permissions_entity_index'
+            );
 
-                $table->index(
-                    ['entity_id', 'entity_type', 'scope'],
-                    'permissions_entity_index'
-                );
+            $table->foreign('ability_id')
+                ->references('id')->on(Models::table('abilities'))
+                ->onUpdate('cascade')->onDelete('cascade');
+        });
 
-                $table->foreign('ability_id')
-                      ->references('id')->on(Models::table('abilities'))
-                      ->onUpdate('cascade')->onDelete('cascade');
-            });
-
-            $users = User::all();
-            foreach ($users as $user) {
-                $roles = \DB::table('authuser_role')
-                        ->join('authrole', 'authrole.id', '=', 'authuser_role.role_id')
-                        ->join('users', 'users.id', '=', 'authuser_role.user_id')
-                        ->select('authrole.*')
-                        ->where('users.id', '=', $user->id)->get();
-                foreach ($roles as $role) {
-                    if ($user->id == 1) {
-                        $role->name = ($role->name == 'super_admin') ? 'admin' : $role->name;
-                    } else {
-                        $role->name = ($role->name == 'super_admin') ? 'support' : $role->name;
-                    }
-
-                    if (! Role::find($role->id)) {
-                        Role::create([
-                            'id' => $role->id,
-                            'name' => ! (Role::where('name', $role->name)->count()) ? $role->name : $role->name.$role->id,
-                            'title' => Str::studly($role->name),
-                            'rank' => 101 - $role->id,
-                            'description' => $role->description,
-                        ]);
-                    }
-                    Bouncer::assign($role->name)->to($user);
-                    Bouncer::allow($user)->toOwn(User::class); // Ability to manage own Usermodel
+        $users = User::all();
+        foreach ($users as $user) {
+            $roles = \DB::table('authuser_role')
+                    ->join('authrole', 'authrole.id', '=', 'authuser_role.role_id')
+                    ->join('users', 'users.id', '=', 'authuser_role.user_id')
+                    ->select('authrole.*')
+                    ->where('users.id', '=', $user->id)->get();
+            foreach ($roles as $role) {
+                if ($user->id == 1) {
+                    $role->name = ($role->name == 'super_admin') ? 'admin' : $role->name;
+                } else {
+                    $role->name = ($role->name == 'super_admin') ? 'support' : $role->name;
                 }
+
+                if (! Role::find($role->id)) {
+                    Role::create([
+                        'id' => $role->id,
+                        'name' => ! (Role::where('name', $role->name)->count()) ? $role->name : $role->name.$role->id,
+                        'title' => Str::studly($role->name),
+                        'rank' => 101 - $role->id,
+                        'description' => $role->description,
+                    ]);
+                }
+                Bouncer::assign($role->name)->to($user);
+                Bouncer::allow($user)->toOwn(User::class); // Ability to manage own Usermodel
             }
-            //create Custom Abilities
-            Bouncer::allow('admin')->everything();
-            Bouncer::allow('support')->everything();
-            Bouncer::allow('guest')->to('view', '*'); //role for demo system or presentation
-            Bouncer::forbid('support')->to('use api');
-            Bouncer::forbid('support')->to('see income chart');
-            Bouncer::forbid('support')->toManage(Role::class);
+        }
+        //create Custom Abilities
+        Bouncer::allow('admin')->everything();
+        Bouncer::allow('support')->everything();
+        Bouncer::allow('guest')->to('view', '*'); //role for demo system or presentation
+        Bouncer::forbid('support')->to('use api');
+        Bouncer::forbid('support')->to('see income chart');
+        Bouncer::forbid('support')->toManage(Role::class);
 
-            \Artisan::call('auth:nms');
+        \Artisan::call('auth:nms');
 
-            $admin = Role::where('name', 'admin')->first();
-            $admin->rank = 101;
-            $admin->save();
-        });
+        $admin = Role::where('name', 'admin')->first();
+        $admin->rank = 101;
+        $admin->save();
 
         Schema::dropIfExists('authrole');
         Schema::dropIfExists('authcores');
