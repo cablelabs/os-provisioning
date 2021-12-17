@@ -714,13 +714,13 @@ class ModemController extends \BaseController
      */
     public static function floodPing($hostname)
     {
-        if (! \Request::filled('floodPing')) {
+        if (! \Request::filled('task')) {
             return;
         }
 
         $hostname = escapeshellarg($hostname);
 
-        switch (\Request::get('floodPing')) {
+        switch (\Request::get('task')) {
             case '1':
                 exec("sudo ping -c500 -f $hostname 2>&1", $fp, $ret);
                 break;

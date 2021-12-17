@@ -580,6 +580,7 @@ return [
         'DT_Last Sessions' => 'Last Sessions',
         'DT_Replies' => 'RadReplies',
         'DT_Authentications' => 'Auth',
+        'sendPing' => 'Send Ping',
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',

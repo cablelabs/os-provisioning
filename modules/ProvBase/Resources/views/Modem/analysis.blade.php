@@ -57,27 +57,36 @@
         </div>
 
         <div class="tab-pane fade in" id="flood-ping">
-            <form method="POST" action="{{ route('Modem.floodPing', ['id' => $modem->id]) }}">Type:
-                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                <select class="select2 form-control m-b-20" name="floodPing" style="width: 100%;">
-                    <option value="1">low load: 500 packets of 56 Byte</option> {{-- needs approximately 5 sec --}}
-                    <option value="2">average load: 1000 packets of 736 Byte</option> {{-- needs approximately 10 sec --}}
-                    <option value="3">big load: 2500 packets of 56 Byte</option> {{-- needs approximately 30 sec --}}
-                    <option value="4">huge load: 2500 packets of 1472 Byte</option> {{-- needs approximately 30 sec --}}
-                </select>
-
-                {{-- Result --}}
-                @if (isset($floodPing))
-                    <table class="m-t-20">
-                    @foreach ($floodPing as $line)
-                        <tr><td><font color="grey">{{$line}}</font></td></tr>
-                    @endforeach
-                    </table>
-                @endif
-                <div class="text-center">
-                    <button class="btn btn-primary m-t-10" type="submit">Send Ping</button>
+            <form v-on:submit.prevent="floodPing">
+                <script type="text/x-template" id="select2-template">
+                    <select>
+                        <slot></slot>
+                    </select>
+                </script>
+                <div class="row d-flex">
+                    <div style="flex:1;">
+                        <select2 v-model="selectedPing" v-on:input="setPing">
+                            <option :value="1">low load: 500 packets of 56 Byte</option> {{-- needs approximately 5 sec --}}
+                            <option :value="2">average load: 1000 packets of 736 Byte</option> {{-- needs approximately 10 sec --}}
+                            <option :value="3">big load: 2500 packets of 56 Byte</option> {{-- needs approximately 30 sec --}}
+                            <option :value="4">huge load: 2500 packets of 1472 Byte</option> {{-- needs approximately 30 sec --}}
+                        </select2>
+                    </div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.modemAnalysis.sendPing') }}</button>
+                    </div>
                 </div>
             </form>
+            {{-- Result --}}
+            <div v-if="floodPingResult">
+                <table>
+                    <tr v-for="line in floodPingResult">
+                        <td>
+                            <p style="color: grey" v-text="line"></font>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 @stop

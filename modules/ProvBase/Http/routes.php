@@ -94,7 +94,7 @@ BaseRoute::group([], function () {
 
     BaseRoute::post('modem/{id}/floodPing', [
         'as' => 'Modem.floodPing',
-        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@analysis',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@floodPing',
         'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
 
