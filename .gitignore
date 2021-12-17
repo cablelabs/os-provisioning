@@ -59,3 +59,5 @@ storage/app/config/provvoip/ekp_codes__sha1sum
 
 # linked storage folder
 public/storage
+
+_ide_helper.php
