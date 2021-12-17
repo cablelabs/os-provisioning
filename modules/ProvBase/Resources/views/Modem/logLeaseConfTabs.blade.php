@@ -98,7 +98,6 @@
             <table class="table streamtable table-bordered" width="100%">
                 <thead>
                     <tr class='active'>
-                        <th width="20px"></th>
                         @foreach (array_shift($eventlog) as $col_name)
                             <th class='text-center'>{{$col_name}}</th>
                         @endforeach
@@ -107,7 +106,6 @@
                 <tbody>
                 @foreach ($eventlog as $row)
                     <tr class = "{{$row[2]}}">
-                        <td></td>
                         @foreach ($row as $idx => $data)
                             @if($idx != 2)
                                 <td><font>{{$data}}</font></td>
