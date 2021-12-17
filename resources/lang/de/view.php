@@ -583,6 +583,12 @@ return [
         'DT_Replies' => 'RadReplies',
         'DT_Authentications' => 'Auth',
         'sendPing' => 'Ping',
+        'floodping' => [
+            'lowLoad' => 'geringe Last: 500 Pakete mit 56 Bytes (~ 5s)',
+            'averageLoad' => 'mittlere Last: 1000 Pakete mit 736 Bytes (~ 10s)',
+            'bigLoad' => 'hohe Last: 2500 Pakete mit 56 Bytes (~ 30s)',
+            'hugeLoad' => 'sehr hohe Last: 2500 Pakete mit 1472 Bytes (~ 30s)',
+        ],
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',

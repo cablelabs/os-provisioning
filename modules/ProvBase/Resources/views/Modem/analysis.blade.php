@@ -77,6 +77,9 @@
                 </div>
             </form>
             {{-- Result --}}
+            <div v-if="pingStarted && ! floodPingResult" class="d-flex justify-content-center m-t-20" style="position:relative;height:200px;">
+                <div id="loader" style="position: absolute;"></div>
+            </div>
             <div v-if="floodPingResult">
                 <table>
                     <tr v-for="line in floodPingResult">

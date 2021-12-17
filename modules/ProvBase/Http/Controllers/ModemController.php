@@ -727,7 +727,7 @@ class ModemController extends \BaseController
 
         $hostname = escapeshellarg($modem->hostname);
 
-        match ($task) {
+        match (intval($task)) {
             1 => exec("sudo ping -c500 -f $hostname 2>&1", $fp, $ret),
             2 => exec("sudo ping -c1000 -s736 -f $hostname 2>&1", $fp, $ret),
             3 => exec("sudo ping -c2500 -f $hostname 2>&1", $fp, $ret),
