@@ -33,9 +33,6 @@ class InstallSwitchToInnoDbBarracudaCactiCompatibility extends BaseMigration
     {
         $dbCon = DB::connection('mysql-root');
 
-        // Change Characterset of Cacti DB
-        $dbCon->statement('ALTER DATABASE cacti CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;');
-
         // Set global Variables for new Tables inside the Database
         $dbCon->statement('SET GLOBAL innodb_file_format=Barracuda;');
         $dbCon->statement('SET GLOBAL innodb_file_format_max=Barracuda;');
