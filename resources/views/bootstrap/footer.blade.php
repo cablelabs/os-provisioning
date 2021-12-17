@@ -75,7 +75,7 @@ $(document).ready(function() {
 Vue.component("select2", {
     props: {
       options: [Object, Array],
-      initialValue: String,
+      initialValue: [String, Number],
       multiple: {
         type: Boolean,
         default: false
@@ -93,7 +93,7 @@ Vue.component("select2", {
         .trigger('change')
 
         if (! this.multiple) {
-          return this.select.on('change', (e) => this.$emit("input", this.value))
+          return this.select.on('change', (e) => this.$emit("input", e.target.value))
         }
 
         this.select.on('select2:select', (e) => this.selected(e.params.data.id))

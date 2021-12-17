@@ -719,28 +719,20 @@ class ModemController extends \BaseController
      * @param hostname  the host to send a flood ping
      * @return flood ping exec result
      */
-    public static function floodPing($hostname)
+    public static function floodPing(Modem $modem)
     {
-        if (! \Request::filled('task')) {
+        if (! $task = request('task')) {
             return;
         }
 
-        $hostname = escapeshellarg($hostname);
+        $hostname = escapeshellarg($modem->hostname);
 
-        switch (\Request::get('task')) {
-            case '1':
-                exec("sudo ping -c500 -f $hostname 2>&1", $fp, $ret);
-                break;
-            case '2':
-                exec("sudo ping -c1000 -s736 -f $hostname 2>&1", $fp, $ret);
-                break;
-            case '3':
-                exec("sudo ping -c2500 -f $hostname 2>&1", $fp, $ret);
-                break;
-            case '4':
-                exec("sudo ping -c2500 -s1472 -f $hostname 2>&1", $fp, $ret);
-                break;
-        }
+        match ($task) {
+            1 => exec("sudo ping -c500 -f $hostname 2>&1", $fp, $ret),
+            2 => exec("sudo ping -c1000 -s736 -f $hostname 2>&1", $fp, $ret),
+            3 => exec("sudo ping -c2500 -f $hostname 2>&1", $fp, $ret),
+            4 => exec("sudo ping -c2500 -s1472 -f $hostname 2>&1", $fp, $ret),
+        };
 
         // remove the flood ping line "....." from result
         if ($ret == 0) {

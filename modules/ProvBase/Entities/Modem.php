@@ -2043,8 +2043,6 @@ class Modem extends \BaseModel
             return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip', 'radius');
         }
 
-        $floodPing = ModemController::floodPing($ip);
-
         $tabs = $this->analysisTabs();
         $pills = ['log', 'lease', 'configfile', 'eventlog'];
         $view_header = 'Modem-'.trans('view.analysis');
@@ -2052,7 +2050,7 @@ class Modem extends \BaseModel
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius');
+            'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius');
     }
 
     /**

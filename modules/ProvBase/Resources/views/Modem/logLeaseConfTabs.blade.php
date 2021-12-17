@@ -68,8 +68,8 @@
                 </script>
                 <div class="row d-flex">
                     <div style="flex:1;">
-                        <select2 v-model.lazy="selectedTask" v-on:input="setTask">
-                            <template v-for="option in options">
+                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task">
+                            <template v-for="option in taskOptions">
                                 <option :value="option.task" v-text="option.name"></option>
                             </template>
                         </select2>

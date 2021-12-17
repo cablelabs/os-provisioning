@@ -65,11 +65,10 @@
                 </script>
                 <div class="row d-flex">
                     <div style="flex:1;">
-                        <select2 v-model="selectedPing" v-on:input="setPing">
-                            <option :value="1">low load: 500 packets of 56 Byte</option> {{-- needs approximately 5 sec --}}
-                            <option :value="2">average load: 1000 packets of 736 Byte</option> {{-- needs approximately 10 sec --}}
-                            <option :value="3">big load: 2500 packets of 56 Byte</option> {{-- needs approximately 30 sec --}}
-                            <option :value="4">huge load: 2500 packets of 1472 Byte</option> {{-- needs approximately 30 sec --}}
+                        <select2 v-model="selectedPing" :initial-value="selectedPing">
+                            <template v-for="option in pingOptions">
+                                <option :value="option.id" v-text="option.name"></option>
+                            </template>
                         </select2>
                     </div>
                     <div class="text-center">
