@@ -44,7 +44,7 @@ class NetElement extends \BaseModel
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
     protected $with = ['netelementtype'];
 
-    public $guarded = ['kml_file_upload'];
+    public $guarded = [];
 
     /**
      * The connection name for the model.
@@ -748,7 +748,7 @@ class NetElement extends \BaseModel
     {
         return collect(File::files(storage_path(self::GPS_FILE_PATH)))
             ->mapWithKeys(fn ($file) => [$file->getFilename() => $file->getFilename()])
-            ->prepend(trans('messages.None'));
+            ->prepend(trans('messages.None'), '');
     }
 
     /*
