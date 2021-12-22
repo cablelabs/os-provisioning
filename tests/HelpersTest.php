@@ -18,9 +18,7 @@
 
 namespace Tests;
 
-use App\Http\Controllers\BaseViewController;
-
-class BaseViewControllerTest extends \PHPUnit\Framework\TestCase
+class HelpersTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Data provider for testing ValueInThresholdStringData()
@@ -74,12 +72,37 @@ class BaseViewControllerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Data provider for testing ValueInThresholdStringData()
+     */
+    public function provideTestValuesFromThresholdStringData()
+    {
+        return [
+            [
+                '..2',
+                [[-PHP_FLOAT_MAX, 2.0]],
+            ],
+            [
+                '2..',
+                [[2.0, PHP_FLOAT_MAX]],
+            ],
+            [
+                '-2..2',
+                [[-2.0, 2.0]],
+            ],
+            [
+                '-4..-2;2..4',
+                [[-4.0, -2.0], [2.0, 4.0]],
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider provideTestValueInThresholdStringData
      */
     public function testValueInThresholdString($value, $thresholds, $expectedResult)
     {
         self::assertSame(
-            BaseViewController::valueInThresholdString($value, $thresholds),
+            valueInThresholdString($value, $thresholds),
             $expectedResult,
         );
     }
@@ -88,6 +111,17 @@ class BaseViewControllerTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Exception');
         $this->expectExceptionMessageMatches('/is not numeric$/');
-        BaseViewController::valueInThresholdString('foobar', '..1');
+        valueInThresholdString('foobar', '..1');
+    }
+
+    /**
+     * @dataProvider provideTestValuesFromThresholdStringData
+     */
+    public function testValuesFromThresholdString($thresholds, $expectedResult)
+    {
+        self::assertSame(
+            valuesFromThresholdString($thresholds),
+            $expectedResult,
+        );
     }
 }

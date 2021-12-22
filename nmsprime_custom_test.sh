@@ -39,7 +39,7 @@ TESTS=" modules/ProvVoip/Tests/PhoneTariffLifecycleTest.php"
 TESTS=" modules/BillingBase/Tests/ItemLifecycleTest.php"
 TESTS=" modules/BillingBase/Tests/ProductLifecycleTest.php"
 
-TESTS=" tests/BaseViewControllerTest.php"
+TESTS=" tests/HelpersTest.php"
 
 touch $LOGFILE $OUTFILE
 chmod 666 $LOGFILE $OUTFILE
