@@ -1152,7 +1152,8 @@ class Modem extends \BaseModel
 
         $model = reset($model);
 
-        if (! $projection) {
+        // handle none or any number of projections
+        if (! $projection || Str::contains($projection, ',')) {
             return $model;
         }
 
@@ -2041,7 +2042,7 @@ class Modem extends \BaseModel
         $onlineStatus = $this->onlineStatus();
         // return $ip and $online
         foreach ($onlineStatus as $name => $value) {
-            $$name = $value;
+            ${$name} = $value;
         }
 
         if (\Request::has('offline')) {

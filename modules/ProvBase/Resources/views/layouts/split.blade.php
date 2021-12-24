@@ -51,7 +51,7 @@
         @php
             $panelHeader = '<ul class="nav nav-pills" id="loglease">';
             foreach ($pills as $pill) {
-                if ($$pill) {
+                if (${$pill}) {
                     $panelHeader .= "<li role=\"presentation\"><a href=\"#$pill\" data-toggle=\"pill\">".ucfirst($pill).'</a></li>';
                 }
             }
