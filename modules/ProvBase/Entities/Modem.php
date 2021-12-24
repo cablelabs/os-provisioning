@@ -1229,6 +1229,146 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Check if the TR-069 device is of type InternetGatewayDevice, Device1 or Device2.
+     *
+     * NOTE: We could extend it with the different services (e.g. VoIP)
+     * and the exact term of the root data models (TR-069/TR-106/TR-181).
+     *
+     * @return mixed
+     *
+     * @author Roy Schneider
+     */
+    protected function getCwmpDataModel()
+    {
+        // InternetGatewayDevice, Device1, Device2
+        $model = $this->getGenieAcsModel('InternetGatewayDevice.DeviceInfo.SpecVersion,Device.DeviceInfo.SpecVersion,Device.DeviceInfo.SupportedDataModels');
+
+        if (! $model) {
+            return;
+        }
+
+        if (! property_exists($model, 'Device')) {
+            return 'InternetGatewayDevice';
+        }
+
+        if (! property_exists($model->Device->DeviceInfo, 'SupportedDataModels')) {
+            return 'Device1';
+        }
+
+        return 'Device2';
+    }
+
+    /**
+     * Merge the array with the CWMP paramters and the GenieACS model.
+     *
+     * @param  mixed  $model
+     * @param  array  $scheme
+     * @param  int  $idx
+     * @return array
+     *
+     * @author Roy Schneider
+     */
+    protected function mergeGenieModelAndConfigOverview($model, $scheme, $idx = 0)
+    {
+        $config = [];
+        foreach ($scheme as $name => $param) {
+            if (Str::contains($param, '.')) {
+                foreach (explode('.', $param) as $next) {
+                    $iteration = $model->$next ?? $iteration->$next;
+                }
+                $config[$idx][$name] = $iteration->_value;
+
+                continue;
+            }
+
+            $config[$idx][$name] = property_exists($model, $param) ? $model->{$param}->_value : 'n/a';
+        }
+
+        return $config;
+    }
+
+    /**
+     * Differentiate return values from GenieACS API call and return an array with config parameters.
+     *
+     * @param  mixed  $model
+     * @param  array  $scheme
+     * @return array
+     *
+     * @author Roy Schneider
+     */
+    protected function generateConfigOverview($model, $scheme)
+    {
+        if (! is_numeric(key($model))) {
+            return $this->mergeGenieModelAndConfigOverview($model, $scheme);
+        }
+
+        // $model is an GenieACS Object
+        foreach ($model as $idx => $data) {
+            if (! is_object($data)) {
+                continue;
+            }
+
+            $config = $this->mergeGenieModelAndConfigOverview($data, $scheme, $idx);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Retrieve configuration of WIFI interface for TR-069 devices.
+     *
+     * @param  string  $dataModel
+     * @return mixed
+     *
+     * @author Roy Schneider
+     */
+    protected function getWifiConfigOverview($dataModel)
+    {
+        if ($dataModel != 'InternetGatewayDevice') {
+            return;
+        }
+
+        return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.WLANConfiguration'),
+            [
+                'Enabled' => 'Enable',
+                'SSID' => 'SSID',
+                'Channel' => 'Channel',
+                'Encryption Mode' => 'BeaconType',
+                'Wifi Status' => 'Status',
+                'Wifi Standard' => 'Standard',
+            ]
+        );
+    }
+
+    /**
+     * Retrieve configuration of LAN interface for TR-069 devices.
+     *
+     * @param  string  $dataModel
+     * @return mixed
+     *
+     * @author Roy Schneider
+     */
+    protected function getLanConfigOverview($dataModel)
+    {
+        if ($dataModel != 'InternetGatewayDevice') {
+            return;
+        }
+
+        return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.LANHostConfigManagement'),
+            [
+                'DHCP Enabled' => 'DHCPServerEnable',
+                'Lease Time' => 'DHCPLeaseTime',
+                'Minimum Address' => 'MinAddress',
+                'Maximum Address' => 'MaxAddress',
+                'Subnet Mask' => 'SubnetMask',
+                'DNS Servers' => 'DNSServers',
+                'LAN IP Address' => 'IPInterface.1.IPInterfaceIPAddress',
+                'Default Gateway' => 'IPRouters',
+            ]
+        );
+    }
+
+    /**
      * Get NETGW a CM is registered on
      *
      * @param  string 	ip 		address of cm
@@ -1999,8 +2139,8 @@ class Modem extends \BaseModel
         $tickets = $this->tickets;
         $genieCmds = [];
 
-        // Configfile tab
         if ($this->isTR069()) {
+            // Configfile tab
             $prov = json_decode(self::callGenieAcsApi("provisions?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
             if ($prov && isset($prov[0]->script)) {
@@ -2035,6 +2175,11 @@ class Modem extends \BaseModel
                 $genieCmds[] = ['task' => $cmd, 'name' => $name];
                 unset($genieCmds[$cmd]);
             }
+
+            // Wifi and LAN tab
+            $dataModel = $this->getCwmpDataModel();
+            $wifi = $this->getWifiConfigOverview($dataModel);
+            $lan = $this->getLanConfigOverview($dataModel);
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
@@ -2076,13 +2221,13 @@ class Modem extends \BaseModel
         }
 
         $tabs = $this->analysisTabs();
-        $pills = ['log', 'lease', 'configfile', 'eventlog'];
+        $pills = ['log', 'lease', 'configfile', 'eventlog', 'wifi', 'lan'];
         $view_header = 'Modem-'.trans('view.analysis');
         $this->help = 'modem_analysis';
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius');
+            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius', 'wifi', 'lan');
     }
 
     /**

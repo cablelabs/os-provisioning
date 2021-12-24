@@ -120,3 +120,32 @@
         <font color="red">{{ trans('messages.modem_eventlog_error')}}</font>
     @endif
 </div>
+
+@foreach (['wifi' => $wifi, 'lan' => $lan] as $tab => $configInterface)
+    <div class="tab-pane fade in" id="{{ $tab }}">
+        @if ($configInterface)
+            <table class="table streamtable table-bordered">
+                @foreach ($configInterface as $entry => $config)
+                    <thead>
+                        <tr class="active">
+                            <th class="text-center">#</th>
+                            @foreach ($config as $name => $value)
+                                <th class="text-center">{{ $name }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ $entry }}</td>
+                            @foreach ($config as $name => $value)
+                                <td class="text-center">
+                                    <p style="color: grey; margin-bottom: 0px;">{{ $value }}</p>
+                                </td>
+                            @endforeach
+                        </tr>
+                    </tbody>
+                @endforeach
+            </table>
+        @endif
+    </div>
+@endforeach
