@@ -35,6 +35,7 @@ class InstallKea extends BaseMigration
         }
 
         system('chown -R apache /etc/kea/');
+        system("sed -i 's/tag VARCHAR(256) NOT NULL,/tag VARCHAR(191) NOT NULL,/' /usr/share/kea/scripts/mysql/dhcpdb_create.mysql");
 
         // Create kea DB and grant all permissions to user nmsprime
         $rootConf = DB::connection('mysql-root')->getConfig();
