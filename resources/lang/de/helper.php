@@ -1,14 +1,14 @@
 <?php
 
 return [
-  'debt' => [
-    'amount' => 'Postiv wenn Kunde Geld abgezogen wird, negativ wenn Kunde einzahlt',
-    'totalFee' => 'Veraltete Anzeige. Dient nur der Anzeige der bisher genutzten Gesamtgebühr. Diese wird jetzt aus der Summe von Bank- und zusätzlicher Gebühr berechnet und in Zukunft wegen Redundanz nicht mehr angezeigt.',
-  ],
+    'debt' => [
+        'amount' => 'Postiv wenn Kunde Geld abgezogen wird, negativ wenn Kunde einzahlt',
+        'totalFee' => 'Veraltete Anzeige. Dient nur der Anzeige der bisher genutzten Gesamtgebühr. Diese wird jetzt aus der Summe von Bank- und zusätzlicher Gebühr berechnet und in Zukunft wegen Redundanz nicht mehr angezeigt.',
+    ],
 
-  /*
-  * Authentication and Base
-  */
+    /*
+     * Authentication and Base
+     */
     'translate'                 => 'Sie können dabei helfen NMS Prime zu übersetzen. Besuchen Sie:',
     'assign_role'                   => 'Diesem Nutzer eine oder mehrere Rollen zuweisen. Nutzer ohne Rolle können das NMS nicht verwenden, da sie keine Berechtigungen haben.',
     'assign_users'                  => 'Einen oder mehrere Nutzer zu dieser Rolle zuweisen. Die Veränderung ist im GuiLog des Users nicht sichtbar, sondern nur hier.',
@@ -22,8 +22,8 @@ return [
     'View analysis pages of netgw' => 'Diese Fähigkeit erlaubt oder verbietet den Zugriff auf die Analysisseite der NetGws.',
     'Download settlement runs'  => 'Diese Fähigkeit erlaubt oder verbietet den Download der Abrechnungsläufe. Wenn das Verwalten von Abrechnungsläufen verboten ist, hat diese Einstellung keine Auswirkung.',
     /*
-  * Index Page - Datatables
-  */
+     * Index Page - Datatables
+     */
     'SortSearchColumn'              => 'Diese Spalte kann nicht sortiert oder durchsucht werden.',
     'PrintVisibleTable'             => 'Druckt den aktuell sichtbaren Bereich der Tabelle. Um alles zu drucken bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
     'ExportVisibleTable'            => 'Exportiert den aktuell sichtbaren Bereich der Tabelle. Um alles zu exportieren bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
@@ -75,8 +75,8 @@ return [
     'settlement_verification'       => 'Die Rechnungen der Kunden werden nur mit aktivierter Checkbox angezeigt. Der Haken kann nur gesetzt werden, wenn der letzte Rechnungslauf für ALLE SEPA-Konten ausgeführt wurde (damit keine Änderungen missachtet werden). Info: Mit aktivierter Checkbox kann der Abrechnungslauf nicht wiederholt werden.',
 
     /*
-  * MODULE: Dashboard
-  */
+     * MODULE: Dashboard
+     */
     'next'                          => 'Nächster Schritt: ',
     'set_isp_name'                  => 'Namen des Internetanbieters setzen',
     'create_netgw'                  => 'Erstes NetGw/CMTS anlegen',
@@ -93,15 +93,15 @@ return [
     'create_modem'                  => 'Erstes Modem anlegen',
 
     /*
-  * MODULE: HfcReq
-  */
+     * MODULE: HfcReq
+     */
     'netelementtype_reload'         => 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
     'netelementtype_time_offset'    => 'In Sekunden. Nachkommastellen möglich.',
     'undeleteables'                 => 'Net & Cluster können weder gelöscht werden, noch kann der Name geändert werden, da die Existenz dieser Typen Vorraussetzung für die Erzeugung des Entitity-Relationship-Diagramms ist.',
 
     /*
-  * MODULE: HfcSnmp
-  */
+     * MODULE: HfcSnmp
+     */
     'mib_filename'                  => 'Der Dateiname setzt sich aus MIB Name und Revision zusammen. Existiert bereits ein MIB-File mit selbem Dateiname und ist identisch, kann dieses nicht erneut angelegt werden.',
     'oid_link'                      => 'Gehe zu OID Einstellungen',
     'oid_table'                     => 'INFO: Dieser Parameter gehört zu einer Tabellen-OID. Durch Hinzufügen von SubOIDs or Indizes werden die SnmpWerte nur für diese abgefragt. Neben einem besseren Überblick auf der Einstellungen-Übersicht des Netzelements kann dies deren Aufrufgeschwindigkeit deutlich beschleunigen.',
@@ -113,8 +113,8 @@ return [
     'parameter_html_id'             => 'Durch Eintragen einer ID wird der Parameter in Reihe zu den anderen Parametern gemäß der ID (aufsteigend) angeordnet. In Tabellen kann durch setzen der ID im Sub-Parameter die Spaltenanordnung verändert werden.',
 
     /*
-  * MODULE: ProvBase
-  */
+     * MODULE: ProvBase
+     */
     'contract' => [
         'valueDate' => 'Tag im Monat des separaten Buchungsdatums. Überschreibt das Fälligkeitsdatum aus den globalen Konfigurationen für diesen Vertrag in der SEPA XML. Die Bank bucht den Betrag dann an diesem Tag ab.',
     ],
@@ -154,8 +154,8 @@ return [
     ],
 
     /*
-  * MODULE: ProvVoip
-  */
+     * MODULE: ProvVoip
+     */
     //PhonenumberManagementController
     'PhonenumberManagement_activation_date' => 'Wird als Wunschtermin der Schaltung zum Provider geschickt und für die Ermittlung des Aktiv-Status der Rufnummer verwendet.',
     'PhonenumberManagement_deactivation_date' => 'Wird als Wunschtermin der Abschaltung zum Provider geschickt und für die Ermittlung des Aktiv-Status der Rufnummer verwendet.',
@@ -171,8 +171,8 @@ return [
     'PhonenumberManagement_ExternalDeactivationDateWithEnvia' => 'Datum der Deaktivierung bei envia TEL.',
     'PhonenumberManagement_Autogenerated' => 'Dieses Management wurde automatisch erzeugt. Bitte sämtliche Werte überprüfen und nach evtl. Korrektur den Haken entfernen',
     /*
-  * MODULE VoipMon
-  */
+     * MODULE VoipMon
+     */
     'mos_min_mult10'                => 'Minimaler Mean Opionion Score während des Anrufs',
     'caller'                        => 'Betrachtung der Anrufrichtung von Anrufer zu Angerufenem',
     'a_mos_f1_min_mult10'           => 'Minimaler Mean Opionion Score während des Anrufs mit einem festen Jitter-Buffer von 50ms',
@@ -187,8 +187,8 @@ return [
     'a_d300' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
     'called' => 'Betrachtung der Anrufrichtung von Angerufenem zum Anrufer',
     /*
- * Module Ticketsystem
- */
+     * Module Ticketsystem
+     */
     'assign_user' => 'Zuweisen eines Users zu einem Ticket.',
     'mail_env'    => 'Nächster Schritt: Host/Nutzernamen/Passwort in /etc/nmsprime/env/global.env eintragen, um Emails im Bezug auf Tickets zu erhalten.',
     'noReplyMail' => 'Die E-Mail-Adresse, die als Absender angezeigt werden soll, wenn Tickets geändert/erstellt werden. Die Adresse muss nicht existieren. Z.B. example@example.com',
