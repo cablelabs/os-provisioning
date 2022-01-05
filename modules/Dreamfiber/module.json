@@ -1,0 +1,13 @@
+{
+    "name": "Dreamfiber",
+    "alias": "dreamfiber",
+    "description": "apps.Dreamfiber",
+    "keywords": [],
+    "order": 260,
+    "providers": [
+        "Modules\\Dreamfiber\\Providers\\DreamfiberServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

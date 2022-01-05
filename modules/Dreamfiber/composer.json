@@ -1,0 +1,25 @@
+{
+    "name": "nwidart/dreamfiber",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Dreamfiber\\Providers\\DreamfiberServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Dreamfiber\\": ""
+        }
+    }
+}
