@@ -183,7 +183,7 @@ class ContractController extends \BaseController
             $c[array_key_last($c)]['space'] = 1;
         }
 
-        if (cache('billingBase')->show_ags) {
+        if (\Module::collections()->has('BillingBase') && cache('billingBase')->show_ags) {
             $c[] = ['form_type' => 'select', 'name' => 'contact', 'description' => 'Contact Persons', 'value' => \Modules\BillingBase\Entities\BillingBase::contactPersons()];
         }
 
