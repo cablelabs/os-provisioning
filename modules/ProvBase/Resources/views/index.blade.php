@@ -144,16 +144,17 @@
 @stop
 
 @section('javascript_extra')
-<script type="text/javascript">
-    function filterImpairedModems() {
-        let url = "{!! route('CustomerTopo.show_impaired', ['row' => 'impairedModemRow', 'lower' => 'lowerValue', 'upper' => 'upperValue']) !!}";
+    @if (Module::collections()->has('HfcCustomer'))
+    <script type="text/javascript">
+        function filterImpairedModems() {
+            let url = "{!! route('CustomerTopo.show_impaired', ['row' => 'impairedModemRow', 'lower' => 'lowerValue', 'upper' => 'upperValue']) !!}";
 
-        ['impairedModemRow', 'lowerValue', 'upperValue'].forEach( function (attribute) {
-            return url = url.replace(attribute, document.getElementById(attribute).value);
-        });
+            ['impairedModemRow', 'lowerValue', 'upperValue'].forEach( function (attribute) {
+                return url = url.replace(attribute, document.getElementById(attribute).value);
+            });
 
-        document.location.href = url;
-    }
-</script>
-
+            document.location.href = url;
+        }
+    </script>
+    @endif
 @endsection
