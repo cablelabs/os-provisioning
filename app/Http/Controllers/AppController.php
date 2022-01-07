@@ -79,7 +79,7 @@ class AppController extends BaseController
         $route = 'https://www.nmsprime.com/'.$module->get('category').'-apps/#'.\Str::lower(str_replace('.png', '', $module->get('icon')));
 
         if ($state == 'active') {
-            $route = config()->has($link) ? route(config()->get($link)) : '#';
+            $route = config()->has($link) && config($link) && \Route::has(config($link)) ? route(config()->get($link)) : '#';
         }
 
         return $route;
