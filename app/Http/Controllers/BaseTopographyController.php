@@ -6,7 +6,6 @@ use geoPHP\geoPHP;
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElement;
-use Modules\Ticketsystem\Entities\Ticket;
 
 abstract class BaseTopographyController extends BaseController
 {
@@ -83,16 +82,16 @@ abstract class BaseTopographyController extends BaseController
         }
 
         $lookup = [
-            Ticket::STATES['New'] => 0,
-            Ticket::STATES['Paused'] => 1,
-            Ticket::STATES['In Progress'] => 1,
-            Ticket::STATES['Closed'] => 2,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['New'] => 0,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['Paused'] => 1,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['In Progress'] => 1,
+            \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'] => 2,
         ];
 
-        return Ticket::with('ticketable', 'users:first_name,last_name')
-            ->where('state', '!=', Ticket::STATES['Closed'])
+        return \Modules\Ticketsystem\Entities\Ticket::with('ticketable', 'users:first_name,last_name')
+            ->where('state', '!=', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
             ->orWhere(function ($query) {
-                $query->where('state', Ticket::STATES['Closed'])
+                $query->where('state', \Modules\Ticketsystem\Entities\Ticket::STATES['Closed'])
                     ->where('updated_at', '>=', now()->subMinutes(5));
             })
             ->get(['id', 'name', 'priority', 'description', 'state', 'ticketable_id', 'ticketable_type'])
