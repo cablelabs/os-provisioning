@@ -19,6 +19,7 @@
 namespace Modules\HfcReq\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseController;
 use Modules\HfcReq\Entities\NetElementType;
@@ -94,10 +95,14 @@ class NetElementController extends BaseController
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap, 'space' => 1]),
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
+        ];
 
-            ['form_type' => 'select', 'name' => 'infrastructure_file', 'description' => 'Choose Infrastructure file', 'value' => $netelement->infrastructureGpsFiles()],
-            ['form_type' => 'file', 'name' => 'infrastructure_file_upload', 'description' => 'or: Upload Infrastructure file', 'help' => trans('helper.gpsUpload'), 'space' => 1],
+        if (Module::collections()->has('HfcBase')) {
+            $a[] = ['form_type' => 'select', 'name' => 'infrastructure_file', 'description' => 'Choose Infrastructure file', 'value' => $netelement->infrastructureGpsFiles()];
+            $a[] = ['form_type' => 'file', 'name' => 'infrastructure_file_upload', 'description' => 'or: Upload Infrastructure file', 'help' => trans('helper.gpsUpload'), 'space' => 1];
+        }
 
+        $b = [
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'address1', 'description' => $addressDesc1],
@@ -108,8 +113,7 @@ class NetElementController extends BaseController
             ['form_type' => 'textarea', 'name' => 'descr', 'description' => 'Description'],
         ];
 
-        $b = [];
-        if (\Module::collections()->has('PropertyManagement') && $type == 9) {
+        if (Module::collections()->has('PropertyManagement') && $type == 9) {
             $b[] = ['form_type' => 'select', 'name' => 'apartment_id', 'description' => 'Apartment', 'hidden' => 0,
                 'value' => $this->setupSelect2Field($netelement, 'Apartment'), 'help' => trans('propertymanagement::help.apartmentList'),
                 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true',
@@ -117,14 +121,11 @@ class NetElementController extends BaseController
             ];
         }
 
-        $c = [];
-        if (\Module::collections()->has('HfcSnmp') && $type == 2) {
-            $c = [
-                ['form_type' => 'text', 'name' => 'rkm_line_number', 'description' => 'RKM line number'],
-            ];
+        if (Module::collections()->has('HfcSnmp') && $type == 2) {
+            $b[] = ['form_type' => 'text', 'name' => 'rkm_line_number', 'description' => 'RKM line number'];
         }
 
-        return array_merge($a, $b, $c);
+        return array_merge($a, $b);
     }
 
     public function prepare_input($data)
