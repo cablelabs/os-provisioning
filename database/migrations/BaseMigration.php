@@ -182,7 +182,7 @@ class BaseMigration extends Migration
                 }
             }
             if (! $rollback) {
-                echo "\tWARNING: up_table_generic() not called from ".$this->callerClassname.'. Falling back to database defaults.';
+                echo "\tWARNING: up_table_generic() not called from ".$this->callerClassname.". Falling back to database defaults.\n";
             }
         }
     }
