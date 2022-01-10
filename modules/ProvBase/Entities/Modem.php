@@ -733,6 +733,8 @@ class Modem extends \BaseModel
         if (! $unblock) {
             file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
 
+            Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
+
             if (! $macChanged) {
                 return;
             }
@@ -746,6 +748,8 @@ class Modem extends \BaseModel
             if (Str::contains($line, $mac)) {
                 unset($lines[$i]);
                 File::put(self::BLOCKED_CPE_FILE_PATH, implode($lines), true);
+
+                Log::info("DHCP - Remove modem $this->id ($this->mac) from list for blocked CPEs");
 
                 return;
             }
