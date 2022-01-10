@@ -201,9 +201,6 @@ class Kernel extends ConsoleKernel
                 }
             })->everyFiveMinutes();
 
-            // update firmware version + model strings of all modems once a day
-            $schedule->call('\Modules\ProvBase\Entities\Modem@update_model_firmware')->daily();
-
             // Hardware support check for modems and CMTS
             $schedule->command('nms:hardware-support')->twiceDaily(10, 14);
         }

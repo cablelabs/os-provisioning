@@ -1194,61 +1194,20 @@ class Modem extends \BaseModel
     /**
      * Get all used firmwares of specified modem(s)
      *
-     * @param  string  $id  Modem identifier (all modems if $id is null)
      * @return array Hierarchical object (vendor->model->sw_rev) of all used firmwares
      *
      * @author Ole Ernst
      */
-    public static function get_firmware_tree($id = null)
+    public static function get_firmware_tree()
     {
         $ret = [];
 
-        if (! Module::collections()->has('ProvMon')) {
-            return $ret;
-        }
-
-        foreach (glob("/var/lib/cacti/rra/cm-$id*.json") as $file) {
-            if (filemtime($file) < time() - 86400 || // ignore json files, which haven't been updated within a day
-                ! ($json = file_get_contents($file)) ||
-                ! ($json = json_decode($json)) ||
-                ! isset($json->descr)) {
-                continue;
-            }
-
-            preg_match_all('/VENDOR: ([^;]*);.*SW_REV: (.*); MODEL: (.*)>>/', $json->descr, $match);
-            $vendor = array_pop($match[1]) ?: 'n/a';
-            $sw_rev = array_pop($match[2]) ?: 'n/a';
-            $model = array_pop($match[3]) ?: 'n/a';
-
-            if ($id) {
-                return [$vendor, $model, $sw_rev];
-            }
-
-            if (! isset($ret[$vendor][$model][$sw_rev])) {
-                $ret[$vendor][$model][$sw_rev] = 0;
-            }
-
-            $ret[$vendor][$model][$sw_rev] += 1;
+        foreach (self::whereNotNull('sw_rev')->groupBy('sw_rev')->select(DB::raw('model, sw_rev, COUNT(*) as count'))->get() as $modem) {
+            $model = explode(' ', $modem->model, 2);
+            $ret[reset($model)][end($model)][$modem->sw_rev] = $modem->count;
         }
 
         return $ret;
-    }
-
-    /**
-     * Update firmware and model strings of all modems
-     *
-     * @author Ole Ernst
-     */
-    public static function update_model_firmware()
-    {
-        foreach (DB::table('modem')->whereNull('deleted_at')->pluck('id') as $id) {
-            $tmp = self::get_firmware_tree($id);
-            if (! $tmp) {
-                continue;
-            }
-
-            DB::statement("UPDATE modem SET model = '$tmp[0] $tmp[1]', sw_rev = '$tmp[2]' where id='$id'");
-        }
     }
 
     /**
