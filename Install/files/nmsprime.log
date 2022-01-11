@@ -7,8 +7,7 @@
     notifempty
     create 644 apache apache
     postrotate
-        /opt/remi/php80/root/usr/bin/php artisan queue:restart || true
-        /opt/remi/php80/root/usr/bin/php artisan websockets:restart || true
+        /usr/bin/supervisorctl update || true
     endscript
 }
 
@@ -20,7 +19,7 @@
     rotate 6
     create 644 apache apache
     postrotate
-        /opt/remi/php80/root/usr/bin/php artisan queue:restart || true
+        /usr/bin/supervisorctl update || true
     endscript
 }
 
@@ -31,7 +30,7 @@
     notifempty
     create 644 root apache
     postrotate
-        /opt/remi/php80/root/usr/bin/php artisan queue:restart || true
+        /usr/bin/supervisorctl update || true
     endscript
 }
 
@@ -42,6 +41,6 @@
     notifempty
     create 644 apache apache
     postrotate
-        /opt/remi/php80/root/usr/bin/php artisan websockets:restart || true
+        /usr/bin/supervisorctl update || true
     endscript
 }

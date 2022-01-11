@@ -14,7 +14,3 @@ systemd-tmpfiles --create
 
 # reread supervisor config and restart affected processes
 /usr/bin/supervisorctl update
-
-# restart all laravel background jobs to make sure all workers use current code
-/opt/remi/php80/root/usr/bin/php artisan queue:restart
-/opt/remi/php80/root/usr/bin/php artisan websockets:restart

@@ -50,10 +50,6 @@ if [ $lastModule -eq 1 ]; then
     # reread supervisor config and restart affected processes
     /usr/bin/supervisorctl update
 
-    # restart laravel background jobs (to make use of new code)
-    /opt/remi/php80/root/usr/bin/php artisan queue:restart
-    /opt/remi/php80/root/usr/bin/php artisan websockets:restart
-
     # finally: rebuild dhcpd/named config
     /opt/remi/php80/root/usr/bin/php artisan nms:dhcp
 fi

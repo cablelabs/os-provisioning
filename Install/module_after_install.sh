@@ -17,9 +17,8 @@ rm -rf /var/www/nmsprime/bootstrap/cache/*
 # on HA machines: clean up
 [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/remi/php80/root/usr/bin/php artisan provha:clean_up_slave
 
-# restart laravel background jobs (to make use of new code)
-/opt/remi/php80/root/usr/bin/php artisan queue:restart
-/opt/remi/php80/root/usr/bin/php artisan websockets:restart
+# reread supervisor config and restart affected processes
+/usr/bin/supervisorctl update
 
 systemctl reload httpd
 
