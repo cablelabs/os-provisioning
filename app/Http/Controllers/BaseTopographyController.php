@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use SplFileInfo;
 use geoPHP\geoPHP;
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Facades\Module;
@@ -34,14 +35,13 @@ abstract class BaseTopographyController extends BaseController
         $netElements->whereNotNull('infrastructure_file')
             ->unique('infrastructure_file')
             ->each(function ($netElement) use (&$points, &$lines) {
-                $kml = geoPHP::load(file_get_contents(storage_path(NetElement::GPS_FILE_PATH."/{$netElement->infrastructure_file}")), explode('.', $netElement->infrastructure_file)[1]);
+                $infrastructureFile = new SplFileInfo(storage_path(NetElement::GPS_FILE_PATH."/{$netElement->infrastructure_file}"));
 
-                foreach ($kml->asArray() as $shape) {
-                    if (! isset($shape['type']) || ($shape['type'] == 'LineString' && in_array(count($shape['components']), [0, 1]))) {
-                        \Log::info('Skipping corrupted shape of KML', $shape);
-                        continue;
-                    }
+                if (! $infrastructureFile->isFile()) {
+                    return;
+                }
 
+                foreach (geoPHP::load(file_get_contents($infrastructureFile), $infrastructureFile->getExtension())->asArray() as $shape) {
                     if ($shape['type'] == 'GeometryCollection') {
                         foreach ($shape['components'] as $component) {
                             array_push($lines['features'], ['type' => 'Feature', 'properties' => [], 'geometry' => ['type' => 'LineString', 'coordinates' => $component['components']]]);
