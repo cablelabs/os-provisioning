@@ -15,7 +15,9 @@ rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/remi/php80/root/usr/bin/php artisan view:clear
 
 # on HA machines: clean up
-[ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/remi/php80/root/usr/bin/php artisan provha:clean_up_slave
+[ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] &&
+	/opt/remi/php80/root/usr/bin/php artisan module:list | grep -i provha | grep -i enabled &&
+	/opt/remi/php80/root/usr/bin/php artisan provha:clean_up_slave
 
 # reread supervisor config and restart affected processes
 /usr/bin/supervisorctl update

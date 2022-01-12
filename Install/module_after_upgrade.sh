@@ -42,10 +42,14 @@ if [ $lastModule -eq 1 ]; then
     /opt/remi/php80/root/usr/bin/php artisan view:clear
 
     # on HA machines: clean up
-    [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] && /opt/remi/php80/root/usr/bin/php artisan provha:clean_up_slave
+    [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] &&
+        /opt/remi/php80/root/usr/bin/php artisan module:list | grep -i provha | grep -i enabled &&
+        /opt/remi/php80/root/usr/bin/php artisan provha:clean_up_slave
 
     # on HA machines: process migrations
-    [ -e /var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php ] && /opt/remi/php80/root/usr/bin/php artisan provha:migrate_slave
+    [ -e /var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php ] &&
+    /opt/remi/php80/root/usr/bin/php artisan module:list | grep -i provha | grep -i enabled &&
+    /opt/remi/php80/root/usr/bin/php artisan provha:migrate_slave
 
     # reread supervisor config and restart affected processes
     /usr/bin/supervisorctl update
