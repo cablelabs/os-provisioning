@@ -16,6 +16,28 @@
  * limitations under the License.
  */
 
+namespace Modules\Dreamfiber\Entities;
+
 return [
-    'name' => 'Dreamfiber'
+    'name' => 'Dreamfiber',
+    'api' => [
+        'user' => env('API_USER', 'n/a'),
+        'userInformation' => env('API_USER_INFORMATION', ''),
+        'password' => env('API_PASSWORD', 'n/a'),
+
+        'sepFile' => env('SEP_CSV_FILE', null),
+        'wsdlFile' => env('WSDL_FILE', null),
+    ],
+    'MenuItems' => [
+        'DF Subscriptions' => [
+            'link'	=> 'DfSubscription.index',
+            'icon'	=> 'fa-pencil-square',
+            'class' => DfSubscription::class,
+        ],
+        'DF Subscription Events' => [
+            'link'	=> 'DfSubscriptionEvent.index',
+            'icon'	=> 'fa-pencil-square-o',
+            'class' => DfSubscriptionEvent::class,
+        ],
+    ],
 ];

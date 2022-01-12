@@ -1,10 +1,10 @@
 {
-    "name": "nwidart/dreamfiber",
-    "description": "",
+    "name": "nmsprime-modules/dreamfiber",
+    "description": "NMS Prime Dreamfiber API",
     "authors": [
         {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
+            "name": "NMS Prime GmbH",
+            "email": "info@nmsprime.com"
         }
     ],
     "extra": {
