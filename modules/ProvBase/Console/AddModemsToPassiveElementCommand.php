@@ -67,7 +67,7 @@ class AddModemsToPassiveElementCommand extends Command
     {
         $this->netelement = NetElement::findOrFail($this->argument('netelement'));
 
-        if ($this->netelement->netelementtype->name != 'Passive Component') {
+        if (! in_array($this->netelement->netelementtype_id, [11, 12, 13, 14])) {
             $this->warn('You have to select a Netelement of Type Passive Component');
 
             return 1;
