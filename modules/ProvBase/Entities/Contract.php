@@ -18,10 +18,11 @@
 
 namespace Modules\ProvBase\Entities;
 
-use App\Observers\BaseObserver;
 use DB;
-use Illuminate\Support\Facades\Log;
 use Module;
+use Request;
+use App\Observers\BaseObserver;
+use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
 {
@@ -85,6 +86,27 @@ class Contract extends \BaseModel
             $rules['birthday'] .= '|required_if:salutation,placeholder_salutations_person';
         }
 
+        // adapt ruleset for dreamfiber contract types (=OTO)
+        $type = Request::get('type');
+        if (in_array($type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+            $rules['birthday'] = 'nullable';
+            $rules['company'] = 'nullable';
+            $rules['contract_start'] = 'nullable|date_format:Y-m-d';
+            $rules['costcenter_id'] = 'nullable';
+            $rules['firstname'] = 'nullable';
+            $rules['lastname'] = 'nullable';
+            $rules['number'] = 'nullable';
+            $rules['number2'] = 'nullable';
+            $rules['number3'] = 'nullable';
+            $rules['number4'] = 'nullable';
+            $rules['salutation'] = 'nullable';
+            $rules['sep_id'] = 'string|unique';
+        }
+
+        if ($type == 'DF_OTO_STORAGE') {
+            $rules['sep_id'] = 'nullable|string';
+        }
+
         return $rules;
     }
 
@@ -106,14 +128,48 @@ class Contract extends \BaseModel
     {
         $bsclass = $this->get_bsclass();
 
-        $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.number', $this->table.'.firstname', $this->table.'.lastname', 'company', 'email', $this->table.'.zip', $this->table.'.city', 'district', $this->table.'.street', $this->table.'.house_number', $this->table.'.apartment_nr', $this->table.'.additional', $this->table.'.contract_start', $this->table.'.contract_end', $this->table.'.ground_for_dismissal'],
+        $ret = [
+            'table' => $this->table,
+            'index_header' => [],
             'header' =>  $this->label(),
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
             'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'],
         ];
+
+        if (Module::collections()->has('Dreamfiber')) {
+            $ret['index_header'] = array_merge(
+                $ret['index_header'],
+                [
+                    $this->table.'.sep_id',
+                    $this->table.'.oto_id',
+                    $this->table.'.oto_status',
+                    $this->table.'.alex_status',
+                ]
+            );
+        }
+
+        $ret['index_header'] = array_merge(
+            $ret['index_header'],
+            [
+                $this->table.'.number',
+                $this->table.'.firstname',
+                $this->table.'.lastname',
+                'company',
+                'email',
+                $this->table.'.zip',
+                $this->table.'.city',
+                'district',
+                $this->table.'.street',
+                $this->table.'.house_number',
+                $this->table.'.apartment_nr',
+                $this->table.'.additional',
+                $this->table.'.contract_start',
+                $this->table.'.contract_end',
+                $this->table.'.ground_for_dismissal',
+            ]
+        );
 
         if (Module::collections()->has('BillingBase')) {
             $ret['index_header'][] = 'costcenter.name';
@@ -136,10 +192,38 @@ class Contract extends \BaseModel
     }
 
     /**
+     * Define OTO Bootstrap color class
+     *
+     * @return string Bootstrap color class
+     *
+     * @author Patrick Reichel
+     */
+    private function getBsclassDfOto()
+    {
+        if ($this->type == 'DF_OTO_STORAGE') {
+            return 'success';
+        }
+
+        return match ($this->alex_status) {
+            'UNDEFINED' => 'info',
+            'BEPREADY' => 'danger',
+            'PLUGFREE' => 'warning',
+            'PLUGINUSE' => 'success',
+            default => 'info',
+        };
+    }
+
+    /**
      * @return string Bootstrap Color Class
      */
     public function get_bsclass()
     {
+        // special case Dreamfiber OTO
+        if (in_array($this->type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+            return $this->getBsclassDfOto();
+        }
+
+        // default NMSPrime contract
         $bsclass = 'success';
 
         if ($this->group_contract) {
@@ -163,6 +247,12 @@ class Contract extends \BaseModel
      */
     public function label()
     {
+        // special case Dreamfiber OTO
+        if (in_array($this->type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+            return "$this->sep_id – $this->omfd_id";
+        }
+
+        // default nmsprime contract
         return $this->number.' - '.$this->firstname.' '.$this->lastname;
     }
 
