@@ -24,6 +24,13 @@ use Illuminate\Database\Eloquent\Factory;
 class DreamfiberServiceProvider extends ServiceProvider
 {
     /**
+     * The artisan commands provided by this module
+     */
+    protected $commands = [
+        'Modules\Dreamfiber\Console\OtoFromCsvUpdaterCommand',
+    ];
+
+    /**
      * Boot the application events.
      *
      * @return void
@@ -45,6 +52,7 @@ class DreamfiberServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->commands($this->commands);
     }
 
     /**
@@ -74,11 +82,11 @@ class DreamfiberServiceProvider extends ServiceProvider
         $sourcePath = module_path('Dreamfiber', 'Resources/views');
 
         $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+            $sourcePath => $viewPath,
+        ], 'views');
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/dreamfiber';
+            return $path.'/modules/dreamfiber';
         }, \Config::get('view.paths')), [$sourcePath]), 'dreamfiber');
     }
 

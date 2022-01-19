@@ -27,6 +27,6 @@
 |
 */
 
-Route::prefix('dreamfiber')->group(function() {
+Route::prefix('dreamfiber')->group(function () {
     Route::get('/', 'DreamfiberController@index');
 });
