@@ -47,7 +47,7 @@
                     @isset($notification->data['shortDetail'])
                         <div class="text-muted f-s-10 text-ellipsis">{{ $notification->data['shortDetail'] }}</div>
                     @endisset
-                    <div class="text-muted f-s-10 text-ellipsis">{{ $notification->created_at->diffForHumans() }} {{ $notification->data['user'] ?? '' }}</div>
+                    <div class="text-muted f-s-10 text-ellipsis">{{ \Carbon\Carbon::parse($notification->getAttributes()['created_at'])->diffForHumans() }} {{ $notification->data['user'] ?? '' }}</div>
                 </div>
                 <form action="{{ route('Notifications.markRead', [$notification]) }}" method="post">
                     @csrf

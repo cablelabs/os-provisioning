@@ -75,7 +75,7 @@
                                             {{ trans('view.ticket.notification.'.array_slice(explode('\\', $notification->type), -1)[0]) }}: {{ $notification->data['title'] ?? '' }}
                                         </a>
                                         <div class="text-secondary">
-                                            {{ $notification->created_at->diffForHumans() }} {{ $notification->data['user'] ?? '' }}
+                                            {{ \Carbon\Carbon::parse($notification->getAttributes()['created_at'])->diffForHumans() }} {{ $notification->data['user'] ?? '' }}
                                         </div>
                                     </div>
                                 </div>
