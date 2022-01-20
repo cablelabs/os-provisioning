@@ -22,6 +22,7 @@ class RadAcct extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radacct';
+    protected $connection = 'pgsql-radius';
 
     protected $primaryKey = 'radacctid';
 

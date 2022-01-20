@@ -22,6 +22,7 @@ class RadPostAuth extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radpostauth';
+    protected $connection = 'pgsql-radius';
 
     public $timestamps = false;
     protected $forceDeleting = true;

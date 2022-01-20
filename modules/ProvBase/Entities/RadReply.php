@@ -22,6 +22,7 @@ class RadReply extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radreply';
+    protected $connection = 'pgsql-radius';
 
     public $timestamps = false;
     protected $forceDeleting = true;

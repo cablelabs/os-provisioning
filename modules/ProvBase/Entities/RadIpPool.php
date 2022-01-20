@@ -22,6 +22,7 @@ class RadIpPool extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radippool';
+    protected $connection = 'pgsql-radius';
 
     public $timestamps = false;
     protected $forceDeleting = true;

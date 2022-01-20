@@ -22,6 +22,7 @@ class RadUserGroup extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radusergroup';
+    protected $connection = 'pgsql-radius';
 
     public $timestamps = false;
     protected $forceDeleting = true;

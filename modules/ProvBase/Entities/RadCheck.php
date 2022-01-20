@@ -22,6 +22,7 @@ class RadCheck extends \BaseModel
 {
     // The associated SQL table for this Model
     public $table = 'radcheck';
+    protected $connection = 'pgsql-radius';
 
     public $timestamps = false;
     protected $forceDeleting = true;
