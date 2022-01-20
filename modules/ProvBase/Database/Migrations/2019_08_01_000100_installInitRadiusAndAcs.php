@@ -37,11 +37,10 @@ class InstallInitRadiusAndAcs extends BaseMigration
         });
 
         // use schema from git, since it adds the id column in radusergroup
-        // centos8: reset to /etc/raddb/mods-config/sql/main/mysql/schema.sql
-        \DB::unprepared(file_get_contents('https://raw.githubusercontent.com/FreeRADIUS/freeradius-server/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/mysql/schema.sql'));
+        \DB::unprepared(file_get_contents('https://github.com/FreeRADIUS/freeradius-server/blob/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/postgresql/schema.sql'));
         \Artisan::call('nms:radgroupreply-repopulate');
 
-        $config = DB::connection('mysql-radius')->getConfig();
+        $config = DB::connection('pgsql-radius')->getConfig();
 
         $find = [
             '/^\s*#*\s*driver\s*=.*/m',
@@ -53,8 +52,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
         ];
 
         $replace = [
-            "\tdriver = \"rlm_sql_mysql\"",
-            "\tdialect = \"mysql\"",
+            "\tdriver = \"rlm_sql_postgresql\"",
+            "\tdialect = \"postgresql\"",
             "\tlogin = \"{$config['username']}\"",
             "\tpassword = \"{$config['password']}\"",
             "\tradius_db = \"{$config['database']}\"",

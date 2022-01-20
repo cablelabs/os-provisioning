@@ -24,6 +24,9 @@ class InstallKea extends BaseMigration
      */
     public function up()
     {
+        $psw = \Str::random(12);
+        $user = DB::connection('pgsql-kea')->getConfig('username');
+
         // Add directory structure
         if (! is_dir('/etc/kea/gateways6')) {
             mkdir('/etc/kea/gateways6', 0750, true);
@@ -37,17 +40,23 @@ class InstallKea extends BaseMigration
         system('chown -R apache /etc/kea/');
         system("sed -i 's/tag VARCHAR(256) NOT NULL,/tag VARCHAR(191) NOT NULL,/' /usr/share/kea/scripts/mysql/dhcpdb_create.mysql");
 
-        // Create kea DB and grant all permissions to user nmsprime
-        $rootConf = DB::connection('mysql-root')->getConfig();
-        $conf = DB::connection('mysql')->getConfig();
+        system("sed -i 's/^KEA_DB_PASSWORD=.*$/KEA_DB_PASSWORD=$psw/' /etc/nmsprime/env/provbase.env");
+        Config::set('database.connections.pgsql-kea.password', $psw);
+        DB::reconnect('pgsql-kea');
 
-        $rootDbUser = $rootConf['username'];
-        $rootDbPassword = $rootConf['password'];
-        $dbUser = $conf['username'];
-        $dbPassword = $conf['password'];
+        system('sudo -u postgres psql -c "CREATE DATABASE kea"');
+        system("sudo -u postgres psql -d kea -c \"CREATE USER $user PASSWORD '$psw';\"");
+        system("/usr/sbin/kea-admin db-init pgsql -u $user -p $psw -n kea");
 
-        system("mysql -u '$rootDbUser' --password='$rootDbPassword' --exec=\"CREATE DATABASE kea; GRANT ALL ON kea.* TO 'nmsprime'@'localhost'\"");
-        system("/usr/sbin/kea-admin db-init mysql -u '$dbUser' -p '$dbPassword' -n kea");
+        system("sudo -u postgres psql -d kea -c \"
+            GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
+            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
+        \"");
+
+        echo "Change owner of kea DB tables to kea\n";
+
+        system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" kea`;
+            do sudo -u postgres psql -d kea -c \"alter table ".'$tbl'." owner to ".$user."\"; done");
 
         $find = [
             '<DB_USERNAME>',
@@ -55,8 +64,8 @@ class InstallKea extends BaseMigration
         ];
 
         $replace = [
-            $dbUser,
-            $dbPassword,
+            $user,
+            $psw,
         ];
 
         $filename = '/etc/kea/dhcp6-nmsprime.conf';
