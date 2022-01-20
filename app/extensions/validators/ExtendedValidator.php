@@ -96,12 +96,11 @@ class ExtendedValidator
      */
     public function isIpBetweenRange($ip, $startIp, $endIp)
     {
-       return inet_pton($ip) >= inet_pton($startIp) && inet_pton($ip) <= inet_pton($endIp);
+        return inet_pton($ip) >= inet_pton($startIp) && inet_pton($ip) <= inet_pton($endIp);
     }
 
     /**
      * @param string e.g. 100.64.0.0/24 or fd00::/48
-     *
      * @return array|null
      */
     public function getFirstAndLastIpFromPrefix($prefix)
@@ -130,8 +129,8 @@ class ExtendedValidator
     {
         $cidr = explode('/', $prefix);
 
-        $range['first'] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int)$cidr[1]))));
-        $range['last'] = long2ip((ip2long($range['first'])) + pow(2, (32 - (int)$cidr[1])) - 1);
+        $range['first'] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int) $cidr[1]))));
+        $range['last'] = long2ip((ip2long($range['first'])) + pow(2, (32 - (int) $cidr[1])) - 1);
 
         return $range;
     }
@@ -146,7 +145,7 @@ class ExtendedValidator
     public function getFirstAndLastIpv6FromPrefix($prefix): array
     {
         // Split in address and prefix length
-        list($addr_given_str, $prefixlen) = explode('/', $prefix);
+        [$addr_given_str, $prefixlen] = explode('/', $prefix);
 
         // Parse the address into a binary string
         $addr_given_bin = inet_pton($addr_given_str);
@@ -176,7 +175,7 @@ class ExtendedValidator
             $origval_last = hexdec($orig_last);
 
             // First address: calculate the subnet mask. min() prevents the comparison from being negative
-            $mask = 0xf << (min(4, $flexbits));
+            $mask = 0xF << (min(4, $flexbits));
 
             // AND the original against its mask
             $new_val_first = $origval_first & $mask;

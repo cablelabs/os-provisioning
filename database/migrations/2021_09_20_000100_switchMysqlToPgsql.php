@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
-
 /**
  * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
  * and others – powered by CableLabs. All rights reserved.
@@ -45,11 +43,11 @@ class SwitchMysqltoPgsql extends BaseMigration
         // Check if postgres and pgloader is installed before starting any action
         exec('systemctl status postgresql-13.service', $out, $ret);
         if ($ret) {
-            throw new Exception("Postgresql-13 is missing.");
+            throw new Exception('Postgresql-13 is missing.');
         }
 
         if (! system('which pgloader')) {
-            throw new Exception("Pgloader is not installed. Install via: yum install pgloader");
+            throw new Exception('Pgloader is not installed. Install via: yum install pgloader');
         }
 
         $this->convertNmsprimeDbs();
@@ -113,8 +111,8 @@ class SwitchMysqltoPgsql extends BaseMigration
 
             if ($db == 'nmsprime') {
                 // DB already exists - Just add extension for indexing and quick search with % at start & end
-                system("sudo -u postgres psql -d $db -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm'");
                 // Schema::createExtension('pg_trgm'); - only with https://github.com/tpetry/laravel-postgresql-enhanced
+                system("sudo -u postgres psql -d $db -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm'");
             } else {
                 system("sudo -u postgres psql -c 'CREATE DATABASE $db'");
                 echo "$db\n";
@@ -128,7 +126,6 @@ class SwitchMysqltoPgsql extends BaseMigration
                 // Create user
                 system("sudo -u postgres psql -c \"CREATE USER $user PASSWORD '".$conf['password'].'\'"');
                 echo "$user\n";
-
             }
 
             // Set search path of postgres user to mainly used schema to not be required to always specify schema in queries
@@ -252,7 +249,7 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         echo "Change owner of kea DB tables to kea\n";
 
         system("for tbl in `sudo -u postgres psql kea -qAt -c \"select tablename from pg_tables where schemaname = 'public';\"`;
-            do sudo -u postgres psql kea -c \"alter table ".'$tbl'." owner to ".$user."\"; done");
+            do sudo -u postgres psql kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
 
         // Transfer leases
         foreach (DB::connection('mysql')->table('kea.lease6')->get() as $lease) {

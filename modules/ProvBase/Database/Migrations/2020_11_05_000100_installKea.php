@@ -56,7 +56,7 @@ class InstallKea extends BaseMigration
         echo "Change owner of kea DB tables to kea\n";
 
         system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" kea`;
-            do sudo -u postgres psql -d kea -c \"alter table ".'$tbl'." owner to ".$user."\"; done");
+            do sudo -u postgres psql -d kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
 
         $find = [
             '<DB_USERNAME>',

@@ -327,8 +327,8 @@ function whereLaterOrEqual($column, $date)
     return function ($query) use ($column, $date) {
         $query
             ->where($column, '>=', $date)
-            ->orWhereNull($column);
             // ->orWhere($column, '=', '');
+            ->orWhereNull($column);
     };
 }
 
