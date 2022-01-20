@@ -146,11 +146,11 @@ class IpPoolController extends \BaseController
         // Replace placeholder in rules by data e.g. net in ip_pool_start rule by $data['net']
         $rulesWithPlaceholders = ['ip_pool_start', 'ip_pool_end', 'router_ip', 'broadcast_ip'];
         foreach ($rulesWithPlaceholders as $rkey) {
-            $description = $rules[$rkey];
+            $description = implode('|', $rules[$rkey]);
 
             foreach ($data as $key => $value) {
                 if (($pos = strpos($description, $key)) && substr($description, $pos - 1, 1) != '|') {
-                    $rules[$rkey] = $description = preg_replace("/$key\b/", "$value", $description);
+                    $rules[$rkey] = preg_replace("/$key\b/", "$value", $rules[$rkey]);
                 }
             }
         }
@@ -159,18 +159,14 @@ class IpPoolController extends \BaseController
         $rulesToAddIpRule = array_merge($rulesWithPlaceholders, ['net', 'dns1_ip', 'dns2_ip', 'dns3_ip']);
         foreach ($rulesToAddIpRule as $rkey) {
             $rule = $data['version'] ? 'ipv'.$data['version'] : 'ip';
-            $rules[$rkey] = isset($rules[$rkey]) ? $rule.'|'.$rules[$rkey] : $rule;
+            isset($rules[$rkey]) ? array_push($rules[$rkey], $rule) : $rules[$rkey] = [$rule];
         }
 
         if ($data['version'] == '6') {
-            $rules['type'] = 'In:CPEPub';
+            $rules['type'] = ['In:CPEPub'];
 
             foreach (['prefix', 'prefix_len', 'delegated_len'] as $rkey) {
-                if (isset($rules[$rkey])) {
-                    $rules[$rkey] .= '|required';
-                } else {
-                    $rules[$rkey] = 'required';
-                }
+                isset($rules[$rkey]) ? array_unshift($rules[$rkey], 'required') : $rules[$rkey] = ['required'];
             }
         }
 

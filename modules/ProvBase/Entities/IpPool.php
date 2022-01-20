@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
+use Illuminate\Validation\Rule;
 
 class IpPool extends \BaseModel
 {
@@ -32,17 +33,17 @@ class IpPool extends \BaseModel
         // Note: ip rule is added in IpPoolController
         // TODO: Take care of IpPoolController::prepare_rules() when adding new rules!
         return [
-            'net' => 'required',
-            'netmask' => 'required|netmask',     // netmask must not be in first place!
-            'ip_pool_start' => 'required|ip_in_range:net,netmask|ip_larger:net',
-            'ip_pool_end' => 'required|ip_in_range:net,netmask|ip_larger:ip_pool_start',
-            'router_ip' => 'required|ip_in_range:net,netmask',
-            'broadcast_ip' => 'nullable|ip_in_range:net,netmask|ip_larger:ip_pool_end',
-            'dns1_ip' => 'nullable',
-            'dns2_ip' => 'nullable',
-            'dns3_ip' => 'nullable',
-            'prefix_len' => 'netmask',
-            'delegated_len' => 'netmask',
+            'net' => ['required', Rule::unique('ippool')->ignore($this)],
+            'netmask' => ['required', 'netmask'],     // netmask must not be in first place!
+            'ip_pool_start' => ['required', 'ip_in_range:net,netmask', 'ip_larger:net'],
+            'ip_pool_end' => ['required', 'ip_in_range:net,netmask', 'ip_larger:ip_pool_start'],
+            'router_ip' => ['required', 'ip_in_range:net,netmask'],
+            'broadcast_ip' => ['nullable', 'ip_in_range:net,netmask', 'ip_larger:ip_pool_end'],
+            'dns1_ip' => ['nullable'],
+            'dns2_ip' => ['nullable'],
+            'dns3_ip' => ['nullable'],
+            'prefix_len' => ['netmask'],
+            'delegated_len' => ['netmask'],
         ];
     }
 
