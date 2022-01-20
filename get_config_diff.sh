@@ -37,5 +37,6 @@ for file in $(find /var/www/nmsprime -maxdepth 4 -path "*/Install/config.cfg"); 
 		fi
 
 		diff -u "$f_to" "$f_from"
+		echo ""
 	done < <(awk '/\[files\]/{flag=1;next}/\[/{flag=0}flag' "$file" | grep '=' | sed -f <(printf '\|%s|d\n' "${ignore[@]}"))
 done
