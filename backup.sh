@@ -80,35 +80,17 @@ else
 	done
 fi
 
+# Backup databases - cacti (mysql) first
 mkdir -p "/root/$db_dir"
-for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc; do
-# centos8
-#for db in cacti director icinga2 icingaweb2 nmsprime nmsprime_ccc radius; do
-	case "$db" in
-	'cacti')
-		auth=$(php -r 'require_once "/etc/cacti/db.php"; echo "$database_default\n$database_password\n$database_username\n";' | xargs)
-		;;
-	'nmsprime')
-		auth=$(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsprime/env/global.env | sort | cut -d'=' -f2 | xargs)
-		;;
-	'nmsprime_ccc')
-		auth=$(grep '^CCC_DB_DATABASE\|^CCC_DB_USERNAME\|^CCC_DB_PASSWORD' /etc/nmsprime/env/ccc.env | sort | cut -d'=' -f2 | xargs)
-		;;
-	'radius')
-		auth=$(grep '^RADIUS_DB_DATABASE\|^RADIUS_DB_USERNAME\|^RADIUS_DB_PASSWORD' /etc/nmsprime/env/provbase.env | sort | cut -d'=' -f2 | xargs)
-		;;
-	*)
-		auth=$(awk "/\[$db\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep '^dbname\|^username\|^password' | sort | cut -d'=' -f2 | xargs)
-		;;
-	esac
+auth=$(php -r 'require_once "/etc/cacti/db.php"; echo "$database_default\n$database_password\n$database_username\n";' | xargs)
+read -r -a auths <<< "$auth"
+mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/root/$db_dir/${auths[0]}.sql.gz"
 
-	read -r -a auths <<< "$auth"
-	mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/root/$db_dir/${auths[0]}.sql.gz"
+for db in director icinga2 icingaweb2 nmsprime nmsprime_ccc radius; do
+	# see aws.sh for an alternative, if the dump gets too large at some point in time
+	su - postgres -c '/usr/pgsql-13/bin/pg_dump -Fc $db' > "/root/$db_dir/$db.psql"
 done
 
 mongodump --db=genieacs --gzip --archive="/root/$db_dir/genieacs.gz"
-
-# see aws.sh for an alternative, if the dump gets too large at some point in time
-su - postgres -c '/usr/pgsql-13/bin/pg_dump -Fc nmsprime' > "/root/$db_dir/nmsprime.psql"
 
 tar --exclude-from <(IFS=$'\n'; echo "${excludes[*]}") --transform=$(IFS=';'; echo "${transform[*]}") --hard-dereference -cz "${static[@]}" "${files[@]}" 2> /root/backup-nmsprime.txt
