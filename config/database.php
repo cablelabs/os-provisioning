@@ -290,12 +290,7 @@ return [
 
         'pgsql-ccc' => [
             'driver'   => 'pgsql',
-            'read'      => [
-                'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
-            ],
-            'write'      => [
-                'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
-            ],
+            'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
             'sticky' => true,
             'database'  => env('CCC_DB_DATABASE', env('DB_DATABASE', 'forge')),
             'username'  => env('CCC_DB_USERNAME', env('DB_USERNAME', '')),
@@ -304,6 +299,45 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'nmsprime_ccc',
+            'sslmode' => 'prefer',
+        ],
+
+        'pgsql-icinga2' => [
+            'driver'   => 'pgsql',
+            'sticky' => true,
+            'host'      => exec('awk "/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^host" | sort | cut -d\'=\' -f2 | xargs') ?: 'localhost',
+            'database'  => exec('awk "/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^password" | sort | cut -d\'=\' -f2 | xargs') ?: 'icinga2',
+            'username'  => exec('awk "/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^username" | sort | cut -d\'=\' -f2 | xargs') ?: 'icinga2user',
+            'password'  => exec('awk "/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^password" | sort | cut -d\'=\' -f2 | xargs'),
+            // 'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
+            // 'database'  => env('ICINGA2_DB_DATABASE', 'icinga2'),
+            // 'username'  => env('ICINGA2_DB_USERNAME', env('DB_USERNAME', 'icinga2user')),
+            // 'password'  => env('ICINGA2_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'pgsql-kea' => [
+            'driver'    => 'pgsql',
+            'host'      => env('KEA_DB_HOST', 'localhost'),
+            'database'  => env('KEA_DB_DATABASE', 'kea'),
+            'username'  => env('KEA_DB_USERNAME', 'kea'),
+            'password'  => env('KEA_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'pgsql-radius' => [
+            'driver'   => 'pgsql',
+            'host'      => explode(',', str_replace(' ', '', env('RADIUS_DB_HOST', env('DB_HOST', 'localhost')))),
+            'sticky' => true,
+            'database'  => env('RADIUS_DB_DATABASE', env('DB_DATABASE', 'radius')),
+            'username'  => env('RADIUS_DB_USERNAME', env('DB_USERNAME', 'radius')),
+            'password'  => env('RADIUS_DB_PASSWORD', env('DB_PASSWORD', 'radpass')),
+            'charset' => 'utf8',
+            'schema' => 'public',
             'sslmode' => 'prefer',
         ],
 
