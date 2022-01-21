@@ -724,6 +724,7 @@ return [
             'deceased' => 'deceased',
             'competitor' => 'competitor',
         ],
+        'noModemTickets' => 'Currently none of the modems that belong to this contract have a ticket associated!',
     ],
     'geocoding' => [
         'failed' => 'Could not determine geo coordinates (:reason) – please add the coordinates manually!',

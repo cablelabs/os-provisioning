@@ -724,6 +724,7 @@ return [
             'deceased' => 'verstorben',
             'competitor' => 'Mitbewerber',
         ],
+        'noModemTickets' => 'Aktuell besitzen die Modems dieses Vertrags keine Tickets!',
     ],
     'geocoding' => [
         'failed' => 'Leider konnten die Daten nicht in Koordinaten umgewandelt werden (:reason) – bitte manuell hinzufügen!',

@@ -34,7 +34,7 @@
             document.addEventListener("DOMContentLoaded", function() {
                 let {{ $dtName }} = $('#{{ $dtName }}').DataTable({
                     @include('datatables.lang')
-                    dom: 'rtip',
+                    dom: 'rt'+"<'row'<'col-12 pb-1'i><'col-9 ml-auto'p>>",
                     columnDefs: [
                         {
                             defaultContent: "",
@@ -56,4 +56,10 @@
     @endif
     {!! Form::close() !!}
 @DivClose()
+@elseif (isset($options['empty_message']))
+
+<div class="text-dark" style="padding: 1.5rem;font-weight:bold;">
+    {{ $options['empty_message'] }}
+</div>
+
 @endif

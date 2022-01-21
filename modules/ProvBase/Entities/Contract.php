@@ -234,6 +234,15 @@ class Contract extends \BaseModel
                 $this->invoices;
         }
 
+        if (Module::collections()->has('Ticketsystem')) {
+            $ret['Tickets']['Ticket']['class'] = 'Ticket';
+            $ret['Tickets']['Ticket']['relation'] = $this->tickets;
+            $ret['Tickets']['Modem Tickets']['class'] = 'Ticket';
+            $ret['Tickets']['Modem Tickets']['relation'] = $this->modems()->select('id')->with('tickets')->get()->pluck('tickets')->flatten();
+            $ret['Tickets']['Modem Tickets']['options']['hide_create_button'] = 1;
+            $ret['Tickets']['Modem Tickets']['options']['empty_message'] = trans('view.contract.noModemTickets');
+        }
+
         if (Module::collections()->has('ProvVoipEnvia') &&
             (! Module::collections()->has('PropertyManagement') || (! $this->group_contract))) {
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
@@ -261,8 +270,6 @@ class Contract extends \BaseModel
         if (Module::collections()->has('Mail')) {
             $ret['Email']['Email'] = $this->emails;
         }
-
-        $this->addViewHasManyTickets($ret);
 
         return $ret;
     }
