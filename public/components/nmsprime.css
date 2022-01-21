@@ -866,11 +866,43 @@ div.recolor:hover,
     max-width: 12rem;
 }
 
+#breadcrumbscroller {
+    position: absolute;
+    width: 80vw;
+    z-index: 100;
+    padding-top: .5rem;
+    background-color: white;
+    transform: translateY(-150px);
+    transition: 325ms ease-in;
+}
+
+#breadcrumbexit {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    left: 80vw;
+    width: 20vw;
+    z-index: 100;
+    padding: 1rem;
+    background-color: white;
+    transform: translateY(-150px);
+    transition: 325ms ease-in;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .mw-sm-80 {
         width: 100%;
         max-width: 20rem;
+    }
+
+    #breadcrumbscroller {
+        width: 90vw;
+    }
+
+    #breadcrumbexit {
+        left: 90vw;
+        width: 10vw;
     }
 }
 
@@ -886,6 +918,15 @@ div.recolor:hover,
 @media (min-width: 992px) {
     #mapid, #map {
         min-height: 50vh;
+    }
+
+    #breadcrumbscroller {
+        position: relative;
+        padding-top: 0;
+        margin-top: .5rem;
+        width: inherit;
+        background-color: transparent;
+        transform: translateY(0);
     }
 }
 

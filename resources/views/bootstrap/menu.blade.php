@@ -34,25 +34,65 @@
           </a>
         </span>
 
+        @if ($headline && Illuminate\Support\Str::endsWith(request()->route()->getName(), 'edit'))
+          <ul class="nav nav-pills mt-2 d-flex d-lg-none">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle bg-dark active text-white"
+                style="display:flex; align-items:center;"
+                href="#"
+                onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(0)';document.getElementById('breadcrumbexit').style.transform = 'translateY(0)';">
+                <i class="fa fa-ellipsis-h fa-2x" aria-hidden="true"></i>
+                <div class="d-none d-md-block pl-2">{{ trans('view.Header_Dependencies') }}</div>
+              </a>
+            </li>
+          </ul>
+        @endif
       {{-- end mobile sidebar expand / collapse button --}}
-      <div class="col tab-overflow p-t-5 m-l-5 d-none d-md-block">
-        <ul class="nav nav-pills p-t-5">
-          <li class="prev-button"><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
-          @yield('content_top')
-          <li class="next-button"><a href="javascript:;" data-click="next-tab" class="m-t-10"><i class="fa fa-arrow-right"></i></a></li>
-        </ul>
+      <div id="breadcrumbscroller" class="d-flex col tab-overflow">
+          <ul class="nav nav-pills p-t-5">
+            <li class="prev-button "><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i class="fa fa-arrow-left"></i></a></li>
+              @yield('content_top')
+            <li class="next-button"><a href="javascript:;" data-click="next-tab" class="m-t-10"><i class="fa fa-arrow-right"></i></a></li>
+          </ul>
+      </div>
+      <div id="breadcrumbexit" class="d-lg-none">
+        <a href="#" class="text-dark" onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(-150px)';document.getElementById('breadcrumbexit').style.transform = 'translateY(-150px)';">
+          <i class="fa fa-close fa-2x"></i>
+        </a>
       </div>
 
       <ul class="navbar-nav ml-auto">
-        {{-- global search form --}}
-        <li class="nav-item d-flex">
-          <a id="togglesearch" href="javascript:;" class="waves-effect waves-light" data-toggle="navbar-search">
-            <i class="fa fa-search fa-2x" aria-hidden="true"></i>
-          </a>
-        </li>
+        @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics))
+          {{-- Modem Statistics (Online/Offline) --}}
+          <li class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
+            <a class="d-flex" href="{{ route('HfcBase.index') }}" style="text-decoration: none;" data-toggle="tooltip" data-html="true" data-placement="auto" title="{!! $modem_statistics->text !!}">
+                <i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
+                <div class="badge badge-{{ $modem_statistics->style }} d-none d-lg-block">{!! $modem_statistics->text !!}</div>
+            </a>
+          </li>
+        @endif
+
+        {{-- count of user interaction needing EnviaOrders --}}
+        @if (Module::collections()->has('ProvVoipEnvia'))
+          <li  class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
+            <a href="{{ 'envia' /* route('EnviaOrder.index', ['show_filter' => 'action_needed']) */ }}" target="_self" style="text-decoration: none;">
+              @if ($envia_interactioncount > 0)
+                <div class="d-flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
+                  <i class="fa fa-times fa-lg text-danger"></i>
+                  <div class="badge badge-danger d-none d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 9) }}</div>
+                </div>
+              @else
+                <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
+                  <i class="fa fa-check fa-lg text-success"></i>
+                </div>
+              @endif
+            </a>
+          </li>
+        @endif
+
 
         {{-- Help Section --}}
-        <li class="nav-item dropdown d-none d-md-block">
+        <li class="nav-item dropdown d-none d-md-flex">
           <a id="navbarDropdown"
             class="nav-link dropdown-toggle"
             href="#"
@@ -80,44 +120,20 @@
           </div>
         </li>
 
-        @if (Module::collections()->has(['Dashboard', 'HfcBase']))
-          {{-- Modem Statistics (Online/Offline) --}}
-          <li  class='d-none d-md-block m-t-10' style='font-size: 2em; font-weight: bold'>
-            <a href="{{ route('HfcBase.index') }}" style="text-decoration: none;">
-              @if (is_object($modem_statistics))
-                <span data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.modem_statistics') }}">
-                  <i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
-                  <span class="badge badge-{{ $modem_statistics->style }}">{!! $modem_statistics->text !!}</span>
-                </span>
-              @endif
-            </a>
-          </li>
-        @endif
-        @if (Module::collections()->has('ProvVoipEnvia'))
-          {{-- count of user interaction needing EnviaOrders --}}
-          <li  class='d-none d-md-block m-t-10' style='font-size: 2em; font-weight: bold'>
-            <a href="{{route('EnviaOrder.index', ['show_filter' => 'action_needed'])}}" target="_self" style="text-decoration: none;">
-              @if ($envia_interactioncount > 0)
-                <span data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
-                  <i class="fa fa-times fa-lg text-danger"></i>
-                  <span class="badge badge-danger">Envia<br>{{ $envia_interactioncount }}</span>
-                </span>
-              @else
-                <span data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
-                  <i class="fa fa-check fa-lg text-success"></i>
-                </span>
-              @endif
-            </a>
-          </li>
-        @endif
+        {{-- global search form --}}
+        <li class="nav-item d-flex">
+          <a id="togglesearch" href="javascript:;" class="waves-effect waves-light" data-toggle="navbar-search">
+            <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+          </a>
+        </li>
 
         {{-- Notification Section --}}
         @include('bootstrap._navbar-notifications')
 
         {{-- User Menu --}}
-        <li class="nav-item dropdown m-r-10">
+        <li class="nav-item dropdown d-flex m-r-10">
           <a id="navbarDropdown"
-            class="nav-link d-flex align-items-center dropdown-toggle"
+            class="nav-link d-flex align-items-end dropdown-toggle"
             href="#"
             role="button"
             data-toggle="dropdown"

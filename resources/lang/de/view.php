@@ -257,6 +257,9 @@ return [
     // Workforce
     'Header_Workforce'          => 'Workforce Kommandozentrale',
 
+    // Responsive Navbar Button
+    'Header_Dependencies'       => 'Abhängigkeiten',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index
