@@ -557,7 +557,7 @@ class Modem extends \BaseModel
             $modems_raw = self::whereNotNull('mac')->get();
             $modems = [];
             foreach ($modems_raw as $modem) {
-                $modems[\Str::lower($modem->mac)] = $modem->hostname;
+                $modems[Str::lower($modem->mac)] = $modem->hostname;
             }
             ksort($modems);
 
@@ -577,7 +577,7 @@ class Modem extends \BaseModel
             $remote_id_lines = [];
             foreach ($modems as $mac => $hostname) {
                 if (in_array($hostname, $hostnames)) {
-                    $line = "\t\t(option agent.remote-id != ".\Str::lower($mac).')';
+                    $line = "\t\t(option agent.remote-id != ".Str::lower($mac).')';
                     array_push($remote_id_lines, $line);
                 }
             }
@@ -731,29 +731,28 @@ class Modem extends \BaseModel
     {
         // Add (Block)
         if (! $unblock) {
-            file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
+            exec('grep -i '.$mac.' '.self::BLOCKED_CPE_FILE_PATH, $out, $ret);
 
-            Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
+            // not found
+            if ($ret) {
+                file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
+
+                Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
+            }
 
             if (! $macChanged) {
+                // Remove original MAC if MAC was changed
                 return;
             }
         }
 
         // Remove (Unblock)
-        $lines = file(self::BLOCKED_CPE_FILE_PATH);
         $mac = $macChanged ? $this->getOriginal('mac') : $this->mac;
 
-        foreach ($lines as $i => $line) {
-            if (Str::contains($line, $mac)) {
-                unset($lines[$i]);
-                File::put(self::BLOCKED_CPE_FILE_PATH, implode($lines), true);
+        exec('grep -v '.$mac.' '.self::BLOCKED_CPE_FILE_PATH.' > '.self::BLOCKED_CPE_FILE_PATH.'.tmp');
+        rename(self::BLOCKED_CPE_FILE_PATH.'.tmp', self::BLOCKED_CPE_FILE_PATH);
 
-                Log::info("DHCP - Remove modem $this->id ($this->mac) from list for blocked CPEs");
-
-                return;
-            }
-        }
+        Log::info("DHCP - Remove modem $this->id ($this->mac) from list for blocked CPEs");
     }
 
     /**
@@ -828,11 +827,11 @@ class Modem extends \BaseModel
 
         // don't use auto generated MaxCPE if it is explicitly set in the configfile
         // see https://stackoverflow.com/a/643136 for stripping multiline comments
-        if (! \Str::contains(preg_replace('!/\*.*?\*/!s', '', $text), 'MaxCPE')) {
+        if (! Str::contains(preg_replace('!/\*.*?\*/!s', '', $text), 'MaxCPE')) {
             $conf .= "\tMaxCPE $max_cpe;\n";
         }
 
-        if (Module::collections()->has('ProvVoip') && $internet_access && ! \Str::contains($text, 'CpeMacAddress skip')) {
+        if (Module::collections()->has('ProvVoip') && $internet_access && ! Str::contains($text, 'CpeMacAddress skip')) {
             foreach ($this->mtas as $mta) {
                 $conf .= "\tCpeMacAddress $mta->mac;\n";
             }
@@ -1449,7 +1448,7 @@ class Modem extends \BaseModel
         $ignore = ['T3 time', 'T4 time'];
         $trans = ['', 'danger', 'danger', 'danger', 'danger', 'warning', 'success', '', 'info'];
         foreach ($log[$color_key] as $k => $color_idx) {
-            $log[$color_key][$k] = \Str::contains($log[$text_key][$k], $ignore) ? '' : $trans[$color_idx];
+            $log[$color_key][$k] = Str::contains($log[$text_key][$k], $ignore) ? '' : $trans[$color_idx];
         }
 
         // add table headers
