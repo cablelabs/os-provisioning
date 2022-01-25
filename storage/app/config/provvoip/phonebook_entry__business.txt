@@ -4461,7 +4461,6 @@ Berufsförderungsdienst
 Berufsförderungsinstitut
 Berufsförderungswerk
 Berufsfortbildungsstätte
-BerufsGeschaeftsbezeichnung
 Berufsimkerei
 Berufskleiderfabrikation
 Berufskleidungsmietservice
@@ -4471,6 +4470,7 @@ Berufskraftfahrer Akademie
 Berufskraftfahrerausbildung
 Berufskraftfahrerin
 Berufskraftfahrerschule
+Berufskraftfahrerschulung
 Berufskraftfahrschule
 Berufspädagoge
 Berufspädagogin
@@ -8109,6 +8109,7 @@ Edelsteingalerie
 Edelsteingestaltung
 Edelsteingraveur
 Edelsteingraveurin
+Edelsteingraveurmeisterin
 Edelsteingravierwerkstätte
 Edelsteinhandel
 Edelsteinhandlung
@@ -20062,6 +20063,7 @@ Konsistorialpräsident a.D.
 Konsortialgeschäft
 Konstrukteur
 Konstrukteur a.D.
+Konstrukteur für Fertigungsmittel
 Konstrukteur i.R.
 Konstrukteurin
 Konstruktionen für den Maschinenbau
@@ -21964,6 +21966,7 @@ Lebensenergieberatung
 Lebensenergietherapeut
 Lebenserhaltende Medizintechnik
 Lebensgestaltung
+Lebenshelfer
 Lebenshelferin
 Lebenshilfe
 Lebenshilfe für Behinderte
@@ -27266,6 +27269,7 @@ Planierarbeiten
 Plankonzept
 Plantage
 Planung für Haustechnik
+Planung für medizinische Bereiche
 Planung von Gewerbeküchen
 Planungsagentur für Lichttechnik
 Planungsatelier für Wohnungseinrichtungen
@@ -30567,6 +30571,7 @@ Sachverständigenbüro für Grundstücke
 Sachverständigenbüro für Grundstücksbewertung
 Sachverständigenbüro für Grundstücksermittlung
 Sachverständigenbüro für Grundstückswertermittlung
+Sachverständigenbüro für Grundwasser
 Sachverständigenbüro für Haustechnik
 Sachverständigenbüro für Hochbau
 Sachverständigenbüro für Holzschutz
@@ -40921,6 +40926,7 @@ Zertifizierter Entsorgungsfachbetrieb
 Zertifizierter Implantologe
 Zertifizierter Kanalsanierungsberater
 Zertifizierter Mediator
+Zertifizierter Onlineredakteur
 Zertifizierter Sachverständiger
 Zertifizierter Sachverständiger für Wohnimmobilien
 Zeugnisberatung
