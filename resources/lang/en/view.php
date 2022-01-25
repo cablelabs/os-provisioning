@@ -669,6 +669,9 @@ return [
     'Time' => 'Time',
     'from' => 'from',
     'to' => 'to',
+    'tree' => [
+        'addDevice' => 'Add NetElement at the selected position',
+    ],
     'topo' => [
         'MPR' => 'Modem Positioning Rule',
         'Modem' => 'Topography: Modem Overview',

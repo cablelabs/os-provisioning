@@ -669,6 +669,9 @@ return [
     'Time' => 'Zeit',
     'from' => 'von',
     'to' => 'bis',
+    'tree' => [
+        'addDevice' => 'Netzelement an der gewählten Position hinzufügen',
+    ],
     'topo' => [
         'MPR' => 'Modembereich',
         'Modem' => 'Modemübersicht Topographie',

@@ -257,22 +257,27 @@ class NetElement extends \BaseModel
             $query->select(['id', '_lft', '_rgt', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
         }
 
-        return $query->where($field, $operator, $id)
-            ->withCount([
-                'modems' => function ($query) {
-                    $this->excludeCanceledContractsQuery($query);
-                },
-                'modems as modems_online_count' => function ($query) {
-                    $query->where('us_pwr', '>', '0');
+        if (is_array($operator)) {
+            $query->whereIn($field, $operator);
+        } else {
+            $query->where($field, $operator, $id);
+        }
 
-                    $this->excludeCanceledContractsQuery($query);
-                },
-                'modems as modems_critical_count' => function ($query) {
-                    $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
+        return $query->withCount([
+            'modems' => function ($query) {
+                $this->excludeCanceledContractsQuery($query);
+            },
+            'modems as modems_online_count' => function ($query) {
+                $query->where('us_pwr', '>', '0');
 
-                    $this->excludeCanceledContractsQuery($query);
-                },
-            ]);
+                $this->excludeCanceledContractsQuery($query);
+            },
+            'modems as modems_critical_count' => function ($query) {
+                $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
+
+                $this->excludeCanceledContractsQuery($query);
+            },
+        ]);
     }
 
     /**
@@ -534,6 +539,16 @@ class NetElement extends \BaseModel
             ->where('id', '!=', $this->id)
             ->where('netelementtype_id', $cluster_id)
             ->orderBy('name');
+    }
+
+    public function isCluster()
+    {
+        return $this->id == $this->cluster;
+    }
+
+    public function isNet()
+    {
+        return $this->id == $this->net;
     }
 
     /**
@@ -913,15 +928,13 @@ class NetElement extends \BaseModel
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
-        $sqlCol = $this->netelementtype->name;
-        $id = $this->id;
+        $sqlCol = 'id';
         if (! in_array($type, [1, 2])) {
-            $sqlCol = $this->cluster ? 'Cluster' : 'Net';
-            $id = $this->cluster ? $this->cluster : $this->net;
+            $sqlCol = $this->cluster ? 'cluster' : 'net';
         }
 
-        $tabs[] = ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $id]];
-        $tabs[] = ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $id]];
+        $tabs[] = ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
+        $tabs[] = ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
 
         if (! Module::collections()->has('HfcBase')) {
             $tabs[array_key_last($tabs) - 1]['route'] = 'missingModule';
