@@ -131,20 +131,21 @@ class IpPool extends \BaseModel
      *
      * @return bool
      */
-    public function ip_route_prov_exists()
+    public function ip_route_prov_exists($netgw = null)
     {
+        $netgw = $netgw ?? $this->netgw;
         // route is online without setting a static route,
         // e.g. an external router is used (default gateway)
-        if ($this->ip_route_online()) {
+        if ($netgw->isOnline && $this->ip_route_online()) {
             return true;
         }
 
         $optionIpv6 = '';
-        $ip = $this->netgw->ip;
+        $ip = $netgw->ip;
 
         if ($this->version == '6') {
             $optionIpv6 = '-6';
-            $ip = $this->netgw->ipv6;
+            $ip = $netgw->ipv6;
         }
 
         return strlen(exec("/usr/sbin/ip $optionIpv6 route show ".$this->net.$this->maskToCidr().' via '.$ip)) != 0;

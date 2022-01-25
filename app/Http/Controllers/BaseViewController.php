@@ -285,6 +285,7 @@ class BaseViewController extends Controller
                         $field['help'] = 'Device seems to be Offline!';
                         $field['help_icon'] = 'fa-exclamation-triangle text-warning';
                     } else {
+                        $model->isOnline = true;
                         $field['help'] = 'Device is Online';
                         $field['help_icon'] = 'fa-check-circle-o text-success';
                     }

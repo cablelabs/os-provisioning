@@ -25,7 +25,7 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 <?php $cb->missing_pools=false; ?>
 @foreach ($view_var->ippools as $pool)
 @php
-	$routeExists = $pool->ip_route_prov_exists();
+	$routeExists = $pool->ip_route_prov_exists($view_var);
 @endphp
 @if (! $routeExists)
 <div class="label label-danger m-l-5">
@@ -47,7 +47,7 @@ File: <i>/etc/sysconfig/network-scripts/route-...</i><br><br>
 
 <div class="p-l-10">
 <pre>
- @include ('provbase::NetGwBlade.bundle_ips')
+@include ('provbase::NetGwBlade.bundle_ips')
 </pre>
 </div>
 
