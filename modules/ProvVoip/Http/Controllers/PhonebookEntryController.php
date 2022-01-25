@@ -174,6 +174,11 @@ class PhonebookEntryController extends \BaseController
         foreach ($rules as $form_name => $form_name_rules) {
             $form_name_rules = explode('|', $form_name_rules);
 
+            if ('phonenumbermanagement_id' == $form_name) {
+                // nothing to replace in this rule; would replace “id” by $phonebookentry->id
+                continue;
+            }
+
             // we need to go through complete data => e.g. we need to replace lastname AND entry_type in valitation of lastname
             foreach ($data as $varname => $value) {
 
