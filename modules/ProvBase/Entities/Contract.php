@@ -369,31 +369,9 @@ class Contract extends \BaseModel
             $ret['Email']['Email'] = $this->emails;
         }
 
-        if (Module::collections()->has('DocumentManagement')) {
-            data_set($ret, 'Documents.UploadDocument.view', [
-                'view' => 'documentmanagement::Document.upload',
-                'vars' => [
-                    'model_id' => $this->getKey(),
-                    'model_type' => $this::class,
-                ],
-            ]);
-
-            data_set(
-                $ret,
-                'Documents.GenerateDocument.html',
-                \Livewire\Livewire::mount(
-                    'documentmanagement::generate-document',
-                    ['contract' => $this->withoutRelations()]
-                )->html()
-            );
-
-            data_set($ret, 'Documents.Documents', [
-                'class' => 'Document',
-                'relation' => $this->documents,
-                'options' => [
-                    'hide_create_button' => true,
-                ],
-            ]);
+        if (Module::collections()->has('Dreamfiber')) {
+            $ret['Edit']['DfSubscription']['class'] = 'DfSubscription';
+            $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscription;
         }
 
         return $ret;
