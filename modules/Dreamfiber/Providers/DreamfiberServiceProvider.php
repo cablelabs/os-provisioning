@@ -28,6 +28,7 @@ class DreamfiberServiceProvider extends ServiceProvider
      */
     protected $commands = [
         'Modules\Dreamfiber\Console\OtoFromCsvUpdaterCommand',
+        'Modules\Dreamfiber\Console\DfSubscriptionGetterCommand',
     ];
 
     /**
