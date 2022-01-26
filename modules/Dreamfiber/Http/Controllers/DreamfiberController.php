@@ -20,4 +20,48 @@ namespace Modules\Dreamfiber\Http\Controllers;
 
 class DreamfiberController extends \BaseController
 {
+    /**
+     * Gets informations about subscription(s) from Dreamfiber API
+     *
+     * @author Patrick Reichel
+     */
+    public function getDfSubscriptionInformation()
+    {
+    }
+
+    /**
+     * Creates a subscription at Dreamfiber API.
+     *
+     * @author Patrick Reichel
+     */
+    public function createDfSubscription()
+    {
+    }
+
+    /**
+     * Updates a subscription at Dreamfiber API.
+     *
+     * @author Patrick Reichel
+     */
+    public function updateDfSubscription()
+    {
+    }
+
+    /**
+     * Canceles a subscription at Dreamfiber API.
+     *
+     * @author Patrick Reichel
+     */
+    public function cancelDfSubscription()
+    {
+    }
+
+    /**
+     * Terminates a subscription at Dreamfiber API.
+     *
+     * @author Patrick Reichel
+     */
+    public function terminateDfSubscription()
+    {
+    }
 }
