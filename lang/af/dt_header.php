@@ -174,6 +174,10 @@ return [
     'contract.number' => 'Number',
     'contract.street' => 'Street',
     'contract.zip' => 'ZIP',
+    'contract.sep_id' => 'SEP ID',
+    'contract.oto_id' => 'OTO ID',
+    'contract.oto_status' => 'OTO status',
+    'contract.alex_status' => 'ALEX ID',
     // Domain
     'domain.name' => 'Domain',
     'domain.type' => 'Type',
@@ -304,4 +308,23 @@ return [
     'ticket.assigned_users' => 'Assigned Users',
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
+
+    // Dreamfiber
+    'dfsubscription' => [
+        'contact_city' => 'City',
+        'contact_postal_code' => 'ZIP',
+        'contact_street' => 'Street',
+        'contact_street_no' => 'House number',
+        'id' => 'ID',
+        'status' => 'Status',
+        'subscription_end_point_id' => 'SEP ID',
+        'subscription_id' => 'external ID',
+        'switchdate' => 'Switchdate',
+        'wishdate' => 'Wishdate',
+    ],
+    'dfsubscriptionevent' => [
+        'id' => 'ID',
+        'status' => 'Status',
+        'timestamp' => 'Timestamp',
+    ],
 ];

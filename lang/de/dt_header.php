@@ -65,6 +65,10 @@ return [
         'street' => 'Straße',
         'zip' => 'PLZ',
         'ground_for_dismissal' => 'Kündigungsgrund',
+        'sep_id' => 'SEP-ID',
+        'oto_id' => 'OTO-ID',
+        'oto_status' => 'OTO-Status',
+        'alex_status' => 'ALEX-Status',
     ],
     'contract_id' => 'Vertrag',
     // Auth
@@ -598,10 +602,23 @@ return [
     'assigned_users' => 'Bearbeiter',
     'tickettypes.name' => 'Typ',
     'total_fee' => 'Gebühren',
-    'vendor' => 'Hersteller',
-    'internalId' => 'Interne Referenz',
-    'dunning' => [
-        'contract_id' => 'Vertrag',
+
+    // Dreamfiber
+    'dfsubscription' => [
+        'contact_city' => 'Ort',
+        'contact_postal_code' => 'PLZ',
+        'contact_street' => 'Straße',
+        'contact_street_no' => 'Hausnummer',
+        'id' => 'ID',
+        'status' => 'Status',
+        'subscription_end_point_id' => 'SEP-ID',
+        'subscription_id' => 'Externe ID',
+        'switchdate' => 'Realisierungsdatum',
+        'wishdate' => 'Wunschdatum',
     ],
-    'created_at' => 'Erstellt am',
+    'dfsubscriptionevent' => [
+        'id' => 'ID',
+        'status' => 'Status',
+        'timestamp' => 'Zeitpunkt',
+    ],
 ];

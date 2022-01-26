@@ -60,12 +60,12 @@ return [
     'Menu_Tree Table'           => 'Baumdiagramm',
     'Menu_Devices'              => 'Geräte',
     'Menu_DeviceTypes'          => 'Gerätetypen',
-    'Menu_Contracts'            => 'Verträge',
+    'Menu_Contracts'            => 'Verträge'.(Module::collections()->has('Dreamfiber') ? '/OTOs' : ''),
     'Menu_HfcBase'              => 'Detect',
     'Menu_HfcReq'               => 'HFC',
     'Menu_MibFile'              => 'MIB-Dateien',
     'Menu_ProvBase'             => 'Provisioning',
-    'Menu_Modems'               => 'Modems',
+    'Menu_Modems'               => 'Modems'.(Module::collections()->has('Dreamfiber') ? '/ONTs' : ''),
     'Menu_Endpoint'             => 'Endpunkte',
     'Menu_Number Range'         => 'Nummernkreis',
     'Menu_Configfile'           => 'Konfigurationsdateien',
@@ -92,6 +92,8 @@ return [
     'Menu_Nets'                 => 'Netze',
     'Menu_allNets'              => 'Alle Netze',
     'Menu_VicinityGraph'        => 'Nachbarschaftsdiagramm',
+    'Menu_DFSubscriptions'      => 'Abonnements',
+    'Menu_DFSubscriptionEvents' => 'Ereignisse',
 
     //User Settings
     'Menu_UserSettings'         => 'Nutzereinstellungen',
@@ -177,14 +179,14 @@ return [
     //Provisioning
     //Contract
     'Header_Salesman'           => 'Verkäufer|Verkäufer',
-    'Header_Contract'           => 'Vertrag|Verträge',
+    'Header_Contract'           => 'Vertrag'.(Module::collections()->has('Dreamfiber') ? '/OTO' : '').'|Verträge'.(Module::collections()->has('Dreamfiber') ? '/OTOs' : ''),
     'Header_ContractInfoApartment' => 'Verträge der Liegenschaft (Info)',
     'Header_ContractInfoRealty' => 'Info: Vertrag der Modems',
     'Header_EditContract'       => 'Vertrag bearbeiten',
     'Header_GroupContracts'      => 'Gruppenverträge',
     'Header_SepaMandate'        => 'SEPA-Mandat|SEPA-Mandate',
     //Modems
-    'Header_Modems'             => 'Modem|Modems', //workaround
+    'Header_Modems'             => 'Modem'.(Module::collections()->has('Dreamfiber') ? '/ONT' : '').'|Modems'.(Module::collections()->has('Dreamfiber') ? '/ONTs' : ''), //workaround
     'Header_ModemOption'        => 'Modemoption|Modemoptionen',
     'Header_Invoice'            => 'Rechnung|Rechnungen',
     'Header_OldInvoices'        => 'Ältere Rechnungen',
@@ -283,9 +285,10 @@ return [
     // 'Create'                 => 'Erstelle ',
     // 'Edit'                       => 'Ändere ',
 
-    // Dunning
-    'DunningLetter'      => 'Mahnschreiben',
-    'DunningRun'         => 'Mahnlauf',
+    // Dreamfiber
+    'Header_Dreamfiber' => 'Dreamfiber-API',
+    'Header_DfSubscription'     => 'DF-Abonnement',
+    'Header_DfSubscriptionEvent' => 'DF-Abonnement-Ereignis',
 
     //BUTTON
     'Sign me in'                => 'Einloggen',
@@ -618,6 +621,7 @@ return [
     'Detach all' => 'Alle :model entfernen',
     'Diagrams' => 'Diagramme',
     'Discard' => 'Missachte',
+    'Dreamfiber' => 'Dreamfiber-API',
     'download' => [
         'connInfo' => 'Anschlussinformation',
         'contractConfirmation' => 'Vertragsbestätigung',
