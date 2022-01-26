@@ -896,4 +896,53 @@ class BaseModel extends Eloquent
 
         return false;
     }
+
+    /**
+     * Helper to log and output messages
+     *
+     * @param $msg The message to be logged and printed
+     * @param $level The log level
+     * @param $type color Bootsrap color for GUI (one of self::ABOVE_MESSAGES_ALLOWED_TYPES)
+     * @param $place Where to put the message in GUI (one of self::ABOVE_MESSAGES_ALLOWED_PLACES)
+     *
+     * @author Patrick Reichel
+     */
+    public function logAndPrint($msg, $level = 'info', $type = null, $place = null)
+    {
+        // allowed levels are the keys, values are default types
+        $allowedLevels = [
+            'debug' => 'info',
+            'info' => 'info',
+            'notice' => 'info',
+            'warning' => 'warning',
+            'error' => 'error',
+            'critical' => 'error',
+            'alert' => 'error',
+            'emergency' => 'error',
+        ];
+
+        // check if valid level has been given
+        if (! array_key_exists($level, $allowedLevels)) {
+            throw new \Exception('Invalid log level – “'.$level.'” not in ['.implode('|', $allowedLevels).']');
+        }
+
+        // check if type is given; set to default if not
+        if (is_null($type)) {
+            $type = $allowedLevels[$level];
+        }
+
+        // log the message
+        \Log::{$level}($msg);
+
+        // CLI output
+        if (app()->runningInConsole()) {
+            echo strtoupper($level).": $msg\n";
+
+            return;
+        }
+
+        // GUI output
+        $msg = trans(strtoupper($type)).": $msg";
+        $this->addAboveMessage($msg, $type, $place);
+    }
 }
