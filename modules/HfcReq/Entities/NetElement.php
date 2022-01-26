@@ -978,9 +978,11 @@ class NetElement extends \BaseModel
         }
 
         if ($type == 4 || $type == 5) {
+            $id = $this->getModemIdFromHostname($this->ip) ?? $this->prov_device_id;
             // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
             $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
-            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip) ?? $this->prov_device_id];
+            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $id];
+            $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $id];
         }
 
         if (! in_array($type, [4, 5, 8, 9])) {

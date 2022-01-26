@@ -409,9 +409,15 @@ class Modem extends \BaseModel
 
     public function analysisTabs()
     {
+        if ($this->provNetelement) {
+            return $this->provNetelement->tabs();
+        }
+
         // Always show analysis tab and return error page when ProvMon is not installed/active
-        $tabs[] = ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $this->id];
-        $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id];
+        $tabs = [
+            ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $this->id],
+            ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id],
+        ];
 
         if (Module::collections()->has('ProvMon')) {
             $tabs[array_key_last($tabs)]['route'] = 'ProvMon.index';
