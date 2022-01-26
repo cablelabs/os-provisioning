@@ -1996,7 +1996,7 @@ class Modem extends \BaseModel
         $search .= "$this->hostname[^0-9]";
         $search .= $ip ? "|$ip " : '';
         $log = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30  | tac');
-        $lease['text'] = self::searchLease("hardware ethernet $mac");
+        $lease['text'] = self::searchLease($mac ? "hardware ethernet $mac" : '');
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
 
         $radius = $this->radiusData();
