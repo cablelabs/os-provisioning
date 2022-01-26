@@ -288,6 +288,11 @@ class Modem extends \BaseModel
         return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class);
     }
 
+    public function provNetelement()
+    {
+        return $this->belongsTo(\Modules\HfcReq\Entities\NetElement::class, 'id', 'prov_device_id');
+    }
+
     public function apartment()
     {
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
@@ -393,6 +398,11 @@ class Modem extends \BaseModel
         }
 
         $this->addViewHasManyTickets($ret);
+
+        if ($this->provNetelement) {
+            $ret['Modem'] = $ret['Edit'];
+            unset($ret['Edit']);
+        }
 
         return $ret;
     }

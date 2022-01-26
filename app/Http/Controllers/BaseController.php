@@ -326,7 +326,7 @@ class BaseController extends Controller
     protected function prepare_tabs($relations, $tabs)
     {
         // Generate tabs from array structure of relations
-        foreach ($relations as $tab => $panels) {
+        foreach (array_keys($relations) as $tab) {
             if (! $this->tabDefined($tab, $tabs)) {
                 $tabs[] = ['name' => $tab];
             }
@@ -342,8 +342,8 @@ class BaseController extends Controller
      */
     private function tabDefined($relationsTab, $editTabs)
     {
-        foreach ($editTabs as $key => $array) {
-            if ($array['name'] == $relationsTab) {
+        foreach ($editTabs as $relation) {
+            if ($relation['name'] == $relationsTab) {
                 return true;
             }
         }

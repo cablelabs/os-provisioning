@@ -36,7 +36,8 @@ class NetGw extends \BaseModel
     // Attributes
     public $guarded = ['formatted_support_state', 'nas_secret'];
     protected $appends = ['formatted_support_state'];
-    protected $with = ['ippools'];
+    protected $with = ['ippools', 'netelement:id,cluster,net,ip,parent_id,netelementtype_id,prov_device_id,_lft,_rgt'];
+    protected $without = ['netelement.netelementtype'];
 
     // Add your validation rules here
     public function rules()
@@ -205,6 +206,11 @@ class NetGw extends \BaseModel
         // uncomment: to use default blade instead
         //$ret['Base']['NetElement']['class'] = 'NetElement';
         //$ret['Base']['NetElement']['relation'] = $this->clusters;
+
+        if ($this->netelement) {
+            $ret['NetGw'] = $ret['Edit'];
+            unset($ret['Edit']);
+        }
 
         return $ret;
     }

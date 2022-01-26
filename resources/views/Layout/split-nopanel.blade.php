@@ -61,10 +61,8 @@
                 @if(isset($tabs))
                 <div class="card-header m-b-15 d-print-none" style="display:flex;">
                     <ul id="tabs" class="nav nav-tabs card-header-tabs d-flex" style="width:100%;">
-                        @foreach ($tabs as $key => $tab)
-                            @php
-                                $firstKey = $key == 0 ? $tab['name'] : '';
-                            @endphp
+                        @foreach ($tabs as $tab)
+
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
                                 <li class="nav-item order-12 ml-auto" role="tab" style="float: right">
@@ -72,28 +70,32 @@
                                         <i class="fa fa-lg fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging
                                     </a>
                                 </li>
+                                @continue
+                            @endif
+
                             {{-- Link to separate view --}}
-                            @elseif (isset($tab['route']))
+                            @if (isset($tab['route']))
                                 <li class="nav-item" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}" class="{{\Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : ''}}">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}" class="{{ \Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : ''}}">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
                                         @endif
-                                        {{ \Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
+                                        {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                     </a>
                                 </li>
-                            {{-- Other tabs --}}
-                            @else
-                                {{-- probably the <a> tag must be set to active according to docu --}}
-                                <li class="nav-item {{$firstKey == $tab['name'] ? 'show' : ''}}" role="tab">
-                                    <a id="{{$tab['name'].'tab'}}" class="{{$firstKey == $tab['name'] ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">
-                                        @if (isset($tab['icon']))
-                                            <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
-                                        @endif
-                                        {{ \Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
-                                    </a>
-                                </li>
+                                @continue
                             @endif
+
+                            {{-- Other tabs --}}
+                            {{-- probably the <a> tag must be set to active according to docu --}}
+                            <li class="nav-item {{ $loop->first ? 'show' : ''}}" role="tab">
+                                <a id="{{$tab['name'].'tab'}}" class="{{ $loop->first ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">
+                                    @if (isset($tab['icon']))
+                                        <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
+                                    @endif
+                                    {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

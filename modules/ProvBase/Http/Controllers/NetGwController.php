@@ -155,16 +155,26 @@ class NetGwController extends \BaseController
      * @param Modules\ProvBase\Entities\NetGw
      * @return array
      */
-    protected function editTabs($netgw)
+    protected function editTabs($netGw)
     {
-        $tabs = parent::editTabs($netgw);
-        $tabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netgw->id];
+        $defaultTabs = parent::editTabs($netGw);
 
-        if (! \Module::collections()->has('ProvMon')) {
-            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
-            $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring';
+        if ($netGw->netelement) {
+            $tabs = $netGw->netelement->tabs();
+            unset($tabs[1]['route']);
+
+            $tabs[] = $defaultTabs[1];
+
+            return $tabs;
         }
 
-        return $tabs;
+        $defaultTabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netGw->id];
+
+        if (! \Module::collections()->has('ProvMon')) {
+            $defaultTabs[array_key_last($defaultTabs)]['route'] = 'missingModule';
+            $defaultTabs[array_key_last($defaultTabs)]['link'] = 'Prime Monitoring';
+        }
+
+        return $defaultTabs;
     }
 }

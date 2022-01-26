@@ -125,6 +125,11 @@ class NetElement extends \BaseModel
 
         $this->addViewHasManyTickets($ret);
 
+        if ($this->prov_device_id) {
+            $ret['NetElement'] = $ret['Edit'];
+            unset($ret['Edit']);
+        }
+
         return $ret;
     }
 
@@ -928,6 +933,17 @@ class NetElement extends \BaseModel
 
         $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
+        if ($this->prov_device_id) {
+            $tabs[array_key_last($tabs)]['name'] = 'NetElement';
+
+            $tabs[] = [
+                'name' => ($type == 3 ? 'NetGw' : 'Modem'),
+                'icon' => 'pencil',
+                'route' => ($type == 3 ? 'NetGw.edit' : 'Modem.edit'),
+                'link' => $this->prov_device_id,
+            ];
+        }
+
         $sqlCol = 'id';
         if (! in_array($type, [1, 2])) {
             $sqlCol = $this->cluster ? 'cluster' : 'net';
@@ -956,10 +972,15 @@ class NetElement extends \BaseModel
             }
         }
 
+        if ($type == 3 && $this->prov_device_id) {
+            $route = $provmonEnabled ? 'ProvMon.netgw' : 'NetGw.edit';
+            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $this->prov_device_id];
+        }
+
         if ($type == 4 || $type == 5) {
             // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
             $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
-            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip)];
+            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $this->getModemIdFromHostname($this->ip) ?? $this->prov_device_id];
         }
 
         if (! in_array($type, [4, 5, 8, 9])) {

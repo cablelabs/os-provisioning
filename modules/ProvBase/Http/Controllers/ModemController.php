@@ -226,15 +226,18 @@ class ModemController extends \BaseController
      */
     public function editTabs($model)
     {
+        $defaultTabs = parent::editTabs($model);
+
+        if ($model->provNetelement) {
+
+        }
         // Defines which edit page you came from
         Session::put('Edit', 'Modem');
-
-        $tabs = parent::editTabs($model);
 
         $analysisTabs = $model->analysisTabs();
         unset($analysisTabs[0]);
 
-        return array_merge($tabs, $analysisTabs);
+        return array_merge($defaultTabs, $analysisTabs);
     }
 
     /**
