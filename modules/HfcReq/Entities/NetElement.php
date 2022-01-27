@@ -982,8 +982,7 @@ class NetElement extends \BaseModel
             $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $this->prov_device_id];
         }
 
-        if ($type == 4 || $type == 5) {
-            $id = $this->getModemIdFromHostname($this->ip) ?? $this->prov_device_id;
+        if (($type == 4 || $type == 5) && ($id = $this->prov_device_id ?? $this->getModemIdFromHostname())) {
             // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
             $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
             $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $id];
@@ -1005,20 +1004,17 @@ class NetElement extends \BaseModel
     /**
      * Return number from IP address field if the record is written like: 'cm-...'.
      *
-     * @param string
-     * @return string
-     *
      * @author Roy Schneider
      */
-    private function getModemIdFromHostname($hostname)
+    public function getModemIdFromHostname()
     {
-        preg_match('/[c][m]\-\d+/', $hostname, $return);
+        preg_match('/[c][m]\-\d+/', $this->ip, $id);
 
-        if (empty($return)) {
-            return '0';
+        if (empty($id)) {
+            return;
         }
 
-        return substr($return[0], 3);
+        return substr($id[0], 3);
     }
 
     /**
