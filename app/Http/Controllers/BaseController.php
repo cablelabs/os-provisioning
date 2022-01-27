@@ -999,7 +999,8 @@ class BaseController extends Controller
 
         // view_has_many should actually be a controller function!
         $relations = $view_var->view_has_many();
-        $tabs = $this->prepare_tabs($relations, $this->editTabs($view_var));
+        $tabs = collect($this->prepare_tabs($relations, $this->editTabs($view_var)));
+        $firstTab = $tabs->reject(fn ($tab) => isset($tab['route']))->first()['name'];
 
         // check if there is additional data to be passed to blade template
         // on demand overwrite base method getAdditionalDataForEditView($model)
@@ -1016,7 +1017,7 @@ class BaseController extends Controller
             $form_path = NamespaceController::get_view_name().'.form';
         }
 
-        return View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'relations', 'additional_data')));
+        return View::make($view_path, $this->compact_prep_view(compact('view_var', 'view_header', 'form_path', 'form_fields', 'headline', 'tabs', 'firstTab', 'relations', 'additional_data')));
     }
 
     /**

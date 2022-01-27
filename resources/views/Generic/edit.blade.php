@@ -53,13 +53,12 @@
 
 
 @section('content_right')
-
     @if(isset($relations) && !empty($relations))
         <div class="col-lg-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}}">
             <div class="tab-content">
                 @foreach ($tabs as $tab)
                     @if (isset($relations[$tab['name']]))
-                        <div class="tab-pane {{ $loop->first ? 'active' : ''}}" id="{{$tab['name']}}">
+                        <div class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}" id="{{ $tab['name'] }}">
                             @foreach($relations[$tab['name']] as $view => $relation)
 
                                 {{-- The section content for the new Panel --}}

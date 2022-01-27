@@ -46,7 +46,7 @@
         'VicinityGraph.show'
     ];
 
-    if (in_array(\Request::route()->getName(), $fullscreenRoutes)) {
+    if (in_array($routeName = request()->route()->getName(), $fullscreenRoutes)) {
         $flex = 'flex:1;';
     }
 @endphp
@@ -76,7 +76,7 @@
                             {{-- Link to separate view --}}
                             @if (isset($tab['route']))
                                 <li class="nav-item" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}" class="{{ \Route::getCurrentRoute()->action['as'] == $tab['route'] ? 'active' : ''}}">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}}">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
                                         @endif
@@ -88,8 +88,8 @@
 
                             {{-- Other tabs --}}
                             {{-- probably the <a> tag must be set to active according to docu --}}
-                            <li class="nav-item {{ $loop->first ? 'show' : ''}}" role="tab">
-                                <a id="{{$tab['name'].'tab'}}" class="{{ $loop->first ? 'active' : ''}}" href="#{{$tab['name']}}" data-toggle="tab">
+                            <li class="nav-item" role="tab">
+                                <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }}" href="#{{ $tab['name'] }}" data-toggle="tab">
                                     @if (isset($tab['icon']))
                                         <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
                                     @endif
@@ -108,11 +108,9 @@
                 </div>
             </div>
         </div>
-
         @yield('contentRightRight')
 
     </div>
 
     @yield('contentBottom')
-
 @stop
