@@ -293,6 +293,12 @@ class NetElement extends \BaseModel
             ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
+    public function scopeTreeQuery($query)
+    {
+        return $query->select('id', 'name', 'cluster', 'net', 'ip', 'parent_id', 'prov_device_id', 'netelementtype_id', '_lft', '_rgt')
+            ->with(['netelementtype:id,name,base_type_id']);
+    }
+
     /**
      * Relations
      */
