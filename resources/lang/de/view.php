@@ -621,8 +621,14 @@ return [
     'SettlementRun' => 'Abrechnungslauf',
     'tab' => [
         'Documents' => 'Dokumente',
+        'Entity Diagram' => 'ERD',
+        'Topography' => 'Netztopographie',
+        'Customers' => 'Modemkarte',
+        'Controlling' => 'Steuerung',
+        'modemAnalysis' => 'Modem Analyse',
+        'netGWAnalysis' => 'NetGw Analyse',
+        'Diagrams' => 'Diagramme',
     ],
-
     'ticket' => [
         'priority' => [
             'critical' => 'Kritisch',

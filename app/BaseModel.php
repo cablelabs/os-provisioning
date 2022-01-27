@@ -187,11 +187,11 @@ class BaseModel extends Eloquent
      * @param  array  $ret
      * @return void
      */
-    public function addViewHasManyTickets(&$ret)
+    public function addViewHasManyTickets(&$ret, $tabName = 'Edit')
     {
         if (Module::collections()->has('Ticketsystem')) {
-            $ret['Edit']['Ticket']['class'] = 'Ticket';
-            $ret['Edit']['Ticket']['relation'] = $this->tickets;
+            $ret[$tabName]['Ticket']['class'] = 'Ticket';
+            $ret[$tabName]['Ticket']['relation'] = $this->tickets;
         }
     }
 

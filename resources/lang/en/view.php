@@ -620,7 +620,14 @@ return [
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'tab' => [
-        'Documents' => 'Documents',
+        'Documents' => 'Dokuments',
+        'Entity Diagram' => 'ERD',
+        'Topography' => 'Net Topology',
+        'Customers' => 'Modem Topology',
+        'Controlling' => 'Controlling',
+        'modemAnalysis' => 'Modem Analysis',
+        'netGWAnalysis' => 'NetGw Analysis',
+        'Diagrams' => 'Diagrams',
     ],
 
     'ticket' => [

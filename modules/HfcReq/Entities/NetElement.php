@@ -97,38 +97,28 @@ class NetElement extends \BaseModel
     public function view_has_many()
     {
         $ret = [];
-
-        // if (Module::collections()->has('ProvBase'))
-        // {
-        // 	$ret['Edit']['Modem']['class'] 	  = 'Modem';
-        // 	$ret['Edit']['Modem']['relation'] = $this->modems;
-        // }
+        $tabName = trans_choice('view.Header_NetElement', 1);
 
         if (Module::collections()->has('HfcCustomer') && $this->netelementtype->base_type_id != array_search('Tap-Port', NetelementType::$undeletables)) {
-            $ret['Edit']['Mpr']['class'] = 'Mpr';
-            $ret['Edit']['Mpr']['relation'] = $this->mprs;
+            $ret[$tabName]['Mpr']['class'] = 'Mpr';
+            $ret[$tabName]['Mpr']['relation'] = $this->mprs;
         }
 
         if (Module::collections()->has('HfcSnmp')) {
             if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count())) {
-                $ret['Edit']['Indices']['class'] = 'Indices';
-                $ret['Edit']['Indices']['relation'] = $this->indices;
+                $ret[$tabName]['Indices']['class'] = 'Indices';
+                $ret[$tabName]['Indices']['relation'] = $this->indices;
             }
 
             // see NetElementController@controlling_edit for Controlling Tab!
         }
 
         if ($this->netelementtype->base_type_id == array_search('Tap', NetelementType::$undeletables)) {
-            $ret['Edit']['SubNetElement']['class'] = 'NetElement';
-            $ret['Edit']['SubNetElement']['relation'] = $this->children;
+            $ret[$tabName]['SubNetElement']['class'] = 'NetElement';
+            $ret[$tabName]['SubNetElement']['relation'] = $this->children;
         }
 
-        $this->addViewHasManyTickets($ret);
-
-        if ($this->prov_device_id) {
-            $ret['NetElement'] = $ret['Edit'];
-            unset($ret['Edit']);
-        }
+        $this->addViewHasManyTickets($ret, $tabName);
 
         return $ret;
     }
@@ -931,13 +921,11 @@ class NetElement extends \BaseModel
         $provmonEnabled = Module::collections()->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
 
-        $tabs = [['name' => 'Edit', 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+        $tabs = [['name' => trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
         if ($this->prov_device_id) {
-            $tabs[array_key_last($tabs)]['name'] = 'NetElement';
-
             $tabs[] = [
-                'name' => ($type == 3 ? 'NetGw' : 'Modem'),
+                'name' => ($type == 3 ? trans_choice('view.Header_NetGw', 1) : trans_choice('view.Header_Modem', 1)),
                 'icon' => 'pencil',
                 'route' => ($type == 3 ? 'NetGw.edit' : 'Modem.edit'),
                 'link' => $this->prov_device_id,
@@ -949,8 +937,9 @@ class NetElement extends \BaseModel
             $sqlCol = $this->cluster ? 'cluster' : 'net';
         }
 
-        $tabs[] = ['name' => 'Entity Diagram', 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
-        $tabs[] = ['name' => 'Topography', 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
+        $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
+        $tabs[] = ['name' => trans('view.tab.Topography'), 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
+        $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
 
         if (! Module::collections()->has('HfcBase')) {
             $tabs[array_key_last($tabs) - 1]['route'] = 'missingModule';
@@ -959,12 +948,22 @@ class NetElement extends \BaseModel
             $tabs[array_key_last($tabs)]['link'] = 'HfcBase';
         }
 
+        if (! Module::collections()->has('HfcCustomer')) {
+            $tabs[array_key_last($tabs) - 2]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs) - 2]['link'] = 'HfcCustomer';
+        }
+
         if (! in_array($type, [1, 8, 9])) {
-            $tabs[] = ['name' => 'Controlling', 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]];
+            $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]];
+        }
+
+        if (! Module::collections()->has('HfcSnmp')) {
+            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
+            $tabs[array_key_last($tabs)]['link'] = 'HfcSnmp';
         }
 
         if ($type == 9) {
-            $tabs[] = ['name' => 'Controlling', 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]];
+            $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]];
 
             if (! \Module::collections()->has('Satkabel')) {
                 $tabs[array_key_last($tabs)]['route'] = 'missingModule';
@@ -986,7 +985,7 @@ class NetElement extends \BaseModel
         }
 
         if (! in_array($type, [4, 5, 8, 9])) {
-            $tabs[] = ['name' => 'Diagrams', 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
+            $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
 
             if (! $provmonEnabled && Module::collections()->has('HfcCustomer')) {
                 $tabs[array_key_last($tabs)]['route'] = 'missingModule';
