@@ -134,12 +134,11 @@ class BaseController extends Controller
 
         $class_name = $model->get_model_name();
 
-        return [[
-            'name' => 'Edit',
-            'icon' => 'pencil',
-            // 'route' => $class_name.'.edit',
-            // 'link' => ['model_id' => $model->id, 'model' => $class_name],
-        ],
+        return [
+            [
+                'name' => 'Edit',
+                'icon' => 'pencil',
+            ],
             [
                 'name' => 'Logging',
                 'route' => 'GuiLog.filter',

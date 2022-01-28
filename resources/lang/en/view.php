@@ -619,6 +619,7 @@ return [
     'redirectNote' => 'You are not logged in and tried to access an internal page. After a successful login you are redirected to:',
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
+    'SipDevices' => 'SIP Devices',
     'tab' => [
         'Documents' => 'Dokuments',
         'Entity Diagram' => 'ERD',

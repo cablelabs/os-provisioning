@@ -375,7 +375,7 @@ class Modem extends \BaseModel
 
         if (Module::collections()->has('ProvVoip')) {
             $this->setRelation('mtas', $this->mtas()->with('configfile')->get());
-            $mtaName = ! $this->isTR069() ? trans('view.SipDevice') : 'MTA';
+            $mtaName = $this->isTR069() ? trans('view.SipDevices') : 'MTAs';
 
             $ret[$tabName][$mtaName]['class'] = 'Mta';
             $ret[$tabName][$mtaName]['relation'] = $this->mtas;
@@ -425,8 +425,9 @@ class Modem extends \BaseModel
         if ($this->configfile->device == 'cm') {
             $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $this->id];
 
-            if (isset($this->mtas) && isset($this->mtas[0])) {
-                $tabs[] = ['name' => 'MTA-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.mtaAnalysis', 'link' => $this->id];
+            if (Module::collections()->has('ProvVoip') && isset($this->mtas) && isset($this->mtas[0])) {
+                $mtaName = $this->isTR069() ? 'SIP' : 'MTA';
+                $tabs[] = ['name' => $mtaName.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.mtaAnalysis', 'link' => $this->id];
             }
         }
 

@@ -240,7 +240,8 @@ class ModemController extends \BaseController
         Session::put('Edit', 'Modem');
 
         $analysisTabs = $model->analysisTabs();
-        unset($analysisTabs[0]);
+        unset($defaultTabs[0]);
+        unset($analysisTabs[0]['route']);
 
         return array_merge($defaultTabs, $analysisTabs);
     }

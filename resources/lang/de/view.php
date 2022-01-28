@@ -619,6 +619,7 @@ return [
     'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
+    'SipDevices' => 'SIP Geräte',
     'tab' => [
         'Documents' => 'Dokumente',
         'Entity Diagram' => 'ERD',

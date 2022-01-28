@@ -993,6 +993,18 @@ class NetElement extends \BaseModel
             $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
             $tabs[] = ['name' => $i18nModem.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $id];
             $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $id];
+
+            if ($enabledModules->has('ProvVoip')) {
+                $modem = \Modules\ProvBase\Entities\Modem::select('id', 'hostname', 'configfile_id')
+                    ->with(['configfile:id,device'])
+                    ->whereId($id)
+                    ->first();
+
+                if ($modem->mtas()->count()) {
+                    $mtaName = $modem->isTR069() ? 'SIP' : 'MTA';
+                    $tabs[] = ['name' => $mtaName.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.mtaAnalysis', 'link' => $id];
+                }
+            }
         }
 
         if (! in_array($type, [4, 5, 8, 9])) {

@@ -49,6 +49,10 @@
     if (in_array($routeName = request()->route()->getName(), $fullscreenRoutes)) {
         $flex = 'flex:1;';
     }
+
+    if (! isset($firstTab)) {
+        $firstTab = $routeName;
+    }
 @endphp
 
 @section ('content')
