@@ -133,7 +133,7 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => 'PPP Username', 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
             ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'PPP Password', 'select' => $cfIds['tr069']],
             array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $this->setupSelect2Field($model, 'Contract'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Modem.select2', ['relation' => 'contracts'])]], $help['contract']),
-            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1', 'hidden' => $model->endpoints->count() ? '1' : '0'],
+            ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access', 'value' => '1', 'help' => trans('helper.Modem_InternetAccess')],
         ];
 
