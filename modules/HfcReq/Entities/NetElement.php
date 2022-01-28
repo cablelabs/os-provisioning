@@ -946,6 +946,7 @@ class NetElement extends \BaseModel
         $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
         $tabs[] = ['name' => trans('view.tab.Topography'), 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
         $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
+        $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
 
         if (! Module::collections()->has('HfcBase')) {
             $tabs[array_key_last($tabs) - 1]['route'] = 'missingModule';
