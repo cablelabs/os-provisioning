@@ -371,38 +371,36 @@ class Modem extends \BaseModel
     public function view_has_many()
     {
         $ret = [];
+        $tabName = trans_choice('view.Header_Modem', 1);
 
         if (Module::collections()->has('ProvVoip')) {
             $this->setRelation('mtas', $this->mtas()->with('configfile')->get());
-            $ret['Edit']['Mta']['class'] = 'Mta';
-            $ret['Edit']['Mta']['relation'] = $this->mtas;
+            $mtaName = ! $this->isTR069() ? trans('view.SipDevice') : 'MTA';
+
+            $ret[$tabName][$mtaName]['class'] = 'Mta';
+            $ret[$tabName][$mtaName]['relation'] = $this->mtas;
         }
 
-        $ret['Edit']['Endpoint']['class'] = 'Endpoint';
-        $ret['Edit']['Endpoint']['relation'] = $this->endpoints;
+        $ret[$tabName]['Endpoint']['class'] = 'Endpoint';
+        $ret[$tabName]['Endpoint']['relation'] = $this->endpoints;
 
         if (Module::collections()->has('ProvVoipEnvia')) {
-            $ret['Edit']['EnviaContract']['class'] = 'EnviaContract';
-            $ret['Edit']['EnviaContract']['relation'] = $this->enviacontracts;
-            $ret['Edit']['EnviaContract']['options']['hide_create_button'] = 1;
-            $ret['Edit']['EnviaContract']['options']['hide_delete_button'] = 1;
+            $ret[$tabName]['EnviaContract']['class'] = 'EnviaContract';
+            $ret[$tabName]['EnviaContract']['relation'] = $this->enviacontracts;
+            $ret[$tabName]['EnviaContract']['options']['hide_create_button'] = 1;
+            $ret[$tabName]['EnviaContract']['options']['hide_delete_button'] = 1;
 
-            $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
-            $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['Edit']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
-            $ret['Edit']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
+            $ret[$tabName]['EnviaOrder']['class'] = 'EnviaOrder';
+            $ret[$tabName]['EnviaOrder']['relation'] = $this->_envia_orders;
+            $ret[$tabName]['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+            $ret[$tabName]['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
 
             // TODO: auth - loading controller from model could be a security issue ?
-            $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = ModemController::_get_envia_management_jobs($this);
+            $ret[$tabName]['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+            $ret[$tabName]['EnviaAPI']['view']['vars']['extra_data'] = ModemController::_get_envia_management_jobs($this);
         }
 
-        $this->addViewHasManyTickets($ret);
-
-        if ($this->provNetelement) {
-            $ret['Modem'] = $ret['Edit'];
-            unset($ret['Edit']);
-        }
+        $this->addViewHasManyTickets($ret, $tabName);
 
         return $ret;
     }
@@ -413,10 +411,11 @@ class Modem extends \BaseModel
             return $this->provNetelement->tabs();
         }
 
+        $i18nModem = trans_choice('view.Header_Modem', 1);
         // Always show analysis tab and return error page when ProvMon is not installed/active
         $tabs = [
-            ['name' => 'Edit', 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $this->id],
-            ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id],
+            ['name' => $i18nModem, 'icon' => 'pencil', 'route' => 'Modem.edit', 'link' => $this->id],
+            ['name' => $i18nModem.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.analysis', 'link' => $this->id],
         ];
 
         if (Module::collections()->has('ProvMon')) {

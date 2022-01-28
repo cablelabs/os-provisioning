@@ -924,14 +924,20 @@ class NetElement extends \BaseModel
             return [];
         }
 
-        $provmonEnabled = Module::collections()->has('ProvMon');
+        $enabledModules = Module::collections();
+        $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
 
         $tabs = [['name' => trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+        $i18nModem = trans_choice('view.Header_Modem', 1);
+
+        if (! $enabledModules->has('ProvBase')) {
+            return $tabs;
+        }
 
         if ($this->prov_device_id) {
             $tabs[] = [
-                'name' => ($type == 3 ? trans_choice('view.Header_NetGw', 1) : trans_choice('view.Header_Modem', 1)),
+                'name' => ($type == 3 ? trans_choice('view.Header_NetGw', 1) : $i18nModem),
                 'icon' => 'pencil',
                 'route' => ($type == 3 ? 'NetGw.edit' : 'Modem.edit'),
                 'link' => $this->prov_device_id,
@@ -949,12 +955,12 @@ class NetElement extends \BaseModel
         $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
 
         $lastIndex = array_key_last($tabs);
-        if (! Module::collections()->has('HfcBase')) {
+        if (! $enabledModules->has('HfcBase')) {
             $tabs[$lastIndex - 3]['route'] = $tabs[$lastIndex - 2]['route'] = 'missingModule';
             $tabs[$lastIndex - 3]['link'] = $tabs[$lastIndex - 2]['link'] = 'HfcBase';
         }
 
-        if (! Module::collections()->has('HfcCustomer')) {
+        if (! $enabledModules->has('HfcCustomer')) {
             $tabs[$lastIndex - 1]['route'] = $tabs[$lastIndex]['route'] = 'missingModule';
             $tabs[$lastIndex - 1]['link'] = $tabs[$lastIndex]['link'] = 'HfcCustomer';
         }
@@ -963,7 +969,7 @@ class NetElement extends \BaseModel
             $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]];
         }
 
-        if (! Module::collections()->has('HfcSnmp')) {
+        if (! $enabledModules->has('HfcSnmp')) {
             $tabs[array_key_last($tabs)]['route'] = 'missingModule';
             $tabs[array_key_last($tabs)]['link'] = 'HfcSnmp';
         }
@@ -971,7 +977,7 @@ class NetElement extends \BaseModel
         if ($type == 9) {
             $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]];
 
-            if (! \Module::collections()->has('Satkabel')) {
+            if (! $enabledModules->has('Satkabel')) {
                 $tabs[array_key_last($tabs)]['route'] = 'missingModule';
                 $tabs[array_key_last($tabs)]['link'] = 'Satkabel';
             }
@@ -979,13 +985,13 @@ class NetElement extends \BaseModel
 
         if ($type == 3 && $this->prov_device_id) {
             $route = $provmonEnabled ? 'ProvMon.netgw' : 'NetGw.edit';
-            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $this->prov_device_id];
+            $tabs[] = ['name' => 'NetGw-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $this->prov_device_id];
         }
 
         if (($type == 4 || $type == 5) && ($id = $this->prov_device_id ?? $this->getModemIdFromHostname())) {
             // Create Analysis tab (for ORA/VGP) if IP address is no valid IP
             $route = $provmonEnabled ? 'ProvMon.index' : 'Modem.analysis';
-            $tabs[] = ['name' => trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $id];
+            $tabs[] = ['name' => $i18nModem.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => $route, 'link' => $id];
             $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $id];
         }
 
