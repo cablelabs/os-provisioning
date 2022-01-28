@@ -620,6 +620,10 @@ return [
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'SipDevices' => 'SIP Devices',
+    'belongsToNet' => 'This element belongs to a Net',
+    'viewWholeNet' => 'Display whole net',
+    'belongsToCluster' => 'This element belongs to a Cluster',
+    'viewWholeCluster' => 'Display Cluster',
     'tab' => [
         'Documents' => 'Dokuments',
         'Entity Diagram' => 'ERD',
