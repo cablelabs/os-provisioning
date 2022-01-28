@@ -23,6 +23,8 @@ class RadAcct extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'radacct';
 
+    protected $primaryKey = 'radacctid';
+
     public $timestamps = false;
     protected $forceDeleting = true;
 
