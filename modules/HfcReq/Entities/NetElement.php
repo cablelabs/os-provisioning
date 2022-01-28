@@ -948,16 +948,15 @@ class NetElement extends \BaseModel
         $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
         $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
 
+        $lastIndex = array_key_last($tabs);
         if (! Module::collections()->has('HfcBase')) {
-            $tabs[array_key_last($tabs) - 1]['route'] = 'missingModule';
-            $tabs[array_key_last($tabs) - 1]['link'] = 'HfcBase';
-            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
-            $tabs[array_key_last($tabs)]['link'] = 'HfcBase';
+            $tabs[$lastIndex - 3]['route'] = $tabs[$lastIndex - 2]['route'] = 'missingModule';
+            $tabs[$lastIndex - 3]['link'] = $tabs[$lastIndex - 2]['link'] = 'HfcBase';
         }
 
         if (! Module::collections()->has('HfcCustomer')) {
-            $tabs[array_key_last($tabs) - 2]['route'] = 'missingModule';
-            $tabs[array_key_last($tabs) - 2]['link'] = 'HfcCustomer';
+            $tabs[$lastIndex - 1]['route'] = $tabs[$lastIndex]['route'] = 'missingModule';
+            $tabs[$lastIndex - 1]['link'] = $tabs[$lastIndex]['link'] = 'HfcCustomer';
         }
 
         if (! in_array($type, [1, 8, 9])) {
