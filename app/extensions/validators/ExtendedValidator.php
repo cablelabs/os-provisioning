@@ -285,6 +285,13 @@ class ExtendedValidator
         return true;
     }
 
+    public function validateDhcpConfig($attribute, $value, $parameters)
+    {
+        exec('/usr/sbin/dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf &>/dev/null', $out, $ret);
+
+        return ! $ret;
+    }
+
     // $value (field value) must only contain strings of product type enums - used on Salesman
     public function validateProductType($attribute, $value, $parameters)
     {

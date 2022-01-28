@@ -33,7 +33,7 @@ class IpPool extends \BaseModel
         // Note: ip rule is added in IpPoolController
         // TODO: Take care of IpPoolController::prepare_rules() when adding new rules!
         return [
-            'net' => ['required', Rule::unique('ippool')->ignore($this)],
+            'net' => ['required', 'dhcp_config'],
             'netmask' => ['required', 'netmask'],     // netmask must not be in first place!
             'ip_pool_start' => ['required', 'ip_in_range:net,netmask', 'ip_larger:net'],
             'ip_pool_end' => ['required', 'ip_in_range:net,netmask', 'ip_larger:ip_pool_start'],
