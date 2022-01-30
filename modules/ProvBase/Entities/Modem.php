@@ -2419,7 +2419,7 @@ class Modem extends \BaseModel
         }
 
         $maxCpe = preg_grep('/MaxCPE \d/', $config['text']);
-        preg_match('/MaxCPE (\d)/', end($maxCpe), $match);
+        preg_match('/MaxCPE (\d+)/', end($maxCpe), $match);
         $maxCpe = $match[1];
 
         $cpeMacs = preg_grep('/CpeMacAddress (.*?);/', $config['text']);
