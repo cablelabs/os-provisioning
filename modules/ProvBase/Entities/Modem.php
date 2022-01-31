@@ -2136,6 +2136,8 @@ class Modem extends \BaseModel
         $this->domainName = ProvBase::first()->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
+        $wifi = null;
+        $lan = null;
         $tickets = $this->tickets;
         $genieCmds = [];
 
