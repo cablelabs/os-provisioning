@@ -125,16 +125,16 @@
     <div class="tab-pane fade in" id="{{ $tab }}">
         @if ($configInterface)
             <table class="table streamtable table-bordered">
-                @foreach ($configInterface as $entry => $config)
-                    <thead>
-                        <tr class="active">
-                            <th class="text-center">#</th>
-                            @foreach ($config as $name => $value)
-                                <th class="text-center">{{ $name }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
+                <thead>
+                    <tr class="active">
+                        <th class="text-center" style="min-width: 20px;">#</th>
+                        @foreach ($wifi[array_key_first($wifi)] as $name => $value)
+                            <th class="text-center">{{ $name }}</th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($wifi as $entry => $config)
                         <tr>
                             <td>{{ $entry }}</td>
                             @foreach ($config as $name => $value)
@@ -143,8 +143,8 @@
                                 </td>
                             @endforeach
                         </tr>
-                    </tbody>
-                @endforeach
+                    @endforeach
+                </tbody>
             </table>
         @endif
     </div>

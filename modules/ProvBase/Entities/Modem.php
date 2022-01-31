@@ -1307,13 +1307,14 @@ class Modem extends \BaseModel
             return $this->mergeGenieModelAndConfigOverview($model, $scheme);
         }
 
+        $config = [];
         // $model is an GenieACS Object
         foreach ($model as $idx => $data) {
             if (! is_object($data)) {
                 continue;
             }
 
-            $config = $this->mergeGenieModelAndConfigOverview($data, $scheme, $idx);
+            $config = $config + $this->mergeGenieModelAndConfigOverview($data, $scheme, $idx);
         }
 
         return $config;
