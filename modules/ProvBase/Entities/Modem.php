@@ -2187,10 +2187,8 @@ class Modem extends \BaseModel
         }
 
         $onlineStatus = $this->onlineStatus();
-        // return $ip and $online
-        foreach ($onlineStatus as $name => $value) {
-            ${$name} = $value;
-        }
+        $ip = $onlineStatus['ip'];
+        $online = $onlineStatus['online'];
 
         if (\Request::has('offline')) {
             $online = false;
