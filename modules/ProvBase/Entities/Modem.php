@@ -1241,7 +1241,12 @@ class Modem extends \BaseModel
     protected function getCwmpDataModel()
     {
         // InternetGatewayDevice, Device1, Device2
-        $model = $this->getGenieAcsModel('InternetGatewayDevice.DeviceInfo.SpecVersion,Device.DeviceInfo.SpecVersion,Device.DeviceInfo.SupportedDataModels');
+        $lookup = [
+            'InternetGatewayDevice.DeviceInfo.SpecVersion',
+            'Device.DeviceInfo.SpecVersion',
+            'Device.DeviceInfo.SupportedDataModels'
+        ];
+        $model = $this->getGenieAcsModel(implode(',', $lookup));
 
         if (! $model) {
             return;
