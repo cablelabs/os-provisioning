@@ -239,6 +239,11 @@ return [
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
     'contract_valid' => 'Contract valid?',
+    // Modem option
+    'modem_option' => [
+        'key' => 'Option',
+        'value' => 'Value',
+    ],
     // Node
     'node' => [
         'name' => 'Name',

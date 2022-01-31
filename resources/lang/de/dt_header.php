@@ -235,6 +235,11 @@ return [
     'modem.ds_snr' => 'DS SNR / dB',
     'modem.phy_updated_at' => 'PHY aktualisiert am',
     'contract_valid' => 'Vertrag gültig?',
+    // Modem option
+    'modem_option' => [
+        'key' => 'Option',
+        'value' => 'Wert',
+    ],
     // Node
     'node' => [
         'name' => 'Name',

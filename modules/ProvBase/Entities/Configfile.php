@@ -212,6 +212,11 @@ class Configfile extends \BaseModel
      */
     private function __text_make($device, $type, $sw_up = false)
     {
+        // Generate search and replace arrays
+        $i = 0;
+        $search = [];
+        $replace = [];
+
         // for cfs of type modem, mta or generic
         // get global config - provisioning settings
         $db_schemata ['provbase'][0] = Schema::getColumnListing('provbase');
@@ -274,6 +279,13 @@ class Configfile extends \BaseModel
                     array_push($config_extensions, "SnmpMibObject docsDevSwFilename.0 String \"fw/{$this->firmware}\";");
                     array_push($config_extensions, 'SnmpMibObject docsDevSwAdminStatus.0 Integer 2;');
                     exec("openssl pkcs7 -print_certs -inform DER -in /tftpboot/fw/$this->firmware | openssl x509 -outform DER | xxd -p -c 254 | sed 's/^/MfgCVCData 0x/; s/$/;/'", $config_extensions);
+                }
+
+                // populate modem options
+                foreach ($device->options as $option) {
+                    $search[] = "{modem.{$option->key}.0}";
+                    $replace[] = $option->value;
+                    $i++;
                 }
 
                 break;
@@ -339,12 +351,6 @@ class Configfile extends \BaseModel
                 return false;
 
         } // switch
-
-        // Generate search and replace arrays
-        $search = [];
-        $replace = [];
-
-        $i = 0;
 
         // lo all schemata; they can exist multiple times per table
         foreach ($db_schemata as $table => $columns_multiple) {

@@ -792,4 +792,5 @@ return [
     'JsonDecodeFailed'          => 'JSON konnte nicht dekodiert werden.',
     'Latitude'                  => 'Breitengrad',
     'Longitude'                 => 'Längengrad',
+    'Value'                     => 'Wert',
 ];
