@@ -129,7 +129,10 @@ class BaseController extends Controller
         $class = get_class($model);
 
         if (Str::contains($class, 'GuiLog')) {
-            return;
+            return [[
+                'name' => 'Log',
+                'icon' => 'pencil',
+            ]];
         }
 
         $class_name = $model->get_model_name();
