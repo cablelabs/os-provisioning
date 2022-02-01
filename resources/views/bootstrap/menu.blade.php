@@ -75,11 +75,11 @@
         {{-- count of user interaction needing EnviaOrders --}}
         @if (Module::collections()->has('ProvVoipEnvia'))
           <li  class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
-            <a href="{{ 'envia' /* route('EnviaOrder.index', ['show_filter' => 'action_needed']) */ }}" target="_self" style="text-decoration: none;">
+            <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
               @if ($envia_interactioncount > 0)
                 <div class="d-flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
                   <i class="fa fa-times fa-lg text-danger"></i>
-                  <div class="badge badge-danger d-none d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 9) }}</div>
+                  <div class="badge badge-danger d-none d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
                 </div>
               @else
                 <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
