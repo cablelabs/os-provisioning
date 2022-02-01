@@ -619,7 +619,7 @@ class BaseController extends Controller
                         $view_var = $view_var->merge($result);
                     }
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 //
             }
         }

@@ -101,7 +101,7 @@ class NamespaceController
      *
      * @author Torsten Schmidt, Patrick Reichel
      *
-     * @return model name
+     * @return string model name
      */
     public static function get_model_name()
     {
@@ -119,7 +119,7 @@ class NamespaceController
     /**
      * Return Controller Name
      *
-     * @return controller name
+     * @return string controller name
      */
     public static function get_controller_name()
     {
