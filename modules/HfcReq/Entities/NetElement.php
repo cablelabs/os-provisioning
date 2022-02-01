@@ -672,7 +672,7 @@ class NetElement extends \BaseModel
      */
     public function select2ProvDevice(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        $class = 'Modules\\ProvBase\\Entities\\'.(request('base_type_id') == array_search('NetGw', NetelementType::$undeletables) ? 'NetGw' : 'Modem');
+        $class = 'Modules\\ProvBase\\Entities\\'.(request('base_type_id') == array_search('NetGw', NetElementType::$undeletables) ? 'NetGw' : 'Modem');
 
         return $class::select('id', 'hostname as text')
             ->when($search, function ($query, $search) {
