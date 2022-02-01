@@ -752,7 +752,7 @@ class Modem extends \BaseModel
     {
         // Add (Block)
         if (! $unblock) {
-            exec('grep -i '.$mac.' '.self::BLOCKED_CPE_FILE_PATH, $out, $ret);
+            exec('grep -i '.$this->mac.' '.self::BLOCKED_CPE_FILE_PATH, $out, $ret);
 
             // not found
             if ($ret) {
