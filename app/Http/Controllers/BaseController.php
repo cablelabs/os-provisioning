@@ -1838,7 +1838,7 @@ class BaseController extends Controller
         $lowerField = strtolower($class);
         $field = $field ?? "{$lowerField}_id";
         $placeholder = trans('view.select.base', ['model' => trans("view.select.{$class}")]);
-        $isSetViaRequest = request($field) && array_key_exists($class, $models = session('models'));
+        $isSetViaRequest = request($field) && array_key_exists($class, $models = session('models', BaseModel::get_models()));
 
         if ($model->exists) {
             $fn = $fn ?? $lowerField;
