@@ -29,12 +29,12 @@ return [
         'wsdlFile' => env('WSDL_FILE', null),
     ],
     'MenuItems' => [
-        'DF Subscriptions' => [
+        'DFSubscriptions' => [
             'link'	=> 'DfSubscription.index',
             'icon'	=> 'fa-pencil-square',
             'class' => DfSubscription::class,
         ],
-        'DF Subscription Events' => [
+        'DFSubscriptionEvents' => [
             'link'	=> 'DfSubscriptionEvent.index',
             'icon'	=> 'fa-pencil-square-o',
             'class' => DfSubscriptionEvent::class,

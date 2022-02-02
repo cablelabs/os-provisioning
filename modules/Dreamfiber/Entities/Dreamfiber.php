@@ -80,7 +80,7 @@ class Dreamfiber extends \BaseModel
 
             return null;
         } catch (\Exception $ex) {
-            $this->logAndPrint('Exceptiona thrown: '.$ex->getMessage(), 'error');
+            $this->logAndPrint('Exception thrown: '.$ex->getMessage(), 'error');
             throw($ex);
         }
 
@@ -105,19 +105,19 @@ class Dreamfiber extends \BaseModel
         if (! $result) {
             $this->logAndPrint('Got no result', 'error');
 
-            return;
+            return False;
         }
-
-        $msg = $result->message->messageTitle.': '.$result->message->messageDescription;
 
         // check if api call has been successfull
         if (! $result->success) {
+            $msg = $result->message->messageTitle.': '.$result->message->messageDescription;
             $this->logAndPrint($msg, 'error');
 
-            return;
+            return False;
         }
 
         $this->processDfSubscriptionInformation($result);
+        return True;
     }
 
     /**
@@ -138,7 +138,13 @@ class Dreamfiber extends \BaseModel
                 // if something went wrong with this subscription: move on to the next
                 continue;
             }
-            $dbSub->save();
+            if ($dbSub->getDirty()) {
+                $dbSub->save();
+                $dbSub->logAndPrint(trans('dreamfiber::messages.dfSubscription.updated'), 'info');
+            } else {
+                $dbSub->logAndPrint(trans('dreamfiber::messages.dfSubscription.upToDate'), 'info');
+            }
+
 
             // check if SubscriptionEvents exist in database; if not: create
             foreach ($soapEvents as $soapEvent) {

@@ -25,6 +25,40 @@ class DfSubscription extends \BaseModel
 
     protected $fillable = [];
 
+    // Helper to map dfsubscription and contract fields
+    // while content may differ they are deeply related
+    public $contractFieldMap = [
+        'service_name' => '',
+        'service_type' => '',
+        'contact_no' => '',
+        'contact_first_name' => 'firstname',
+        'contact_last_name' => 'lastname',
+        'contact_company_name' => 'company',
+        'contact_street' => 'street',
+        'contact_street_no' => 'house_number',
+        'contact_postal_code' => 'zip',
+        'contact_city' => 'city',
+        'contact_country' => 'country_code',
+        'contact_phone' => 'phone',
+        'contact_email' => 'email',
+        'contact_notes' => '',
+        'subscription_id' => '',
+        'subscription_end_point_id' => 'sep_id',
+        'sf_sla' => '',
+        'status' => '',
+        'wishdate' => '',
+        'switchdate' => '',
+        'modificationdate' => '',
+        'l1_handover_equipment_name' => 'omdf_id',
+        'l1_handover_equipment_rack' => '',
+        'l1_handover_equipment_slot' => '',
+        'l1_handover_equipment_port' => '',
+        'l1_breakout_cable' => '',
+        'l1_breakout_fiber' => '',
+        'alau_order_ref' => '',
+        'note' => '',
+    ];
+
     /**
      * View Stuff
      */
@@ -100,6 +134,84 @@ class DfSubscription extends \BaseModel
         $this->setRelation('subscriptionevents', $this->dfsubscriptionevents()->get());
         $ret['Edit']['DfSubscriptionEvent']['class'] = 'DfSubscriptionEvent';
         $ret['Edit']['DfSubscriptionEvent']['relation'] = $this->dfsubscriptionevents;
+        $ret['Edit']['DfSubscriptionEvent']['options']['hide_create_button'] = 1;
+        $ret['Edit']['DfSubscriptionEvent']['options']['hide_delete_button'] = 1;
+
+        $ret['Edit']['Dreamfiber']['view']['view'] = 'dreamfiber::Dreamfiber.actions';
+        $ret['Edit']['Dreamfiber']['view']['vars']['apiActions'] = $this->viewApiActions();
+
+        return $ret;
+    }
+
+    /**
+     * Provide a view usable array of possible API jobs
+     *
+     * @return array for use in view
+     *
+     * @author Patrick Reichel
+     */
+    public function viewApiActions()
+    {
+        $actions = $this->possibleApiActions();
+
+        return $this->prepareApiActionsForView($actions);
+    }
+
+    /**
+     * Create the view data for the possible API actions.
+     *
+     * @param array of possible actions
+     * @return array with view data
+     *
+     * @author Patrick Reichel
+     */
+    public function prepareApiActionsForView($actions)
+    {
+        $ret = [];
+        foreach ($actions as $action) {
+            $url = \URL::route('Dreamfiber.action', ['type' => $action, 'subscription_id' => $this->id]);
+            $data = [
+                'url' => $url,
+                'linktext' => trans($action),
+            ];
+            $ret[] = $data;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Returns all possible API actions depending of the current status
+     *
+     * @return array containing possible actions
+     *
+     * @author Patrick Reichel
+     */
+    public function possibleApiActions()
+    {
+        $actions = [
+            'NEW' => ['cancelSubscription'],
+            'ACCEPTED-O' => ['cancelSubscription'],
+            'RUNNING' => ['terminateSubscription', 'updateSubscription'],
+            'CEASE' => ['cancelSubscription'],
+            'ACCEPTED-C' => ['cancelSubscription'],
+            'DECOMMISSION' => ['cancelSubscription'],
+            'terminateSubscriptionD' => ['createSubscription'],
+        ];
+
+        // freshly createSubscriptiond in local system – and still not known to Dreamfiber
+        if (in_array($this->status, ['', 'n/a'])) {
+            return ['createSubscription'];
+        }
+
+        // all other statuses have been updateSubscriptiond via Dreamfiber API – so we should be able to getSubscriptionInformation
+        // informations about
+        if (! array_key_exists($this->status, $actions)) {
+            return ['getSubscriptionInformation'];
+        }
+
+        $ret = $actions[$this->status];
+        array_unshift($ret, 'getSubscriptionInformation');
 
         return $ret;
     }

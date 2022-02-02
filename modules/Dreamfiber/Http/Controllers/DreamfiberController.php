@@ -18,15 +18,58 @@
 
 namespace Modules\Dreamfiber\Http\Controllers;
 
+use Modules\Dreamfiber\Entities\DfSubscription;
+use Modules\Dreamfiber\Entities\Dreamfiber;
+
 class DreamfiberController extends \BaseController
 {
+    /**
+     * Performs an API action.
+     *
+     * @author Patrick Reichel
+     */
+
+    public function apiAction()
+    {
+        $action = \Request::get('type');
+        $subscription_id = \Request::get('subscription_id');
+        $this->subscription = DfSubscription::find($subscription_id);
+
+        // invalid subsription id given
+        if (is_null($this->subscription)) {
+            \Session::push('tmp_error_above_index_list', 'ERROR: Could not find requested DfSubscription with ID '.$subscription_id);
+            return \Redirect::route('DfSubscription.index');
+        }
+
+        // invalid api method requested
+        if (! in_array($action, $this->subscription->possibleApiActions())) {
+            $this->subscription->addAboveMessage('ERROR: Action '.$action.' not allowed for this DfSubcription', 'error');
+            return \Redirect::route('DfSubscription.edit', $subscription_id);
+        }
+
+        $this->model = new Dreamfiber();
+        return $this->{$action}();
+    }
     /**
      * Gets informations about subscription(s) from Dreamfiber API
      *
      * @author Patrick Reichel
      */
-    public function getDfSubscriptionInformation()
+    public function getSubscriptionInformation()
     {
+        $this->model->getDfSubscriptionInformation('single', $this->subscription->subscription_id);
+
+        /* if ($ret) { */
+        /*     $this->subscription->addAboveMessage('Subscription information returned by Dreamfiber API', 'success'); */
+        /* } else { */
+        /*     $this->subscription->addAboveMessage('Dreamfiber API call', 'error'); */
+        /* } */
+
+        /* d('boo'); */
+
+        /* d(\Redirect::route('DfSubscription.edit', [$this->subscription->id])); */
+        /* d(\Redirect::back()); */
+        return \Redirect::route('DfSubscription.edit', [$this->subscription->id]);
     }
 
     /**
@@ -34,7 +77,7 @@ class DreamfiberController extends \BaseController
      *
      * @author Patrick Reichel
      */
-    public function createDfSubscription()
+    public function createSubscription()
     {
     }
 
@@ -43,7 +86,7 @@ class DreamfiberController extends \BaseController
      *
      * @author Patrick Reichel
      */
-    public function updateDfSubscription()
+    public function updateSubscription()
     {
     }
 
@@ -52,7 +95,7 @@ class DreamfiberController extends \BaseController
      *
      * @author Patrick Reichel
      */
-    public function cancelDfSubscription()
+    public function cancelSubscription()
     {
     }
 
@@ -61,7 +104,7 @@ class DreamfiberController extends \BaseController
      *
      * @author Patrick Reichel
      */
-    public function terminateDfSubscription()
+    public function terminateSubscription()
     {
     }
 }

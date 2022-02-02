@@ -30,3 +30,8 @@
 Route::prefix('dreamfiber')->group(function () {
     Route::get('/', 'DreamfiberController@index');
 });
+
+Route::get('Dreamfiber/action', [
+    'as' => 'Dreamfiber.action',
+    'uses' => 'DreamfiberController@apiAction',
+]);
