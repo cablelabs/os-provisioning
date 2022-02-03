@@ -93,7 +93,7 @@ class ConfigfileObserver
 
         // remove invalid monitoring config entries
         $entries = array_filter($flattenedEntries, function ($entry) use (&$publish) {
-            if (! is_array($entry) || count($entry) != 3 || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice'])) {
+            if (! is_array($entry) || count($entry) != 3 || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice']) || stripos($entry[0], 'password') !== false) {
                 return false;
             }
 
