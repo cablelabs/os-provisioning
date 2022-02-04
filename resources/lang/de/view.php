@@ -596,6 +596,11 @@ return [
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',
+    'preeq' => [
+        'relativeFrequency' => 'relative Frequenz',
+        'tapEnergyDistribution' => 'Energieverteilung per TAP',
+        'fft' => 'FFT der entzerrten Frequenzantwort',
+    ],
     'product' => [
         'billingCycles' => [
             'once' => 'einmalig',

@@ -596,6 +596,11 @@ return [
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
     'parentNetelement' => 'Parent <br> netelement',
+    'preeq' => [
+        'relativeFrequency' => 'relative Frequenzy',
+        'tapEnergyDistribution' => 'Energy Distribution per TAP',
+        'fft' => 'FFT of the equalized Frequency Response',
+    ],
     'product' => [
         'billingCycles' => [
             'once' => 'once',
