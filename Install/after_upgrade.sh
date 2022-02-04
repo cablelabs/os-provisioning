@@ -13,4 +13,4 @@ systemctl restart nmsprimed
 systemd-tmpfiles --create
 
 # reread supervisor config and restart affected processes
-/usr/bin/supervisorctl update
+# /usr/bin/supervisorctl update
