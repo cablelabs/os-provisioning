@@ -34,6 +34,7 @@ if [ $lastModule -eq 1 ]; then
     /opt/remi/php80/root/usr/bin/php artisan clear-compiled
     /opt/remi/php80/root/usr/bin/php artisan cache:clear
     /opt/remi/php80/root/usr/bin/php artisan migrate
+    /opt/remi/php80/root/usr/bin/php artisan module:v6:migrate
     /opt/remi/php80/root/usr/bin/php artisan module:migrate
     /opt/remi/php80/root/usr/bin/php artisan module:publish
     /opt/remi/php80/root/usr/bin/php artisan bouncer:clean
