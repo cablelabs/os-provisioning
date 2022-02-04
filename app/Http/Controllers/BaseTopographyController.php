@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use SplFileInfo;
 use geoPHP\geoPHP;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElement;
 
@@ -57,6 +58,11 @@ abstract class BaseTopographyController extends BaseController
 
                     if ($shape['type'] == 'Point') {
                         array_push($points, $shape['components']);
+                        continue;
+                    }
+
+                    if ($shape['type'] == 'Polygon') {
+                        Log::info('Ignore Polygon shapes from Infrastructure file in Topography. Currently not supported!', $shape);
                         continue;
                     }
 

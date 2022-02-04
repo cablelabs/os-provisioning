@@ -44,7 +44,7 @@ class NetElement extends \BaseModel
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
     protected $with = ['netelementtype'];
 
-    public $guarded = [];
+    public $guarded = ['infrastructure_file_upload'];
 
     /**
      * The connection name for the model.
