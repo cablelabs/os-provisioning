@@ -928,7 +928,7 @@ class NetElement extends \BaseModel
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
 
-        $tabs = [['name' => trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+        $tabs = [['name' => $i18nNetElement = trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
         $i18nModem = trans_choice('view.Header_Modem', 1);
 
         if (! $enabledModules->has('ProvBase')) {
@@ -952,7 +952,7 @@ class NetElement extends \BaseModel
         $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
         $tabs[] = ['name' => trans('view.tab.Topography'), 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
         $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
-        $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
+        $tabs[] = ['name' => $i18nModem.' '.trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
 
         $lastIndex = array_key_last($tabs);
         if (! $enabledModules->has('HfcBase')) {
@@ -1008,7 +1008,7 @@ class NetElement extends \BaseModel
         }
 
         if (! in_array($type, [4, 5, 8, 9])) {
-            $tabs[] = ['name' => trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
+            $tabs[] = ['name' => $i18nNetElement.' '.trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
 
             if (! $provmonEnabled && Module::collections()->has('HfcCustomer')) {
                 $tabs[array_key_last($tabs)]['route'] = 'missingModule';
