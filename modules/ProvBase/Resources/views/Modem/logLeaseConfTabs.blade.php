@@ -67,17 +67,52 @@
                     </select>
                 </script>
                 <div class="row d-flex">
-                    <div style="flex:1;">
-                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task">
+                    <div style="flex: 1;">
+                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task" v-on:input="setTask">
                             <template v-for="option in taskOptions">
                                 <option :value="option.task" v-text="option.name"></option>
                             </template>
                         </select2>
                     </div>
-                    <button type="submit" class="btn btn-danger" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
+                    <button v-if="! isForm" type="submit" class="btn btn-danger" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
                 </div>
             </form>
         @endif
+        <template v-if="selectedTask == 'custom/setWlan'">
+            <form v-on:submit.prevent="setWlan" style="margin-top: 10px;">
+                <div class="form-group row">
+                    <label for="Channel" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('view.modemAnalysis.channel') }}</label>
+                    <div class="col-sm-10">
+                        <input v-model="getWlanSettings['channel']" type="number" class="form-control" id="Channel">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="SSID" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">SSID</label>
+                    <div class="col-sm-10">
+                        <input v-model="getWlanSettings['ssid']" type="text" class="form-control" id="SSID" placeholder="SSID">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Password" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('messages.Password') }}</label>
+                    <div class="col-sm-10">
+                        <input v-model="getWlanSettings['password']" type="password" class="form-control" id="Password" placeholder="{{ trans('messages.Password') }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
+            </form>
+        </template>
+        <template v-if="selectedTask == 'custom/setDns'">
+            <form v-on:submit.prevent="setDns" style="margin-top: 10px;">
+                <div class="form-group row">
+                    <label for="DNS" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">DNS</label>
+                    <div class="col-sm-10">
+                        <input v-model="getDnsSettings['dns']" type="text" class="form-control" id="DNS" placeholder="0.0.0.0,0.0.0.0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
+            </form>
+        </template>
+
         @foreach ($configfile['text'] as $line)
             <table>
                 <tr>
