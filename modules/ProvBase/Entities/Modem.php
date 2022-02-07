@@ -1238,7 +1238,7 @@ class Modem extends \BaseModel
      *
      * @author Roy Schneider
      */
-    protected function getCwmpDataModel()
+    public function getCwmpDataModel($genieId)
     {
         // InternetGatewayDevice, Device1, Device2
         $lookup = [
@@ -1253,14 +1253,14 @@ class Modem extends \BaseModel
         }
 
         if (! property_exists($model, 'Device')) {
-            return 'InternetGatewayDevice';
+            return new \Modules\ProvMon\Entities\InternetGatewayDevice($this, $genieId);
         }
 
         if (! property_exists($model->Device->DeviceInfo, 'SupportedDataModels')) {
-            return 'Device1';
+            return new \Modules\ProvMon\Entities\Device1($this, $genieId);
         }
 
-        return 'Device2';
+        return new \Modules\ProvMon\Entities\Device2($this, $genieId);
     }
 
     /**
@@ -1324,15 +1324,19 @@ class Modem extends \BaseModel
      * Retrieve configuration of WIFI interface for TR-069 devices.
      *
      * @param  string  $dataModel
+     * @param  string  $genieId
      * @return mixed
      *
      * @author Roy Schneider
      */
-    protected function getWifiConfigOverview($dataModel)
+    protected function getWifiConfigOverview($dataModel, $genieId)
     {
         if ($dataModel != 'InternetGatewayDevice') {
             return;
         }
+
+        // it would be better to refresh it async or to retrieve it via notifications
+        self::callGenieAcsApi("devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '{"name":"refreshObject", "objectName": "InternetGatewayDevice.LANDevice.1.WLANConfiguration.*"}');
 
         return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.WLANConfiguration'),
             [
@@ -1350,15 +1354,19 @@ class Modem extends \BaseModel
      * Retrieve configuration of LAN interface for TR-069 devices.
      *
      * @param  string  $dataModel
+     * @param  string  $genieId
      * @return mixed
      *
      * @author Roy Schneider
      */
-    protected function getLanConfigOverview($dataModel)
+    protected function getLanConfigOverview($dataModel, $genieId)
     {
         if ($dataModel != 'InternetGatewayDevice') {
             return;
         }
+
+        // it would be better to refresh it async or to retrieve it via notifications
+        self::callGenieAcsApi("devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '{"name":"refreshObject", "objectName": "InternetGatewayDevice.LANDevice.1.LANHostConfigManagement.*"}');
 
         return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.LANHostConfigManagement'),
             [
@@ -2023,6 +2031,18 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Get GenieACS CWMP ID for cURL requests.
+     *
+     * @return string
+     *
+     * @author Roy Schneider
+     */
+    public function getGenieId()
+    {
+        return rawurlencode($this->getGenieAcsModel('_id'));
+    }
+
+    /**
      * Synchronize radcheck with modem table, if PPPoE is used.
      *
      * @author Ole Ernst
@@ -2171,6 +2191,14 @@ class Modem extends \BaseModel
                 }, $genieCmds);
                 $genieCmds = array_flip($genieCmds);
                 $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
+
+                $genieId = $this->getGenieId();
+                $cwmpModel = $this->getCwmpDataModel($genieId);
+                if ($cwmpModel) {
+                    foreach ($cwmpModel::$tasks as $task) {
+                        $genieCmds["custom/$task"] = trans("messages.modemAnalysis.$task");
+                    }
+                }
             } else {
                 $configfile['text'] = [];
             }
@@ -2185,9 +2213,10 @@ class Modem extends \BaseModel
             }
 
             // Wifi and LAN tab
-            $dataModel = $this->getCwmpDataModel();
-            $wifi = $this->getWifiConfigOverview($dataModel);
-            $lan = $this->getLanConfigOverview($dataModel);
+            $genieId = $genieId ?? $this->getGenieId();
+            $dataModel = $this->getCwmpDataModel($genieId);
+            $wifi = $this->getWifiConfigOverview($dataModel?->getName(), $genieId);
+            $lan = $this->getLanConfigOverview($dataModel?->getName(), $genieId);
         } else {
             $configfile = self::getConfigfileText("/tftpboot/cm/$this->hostname");
         }
@@ -2233,7 +2262,7 @@ class Modem extends \BaseModel
         $modem = $this;
 
         return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
-            'floodPing', 'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius', 'wifi', 'lan');
+            'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius', 'wifi', 'lan');
     }
 
     /**

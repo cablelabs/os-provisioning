@@ -329,6 +329,14 @@ class ModemController extends \BaseController
         }
 
         $task = Request::get('task');
+        if (is_array($task) || \Str::startsWith($task, 'custom/')) {
+            $modem = Modem::find($id);
+            $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
+            $task = request('taskName') ?? $task;
+            $taskName = \Str::after($task, 'custom/');
+
+            return $cwmpModel->$taskName();
+        }
 
         if (\Str::startsWith($task, 'tasks/')) {
             Modem::callGenieAcsApi($task, 'DELETE');
