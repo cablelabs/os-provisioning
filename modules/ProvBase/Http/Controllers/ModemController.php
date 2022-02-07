@@ -503,6 +503,92 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Block DHCP Server of the modem via API.
+     *
+     * @return JsonResponse
+     *
+     * @author Roy Schneider
+     */
+    public function api_blockDhcp($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+
+        $modem = static::get_model_obj()->findOrFail($id);
+
+        $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
+        $cwmpModel->blockDhcp();
+
+        return response()->v0ApiReply([], true, $id);
+
+    }
+
+    /**
+     * Unblock DHCP Server of the modem via API.
+     *
+     * @return JsonResponse
+     *
+     * @author Roy Schneider
+     */
+    public function api_unblockDhcp($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+
+        $modem = static::get_model_obj()->findOrFail($id);
+
+        $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
+        $cwmpModel->unblockDhcp();
+
+        return response()->v0ApiReply([], true, $id);
+
+    }
+
+    /**
+     * Set DNS of the modem via API.
+     *
+     * @return JsonResponse
+     *
+     * @author Roy Schneider
+     */
+    public function api_setDns($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+
+        $modem = static::get_model_obj()->findOrFail($id);
+
+        $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
+        $cwmpModel->setDns(request('dns'));
+
+        return response()->v0ApiReply([], true, $id);
+    }
+
+    /**
+     * Unset DNS of the modem via API.
+     *
+     * @return JsonResponse
+     *
+     * @author Roy Schneider
+     */
+    public function api_unsetDns($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+
+        $modem = static::get_model_obj()->findOrFail($id);
+
+        $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
+        $cwmpModel->setDns('0.0.0.0,0.0.0.0');
+
+        return response()->v0ApiReply([], true, $id);
+    }
+
+    /**
      * Set nullable fields.
      *
      * @author Patrick Reichel

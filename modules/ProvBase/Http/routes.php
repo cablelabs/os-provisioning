@@ -79,6 +79,30 @@ BaseRoute::group([], function () {
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_restart',
             'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
         ]);
+
+        Route::get('Modem/{id}/blockDhcp', [
+            'as' => 'Modem.api_blockDhcp',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_blockDhcp',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
+
+        Route::get('Modem/{id}/unblockDhcp', [
+            'as' => 'Modem.api_unblockDhcp',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_unblockDhcp',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
+
+        Route::post('Modem/{id}/setDns', [
+            'as' => 'Modem.api_setDns',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_setDns',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
+
+        Route::get('Modem/{id}/unsetDns', [
+            'as' => 'Modem.api_unsetDns',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_unsetDns',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
     });
 
     BaseRoute::get('modem/{id}/analysis', [
