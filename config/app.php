@@ -267,5 +267,4 @@ return [
     'hereMapApiKey' => env('HERE_JS_API_KEY'),
     'adminPort' => env('HTTPS_ADMIN_PORT', 8080),
     'cccPort' => env('HTTPS_CCC_PORT', 443),
-    'mpsMprSubareas' => intval(env('MPS_MPR_SUBAREAS', 20000)),
 ];
