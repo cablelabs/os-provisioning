@@ -32,6 +32,7 @@
 
         <div id="content" class="d-flex flex-column content p-t-15 p-b-0" style="flex:1;transition: all .15s">
             @if(session('GlobalNotification'))
+            <div style="padding-top:1rem;">
                 @foreach (session('GlobalNotification') as $name => $options)
                     <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
                         <h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
@@ -46,6 +47,7 @@
                         </button>
                     </div>
                 @endforeach
+            </div>
             @endif
             @if(session('DashboardNotification'))
                 @foreach (session('DashboardNotification') as $name => $options)

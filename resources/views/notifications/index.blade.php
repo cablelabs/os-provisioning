@@ -19,7 +19,7 @@
 @extends ('Layout.split84-nopanel')
 
 @section('content')
-<div id="app" class="row">
+<div id="app" class="row" style="padding-top:1rem;">
     <div class="card w-100 px-2">
         <h2 class="card-title d-flex" style="justify-content: space-between;padding:0 1rem;">
             <div class="d-flex align-items-baseline">
