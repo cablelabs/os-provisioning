@@ -588,7 +588,7 @@ class NetElement extends \BaseModel
      *
      * @return HasMany Filtered and aggregated modem Relationship
      */
-    public function modemsUpstreamAvg()
+    public function modemsPhyParameterAvg()
     {
         $query = $this->modems()->select('netelement_id');
 
@@ -600,7 +600,7 @@ class NetElement extends \BaseModel
         return $query->groupBy('netelement_id');
     }
 
-    public function modemsUpstreamAndPositionAvg()
+    public function modemsPhyParameterAndPositionAvg()
     {
         $query = $this->modems()
             ->where('lng', '<>', '0')
@@ -620,17 +620,17 @@ class NetElement extends \BaseModel
      *
      * @return int
      */
-    public function getModemsUsPwrAvgAttribute()
+    public function getModemsPhyParameterAvgAttribute()
     {
-        if (array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
-            return round(optional($this->getRelation('modemsUpstreamAndPositionAvg')->first())->us_pwr_avg, 1);
+        if (array_key_exists('modemsPhyParameterAndPositionAvg', $this->relations)) {
+            return round(optional($this->getRelation('modemsPhyParameterAndPositionAvg')->first())->us_pwr_avg, 1);
         }
 
-        if (! array_key_exists('modemsUpstreamAvg', $this->relations)) {
-            $this->load('modemsUpstreamAvg');
+        if (! array_key_exists('modemsPhyParameterAvg', $this->relations)) {
+            $this->load('modemsPhyParameterAvg');
         }
 
-        return round(optional($this->getRelation('modemsUpstreamAvg')->first())->us_pwr_avg, 1);
+        return round(optional($this->getRelation('modemsPhyParameterAvg')->first())->us_pwr_avg, 1);
     }
 
     /**
@@ -639,13 +639,13 @@ class NetElement extends \BaseModel
      *
      * @return int
      */
-    public function getModemsUsPwrPosAvgsAttribute()
+    public function getModemsPhyParameterPosAvgsAttribute()
     {
-        if (! array_key_exists('modemsUpstreamAndPositionAvg', $this->relations)) {
-            $this->load('modemsUpstreamAndPositionAvg');
+        if (! array_key_exists('modemsPhyParameterAndPositionAvg', $this->relations)) {
+            $this->load('modemsPhyParameterAndPositionAvg');
         }
 
-        return optional($this->getRelation('modemsUpstreamAndPositionAvg')->first());
+        return optional($this->getRelation('modemsPhyParameterAndPositionAvg')->first());
     }
 
     /**
