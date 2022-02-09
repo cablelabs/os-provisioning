@@ -20,6 +20,9 @@ namespace Modules\Dreamfiber\Entities;
 
 class Dreamfiber extends \BaseModel
 {
+    // The associated SQL table for this Model
+    public $table = 'dreamfiber';
+
     protected $fillable = [];
 
     /**
@@ -105,7 +108,7 @@ class Dreamfiber extends \BaseModel
         if (! $result) {
             $this->logAndPrint('Got no result', 'error');
 
-            return False;
+            return false;
         }
 
         // check if api call has been successfull
@@ -113,11 +116,12 @@ class Dreamfiber extends \BaseModel
             $msg = $result->message->messageTitle.': '.$result->message->messageDescription;
             $this->logAndPrint($msg, 'error');
 
-            return False;
+            return false;
         }
 
         $this->processDfSubscriptionInformation($result);
-        return True;
+
+        return true;
     }
 
     /**
@@ -144,7 +148,6 @@ class Dreamfiber extends \BaseModel
             } else {
                 $dbSub->logAndPrint(trans('dreamfiber::messages.dfSubscription.upToDate'), 'info');
             }
-
 
             // check if SubscriptionEvents exist in database; if not: create
             foreach ($soapEvents as $soapEvent) {

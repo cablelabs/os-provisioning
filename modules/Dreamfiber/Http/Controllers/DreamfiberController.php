@@ -18,17 +18,30 @@
 
 namespace Modules\Dreamfiber\Http\Controllers;
 
-use Modules\Dreamfiber\Entities\DfSubscription;
 use Modules\Dreamfiber\Entities\Dreamfiber;
+use Modules\Dreamfiber\Entities\DfSubscription;
 
 class DreamfiberController extends \BaseController
 {
+    /**
+     * Defines the formular fields for the edit and create view
+     *
+     * @author Patrick Reichel
+     */
+    public function view_form_fields($model = null)
+    {
+        // label has to be the same like column in sql table
+        return [
+            ['form_type' => 'text', 'name' => 'default_service_name', 'description' => 'default_service_name'],
+            ['form_type' => 'text', 'name' => 'default_service_type', 'description' => 'default_service_type'],
+        ];
+    }
+
     /**
      * Performs an API action.
      *
      * @author Patrick Reichel
      */
-
     public function apiAction()
     {
         $action = \Request::get('type');
@@ -38,18 +51,22 @@ class DreamfiberController extends \BaseController
         // invalid subsription id given
         if (is_null($this->subscription)) {
             \Session::push('tmp_error_above_index_list', 'ERROR: Could not find requested DfSubscription with ID '.$subscription_id);
+
             return \Redirect::route('DfSubscription.index');
         }
 
         // invalid api method requested
         if (! in_array($action, $this->subscription->possibleApiActions())) {
             $this->subscription->addAboveMessage('ERROR: Action '.$action.' not allowed for this DfSubcription', 'error');
+
             return \Redirect::route('DfSubscription.edit', $subscription_id);
         }
 
         $this->model = new Dreamfiber();
+
         return $this->{$action}();
     }
+
     /**
      * Gets informations about subscription(s) from Dreamfiber API
      *

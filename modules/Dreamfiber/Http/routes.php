@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 BaseRoute::group([], function () {
+    BaseRoute::resource('Dreamfiber', 'Modules\Dreamfiber\Http\Controllers\DreamfiberController');
     BaseRoute::resource('DfSubscription', 'Modules\Dreamfiber\Http\Controllers\DfSubscriptionController');
     BaseRoute::resource('DfSubscriptionEvent', 'Modules\Dreamfiber\Http\Controllers\DfSubscriptionEventController');
 });
