@@ -57,6 +57,8 @@ class NetElement extends \BaseModel
 
     public $snmpvalues = ['attributes' => [], 'original' => []];
 
+    protected $monitoringPhyParameter;
+
     // Add your validation rules here
     public function rules()
     {
@@ -213,6 +215,35 @@ class NetElement extends \BaseModel
     public function get_elementtype_name()
     {
         return $this->netelementtype ? $this->netelementtype->name : '';
+    }
+
+    /**
+     * Get the physical Parameter that should be used for monitoring
+     *
+     * @return void
+     */
+    public function getMonitoringPhyParameterAttribute()
+    {
+        if (! $this->monitoringPhyParameter) {
+            $this->monitoringPhyParameter = config('hfccustomer.monitoringPhyParameter', 'us');
+        }
+
+        return $this->monitoringPhyParameter;
+    }
+
+    /**
+     * Set the physical Parameter that should be used for monitoring
+     *
+     * @param  string  $attr
+     * @return void
+     */
+    public function setMonitoringPhyParameterAttribute(string $attr)
+    {
+        if (! in_array(strtolower($attr), ['us', 'snr'])) {
+            return;
+        }
+
+        $this->monitoringPhyParameter = strtolower($attr);
     }
 
     public function view_belongs_to()
@@ -559,20 +590,29 @@ class NetElement extends \BaseModel
      */
     public function modemsUpstreamAvg()
     {
-        return $this->modems()
-            ->where('us_pwr', '>', '0')
-            ->selectRaw('AVG(us_pwr) as us_pwr_avg, netelement_id')
-            ->groupBy('netelement_id');
+        $query = $this->modems()->select('netelement_id');
+
+        $query = match ($this->getMonitoringPhyParameterAttribute()) {
+            'snr' => $query->where('us_snr', '>', '0')->selectRaw('AVG(us_snr) as us_pwr_avg'),
+            default => $query->where('us_pwr', '>', '0')->selectRaw('AVG(us_pwr) as us_pwr_avg'),
+        };
+
+        return $query->groupBy('netelement_id');
     }
 
     public function modemsUpstreamAndPositionAvg()
     {
-        return $this->modems()
-            ->where('us_pwr', '>', '0')
+        $query = $this->modems()
             ->where('lng', '<>', '0')
             ->where('lat', '<>', '0')
-            ->selectRaw('AVG(us_pwr) as us_pwr_avg, AVG(lng) as lng_avg, AVG(lat) as lat_avg, netelement_id')
-            ->groupBy('netelement_id');
+            ->selectRaw('AVG(lng) as lng_avg, AVG(lat) as lat_avg, netelement_id');
+
+        $query = match ($this->getMonitoringPhyParameterAttribute()) {
+            'snr' => $query->where('us_snr', '>', '0')->selectRaw('AVG(us_snr) as us_pwr_avg'),
+            default => $query->where('us_pwr', '>', '0')->selectRaw('AVG(us_pwr) as us_pwr_avg'),
+        };
+
+        return $query->groupBy('netelement_id');
     }
 
     /**
