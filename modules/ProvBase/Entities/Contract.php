@@ -665,10 +665,12 @@ class Contract extends \BaseModel
         if ($this->changes_on_daily_conversion) {
             // Avoid endless loop by disabling observer but add GuiLog entry
             BaseObserver::addLogEntry($this, 'updated');
+            $hasTelephonyChanged = $this->isDirty('has_telephony');
 
-            $this->pushToModems();
             $this->observer_enabled = false;
             $this->save();
+
+            $this->pushToModems($hasTelephonyChanged);
         }
     }
 
@@ -931,8 +933,9 @@ class Contract extends \BaseModel
         }
 
         if ($contract_changed) {
+            $hasTelephonyChanged = $this->isDirty('has_telephony');
             $this->saveQuietly();
-            $this->pushToModems();
+            $this->pushToModems($hasTelephonyChanged);
         }
     }
 
@@ -1202,22 +1205,29 @@ class Contract extends \BaseModel
      *
      * Note: This allows only 1 tariff qos_id for all modems
      *
-     * @author: Torsten Schmidt, Nino Ryschawy
+     * @param $hasTelephonyChanged Flag to trigger config rebuild
+     *
+     * @author: Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */
-    public function pushToModems()
+    public function pushToModems($hasTelephonyChanged = false)
     {
         foreach ($this->modems as $modem) {
             $modem->internet_access = $this->internet_access;
             $modem->qos_id = $this->qos_id;
 
-            if (! $modem->getDirty() && $this->isDirty('has_telephony')) {
-                $modem->make_configfile();
+            // this rebuilds configfile, too (at least one relevant field changed)
+            if ($modem->getDirty()) {
+                $modem->save();
                 $modem->restart_modem();
-
                 continue;
             }
 
-            $modem->save();
+            // rebuild/restart if contract phone state has changed, too
+            // this is needed e.g. on activation of voip only items
+            if ($hasTelephonyChanged || $this->isDirty('has_telephony')) {
+                $modem->make_configfile();
+                $modem->restart_modem();
+            }
         }
     }
 

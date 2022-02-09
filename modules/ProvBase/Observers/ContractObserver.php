@@ -95,8 +95,8 @@ class ContractObserver
         }
 
         if (! Module::collections()->has('BillingBase') &&
-            (array_key_exists('internet_access', $changed_fields) || array_key_exists('qos_id', $changed_fields))) {
-            $contract->pushToModems();
+            (array_key_exists('internet_access', $changed_fields) || array_key_exists('qos_id', $changed_fields) || array_key_exists('has_telephony', $changed_fields))) {
+            $contract->pushToModems(array_key_exists('has_telephony', $changed_fields));
         }
 
         // Show alert when contract is canceled and there are yearly payed items that were charged already (by probably full amount) - customer should get a credit then
