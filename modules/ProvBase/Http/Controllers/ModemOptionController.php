@@ -26,7 +26,7 @@ class ModemOptionController extends \BaseController
     {
         return [
             ['form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1],
-            ['form_type' => 'text', 'name' => 'key', 'description' => 'Option'],
+            ['form_type' => 'text', 'name' => 'key', 'description' => 'Option', 'autocomplete' => []],
             ['form_type' => 'text', 'name' => 'value', 'description' => 'Value'],
         ];
     }
