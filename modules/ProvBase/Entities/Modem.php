@@ -384,6 +384,9 @@ class Modem extends \BaseModel
         $ret[$tabName]['Endpoint']['class'] = 'Endpoint';
         $ret[$tabName]['Endpoint']['relation'] = $this->endpoints;
 
+        $ret[$tabName]['Option']['class'] = 'ModemOption';
+        $ret[$tabName]['Option']['relation'] = $this->options;
+
         if (Module::collections()->has('ProvVoipEnvia')) {
             $ret[$tabName]['EnviaContract']['class'] = 'EnviaContract';
             $ret[$tabName]['EnviaContract']['relation'] = $this->enviacontracts;
