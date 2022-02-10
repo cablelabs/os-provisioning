@@ -334,6 +334,13 @@ class Configfile extends \BaseModel
                 $qos = [$device->qos];
                 $db_schemata['qos'][0] = Schema::getColumnListing('qos');
 
+                // populate modem options
+                foreach ($device->options as $option) {
+                    $search[] = "{modem.{$option->key}.0}";
+                    $replace[] = $option->value;
+                    $i++;
+                }
+
                 if (! Module::collections()->has('ProvVoip') || ! $device->mtas->first()) {
                     break;
                 }
