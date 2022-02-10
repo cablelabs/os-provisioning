@@ -85,4 +85,11 @@ class ModemOption extends \BaseModel
     {
         return $this->modem;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new \Modules\ProvBase\Observers\ModemOptionObserver);
+    }
 }
