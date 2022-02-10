@@ -49,7 +49,9 @@ class ModemOption extends \BaseModel
                 'required',
                 // require key to be unique per modem
                 Rule::unique($this->table)->ignore($this)->where(function ($query) {
-                    return $query->where('modem_id', $this->modem->id ?? \Request::get('modem_id'));
+                    return $query
+                        ->whereNull('deleted_at')
+                        ->where('modem_id', $this->modem->id ?? \Request::get('modem_id'));
                 }),
             ],
         ];
