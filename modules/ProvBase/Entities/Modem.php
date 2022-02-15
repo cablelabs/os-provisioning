@@ -1510,7 +1510,11 @@ class Modem extends \BaseModel
         }
 
         $preq['axis'] = range(-0.5, 0.5, 1 / 128);
-        $preq['chart'] = array_fill(0, count($preq['energy']), floor(min($preq['energy'])));
+        $preq['chart'] = array_fill(
+            0,
+            count($preq['energy']),
+            floor(min(array_filter($preq['energy'], fn ($energy) => is_int($energy)))),
+        );
 
         return $preq;
     }
