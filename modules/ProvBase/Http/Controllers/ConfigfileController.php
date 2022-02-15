@@ -20,6 +20,7 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use Storage;
 use Illuminate\Support\Str;
+use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\File;
 use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Request;
@@ -91,7 +92,7 @@ class ConfigfileController extends \BaseController
     {
         $rules['text'] .= ':'.$data['device'];
 
-        if ($data['device'] != 'mta') {
+        if ($data['device'] != 'mta' && Module::collections()->has('ProvMon')) {
             $rules['dashboard'] = 'required';
         }
 
