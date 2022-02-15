@@ -427,7 +427,7 @@ class ConfigfileController extends \BaseController
      *
      * @param  array  $content  Current Configfile
      * @param  bool  $hasName  Take Name of Input field for first Configfile?
-     * @param  Illuminate\Support\Collection  $originalConfigfiles  Data of all Configfiles
+     * @param  \Illuminate\Support\Collection  $originalConfigfiles  Data of all Configfiles
      * @return void
      */
     public function recreateTree(array $content, bool $hasName, \Illuminate\Support\Collection $originalConfigfiles): void
