@@ -19,7 +19,7 @@
 use Modules\ProvBase\Entities\Contract;
 use Illuminate\Database\Schema\Blueprint;
 
-class UpdateContractAddDreamfiberFields extends BaseMigration
+class UpdateContractAddSmartOntFields extends BaseMigration
 {
     public $migrationScope = 'database';
 
@@ -57,7 +57,7 @@ class UpdateContractAddDreamfiberFields extends BaseMigration
             'city' => 'n/a',
             'country_code' => 'n/a',
             'description' => '“Storage” holding free ONT. Change parameters to your needs.',
-            'type' => 'DF_OTO_STORAGE',
+            'type' => 'OTO_STORAGE',
         ]);
         $contract->save();
     }

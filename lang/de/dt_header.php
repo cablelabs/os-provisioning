@@ -603,7 +603,7 @@ return [
     'tickettypes.name' => 'Typ',
     'total_fee' => 'Gebühren',
 
-    // Dreamfiber
+    // SmartOnt
     'dfsubscription' => [
         'contact_city' => 'Ort',
         'contact_postal_code' => 'PLZ',

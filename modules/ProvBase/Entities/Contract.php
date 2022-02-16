@@ -86,9 +86,9 @@ class Contract extends \BaseModel
             $rules['birthday'] .= '|required_if:salutation,placeholder_salutations_person';
         }
 
-        // adapt ruleset for dreamfiber contract types (=OTO)
+        // adapt ruleset for smartont contract types (=OTO)
         $type = Request::get('type');
-        if (in_array($type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+        if (in_array($type, ['OTO', 'OTO_STORAGE'])) {
             $rules['birthday'] = 'nullable';
             $rules['company'] = 'nullable';
             $rules['contract_start'] = 'nullable|date_format:Y-m-d';
@@ -103,7 +103,7 @@ class Contract extends \BaseModel
             $rules['sep_id'] = 'string|unique';
         }
 
-        if ($type == 'DF_OTO_STORAGE') {
+        if ($type == 'OTO_STORAGE') {
             $rules['sep_id'] = 'nullable|string';
         }
 
@@ -138,7 +138,7 @@ class Contract extends \BaseModel
             'order_by' => ['0' => 'asc'],
         ];
 
-        if (Module::collections()->has('Dreamfiber')) {
+        if (Module::collections()->has('SmartOnt')) {
             $ret['index_header'] = array_merge(
                 $ret['index_header'],
                 [
@@ -200,7 +200,7 @@ class Contract extends \BaseModel
      */
     private function getBsclassDfOto()
     {
-        if ($this->type == 'DF_OTO_STORAGE') {
+        if ($this->type == 'OTO_STORAGE') {
             return 'success';
         }
 
@@ -218,8 +218,8 @@ class Contract extends \BaseModel
      */
     public function get_bsclass()
     {
-        // special case Dreamfiber OTO
-        if (in_array($this->type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+        // special case SmartOnt OTO
+        if (in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
             return $this->getBsclassDfOto();
         }
 
@@ -247,8 +247,8 @@ class Contract extends \BaseModel
      */
     public function label()
     {
-        // special case Dreamfiber OTO
-        if (in_array($this->type, ['DF_OTO', 'DF_OTO_STORAGE'])) {
+        // special case SmartOnt OTO
+        if (in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
             return "$this->sep_id – $this->omfd_id";
         }
 
@@ -369,7 +369,7 @@ class Contract extends \BaseModel
             $ret['Email']['Email'] = $this->emails;
         }
 
-        if (Module::collections()->has('Dreamfiber')) {
+        if (Module::collections()->has('SmartOnt')) {
             $ret['Edit']['DfSubscription']['class'] = 'DfSubscription';
             $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscription;
         }

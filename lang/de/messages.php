@@ -825,7 +825,7 @@ return [
     'STB'                       => 'STB',
     'dhcpValidationError'       => 'Ungültige DHCP Konfiguration: Der DHCP Server wird nicht neu gestartet, bitte prüfen Sie die Konfiguration via: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
 
-    // Dreamfiber
+    // SmartOnt
     'alau_order_ref'            => 'Eigene Aufragskennung',
     'contact_city'              => 'Kontakt-Stadt',
     'contact_company_name'      => 'Kontakt-Firma',

@@ -60,12 +60,12 @@ return [
     'Menu_Tree Table'           => 'Tree Table',
     'Menu_Devices'              => 'Devices',
     'Menu_DeviceTypes'          => 'Devicetypes',
-    'Menu_Contracts'            => 'Contracts'.(Module::collections()->has('Dreamfiber') ? '/OTOs' : ''),
+    'Menu_Contracts'            => 'Contracts'.(Module::collections()->has('SmartOnt') ? '/OTOs' : ''),
     'Menu_HfcBase'              => 'Detect',
     'Menu_HfcReq'               => 'HFC',
     'Menu_MibFile'              => 'MIB-Files',
     'Menu_ProvBase'             => 'Provisioning',
-    'Menu_Modems'               => 'Modems'.(Module::collections()->has('Dreamfiber') ? '/ONTs' : ''),
+    'Menu_Modems'               => 'Modems'.(Module::collections()->has('SmartOnt') ? '/ONTs' : ''),
     'Menu_Endpoint'             => 'Endpoints',
     'Menu_Number Range'         => 'Number Range',
     'Menu_Configfile'           => 'Configfiles',
@@ -92,8 +92,8 @@ return [
     'Menu_Nets'                 => 'Nets',
     'Menu_allNets'              => 'All networks',
     'Menu_VicinityGraph'        => 'Vicinity Graph',
-    'Menu_DFSubscriptions'      => 'Subscriptions',
-    'Menu_DFSubscriptionEvents' => 'Events',
+    'Menu_DFSubscriptions'      => 'Dreamfiber subscriptions',
+    'Menu_DFSubscriptionEvents' => 'Dreamfiber events',
 
     //User Settings
     'Menu_UserSettings'         => 'User Settings',
@@ -180,14 +180,14 @@ return [
     //Provisioning
     //Contract
     'Header_Salesman'           => 'Salesman|Salesmen',
-    'Header_Contract'           => 'Contract'.(Module::collections()->has('Dreamfiber') ? '/OTO' : '').'|Contracts'.(Module::collections()->has('Dreamfiber') ? '/OTOs' : ''),
+    'Header_Contract'           => 'Contract'.(Module::collections()->has('SmartOnt') ? '/OTO' : '').'|Contracts'.(Module::collections()->has('SmartOnt') ? '/OTOs' : ''),
     'Header_ContractInfoApartment' => 'Contracts of realty (info)',
     'Header_ContractInfoRealty' => 'Info: Contract of modems',
     'Header_EditContract'       => 'Edit Contract',
     'Header_GroupContracts'      => 'Group Contracts',
     'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
     //Modems
-    'Header_Modems'             => 'Modem'.(Module::collections()->has('Dreamfiber') ? '/ONT' : '').'|Modems'.(Module::collections()->has('Dreamfiber') ? '/ONTs' : ''), //workaround
+    'Header_Modems'             => 'Modem'.(Module::collections()->has('SmartOnt') ? '/ONT' : '').'|Modems'.(Module::collections()->has('SmartOnt') ? '/ONTs' : ''), //workaround
     'Header_ModemOption'        => 'Modem Option|Modem Options',
     'Header_Invoice'            => 'Invoice|Invoices',
     'Header_OldInvoices'        => 'Old Invoices',
@@ -286,10 +286,10 @@ return [
     // 'Create'                 => 'Erstelle ',
     // 'Edit'                       => 'Ändere ',
 
-    // Dreamfiber
-    'Header_Dreamfiber' => 'Dreamfiber API',
-    'Header_DfSubscription'     => 'DF subsription',
-    'Header_DfSubscriptionEvent' => 'DF subsription event',
+    // SmartOnt
+    'Header_SmartOnt' => 'Smart ONT',
+    'Header_DfSubscription'     => 'Dreamfiber subscription',
+    'Header_DfSubscriptionEvent' => 'Dreamfiber subscription event',
 
     //BUTTON
     'Sign me in'                => 'Login',
@@ -622,7 +622,7 @@ return [
     'Detach all' => 'Detach all :model',
     'Diagrams' => 'Diagrams',
     'Discard' => 'Discard',
-    'Dreamfiber' => 'Dreamfiber API',
+    'SmartOnt' => 'Smart ONT',
     'download' => [
         'connInfo' => 'Connection Information',
         'contractConfirmation' => 'Contract Confirmation',

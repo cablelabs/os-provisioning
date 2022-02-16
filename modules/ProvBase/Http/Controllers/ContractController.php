@@ -32,7 +32,7 @@ class ContractController extends \BaseController
     protected $relation_create_button = 'Add';
 
     /**
-     * Dreamfiber OTO uses a very different form set than the rest.
+     * SmartOnt OTO uses a very different form set than the rest.
      * This is defined here.
      *
      * @param $model A contract
@@ -87,10 +87,10 @@ class ContractController extends \BaseController
             $model = new Contract;
         }
 
-        if (Module::collections()->has('Dreamfiber')) {
+        if (Module::collections()->has('SmartOnt')) {
             if (
-                in_array($model->type, ['DF_OTO', 'DF_OTO_STORAGE']) ||
-                in_array(Request::get('type'), ['DF_OTO', 'DF_OTO_STORAGE'])
+                in_array($model->type, ['OTO', 'OTO_STORAGE']) ||
+                in_array(Request::get('type'), ['OTO', 'OTO_STORAGE'])
             ) {
                 return $this->viewFormFieldsDfOto($model);
             }

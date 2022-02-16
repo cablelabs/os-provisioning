@@ -826,7 +826,7 @@ return [
     'STB'                       => 'STB',
     'dhcpValidationError'       => 'Invalid DHCP config: DHCP server will not be restarted, please check the output of: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
 
-    // Dreamfiber
+    // SmartOnt
     'alau_order_ref'            => 'Own order reference',
     'contact_city'              => 'Contact city',
     'contact_company_name'      => 'Contact company',

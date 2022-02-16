@@ -223,11 +223,11 @@ class ModemController extends \BaseController
      */
     protected function setupSelect2Field($model, string $class, string $field = null, string $fn = null): array
     {
-        // chose the first ONT configfile for new dreamfiber „modems“
+        // chose the first ONT configfile for new smartont „modems“
         if (
-            Module::collections()->has('Dreamfiber') &&
+            Module::collections()->has('SmartOnt') &&
             (! $model->exists) &&
-            (in_array(Request::get('type'), ['DF_OTO_STORAGE', 'DF_OTO']))
+            (in_array(Request::get('type'), ['OTO_STORAGE', 'OTO']))
         ) {
             $cf = Configfile::where('device', '=', 'ont')->select('id', 'name')->first();
 

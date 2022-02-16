@@ -309,7 +309,7 @@ return [
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
 
-    // Dreamfiber
+    // SmartOnt
     'dfsubscription' => [
         'contact_city' => 'City',
         'contact_postal_code' => 'ZIP',
