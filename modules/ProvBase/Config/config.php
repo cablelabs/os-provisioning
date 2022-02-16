@@ -62,4 +62,6 @@ return  [
             'class' => IpPool::class,
         ],
     ],
+    'cwmpConnectionRequest' => env('CWMP_CONNECTION_REQUEST', 1),
+    'cwmpConnectionRequestTimeout' => env('CWMP_CONNECTION_REQUEST_TIMEOUT', 3000),
 ];

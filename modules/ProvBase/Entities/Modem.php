@@ -1264,7 +1264,9 @@ class Modem extends \BaseModel
                 return;
             }
 
-            $success = self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', "{ \"name\" : \"$action\" }");
+            $timeout = config('provbase.cwmpConnectionRequestTimeout');
+            $conReq = config('provbase.cwmpConnectionRequest') ? '&connection_request' : '';
+            $success = self::callGenieAcsApi("devices/$id/tasks?timeout={$timeout}{$conReq}", 'POST', "{ \"name\" : \"$action\" }");
             if (! $success) {
                 Session::push('tmp_error_above_form', trans('messages.modem_restart_error'));
 
