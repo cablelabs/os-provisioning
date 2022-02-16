@@ -227,6 +227,7 @@ class ModemController extends \BaseController
         if (
             Module::collections()->has('SmartOnt') &&
             (! $model->exists) &&
+            ('Configfile' == $class) &&
             (in_array(Request::get('type'), ['OTO_STORAGE', 'OTO']))
         ) {
             $cf = Configfile::where('device', '=', 'ont')->select('id', 'name')->first();
@@ -235,7 +236,7 @@ class ModemController extends \BaseController
         }
 
         // default – use version of BaseController
-        return parent::setupSelect2Field($model, 'Configfile');
+        return parent::setupSelect2Field($model, $class);
     }
 
     /**

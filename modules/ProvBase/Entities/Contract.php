@@ -369,7 +369,7 @@ class Contract extends \BaseModel
             $ret['Email']['Email'] = $this->emails;
         }
 
-        if (Module::collections()->has('SmartOnt')) {
+        if (Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
             $ret['Edit']['DfSubscription']['class'] = 'DfSubscription';
             $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscription;
         }
