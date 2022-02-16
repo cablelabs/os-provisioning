@@ -69,6 +69,8 @@ class ContractController extends \BaseController
 
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
 
+            ['form_type' => 'text', 'name' => 'type', 'description' => 'Type', 'create' => ['Modem'], 'options' => ['readonly'], 'hidden' => '1'],
+
         ];
 
         return $fields;

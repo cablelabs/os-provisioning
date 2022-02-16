@@ -37,7 +37,7 @@ class Modem extends \BaseModel
     use \App\AddressFunctionsTrait; // get functions for some address select options
     use \App\extensions\geocoding\GeoReferencable;
 
-    public const TYPES = ['cm', 'tr069'];
+    public const TYPES = ['cm', 'tr069', 'ont'];
     public const CWMP_EVENTS = [
         'BOOTSTRAP',
         'BOOT',

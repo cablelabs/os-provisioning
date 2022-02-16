@@ -212,6 +212,33 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Prepare the preselected model for the select 2 field. Currently only
+     * single select is supported.
+     *
+     * @param  BaseModel|null  $model  model in edit view, null in create context
+     * @param  string  $class  unqualified name of the Class
+     * @param  string|null  $field  Name of the input field
+     * @param  string|null  $fn  Name of the relation(function)
+     * @return array
+     */
+    protected function setupSelect2Field($model, string $class, string $field = null, string $fn = null): array
+    {
+        // chose the first ONT configfile for new dreamfiber „modems“
+        if (
+            Module::collections()->has('Dreamfiber') &&
+            (! $model->exists) &&
+            (in_array(Request::get('type'), ['DF_OTO_STORAGE', 'DF_OTO']))
+        ) {
+            $cf = Configfile::where('device', '=', 'ont')->select('id', 'name')->first();
+
+            return [$cf->id => $cf->name];
+        }
+
+        // default – use version of BaseController
+        return parent::setupSelect2Field($model, 'Configfile');
+    }
+
+    /**
      * Change form fields based on selected configfile device (cm || tr069)
      *
      * @author Roy Schneider
@@ -221,10 +248,15 @@ class ModemController extends \BaseController
     public function dynamicDisplayFormFields()
     {
         $tr069Configfiles = Configfile::where('device', 'tr069')->pluck('id', 'id');
+        $ontConfigfiles = Configfile::where('device', 'ont')->pluck('id', 'id');
+        // keys are distinct here – can safely use the “+” operator
+        $allConfigfiles = $tr069Configfiles->toArray() + $ontConfigfiles->toArray();
+        ksort($allConfigfiles);
 
         return [
-            'keyById' => $tr069Configfiles->toArray(),
+            'keyById' => $allConfigfiles,
             'tr069' => $tr069Configfiles->isEmpty() ? 'hide' : $tr069Configfiles->implode(' '),
+            'ont' => $ontConfigfiles->isEmpty() ? 'hide' : $ontConfigfiles->implode(' '),
         ];
     }
 
