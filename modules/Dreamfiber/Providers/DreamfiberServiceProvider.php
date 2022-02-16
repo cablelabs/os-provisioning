@@ -42,7 +42,6 @@ class DreamfiberServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
-        $this->loadMigrationsFrom(module_path('Dreamfiber', 'Database/Migrations'));
     }
 
     /**
