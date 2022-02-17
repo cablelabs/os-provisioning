@@ -87,6 +87,11 @@ var saveTabPillState = function() {
       href = $(e.target).attr('href');
       json[parentId] = href;
 
+      // dont save logging tab
+      if (href === '#logging') {
+        return
+      }
+
       return localStorage.setItem("tabs-state", JSON.stringify(json));
     });
 
