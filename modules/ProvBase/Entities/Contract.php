@@ -174,31 +174,34 @@ class Contract extends \BaseModel
     {
         $this->setRelationCounts();
         $relationThreshhold = config('datatables.relationThreshhold');
+        $i18nContract = trans_choice('view.Header_Contract', 1);
 
-        $ret['Edit']['Modem']['class'] = 'Modem';
-        $ret['Edit']['Modem']['count'] = $this->modems_count;
-        $ret['Edit']['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
+        $ret[$i18nContract]['icon'] = 'pencil';
+        $ret[$i18nContract]['Modem']['class'] = 'Modem';
+        $ret[$i18nContract]['Modem']['count'] = $this->modems_count;
+        $ret[$i18nContract]['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
             collect([new Modem()]) :
             $this->modems;
 
         if (Module::collections()->has('BillingBase')) {
-            $ret['Edit']['Item']['class'] = 'Item';
-            $ret['Edit']['Item']['count'] = $this->items_count;
-            $ret['Edit']['Item']['relation'] = $this->items_count >= $relationThreshhold ?
+            $ret[$i18nContract]['Item']['class'] = 'Item';
+            $ret[$i18nContract]['Item']['count'] = $this->items_count;
+            $ret[$i18nContract]['Item']['relation'] = $this->items_count >= $relationThreshhold ?
                 collect([new \Modules\BillingBase\Entities\Item()]) :
                 $this->items;
 
-            $ret['Edit']['SepaMandate']['class'] = 'SepaMandate';
-            $ret['Edit']['SepaMandate']['relation'] = $this->sepamandates;
+            $ret[$i18nContract]['SepaMandate']['class'] = 'SepaMandate';
+            $ret[$i18nContract]['SepaMandate']['relation'] = $this->sepamandates;
 
-            $ret['Billing']['Item'] = $ret['Edit']['Item'];
+            $ret['Billing']['icon'] = 'line-chart';
+            $ret['Billing']['Item'] = $ret[$i18nContract]['Item'];
             $ret['Billing']['SepaMandate']['class'] = 'SepaMandate';
             $ret['Billing']['SepaMandate']['relation'] = $this->sepamandates;
 
             if (Module::collections()->has('PropertyManagement')) {
                 if ($this->group_contract) {
-                    $ret['Edit']['Modem']['options']['hide_create_button'] = 1;
-                    $ret['Edit']['Modem']['info'] = trans('propertymanagement::messages.groupContract.modem');
+                    $ret[$i18nContract]['Modem']['options']['hide_create_button'] = 1;
+                    $ret[$i18nContract]['Modem']['info'] = trans('propertymanagement::messages.groupContract.modem');
 
                     $tabName = trans('propertymanagement::view.propertyManagement');
                     $ret[$tabName]['Realty']['class'] = 'Realty';
@@ -209,17 +212,17 @@ class Contract extends \BaseModel
                 $belongsToGroupContract = $this->belongsToGroupContract();
                 if ($belongsToGroupContract) {
                     $msg = trans('propertymanagement::messages.groupContract.item');
-                    $ret['Edit']['Item']['info'] = $msg;
+                    $ret[$i18nContract]['Item']['info'] = $msg;
                     $ret['Billing']['Item']['info'] = $msg;
                 }
             }
 
             if (Module::collections()->has('OverdueDebts')) {
                 // resulting outstanding amount
-                $ret['Edit']['DebtResult']['view']['view'] = 'overduedebts::Debt.result';
+                $ret[$i18nContract]['DebtResult']['view']['view'] = 'overduedebts::Debt.result';
                 $resultingDebt = $this->getResultingDebt();
-                $ret['Edit']['DebtResult']['view']['vars']['debt'] = $resultingDebt['amount'];
-                $ret['Edit']['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
+                $ret[$i18nContract]['DebtResult']['view']['vars']['debt'] = $resultingDebt['amount'];
+                $ret[$i18nContract]['DebtResult']['view']['vars']['bsclass'] = $resultingDebt['bsclass'];
 
                 $ret['Billing']['Debt']['class'] = 'Debt';
                 $ret['Billing']['Debt']['relation'] = $this->debts;
@@ -235,6 +238,7 @@ class Contract extends \BaseModel
         }
 
         if (Module::collections()->has('Ticketsystem')) {
+            $ret['Tickets']['icon'] = 'ticket';
             $ret['Tickets']['Ticket']['class'] = 'Ticket';
             $ret['Tickets']['Ticket']['relation'] = $this->tickets;
             $ret['Tickets']['Modem Tickets']['class'] = 'Ticket';
@@ -245,6 +249,7 @@ class Contract extends \BaseModel
 
         if (Module::collections()->has('ProvVoipEnvia') &&
             (! Module::collections()->has('PropertyManagement') || (! $this->group_contract))) {
+            $ret['envia TEL']['icon'] = 'volume-control-phone';
             $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
             $ret['envia TEL']['EnviaContract']['relation'] = $this->enviacontracts;
             $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
@@ -260,10 +265,11 @@ class Contract extends \BaseModel
             $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvBase\Http\Controllers\ContractController::_get_envia_management_jobs($this);
 
             // for better navigation: show modems also in envia TEL blade
-            $ret['envia TEL']['Modem'] = $ret['Edit']['Modem'];
+            $ret['envia TEL']['Modem'] = $ret[$i18nContract]['Modem'];
         }
 
         if (Module::collections()->has('Ccc') && Module::collections()->has('BillingBase')) {
+            $ret['Documents']['icon'] = 'file-text-o';
             $ret['Documents']['Documents']['view']['view'] = 'ccc::prov.conn_info';
         }
 

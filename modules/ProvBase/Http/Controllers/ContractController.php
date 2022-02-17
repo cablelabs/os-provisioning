@@ -305,4 +305,20 @@ class ContractController extends \BaseController
 
         return $data;
     }
+
+    /**
+     * Show tabs in Contract edit page.
+     *
+     * @author Roy Schneider
+     *
+     * @param Modules\ProvBase\Entities\Contract
+     * @return array
+     */
+    protected function editTabs($contract)
+    {
+        $defaultTabs = parent::editTabs($contract);
+        unset($defaultTabs[0]);
+
+        return $defaultTabs;
+    }
 }

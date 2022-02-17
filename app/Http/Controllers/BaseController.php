@@ -330,7 +330,10 @@ class BaseController extends Controller
         // Generate tabs from array structure of relations
         foreach (array_keys($relations) as $tab) {
             if (! $this->tabDefined($tab, $tabs)) {
-                $tabs[] = ['name' => $tab];
+                $tabs[] = [
+                    'name' => $tab,
+                    'icon' => $relations[$tab]['icon'] ?? '',
+                ];
             }
         }
 

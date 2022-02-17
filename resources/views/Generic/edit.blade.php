@@ -60,6 +60,9 @@
                     @if (isset($relations[$tab['name']]))
                         <div class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}" id="{{ $tab['name'] }}">
                             @foreach($relations[$tab['name']] as $view => $relation)
+                                @if ($view === 'icon')
+                                    @continue
+                                @endif
 
                                 {{-- The section content for the new Panel --}}
                                 @section($tab['name'].$view)
