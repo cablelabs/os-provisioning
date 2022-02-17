@@ -574,6 +574,10 @@ class Modem extends \BaseModel
         // only add content if multiple dhcp servers exist
         if (! ProvBase::first()->multiple_provisioning_systems) {
             $content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase\n";
+            // self::IGNORE_CPE_FILE_PATH is already up-to-date
+            if ($content == file_get_contents(self::IGNORE_CPE_FILE_PATH)) {
+                return;
+            }
         } else {
             // get all not deleted modems
             // attention: do not use “where('internet_access', '>', '0')” to shrink the list
