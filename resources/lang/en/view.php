@@ -755,4 +755,5 @@ return [
             'DATA_VERIFICATION_FAILED' => 'Entered Data is invalid or could not be resolved by the geocoding providers.',
         ],
     ],
+    'relativeFrequency' => 'relative Frequency',
 ];
