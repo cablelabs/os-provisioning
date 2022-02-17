@@ -41,6 +41,7 @@
         'CustomerModem.showDiagrams',
         'CustomerRect.show',
         'CustomerPoly.show',
+        'CustomerTopo.show',
         'CustomerTopo.show_impaired',
         'CustomerModem.showModems',
         'CustomerTopo.show_prox',
