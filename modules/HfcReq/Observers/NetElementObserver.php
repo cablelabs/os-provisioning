@@ -57,7 +57,7 @@ class NetElementObserver
             $this->checkNetCluster($netelement);
 
             // Change Net & cluster of all childrens too
-            NetElement::where('parent_id', '=', $netelement->id)
+            NetElement::whereDescendantOf($netelement->id)
                 ->update([
                     'net' => $netelement->net,
                     'cluster' => $netelement->cluster,
@@ -104,12 +104,12 @@ class NetElementObserver
      */
     private function checkNetCluster($netelement)
     {
-        if (! $netelement->net) {
-            return Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noNet'));
+        if ($netelement->parent_id && ! $netelement->net) {
+            Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noNet'));
         }
 
-        if (! $netelement->net) {
-            return Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noCluster'));
+        if ($netelement->parent_id && ! $netelement->cluster) {
+            Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noCluster'));
         }
     }
 }

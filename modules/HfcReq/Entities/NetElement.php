@@ -807,40 +807,47 @@ class NetElement extends \BaseModel
             ->prepend(trans('messages.None'), '');
     }
 
-    /*
-     * Helpers from NMS
+    /**
+     * Resolves to the id of the next ancestor of the given type.
+     *
+     * @param  string  $type  Cluster, Net or NetGw
+     * @return int|null
      */
-    private function _get_native_helper($type = 'Net')
+    private function getNative(string $type = 'Net'): ?int
     {
-        $p = $this;
-        $i = 0;
+        $type = strtolower($type);
+        $netelements = self::defaultOrder()
+            ->whereAncestorOrSelf($this)
+            ->when($type == 'netgw',
+                fn ($query) => $query->with(['netelementtype:id,base_type_id']),
+                fn ($query) => $query->without(['netelementtype'])
+            )
+            ->get(['id', 'netelementtype_id']);
 
-        do {
-            if (! is_object($p)) {
-                return 0;
-            }
+        if (! $netelements->count()) {
+            return null;
+        }
 
-            if ($p->{'is_type_'.strtolower($type)}()) {
-                return $p->id;
-            }
+        if (! $native = $netelements->last(fn ($n) => $n->{'is_type_'.$type}())) {
+            return null;
+        }
 
-            $p = $p->parent;
-        } while ($i++ < $this->max_parents);
+        return $native->id;
     }
 
     public function get_native_cluster()
     {
-        return $this->_get_native_helper('Cluster');
+        return $this->getNative('Cluster');
     }
 
     public function get_native_net()
     {
-        return $this->_get_native_helper();
+        return $this->getNative();
     }
 
     public function get_native_netgw()
     {
-        return $this->_get_native_helper('NetGw');
+        return $this->getNative('NetGw');
     }
 
     /**
