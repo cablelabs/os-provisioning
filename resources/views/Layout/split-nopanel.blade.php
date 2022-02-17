@@ -36,6 +36,7 @@
     }
 
     $fullscreenRoutes = [
+        'TreeErd.show',
         'TreeTopo.show',
         'CustomerModem.showDiagrams',
         'CustomerRect.show',

@@ -889,6 +889,9 @@ div.recolor:hover,
     transition: 325ms ease-in;
 }
 
+.erd-legend {
+    position: relative;
+}
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
     .mw-sm-80 {
@@ -927,6 +930,17 @@ div.recolor:hover,
         width: inherit;
         background-color: transparent;
         transform: translateY(0);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 1200px) {
+    .erd-legend {
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        padding: 1rem;
+        border: 1px solid black;
     }
 }
 
