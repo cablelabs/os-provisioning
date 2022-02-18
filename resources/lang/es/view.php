@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'buttons' => [
+        'revertDebtUpload' => 'Revert Debt Upload',
+    ],
     //SEARCH
     'Search_EnterKeyword'       => 'Ingresar palabra clave',
     'Search_MatchesFor'         => 'Coincide para',
@@ -64,6 +67,7 @@ return [
     'Menu_Qos'                  => 'QoS',
     'Menu_NetGws'               => 'NetGws',
     'Menu_Ip-Pools'             => 'IP-Pools',
+    'Menu_Items'                => 'Items',
     'Menu_OverdueDebts'         => 'Deudas vencidas',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Gestión de propiedades',
@@ -214,10 +218,6 @@ return [
     //HFC
     //Topography
     'Header_Topography - Modems'=> 'Topografia - Modems',
-    'navigate'                  => 'Navegar',
-    'draw box'                  => 'Dibujar caja',
-    'draw polygon'              => 'Dibujar poligono',
-    'modify'                    => 'Modificar elementos',
     'Header_NetElement'         => 'Net Element|Net Elements',
     'Header_NetElementType'     => 'Net Element Type|Net Element Types',
     'Header_TreeErd'            => 'Net|Nets',
@@ -253,6 +253,12 @@ return [
     'Header_Realty'             => 'Bienes raices',
     'Header_SubNetElement'      => 'Subordinated Netelements',
     'Header_tap'                => 'Controllable tap port',
+
+    // Workforce
+    'Header_Workforce'          => 'Workforce Command Center',
+
+    // Responsive Navbar Button
+    'Header_Dependencies'     => 'Dependencies',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
@@ -502,7 +508,6 @@ return [
     'Ability' => [
         'Abilities'         => 'Abilities',
         'Ability'           => 'Ability',
-        'Access Workforce Dashboard' => 'Access to Workforce Command Center',
         'Allow'             => 'Allow',
         'All abilities'     => 'All Abilities',
         'Allow to'          => 'Allow to',
@@ -540,6 +545,7 @@ return [
         'View analysis pages of netgw' => 'View Analysis Pages of NetGw',
         'View everything'   => 'View Everything',
         'VoipMon'           => 'Voip Monitor',
+        'Workforce'         => 'Workforce',
     ],
     'analysis' => 'Analysis',
     'Assign' => 'Assign :model',
@@ -579,10 +585,24 @@ return [
         'DT_Last Sessions' => 'Last Sessions',
         'DT_Replies' => 'RadReplies',
         'DT_Authentications' => 'Auth',
+        'sendPing' => 'Send Ping',
+        'floodping' => [
+            'lowLoad' => 'low load: 500 packets of 56 Byte (~ 5s)',
+            'averageLoad' => 'average load: 1000 packets of 736 Byte (~ 10s)',
+            'bigLoad' => 'big load: 2500 packets of 56 Byte (~ 30s)',
+            'hugeLoad' => 'huge load: 2500 packets of 1472 Byte (~ 30s)',
+        ],
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
     'parentNetelement' => 'Parent <br> netelement',
+    'preeq' => [
+        'energy' => 'Amplitude / dB',
+        'amplitude' => 'Amplitude / dB',
+        'relativeFrequency' => 'Frequency offset / MHz',
+        'tapEnergyDistribution' => 'Energy Distribution per TAP',
+        'fft' => 'Equalized Frequency Response',
+    ],
     'product' => [
         'billingCycles' => [
             'once' => 'once',
@@ -606,8 +626,20 @@ return [
     'redirectNote' => 'You are not logged in and tried to access an internal page. After a successful login you are redirected to:',
     'showChanges' => 'Mostrar el cambio|Mostrar :num cambios',
     'SettlementRun' => 'Arreglo',
+    'SipDevices' => 'SIP Devices',
+    'belongsToNet' => 'This element belongs to a Net',
+    'viewWholeNet' => 'Display whole net',
+    'belongsToCluster' => 'This element belongs to a Cluster',
+    'viewWholeCluster' => 'Display Cluster',
     'tab' => [
-        'Documents' => 'Documents',
+        'Documents' => 'Dokuments',
+        'Entity Diagram' => 'ERD',
+        'Topography' => 'Net Topology',
+        'Customers' => 'Modem Topology',
+        'Controlling' => 'Controlling',
+        'modemAnalysis' => 'Modem Analysis',
+        'netGWAnalysis' => 'NetGw Analysis',
+        'Diagrams' => 'Diagrams',
     ],
 
     'ticket' => [
@@ -654,10 +686,42 @@ return [
     ],
     'Ticketsystem' => 'Ticketsystem',
     'Time' => 'Hora',
-    'topo' => [
-        'addMpr' => 'Add Modem Positioning Rule',
-        'showCustomers' => 'Show Customer in Rectangle',
+    'from' => 'from',
+    'to' => 'to',
+    'tree' => [
+        'addDevice' => 'Add NetElement at the selected position',
     ],
+    'topo' => [
+        'MPR' => 'Modem Positioning Rule',
+        'Modem' => 'Topography: Modem Overview',
+        'addMpr' => 'Add new MPR',
+        'addDevice' => 'Position a new device',
+        'drawDevice' => 'Click to position a device',
+        'cancel' => 'Cancel',
+        'clearAll' => 'Clear All',
+        'cancelDrawing' => 'Cancel drawing',
+        'finish' => 'Finish',
+        'finishDrawing' => 'Finish drawing',
+        'undo' => 'Delete last point',
+        'undoDrawing' => 'Delete last point drawn',
+        'rectangle' => 'Draw a rectangle',
+        'polygon' => 'Draw a polygon',
+        'save' => 'Guardar',
+        'editToolbarText' => 'Drag handles or markers to edit features.',
+        'editToolbarSubtext' => 'Click cancel to undo changes.',
+        'editDisabled' => 'No layers to edit',
+        'viewMpr' => 'view MPR',
+        'editMpr' => 'edit MPR',
+        'boxTooltipStart' => 'Click and drag to draw rectangle.',
+        'boxTooltipEnd' => 'Release mouse to finish drawing.',
+        'draw polygon' => 'Draw a polygonn',
+        'modify' => 'Edit layers',
+        'showCustomers' => 'Show Customers inside this shape',
+        'polyTooltipStart' => 'Click to start drawing shape.',
+        'polyTooltipEnd' => 'Click first point to close this shape.',
+        'polyTooltipCont' => 'Click to continue drawing shape.',
+    ],
+    'address' => 'Adress',
     'true' => 'true',
     'Type' => 'Tipo',
     'users' => 'User',
@@ -682,6 +746,7 @@ return [
             'deceased' => 'deceased',
             'competitor' => 'competitor',
         ],
+        'noModemTickets' => 'Currently none of the modems that belong to this contract have a ticket associated!',
     ],
     'geocoding' => [
         'failed' => 'Could not determine geo coordinates (:reason) – please add the coordinates manually!',
