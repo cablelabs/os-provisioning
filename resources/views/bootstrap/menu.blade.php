@@ -62,7 +62,7 @@
       </div>
 
       <ul class="navbar-nav ml-auto">
-        @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics))
+        @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics) && $modem_statistics->all)
           {{-- Modem Statistics (Online/Offline) --}}
           <li class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
             <a class="d-flex" href="{{ route('HfcBase.index') }}" style="text-decoration: none;" data-toggle="tooltip" data-html="true" data-placement="auto" title="{!! $modem_statistics->text !!}">
