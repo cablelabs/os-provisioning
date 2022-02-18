@@ -1509,11 +1509,13 @@ class Modem extends \BaseModel
             return ['No pre-equalization data found'];
         }
 
-        $preq['axis'] = range(-0.5, 0.5, 1 / 128);
+        $halfband = $preq['width'] / 2000000;
+        $lowestEnergyValue = floor(min($preq['energy']));
+        $preq['axis'] = range(-$halfband, $halfband, 2 * $halfband / count($preq['fft']));
         $preq['chart'] = array_fill(
             0,
             count($preq['energy']),
-            floor(min(array_filter($preq['energy'], fn ($energy) => is_int($energy)))),
+            $lowestEnergyValue - 9 - (($lowestEnergyValue - 9) % 10),
         );
 
         return $preq;
