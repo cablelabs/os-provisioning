@@ -168,7 +168,7 @@ class NetGwController extends \BaseController
             return $tabs;
         }
 
-        $defaultTabs[] = ['name' => 'Analyses', 'route' => 'ProvMon.netgw', 'link' => $netGw->id];
+        $defaultTabs[] = ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $netGw->id];
 
         if (! \Module::collections()->has('ProvMon')) {
             $defaultTabs[array_key_last($defaultTabs)]['route'] = 'missingModule';
