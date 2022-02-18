@@ -597,9 +597,11 @@ return [
     'OverdueDebts' => 'Offene Posten',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',
     'preeq' => [
-        'relativeFrequency' => 'relative Frequenz',
+        'energy' => 'Amplitude / dB',
+        'amplitude' => 'Amplitude / dB',
+        'relativeFrequency' => 'relative Frequenz / MHz',
         'tapEnergyDistribution' => 'Energieverteilung per TAP',
-        'fft' => 'FFT der entzerrten Frequenzantwort',
+        'fft' => 'Entzerrte Frequenzantwort',
     ],
     'product' => [
         'billingCycles' => [
@@ -754,5 +756,4 @@ return [
             'DATA_VERIFICATION_FAILED' => 'Daten ungültig oder konnten vom Geocoding Dienst nicht aufgelöst werden.',
         ],
     ],
-    'relativeFrequency' => 'relative Frequenz',
 ];

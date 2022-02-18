@@ -597,9 +597,11 @@ return [
     'OverdueDebts' => 'Overdue Debts',
     'parentNetelement' => 'Parent <br> netelement',
     'preeq' => [
-        'relativeFrequency' => 'relative Frequenzy',
+        'energy' => 'Amplitude / dB',
+        'amplitude' => 'Amplitude / dB',
+        'relativeFrequency' => 'Frequency offset / MHz',
         'tapEnergyDistribution' => 'Energy Distribution per TAP',
-        'fft' => 'FFT of the equalized Frequency Response',
+        'fft' => 'Equalized Frequency Response',
     ],
     'product' => [
         'billingCycles' => [
@@ -755,5 +757,4 @@ return [
             'DATA_VERIFICATION_FAILED' => 'Entered Data is invalid or could not be resolved by the geocoding providers.',
         ],
     ],
-    'relativeFrequency' => 'relative Frequency',
 ];
