@@ -942,11 +942,18 @@ class Modem extends \BaseModel
 
         self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
 
-        unset($preset['events']);
-        $preset['events']['2 PERIODIC'] = true;
+        // generate monitoring presets...
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
-        self::callGenieAcsApi("presets/mon-$this->id", 'PUT', json_encode($preset));
+        // ...for periodic informs...
+        unset($preset['events']);
+        $preset['events']['2 PERIODIC'] = true;
+        self::callGenieAcsApi("presets/mon-{$this->id}-2", 'PUT', json_encode($preset));
+
+        // ...and connection requests
+        unset($preset['events']);
+        $preset['events']['6 CONNECTION REQUEST'] = true;
+        self::callGenieAcsApi("presets/mon-{$this->id}-6", 'PUT', json_encode($preset));
     }
 
     /**
@@ -1160,7 +1167,11 @@ class Modem extends \BaseModel
     public function deleteGenieAcsPreset()
     {
         self::callGenieAcsApi("presets/prov-$this->id", 'DELETE');
-        self::callGenieAcsApi("presets/mon-$this->id", 'DELETE');
+
+        // delete monitoring presets for periodic informs...
+        self::callGenieAcsApi("presets/mon-{$this->id}-2", 'DELETE');
+        // ...and connection requests
+        self::callGenieAcsApi("presets/mon-{$this->id}-6", 'DELETE');
     }
 
     /**

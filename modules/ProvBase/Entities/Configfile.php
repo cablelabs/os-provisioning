@@ -530,7 +530,7 @@ class Configfile extends \BaseModel
                     ->whereNull('configfile.deleted_at')
                     ->select('modem.*');
 
-                $this->build_configfiles($modemQuery, $type);
+                self::build_configfiles($modemQuery, $type);
             }
         }
 
@@ -541,14 +541,14 @@ class Configfile extends \BaseModel
             }
 
             $mtaQuery = \Modules\ProvVoip\Entities\Mta::query();
-            $this->build_configfiles($mtaQuery, 'mta');
+            self::build_configfiles($mtaQuery, 'mta');
         }
     }
 
     /**
      * @param array  Objects of Modem or Mta
      */
-    public function build_configfiles($deviceQuery, $type)
+    public static function build_configfiles($deviceQuery, $type)
     {
         $type = strtoupper($type);
         $num = (clone $deviceQuery)->count();
