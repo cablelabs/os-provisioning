@@ -83,12 +83,13 @@ return [
         'billing_month' => 'Billing month',
     ],
     'debt' => [
+        'bank_fee' => 'Bank fee',
         'date' => 'Date',
         'due_date' => 'Due date',
+        'extra_fee' => 'Extra fee',
         'indicator' => 'Dunning indicator',
         'missing_amount' => 'Missing amount',
         'number' => 'debt number',
-        'total_fee' => 'Fee',
         'voucher_nr' => 'Voucher nr',
     ],
     //Invoices
@@ -152,7 +153,8 @@ return [
         'name' => 'Netelement',
         'ip' => 'IP Adress',
         'state' => 'Judet',
-        'pos' => 'Position',
+        'lat' => 'Latitude',
+        'lng' => 'Longitude',
         'options' => 'Options',
         'kml_file' => 'KML File',
     ],
@@ -237,6 +239,11 @@ return [
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
     'contract_valid' => 'Contract valid?',
+    // Modem option
+    'modem_option' => [
+        'key' => 'Option',
+        'value' => 'Value',
+    ],
     // Node
     'node' => [
         'name' => 'Name',
@@ -337,4 +344,5 @@ return [
     ],
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
+    'total_fee' => 'Fee',
 ];
