@@ -83,12 +83,13 @@ return [
         'billing_month' => 'Billing month',
     ],
     'debt' => [
+        'bank_fee' => 'Bank fee',
         'date' => 'Fecha',
         'due_date' => 'Fecha límite',
+        'extra_fee' => 'Extra fee',
         'indicator' => 'Indicador de Dunning',
         'missing_amount' => 'Cantidad faltante',
         'number' => 'número de deuda',
-        'total_fee' => 'Tarifa',
         'voucher_nr' => 'Nr de voucher',
     ],
     //Invoices
@@ -152,7 +153,8 @@ return [
         'name' => 'Elemento de red',
         'ip' => 'Direccion IP',
         'state' => 'Estado',
-        'pos' => 'Posición',
+        'lat' => 'Latitude',
+        'lng' => 'Longitude',
         'options' => 'Opciones',
         'kml_file' => 'KML File',
     ],
@@ -237,6 +239,11 @@ return [
     'modem.support_state' => 'Estado de Soporte',
     'modem.formatted_support_state' => 'Estado de Soporte',
     'contract_valid' => 'Contrato valido?',
+    // Modem option
+    'modem_option' => [
+        'key' => 'Option',
+        'value' => 'Value',
+    ],
     // Node
     'node' => [
         'name' => 'Nombre',
@@ -337,4 +344,5 @@ return [
     ],
     'assigned_users' => 'Usuarios asignados',
     'tickettypes.name' => 'Tipo',
+    'total_fee' => 'Tarifa',
 ];
