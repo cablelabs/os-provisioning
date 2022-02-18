@@ -65,7 +65,7 @@
         <div class="d-flex col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
             <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
                 @if(isset($tabs))
-                <div class="card-header m-b-15 d-print-none" style="display:flex;">
+                <div class="card-header m-b-15 d-print-none" style="padding-top:0;display:flex;">
                     <ul id="tabs" class="nav nav-tabs card-header-tabs d-flex" style="width:100%;">
                         @foreach ($tabs as $tab)
 
