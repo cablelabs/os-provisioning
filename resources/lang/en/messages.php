@@ -647,6 +647,7 @@ return [
     'deletedTicketUsersMessage' => 'You have been removed from a ticket.',
     'ticketUpdatedMessage'      => 'this ticket has been updated.',
     'isLegacyTicket'            => 'This is a legacy Ticket, that has no relationship.',
+    'notConnectedTicket'        => 'This Ticket has no relationship.',
     'noTicketsAtAll'            => 'Enjoy your day! Currently there are no Tickets assigned to you!',
     'noComments'                => 'Currently, there are no Comments for this ticket',
     'backToDetails'             => 'Back to Details',
