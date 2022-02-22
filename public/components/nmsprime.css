@@ -719,14 +719,13 @@ ul.nav.nav-pills li {
     vertical-align: top;
     margin: 5px;
     padding: 10px;
-    width: 45%;
+    width: 100%;
     height: auto;
     border: none;
 }
-.dragdropfield .h {
-    cursor: pointer;
-}
-.dragdropfield .h input {
+
+.dragdropfield .h input,
+.dragdropfield .h div {
     font-weight: normal;
     font-size: 20px;
     padding: 10px;
@@ -734,19 +733,15 @@ ul.nav.nav-pills li {
     border: 0;
 }
 .dragdropfield .dragdroplistitem div {
-    margin: 5px;
-    padding: 10px;
     background: #f2f2f2;
 }
 .dragdropfield .dragdroplistitem input {
     display: block;
     box-sizing: border-box;
-    width: 100%;
 }
 .dragdropfield .dragdroplistitem select {
     display: block;
     box-sizing: border-box;
-    width: 100%;
 }
 .dragdropfield .dropzone {
     min-height: 50px;
@@ -754,11 +749,7 @@ ul.nav.nav-pills li {
 .dragdropfield .newlist {
     margin-top: 12px;
 }
-@media (max-width: 800px) {
-    .dragdropfield .box {
-        width: 100%;
-    }
-}
+
 @media (min-width: 1600px) {
     .d-wide-table-cell {
         display: table-cell !important;
@@ -789,12 +780,13 @@ ul.nav.nav-pills li {
 }
 .dragdropitemmenubox {
     padding: 0 !important;
+    top: 35px;
     display: none;
     text-align: left;
     border: 1px solid #ccc !important;
     background: #fff !important;
     position: absolute;
-    right: 0;
+    right: 10px;
     z-index: 2;
 }
 .dragdropitemmenubutton {
@@ -941,6 +933,10 @@ div.recolor:hover,
         left: 1rem;
         padding: 1rem;
         border: 1px solid black;
+    }
+
+    .dragdropfield .box {
+        width: 45%;
     }
 }
 
