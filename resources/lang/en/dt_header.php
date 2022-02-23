@@ -289,11 +289,13 @@ return [
     'enviaorder.orderdate'  => 'Order date',
     'enviaorder_current'  => 'Action needed?',
     'enviaorder.contract.number' => 'Contract',
+    'enviaorder.modem.id' => 'Modem',
     'phonenumber.number' => 'Phonenumber',
     //ENVIA Contract
     'enviacontract.contract.number' => 'Contract',
     'enviacontract.end_date' => 'End Date',
     'enviacontract.envia_contract_reference' => 'envia TEL contract reference',
+    'enviacontract.modem.id' => 'Modem',
     'enviacontract.start_date' => 'Start Date',
     'enviacontract.state' => 'Status',
     // CDR
@@ -311,6 +313,7 @@ return [
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
     'realty' => [
+        'administration' => 'Administration',
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
         'apartmentCount' => 'Total apartments',

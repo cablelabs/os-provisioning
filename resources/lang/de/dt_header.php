@@ -181,8 +181,8 @@ return [
     'email.blacklisting' => 'E-Mail auf Blacklist?',
     'email.forwardto' => 'Weiterleiten an:',
     'contact.firstname1' => 'Vorname 1',
-    'firstname2' => 'Vorname 2',
     'lastname1' => 'Nachname 1',
+    'firstname2' => 'Vorname 2',
     'lastname2' => 'Nachname 2',
     'tel' => 'Telefonnummer',
     'tel_private' => 'Telefonnummer privat',
@@ -194,6 +194,8 @@ return [
     'netgw.ip' => 'IP',
     'netgw.company' => 'Hersteller',
     'netgw.series' => 'Serie',
+    'netgw.formatted_support_state' => 'Unterstützungszustand',
+    'netgw.support_state' => 'Unterstützungszustand',
     // Contract
     'company' => 'Firma',
     // Domain
@@ -234,6 +236,8 @@ return [
     'modem.ds_pwr' => 'DS Pegel / dBmV',
     'modem.ds_snr' => 'DS SNR / dB',
     'modem.phy_updated_at' => 'PHY aktualisiert am',
+    'modem.support_state' => 'Unterstützungszustand',
+    'modem.formatted_support_state' => 'Unterstützungszustand',
     'modem.last_inform' => 'Letzter Inform',
     'contract_valid' => 'Vertrag gültig?',
     // Modem option

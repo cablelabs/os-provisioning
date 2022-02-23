@@ -177,6 +177,7 @@ return [
     'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
     //Modems
     'Header_Modems'             => 'Modem|Modems', //workaround
+    'Header_ModemOption'        => 'Modem Option|Modem Options',
     'Header_Invoice'            => 'Invoice|Invoices',
     'Header_OldInvoices'        => 'Old Invoices',
     'Header_EditModems'         => 'Edit Modem',
@@ -641,7 +642,6 @@ return [
         'netGWAnalysis' => 'NetGw Analysis',
         'Diagrams' => 'Diagrams',
     ],
-
     'ticket' => [
         'priority' => [
             'critical' => 'Critical',
@@ -677,6 +677,7 @@ return [
         'late' => 'late',
         'showContract' => 'Show Contract',
         'modemAnalysis' => 'Modem Analysis',
+        'showModem' => 'Show modem',
         'viewTopography' => 'View Topography',
         'noTickettype' => 'There were no Ticket types set.',
         'enableBrowserNotifications' => 'Please enable Browser Notifications',

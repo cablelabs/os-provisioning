@@ -177,6 +177,7 @@ return [
     'Header_SepaMandate'        => 'SEPA-Mandat|SEPA-Mandate',
     //Modems
     'Header_Modems'             => 'Modem|Modems', //workaround
+    'Header_ModemOption'        => 'Modemoption|Modemoptionen',
     'Header_Invoice'            => 'Rechnung|Rechnungen',
     'Header_OldInvoices'        => 'Ältere Rechnungen',
     'Header_EditModems'         => 'Modem bearbeiten',
@@ -675,6 +676,7 @@ return [
         'legacyTicket' => 'Veraltetes Ticket ohne Zuweisung',
         'late' => 'verspätet',
         'showContract' => 'Zum Vertrag',
+        'modemAnalysis' => 'Modem Analyse',
         'showModem' => 'Zum Modem',
         'viewTopography' => 'Topografie',
         'noTickettype' => 'Es wurden keine Tickettypen gesetzt.',
