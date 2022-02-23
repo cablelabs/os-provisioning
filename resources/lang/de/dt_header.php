@@ -234,6 +234,7 @@ return [
     'modem.ds_pwr' => 'DS Pegel / dBmV',
     'modem.ds_snr' => 'DS SNR / dB',
     'modem.phy_updated_at' => 'PHY aktualisiert am',
+    'modem.last_inform' => 'Letzter Inform',
     'contract_valid' => 'Vertrag gültig?',
     // Modem option
     'modem_option' => [

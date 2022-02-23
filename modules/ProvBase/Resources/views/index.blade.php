@@ -82,7 +82,13 @@
                         {!! HTML::decode (HTML::linkRoute('Modem.firmware',
                             '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
                                 <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br>
-                                <span class="username text-ellipsis text-center">Firmwares</span>
+                                <span class="text-ellipsis text-center">Firmwares</span>
+                            </span>'))
+                        !!}
+                        {!! HTML::decode (HTML::linkRoute('Modem.cwmp',
+                            '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
+                                <i style="font-size: 25px;" class="img-center fa fa-hdd-o p-10"></i><br>
+                                <span class="text-ellipsis text-center">CWMP</span>
                             </span>'))
                         !!}
 

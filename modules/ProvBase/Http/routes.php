@@ -33,6 +33,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::get('modem/cwmp', [
+        'as' => 'Modem.cwmp',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@cwmpDeviceView',
+        'middleware' => ['can:view,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     BaseRoute::post('Modem/genietask/{id}', [
         'as' => 'Modem.genieTask',
         'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@genieTask',

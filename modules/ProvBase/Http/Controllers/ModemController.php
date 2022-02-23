@@ -368,6 +368,20 @@ class ModemController extends \BaseController
         return \View::make('Generic.tree', $this->compact_prep_view(compact('headline', 'view_header', 'view_var', 'create_allowed')));
     }
 
+    public function cwmpDeviceView()
+    {
+        $discoveredDevices = array_map(function ($m) {
+            return [
+                $m['_deviceId']['_SerialNumber'] ?? null,
+                isset($m['_lastInform']) ? \Carbon\Carbon::parse($m['_lastInform'])->diffForHumans() : null,
+            ];
+        }, json_decode(Modem::callGenieAcsApi('devices?projection=_deviceId._SerialNumber,_lastInform', 'GET'), true));
+
+        $headline = 'CWMP';
+
+        return \View::make('provbase::GenieACS.devices', $this->compact_prep_view(compact('headline', 'discoveredDevices')));
+    }
+
     /**
      * Returns MAC addresses of all modems (including the respective CMTS name),
      * which were denied booting in the last two hours, since they are unknown.

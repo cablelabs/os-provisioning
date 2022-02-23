@@ -238,6 +238,7 @@ return [
     'modem.phy_updated_at' => 'PHY updated at',
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
+    'modem.last_inform' => 'Last Inform',
     'contract_valid' => 'Contract valid?',
     // Modem option
     'modem_option' => [
