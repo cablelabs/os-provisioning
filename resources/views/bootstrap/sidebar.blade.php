@@ -56,8 +56,8 @@
             v-on:mouseEnter="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
             v-on:mouseLeave="minified ? leaveMinifiedSidebar() : ''">
             <a class="caret-link"
-              v-on:click="!minified ? setMenu('{{ $moduleNameSlug }}', false) : ''"
-              href="{{ isset($typearray['link']) ?route($typearray['link']) : 'javascript:;'}}">
+              v-on:click="{{ isset($typearray['link']) ? "!minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug }')" }}"
+              href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
                 <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
               @else
@@ -65,7 +65,7 @@
               @endif
               <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
-            @if(isset($typearray['submenu']))
+            @if (isset($typearray['submenu']))
               <a class="caret-link" href="javascript:;" v-on:click.stop="setMenu('{{ $moduleNameSlug }}')" style="width: 100%; height: 20px; display:block; text-align: right">
                 <i class="fa fa-caret-right" :class="{'fa-rotate-90': showSubMenu('{{ $moduleNameSlug }}')}" style="transition:all .25s;"></i>
               </a>
