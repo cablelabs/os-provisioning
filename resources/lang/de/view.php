@@ -70,7 +70,7 @@ return [
     'Menu_Items'                => 'Posten',
     'Menu_OverdueDebts'         => 'Offene Posten',
     'Menu_ProvVoip'             => 'VoIP',
-    'Menu_PropertyManagement'   => 'Liegenschafts - Verwaltung',
+    'Menu_PropertyManagement'   => 'Gebäudeverwaltung',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Telefonnummern',
     'Menu_PhoneTariff'          => 'Telefontarife',
