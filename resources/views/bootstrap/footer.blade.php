@@ -176,6 +176,7 @@ new Vue({
       activeNetelement: null,
       clickedNetelement: null,
       netelements: @json($networks ?? new stdClass()),
+      netCount: {{ $netCount ?? 0 }},
       favorites: @json($favorites ?? new stdClass()),
     }
   },
@@ -195,7 +196,7 @@ new Vue({
       // load minified state
       this.minified = localStorage.getItem('minified-state') === 'true'
       // load state of Net toggle
-      this.isVisible = localStorage.getItem('sidebar-net-isVisible') === 'true'
+      this.isVisible = this.netCount ? localStorage.getItem('sidebar-net-isVisible') === 'true' : false
       this.isSearchMode = localStorage.getItem('sidebar-net-isSearchMode') === 'true'
 
       // load cached search term and results

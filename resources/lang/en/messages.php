@@ -784,6 +784,7 @@ return [
     'delete_task'               => 'Delete task:',
     'refreshPage'               => 'Please reload the page to display the first 25 Nets!',
     'noClusterOrNet'            => 'We couldn\'t find a net or cluster containing the given search term!',
+    'noNetElement'              => 'Currently, there are no Netelements that can be displayed in the sidebar!',
     'refreshPage'               => 'Please reload the page to display the first 25 Nets',
     'minimum'                   => 'minimum',
     'maximum'                   => 'maximum',

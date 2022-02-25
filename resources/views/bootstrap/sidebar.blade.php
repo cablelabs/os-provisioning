@@ -190,7 +190,8 @@
             </transition>
           </li>
         </template>
-        <li v-if="Object.keys(loopNetElements).length === 0 && !isSearchMode && !minified" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.refreshPage')}}</li>
+        <li v-if="Object.keys(loopNetElements).length === 0 && !isSearchMode && !minified && netCount" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.refreshPage')}}</li>
+        <li v-if="Object.keys(loopNetElements).length === 0 && !isSearchMode && !minified && !netCount" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.noNetElements')}}</li>
         <li v-if="Object.keys(loopNetElements).length === 0 && isSearchMode && clusterSearch.length && !loadingSearch" class="m-l-20 m-t-10 text-light w-75">{{ trans('messages.noClusterOrNet')}}</li>
         <li v-if="isSearchMode && clusterSearch.length && loadingSearch" class="m-l-20 m-t-10 text-center w-75"><i class="fa fa-circle-o-notch fa-spin"></i></li>
       </template>
