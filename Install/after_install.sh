@@ -121,3 +121,7 @@ chmod 600 "$env/root.env"
 chmod 644 /var/log/messages
 systemctl restart rsyslog
 systemd-tmpfiles --create
+
+# Supervisord
+systemctl enable supervisord
+systemctl start supervisord
