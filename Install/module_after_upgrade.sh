@@ -29,18 +29,14 @@ fi
 # Migrate when all modules are upgraded
 if [ $lastModule -eq 1 ]; then
     rm -f /var/www/nmsprime/config/excel.php
-    rm -rf /var/www/nmsprime/bootstrap/cache/*
-    /opt/remi/php80/root/usr/bin/php artisan config:cache
-    /opt/remi/php80/root/usr/bin/php artisan clear-compiled
-    /opt/remi/php80/root/usr/bin/php artisan cache:clear
-    /opt/remi/php80/root/usr/bin/php artisan migrate
     /opt/remi/php80/root/usr/bin/php artisan module:v6:migrate
-    /opt/remi/php80/root/usr/bin/php artisan module:migrate
+    /opt/remi/php80/root/usr/bin/php artisan optimize:clear
     /opt/remi/php80/root/usr/bin/php artisan module:publish
+    /opt/remi/php80/root/usr/bin/php artisan migrate
+    /opt/remi/php80/root/usr/bin/php artisan module:migrate
     /opt/remi/php80/root/usr/bin/php artisan bouncer:clean
     /opt/remi/php80/root/usr/bin/php artisan auth:nms
-    /opt/remi/php80/root/usr/bin/php artisan route:cache
-    /opt/remi/php80/root/usr/bin/php artisan view:clear
+    /opt/remi/php80/root/usr/bin/php artisan optimize
 
     # on HA machines: clean up
     [ -e /var/www/nmsprime/modules/ProvHA/Console/CleanUpSlaveCommand.php ] &&
