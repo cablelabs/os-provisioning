@@ -7,7 +7,7 @@ return [
         'description' => 'apps.Cacti',
         'link' => '/cacti',
         'website' => 'https://cacti.net',
-        'rpmName' => 'cacti',
+        'rpmName' => 'cacti-nmsprime',
     ],
     'Icinga' => [
         // source https://www.svgrepo.com/svg/13675/network

@@ -581,8 +581,7 @@ class BaseController extends Controller
         $apps = config('externalApps');
 
         foreach ($apps as $name => $value) {
-            $command = 'rpm -q '.escapeshellarg($value['rpmName']);
-            $package = exec($command);
+            $package = exec('rpm -q '.escapeshellarg($value['rpmName']));
             $apps[$name]['state'] = \Str::contains($package, 'not installed') ? 'inactive' : 'active';
         }
 
