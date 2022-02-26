@@ -410,7 +410,10 @@ class Modem extends \BaseModel
 
     public function analysisTabs()
     {
-        if ($this->provNetelement) {
+        if (
+            $this->provNetelement &&
+            $this->provNetelement->netelementtype->base_type_id !== array_search('NetGw', \Modules\HfcReq\Entities\NetElementType::$undeletables)
+         ) {
             return $this->provNetelement->tabs();
         }
 

@@ -228,7 +228,10 @@ class ModemController extends \BaseController
     {
         $defaultTabs = parent::editTabs($model);
 
-        if ($model->provNetelement) {
+        if (
+            $model->provNetelement &&
+            $model->provNetelement->netelementtype->base_type_id !== array_search('NetGw', \Modules\HfcReq\Entities\NetElementType::$undeletables)
+        ) {
             $tabs = $model->provNetelement->tabs();
             $tabs[] = $defaultTabs[1];
             unset($tabs[1]['route']);
