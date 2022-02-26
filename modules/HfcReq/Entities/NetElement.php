@@ -101,7 +101,7 @@ class NetElement extends \BaseModel
         $ret = [];
         $tabName = trans_choice('view.Header_NetElement', 1);
 
-        if (Module::collections()->has('HfcCustomer') && $this->netelementtype->base_type_id != array_search('Tap-Port', NetelementType::$undeletables)) {
+        if (Module::collections()->has('HfcCustomer') && $this->netelementtype->base_type_id != array_search('Tap-Port', NetElementType::$undeletables)) {
             $ret[$tabName]['Mpr']['class'] = 'Mpr';
             $ret[$tabName]['Mpr']['relation'] = $this->mprs;
         }
@@ -115,7 +115,7 @@ class NetElement extends \BaseModel
             // see NetElementController@controlling_edit for Controlling Tab!
         }
 
-        if ($this->netelementtype->base_type_id == array_search('Tap', NetelementType::$undeletables)) {
+        if ($this->netelementtype->base_type_id == array_search('Tap', NetElementType::$undeletables)) {
             $ret[$tabName]['SubNetElement']['class'] = 'NetElement';
             $ret[$tabName]['SubNetElement']['relation'] = $this->children;
         }
@@ -437,7 +437,7 @@ class NetElement extends \BaseModel
      */
     public function provDevice()
     {
-        if ($this->netelementtype->base_type_id === array_search('NetGw', NetelementType::$undeletables)) {
+        if ($this->netelementtype->base_type_id === array_search('NetGw', NetElementType::$undeletables)) {
             return $this->belongsTo(\Modules\ProvBase\Entities\NetGw::class);
         }
 
@@ -663,7 +663,7 @@ class NetElement extends \BaseModel
             if (! $parent) {
                 break;
             }
-        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != array_search('NetGw', NetelementType::$undeletables));
+        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != array_search('NetGw', NetElementType::$undeletables));
 
         return $parent;
     }
@@ -913,7 +913,7 @@ class NetElement extends \BaseModel
             return false;
         }
 
-        return $this->netelementtype->base_type_id == array_search('NetGw', NetelementType::$undeletables);
+        return $this->netelementtype->base_type_id == array_search('NetGw', NetElementType::$undeletables);
     }
 
     /**
@@ -958,7 +958,7 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Returns all tabs for the view depending on the NetelementType
+     * Returns all tabs for the view depending on the NetElementType
      * Note: 1 = Net, 2 = Cluster, 3 = NetGw, 4 = Amplifier, 5 = Node, 6 = Data, 7 = UPS, 8 = Tap, 9 = Tap-Port, 10 = NMSPrime slave
      *
      * @return array
