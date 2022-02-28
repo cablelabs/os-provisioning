@@ -57,8 +57,8 @@
                 </form>
             </div>
         @empty
-            <div class="dropdown-item d-flex">
-                <i class="fa fa-info" aria-hidden="true" style="width: 20px;"></i>
+            <div class="dropdown-item d-flex align-items-center" style="word-break: break-word;white-space: normal;">
+                <i class="fa fa-info" aria-hidden="true" style="width: 30px;"></i>
                 <div>
                     {{ trans('messages.No unread Notifications') }}
                 </div>
