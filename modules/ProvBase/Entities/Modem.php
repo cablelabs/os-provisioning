@@ -1529,8 +1529,9 @@ class Modem extends \BaseModel
             return ['No pre-equalization data found'];
         }
 
-        $halfband = ($preq['width'] ?? 3200000) / 2000000;
-        $lowestEnergyValue = floor(min($preq['energy']));
+        $halfband = (! empty($preq['width']) && intval($preq['width']) !== 0 ? intval($preq['width']) : 3200000) / 2000000;
+        $minEnergy = min($preq['energy']);
+        $lowestEnergyValue = floor(is_int($minEnergy) ? $minEnergy : 0);
         $preq['axis'] = range(-$halfband, $halfband, 2 * $halfband / count($preq['fft']));
         $preq['chart'] = array_fill(
             0,
