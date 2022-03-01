@@ -38,6 +38,22 @@ class Modem extends \BaseModel
     use \App\extensions\geocoding\Geocoding;
 
     public const TYPES = ['cm', 'tr069'];
+    public const CWMP_EVENTS = [
+        'BOOTSTRAP',
+        'BOOT',
+        'PERIODIC',
+        'SCHEDULED',
+        'VALUE CHANGE',
+        'KICKED',
+        'CONNECTION REQUEST',
+        'TRANSFER COMPLETE',
+        'DIAGNOSTICS COMPLETE',
+        'REQUEST DOWNLOAD',
+        'AUTONOMOUS TRANSFER COMPLETE',
+        'DU STATE CHANGE COMPLETE',
+        'AUTONOMOUS DU STATE CHANGE COMPLETE',
+        'WAKEUP',
+    ];
     public const CONFIGFILE_PREFIX = 'cm';
     public const CONFIGFILE_DIRECTORY = '/tftpboot/cm/';
     public const CONF_FILE_PATH = '/etc/dhcp-nmsprime/modems-host.conf';
@@ -948,15 +964,14 @@ class Modem extends \BaseModel
         // generate monitoring presets...
         $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
 
-        // ...for periodic informs...
-        unset($preset['events']);
-        $preset['events']['2 PERIODIC'] = true;
-        self::callGenieAcsApi("presets/mon-{$this->id}-2", 'PUT', json_encode($preset));
-
-        // ...and connection requests
-        unset($preset['events']);
-        $preset['events']['6 CONNECTION REQUEST'] = true;
-        self::callGenieAcsApi("presets/mon-{$this->id}-6", 'PUT', json_encode($preset));
+        foreach (explode(',', config('provbase.cwmpMonitoringEvents')) as $event) {
+            if (! isset(self::CWMP_EVENTS[$event])) {
+                continue;
+            }
+            unset($preset['events']);
+            $preset['events'][$event.' '.self::CWMP_EVENTS[$event]] = true;
+            self::callGenieAcsApi("presets/mon-{$this->id}-{$event}", 'PUT', json_encode($preset));
+        }
     }
 
     /**
@@ -1171,10 +1186,9 @@ class Modem extends \BaseModel
     {
         self::callGenieAcsApi("presets/prov-$this->id", 'DELETE');
 
-        // delete monitoring presets for periodic informs...
-        self::callGenieAcsApi("presets/mon-{$this->id}-2", 'DELETE');
-        // ...and connection requests
-        self::callGenieAcsApi("presets/mon-{$this->id}-6", 'DELETE');
+        foreach (array_keys(self::CWMP_EVENTS) as $event) {
+            self::callGenieAcsApi("presets/mon-{$this->id}-{$event}", 'DELETE');
+        }
     }
 
     /**
