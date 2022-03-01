@@ -39,6 +39,7 @@ class SnmpController extends \BaseController
      * @var object NetElement
      */
     private $netelement;
+    private $netelementIp;
 
     /**
      * @var object Used for parent netgw of a cluster
@@ -83,6 +84,11 @@ class SnmpController extends \BaseController
 
         $this->snmp_def_mode();
 
+        $this->netelementIp = $netelement->ip;
+        if (! $netelement->ip && $netelement->provDevice) {
+            $this->netelementIp = gethostbyname($netelement->provDevice->hostname);
+        }
+
         if ($netelement->netelementtype_id != 2) {
             return;
         }
@@ -99,7 +105,7 @@ class SnmpController extends \BaseController
             throw new Exception(trans('messages.snmp.missing_netgw'));
         }
 
-        $this->netelement->ip = $netgw->ip;
+        $this->netelementIp = $netgw->ip;
     }
 
     /**
@@ -272,7 +278,7 @@ class SnmpController extends \BaseController
         $valuesToStore = $finalValues = [];
         $table_id = 0;
 
-        if (! $this->netelement->ip) {
+        if (! $this->netelementIp) {
             throw new Exception(trans('messages.snmp.missingIp'));
         }
 
@@ -567,16 +573,16 @@ class SnmpController extends \BaseController
         $oid_s = $oid->oid;
 
         // Log
-        Log::debug('snmpwalk '.$this->netelement->ip.' '.$oid_s);
+        Log::debug('snmpwalk '.$this->netelementIp.' '.$oid_s);
 
         if ($indices) {
             try {
                 // check if snmp version 2 is supported - use it - otherwise use version 1
-                snmp2_get($this->netelement->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+                snmp2_get($this->netelementIp, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
 
                 foreach ($indices as $index) {
                     try {
-                        $results["$oid_s.$index"] = snmp2_get($this->netelement->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                        $results["$oid_s.$index"] = snmp2_get($this->netelementIp, $community, "$oid_s.$index", $this->timeout, $this->retry);
                     } catch (Exception $e) {
                         $name = $oid->name_gui ?: $oid->name;
                         $this->errors[] = "$name.$index";
@@ -585,11 +591,11 @@ class SnmpController extends \BaseController
                 }
             } catch (Exception $e) {
                 try {
-                    snmpget($this->netelement->ip, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
+                    snmpget($this->netelementIp, $community, '1.3.6.1.2.1.1.1.0', $this->timeout, $this->retry);
 
                     foreach ($indices as $index) {
                         try {
-                            $results["$oid_s.$index"] = snmp2_get($this->netelement->ip, $community, "$oid_s.$index", $this->timeout, $this->retry);
+                            $results["$oid_s.$index"] = snmp2_get($this->netelementIp, $community, "$oid_s.$index", $this->timeout, $this->retry);
                         } catch (Exception $e) {
                             $name = $oid->name_gui ?: $oid->name;
                             $this->errors[] = "$name.$index";
@@ -602,13 +608,13 @@ class SnmpController extends \BaseController
             }
         } else {
             try {
-                $results = snmp2_real_walk($this->netelement->ip, $community, $oid_s, $this->timeout, $this->retry);
+                $results = snmp2_real_walk($this->netelementIp, $community, $oid_s, $this->timeout, $this->retry);
             } catch (Exception $e) {
                 try {
                     // There are devices where querying v1 directly after v2 leads to exception (e.g. kathrein HMS-Transponder)
                     // usleep(400000);
 
-                    $results = snmprealwalk($this->netelement->ip, $community, $oid_s, $this->timeout, $this->retry);
+                    $results = snmprealwalk($this->netelementIp, $community, $oid_s, $this->timeout, $this->retry);
                 } catch (Exception $e) {
                     $results = [];
 
@@ -649,15 +655,15 @@ class SnmpController extends \BaseController
         if (! $paramSingleDim->isEmpty()) {
             foreach ($paramSingleDim as $parameter) {
                 // Note: snmpwalk -CE ends on this OID - makes it much faster
-                // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->netelement->community().' '.$this->netelement->ip.' '.$oid->oid, $results);
+                // exec('snmpwalk -v2c -CE 1.3.6.1.2.1.10.127.1.1.1.1.3.6725 -c'.$this->netelement->community().' '.$this->netelementIp.' '.$oid->oid, $results);
                 $results += $this->snmp_walk($parameter->oid, $indices);
             }
         }
         // standard table OID (all suboids(columns) and elements (rows))
         else {
-            Log::debug('snmp2_real_walk (table) '.$this->netelement->ip.' '.$oid->oid);
+            Log::debug('snmp2_real_walk (table) '.$this->netelementIp.' '.$oid->oid);
             try {
-                $results = snmp2_real_walk($this->netelement->ip, $this->netelement->community(), $oid->oid);
+                $results = snmp2_real_walk($this->netelementIp, $this->netelement->community(), $oid->oid);
             } catch (Exception $e) {
                 self::check_reachability($e);
 
@@ -838,11 +844,11 @@ class SnmpController extends \BaseController
 
         // PreConfiguration
         if (! $value) {
-            $conf_val = snmpget($this->netelement->ip, $this->netelement->community(), $oid->oid.'.0', $this->timeout, $this->retry);
+            $conf_val = snmpget($this->netelementIp, $this->netelement->community(), $oid->oid.'.0', $this->timeout, $this->retry);
 
             $ret = false;
             if ($conf_val != $type->pre_conf_value) {
-                $ret = snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
+                $ret = snmpset($this->netelementIp, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $type->pre_conf_value, $this->timeout, $this->retry);
             }
 
             $ret ? Log::debug('Preconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]) : Log::debug('Failed to Preconfigure Device for snmpset', [$this->netelement->name, $this->netelement->id]);
@@ -855,7 +861,7 @@ class SnmpController extends \BaseController
         }
 
         // PostConfiguration
-        snmpset($this->netelement->ip, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
+        snmpset($this->netelementIp, $this->netelement->community('rw'), $oid->oid.'.0', $oid->type, $value, $this->timeout, $this->retry);
 
         Log::debug('Postconfigured Device for snmpset', [$this->netelement->name, $this->netelement->id]);
     }
@@ -876,14 +882,14 @@ class SnmpController extends \BaseController
         // catch all OIDs that could not be set to print later in error message
         try {
             // NOTE: snmp2_set is also available
-            $ret = snmpset($this->netelement->ip, $community, $oid, $type, $value, $this->timeout, $this->retry);
+            $ret = snmpset($this->netelementIp, $community, $oid, $type, $value, $this->timeout, $this->retry);
         } catch (\ErrorException $e) {
-            Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->netelement->ip, $community, $type, $value]);
+            Log::error('snmpset failed with msg: '.$e->getMessage(), [$this->netelementIp, $community, $type, $value]);
 
             return false;
         }
 
-        Log::debug('snmpset '.$this->netelement->ip.' '.$community.' '.$oid.' '.$value.' '.$type, [$ret]);
+        Log::debug('snmpset '.$this->netelementIp.' '.$community.' '.$oid.' '.$value.' '.$type, [$ret]);
 
         return $ret;
     }
