@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+use Modules\ProvBase\Entities\ProvBase;
+
 class InstallNamedDdns extends BaseMigration
 {
-    protected $tablename = '';
+    public $migrationScope = 'system';
 
     /**
      * Run the migrations.
@@ -29,23 +31,37 @@ class InstallNamedDdns extends BaseMigration
         chown('/etc/named-ddns.sh', 'dhcpd');
         chmod('/etc/named-ddns.sh', 0750);
 
-        // create secret to salt hostname generation of public CPEs
+        // Create secret to salt hostname generation of public CPEs
         file_put_contents('/etc/named-ddns-cpe.key', bin2hex(random_bytes(32)).PHP_EOL);
         chown('/etc/named-ddns-cpe.key', 'apache');
         chgrp('/etc/named-ddns-cpe.key', 'dhcpd');
         chmod('/etc/named-ddns-cpe.key', 0640);
 
-        // get DNS-PASSWORD
-        if (preg_match('/secret +"([^"]+)"/', file_get_contents('/etc/dhcp-nmsprime/dhcpd.conf'), $m)) {
-            $pw = $m[1];
-        } else {
-            return;
+         $dns_password = 'n/a';
+        // Get the current DNS password
+        if (preg_match('/secret +"?(.*)"?;/', file_get_contents('/etc/named-nmsprime.conf'), $matches)) {
+            $dns_password = str_replace('"', '', $matches[1]);
         }
 
-        $str = file_get_contents('/etc/nmsprime/env/global.env');
-        $str = preg_replace('/^DNS_PASSWORD=<DNS-PASSWORD>$/m', "DNS_PASSWORD=$pw", $str);
-        file_put_contents('/etc/nmsprime/env/global.env', $str);
+        // Or create a new one
+        if (
+            (substr($dns_password, -1) != '=') &&
+            (preg_match('/secret "?(.*)"?;/', shell_exec('ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret'), $matches))
+        ) {
+            $dns_password = str_replace('"', '', $matches[1]);
+        }
 
+        // Or at least give a hint
+        if (substr($dns_password, -1) != '=') {
+            $dns_password = 'to be set';
+        }
+
+        // Store in database
+        $provha = ProvBase::first();
+        $provha->dns_password = $dns_password;
+        $provha->save();
+
+        // Write to DNS config
         $str = file_get_contents('/etc/named-ddns.sh');
         $str = str_replace('<DNS-PASSWORD>', "$pw", $str);
         file_put_contents('/etc/named-ddns.sh', $str);
