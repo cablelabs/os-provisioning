@@ -32,7 +32,6 @@ class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMig
     public function up()
     {
         $filesystem = new Filesystem();
-        $filesystem->moveDirectory(storage_path('app/data/hfcbase/kml_static'), storage_path('app/data/hfcbase/infrastructureFiles'));
         $filesystem->ensureDirectoryExists(storage_path('app/data/hfcbase/infrastructureFiles'));
 
         // Make ERD files of "old" ERD publicly accessible
@@ -46,7 +45,6 @@ class ChangeKmlFileUploadToGenericGpsFileUploadInNetelementTable extends BaseMig
      */
     public function down()
     {
-        $filesystem = new Filesystem();
-        $filesystem->moveDirectory(storage_path('app/data/hfcbase/infrastructureFiles'), storage_path('app/data/hfcbase/kml_static'));
+
     }
 }
