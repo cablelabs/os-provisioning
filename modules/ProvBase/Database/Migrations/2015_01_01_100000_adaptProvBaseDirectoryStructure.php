@@ -15,18 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class PopulateTftpdCmLog extends BaseMigration
+
+use Illuminate\Database\Schema\Blueprint;
+
+class AdaptProvBaseDirectoryStructure extends BaseMigration
 {
-    protected $tablename = '';
+    public $migrationScope = 'system';
 
     /**
-     * Run the migrations.
+     * Use this migration to create directory structure for ProvBase after squashing migrations
      *
      * @return void
      */
     public function up()
     {
-        echo "Populating /var/log/nmsprime/tftpd-cm.log, this may take some minutes. You can track the progress by following the file.\n";
+        $dirs = [
+            '/tftpboot/cm',
+            '/tftpboot/fw',
+        ];
+
+        foreach ($dirs as $dir) {
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+        }
+
+        system('/bin/chown -R apache /tftpboot/');
+
+        exec('chown -R apache:dhcpd /etc/dhcp-nmsprime');
+        exec('php /var/www/nmsprime/artisan nms:dhcp');
 
         // only necessary for git installations
         if (! is_dir('/var/log/nmsprime')) {
@@ -35,12 +52,9 @@ class PopulateTftpdCmLog extends BaseMigration
             chgrp('/var/log/nmsprime', 'apache');
         }
 
-        shell_exec('for file in /var/log/messages{-*,}; do zgrep "finished cm/cm-" "$file" | while read line; do date -d "$(awk \'{print $1 " " $2 " " $3}\' <<< "$line")" "+%s $(grep -o "Client.*" <<< "$line")"; done; done > /var/log/nmsprime/tftpd-cm.log');
         chmod('/var/log/nmsprime/tftpd-cm.log', 0600);
         chown('/var/log/nmsprime/tftpd-cm.log', 'apache');
         chgrp('/var/log/nmsprime/tftpd-cm.log', 'apache');
-
-        system('systemctl restart rsyslog.service');
     }
 
     /**
@@ -50,5 +64,6 @@ class PopulateTftpdCmLog extends BaseMigration
      */
     public function down()
     {
+
     }
 }
