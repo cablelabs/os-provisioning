@@ -27,12 +27,6 @@ class InstallUpdateToPhp80 extends BaseMigration
      */
     public function up()
     {
-        system('systemctl cat rh-php73-php-fpm.service &>/dev/null && systemctl stop rh-php73-php-fpm.service');
-        system('systemctl cat rh-php73-php-fpm.service &>/dev/null && systemctl disable rh-php73-php-fpm.service');
-
-        system('systemctl start php80-php-fpm.service');
-        system('systemctl enable php80-php-fpm.service');
-
         $tz = date_default_timezone_get();
         foreach (['/etc/php.ini', '/etc/opt/remi/php80/php.ini'] as $file) {
             if (! is_file($file)) {
@@ -57,7 +51,8 @@ class InstallUpdateToPhp80 extends BaseMigration
             file_put_contents($file, $ini);
         }
 
-        system('systemctl restart php80-php-fpm.service');
+        system('systemctl start php80-php-fpm.service');
+        system('systemctl enable php80-php-fpm.service');
     }
 
     /**
@@ -67,10 +62,6 @@ class InstallUpdateToPhp80 extends BaseMigration
      */
     public function down()
     {
-        system('systemctl cat php80-php-fpm.service &>/dev/null && systemctl stop php80-php-fpm.service');
-        system('systemctl cat php80-php-fpm.service &>/dev/null && systemctl disable php80-php-fpm.service');
 
-        system('systemctl start rh-php73-php-fpm.service');
-        system('systemctl enable rh-php73-php-fpm.service');
     }
 }
