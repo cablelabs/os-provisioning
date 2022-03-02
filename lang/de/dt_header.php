@@ -69,6 +69,10 @@ return [
         'oto_id' => 'OTO-ID',
         'oto_status' => 'OTO-Status',
         'alex_status' => 'ALEX-Status',
+        'omdf_id' => 'OMDF-ID',
+        'boc_label' => 'BOC-Label',
+        'bof_label' => 'BOF-Label',
+        'type' => 'Typ',
     ],
     'contract_id' => 'Vertrag',
     // Auth
@@ -259,7 +263,7 @@ return [
     'email2' => 'E-Mail 2',
     // NetGw
     'netgw.id' => 'ID',
-    'netgw.hostname' => 'Name',
+    'netgw.hostname' => 'NetGW-Hostname',
     'netgw.ip' => 'IP',
     'netgw.company' => 'Hersteller',
     'netgw.series' => 'Serie',
@@ -322,6 +326,15 @@ return [
     'modem.support_state' => 'Unterstützungszustand',
     'modem.formatted_support_state' => 'Unterstützungszustand',
     'modem.last_inform' => 'Letzter Inform',
+    'modem.ont_id' => 'ONT-ID',
+    'modem.netgw_id' => 'NetGW-ID',
+    'modem.frame_id' => 'Frame-ID',
+    'modem.slot_id' => 'Slot-ID',
+    'modem.port_id' => 'Port-ID',
+    'modem.ont_state' => 'ONT-Status',
+    'modem.next_ont_state' => 'Nächster ONT-Status',
+    'modem.ont_state_switchdate' => 'ONT-Status-Änderungs-Datum',
+    'modem.service_port_id' => 'Service-Port-ID',
     'contract_valid' => 'Vertrag gültig?',
     // Modem option
     'modem_option' => [

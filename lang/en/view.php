@@ -69,8 +69,8 @@ return [
     'Menu_Endpoint'             => 'Endpoints',
     'Menu_Number Range'         => 'Number Range',
     'Menu_Configfile'           => 'Configfiles',
-    'Menu_Qos'                  => 'QoS',
-    'Menu_NetGws'               => 'NetGws',
+    'Menu_Qos'                  => 'QoS'.(Module::collections()->has('SmartOnt') ? '/Service types' : ''),
+    'Menu_NetGws'               => 'NetGws'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Menu_Ip-Pools'             => 'IP-Pools',
     'Menu_Items'                => 'Items',
     'Menu_OverdueDebts'         => 'Overdue debts',
@@ -209,7 +209,7 @@ return [
     'Header_Device Type'        => 'Device Type|Device Types',
     'Header_EditQos'            => 'Edit QoS-Rule',
     //NetGw
-    'Header_NetGw'              => 'NetGW|NetGWs',
+    'Header_NetGw'              => 'NetGW'.(Module::collections()->has('SmartOnt') ? '/OLT' : '').'|NetGWs'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Header_EditNetGw'          => 'Edit NetGW',
     'Header_Config'             => 'Config proposal|Config proposals',
     //IpPool

@@ -69,8 +69,8 @@ return [
     'Menu_Endpoint'             => 'Endpunkte',
     'Menu_Number Range'         => 'Nummernkreis',
     'Menu_Configfile'           => 'Konfigurationsdateien',
-    'Menu_Qos'                  => 'QoS',
-    'Menu_NetGws'               => 'NetGws',
+    'Menu_Qos'                  => 'QoS'.(Module::collections()->has('SmartOnt') ? '/Dienst-Arten' : ''),
+    'Menu_NetGws'               => 'NetGws'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Menu_Ip-Pools'             => 'IP-Bereiche',
     'Menu_Items'                => 'Posten',
     'Menu_OverdueDebts'         => 'Offene Posten',
@@ -208,7 +208,7 @@ return [
     'Header_Device Type'        => 'Gerätetyp|Gerätetypen',
     'Header_EditQos'            => 'QoS-Regel bearbeiten',
     //NetGw
-    'Header_NetGw'              => 'NetGw|NetGws',
+    'Header_NetGw'              => 'NetGW'.(Module::collections()->has('SmartOnt') ? '/OLT' : '').'|NetGWs'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Header_EditNetGw'          => 'NetGw bearbeiten',
     'Header_Config'             => 'Konfigurationsvorschlag|Konfigurationsvorschläge',
     //IpPool

@@ -154,7 +154,7 @@ return [
     'email2' => 'E-Mail 2',
     // NetGw
     'netgw.id' => 'ID',
-    'netgw.hostname' => 'Hostname',
+    'netgw.hostname' => 'NetGW Hostname',
     'netgw.ip' => 'IP',
     'netgw.company' => 'Manufacturer',
     'netgw.series' => 'Series',
@@ -178,6 +178,10 @@ return [
     'contract.oto_id' => 'OTO ID',
     'contract.oto_status' => 'OTO status',
     'contract.alex_status' => 'ALEX ID',
+    'contract.omdf_id' => 'OMDF ID',
+    'contract.boc_label' => 'BOC label',
+    'contract.bof_label' => 'BOF label',
+    'contract.type' => 'Type',
     // Domain
     'domain.name' => 'Domain',
     'domain.type' => 'Type',
@@ -211,6 +215,16 @@ return [
     'modem.us_pwr' => 'US level',
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
+    'modem.last_inform' => 'Last Inform',
+    'modem.ont_id' => 'ONT ID',
+    'modem.netgw_id' => 'NetGW ID',
+    'modem.frame_id' => 'Frame ID',
+    'modem.slot_id' => 'Slot ID',
+    'modem.port_id' => 'Port ID',
+    'modem.service_port_id' => 'Service port ID',
+    'modem.ont_state' => 'ONT state',
+    'modem.next_ont_state' => 'Next ONT state',
+    'modem.ont_state_switchdate' => 'ONT state switchdate',
     'contract_valid' => 'Contract valid?',
     // Node
     'node' => [
