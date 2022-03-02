@@ -16,11 +16,12 @@
  * limitations under the License.
  */
 
+use DB;
 use Illuminate\Database\Schema\Blueprint;
 
 class InstallInitRadiusAndAcs extends BaseMigration
 {
-    protected $tablename = 'modem';
+    public $migrationScope = 'database';
 
     /**
      * Run the migrations.
@@ -29,15 +30,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
      */
     public function up()
     {
-        Schema::table($this->tablename, function (Blueprint $table) {
-            // align with freeradius DB
-            $table->string('ppp_username', 64)->nullable();
-            // nmsprime default
-            $table->string('ppp_password', 191)->nullable();
-        });
-
-        // use schema from git, since it adds the id column in radusergroup
-        \DB::unprepared(file_get_contents('https://github.com/FreeRADIUS/freeradius-server/blob/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/postgresql/schema.sql'));
+        // Use schema from git, since it adds the id column in radusergroup
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('https://github.com/FreeRADIUS/freeradius-server/blob/b838f5178fe092598fb3459dedb5e1ea49b41340/raddb/mods-config/sql/main/postgresql/schema.sql'));
         \Artisan::call('nms:radgroupreply-repopulate');
 
         $config = DB::connection('pgsql-radius')->getConfig();
@@ -67,10 +61,30 @@ class InstallInitRadiusAndAcs extends BaseMigration
 
         $link = '/etc/raddb/mods-enabled/sql';
         symlink('/etc/raddb/mods-available/sql', $link);
-        // we can't user php chrgp, since it always dereferences symbolic links
+        // We can't use php chrgp, since it always dereferences symbolic links
         exec("chgrp -h radiusd $link");
 
-        foreach (['radiusd', 'mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi', 'genieacs-ui'] as $service) {
+        // Add sqlippool table
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
+
+        // Adjust radiusd sqlippool IP lease duration
+        $leaseTime = Modules\ProvBase\Entities\ProvBase::first()->dhcp_def_lease_time;
+        $queryPath = storage_path('app/config/provbase/radius/queries.conf');
+        exec("sed -i -e 's/^\s*lease_duration\s*=.*/\tlease_duration = $leaseTime/' -e '/^\s*\$INCLUDE/i\\\\t\$INCLUDE $queryPath' /etc/raddb/mods-available/sqlippool");
+
+        // Enable sqlippool
+        $link = '/etc/raddb/mods-enabled/sqlippool';
+        exec("ln -srf /etc/raddb/mods-available/sqlippool $link");
+        exec("chgrp -h radiusd $link");
+        exec("sed -i -e '/^accounting {/a\\\\tsqlippool' -e '/^post-auth {/a\\\\tsqlippool' /etc/raddb/sites-enabled/default");
+
+        // Disable RADIUS detail logging
+        exec("sed -i 's/^\s*detail/#\tdetail/' /etc/raddb/sites-enabled/default");
+
+        exec('systemctl restart radiusd.service');
+
+        // Enable and Start Genie-ACS
+        foreach (['mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi', 'genieacs-ui'] as $service) {
             exec("systemctl enable $service.service");
             exec("systemctl start $service.service");
         }
