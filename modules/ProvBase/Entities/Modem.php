@@ -100,14 +100,23 @@ class Modem extends \BaseModel
             $configfile = Configfile::find(Request::get('configfile_id'));
         }
 
-        if (isset($configfile) && $configfile->device == 'tr069') {
-            $rules['mac'][] = 'nullable';
-            $rules['ppp_password'][] = 'required';
-            // we wan't to show the required rule first, before any other validation error
-            array_unshift($rules['ppp_username'], 'required');
-            array_unshift($rules['serial_num'], 'required');
+        if (isset($configfile)) {
+            if ('tr069' == $configfile->device) {
+                $rules['mac'][] = 'nullable';
+                $rules['ppp_password'][] = 'required';
+                // we wan't to show the required rule first, before any other validation error
+                array_unshift($rules['ppp_username'], 'required');
+                array_unshift($rules['serial_num'], 'required');
 
-            return $rules;
+                return $rules;
+            }
+            if ('ont' == $configfile->device) {
+                $rules['mac'][] = 'nullable';
+                unset($rules['qos_id']);
+                array_unshift($rules['serial_num'], 'required');
+
+                return $rules;
+            }
         }
 
         $rules['mac'][] = 'required';

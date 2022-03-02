@@ -371,7 +371,7 @@ class Contract extends \BaseModel
 
         if (Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
             $ret['Edit']['DfSubscription']['class'] = 'DfSubscription';
-            $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscription;
+            $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscriptions;
         }
 
         return $ret;
@@ -435,13 +435,22 @@ class Contract extends \BaseModel
         return $this->hasMany(Modem::class);
     }
 
+    public function dfsubscriptions()
+    {
+        if (! Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
+            throw new \LogicException(__METHOD__.' only callable if module SmartOnt is active and flavor has DfSubscriptions');
+        } else {
+            return $this->hasMany(\Modules\SmartOnt\Entities\DfSubscription::class);
+        }
+    }
+
     /**
      * related enviacontracts
      */
     public function enviacontracts()
     {
         if (! Module::collections()->has('ProvVoipEnvia')) {
-            throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia as active');
+            throw new \LogicException(__METHOD__.' only callable if module ProvVoipEnvia is active');
         } else {
             return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaContract::class);
         }
