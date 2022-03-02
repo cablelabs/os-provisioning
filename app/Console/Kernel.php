@@ -293,6 +293,14 @@ class Kernel extends ConsoleKernel
 
         // TODO: run Kernel.php and supervisor queue workers as user 'apache'
         exec('chown -R apache:apache '.storage_path('framework/cache'));
+
+        if (\Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
+
+            // get updates for pending DfSubscriptions
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\DfSubscriptionGetterJob('pending'));
+            })->dailyAt(date('H:i', strtotime("03:13 + $time_offset min")));
+        }
     }
 
     /**
