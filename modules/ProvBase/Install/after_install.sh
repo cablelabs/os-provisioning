@@ -40,11 +40,13 @@ systemctl start xinetd
 firewall-cmd --reload
 
 # create freeradius DB and user
-sudo -u postgres psql -c "
-	CREATE DATABASE radius CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
-	GRANT ALL ON radius.* TO 'radius'@'localhost' IDENTIFIED BY '$radius_psw';
-"
-
+user='radius'
+sudo -u postgres psql -c 'CREATE DATABASE radius'
+sudo -u postgres psql -d radius -c "
+    CREATE USER $user PASSWORD '$radius_psw';
+    GRANT USAGE ON SCHEMA public TO $user;
+    GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;"
 sed -i "s/RADIUS_DB_PASSWORD=$/RADIUS_DB_PASSWORD=$radius_psw/" "$env/provbase.env"
 
 systemd-tmpfiles --create
