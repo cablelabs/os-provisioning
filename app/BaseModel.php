@@ -900,14 +900,15 @@ class BaseModel extends Eloquent
     /**
      * Helper to log and output messages
      *
-     * @param $msg The message to be logged and printed
      * @param $level The log level
+     * @param $msg The message to be logged and printed
+     * @param $transArgs Array to be given to the trans() helper
      * @param $type color Bootsrap color for GUI (one of self::ABOVE_MESSAGES_ALLOWED_TYPES)
      * @param $place Where to put the message in GUI (one of self::ABOVE_MESSAGES_ALLOWED_PLACES)
      *
      * @author Patrick Reichel
      */
-    public function logAndPrint($msg, $level = 'info', $type = null, $place = null)
+    public function logAndPrint($level, $msg, $transArgs = [], $type = null, $place = null)
     {
         // allowed levels are the keys, values are default types
         $allowedLevels = [
@@ -931,8 +932,15 @@ class BaseModel extends Eloquent
             $type = $allowedLevels[$level];
         }
 
-        // log the message
-        \Log::{$level}($msg);
+        // store the current locale
+        $locale = \App::getLocale();
+
+        // log the message (always in English – may be helpful on debugging a spanish system)
+        \App::setLocale('en');
+        \Log::{$level}(trans($msg, $transArgs));
+
+        // reset the locale
+        \App::setLocale($locale);
 
         // CLI output
         if (app()->runningInConsole()) {
@@ -942,7 +950,7 @@ class BaseModel extends Eloquent
         }
 
         // GUI output
-        $msg = trans(strtoupper($type)).": $msg";
+        $msg = trans(strtoupper($type)).': '.trans($msg, $transArgs);
         $this->addAboveMessage($msg, $type, $place);
     }
 }
