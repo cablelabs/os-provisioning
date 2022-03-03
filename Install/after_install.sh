@@ -49,6 +49,22 @@ firewall-cmd --reload
 
 
 #
+# Postgresql
+#
+systemctl start postgresql-13.service
+systemctl enable postgresql-13.service
+
+/usr/pgsql-13/bin/postgresql-13-setup initdb
+sudo -u postgres psql -c 'CREATE database nmsprime'
+sudo -u postgres psql nmsprime -c "CREATE SCHEMA nmsprime;
+    CREATE USER nmsprime PASSWORD '$pw';
+    GRANT ALL PRIVILEGES ON ALL Tables in schema nmsprime TO nmsprime;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA nmsprime TO nmsprime;
+"
+sudo -u postgres psql nmsprime < /etc/nmsprime/sql-schemas/nmsprime.pgsql
+
+
+#
 # mariadb
 #
 systemctl start mariadb
@@ -67,7 +83,7 @@ sed -e "s|^#APP_TIMEZONE=|APP_TIMEZONE=$zone|" \
     -e "s/^DB_PASSWORD=$/DB_PASSWORD=$pw/" \
     -i "$env/global.env"
 
-# mysql_secure_installation + create nmsprime DB
+# mysql_secure_installation - necessary for cacti
 mysql -u root << EOF
 UPDATE mysql.user SET Password=PASSWORD('$root_pw') WHERE User='root';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
@@ -75,8 +91,6 @@ DELETE FROM mysql.user WHERE User='';
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
 FLUSH PRIVILEGES;
-CREATE DATABASE nmsprime CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
-GRANT ALL ON nmsprime.* TO 'nmsprime'@'localhost' IDENTIFIED BY '$pw';
 EOF
 
 sed -i "s/^ROOT_DB_PASSWORD=$/ROOT_DB_PASSWORD=$root_pw/" "$env/root.env"

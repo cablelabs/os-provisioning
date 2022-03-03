@@ -30,13 +30,12 @@ class SwitchMysqltoPgsql extends BaseMigration
      */
     public function up()
     {
-        // Don't run migration on fresh installation (radius DB exists already)
-        $radiusDb = DB::connection('pgsql-radius')->getConfig('database');
-        exec("sudo -u postgres psql -lqt | cut -d '|' -f 1 | grep -w $radiusDb", $exists);
+        // Don't run migration on fresh installation (mysql nmsprime DB does not exist)
+        $mysqlRootConf = DB::connection('mysql-root')->getConfig();
+        $ret = system('mysql -u '.$mysqlRootConf['username'].' -p'.$mysqlRootConf['password'].' --exec="SHOW DATABASES LIKE \'nmsprime\'"');
 
-        if ($exists) {
-            echo 'STOP: Radius DB already exists - migration to postgres seems to have already been done.';
-
+        if (! $ret) {
+            // Fresh installation - mysql nmsprime DB doesn't exist
             return;
         }
 
