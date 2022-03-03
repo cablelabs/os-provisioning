@@ -298,7 +298,7 @@ return [
             'unix_socket' => env('CCC_DB_SOCKET', env('DB_SOCKET', '')),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'nmsprime_ccc',
+            'schema' => 'public',
             'sslmode' => 'prefer',
         ],
 

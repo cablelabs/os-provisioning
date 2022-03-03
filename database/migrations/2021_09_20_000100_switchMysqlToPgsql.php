@@ -144,6 +144,9 @@ class SwitchMysqltoPgsql extends BaseMigration
             system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = '$schema';\" $db`;
                 do sudo -u postgres psql $db -c \"alter table $schema.".'$tbl'." owner to $user\"; done");
         }
+
+        // Move nmsprime_ccc table to schema public
+        system("sudo -u postgres psql -d radius -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
     }
 
     /**
