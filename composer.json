@@ -25,7 +25,7 @@
         "phpseclib/phpseclib": "~2.0",
         "intervention/validation": "^2.6",
         "kalnoy/nestedset": "^5.0",
-        "beyondcode/laravel-websockets": "^1.12",
+        "beyondcode/laravel-websockets": "^1.13",
         "pusher/pusher-php-server": "~4.0",
         "swen100/geophp": "^1.0"
     },
