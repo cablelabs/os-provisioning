@@ -210,6 +210,12 @@ class SwitchMysqltoPgsql extends BaseMigration
         if (Schema::hasTable('cccauthuser')) {
             DB::connection('pgsql-ccc')->statement('ALTER table cccauthuser ALTER COLUMN description drop not null');
         }
+
+        if (Schema::hasTable('netelement')) {
+            // Simulate virtual column of netelement
+            DB::statement('ALTER TABLE netelement drop column id_name');
+            DB::statement("ALTER TABLE netelement add column id_name_new varchar generated always as (CASE WHEN name IS NULL THEN cast(id as varchar) WHEN id is NULL THEN name ELSE name || '_' || cast(id as varchar) END) stored");
+        }
     }
 
     /**
