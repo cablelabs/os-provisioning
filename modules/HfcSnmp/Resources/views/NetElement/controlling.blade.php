@@ -272,35 +272,6 @@
 
 </script>
 
-<script type="module">
-    import Echo from "{{ asset('vendor/echo.js') }}";
-
-    var config = "{{ json_encode(config('broadcasting.connections.pusher')) }}";
-    config = JSON.parse(config.replace(/&quot;/ig,'"'));
-
-    if ("{{ ! $error }}") {
-        window.echo = new Echo({
-            broadcaster: 'pusher',
-            key: config.key,
-            wsHost: window.location.hostname,
-            wsPort: config.options.port,
-            wssPort: config.options.port,
-            forceTLS: config.options.encrypted,
-            disableStats: true,
-            enabledTransports: ['ws', 'wss'],
-        });
-
-        // Binding to error event doesn't work as expected
-        // See https://pusher.com/docs/channels/using_channels/connection
-        // window.echo.connector.pusher.connection.bind("error", function (error) {
-        //     console.log('error');
-        // });
-        // But we could use state change event
-        // window.echo.connector.pusher.connection.bind("state_change", function (states) {
-        //     console.log('state_changed', states);
-        // });
-    }
-
-</script>
+@include('Generic.broadcasting')
 
 @stop
