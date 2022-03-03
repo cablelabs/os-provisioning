@@ -24,21 +24,7 @@ class WebsocketApi
 
     public function getPusherApi()
     {
-        $connection = config('broadcasting.connections.pusher');
-
-        return new \Pusher\Pusher(
-            $connection['key'],
-            $connection['secret'],
-            $connection['app_id'],
-            [
-                'cluster' => $connection['options']['cluster'],
-                'curl_options' => $connection['options']['curl_options'],
-                'host' => $connection['options']['host'],
-                'port' => $connection['options']['port'],
-                'useTLS' => $connection['options']['encrypted'],
-                'scheme' => $connection['options']['scheme'],
-            ]
-        );
+        return \Broadcast::driver('pusher-php')->getPusher();
     }
 
     /**
@@ -52,7 +38,7 @@ class WebsocketApi
     public function channelHasSubscribers($channel, $excludeRequestingUser = false)
     {
         if (! $this->pusherApi) {
-            $this->pusherApi = self::getPusherApi();
+            $this->pusherApi = $this->getPusherApi();
         }
 
         $users = $this->pusherApi->get_users_info($channel);
