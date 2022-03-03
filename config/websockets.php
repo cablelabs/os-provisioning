@@ -32,7 +32,7 @@ return [
      * Set a custom dashboard configuration
      */
     'dashboard' => [
-        'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
+        'port' => env('LARAVEL_WEBSOCKETS_PORT', 8080),
     ],
 
     /*
@@ -72,13 +72,14 @@ return [
      * Leave this empty if you want to accept requests from all hosts.
      */
     'allowed_origins' => [
-        //
+        '127.0.0.1',
+        env('APP_URL'),
     ],
 
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
      */
-    'max_request_size_in_kb' => 250,
+    'max_request_size_in_kb' => 1024,
 
     /*
      * This path will be used to register the necessary routes for the package.
@@ -152,8 +153,6 @@ return [
          * Passphrase for your local_cert file.
          */
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
-
-        // 'verify_peer' => false,
     ],
 
     /*
