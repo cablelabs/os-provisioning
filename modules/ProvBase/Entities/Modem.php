@@ -782,7 +782,15 @@ class Modem extends \BaseModel
 
             // not found
             if ($ret) {
-                file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
+                while (true) {
+                    try {
+                        file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
+
+                        break;
+                    } catch (\Exception $e) {
+                        sleep(1);
+                    }
+                }
 
                 Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
             }
