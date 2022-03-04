@@ -804,10 +804,10 @@ class Modem extends \BaseModel
         // Remove (Unblock)
         $mac = $macChanged ? $this->getOriginal('mac') : $this->mac;
 
-        exec('grep -v '.$mac.' '.self::BLOCKED_CPE_FILE_PATH.' > '.self::BLOCKED_CPE_FILE_PATH.'.tmp');
+        exec('grep -vi '.$mac.' '.self::BLOCKED_CPE_FILE_PATH.' > '.self::BLOCKED_CPE_FILE_PATH.'.tmp');
         rename(self::BLOCKED_CPE_FILE_PATH.'.tmp', self::BLOCKED_CPE_FILE_PATH);
 
-        Log::info("DHCP - Remove modem $this->id ($this->mac) from list for blocked CPEs");
+        Log::info("DHCP - Remove modem $this->id ($mac) from list for blocked CPEs");
     }
 
     /**
