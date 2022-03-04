@@ -785,6 +785,9 @@ class Modem extends \BaseModel
                 $i = 10;
                 while ($i) {
                     try {
+                        // Try to avoid not saving the file when permission denied error appears sometimes - maybe because of LOCK?
+                        // Actually file_put_contents() should wait automatically until file is not locked anymore, but it sometimes throws an
+                        // exception
                         file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
 
                         break;
@@ -792,6 +795,10 @@ class Modem extends \BaseModel
                         sleep(1);
                         $i--;
                     }
+                }
+
+                if (! $i) {
+                    Log::error("DHCP - Failed to add modem $this->id ($this->mac) to list for blocked CPEs");
                 }
 
                 Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
