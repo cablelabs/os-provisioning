@@ -108,9 +108,9 @@ class GuiLogController extends BaseController
     {
         $uri = explode('/', $request->getRequestUri());
         $routeName = NamespaceController::get_route_name();
-        $modelName = Str::lower($uri[count($uri) - 3]);
+        $modelName = $uri[count($uri) - 3];
 
-        $request_query = GuiLog::where('model', '=', $modelName)
+        $request_query = GuiLog::where('model', $modelName)
             ->where('model_id', '=', $id)
             ->orderBy('id', 'desc')
             ->get();
