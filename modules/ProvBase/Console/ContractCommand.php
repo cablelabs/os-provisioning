@@ -146,7 +146,7 @@ class ContractCommand extends Command
 
         $contractsQuery->chunk(1000, function ($contracts) use ($num) {
             foreach ($contracts as $c) {
-                echo "contract month: $this->i/$num \r";
+                echo "contract: $this->i/$num \r";
                 $this->i++;
 
                 if (in_array($this->argument('date'), ['daily', 'daily_all'])) {
