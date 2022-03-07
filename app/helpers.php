@@ -566,7 +566,7 @@ function valueInThresholdString($value, $thresholds)
 
     $value = floatval($value);
 
-    if (is_null($thresholds)) {
+    if (is_null($thresholds) || $thresholds === '') {
         return false;
     }
 
