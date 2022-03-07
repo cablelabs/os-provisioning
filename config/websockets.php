@@ -73,7 +73,7 @@ return [
      */
     'allowed_origins' => [
         '127.0.0.1',
-        env('APP_URL'),
+        env('APP_URI'),
     ],
 
     /*
