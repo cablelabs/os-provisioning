@@ -63,21 +63,6 @@ class SwitchMysqltoPgsql extends BaseMigration
     {
         if (! $this->databases) {
             $this->databases = [
-                'director' => [
-                    'user' => exec('awk "/\[director\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^username" | sort | cut -d\'=\' -f2 | xargs'),
-                    'password' => exec('awk "/\[director\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^password" | sort | cut -d\'=\' -f2 | xargs'),
-                    'schema' => 'public',
-                ],
-                'icinga2' => [
-                    'user' => DB::connection('pgsql-icinga2')->getConfig('username'),
-                    'password' => DB::connection('pgsql-icinga2')->getConfig('password'),
-                    'schema' => DB::connection('pgsql-icinga2')->getConfig('schema'),
-                ],
-                'icingaweb2' => [
-                    'user' => exec('awk "/\[icingaweb2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^username" | sort | cut -d\'=\' -f2 | xargs'),
-                    'password' => exec('awk "/\[icingaweb2\]/{flag=1;next}/\[/{flag=0}flag" /etc/icingaweb2/resources.ini | grep "^password" | sort | cut -d\'=\' -f2 | xargs'),
-                    'schema' => 'public',
-                ],
                 'nmsprime' => [
                     'user' => DB::getConfig('username'),
                     'password' => DB::getConfig('password'),
