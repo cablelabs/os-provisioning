@@ -27,7 +27,7 @@ class UpdateDhcpDirectoryPermissions extends BaseMigration
     public function up()
     {
         // Set gid to let newly created files have group dhcpd - Note: uid can not be set on directory
-        chmod('/etc/dhcp-nmsprime/', 02744);
+        chmod('/etc/dhcp-nmsprime/', 02750);
     }
 
     /**
@@ -37,6 +37,6 @@ class UpdateDhcpDirectoryPermissions extends BaseMigration
      */
     public function down()
     {
-        chmod('/etc/dhcp-nmsprime/', 0744);
+        chmod('/etc/dhcp-nmsprime/', 0750);
     }
 }
