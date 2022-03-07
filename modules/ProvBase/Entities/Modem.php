@@ -782,24 +782,7 @@ class Modem extends \BaseModel
 
             // not found
             if ($ret) {
-                $i = 10;
-                while ($i) {
-                    try {
-                        // Try to avoid not saving the file when permission denied error appears sometimes - maybe because of LOCK?
-                        // Actually file_put_contents() should wait automatically until file is not locked anymore, but it sometimes throws an
-                        // exception
-                        file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
-
-                        break;
-                    } catch (\Exception $e) {
-                        sleep(1);
-                        $i--;
-                    }
-                }
-
-                if (! $i) {
-                    Log::error("DHCP - Failed to add modem $this->id ($this->mac) to list for blocked CPEs");
-                }
+                file_put_contents(self::BLOCKED_CPE_FILE_PATH, "\n".$this->getDhcpBlockedCpeSublass(), FILE_APPEND | LOCK_EX);
 
                 Log::info("DHCP - Add modem $this->id ($this->mac) to list for blocked CPEs");
             }
@@ -815,6 +798,7 @@ class Modem extends \BaseModel
 
         exec('grep -vi '.$mac.' '.self::BLOCKED_CPE_FILE_PATH.' > '.self::BLOCKED_CPE_FILE_PATH.'.tmp');
         rename(self::BLOCKED_CPE_FILE_PATH.'.tmp', self::BLOCKED_CPE_FILE_PATH);
+        chown(self::BLOCKED_CPE_FILE_PATH, 'apache');
 
         Log::info("DHCP - Remove modem $this->id ($mac) from list for blocked CPEs");
     }
