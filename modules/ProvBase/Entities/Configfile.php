@@ -37,6 +37,9 @@ class Configfile extends \BaseModel
         return [
             'name' => 'required_without:import|unique:configfile,name,'.$id.',id,deleted_at,NULL',
             'text' => 'docsis',
+            // docsDevSwFilename is SnmpAdminString (SIZE (0..64))
+            // including foldername 'dialplan/' there are 55 characters left
+            'firmware' => 'string|min:1|max:55|nullable',
         ];
     }
 
