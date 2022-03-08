@@ -53,6 +53,7 @@ class SwitchMysqltoPgsql extends BaseMigration
         $this->fixNmsprimeDb();
         $this->switchKeaDb();
         $this->adaptRadius();
+        $this->changeConfig();
 
         // Icinga is done via icinga-module-director RPM - see SPEC file
 
@@ -315,6 +316,13 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system('sudo -u postgres psql -d radius -c "DROP SCHEMA nmsprime cascade"');
         system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' /etc/raddb/mods-available/sql");
         system('systemctl restart radiusd');
+    }
+
+    private function changeConfig()
+    {
+        system("sed -i 's/QUEUE_DRIVER_DATABASE_CONNECTION=mysql/QUEUE_DRIVER_DATABASE_CONNECTION=pgsql/'");
+
+        \Artisan::call('config:cache');
     }
 
     /**
