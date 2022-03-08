@@ -90,7 +90,7 @@ return [
                 'host'      => explode(',', str_replace(' ', '', env('ROOT_DB_HOST', 'localhost'))),
             ],
             'sticky' => true,
-            'database'  => env('ROOT_DB_DATABASE', 'nmsprime'),
+            'database'  => env('ROOT_DB_DATABASE', 'cacti'),
             'username'  => env('ROOT_DB_USERNAME', 'root'),
             'password' => env('ROOT_DB_PASSWORD', ''),
             'unix_socket' => env('ROOT_DB_SOCKET', ''),
