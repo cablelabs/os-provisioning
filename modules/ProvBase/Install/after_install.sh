@@ -4,7 +4,7 @@ source "$env/root.env"
 
 # unfortunately dhcpd does not support hmacs other than hmac-md5
 # see: https://bugs.centos.org/view.php?id=12107
-pw=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
+dnsSecret=$(ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret)
 radius_psw=$(pwgen 12 1)
 
 # create folders
@@ -17,8 +17,16 @@ chown -R named:named /var/named/dynamic
 chown apache:dhcpd /etc/named-ddns.sh
 chmod 750 /etc/named-ddns.sh
 
-sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/dhcp-nmsprime/dhcpd.conf
-sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$pw|" /etc/named-nmsprime.conf
+sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/dhcp-nmsprime/dhcpd.conf
+sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/named-nmsprime.conf
+dnsPw=$(echo $secret | cut -d '"' -f2)
+sed -i "s/<DNS-PASSWORD>/$dnsPw/" /etc/named-ddns.sh
+sudo -u postgres psql nmsprime -c "UPDATE nmsprime.provbase set dns_password = '$dnsPw'"
+
+openssl rand -hex 32 > /etc/named-ddns-cpe.key
+chown apache:dhcpd /etc/named-ddns-cpe.key
+chmod 640 /etc/named-ddns-cpe.key
+
 sed -i "s/<hostname>/$(hostname | cut -d '.' -f1)/" /var/named/dynamic/{nmsprime.test,in-addr.arpa}.zone
 
 echo $'\ninclude /etc/chrony.d/*.conf' >> /etc/chrony.conf
