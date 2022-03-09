@@ -300,6 +300,11 @@ class Kernel extends ConsoleKernel
             $schedule->call(function () {
                 Queue::pushOn('low', new \Modules\SmartOnt\Jobs\DfSubscriptionGetterJob('pending'));
             })->dailyAt(date('H:i', strtotime("03:13 + $time_offset min")));
+
+            // get updates for OTO from CSV file
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OtoFromCsvUpdaterJob());
+            })->dailyAt('06:43');
         }
     }
 
