@@ -283,7 +283,7 @@ class NetElement extends \BaseModel
             $query->select(['id', '_lft', '_rgt', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
         }
 
-        if (is_array($operator)) {
+        if (is_countable($operator)) {
             $query->whereIn($field, $operator);
         } else {
             $query->where($field, $operator, $id);
