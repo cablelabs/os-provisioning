@@ -1274,9 +1274,7 @@ class Contract extends \BaseModel
      */
     public function get_start_time()
     {
-        $date = $this->contract_start && $this->contract_start != '0000-00-00' ? $this->contract_start : $this->created_at->toDateString();
-
-        return strtotime($date);
+        return strtotime($this->contract_start);
     }
 
     /**
@@ -1286,7 +1284,7 @@ class Contract extends \BaseModel
      */
     public function get_end_time()
     {
-        return $this->contract_end && $this->contract_end != '0000-00-00' ? strtotime($this->contract_end) : null;
+        return $this->contract_end ? strtotime($this->contract_end) : null;
     }
 
     /**

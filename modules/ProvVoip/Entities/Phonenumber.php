@@ -151,14 +151,9 @@ class Phonenumber extends \BaseModel
     {
         $management = $this->phonenumbermanagement;
 
-        if (is_null($management)) {
-            $act = 'n/a';
-        } else {
+        $act = 'n/a';
+        if ($management) {
             $act = $management->activation_date;
-
-            if ($act == '0000-00-00') {
-                $act = null;
-            }
         }
 
         // reuse dates for view
@@ -173,14 +168,9 @@ class Phonenumber extends \BaseModel
     {
         $management = $this->phonenumbermanagement;
 
-        if (is_null($management)) {
-            $deact = 'n/a';
-        } else {
+        $deact = 'n/a';
+        if ($management) {
             $deact = $management->deactivation_date;
-
-            if ($deact == '0000-00-00') {
-                $deact = null;
-            }
         }
 
         // reuse dates for view
