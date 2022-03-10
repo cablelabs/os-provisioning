@@ -516,7 +516,7 @@ new Vue({
           return 'fa-circle-o-notch fa-spin'
         }
 
-        return this.favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'
+        return this.favorites.includes(netelement.id) ? 'fa-star range-handle' : 'fa-star-o range-handle'
       }
 
       return 'fa-sitemap'

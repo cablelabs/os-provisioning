@@ -148,23 +148,25 @@
         @endif
         <template v-for="netelement in loopNetElements">
           <li v-if="!loadingSearch || !isSearchMode" class="has-sub" :key="netelement.id">
-            <div v-cloak class="recolor sidebar-element"
+            <div v-cloak class="recolor sidebar-element align-items-baseline"
               v-on:mouseEnter.stop="minified ? loadCluster(netelement) : ''"
               v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
               style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
                 <a href="javascript:;" >
-                  <i v-if="loadingFavorites.includes(netelement.id)" class="caret-link fa fa-circle-o-notch fa-spin m-r-5"></i>
-                  <i v-else class="caret-link fa m-r-5" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i>
+                  <i v-if="loadingFavorites.includes(netelement.id)" class="caret-link fa fa-circle-o-notch fa-spin mr-2"></i>
+                  <i v-else class="caret-link fa mr-2" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i>
                 </a>
-                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;" v-on:click="setNetActive(netelement.id)">
-                  <span v-text="netelement.name"></span>
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
+                  <span v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
                 </a>
               </template>
-              <a v-else :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link" style="max-height: 20px; white-space: nowrap;flex:1;" v-on:click="setNetActive(netelement.id)">
-                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa m-r-5" :class="netElementSearchHoverClass(netelement)"></i>
-                <span v-text="netelement.name"></span>
-              </a>
+              <template v-else>
+                <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa mr-2" :class="netElementSearchHoverClass(netelement)" style="text-decoration: none;"></i>
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link d-flex" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
+                  <span v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
+                </a>
+              </template>
               <a href="javascript:;" v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
                 <i v-if="loadingClusters.includes(netelement.id)" class="fa fa-circle-o-notch fa-spin"></i>
                 <i v-else-if="netelement.clustersLoaded && !netelement.clusters.length"></i>
@@ -180,9 +182,9 @@
                     :class="{active: (clickedNetelement== cluster.id), 'p-t-10': (netelement.clusters[0].id == cluster.id)}"
                     v-on:mouseEnter.stop="minified ? minifiedSidebarNet(netelement, 'enter') : ''"
                     v-on:mouseLeave.stop="minified ? minifiedSidebarNet(netelement, 'leave') : ''">
-                    <a :href="'/admin/Tree/erd/cluster/' + cluster.id" style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
-                      <i class="fa fa-circle-thin text-info"></i>
-                      <span v-text="cluster.name"></span>
+                    <a :href="'/admin/Tree/erd/cluster/' + cluster.id" style="display:flex;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;width:95%;">
+                      <i class="fa fa-circle-thin text-info mr-2"></i>
+                      <span v-text="cluster.name" :title="cluster.name" class="d-block text-ellipsis"></span>
                     </a>
                   </li>
                 </template>
