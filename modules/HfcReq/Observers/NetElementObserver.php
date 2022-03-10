@@ -104,6 +104,10 @@ class NetElementObserver
      */
     private function checkNetCluster($netelement)
     {
+        if ($netelement->net) {
+            return;
+        }
+
         if ($netelement->parent_id && ! $netelement->net) {
             Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noNet'));
         }
