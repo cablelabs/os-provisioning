@@ -787,6 +787,7 @@ return [
             'canceled by us' => 'von uns gekündigt',
             'deceased' => 'verstorben',
             'competitor' => 'Mitbewerber',
+            'fiber' => 'Wechsel zu Glasfaseranbieter',
         ],
         'noModemTickets' => 'Aktuell besitzen die Modems dieses Vertrags keine Tickets!',
     ],

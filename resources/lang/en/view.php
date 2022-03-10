@@ -787,6 +787,7 @@ return [
             'canceled by us' => 'canceled by us',
             'deceased' => 'deceased',
             'competitor' => 'competitor',
+            'fiber' => 'Change to ISP offering fiber connection',
         ],
         'noModemTickets' => 'Currently none of the modems that belong to this contract have a ticket associated!',
     ],
