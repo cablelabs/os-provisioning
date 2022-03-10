@@ -135,6 +135,10 @@ class ModemObserver
             }
 
             $modem->make_configfile();
+
+            // invalidate ipv4 chache
+            // should be replaced with saveQuietly() once available
+            $modem->update(['ipv4' => null]);
         }
 
         $modem->updateRadius();
