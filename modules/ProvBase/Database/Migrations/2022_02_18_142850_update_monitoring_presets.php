@@ -30,7 +30,7 @@ class UpdateMonitoringPresets extends BaseMigration
      */
     public function up()
     {
-        $monPresets = array_filter(json_decode(Modem::callGenieAcsApi('presets', 'GET'), true), function ($preset) {
+        $monPresets = array_filter((array) json_decode(Modem::callGenieAcsApi('presets', 'GET'), true), function ($preset) {
             return isset($preset['events']['2 PERIODIC']);
         });
 
