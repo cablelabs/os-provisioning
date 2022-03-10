@@ -59,9 +59,9 @@
               v-on:click="{{ isset($typearray['link']) ? "!minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug }')" }}"
               href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;'}}">
               @if (is_file(public_path('images/apps/').$typearray['icon']))
-                <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="m-r-5" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
+                <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="mr-2" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
               @else
-                <i class="fa fa-fw {{ $typearray['icon'] }} m-r-5"></i>
+                <i class="fa fa-fw {{ $typearray['icon'] }} mr-2"></i>
               @endif
               <span>{{$typearray['translated_name'] ?? $module_name}}</span>
             </a>
@@ -106,7 +106,7 @@
         <li>
           <div class="sidebar-element recolor">
             <a href="{{ $externalApp['link'] }}">
-                <img src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini h-20 w-20 m-r-5">
+                <img src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini h-20 w-20 mr-2">
                 <span>{{ $appName }}</span>
             </a>
           </div>
@@ -140,7 +140,7 @@
           <li v-if="!isSearchMode" id="network_overview" class="has-sub">
             <div class="recolor sidebar-element">
               <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}" style="max-height: 20px; white-space: nowrap;">
-                <i class="fa fa-sitemap m-r-5"></i>
+                <i class="fa fa-sitemap mr-2"></i>
                 <span>{{ trans('view.Menu_allNets') }}</span>
               </a>
             </div>
