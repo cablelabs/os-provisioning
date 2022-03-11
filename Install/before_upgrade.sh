@@ -1,6 +1,5 @@
 # TODO: Remove this whole code after NMSPrime v3.2
 # The whole code just does the initial steps that need to be done before Laravel can be used again with Pgsql
-yum -y remove postgresql-9.2.24-7.el7_9.x86_64 postgresql-libs-9.2.24-7.el7_9.x86_64
 
 ret=$(sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "SELECT EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'nmsprime')")
 exists=$(echo $ret | cut -d ' ' -f 3)
