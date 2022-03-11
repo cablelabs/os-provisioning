@@ -97,9 +97,9 @@ class SwitchMysqltoPgsql extends BaseMigration
             if ($db == 'nmsprime') {
                 // DB already exists - Just add extension for indexing and quick search with % at start & end
                 // Schema::createExtension('pg_trgm'); - only with https://github.com/tpetry/laravel-postgresql-enhanced
-                system("sudo -u postgres psql -d $db -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm'");
             } else {
-                system("sudo -u postgres psql -c 'CREATE DATABASE $db'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
                 echo "$db\n";
 
                 // Convert MySQL DB to PostgreSQL
@@ -109,30 +109,30 @@ class SwitchMysqltoPgsql extends BaseMigration
                 $ret = [];
 
                 // Create user
-                system("sudo -u postgres psql -c \"CREATE USER $user PASSWORD '".$conf['password'].'\'"');
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -c \"CREATE USER $user PASSWORD '".$conf['password'].'\'"');
                 echo "$user\n";
             }
 
             // Set search path of postgres user to mainly used schema to not be required to always specify schema in queries
-            system("sudo -u postgres psql $db -c \"ALTER ROLE postgres in DATABASE $db set search_path to '$schema'\"");
+            system("sudo -u postgres /usr/pgsql-13/bin/psql $db -c \"ALTER ROLE postgres in DATABASE $db set search_path to '$schema'\"");
             // Move tables to public schema
             // $tables = [];
-            // exec("sudo -u postgres psql $db -t -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = 'nmsprime'\"", $tables);
-            // system("sudo -u postgres psql $db -c 'ALTER TABLE $db.$table SET SCHEMA public'");
+            // exec("sudo -u postgres /usr/pgsql-13/bin/psql $db -t -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = 'nmsprime'\"", $tables);
+            // system("sudo -u postgres /usr/pgsql-13/bin/psql $db -c 'ALTER TABLE $db.$table SET SCHEMA public'");
 
             // Grant permissions
-            system("sudo -u postgres psql -d $db -c '
+            system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c '
                 GRANT USAGE ON SCHEMA $schema TO $user;
                 GRANT ALL PRIVILEGES ON ALL Tables in schema $schema TO $user;
                 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA $schema TO $user;
                 '");
 
-            system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = '$schema';\" $db`;
-                do sudo -u postgres psql $db -c \"alter table $schema.".'$tbl'." owner to $user\"; done");
+            system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = '$schema';\" $db`;
+                do sudo -u postgres /usr/pgsql-13/bin/psql $db -c \"alter table $schema.".'$tbl'." owner to $user\"; done");
         }
 
         // Move nmsprime_ccc table to schema public
-        system("sudo -u postgres psql -d radius -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
     }
 
     /**
@@ -225,25 +225,25 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         Config::set('database.connections.pgsql-kea.password', $psw);
         DB::reconnect('pgsql-kea');
 
-        system('sudo -u postgres psql -c "CREATE DATABASE kea"');
+        system('sudo -u postgres /usr/pgsql-13/bin/psql -c "CREATE DATABASE kea"');
         echo "kea\n";
-        system("sudo -u postgres psql -d kea -c \"CREATE USER $user PASSWORD '$psw';\"");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d kea -c \"CREATE USER $user PASSWORD '$psw';\"");
 
         // (1) Initialise new kea DB for Pgsql (contains less tables than mysql schema)
         system("/usr/sbin/kea-admin db-init pgsql -u $user -p $psw -n kea");
 
         // Add permissions
-        system("sudo -u postgres psql kea -c \"
+        system("sudo -u postgres /usr/pgsql-13/bin/psql kea -c \"
             GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
         \"");
 
-        system('sudo -u postgres psql kea -c "ALTER ROLE postgres set search_path to \'public\'"');
+        system('sudo -u postgres /usr/pgsql-13/bin/psql kea -c "ALTER ROLE postgres set search_path to \'public\'"');
 
         echo "Change owner of kea DB tables to kea\n";
 
-        system("for tbl in `sudo -u postgres psql kea -qAt -c \"select tablename from pg_tables where schemaname = 'public';\"`;
-            do sudo -u postgres psql kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
+        system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql kea -qAt -c \"select tablename from pg_tables where schemaname = 'public';\"`;
+            do sudo -u postgres /usr/pgsql-13/bin/psql kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
 
         // Transfer leases
         foreach (DB::connection('mysql')->table('kea.lease6')->get() as $lease) {
@@ -265,7 +265,7 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system('sed -i "s/^#RADIUS_DB/RADIUS_DB/" /etc/nmsprime/env/provbase.env');
         system("sed -i 's/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$psw/' /etc/nmsprime/env/provbase.env");
 
-        system("sudo -u postgres psql -c 'CREATE DATABASE $db'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
         echo "radius\n";
         exec("sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///$db", $ret);
         echo implode(PHP_EOL, $ret)."\n";
@@ -273,7 +273,7 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         // Same DB as nmsprime -> remove all tables that dont belong to radius, move radius tables to schema public
         $radTables = ['nas', 'radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radippool', 'radpostauth', 'radreply', 'radusergroup'];
 
-        exec('sudo -u postgres psql -d radius -t -c "SELECT table_name FROM information_schema.tables WHERE table_schema = \'nmsprime\'"', $tables);
+        exec('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -t -c "SELECT table_name FROM information_schema.tables WHERE table_schema = \'nmsprime\'"', $tables);
 
         foreach ($tables as $table) {
             $table = trim($table);
@@ -284,36 +284,36 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
 
             if (in_array($table, $radTables)) {
                 // Move table to schema public
-                system("sudo -u postgres psql -d radius -c 'ALTER TABLE nmsprime.$table SET SCHEMA public'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'ALTER TABLE nmsprime.$table SET SCHEMA public'");
             } else {
                 // drop table
                 echo "Drop table $table of schema nmsprime in db radius\n";
-                system("sudo -u postgres psql -d radius -c 'DROP TABLE nmsprime.$table cascade'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'DROP TABLE nmsprime.$table cascade'");
             }
         }
 
-        system("sudo -u postgres psql -d radius -c \"
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"
             CREATE USER $user PASSWORD '$psw';
             GRANT USAGE ON SCHEMA public TO $user;
             GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
             \"");
 
-        system('sudo -u postgres psql radius -c "ALTER ROLE postgres set search_path to \'public\'"');
+        system('sudo -u postgres /usr/pgsql-13/bin/psql radius -c "ALTER ROLE postgres set search_path to \'public\'"');
 
-        system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" radius`;
-            do sudo -u postgres psql -d radius -c \"alter table ".'$tbl'." owner to $user\"; done");
+        system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" radius`;
+            do sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"alter table ".'$tbl'." owner to $user\"; done");
 
-        system("sudo -u postgres psql -d radius -c 'alter function on_update_current_timestamp_radpostauth set schema public'");
-        system("sudo -u postgres psql -d radius -c 'alter function on_update_current_timestamp_authreminders set schema public'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'alter function on_update_current_timestamp_radpostauth set schema public'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'alter function on_update_current_timestamp_authreminders set schema public'");
 
-        system('sudo -u postgres psql -d radius -c "ALTER table radippool
+        system('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "ALTER table radippool
             ALTER COLUMN calledstationid drop not null,
             ALTER COLUMN callingstationid drop not null,
             ALTER COLUMN pool_key drop not null
         "');
 
-        system('sudo -u postgres psql -d radius -c "DROP SCHEMA nmsprime cascade"');
+        system('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "DROP SCHEMA nmsprime cascade"');
         system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' /etc/raddb/mods-available/sql");
         system('systemctl restart radiusd');
     }
@@ -339,24 +339,24 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system('systemctl restart radiusd');
 
         // Remove kea and radius DB and user
-        system("sudo -u postgres psql -c 'drop database kea;'");
-        system("sudo -u postgres psql -c 'drop owned by kea; drop user kea;'");
-        system("sudo -u postgres psql -c 'drop database radius;'");
-        system("sudo -u postgres psql -c 'drop owned by radius; drop user radius;'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop database kea;'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop owned by kea; drop user kea;'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop database radius;'");
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop owned by radius; drop user radius;'");
 
         // Remove nmsprime and icinga DBs and users
         $dbs = $this->getDbsConf();
 
         foreach ($dbs as $db => $config) {
             if ($db == 'nmsprime') {
-                system("sudo -u postgres psql -d $db -c 'drop schema $db cascade'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c 'drop schema $db cascade'");
             } else {
-                system("sudo -u postgres psql -c 'drop database $db'");
+                system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop database $db'");
             }
 
             $user = $config['user'];
 
-            system("sudo -u postgres psql -c 'DROP OWNED BY $user; drop user $user'");
+            system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'DROP OWNED BY $user; drop user $user'");
         }
 
         // Config::set('database.connections.default', 'mysql');

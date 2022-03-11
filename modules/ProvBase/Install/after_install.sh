@@ -21,7 +21,7 @@ sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/dhcp-nmsprime/dhcpd.co
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/named-nmsprime.conf
 dnsPw=$(echo $secret | cut -d '"' -f2)
 sed -i "s/<DNS-PASSWORD>/$dnsPw/" /etc/named-ddns.sh
-sudo -u postgres psql nmsprime -c "UPDATE nmsprime.provbase set dns_password = '$dnsPw'"
+sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c "UPDATE nmsprime.provbase set dns_password = '$dnsPw'"
 
 openssl rand -hex 32 > /etc/named-ddns-cpe.key
 chown apache:dhcpd /etc/named-ddns-cpe.key
@@ -49,8 +49,8 @@ firewall-cmd --reload
 
 # create freeradius DB and user
 user='radius'
-sudo -u postgres psql -c 'CREATE DATABASE radius'
-sudo -u postgres psql -d radius -c "
+sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE radius'
+sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "
     CREATE USER $user PASSWORD '$radius_psw';
     GRANT USAGE ON SCHEMA public TO $user;
     GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;

@@ -44,19 +44,19 @@ class InstallKea extends BaseMigration
         Config::set('database.connections.pgsql-kea.password', $psw);
         DB::reconnect('pgsql-kea');
 
-        system('sudo -u postgres psql -c "CREATE DATABASE kea"');
-        system("sudo -u postgres psql -d kea -c \"CREATE USER $user PASSWORD '$psw';\"");
+        system('sudo -u postgres /usr/pgsql-13/bin/psql -c "CREATE DATABASE kea"');
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d kea -c \"CREATE USER $user PASSWORD '$psw';\"");
         system("/usr/sbin/kea-admin db-init pgsql -u $user -p $psw -n kea");
 
-        system("sudo -u postgres psql -d kea -c \"
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d kea -c \"
             GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
         \"");
 
         echo "Change owner of kea DB tables to kea\n";
 
-        system("for tbl in `sudo -u postgres psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" kea`;
-            do sudo -u postgres psql -d kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
+        system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" kea`;
+            do sudo -u postgres /usr/pgsql-13/bin/psql -d kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
 
         $find = [
             '<DB_USERNAME>',
