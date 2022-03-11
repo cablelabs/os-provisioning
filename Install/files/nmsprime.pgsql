@@ -328,11 +328,11 @@ SET default_table_access_method = heap;
 
 CREATE TABLE nmsprime.abilities (
     id bigint NOT NULL,
-    name character varying(150) NOT NULL,
+    name character varying(150),
     title character varying(191),
     entity_id bigint,
     entity_type character varying(150),
-    only_owned boolean DEFAULT false NOT NULL,
+    only_owned boolean DEFAULT false,
     scope bigint,
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
@@ -372,15 +372,15 @@ CREATE TABLE nmsprime.accountingrecord (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    contract_id bigint NOT NULL,
-    name character varying(191) NOT NULL,
-    product_id bigint NOT NULL,
-    ratio double precision NOT NULL,
-    count smallint NOT NULL,
-    charge double precision NOT NULL,
-    sepaaccount_id bigint NOT NULL,
-    invoice_nr bigint NOT NULL,
-    settlementrun_id bigint NOT NULL
+    contract_id bigint,
+    name character varying(191),
+    product_id bigint,
+    ratio double precision,
+    count smallint,
+    charge double precision,
+    sepaaccount_id bigint,
+    invoice_nr bigint,
+    settlementrun_id bigint
 );
 
 
@@ -416,11 +416,11 @@ CREATE TABLE nmsprime.apartment (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    realty_id bigint NOT NULL,
-    number character varying(191) NOT NULL,
-    floor smallint NOT NULL,
-    connected boolean NOT NULL,
-    occupied boolean NOT NULL,
+    realty_id bigint,
+    number character varying(191),
+    floor smallint,
+    connected boolean,
+    occupied boolean,
     description character varying(191),
     connection_type character varying(191),
     code character varying(191)
@@ -455,9 +455,9 @@ ALTER SEQUENCE nmsprime.apartment_id_seq OWNED BY nmsprime.apartment.id;
 --
 
 CREATE TABLE nmsprime.assigned_roles (
-    role_id bigint NOT NULL,
-    entity_id bigint NOT NULL,
-    entity_type character varying(150) NOT NULL,
+    role_id bigint,
+    entity_id bigint,
+    entity_type character varying(150),
     scope bigint,
     created_at timestamp with time zone,
     updated_at timestamp with time zone
@@ -488,20 +488,20 @@ CREATE TABLE nmsprime.billingbase (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    rcd smallint NOT NULL,
-    currency character varying(191) NOT NULL,
+    rcd smallint,
+    currency character varying(191),
     tax double precision,
     mandate_ref_template character varying(191),
-    split boolean NOT NULL,
-    termination_fix boolean NOT NULL,
-    userlang nmsprime.billingbase_userlang DEFAULT 'de'::nmsprime.billingbase_userlang NOT NULL,
-    cdr_offset smallint NOT NULL,
+    split boolean,
+    termination_fix boolean,
+    userlang nmsprime.billingbase_userlang DEFAULT 'de'::nmsprime.billingbase_userlang,
+    cdr_offset smallint,
     voip_extracharge_default double precision,
     voip_extracharge_mobile_national double precision,
     cdr_retention_period smallint,
-    fluid_valid_dates boolean NOT NULL,
-    show_ags boolean DEFAULT false NOT NULL,
-    adapt_item_start boolean DEFAULT false NOT NULL
+    fluid_valid_dates boolean,
+    show_ags boolean DEFAULT false,
+    adapt_item_start boolean DEFAULT false
 );
 
 
@@ -537,8 +537,8 @@ CREATE TABLE nmsprime.carriercode (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    carrier_code character varying(4) NOT NULL,
-    company character varying(191) NOT NULL
+    carrier_code character varying(4),
+    company character varying(191)
 );
 
 
@@ -653,10 +653,10 @@ CREATE TABLE nmsprime.company (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
-    street character varying(191) NOT NULL,
-    zip character varying(16) NOT NULL,
-    city character varying(191) NOT NULL,
+    name character varying(191),
+    street character varying(191),
+    zip character varying(16),
+    city character varying(191),
     phone character varying(191),
     fax character varying(191),
     web character varying(191),
@@ -708,11 +708,11 @@ CREATE TABLE nmsprime.configfile (
     deleted_at timestamp with time zone,
     name character varying(191),
     text text,
-    device nmsprime.configfile_device NOT NULL,
-    public nmsprime.configfile_public NOT NULL,
+    device nmsprime.configfile_device,
+    public nmsprime.configfile_public,
     parent_id bigint,
     firmware character varying(191) DEFAULT ''::character varying,
-    is_dummy boolean DEFAULT false NOT NULL,
+    is_dummy boolean DEFAULT false,
     monitoring text,
     dashboard character varying(191) DEFAULT '/grafana/d/3-42DM6Gk/cablemodem'::character varying
 );
@@ -764,7 +764,7 @@ CREATE TABLE nmsprime.contact (
     city character varying(191),
     zip character varying(191),
     district character varying(191),
-    administration boolean NOT NULL,
+    administration boolean,
     invoice_text1 text,
     invoice_text2 text,
     invoice_text3 text
@@ -810,7 +810,7 @@ CREATE TABLE nmsprime.contract (
     customer_external_id character varying(60),
     company character varying(191),
     department character varying(191),
-    salutation character varying(191) NOT NULL,
+    salutation character varying(191),
     academic_degree character varying(191),
     firstname character varying(191),
     lastname character varying(191),
@@ -827,7 +827,7 @@ CREATE TABLE nmsprime.contract (
     birthday date,
     contract_start date,
     contract_end date,
-    internet_access boolean NOT NULL,
+    internet_access boolean,
     purchase_tariff bigint,
     next_purchase_tariff bigint,
     qos_id bigint,
@@ -838,20 +838,20 @@ CREATE TABLE nmsprime.contract (
     sepa_bic character varying(11),
     sepa_holder character varying(191),
     sepa_institute character varying(191),
-    create_invoice boolean NOT NULL,
+    create_invoice boolean,
     login character varying(32),
     password character varying(64),
     net bigint,
     cluster bigint,
     description text,
-    costcenter_id bigint NOT NULL,
+    costcenter_id bigint,
     salesman_id bigint,
-    has_telephony boolean NOT NULL,
+    has_telephony boolean,
     apartment_nr character varying(191),
     additional character varying(191),
     ground_for_dismissal character varying(191),
     group_contract boolean,
-    contact bigint NOT NULL,
+    contact bigint,
     value_date smallint,
     apartment_id bigint,
     contact_id bigint
@@ -890,10 +890,10 @@ CREATE TABLE nmsprime.costcenter (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     number character varying(191),
     sepaaccount_id bigint,
-    billing_month smallint NOT NULL,
+    billing_month smallint,
     description character varying(191)
 );
 
@@ -933,15 +933,15 @@ CREATE TABLE nmsprime.debt (
     contract_id bigint,
     sepamandate_id bigint,
     invoice_id bigint,
-    date date NOT NULL,
-    amount numeric(10,2) NOT NULL,
+    date date,
+    amount numeric(10,2),
     bank_fee numeric(10,2),
     total_fee numeric(10,2),
     description text,
     number character varying(191),
     voucher_nr character varying(191),
     due_date date,
-    cleared boolean NOT NULL,
+    cleared boolean,
     indicator boolean,
     dunning_date date,
     parent_id bigint,
@@ -982,9 +982,9 @@ CREATE TABLE nmsprime.domain (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     alias character varying(191),
-    type nmsprime.domain_type NOT NULL
+    type nmsprime.domain_type
 );
 
 
@@ -1020,8 +1020,8 @@ CREATE TABLE nmsprime.ekpcode (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    ekp_code character varying(191) NOT NULL,
-    company character varying(191) NOT NULL
+    ekp_code character varying(191),
+    company character varying(191)
 );
 
 
@@ -1057,14 +1057,14 @@ CREATE TABLE nmsprime.endpoint (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    hostname character varying(63) NOT NULL,
+    hostname character varying(63),
     mac character varying(191),
     description text,
     fixed_ip boolean,
     modem_id bigint,
     ip character varying(191),
     add_reverse character varying(191),
-    version character varying(1) DEFAULT '4'::character varying NOT NULL,
+    version character varying(1) DEFAULT '4'::character varying,
     prefix character varying(191)
 );
 
@@ -1153,7 +1153,7 @@ CREATE TABLE nmsprime.enviaorder (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    orderid bigint NOT NULL,
+    orderid bigint,
     method character varying(191),
     ordertype_id bigint,
     ordertype character varying(191),
@@ -1203,8 +1203,8 @@ CREATE TABLE nmsprime.enviaorder_phonenumber (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    enviaorder_id bigint NOT NULL,
-    phonenumber_id bigint NOT NULL
+    enviaorder_id bigint,
+    phonenumber_id bigint
 );
 
 
@@ -1240,10 +1240,10 @@ CREATE TABLE nmsprime.enviaorderdocument (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    document_type nmsprime.enviaorderdocument_document_type NOT NULL,
-    mime_type character varying(191) NOT NULL,
+    document_type nmsprime.enviaorderdocument_document_type,
+    mime_type character varying(191),
     filename character varying(191),
-    enviaorder_id bigint NOT NULL,
+    enviaorder_id bigint,
     upload_order_id bigint
 );
 
@@ -1277,11 +1277,11 @@ ALTER SEQUENCE nmsprime.enviaorderdocument_id_seq OWNED BY nmsprime.enviaorderdo
 
 CREATE TABLE nmsprime.failed_jobs (
     id bigint NOT NULL,
-    connection text NOT NULL,
-    queue text NOT NULL,
-    payload text NOT NULL,
-    failed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    exception text NOT NULL
+    connection text,
+    queue text,
+    payload text,
+    failed_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    exception text
 );
 
 
@@ -1314,8 +1314,8 @@ ALTER SEQUENCE nmsprime.failed_jobs_id_seq OWNED BY nmsprime.failed_jobs.id;
 
 CREATE TABLE nmsprime.favorite_netelements (
     id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    netelement_id bigint NOT NULL,
+    user_id bigint,
+    netelement_id bigint,
     created_at timestamp with time zone,
     updated_at timestamp with time zone
 );
@@ -1361,12 +1361,12 @@ CREATE TABLE nmsprime.global_config (
     log_level bigint,
     headline1 character varying(191),
     headline2 character varying(191),
-    default_country_code character varying(2) NOT NULL,
+    default_country_code character varying(2),
     passwordresetinterval bigint DEFAULT '120'::bigint,
     alert1 character varying(191),
     alert2 character varying(191),
     alert3 character varying(191),
-    isallnetssidebarenabled boolean DEFAULT false NOT NULL
+    isallnetssidebarenabled boolean DEFAULT false
 );
 
 
@@ -1402,12 +1402,12 @@ CREATE TABLE nmsprime.guilog (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    user_id bigint NOT NULL,
-    username character varying(191) NOT NULL,
-    method character varying(191) NOT NULL,
-    model character varying(191) NOT NULL,
-    model_id character varying(191) NOT NULL,
-    text text NOT NULL
+    user_id bigint,
+    username character varying(191),
+    method character varying(191),
+    model character varying(191),
+    model_id character varying(191),
+    text text
 );
 
 
@@ -1443,8 +1443,8 @@ CREATE TABLE nmsprime.hfcreq (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    ro_community character varying(191) NOT NULL,
-    rw_community character varying(191) NOT NULL,
+    ro_community character varying(191),
+    rw_community character varying(191),
     rkm_server character varying(191),
     rkm_server_username character varying(191),
     rkm_server_password character varying(191),
@@ -1525,13 +1525,13 @@ CREATE TABLE nmsprime.invoice (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    contract_id bigint NOT NULL,
+    contract_id bigint,
     settlementrun_id bigint,
     sepaaccount_id bigint,
     year smallint,
-    month smallint NOT NULL,
+    month smallint,
     filename character varying(191),
-    type nmsprime.invoice_type NOT NULL,
+    type nmsprime.invoice_type,
     number character varying(191),
     charge double precision,
     charge_gross numeric(8,2)
@@ -1571,23 +1571,23 @@ CREATE TABLE nmsprime.ippool (
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
     netgw_id bigint,
-    type nmsprime.ippool_type NOT NULL,
-    net character varying(191) NOT NULL,
-    netmask character varying(191) NOT NULL,
-    ip_pool_start character varying(191) NOT NULL,
-    ip_pool_end character varying(191) NOT NULL,
-    router_ip character varying(191) NOT NULL,
+    type nmsprime.ippool_type,
+    net character varying(191),
+    netmask character varying(191),
+    ip_pool_start character varying(191),
+    ip_pool_end character varying(191),
+    router_ip character varying(191),
     broadcast_ip character varying(191),
     dns1_ip character varying(191),
     dns2_ip character varying(191),
     dns3_ip character varying(191),
     optional text,
     description text,
-    version character varying(1) DEFAULT '4'::character varying NOT NULL,
+    version character varying(1) DEFAULT '4'::character varying,
     prefix character varying(191),
     prefix_len character varying(191),
     delegated_len character varying(191),
-    active boolean DEFAULT true NOT NULL
+    active boolean DEFAULT true
 );
 
 
@@ -1623,17 +1623,17 @@ CREATE TABLE nmsprime.item (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    contract_id bigint NOT NULL,
-    product_id bigint NOT NULL,
+    contract_id bigint,
+    product_id bigint,
     count bigint DEFAULT '1'::bigint,
     valid_from date,
-    valid_from_fixed boolean DEFAULT true NOT NULL,
+    valid_from_fixed boolean DEFAULT true,
     valid_to date,
-    valid_to_fixed boolean DEFAULT true NOT NULL,
+    valid_to_fixed boolean DEFAULT true,
     credit_amount numeric(13,4),
     costcenter_id bigint,
     accounting_text text,
-    payed_month smallint NOT NULL,
+    payed_month smallint,
     smartcardids text
 );
 
@@ -1667,12 +1667,12 @@ ALTER SEQUENCE nmsprime.item_id_seq OWNED BY nmsprime.item.id;
 
 CREATE TABLE nmsprime.jobs (
     id bigint NOT NULL,
-    queue character varying(191) NOT NULL,
-    payload text NOT NULL,
-    attempts smallint NOT NULL,
+    queue character varying(191),
+    payload text,
+    attempts smallint,
     reserved_at bigint,
-    available_at bigint NOT NULL,
-    created_at bigint NOT NULL
+    available_at bigint,
+    created_at bigint
 );
 
 
@@ -1744,8 +1744,8 @@ ALTER SEQUENCE nmsprime.mibfile_id_seq OWNED BY nmsprime.mibfile.id;
 
 CREATE TABLE nmsprime.migrations (
     id bigint NOT NULL,
-    migration character varying(255) NOT NULL,
-    batch bigint NOT NULL
+    migration character varying(255),
+    batch bigint
 );
 
 
@@ -1783,7 +1783,7 @@ CREATE TABLE nmsprime.modem (
     deleted_at timestamp with time zone,
     name character varying(191),
     hostname character varying(191),
-    contract_id bigint NOT NULL,
+    contract_id bigint,
     contract_external_id character varying(191),
     contract_ext_creation_date date,
     contract_ext_termination_date date,
@@ -1806,13 +1806,13 @@ CREATE TABLE nmsprime.modem (
     us_snr bigint,
     ds_pwr bigint,
     ds_snr bigint,
-    public boolean NOT NULL,
-    internet_access boolean NOT NULL,
+    public boolean,
+    internet_access boolean,
     serial_num character varying(191),
     inventar_num character varying(191),
     description text,
     parent bigint,
-    configfile_id bigint NOT NULL,
+    configfile_id bigint,
     netelement_id bigint,
     qos_id bigint,
     lng numeric(9,6),
@@ -1827,10 +1827,10 @@ CREATE TABLE nmsprime.modem (
     ppp_username character varying(64),
     ppp_password character varying(191),
     apartment_nr character varying(191),
-    next_passive_id bigint NOT NULL,
+    next_passive_id bigint,
     phy_updated_at timestamp with time zone,
     ipv4 bigint,
-    address_to_invoice boolean NOT NULL,
+    address_to_invoice boolean,
     apartment_id bigint
 );
 
@@ -1867,8 +1867,8 @@ CREATE TABLE nmsprime.modem_option (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    modem_id bigint NOT NULL,
-    key character varying(191) NOT NULL,
+    modem_id bigint,
+    key character varying(191),
     value character varying(191)
 );
 
@@ -1905,7 +1905,7 @@ CREATE TABLE nmsprime.mpr (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     type bigint,
     value text,
     netelement_id bigint,
@@ -1946,7 +1946,7 @@ CREATE TABLE nmsprime.mprgeopos (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     mpr_id bigint,
     lng numeric(9,6),
     lat numeric(9,6),
@@ -1986,12 +1986,12 @@ CREATE TABLE nmsprime.mta (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    modem_id bigint DEFAULT '1'::bigint NOT NULL,
+    modem_id bigint DEFAULT '1'::bigint,
     mac character varying(191),
     hostname character varying(191),
-    configfile_id bigint DEFAULT '1'::bigint NOT NULL,
-    type nmsprime.mta_type NOT NULL,
-    is_dummy boolean DEFAULT false NOT NULL
+    configfile_id bigint DEFAULT '1'::bigint,
+    type nmsprime.mta_type,
+    is_dummy boolean DEFAULT false
 );
 
 
@@ -2024,11 +2024,11 @@ ALTER SEQUENCE nmsprime.mta_id_seq OWNED BY nmsprime.mta.id;
 
 CREATE TABLE nmsprime.nas (
     id bigint NOT NULL,
-    nasname character varying(128) NOT NULL,
+    nasname character varying(128),
     shortname character varying(32),
     type character varying(30) DEFAULT 'other'::character varying,
     ports integer,
-    secret character varying(60) DEFAULT 'secret'::character varying NOT NULL,
+    secret character varying(60) DEFAULT 'secret'::character varying,
     server character varying(64),
     community character varying(50),
     description character varying(200) DEFAULT 'RADIUS Client'::character varying
@@ -2067,7 +2067,7 @@ CREATE TABLE nmsprime.netelement (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     series bigint,
     options bigint,
     ip character varying(191),
@@ -2084,7 +2084,7 @@ CREATE TABLE nmsprime.netelement (
     draw character varying(191),
     line character varying(191),
     parent_id bigint,
-    netelementtype_id bigint NOT NULL,
+    netelementtype_id bigint,
     community_ro character varying(45),
     community_rw character varying(45),
     address1 character varying(191),
@@ -2095,8 +2095,8 @@ CREATE TABLE nmsprime.netelement (
     agc_offset double precision,
     rkm_line_number bigint,
     state character varying(191),
-    _lft bigint NOT NULL,
-    _rgt bigint NOT NULL,
+    _lft bigint,
+    _rgt bigint,
     apartment_id bigint,
     id_name character varying GENERATED ALWAYS AS (
 CASE
@@ -2139,7 +2139,7 @@ CREATE TABLE nmsprime.netelementtype (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     vendor character varying(191),
     version character varying(191),
     description text,
@@ -2149,7 +2149,7 @@ CREATE TABLE nmsprime.netelementtype (
     pre_conf_value character varying(191),
     pre_conf_time_offset double precision,
     page_reload_time double precision,
-    base_type_id numeric NOT NULL
+    base_type_id numeric
 );
 
 
@@ -2185,21 +2185,21 @@ CREATE TABLE nmsprime.netgw (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    hostname character varying(191) NOT NULL,
+    hostname character varying(191),
     series character varying(191),
     ip character varying(191),
     community_rw character varying(191),
     community_ro character varying(191),
-    company character varying(191) NOT NULL,
+    company character varying(191),
     network bigint,
     state bigint,
     monitoring bigint,
     support_state character varying(30) DEFAULT 'verifying'::character varying,
-    type character varying(191) DEFAULT 'cmts'::character varying NOT NULL,
+    type character varying(191) DEFAULT 'cmts'::character varying,
     username character varying(191),
     password character varying(191),
     ssh_port integer,
-    ssh_auto_prov boolean DEFAULT false NOT NULL,
+    ssh_auto_prov boolean DEFAULT false,
     coa_port integer,
     ipv6 character varying(191)
 );
@@ -2239,12 +2239,12 @@ CREATE TABLE nmsprime.node (
     deleted_at timestamp with time zone,
     netelement_id bigint,
     name character varying(191),
-    street character varying(191) NOT NULL,
-    house_nr character varying(191) NOT NULL,
-    zip character varying(191) NOT NULL,
-    city character varying(191) NOT NULL,
+    street character varying(191),
+    house_nr character varying(191),
+    zip character varying(191),
+    city character varying(191),
     type character varying(191),
-    headend boolean NOT NULL,
+    headend boolean,
     description character varying(191),
     lng numeric(9,6),
     lat numeric(9,6),
@@ -2282,11 +2282,11 @@ ALTER SEQUENCE nmsprime.node_id_seq OWNED BY nmsprime.node.id;
 --
 
 CREATE TABLE nmsprime.notifications (
-    id character(36) NOT NULL,
-    type character varying(191) NOT NULL,
-    notifiable_type character varying(191) NOT NULL,
-    notifiable_id numeric NOT NULL,
-    data text NOT NULL,
+    id character(36),
+    type character varying(191),
+    notifiable_type character varying(191),
+    notifiable_id numeric,
+    data text,
     read_at timestamp with time zone,
     created_at timestamp with time zone,
     updated_at timestamp with time zone
@@ -2304,13 +2304,13 @@ CREATE TABLE nmsprime.numberrange (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
-    start bigint NOT NULL,
-    "end" bigint NOT NULL,
+    name character varying(191),
+    start bigint,
+    "end" bigint,
     prefix character varying(191) DEFAULT ''::character varying,
     suffix character varying(191) DEFAULT ''::character varying,
     costcenter_id bigint,
-    type nmsprime.numberrange_type NOT NULL
+    type nmsprime.numberrange_type
 );
 
 
@@ -2349,8 +2349,8 @@ CREATE TABLE nmsprime.oid (
     mibfile_id bigint,
     html_type nmsprime.oid_html_type,
     name character varying(191),
-    oid character varying(191) NOT NULL,
-    oid_table boolean NOT NULL,
+    oid character varying(191),
+    oid_table boolean,
     type nmsprime.oid_type,
     type_array character varying(191),
     phpcode_pre text,
@@ -2400,7 +2400,7 @@ CREATE TABLE nmsprime.overduedebts (
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
     fee numeric(10,4),
-    total boolean NOT NULL,
+    total boolean,
     dunning_charge1 double precision,
     dunning_charge2 double precision,
     dunning_charge3 double precision,
@@ -2448,10 +2448,10 @@ CREATE TABLE nmsprime.parameter (
     deleted_at timestamp with time zone,
     netelementtype_id bigint,
     oid_id bigint,
-    diff_param boolean DEFAULT false NOT NULL,
+    diff_param boolean DEFAULT false,
     divide_by character varying(191),
     parent_id bigint,
-    third_dimension boolean DEFAULT false NOT NULL,
+    third_dimension boolean DEFAULT false,
     html_frame character varying(16),
     html_properties text,
     html_id bigint
@@ -2489,7 +2489,7 @@ CREATE TABLE nmsprime.permissions (
     ability_id bigint NOT NULL,
     entity_id bigint,
     entity_type character varying(150),
-    forbidden boolean DEFAULT false NOT NULL,
+    forbidden boolean DEFAULT false,
     scope bigint,
     created_at timestamp with time zone,
     updated_at timestamp with time zone
@@ -2507,13 +2507,13 @@ CREATE TABLE nmsprime.phonebookentry (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    phonenumbermanagement_id bigint NOT NULL,
-    reverse_search character(1) NOT NULL,
-    publish_in_print_media character(1) NOT NULL,
-    publish_in_electronic_media character(1) NOT NULL,
-    directory_assistance character(1) NOT NULL,
-    entry_type character(1) NOT NULL,
-    publish_address character(1) NOT NULL,
+    phonenumbermanagement_id bigint,
+    reverse_search character(1),
+    publish_in_print_media character(1),
+    publish_in_electronic_media character(1),
+    directory_assistance character(1),
+    entry_type character(1),
+    publish_address character(1),
     company character varying(191),
     salutation character varying(191),
     academic_degree character varying(191),
@@ -2522,13 +2522,13 @@ CREATE TABLE nmsprime.phonebookentry (
     lastname character varying(191),
     other_name_suffix character varying(191),
     firstname character varying(191),
-    street character varying(191) NOT NULL,
-    houseno character varying(191) NOT NULL,
-    zipcode character varying(191) NOT NULL,
-    city character varying(191) NOT NULL,
+    street character varying(191),
+    houseno character varying(191),
+    zipcode character varying(191),
+    city character varying(191),
     urban_district character varying(191),
     business character varying(191),
-    usage character(1) NOT NULL,
+    usage character(1),
     tag character varying(191),
     external_creation_date date,
     external_update_date date
@@ -2567,16 +2567,16 @@ CREATE TABLE nmsprime.phonenumber (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    mta_id bigint DEFAULT '1'::bigint NOT NULL,
-    port smallint NOT NULL,
-    country_code character varying(191) NOT NULL,
-    prefix_number character varying(191) NOT NULL,
-    number character varying(191) NOT NULL,
-    username character varying(191) NOT NULL,
+    mta_id bigint DEFAULT '1'::bigint,
+    port smallint,
+    country_code character varying(191),
+    prefix_number character varying(191),
+    number character varying(191),
+    username character varying(191),
     password character varying(191),
-    sipdomain character varying(191) NOT NULL,
-    active boolean NOT NULL,
-    is_dummy boolean DEFAULT false NOT NULL,
+    sipdomain character varying(191),
+    active boolean,
+    is_dummy boolean DEFAULT false,
     contract_external_id character varying(191)
 );
 
@@ -2613,19 +2613,19 @@ CREATE TABLE nmsprime.phonenumbermanagement (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    phonenumber_id bigint DEFAULT '1'::bigint NOT NULL,
-    trcclass bigint NOT NULL,
+    phonenumber_id bigint DEFAULT '1'::bigint,
+    trcclass bigint,
     voipaccount_ext_creation_date timestamp with time zone,
     activation_date date,
     external_activation_date date,
-    porting_in boolean DEFAULT false NOT NULL,
-    carrier_in bigint NOT NULL,
-    ekp_in bigint NOT NULL,
+    porting_in boolean DEFAULT false,
+    carrier_in bigint,
+    ekp_in bigint,
     deactivation_date date,
     external_deactivation_date date,
     voipaccount_ext_termination_date timestamp with time zone,
-    porting_out boolean DEFAULT false NOT NULL,
-    carrier_out bigint NOT NULL,
+    porting_out boolean DEFAULT false,
+    carrier_out bigint,
     ekp_out bigint,
     subscriber_company character varying(191),
     subscriber_department character varying(191),
@@ -2639,7 +2639,7 @@ CREATE TABLE nmsprime.phonenumbermanagement (
     subscriber_city character varying(191),
     subscriber_district character varying(191),
     subscriber_country bigint,
-    autogenerated boolean DEFAULT false NOT NULL,
+    autogenerated boolean DEFAULT false,
     enviacontract_id bigint
 );
 
@@ -2676,11 +2676,11 @@ CREATE TABLE nmsprime.phonetariff (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    external_identifier character varying(191) NOT NULL,
-    name character varying(191) NOT NULL,
-    type nmsprime.phonetariff_type NOT NULL,
+    external_identifier character varying(191),
+    name character varying(191),
+    type nmsprime.phonetariff_type,
     description character varying(191),
-    usable boolean DEFAULT true NOT NULL,
+    usable boolean DEFAULT true,
     voip_protocol nmsprime.phonetariff_voip_protocol
 );
 
@@ -2717,23 +2717,23 @@ CREATE TABLE nmsprime.product (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
-    type nmsprime.product_type NOT NULL,
+    name character varying(191),
+    type nmsprime.product_type,
     qos_id smallint,
     voip_sales_tariff_id bigint,
     voip_purchase_tariff_id bigint,
-    billing_cycle nmsprime.product_billing_cycle NOT NULL,
+    billing_cycle nmsprime.product_billing_cycle,
     maturity character varying(20),
     costcenter_id bigint,
     price numeric(13,4),
-    tax boolean NOT NULL,
-    bundled_with_voip boolean DEFAULT false NOT NULL,
+    tax boolean,
+    bundled_with_voip boolean DEFAULT false,
     email_count bigint,
     period_of_notice character varying(20),
     maturity_min character varying(20),
-    proportional boolean NOT NULL,
-    record_monthly boolean NOT NULL,
-    deprecated boolean NOT NULL,
+    proportional boolean,
+    record_monthly boolean,
+    deprecated boolean,
     markon numeric(8,2)
 );
 
@@ -2770,27 +2770,27 @@ CREATE TABLE nmsprime.provbase (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    provisioning_server character varying(191) NOT NULL,
+    provisioning_server character varying(191),
     ro_community character varying(191),
     rw_community character varying(191),
     notif_mail character varying(191),
     domain_name character varying(191),
-    dns_password character varying(191) NOT NULL,
-    dhcp_def_lease_time bigint NOT NULL,
-    dhcp_max_lease_time bigint NOT NULL,
+    dns_password character varying(191),
+    dhcp_def_lease_time bigint,
+    dhcp_max_lease_time bigint,
     startid_contract bigint,
     startid_modem bigint,
     startid_endpoint bigint,
-    max_cpe smallint NOT NULL,
+    max_cpe smallint,
     ds_rate_coefficient double precision,
     us_rate_coefficient double precision,
-    multiple_provisioning_systems boolean NOT NULL,
-    additional_modem_reset boolean NOT NULL,
-    modem_edit_page_new_tab boolean NOT NULL,
-    random_ip_allocation boolean DEFAULT false NOT NULL,
-    ppp_session_timeout bigint DEFAULT '86400'::bigint NOT NULL,
-    auto_factory_reset boolean DEFAULT false NOT NULL,
-    acct_interim_interval bigint DEFAULT '300'::bigint NOT NULL
+    multiple_provisioning_systems boolean,
+    additional_modem_reset boolean,
+    modem_edit_page_new_tab boolean,
+    random_ip_allocation boolean DEFAULT false,
+    ppp_session_timeout bigint DEFAULT '86400'::bigint,
+    auto_factory_reset boolean DEFAULT false,
+    acct_interim_interval bigint DEFAULT '300'::bigint
 );
 
 
@@ -2903,11 +2903,11 @@ CREATE TABLE nmsprime.qos (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    ds_rate_max double precision NOT NULL,
-    us_rate_max double precision NOT NULL,
+    ds_rate_max double precision,
+    us_rate_max double precision,
     ds_rate_max_help bigint,
     us_rate_max_help bigint,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     ds_name character varying(191),
     us_name character varying(191)
 );
@@ -2942,12 +2942,12 @@ ALTER SEQUENCE nmsprime.qos_id_seq OWNED BY nmsprime.qos.id;
 
 CREATE TABLE nmsprime.radacct (
     radacctid bigint NOT NULL,
-    acctsessionid character varying(64) DEFAULT ''::character varying NOT NULL,
-    acctuniqueid character varying(32) DEFAULT ''::character varying NOT NULL,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    groupname character varying(64) DEFAULT ''::character varying NOT NULL,
+    acctsessionid character varying(64) DEFAULT ''::character varying,
+    acctuniqueid character varying(32) DEFAULT ''::character varying,
+    username character varying(64) DEFAULT ''::character varying,
+    groupname character varying(64) DEFAULT ''::character varying,
     realm character varying(64) DEFAULT ''::character varying,
-    nasipaddress character varying(15) DEFAULT ''::character varying NOT NULL,
+    nasipaddress character varying(15) DEFAULT ''::character varying,
     nasportid character varying(50),
     nasporttype character varying(32),
     acctstarttime timestamp with time zone,
@@ -2960,12 +2960,12 @@ CREATE TABLE nmsprime.radacct (
     connectinfo_stop character varying(50),
     acctinputoctets bigint,
     acctoutputoctets bigint,
-    calledstationid character varying(50) DEFAULT ''::character varying NOT NULL,
-    callingstationid character varying(50) DEFAULT ''::character varying NOT NULL,
-    acctterminatecause character varying(32) DEFAULT ''::character varying NOT NULL,
+    calledstationid character varying(50) DEFAULT ''::character varying,
+    callingstationid character varying(50) DEFAULT ''::character varying,
+    acctterminatecause character varying(32) DEFAULT ''::character varying,
     servicetype character varying(32),
     framedprotocol character varying(32),
-    framedipaddress character varying(15) DEFAULT ''::character varying NOT NULL
+    framedipaddress character varying(15) DEFAULT ''::character varying
 );
 
 
@@ -2998,10 +2998,10 @@ ALTER SEQUENCE nmsprime.radacct_radacctid_seq OWNED BY nmsprime.radacct.radaccti
 
 CREATE TABLE nmsprime.radcheck (
     id bigint NOT NULL,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    attribute character varying(64) DEFAULT ''::character varying NOT NULL,
-    op character(2) DEFAULT '=='::bpchar NOT NULL,
-    value character varying(253) DEFAULT ''::character varying NOT NULL
+    username character varying(64) DEFAULT ''::character varying,
+    attribute character varying(64) DEFAULT ''::character varying,
+    op character(2) DEFAULT '=='::bpchar,
+    value character varying(253) DEFAULT ''::character varying
 );
 
 
@@ -3034,10 +3034,10 @@ ALTER SEQUENCE nmsprime.radcheck_id_seq OWNED BY nmsprime.radcheck.id;
 
 CREATE TABLE nmsprime.radgroupcheck (
     id bigint NOT NULL,
-    groupname character varying(64) DEFAULT ''::character varying NOT NULL,
-    attribute character varying(64) DEFAULT ''::character varying NOT NULL,
-    op character(2) DEFAULT '=='::bpchar NOT NULL,
-    value character varying(253) DEFAULT ''::character varying NOT NULL
+    groupname character varying(64) DEFAULT ''::character varying,
+    attribute character varying(64) DEFAULT ''::character varying,
+    op character(2) DEFAULT '=='::bpchar,
+    value character varying(253) DEFAULT ''::character varying
 );
 
 
@@ -3070,10 +3070,10 @@ ALTER SEQUENCE nmsprime.radgroupcheck_id_seq OWNED BY nmsprime.radgroupcheck.id;
 
 CREATE TABLE nmsprime.radgroupreply (
     id bigint NOT NULL,
-    groupname character varying(64) DEFAULT ''::character varying NOT NULL,
-    attribute character varying(64) DEFAULT ''::character varying NOT NULL,
-    op character(2) DEFAULT '='::bpchar NOT NULL,
-    value character varying(253) DEFAULT ''::character varying NOT NULL
+    groupname character varying(64) DEFAULT ''::character varying,
+    attribute character varying(64) DEFAULT ''::character varying,
+    op character(2) DEFAULT '='::bpchar,
+    value character varying(253) DEFAULT ''::character varying
 );
 
 
@@ -3106,14 +3106,14 @@ ALTER SEQUENCE nmsprime.radgroupreply_id_seq OWNED BY nmsprime.radgroupreply.id;
 
 CREATE TABLE nmsprime.radippool (
     id bigint NOT NULL,
-    pool_name character varying(30) NOT NULL,
-    framedipaddress character varying(15) DEFAULT ''::character varying NOT NULL,
-    nasipaddress character varying(15) DEFAULT ''::character varying NOT NULL,
-    calledstationid character varying(30) NOT NULL,
-    callingstationid character varying(30) NOT NULL,
+    pool_name character varying(30),
+    framedipaddress character varying(15) DEFAULT ''::character varying,
+    nasipaddress character varying(15) DEFAULT ''::character varying,
+    calledstationid character varying(30),
+    callingstationid character varying(30),
     expiry_time timestamp with time zone,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    pool_key character varying(30) NOT NULL
+    username character varying(64) DEFAULT ''::character varying,
+    pool_key character varying(30)
 );
 
 
@@ -3146,9 +3146,9 @@ ALTER SEQUENCE nmsprime.radippool_id_seq OWNED BY nmsprime.radippool.id;
 
 CREATE TABLE nmsprime.radpostauth (
     id bigint NOT NULL,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    pass character varying(64) DEFAULT ''::character varying NOT NULL,
-    reply character varying(32) DEFAULT ''::character varying NOT NULL,
+    username character varying(64) DEFAULT ''::character varying,
+    pass character varying(64) DEFAULT ''::character varying,
+    reply character varying(32) DEFAULT ''::character varying,
     authdate timestamp with time zone
 );
 
@@ -3182,10 +3182,10 @@ ALTER SEQUENCE nmsprime.radpostauth_id_seq OWNED BY nmsprime.radpostauth.id;
 
 CREATE TABLE nmsprime.radreply (
     id bigint NOT NULL,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    attribute character varying(64) DEFAULT ''::character varying NOT NULL,
-    op character(2) DEFAULT '='::bpchar NOT NULL,
-    value character varying(253) DEFAULT ''::character varying NOT NULL
+    username character varying(64) DEFAULT ''::character varying,
+    attribute character varying(64) DEFAULT ''::character varying,
+    op character(2) DEFAULT '='::bpchar,
+    value character varying(253) DEFAULT ''::character varying
 );
 
 
@@ -3218,9 +3218,9 @@ ALTER SEQUENCE nmsprime.radreply_id_seq OWNED BY nmsprime.radreply.id;
 
 CREATE TABLE nmsprime.radusergroup (
     id bigint NOT NULL,
-    username character varying(64) DEFAULT ''::character varying NOT NULL,
-    groupname character varying(64) DEFAULT ''::character varying NOT NULL,
-    priority bigint DEFAULT '1'::bigint NOT NULL
+    username character varying(64) DEFAULT ''::character varying,
+    groupname character varying(64) DEFAULT ''::character varying,
+    priority bigint DEFAULT '1'::bigint
 );
 
 
@@ -3256,14 +3256,14 @@ CREATE TABLE nmsprime.realty (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    node_id bigint NOT NULL,
+    node_id bigint,
     name character varying(191),
     number character varying(191),
-    street character varying(191) NOT NULL,
-    house_nr character varying(191) NOT NULL,
+    street character varying(191),
+    house_nr character varying(191),
     district character varying(191),
-    zip character varying(191) NOT NULL,
-    city character varying(191) NOT NULL,
+    zip character varying(191),
+    city character varying(191),
     expansion_degree character varying(191),
     concession_agreement character varying(191),
     agreement_from date,
@@ -3309,10 +3309,10 @@ ALTER SEQUENCE nmsprime.realty_id_seq OWNED BY nmsprime.realty.id;
 
 CREATE TABLE nmsprime.roles (
     id bigint NOT NULL,
-    name character varying(150) NOT NULL,
+    name character varying(150),
     title character varying(191),
     description character varying(191),
-    rank bigint NOT NULL,
+    rank bigint,
     level bigint,
     scope bigint,
     created_at timestamp with time zone,
@@ -3353,9 +3353,9 @@ CREATE TABLE nmsprime.salesman (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    firstname character varying(191) NOT NULL,
-    lastname character varying(191) NOT NULL,
-    commission double precision NOT NULL,
+    firstname character varying(191),
+    lastname character varying(191),
+    commission double precision,
     products character varying(191),
     description character varying(191)
 );
@@ -3393,10 +3393,10 @@ CREATE TABLE nmsprime.sepaaccount (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
-    holder character varying(191) NOT NULL,
-    creditorid character varying(35) NOT NULL,
-    iban character varying(34) NOT NULL,
+    name character varying(191),
+    holder character varying(191),
+    creditorid character varying(35),
+    iban character varying(34),
     bic character varying(11),
     institute character varying(191),
     company_id bigint,
@@ -3444,18 +3444,18 @@ CREATE TABLE nmsprime.sepamandate (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    contract_id bigint NOT NULL,
-    reference character varying(191) NOT NULL,
-    signature_date date NOT NULL,
+    contract_id bigint,
+    reference character varying(191),
+    signature_date date,
     holder character varying(191),
-    iban character varying(34) NOT NULL,
+    iban character varying(34),
     bic character varying(11),
     institute character varying(191),
-    valid_from date NOT NULL,
+    valid_from date,
     valid_to date,
     state nmsprime.sepamandate_state,
     costcenter_id bigint,
-    disable boolean NOT NULL,
+    disable boolean,
     description text
 );
 
@@ -3495,11 +3495,11 @@ CREATE TABLE nmsprime.settlementrun (
     executed_at timestamp with time zone,
     uploaded_at timestamp with time zone,
     year smallint,
-    month smallint NOT NULL,
+    month smallint,
     path character varying(191),
     description character varying(191),
-    verified boolean NOT NULL,
-    fullrun boolean NOT NULL
+    verified boolean,
+    fullrun boolean
 );
 
 
@@ -3613,14 +3613,14 @@ CREATE TABLE nmsprime.ticket (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     description text,
-    user_id bigint NOT NULL,
-    state character varying(191) NOT NULL,
-    priority nmsprime.ticket_priority NOT NULL,
+    user_id bigint,
+    state character varying(191),
+    priority nmsprime.ticket_priority,
     duedate timestamp with time zone,
-    ticketable_type character varying(191) NOT NULL,
-    ticketable_id numeric NOT NULL,
+    ticketable_type character varying(191),
+    ticketable_id numeric,
     started_at timestamp with time zone,
     finished_at timestamp with time zone
 );
@@ -3658,7 +3658,7 @@ CREATE TABLE nmsprime.ticket_type (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191) NOT NULL,
+    name character varying(191),
     parent_id bigint,
     description character varying(191)
 );
@@ -3770,9 +3770,9 @@ CREATE TABLE nmsprime.ticketsystem (
     deleted_at timestamp with time zone,
     noreplymail character varying(191),
     noreplyname character varying(191),
-    distance bigint DEFAULT '1'::bigint NOT NULL,
-    modemcount bigint DEFAULT '1'::bigint NOT NULL,
-    opentickets bigint DEFAULT '1'::bigint NOT NULL
+    distance bigint DEFAULT '1'::bigint,
+    modemcount bigint DEFAULT '1'::bigint,
+    opentickets bigint DEFAULT '1'::bigint
 );
 
 
@@ -3809,8 +3809,8 @@ CREATE TABLE nmsprime.trcclass (
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
     trc_id bigint,
-    trc_short character varying(191) NOT NULL,
-    trc_description character varying(191) NOT NULL
+    trc_short character varying(191),
+    trc_description character varying(191)
 );
 
 
@@ -3850,11 +3850,11 @@ CREATE TABLE nmsprime.users (
     last_name character varying(191),
     email character varying(191),
     phonenumber character varying(191),
-    login_name character varying(191) NOT NULL,
-    password character varying(60) NOT NULL,
+    login_name character varying(191),
+    password character varying(60),
     api_token character varying(80),
     description character varying(191),
-    active boolean DEFAULT true NOT NULL,
+    active boolean DEFAULT true,
     remember_token character varying(100),
     language character varying(191) DEFAULT 'en'::character varying,
     last_login_at timestamp with time zone,
@@ -3863,7 +3863,7 @@ CREATE TABLE nmsprime.users (
     geopos_updated_at timestamp with time zone,
     lng numeric(9,6),
     lat numeric(9,6),
-    hastruck boolean DEFAULT false NOT NULL
+    hastruck boolean DEFAULT false
 );
 
 
@@ -3896,10 +3896,10 @@ ALTER SEQUENCE nmsprime.users_id_seq OWNED BY nmsprime.users.id;
 
 CREATE TABLE nmsprime.websockets_statistics_entries (
     id bigint NOT NULL,
-    app_id character varying(191) NOT NULL,
-    peak_connection_count bigint NOT NULL,
-    websocket_message_count bigint NOT NULL,
-    api_message_count bigint NOT NULL,
+    app_id character varying(191),
+    peak_connection_count bigint,
+    websocket_message_count bigint,
+    api_message_count bigint,
     created_at timestamp with time zone,
     updated_at timestamp with time zone
 );
