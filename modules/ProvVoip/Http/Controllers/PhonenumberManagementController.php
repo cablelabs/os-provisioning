@@ -158,13 +158,13 @@ class PhonenumberManagementController extends \BaseController
                 'space' => '1',
             ],
             [
-                'form_type' => 'text',
+                'form_type' => 'date',
                 'name' => 'activation_date',
                 'description' => 'Activation date',
                 'help' => trans('helper.PhonenumberManagement_activation_date'),
             ],
             [
-                'form_type' => 'text',
+                'form_type' => 'date',
                 'name' => 'external_activation_date',
                 'description' => 'External activation date',
                 'options' => ['readonly'],
@@ -265,14 +265,14 @@ class PhonenumberManagementController extends \BaseController
             ],
 
             [
-                'form_type' => 'text',
+                'form_type' => 'date',
                 'name' => 'deactivation_date',
                 'description' => 'Termination date',
                 'hidden' => $hide_flags['deactivation_date'],
                 'help' => trans('helper.PhonenumberManagement_deactivation_date'),
             ],
             [
-                'form_type' => 'text',
+                'form_type' => 'date',
                 'name' => 'external_deactivation_date',
                 'description' => 'External deactivation date',
                 'options' => ['readonly'],
