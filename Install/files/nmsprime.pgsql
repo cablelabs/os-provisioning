@@ -6334,7 +6334,7 @@ SELECT pg_catalog.setval('nmsprime.ekpcode_id_seq', 625, true);
 -- Name: endpoint_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
 --
 
-SELECT pg_catalog.setval('nmsprime.endpoint_id_seq', 2, true);
+SELECT pg_catalog.setval('nmsprime.endpoint_id_seq', 1, true);
 
 
 --
@@ -6418,7 +6418,7 @@ SELECT pg_catalog.setval('nmsprime.invoice_id_seq', 1, true);
 -- Name: ippool_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
 --
 
-SELECT pg_catalog.setval('nmsprime.ippool_id_seq', 2, true);
+SELECT pg_catalog.setval('nmsprime.ippool_id_seq', 1, true);
 
 
 --
@@ -6446,7 +6446,7 @@ SELECT pg_catalog.setval('nmsprime.mibfile_id_seq', 1, true);
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
 --
 
-SELECT pg_catalog.setval('nmsprime.migrations_id_seq', 395, true);
+SELECT pg_catalog.setval('nmsprime.migrations_id_seq', 1, true);
 
 
 --
