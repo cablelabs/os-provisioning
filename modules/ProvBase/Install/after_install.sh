@@ -19,7 +19,7 @@ chmod 750 /etc/named-ddns.sh
 
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/dhcp-nmsprime/dhcpd.conf
 sed -i "s|^.*secret \"<DNS-PASSWORD>\";|$dnsSecret|" /etc/named-nmsprime.conf
-dnsPw=$(echo $secret | cut -d '"' -f2)
+dnsPw=$(echo $dnsSecret | cut -d '"' -f2)
 sed -i "s/<DNS-PASSWORD>/$dnsPw/" /etc/named-ddns.sh
 sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c "UPDATE nmsprime.provbase set dns_password = '$dnsPw'"
 
