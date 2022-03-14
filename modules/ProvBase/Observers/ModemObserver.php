@@ -108,6 +108,10 @@ class ModemObserver
                 \Queue::pushOn('medium', new \Modules\HfcCustomer\Jobs\MpsJob($modem));
             }
         }
+
+        if (multi_array_key_exists(['mac', 'configfile_id'], $diff)) {
+            $modem->ipv4 = null;
+        }
     }
 
     public function updated($modem)
@@ -135,10 +139,6 @@ class ModemObserver
             }
 
             $modem->make_configfile();
-
-            // invalidate ipv4 chache
-            // should be replaced with saveQuietly() once available
-            $modem->update(['ipv4' => null]);
         }
 
         $modem->updateRadius();
