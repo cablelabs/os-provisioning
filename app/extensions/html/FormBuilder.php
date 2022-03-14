@@ -42,13 +42,13 @@ class FormBuilder extends CollectiveFormBuilder
      * Append <div> block with col-md-7 </div>
      * NOTE: 4: col for label, 7: col for form field, 1: col for help image - if set
      */
-    public function appendDiv($s, $col = 7)
+    public function appendDiv($s, $col = 7, $classes = '')
     {
-        if (isset(static::$layout_form_col_md['form'])) {
+        if (isset(static::$layout_form_col_md['form']) && ! $classes) {
             $col = static::$layout_form_col_md['form'];
         }
 
-        return '<div class="col-md-'.$col.'">'.$s.'</div>';
+        return "<div class=\"col-md-{$col} {$classes}\">{$s}</div>";
     }
 
     /**
@@ -111,7 +111,7 @@ class FormBuilder extends CollectiveFormBuilder
             $col = static::$layout_form_col_md['label'];
         }
 
-        $options = $this->appendClassToOptions('col-md-'.$col.' control-label', $options);
+        $options = $this->appendClassToOptions('control-label', $options);
 
         // translate the value if necessary
         // $bc = new \App\Http\Controllers\BaseController;
@@ -120,7 +120,7 @@ class FormBuilder extends CollectiveFormBuilder
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
-        return parent::label($name, $value, $options, $escape_html);
+        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $col, 'd-flex');
     }
 
     /**
@@ -305,8 +305,6 @@ class FormBuilder extends CollectiveFormBuilder
         // Get the errors from the session.
         $errors = Session::get('errors');
 
-        // dd(\App::getLocale());
-
         // Return the formatted error message, if the form element has any.
         return $errors->first($this->transformKey($name), '<p align="left" class="help-block">:message</p>');
     }
@@ -318,7 +316,6 @@ class FormBuilder extends CollectiveFormBuilder
     {
         $options = $this->appendClassToOptions('form-group row', $options);
 
-        // dd($name, $label);
         // Append the name of the group to the groupStack.
         $this->groupStack[] = $name;
 
