@@ -39,7 +39,7 @@ class NetGwController extends \BaseController
             $init_values = [];
 
             // fetch all NETGW ip's and order them
-            $ips = NetGw::where('id', '>', '0')->orderBy(\DB::raw('INET_ATON(ip)'))->get();
+            $ips = NetGw::where('id', '>', '0')->orderBy('ip')->get();
 
             // still NETGW added?
             if ($ips->count() > 0) {
