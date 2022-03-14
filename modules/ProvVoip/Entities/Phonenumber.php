@@ -284,7 +284,7 @@ class Phonenumber extends \BaseModel
      */
     public function select2Mtas(?string $search): \Illuminate\Database\Eloquent\Builder
     {
-        return MTA::select('mta.id', 'mta.hostname', 'mta.mac', 'c.number', 'c.firstname', 'c.lastname')
+        return Mta::select('mta.id', 'mta.hostname', 'mta.mac', 'c.number', 'c.firstname', 'c.lastname')
             ->selectRaw('CONCAT(mta.hostname, \' (\' ,mta.mac, \') => \', c.number, \' - \', c.firstname, \' \', c.lastname) as text')
             ->join('modem as m', 'm.id', '=', 'mta.modem_id')
             ->join('contract as c', 'c.id', '=', 'm.contract_id')
