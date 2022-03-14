@@ -111,6 +111,9 @@ class SwitchMysqltoPgsql extends BaseMigration
                 // Create user
                 system("sudo -u postgres /usr/pgsql-13/bin/psql -c \"CREATE USER $user PASSWORD '".$conf['password'].'\'"');
                 echo "$user\n";
+
+                // Move nmsprime_ccc table to schema public
+                system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
             }
 
             // Set search path of postgres user to mainly used schema to not be required to always specify schema in queries
@@ -130,9 +133,6 @@ class SwitchMysqltoPgsql extends BaseMigration
             system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = '$schema';\" $db`;
                 do sudo -u postgres /usr/pgsql-13/bin/psql $db -c \"alter table $schema.".'$tbl'." owner to $user\"; done");
         }
-
-        // Move nmsprime_ccc table to schema public
-        system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
     }
 
     /**
