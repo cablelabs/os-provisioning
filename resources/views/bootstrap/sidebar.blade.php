@@ -153,18 +153,18 @@
               v-on:mouseLeave.stop="minified ? leaveMinifiedSidebar(netelement) : ''"
               style="display: flex;padding: 0.5rem 1.25rem;">
               <template v-if="isSearchMode" style="cursor: pointer;">
-                <a href="javascript:;" >
+                <a href="javascript:;">
                   <i v-if="loadingFavorites.includes(netelement.id)" class="caret-link fa fa-circle-o-notch fa-spin mr-2"></i>
                   <i v-else class="caret-link fa mr-2" :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'" v-on:click="favorNetelement(netelement)"></i>
                 </a>
-                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="no-underline" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
                   <span v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
                 </a>
               </template>
               <template v-else>
                 <i v-on:mouseenter="setHover(netelement, true)" v-on:mouseLeave="setHover(netelement, false)" v-on:click="directFavor(netelement, $event)" class="fa mr-2" :class="netElementSearchHoverClass(netelement)" style="text-decoration: none;"></i>
-                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link d-flex" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
-                  <span v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
+                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="caret-link d-flex no-underline" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
+                  <span v-if="! minified" v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
                 </a>
               </template>
               <a href="javascript:;" v-if="netelement.netelementtype_id == 1" v-on:click="loadCluster(netelement)" class="caret-link" style="cursor: pointer;width: 100%; text-align: right;">
@@ -175,6 +175,15 @@
             </div>
             <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
               <ul :id="'network_' + netelement.id" v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && netelement.clusters.length && !netelement.isCollapsed" class="sidebar-hover p-b-10 p-l-20 m-0" :class="{'minifiedMenu': (showMinifiedHoverNet && netelement.clustersLoaded)}" :style="(!minified ? 'transition:max-height .3s linear;' : '') + 'overflow:hidden;list-style-type: none;background: #1a2229;'">
+                <li v-show="minified" class="pt-3 pb-1"
+                  v-on:mouseEnter.stop="minifiedSidebarNet(netelement, 'enter')"
+                  v-on:mouseLeave.stop="minifiedSidebarNet(netelement, 'leave')"
+                >
+                  <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' : 'cluster/') + netelement.id" class="d-flex text-secondary font-weight-bold no-underline" style="max-height: 20px; white-space: nowrap;flex:1;width:80%;" v-on:click="setNetActive(netelement.id)">
+                    <i class="fa fa-sitemap mr-2"></i>
+                    <span v-text="netelement.name" :title="netelement.name" class="d-block text-ellipsis"></span>
+                  </a>
+                </li>
                 <template v-for="cluster in netelement.clusters" >
                   <li :id="'cluster_' + cluster.id"
                     :key="cluster.id"

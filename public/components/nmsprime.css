@@ -1119,3 +1119,11 @@ textarea.select2-search__field {
     background-position: 100% 0, 0 0;
   }
 }
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.no-underline:hover {
+    text-decoration: none !important;
+}
