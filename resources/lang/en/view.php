@@ -643,6 +643,10 @@ return [
         'Diagrams' => 'Diagrams',
     ],
     'ticket' => [
+        'comment' => [
+            'send' => 'send Message',
+            'writeComment' => 'write a comment ...',
+        ],
         'priority' => [
             'critical' => 'Critical',
             'major' => 'Major',
