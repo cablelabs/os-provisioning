@@ -274,12 +274,14 @@ return [
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Activation date',
     'phonenumbermanagement.deactivation_date' => 'Deactivation date',
-    // PhoneTariff
-    'phonetariff.name' => 'Phone Tariff',
-    'phonetariff.type' => 'Type',
-    'phonetariff.description' => 'Description',
-    'phonetariff.voip_protocol' => 'VOIP Protocol',
-    'phonetariff.usable' => 'Usable',
+    'phonetariff' => [
+        'name' => 'Phone Tariff',
+        'type' => 'Type',
+        'description' => 'Description',
+        'external_identifier' => 'External Identifier',
+        'voip_protocol' => 'VOIP Protocol',
+        'usable' => 'Usable',
+    ],
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
