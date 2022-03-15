@@ -11,6 +11,8 @@ rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache
 systemctl restart nmsprimed
 systemd-tmpfiles --create
+php artisan config:cache
+php artisan migrate
 
 # reread supervisor config and restart affected processes
 # /usr/bin/supervisorctl update
