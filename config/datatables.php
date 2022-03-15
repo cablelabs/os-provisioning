@@ -140,6 +140,7 @@ return [
      * when the user initially opens the index page and no filter is set. Everytime a/the filter is changed the
      * sorting (order by) is initially removed
      */
+    'isIndexCachingEnabled' => false,
     'hugeTableThreshhold' => env('DATATABLES_HUGE_TABLE_THRESHHOLD', 500000),
 
     /**

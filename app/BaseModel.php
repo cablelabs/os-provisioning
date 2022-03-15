@@ -885,7 +885,7 @@ class BaseModel extends Eloquent
 
     public function getCachedIndexTableCountAttribute()
     {
-        return cache('indexTables.'.$this->table);
+        return cache('indexTables.'.$this->table, 0);
     }
 
     /**
@@ -894,9 +894,10 @@ class BaseModel extends Eloquent
      */
     public function hasHugeIndexTable()
     {
-        $count = $this->cachedIndexTableCount;
-
-        if ($count && $count > config('datatables.hugeTableThreshhold')) {
+        if (
+            config('datatables.isIndexCachingEnabled') &&
+            $this->cachedIndexTableCount > config('datatables.hugeTableThreshhold')
+        ) {
             return true;
         }
 

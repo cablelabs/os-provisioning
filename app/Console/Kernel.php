@@ -105,9 +105,11 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
         }
 
-        $schedule->call(function () {
-            \App\Jobs\CacheIndexTableCountJob::dispatch();
-        })->dailyAt('03:55');
+        if (config('datatables.isIndexCachingEnabled')) {
+            $schedule->call(function () {
+                \App\Jobs\CacheIndexTableCountJob::dispatch();
+            })->dailyAt('03:55');
+        }
 
         // Command to remove obsolete data in storage
         $schedule->command('main:storage_cleaner')->dailyAt('04:18');

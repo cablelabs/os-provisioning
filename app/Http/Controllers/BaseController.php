@@ -1682,16 +1682,18 @@ class BaseController extends Controller
             ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
-        $count = $model->cachedIndexTableCount;
-        if (! $count) {
-            $count = $model::count();
+        if (config('datatables.isIndexCachingEnabled')) {
+            $count = $model->cachedIndexTableCount;
+            if (! $count) {
+                $count = $model::count();
 
-            cache(['indexTables.'.$model->table => $count]);
+                cache(['indexTables.'.$model->table => $count]);
+            }
+
+            $DT->setTotalRecords($count);
+            // ->setFilteredRecords(10000)
+            // ->skipTotalRecords()
         }
-
-        $DT->setTotalRecords($count);
-        // ->setFilteredRecords(10000)
-        // ->skipTotalRecords()
 
         // TODO: Just set this in where clause in query?
         foreach ($filter_column_data as $column => $custom_query) {
