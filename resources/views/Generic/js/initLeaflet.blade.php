@@ -1,7 +1,16 @@
-const map = L.map('map').fitBounds([
-    [{{ $bounds['maxLat'] }}, {{ $bounds['maxLng'] }}],
-    [{{ $bounds['minLat'] }}, {{ $bounds['minLng'] }}]
-])
+const map = L.map('map')
+
+@if (isset($bounds['maxLat']) && $bounds['maxLng'] && $bounds['minLat'] && $bounds['minLng'])
+    map.fitBounds([
+        [{{ $bounds['maxLat'] }}, {{ $bounds['maxLng'] }}],
+        [{{ $bounds['minLat'] }}, {{ $bounds['minLng'] }}]
+    ])
+@else
+    map.setView(new L.LatLng(50.82,12.928), 16);
+    var marker = L.marker([50.81987, 12.9276208]).addTo(map);
+    var popup = marker.bindPopup('{!! trans('view.map.NMS Prime') !!}');
+    alert('{{ trans('view.map.noData') }}')
+@endif
 
 const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

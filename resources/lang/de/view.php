@@ -481,6 +481,11 @@ return [
 
     'map action' => 'Kartenaktion',
     'filter by modem type' => 'Nach Modemtyp filtern',
+    'map' => [
+        'NMS Prime' => '<b>NMS Prime Hauptquartier (a.k.a. Büro)</b><br />Hier arbeitet das NMS Prime Team an tollen Ideen.<br />Es gibt auch einen Tischkicker und wir freuen uns immer über Besuch - also komm vorbei und trink einen Kaffee, ein Bier oder einen Tee(/Fruchtaufguss) mit uns! 😊',
+        'noData' => 'Keine Daten zum Anzeigen auf der Karte vorhanden!',
+    ],
+
     //
     // Numberrange
     //
