@@ -150,7 +150,7 @@
                         <div class="pr-4">{{ trans('view.Header_DragDrop DeviceParameters') }}</div>
                         <a href="{{route('Configfile.refreshGenieAcs', $view_var->id )}}" class="btn btn-primary">{{ trans('view.Button_DragDrop Refresh') }}</a>
                     </div>
-                    <input class="mb-3" type="text" v-on:keyup.prevent="ddFilter" v-on:keydown.enter.prevent='blurInput' id="ddsearch" placeholder="{{ trans('view.Button_Search') }}"/>
+                    <input class="mb-3 w-100" type="text" v-on:keyup.prevent="ddFilter" v-on:keydown.enter.prevent='blurInput' v-model="search" placeholder="{{ trans('view.Button_Search') }}"/>
                     <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}">
                         <div class="dragdroplistitem" style="margin-bottom:.25rem;padding:.5rem;background-color: #f2f2f2;cursor: grabbing;" v-for="(item, id) in list.content" :key="item.id">
                             <div>
@@ -206,6 +206,9 @@ var app=new Vue({
     el: '#dragdrop',
     data: {
         listName: '',
+        search: '',
+        prevSearch: '',
+        searchTimeout: null,
         lists: @json($additional_data['lists'])
     },
     methods: {
@@ -293,20 +296,25 @@ var app=new Vue({
             this.lists.splice(key, 1);
         },
         ddFilter: function(key) {
-            var search = $("#ddsearch")[0].value;
-            if (search == "") {
+            if (this.search == this.prevSearch) {
                 return null;
             }
 
-            var refThis = this; // xhttps anonymous function overwrites the this-reference
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    refThis.lists[0].content = JSON.parse(this.responseText);
-                }
-            };
-            xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+search, true);
-            xhttp.send();
+            clearTimeout(this.searchTimeout)
+
+            this.searchTimeout = setTimeout(() => {
+                let refThis = this; // xhttps anonymous function overwrites the this-reference
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        refThis.lists[0].content = JSON.parse(this.responseText);
+                        refThis.prevSearch = refThis.search;
+                    }
+                };
+                xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+this.search, true);
+                xhttp.send();
+            }, 300);
+
         },
         refreshSelect: function () {
             $('select').select2()
