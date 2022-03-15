@@ -83,35 +83,13 @@ class ConfigfileObserver
             return;
         }
 
-        $columns = Configfile::getMonitoringColumns();
-        $publish = false;
-
-        $flattenedEntries = [];
-        foreach ($entries as $entry) {
-            $flattenedEntries = array_merge($flattenedEntries, array_values($entry));
-        }
-
-        // remove invalid monitoring config entries
-        $entries = array_filter($flattenedEntries, function ($entry) use (&$publish) {
-            if (! is_array($entry) || count($entry) != 3 || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice']) || stripos($entry[0], 'password') !== false) {
-                return false;
-            }
-
-            if ($entry[2] === null) {
-                return true;
-            }
-
-            if (is_array($entry[2]) && count($entry[2]) == 3 && in_array($entry[2][1], ['+', '-', '*', '/', '%']) && is_numeric($entry[2][2])) {
-                $publish = true;
-
-                return true;
-            }
-        });
+        $entries = $configfile->getValidMonitoringEntries();
+        $entries['columns'] = Configfile::getMonitoringColumns();
 
         Modem::callGenieAcsApi(
             "provisions/mon-{$configfile->id}",
             'PUT',
-            view('provbase::GenieACS.monitoring', compact('columns', 'entries', 'publish'))->render()
+            view('provbase::GenieACS.monitoring', $entries)->render()
         );
     }
 }

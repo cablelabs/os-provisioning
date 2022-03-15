@@ -589,6 +589,36 @@ class Configfile extends \BaseModel
     }
 
     /**
+     * Remove invalid monitoring config entries or entries which should not be
+     * queried, since the CPE returns blank (password, presharedkey)
+     *
+     * @author Ole Ernst
+     */
+    public function getValidMonitoringEntries()
+    {
+        $publish = false;
+        $entries = $this->getMonitoringConfig();
+        $flattenedEntries = [];
+        foreach ($entries as $entry) {
+            $flattenedEntries = array_merge($flattenedEntries, array_values($entry));
+        }
+
+        $entries = array_filter($flattenedEntries, function ($entry) use (&$publish) {
+            if (! is_array($entry) || ! isset($entry[0]) || ! \Str::startsWith($entry[0], ['_', 'Device', 'InternetGatewayDevice']) || \Str::contains(strtolower($entry[0]), ['password', 'presharedkey'])) {
+                return false;
+            }
+
+            if (isset($entry[2]) && is_array($entry[2]) && count($entry[2]) == 3 && in_array($entry[2][1], ['+', '-', '*', '/', '%']) && is_numeric($entry[2][2])) {
+                $publish = true;
+            }
+
+            return true;
+        });
+
+        return compact('entries', 'publish');
+    }
+
+    /**
      * Get all available user-settable columns of TimescaleDB
      *
      * @author Ole Ernst
