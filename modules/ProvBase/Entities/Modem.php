@@ -2430,7 +2430,7 @@ class Modem extends \BaseModel
 
         $file = storage_path('app/config/provbase/realtime/prepare.php');
         if (file_exists($file)) {
-            require $file;
+            require_once $file;
             if (function_exists('prepareRealtimeTR069')) {
                 $mon = prepareRealtimeTR069($this, $mon);
             }
