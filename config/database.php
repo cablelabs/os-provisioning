@@ -307,7 +307,7 @@ return [
             'driver'   => 'pgsql',
             'sticky' => true,
             'host'      => exec("test -f $icingaCredentialsFile && awk \"/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag\" $icingaCredentialsFile | grep \"^host\" | sort | cut -d '=' -f2 | xargs") ?: 'localhost',
-            'database'  => exec("test -f $icingaCredentialsFile && awk \"/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag\" $icingaCredentialsFile | grep \"^password\" | sort | cut -d '=' -f2 | xargs") ?: 'icinga2',
+            'database'  => exec("test -f $icingaCredentialsFile && awk \"/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag\" $icingaCredentialsFile | grep \"^database\" | sort | cut -d '=' -f2 | xargs") ?: 'icinga2',
             'username'  => exec("test -f $icingaCredentialsFile && awk \"/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag\" $icingaCredentialsFile | grep \"^username\" | sort | cut -d '=' -f2 | xargs") ?: 'icinga2user',
             'password'  => exec("test -f $icingaCredentialsFile && awk \"/\[icinga2\]/{flag=1;next}/\[/{flag=0}flag\" $icingaCredentialsFile | grep \"^password\" | sort | cut -d '=' -f2 | xargs"),
             // 'host'      => explode(',', str_replace(' ', '', env('CCC_DB_HOST', env('DB_HOST', 'localhost')))),
