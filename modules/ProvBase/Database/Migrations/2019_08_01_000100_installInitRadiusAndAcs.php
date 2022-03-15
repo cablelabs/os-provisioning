@@ -16,9 +16,6 @@
  * limitations under the License.
  */
 
-use DB;
-use Illuminate\Database\Schema\Blueprint;
-
 class InstallInitRadiusAndAcs extends BaseMigration
 {
     public $migrationScope = 'database';

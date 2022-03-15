@@ -62,6 +62,5 @@ class InstallUpdateToPhp80 extends BaseMigration
      */
     public function down()
     {
-
     }
 }

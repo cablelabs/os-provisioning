@@ -18,7 +18,6 @@
 
 namespace App\Http\Controllers;
 
-use Str;
 use App\GuiLog;
 use App\BaseModel;
 use Illuminate\Http\Request;
