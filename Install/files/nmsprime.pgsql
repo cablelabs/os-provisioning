@@ -2287,9 +2287,9 @@ CREATE TABLE nmsprime.notifications (
     notifiable_type character varying(191),
     notifiable_id numeric,
     data text,
-    read_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    read_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 

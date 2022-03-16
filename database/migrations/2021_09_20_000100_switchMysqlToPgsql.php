@@ -202,6 +202,12 @@ class SwitchMysqltoPgsql extends BaseMigration
             DB::statement('ALTER TABLE netelement drop column id_name');
             DB::statement("ALTER TABLE netelement add column id_name varchar generated always as (CASE WHEN name IS NULL THEN cast(id as varchar) WHEN id is NULL THEN name ELSE name || '_' || cast(id as varchar) END) stored");
         }
+
+        if (Schema::hasTable('notifications')) {
+            DB::statement('ALTER TABLE notifications alter COLUMN read_at type timestamp without time zone;');
+            DB::statement('ALTER TABLE notifications alter COLUMN created_at type timestamp without time zone;');
+            DB::statement('ALTER TABLE notifications alter COLUMN updated_at type timestamp without time zone;');
+        }
     }
 
     /**
