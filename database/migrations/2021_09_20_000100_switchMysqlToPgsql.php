@@ -326,6 +326,7 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
     private function changeConfig()
     {
         system("sed -i 's/QUEUE_DRIVER_DATABASE_CONNECTION=mysql/QUEUE_DRIVER_DATABASE_CONNECTION=pgsql/' /etc/nmsprime/env/global.env");
+        system("sed -i 's/ROOT_DB_DATABASE=nmsprime/ROOT_DB_DATABASE=cacti/' /etc/nmsprime/env/root.env");
 
         \Artisan::call('config:cache');
     }
