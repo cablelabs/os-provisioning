@@ -30,8 +30,11 @@ class Qos extends \BaseModel
 
         return [
             'name' => "required|unique:qos,name,$id,id,deleted_at,NULL",
-            'ds_rate_max' => 'required|numeric|min:0',
-            'us_rate_max' => 'required|numeric|min:0',
+            'ds_rate_max' => 'required_if:type,default|numeric|min:0',
+            'us_rate_max' => 'required_if:type,default|numeric|min:0',
+            'vlan_id' => 'integer|min:0|max:4095',
+            'ont_line_profile_id' => 'nullable|integer',
+            'service_profile_id' => 'nullable|integer',
         ];
     }
 

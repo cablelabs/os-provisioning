@@ -112,7 +112,8 @@ class Modem extends \BaseModel
             }
             if ('ont' == $configfile->device) {
                 $rules['mac'][] = 'nullable';
-                unset($rules['qos_id']);
+                $rules['ppp_username'][] = 'nullable';
+                $rules['qos_id'] = ['required', 'exists:qos,id,deleted_at,NULL'];
                 array_unshift($rules['serial_num'], 'required');
 
                 return $rules;

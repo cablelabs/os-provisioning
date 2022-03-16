@@ -18,6 +18,7 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\ProvBase;
 
 class QosController extends \BaseController
@@ -28,13 +29,78 @@ class QosController extends \BaseController
     public function view_form_fields($model = null)
     {
         // label has to be the same like column in sql table
-        return [
+        $ret = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             ['form_type' => 'text', 'name' => 'ds_rate_max', 'description' => 'DS Rate [MBit/s]'],
             ['form_type' => 'text', 'name' => 'us_rate_max', 'description' => 'US Rate [MBit/s]'],
             ['form_type' => 'text', 'name' => 'ds_name', 'description' => 'DS PPPoE Name'],
             ['form_type' => 'text', 'name' => 'us_name', 'description' => 'US PPPoE Name'],
         ];
+
+        if (Module::collections()->has('SmartOnt')) {
+            $types = [
+                'default' => 'Default',
+                'smartont' => 'SmartOnt',
+            ];
+            $ret[] = [
+                'form_type' => 'select',
+                'name' => 'type',
+                'value' => $types,
+                'description' => 'Type',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'vlan_id',
+                'description' => 'VLAN ID',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'ont_line_profile_id',
+                'description' => 'ONT line profile ID',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'service_profile_id',
+                'description' => 'Service profile ID',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'gem_port',
+                'description' => 'GEM port',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'traffic_table_in',
+                'description' => 'Traffic table in',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'traffic_table_out',
+                'description' => 'Traffic table out',
+            ];
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Set nullable fields.
+     *
+     * @author Patrick Reichel
+     */
+    public function prepare_input($data)
+    {
+        $data = parent::prepare_input($data);
+
+        if (is_null($data['vlan_id'])) {
+            $data['vlan_id'] = 0;
+        }
+        if ('smartont' == $data['type']) {
+            $data['ds_rate_max'] = $data['ds_rate_max'] ?? 0;
+            $data['us_rate_max'] = $data['us_rate_max'] ?? 0;
+        }
+
+        return $data;
     }
 
     public function prepare_input_post_validation($data)

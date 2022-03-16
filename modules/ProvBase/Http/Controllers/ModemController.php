@@ -208,7 +208,47 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'additional', 'description' => 'Additional info', 'help' => trans('helper.modem.additional'), 'autocomplete' => [], 'space' => 1],
         ];
 
-        return array_merge($a, $b, $c, $d);
+        $smartont = [];
+        if (Module::collections()->has('SmartOnt')) {
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'netgw_id',
+                'description' => 'NetGW ID',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'frame_id',
+                'description' => 'Frame ID',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'slot_id',
+                'description' => 'Slot ID',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'port_id',
+                'description' => 'Port ID',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'ont_id',
+                'description' => 'ONT ID',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'service_port_id',
+                'description' => 'Service port ID',
+                'options' => ['readonly'],
+            ];
+        }
+
+        return array_merge($a, $b, $c, $d, $smartont);
     }
 
     /**
