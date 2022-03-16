@@ -682,7 +682,7 @@ return [
         'available' => 'Verfügbar',
         'ticketReceiver' => 'Ticketzentrale',
         'toTicketReceiver' => 'Zur Ticketzentrale',
-        'legacyTicket' => 'Veraltetes Ticket ohne Zuweisung',
+        'legacyTicket' => 'Dieses Ticket besitzt keine Verknüpfung. Es sind daher keine weiteren Details verfügbar.',
         'late' => 'verspätet',
         'showContract' => 'Zum Vertrag',
         'modemAnalysis' => 'Modem Analyse',

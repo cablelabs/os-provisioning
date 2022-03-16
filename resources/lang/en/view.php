@@ -681,7 +681,7 @@ return [
         'available' => 'Available',
         'ticketReceiver' => 'TicketReceiver',
         'toTicketReceiver' => 'Show TicketReceiver',
-        'legacyTicket' => 'Legacy Ticket without relation',
+        'legacyTicket' => 'This Ticket has no relation, hence no details can be displayed!',
         'late' => 'late',
         'showContract' => 'Show Contract',
         'modemAnalysis' => 'Modem Analysis',
