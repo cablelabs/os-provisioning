@@ -315,7 +315,6 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
 
         system('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "DROP SCHEMA nmsprime cascade"');
         system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' /etc/raddb/mods-available/sql");
-        system('systemctl restart radiusd');
     }
 
     private function changeConfig()
