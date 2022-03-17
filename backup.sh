@@ -47,18 +47,7 @@ excludes=(
 )
 
 static=(
-	'/etc/cron.d'
-	'/etc/dhcp-nmsprime'
-	'/etc/hostname'
-	'/etc/firewalld'
-	'/etc/group'
-	'/etc/named'*
-	'/etc/nmsprime'
-	'/etc/passwd'
-	'/etc/pki/tls/private'
-	'/etc/shadow'
-	'/etc/sysconfig/network-scripts/ifcfg-'*
-	'/etc/sysconfig/network-scripts/route-'*
+	'/etc'
 	'/home'
 	'/root'
 	'/tftpboot'
@@ -73,11 +62,7 @@ static=(
 # transformed files won't overwrite their system counterparts while untarring
 # instead they will be put into /$ref_dir for reference/diffing
 transform=(
-	"s|etc/group|$ref_dir/etc/group|"
-	"s|etc/nmsprime/env|$ref_dir/etc/nmsprime/env|"
-	"s|etc/passwd|$ref_dir/etc/passwd|"
-	"s|etc/shadow|$ref_dir/etc/shadow|"
-	"s|etc/sysconfig|$ref_dir/etc/sysconfig|"
+	"s|^etc|$ref_dir/etc|"
 	"s|^|$(date +%Y%m%dT%H%M%S)/|"
 )
 
