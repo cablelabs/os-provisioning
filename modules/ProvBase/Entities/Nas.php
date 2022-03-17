@@ -20,6 +20,8 @@ namespace Modules\ProvBase\Entities;
 
 class Nas extends \BaseModel
 {
+    protected $connection = 'pgsql-radius';
+
     // The associated SQL table for this Model
     public $table = 'nas';
 
