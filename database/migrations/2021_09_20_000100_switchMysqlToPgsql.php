@@ -208,6 +208,13 @@ class SwitchMysqltoPgsql extends BaseMigration
             DB::statement('ALTER TABLE notifications alter COLUMN created_at type timestamp without time zone;');
             DB::statement('ALTER TABLE notifications alter COLUMN updated_at type timestamp without time zone;');
         }
+
+        if (Schema::hasTable('mpr')) {
+            DB::statement('ALTER TABLE mpr drop COLUMN prio;');
+            DB::statement('ALTER TABLE mpr drop COLUMN type;');
+            DB::statement('ALTER TABLE mprgeopos drop COLUMN name;');
+            DB::statement('ALTER TABLE mprgeopos drop COLUMN description;');
+        }
     }
 
     /**

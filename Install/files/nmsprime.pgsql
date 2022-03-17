@@ -1906,10 +1906,8 @@ CREATE TABLE nmsprime.mpr (
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
     name character varying(191),
-    type bigint,
     value text,
     netelement_id bigint,
-    prio bigint,
     description text
 );
 
@@ -1946,11 +1944,9 @@ CREATE TABLE nmsprime.mprgeopos (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     deleted_at timestamp with time zone,
-    name character varying(191),
     mpr_id bigint,
     lng numeric(9,6),
     lat numeric(9,6),
-    description text
 );
 
 
