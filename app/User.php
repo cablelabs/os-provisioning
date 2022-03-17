@@ -59,7 +59,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     protected $dates = [
         'last_login_at',
-        'geopos_updated_at',
         'password_changed_at',
     ];
 
