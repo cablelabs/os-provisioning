@@ -706,7 +706,7 @@ class BaseViewController extends Controller
 
             if (class_exists($class_name)) {
                 $class = new $class_name;
-                $view_var = $class->find($html[$key]);
+                $view_var = is_int($html[$key]) ? $class->find($html[$key]) : null;
             }
         }
 
