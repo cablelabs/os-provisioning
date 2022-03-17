@@ -41,6 +41,7 @@ class InstallKea extends BaseMigration
         // system("sed -i 's/tag VARCHAR(256) NOT NULL,/tag VARCHAR(191) NOT NULL,/' /usr/share/kea/scripts/mysql/dhcpdb_create.mysql");
 
         system("sed -i 's/^KEA_DB_PASSWORD=.*$/KEA_DB_PASSWORD=$psw/' /etc/nmsprime/env/provbase.env");
+        system("sed -i 's/<DB_PASSWORD>/$psw/' /etc/kea/dhcp6-nmsprime.conf");
         Config::set('database.connections.pgsql-kea.password', $psw);
         DB::reconnect('pgsql-kea');
 
