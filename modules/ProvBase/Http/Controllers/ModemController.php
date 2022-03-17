@@ -720,9 +720,17 @@ class ModemController extends \BaseController
             return;
         }
 
-        $leases = \DB::connection('mysql-kea')->table('lease6')
-            ->whereRaw('hex(hwaddr) = "'.strtoupper(str_replace(':', '', $cpeMac)).'"')
-            ->get();
+        $con = \DB::connection('pgsql-kea');
+        $leaseQuery = $con->table('lease6');
+
+        if ($con->getConfig('driver') == 'pgsql') {
+            $leaseQuery->whereRaw("encode(hwaddr, 'hex') = '".strtolower(str_replace(':', '', $cpeMac))."'");
+        } else {
+            // MySql
+            $leaseQuery->whereRaw('hex(hwaddr) = "'.strtoupper(str_replace(':', '', $cpeMac)).'"');
+        }
+
+        $leases = $leaseQuery->get();
 
         foreach ($leases as $lease6) {
             $lease6->hwaddr = $cpeMac;
