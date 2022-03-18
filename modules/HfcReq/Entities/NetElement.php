@@ -315,13 +315,22 @@ class NetElement extends \BaseModel
      */
     private function excludeCanceledContractsQuery($query)
     {
+        $age = config('hfccustomer.monitoringIgnorePhyUpdatedAtAge');
+
         return $query
             // ->leftJoin('modem', 'modem.netelement_id', 'netelement.id')
             ->join('contract', 'contract.id', 'modem.contract_id')
             ->whereNull('modem.deleted_at')
             ->whereNull('contract.deleted_at')
             ->where('contract_start', '<=', date('Y-m-d'))
-            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
+            ->where(whereLaterOrEqual('contract_end', date('Y-m-d')))
+            ->when(is_numeric($age), function ($query) use ($age) {
+                if (config('database.default') == 'pgsql') {
+                    $query->whereRaw("EXTRACT(EPOCH FROM current_timestamp - modem.phy_updated_at) < $age");
+                } else {
+                    $query->whereRaw("TIMESTAMPDIFF(SECOND, modem.phy_updated_at, now()) < $age");
+                }
+            });
     }
 
     public function scopeTreeQuery($query)
