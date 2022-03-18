@@ -1285,7 +1285,7 @@ class BaseController extends Controller
         }
         $obj = isset($obj) ? $obj : static::get_model_obj();
         $class = NamespaceController::get_route_name();
-        $translatedClass = trans("messages.$class");
+        $translatedClass = trans("messages.{$class}") != "messages.{$class}" ?: trans_choice('view.Header_{$class}', $deleted ?: 1);
 
         if (! $deleted && ! $obj->force_delete) {
             $color = 'danger';

@@ -674,11 +674,14 @@ class BaseModel extends Eloquent
 
         // always return this value (also in your derived classes!)
         $deleted = $this->_delete();
+        $class = $this->get_model_name();
+        $translatedClass = trans("messages.{$class}") != "messages.{$class}" ?: trans_choice('view.Header_{$class}', 1);
+
         if ($deleted) {
-            $msg = trans('messages.base.delete.success', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            $msg = trans('messages.base.delete.success', ['model' => $translatedClass, 'id' => $this->id]);
             $this->addAboveMessage($msg, 'success');
         } else {
-            $msg = trans('messages.base.delete.fail', ['model' => $this->get_model_name(), 'id' => $this->id]);
+            $msg = trans('messages.base.delete.fail', ['model' => $translatedClass, 'id' => $this->id]);
             $this->addAboveMessage($msg, 'error');
         }
 
