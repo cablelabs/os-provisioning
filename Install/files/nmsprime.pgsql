@@ -1946,7 +1946,7 @@ CREATE TABLE nmsprime.mprgeopos (
     deleted_at timestamp with time zone,
     mpr_id bigint,
     lng numeric(9,6),
-    lat numeric(9,6),
+    lat numeric(9,6)
 );
 
 
@@ -5783,7 +5783,7 @@ COPY nmsprime.modem_option (id, created_at, updated_at, deleted_at, modem_id, ke
 -- Data for Name: mpr; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
 --
 
-COPY nmsprime.mpr (id, created_at, updated_at, deleted_at, name, type, value, netelement_id, prio, description) FROM stdin;
+COPY nmsprime.mpr (id, created_at, updated_at, deleted_at, name, value, netelement_id, description) FROM stdin;
 \.
 
 
@@ -5791,7 +5791,7 @@ COPY nmsprime.mpr (id, created_at, updated_at, deleted_at, name, type, value, ne
 -- Data for Name: mprgeopos; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
 --
 
-COPY nmsprime.mprgeopos (id, created_at, updated_at, deleted_at, name, mpr_id, lng, lat, description) FROM stdin;
+COPY nmsprime.mprgeopos (id, created_at, updated_at, deleted_at, mpr_id, lng, lat) FROM stdin;
 \.
 
 
