@@ -26,6 +26,14 @@ if (is_file('/etc/httpd/conf.d/nmsprime-admin.conf')) {
     preg_match('/^[ \t]*SSLCertificateKeyFile (\/.*)/m', $content, $certKey);
 }
 
+if (env('LARAVEL_WEBSOCKETS_RESTRICT_BY_IP', false)) {
+    $allowedOrigins = [
+        '127.0.0.1',
+        'localhost',
+        env('APP_URI'),
+    ];
+}
+
 return [
 
     /*
@@ -71,11 +79,7 @@ return [
      * This array contains the hosts of which you want to allow incoming requests.
      * Leave this empty if you want to accept requests from all hosts.
      */
-    'allowed_origins' => [
-        '127.0.0.1',
-        'localhost',
-        env('APP_URI'),
-    ],
+    'allowed_origins' => $allowedOrigins ?? [],
 
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
