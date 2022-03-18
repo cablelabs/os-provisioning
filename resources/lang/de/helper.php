@@ -28,6 +28,7 @@ return [
     'PrintVisibleTable'             => 'Druckt den aktuell sichtbaren Bereich der Tabelle. Um alles zu drucken bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
     'ExportVisibleTable'            => 'Exportiert den aktuell sichtbaren Bereich der Tabelle. Um alles zu exportieren bitte im Filter \\"Alle\\" auswählen. Das Laden kann einige Sekunden dauern.',
     'ChangeVisibilityTable'         => 'Mit dieser Option können Spaten ein-/ausgeblendet werden.',
+    'clearFilter'                   => 'Suchfilter für Spaltensuche und das allgemeine Suchfeld leeren.',
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'              => 'ISO 3166 ALPHA-2 (zwei Zeichen, z.B. „DE“). Genutzt in Formularen mit Adressdaten um das Land anzugeben.',

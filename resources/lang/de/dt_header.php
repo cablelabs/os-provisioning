@@ -4,6 +4,9 @@ return [
     // Index DataTable Header
     'active' => 'Aktiv',
     'amount' => 'Betrag',
+    'buttons' => [
+        'clearFilter' => 'Suchfilter leeren',
+    ],
     'city' => 'Stadt',
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',

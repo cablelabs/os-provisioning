@@ -4,6 +4,9 @@ return [
     // Index DataTable Header
     'active' => 'Active',
     'amount' => 'Amount',
+    'buttons' => [
+        'clearFilter' => 'Clear Search Filter',
+    ],
     'city' => 'City',
     'connected' => 'Connected',
     'connection_type' => 'Connection type',

@@ -119,4 +119,18 @@ buttons: [
             },
         ],
     },
+    {
+        text: "{{ trans('dt_header.buttons.clearFilter') }}",
+        className: 'btn-sm btn-primary',
+        titleAttr: "{!! trans('helper.ClearFilter') !!}",
+        action: function ( e, dt, node, config ) {
+            dt.columns().eq(0).each(function (colIdx) {
+                $('input', this.column(colIdx).footer()).val('')
+            })
+
+            dt.columns().search('')
+            dt.table().search('')
+            dt.table().draw()
+        }
+    },
 ],

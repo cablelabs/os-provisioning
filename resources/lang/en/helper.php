@@ -28,6 +28,7 @@ return [
     'PrintVisibleTable'             => 'Prints the shown table. If the table is filtered make sure to select the \\"All\\" option to display everything. Loading can take a few seconds.',
     'ExportVisibleTable'            => 'Exports the shown table. If the table is filtered make sure to select the \\"All\\" option to display everything. Loading can take a few seconds.',
     'ChangeVisibilityTable'         => 'Select the columns that should be visible.',
+    'clearFilter'                   => 'Clear column and table search filter.',
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'              => 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
