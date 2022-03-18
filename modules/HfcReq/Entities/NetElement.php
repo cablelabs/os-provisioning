@@ -1056,7 +1056,7 @@ class NetElement extends \BaseModel
                     ->whereId($id)
                     ->first();
 
-                if ($modem->mtas()->count()) {
+                if ($modem?->mtas()->count()) {
                     $mtaName = $modem->isTR069() ? 'SIP' : 'MTA';
                     $tabs[] = ['name' => $mtaName.'-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.mtaAnalysis', 'link' => $id];
                 }
