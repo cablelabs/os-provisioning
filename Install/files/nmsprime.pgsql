@@ -5999,7 +5999,7 @@ COPY nmsprime.provvoip (id, created_at, updated_at, deleted_at, startid_mta, mta
 --
 
 COPY nmsprime.qos (id, created_at, updated_at, deleted_at, ds_rate_max, us_rate_max, ds_rate_max_help, us_rate_max_help, name, ds_name, us_name) FROM stdin;
-1	2022-02-18 12:57:42+01	2022-02-18 12:57:42+01	\N	1000	400	1000000000	400000000	MuQoS	Down	Up
+1	2022-02-18 12:57:42+01	2022-02-18 12:57:42+01	\N	100	10	100000000	10000000	100/10	Down	Up
 \.
 
 
