@@ -35,6 +35,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
         $find = [
             '/^\s*#*\s*driver\s*=.*/m',
             '/^\s*#*\s*dialect\s*=.*/m',
+            '/^\s*#*\s*server\s*=.*/m',
+            '/^\s*#*\s*port\s*=.*/m',
             '/^\s*#*\s*login\s*=.*/m',
             '/^\s*#*\s*password\s*=.*/m',
             '/^\s*radius_db\s*=.*/m',
@@ -44,6 +46,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
         $replace = [
             "\tdriver = \"rlm_sql_postgresql\"",
             "\tdialect = \"postgresql\"",
+            "\tserver = \"localhost\"",
+            "\tport = 5432",
             "\tlogin = \"{$config['username']}\"",
             "\tpassword = \"{$config['password']}\"",
             "\tradius_db = \"{$config['database']}\"",
@@ -77,10 +81,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
         // Disable RADIUS detail logging
         exec("sed -i 's/^\s*detail/#\tdetail/' /etc/raddb/sites-enabled/default");
 
-        exec('systemctl restart radiusd.service');
-
-        // Enable and Start Genie-ACS
-        foreach (['mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi', 'genieacs-ui'] as $service) {
+        // Enable and Start Genie-ACS and Radius
+        foreach (['mongod', 'genieacs-cwmp', 'genieacs-fs', 'genieacs-nbi', 'genieacs-ui', 'radiusd'] as $service) {
             exec("systemctl enable $service.service");
             exec("systemctl start $service.service");
         }
