@@ -17251,6 +17251,7 @@ Ingenieurbüro für Gasfeuerzeuge
 Ingenieurbüro für Gastechnik
 Ingenieurbüro für Gastronomieplanung
 Ingenieurbüro für Gebäudeplanung
+Ingenieurbüro für Gebäudesanierung
 Ingenieurbüro für Gebäudetechnik
 Ingenieurbüro für Geoinformatik
 Ingenieurbüro für Geoinformation
@@ -19117,6 +19118,7 @@ Keyaccountmanager
 Keyboardschule
 Keyboardunterricht
 KFZ-Abschleppdienst
+Kfz-Ankauf
 KFZ-Aufbereitung
 KFZ-Bauelementevertrieb
 KFZ-Beratung
@@ -26257,6 +26259,7 @@ Optikdesign
 Optiker
 Optikergeschäft
 Optikermeister
+Optikermeisterin
 Optikfachberater
 Optikfachgeschäft
 Optikgeschäft
@@ -32454,6 +32457,7 @@ Selbsthilfegruppe für COPD
 Selbsthilfegruppe für Essstörungen
 Selbsthilfegruppe für Guillain-Barré-Syndrom
 Selbsthilfegruppe für Prostatakrebs
+Selbsthilfevereinigung
 Selbsthilfewerkstatt
 Selbsthilfezentrum
 Selbstschutzcoaching
