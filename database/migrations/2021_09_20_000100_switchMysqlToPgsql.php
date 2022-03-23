@@ -215,6 +215,13 @@ class SwitchMysqltoPgsql extends BaseMigration
             DB::statement('ALTER TABLE mprgeopos drop COLUMN name;');
             DB::statement('ALTER TABLE mprgeopos drop COLUMN description;');
         }
+
+        // Drop RADIUS tables as they will be in own database
+        $radTables = ['nas', 'radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radippool', 'radpostauth', 'radreply', 'radusergroup'];
+
+        foreach ($radTables as $table) {
+            DB::statement("DROP table $table");
+        }
     }
 
     /**
