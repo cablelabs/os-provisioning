@@ -77,7 +77,7 @@ class NetGw extends \BaseModel
             'bsclass' => $this->get_bsclass(),
         ];
 
-        if (Sla::firstCached()->valid()) {
+        if (false && Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';

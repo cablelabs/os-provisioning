@@ -94,7 +94,7 @@ class NetGwController extends \BaseController
             // ['form_type' => 'text', 'name' => 'state', 'description' => 'State', 'hidden' => 1],
             // ['form_type' => 'text', 'name' => 'monitoring', 'description' => 'Monitoring', 'hidden' => 1],
         ];
-        if (Sla::first()->valid()) {
+        if (false && Sla::first()->valid()) {
             $ret_tmp[] = ['form_type'=> 'text',
                 'name' => 'formatted_support_state',
                 'description' => 'Support State',

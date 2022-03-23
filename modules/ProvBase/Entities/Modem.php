@@ -150,7 +150,7 @@ class Modem extends \BaseModel
             $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
         }
 
-        if (Sla::firstCached()->valid()) {
+        if (false && Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
             $ret['raw_columns'][] = 'support_state';
@@ -164,7 +164,7 @@ class Modem extends \BaseModel
         $bsclass = 'success';
 
         switch ($this->get_state('int')) {
-            case 0:	$bsclass = 'success'; break; // online
+            case 0: $bsclass = 'success'; break; // online
             case 1: $bsclass = 'warning'; break; // warning
             case 2: $bsclass = 'warning'; break; // critical
             case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info'; break; // offline

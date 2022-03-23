@@ -204,7 +204,7 @@ class Kernel extends ConsoleKernel
             })->everyFiveMinutes();
 
             // Hardware support check for modems and CMTS
-            $schedule->command('nms:hardware-support')->twiceDaily(10, 14);
+            // $schedule->command('nms:hardware-support')->twiceDaily(10, 14);
         }
 
         // Automatic Power Control based on measured SNR
