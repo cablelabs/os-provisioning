@@ -74,6 +74,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
 
         // Enable sqlippool
         $link = '/etc/raddb/mods-enabled/sqlippool';
+        system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' $link");
         exec("ln -srf /etc/raddb/mods-available/sqlippool $link");
         exec("chgrp -h radiusd $link");
         exec("sed -i -e '/^accounting {/a\\\\tsqlippool' -e '/^post-auth {/a\\\\tsqlippool' /etc/raddb/sites-enabled/default");
