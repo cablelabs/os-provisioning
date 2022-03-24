@@ -198,6 +198,10 @@ class Kernel extends ConsoleKernel
             })->monthly()->at('00:33');
 
             $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\ProvBase\Jobs\DeleteStaleGenieAcsTasksJob());
+            })->daily()->at('01:03');
+
+            $schedule->call(function () {
                 foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'olt')->where('ssh_auto_prov', '1')->get() as $olt) {
                     $olt->runSshAutoProv();
                 }
