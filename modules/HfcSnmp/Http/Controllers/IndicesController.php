@@ -32,7 +32,7 @@ class IndicesController extends BaseController
 
         // get params from parent netgw for cluster
         if ($netelement->netelementtype_id == 2) {
-            $netelement = $netelement->get_parent_netgw();
+            $netelement = $netelement->getParentNetelementOfType(3);
         }
 
         // label has to be the same like column in sql table

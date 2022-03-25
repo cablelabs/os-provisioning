@@ -94,7 +94,7 @@ class SnmpController extends \BaseController
         }
 
         // Search parent NetGw for type cluster
-        $netgw = $netelement->get_parent_netgw();
+        $netgw = $netelement->getParentNetelementOfType(3);
         $this->parent_device = $netgw ?: null;
 
         if ($this->netelement->ip) {

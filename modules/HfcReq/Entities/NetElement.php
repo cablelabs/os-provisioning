@@ -658,11 +658,16 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Get first parent of type NetGw
+     * Get a netelements parent that is of a specific netelementtype
      *
-     * @return object NetElement    (or NULL if there is no parent NetGw)
+     * See NetElementType::undeletables for the list of IDs
+     *
+     * @param int ID of NetelementType
+     * @return obj NetElement
+     *
+     * @author Nino Ryschawy
      */
-    public function get_parent_netgw()
+    public function getParentNetelementOfType($netelementtypeId)
     {
         $parent = $this;
 
@@ -672,7 +677,7 @@ class NetElement extends \BaseModel
             if (! $parent) {
                 break;
             }
-        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != array_search('NetGw', NetElementType::$undeletables));
+        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != $netelementtypeId);
 
         return $parent;
     }
@@ -1097,7 +1102,7 @@ class NetElement extends \BaseModel
             return $this->ip;
         }
 
-        if (! $netgw = $this->get_parent_netgw()) {
+        if (! $netgw = $this->getParentNetelementOfType(3)) {
             return;
         }
 
