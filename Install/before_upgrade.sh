@@ -20,6 +20,8 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
     UPDATE oid set type = 'u' where type = '' or type is null;
     UPDATE phonetariff set voip_protocol = 'SIP' where voip_protocol = '' or voip_protocol is null;
     ALTER TABLE settlementrun modify month smallint(6) null;
+    ALTER TABLE invoice modify month smallint(6) null;
+    ALTER TABLE costcenter modify billing_month smallint(6) null;
 "
 
 read -r -a credentials <<< $(grep '^ROOT_DB_USERNAME\|^ROOT_DB_PASSWORD=' /etc/nmsprime/env/root.env | cut -d '=' -f2)
