@@ -484,7 +484,7 @@ class NetGw extends \BaseModel
         require_once storage_path("app/$fn");
         Storage::delete($fn);
 
-        $iucList = Arr::where($iucList, function($value, $key) {
+        $iucList = Arr::where($iucList, function ($value, $key) {
             return $value !== '';
         });
 
