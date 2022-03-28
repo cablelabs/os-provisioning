@@ -35,7 +35,7 @@
         <button id="stateC" type="button" class="btn btn-danger btn-lg rkm-button" onclick="sendSwitchCmd('C')">-40 dB</button>
     </div>
     <div class="row controlling-container">
-        @if (! $hfcBaseConf->rkm_server)
+        @if (! $rkmServer)
             <div class="m-t-10 alert alert-danger ajaxResponse">{{ trans('hfcsnmp::messages.missingConf', ['device' => 'RKM-Server']) }}</div>
         @else
             <div id="switchStateResponse" class="m-t-10 ajaxResponse"></div>
@@ -144,7 +144,7 @@
         $.ajax({
             // async: false,
             // crossDomain: true,
-            // url: 'http://{{$hfcBaseConf->rkm_server}}' + '/index.php',
+            // url: 'http:// '<rkmServerIp>' + '/index.php',
             type: 'post',
             url: '{{ "/admin/NetElement/switchTapState" }}',
             timeout: 4000,

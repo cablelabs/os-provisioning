@@ -336,6 +336,7 @@ return [
     'House Nr'                  => 'Hausnr',
     'Salesman'                  => 'Verkäufer',
     'Start Date'                => 'Startdatum',
+    'missingRkmServer' => 'RKM-Server fehlt als eines der Elternobjekte des Netzelements. Bitte fügen Sie ein Netzelement vom Typ \'RKM-Server\' hinzu.',
     'modem_restart_error'       => 'Das Modem konnte nicht neu gestartet werden! (offline?)',
     'Contact Persons'           => 'Antennengemeinschaft/Kontakt',
     'modem_restart_success_netgw' => 'Das Modem wurde erfolgreich über das NetGw neu gestartet',

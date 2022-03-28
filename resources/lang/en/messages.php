@@ -336,6 +336,7 @@ return [
     'House Nr'                  => 'House Nr',
     'Salesman'                  => 'Salesman',
     'Start Date'                => 'Start Date',
+    'missingRkmServer' => 'Missing RKM Server as one of the netelements parents. Please add a netelement of type \'RKM-Server\'.',
     'modem_restart_error'       => 'Could not restart Modem! (offline?)',
     'Contact Persons'           => 'Contact Persons',
     'modem_restart_success_netgw' => 'Restarted modem via NetGw',
