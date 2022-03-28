@@ -20,6 +20,8 @@ namespace Modules\ProvBase\Entities;
 
 use File;
 use App\Sla;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class NetGw extends \BaseModel
 {
@@ -382,17 +384,17 @@ class NetGw extends \BaseModel
      *
      * @author Nino Ryschawy
      */
-    public function get_us_snr($ip)
+    public function getUsSnr($ip)
     {
         $fn = self::US_SNR_PATH."/$this->id.json";
 
-        if (! \Storage::exists($fn)) {
+        if (! Storage::exists($fn)) {
             \Log::error("Missing Modem US SNR json file of CMTS $this->hostname [$this->id]");
 
             return;
         }
 
-        $snrs = json_decode(\Storage::get($fn), true);
+        $snrs = json_decode(Storage::get($fn), true);
 
         if (array_key_exists($ip, $snrs)) {
             return $snrs[$ip];
@@ -400,10 +402,10 @@ class NetGw extends \BaseModel
 
         // L2 CMTSes may share the same IP pools
         $outdated = now()->subMinutes(30)->timestamp;
-        foreach (\Storage::files(self::US_SNR_PATH) as $file) {
+        foreach (Storage::files(self::US_SNR_PATH) as $file) {
             // ignore files older than 10 minutes, e.g. from a decommissioned cmts
-            if (\Storage::lastModified($file) > $outdated &&
-                ($snrs = json_decode(\Storage::get($file), true)) !== null &&
+            if (Storage::lastModified($file) > $outdated &&
+                ($snrs = json_decode(Storage::get($file), true)) !== null &&
                 array_key_exists($ip, $snrs)) {
                 return $snrs[$ip];
             }
@@ -417,7 +419,7 @@ class NetGw extends \BaseModel
      * @author Ole Ernst
      * @author Nino Ryschawy  - D2.0 Extension
      */
-    public function store_us_snrs()
+    public function storeUsValues()
     {
         $ret = [];
         $freqs = [];
@@ -428,12 +430,12 @@ class NetGw extends \BaseModel
 
         $fn = self::US_SNR_PATH."/{$this->id}.php";
 
-        if (! \Storage::exists($fn)) {
+        if (! Storage::exists($fn)) {
             return;
         }
 
-        require_once storage_path('app/').$fn;
-        \Storage::delete($fn);
+        require_once storage_path("app/$fn");
+        Storage::delete($fn);
 
         $freqs = array_map(function ($freq) {
             return strval($freq / 1000000);
@@ -463,7 +465,7 @@ class NetGw extends \BaseModel
             }
         }
 
-        \Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret));
+        Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret));
     }
 
     /**
