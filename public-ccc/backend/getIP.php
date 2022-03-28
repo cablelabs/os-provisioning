@@ -102,7 +102,7 @@ if (isset($_GET["isp"])) {
 		}
         if (isset($_GET["distance"])) {
             if ($clientLoc) {
-				$locFile="getIP_serverLocation.php";
+				$locFile="/tmp/getIP_serverLocation.php";
 				$serverLoc=null;
 				if(file_exists($locFile)){
 					require $locFile;
