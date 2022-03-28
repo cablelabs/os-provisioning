@@ -29,6 +29,7 @@ class NetGw extends \BaseModel
     // don't put a trailing slash here!
     public const NETGW_INCLUDE_PATH = '/etc/dhcp-nmsprime/cmts_gws';
     public const US_SNR_PATH = 'data/provmon/us_snr';
+    public const US_OFDMA_PATH = 'data/provmon/ofdma';
     protected const DHCP6_GATEWAYS_FILE = '/etc/kea/gateways6.conf';
     protected const DHCP6_GATEWAYS_DIR = '/etc/kea/gateways6';
 
@@ -413,7 +414,7 @@ class NetGw extends \BaseModel
     }
 
     /**
-     * Store US SNR values for all modems once every 5 minutes
+     * Store US SNR/OFDMA values for all modems once every 5 minutes
      * this greatly reduces the cpu load on the cmts
      *
      * @author Ole Ernst
@@ -429,43 +430,85 @@ class NetGw extends \BaseModel
         $d2Snrs = [];
 
         $fn = self::US_SNR_PATH."/{$this->id}.php";
+        if (Storage::exists($fn)) {
+            require_once storage_path("app/$fn");
+            Storage::delete($fn);
+
+            $freqs = array_map(function ($freq) {
+                return strval($freq / 1000000);
+            }, $freqs);
+
+            $ips = array_map(function ($hex) {
+                return long2ip(hexdec(preg_replace('/[^[:xdigit:]]/', '', $hex)));
+            }, $ips);
+
+            foreach ($ips as $ipIdx => $ip) {
+                if ($ip == '0.0.0.0') {
+                    continue;
+                }
+
+                foreach ($snrs as $snrOid => $snr) {
+                    [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
+
+                    if ($snrIpIdx != $ipIdx) {
+                        continue;
+                    }
+
+                    $ret['SNR'][$ip][$freqs[$snrFreqIdx]] = $snr / 10;
+                }
+
+                // fallback to D2.0 to retrive at least one US SNR value
+                if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
+                    $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
+                }
+            }
+
+            Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret['SNR']));
+        }
+
+        $ret['OFDMA'] = $this->mapOfdmaChannelDataToMac();
+        Storage::put(self::US_OFDMA_PATH."/$this->id.json", json_encode($ret['OFDMA']));
+    }
+
+    public function mapOfdmaChannelDataToMac()
+    {
+        $iucStats = [];
+        $macs = [];
+        $iucList = [];
+        $fn = self::US_OFDMA_PATH."/{$this->id}.php";
 
         if (! Storage::exists($fn)) {
-            return;
+            return [];
         }
 
         require_once storage_path("app/$fn");
         Storage::delete($fn);
 
-        $freqs = array_map(function ($freq) {
-            return strval($freq / 1000000);
-        }, $freqs);
-        $ips = array_map(function ($hex) {
-            return long2ip(hexdec(preg_replace('/[^[:xdigit:]]/', '', $hex)));
-        }, $ips);
+        $iucList = Arr::where($iucList, function($value, $key) {
+            return $value !== '';
+        });
 
-        foreach ($ips as $ipIdx => $ip) {
-            if ($ip == '0.0.0.0') {
-                continue;
+        /* first 4 octets: ifIndex
+         * next 2 octets: number or count of Data IUCs
+         * next octet: Data IUC (5, 6, 9-13)
+         */
+        $data = array_map(function ($hex) {
+            // split string in chunks of length 14 since there can be multiple OFDMA Channels
+            foreach (str_split(str_replace(' ', '', $hex), 14) as $key => $value) {
+                return [$key => [hexdec(substr($value, 0, 8)), hexdec(substr($value, 8, 4)), hexdec(substr($value, 12, 2))]];
             }
+        }, $iucList);
 
-            foreach ($snrs as $snrOid => $snr) {
-                [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
-
-                if ($snrIpIdx != $ipIdx || ! isset($freqs[$snrFreqIdx])) {
-                    continue;
-                }
-
-                $ret[$ip][$freqs[$snrFreqIdx]] = $snr / 10;
-            }
-
-            // fallback to D2.0 to retrive at least one US SNR value
-            if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
-                $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
-            }
+        $ret = [];
+        foreach ($macs as $ifIndex => $mac) {
+            $ret['iucList'][$mac] = $data[$ifIndex] ?? null;
         }
 
-        Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret));
+        if ($iucStats) {
+            $ret['iucStats'] = $iucStats;
+        }
+
+        return $ret;
     }
 
     /**
