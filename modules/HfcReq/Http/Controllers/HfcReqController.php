@@ -39,9 +39,9 @@ class HfcReqController extends \BaseController
         $b = [];
         if (Module::collections()->has('Satkabel')) {
             $b = [
-                ['form_type' => 'text', 'name' => 'rkm_server', 'description' => 'RKM Server '.trans('messages.Address'), 'help' => trans('hfcsnmp::help.rkmServerAddress'), 'options' => ['placeholder' => '172.20.0.10:1700']],
-                ['form_type' => 'text', 'name' => 'rkm_server_username', 'description' => 'RKM Server '.trans('messages.Username')],
-                ['form_type' => 'text', 'name' => 'rkm_server_password', 'description' => 'RKM Server '.trans('messages.Password'), 'space' => 1],
+                ['form_type' => 'text', 'name' => 'rkm_server', 'description' => 'Global RKM Server'.' '.trans('messages.Address'), 'help' => trans('helper.rkmServerAddress'), 'options' => ['placeholder' => '172.20.0.10:1700']],
+                ['form_type' => 'text', 'name' => 'rkm_server_username', 'description' => 'Global RKM Server'.' '.trans('messages.Username')],
+                ['form_type' => 'text', 'name' => 'rkm_server_password', 'description' => 'Global RKM Server'.' '.trans('messages.Password'), 'space' => 1],
 
                 ['form_type' => 'text', 'name' => 'video_controller', 'description' => 'Video Controlling Server '.trans('messages.Address'), 'options' => ['placeholder' => '172.20.0.11:1701']],
                 ['form_type' => 'text', 'name' => 'video_controller_username', 'description' => 'Video Controlling Server '.trans('messages.Username')],

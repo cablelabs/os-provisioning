@@ -112,6 +112,7 @@ return [
     'Floor'                     => 'Etage',
     'Force Restart'             => 'Neustart erzwingen',
     'Geocode origin'            => 'Herkunft der Geodaten',
+    'Global RKM Server' => 'Globaler RKM Server',
     'Group Contract'            => 'Gruppenvertrag',
     'Headend'                   => 'Kopfstelle',
     'House number'              => 'Hausnummer',

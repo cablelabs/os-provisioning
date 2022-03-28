@@ -23,6 +23,29 @@ class NetElementType extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'netelementtype';
 
+    /**
+     * These Types are relevant for whole Entity Relation Diagram and therefore must not be deleted
+     * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
+     * So don't change this order unless you definitly know what you are doing !!!
+     */
+    public static $undeletables = [
+        1 => 'Net',
+        2 => 'Cluster',
+        3 => 'NetGw',
+        4 => 'Amplifier',
+        5 => 'Node',
+        6 => 'Data',
+        7 => 'UPS',
+        8 => 'Tap',
+        9 => 'Tap-Port',
+        10 => 'NMSPrime HA slave',
+        11 => 'Passives',
+        12 => 'Splitter',
+        13 => 'Amplifier',
+        14 => 'Node',
+        15 => 'RKM-Server',
+    ];
+
     public static function boot()
     {
         parent::boot();
@@ -196,28 +219,6 @@ class NetElementType extends \BaseModel
 
         return $list;
     }
-
-    /**
-     * These Types are relevant for whole Entity Relation Diagram and therefore must not be deleted
-     * Furthermore they are ordered by there Database ID which is probably used as fix value in many places of the source code
-     * So don't change this order unless you definitly know what you are doing !!!
-     */
-    public static $undeletables = [
-        1 => 'Net',
-        2 => 'Cluster',
-        3 => 'NetGw',
-        4 => 'Amplifier',
-        5 => 'Node',
-        6 => 'Data',
-        7 => 'UPS',
-        8 => 'Tap',
-        9 => 'Tap-Port',
-        10 => 'NMSPrime HA slave',
-        11 => 'Passives',
-        12 => 'Splitter',
-        13 => 'Amplifier',
-        14 => 'Node',
-    ];
 
     /**
      * Must be defined to disable delete Checkbox on index tree view.

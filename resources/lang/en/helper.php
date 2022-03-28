@@ -5,6 +5,7 @@ return [
         'amount' => 'Postive when customer is charged, negative when customer gets credit',
         'totalFee' => 'Deprecated. Just used to show the old total fee that is now determined by the sum of bank and extra fee. The field will probably be removed in future to reduce redundant informations.',
     ],
+    'rkmServerAddress' => 'IP:Port (IP can also be a hostname). If you set the global server infos we will try to set all taps & tap ports automatically via this server. If you have more than one RKM-Server please add netelements of type RKM-Server. Then the corresponding server will be determined by the parent relations in the netelement / ERD.',
 
     /*
      * Authentication and Base

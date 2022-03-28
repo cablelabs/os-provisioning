@@ -112,6 +112,7 @@ return [
     'Floor'                     => 'Floor',
     'Force Restart'             => 'Force Restart',
     'Geocode origin'            => 'Geocode origin',
+    'Global RKM Server' => 'Global RKM Server',
     'Group Contract'            => 'Group Contract',
     'Headend'                   => 'Headend',
     'House number'              => 'House number',

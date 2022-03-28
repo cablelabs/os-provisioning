@@ -5,6 +5,7 @@ return [
         'amount' => 'Postiv wenn Kunde Geld abgezogen wird, negativ wenn Kunde einzahlt',
         'totalFee' => 'Veraltete Anzeige. Dient nur der Anzeige der bisher genutzten Gesamtgebühr. Diese wird jetzt aus der Summe von Bank- und zusätzlicher Gebühr berechnet und in Zukunft wegen Redundanz nicht mehr angezeigt.',
     ],
+    'rkmServerAddress' => 'IP:Port (IP kann ein Hostname sein). Wird ein globaler Server eingetragen, gilt dieser für ALLE Abzweiger! Bitte erstellen Sie Netzelemente vom Typ RKM-Server, wenn Sie mehrere RKM-Server besitzen. Der zugehörige Server wird dann über die Elternbeziehung im Netzelement bzw. ERD ermittelt.',
 
     /*
      * Authentication and Base
