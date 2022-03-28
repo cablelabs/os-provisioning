@@ -97,6 +97,9 @@ return [
     /*
      * MODULE: HfcReq
      */
+    'netelement' => [
+        'credentials' => 'Wird aktuell nur für Netzelemente des Typs \'RKM-Server\' genutzt, um während der Abzweigersteuerung die Verbindung zum Server herzustellen.',
+    ],
     'netelementtype' => [
         'reload'        => 'In Sekunden. 0s zum Deaktivieren des Autoreloads. Nachkommastellen möglich.',
         'sidebarPos'    => 'Position in der Sidebar - absteigend. D.h. der Netzelementtyp mit der höchsten Zahl taucht in der Sidebar ganz unten auf. Bitte lassen Sie das Feld leer, wenn der Netzelementtyp nicht in der Sidebar auftauchen soll.',

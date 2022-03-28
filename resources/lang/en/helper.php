@@ -97,6 +97,9 @@ return [
     /*
      * MODULE: HfcReq
      */
+    'netelement' => [
+        'credentials' => 'Currently only used for netelements of type \'RKM-Server\' to connect to the server during the change of settings of taps',
+    ],
     'netelementtype' => [
         'reload'        => 'In Seconds. Zero to deactivate autoreload. Decimals possible.',
         'sidebarPos'    => 'Position in the sidebar - descending. The netelement type with the highest number will be placed at the bottom of the sidebar. Please let the field empty if the netelement type shall not appear in the sidebar.',

@@ -82,18 +82,22 @@ class NetElementController extends BaseController
         }
 
         $a = [
-            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'value' => $this->setupSelect2Field($netelement, 'NetElementType'), 'hidden' => 0, 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['relation' => 'netelementtypes'])]],
+            ['form_type' => 'select', 'name' => 'netelementtype_id', 'description' => 'NetElement Type', 'select' => NetElementType::$undeletables, 'value' => $this->setupSelect2Field($netelement, 'NetElementType'), 'hidden' => 0, 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('NetElement.select2', ['relation' => 'netelementtypes'])]],
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name', 'space' => 1],
             // array('form_type' => 'select', 'name' => 'type', 'description' => 'Type', 'value' => ['NET' => 'NET', 'NETGW' => 'NETGW', 'DATA' => 'DATA', 'CLUSTER' => 'CLUSTER', 'NODE' => 'NODE', 'AMP' => 'AMP']),
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address', 'hidden' => $hidden4TapPort || $hidden4Tap],
-            ['form_type' => 'text', 'name' => 'link', 'description' => 'ERD Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'provDevice', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['base_type_id' => $type, 'relation' => 'provDevice'])]],
-            ['form_type' => 'text', 'name' => 'lng', 'description' => 'Longitude', 'hidden' => $hidden4TapPort],
-            ['form_type' => 'text', 'name' => 'lat', 'description' => 'Latitude', 'hidden' => $hidden4TapPort],
-            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
+            ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'select' => 'RKM-Server', 'help' => trans('helper.netelement.credentials')],
+            ['form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'select' => 'RKM-Server', 'help' => trans('helper.netelement.credentials')],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap, 'space' => 1]),
+
+            ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
+            ['form_type' => 'text', 'name' => 'link', 'description' => 'ERD Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             // array('form_type' => 'select', 'name' => 'state', 'description' => 'State', 'value' => ['OK' => 'OK', 'YELLOW' => 'YELLOW', 'RED' => 'RED'], 'options' => ['readonly']),
         ];
 
@@ -103,13 +107,12 @@ class NetElementController extends BaseController
         }
 
         $b = [
-            ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
-            ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'lng', 'description' => 'Longitude', 'hidden' => $hidden4TapPort],
+            ['form_type' => 'text', 'name' => 'lat', 'description' => 'Latitude', 'hidden' => $hidden4TapPort],
             ['form_type' => 'text', 'name' => 'address1', 'description' => $addressDesc1],
             ['form_type' => 'text', 'name' => 'address2', 'description' => $addressDesc2, 'hidden' => $hidden4TapPort],
-            ['form_type' => 'text', 'name' => 'controlling_link', 'description' => 'Controlling Link', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'checkbox', 'name' => 'enable_agc', 'description' => 'Enable AGC', 'help' => trans('helper.enable_agc'), 'hidden' => ! $cluster],
-            ['form_type' => 'text', 'name' => 'agc_offset', 'description' => 'AGC offset', 'help' => trans('helper.agc_offset'), 'checkbox' => 'show_on_enable_agc', 'hidden' => ! $cluster],
+            ['form_type' => 'text', 'name' => 'agc_offset', 'description' => 'AGC offset', 'help' => trans('helper.agc_offset'), 'checkbox' => 'show_on_enable_agc', 'hidden' => ! $cluster, 'space' => 1],
             ['form_type' => 'textarea', 'name' => 'descr', 'description' => 'Description'],
         ];
 
