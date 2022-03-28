@@ -423,6 +423,8 @@ class NetGw extends \BaseModel
         $freqs = [];
         $ips = [];
         $snrs = [];
+        $d2ChIdxs = [];
+        $d2Snrs = [];
 
         $fn = self::US_SNR_PATH."/{$this->id}.php";
 
@@ -448,11 +450,16 @@ class NetGw extends \BaseModel
             foreach ($snrs as $snrOid => $snr) {
                 [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
 
-                if ($snrIpIdx != $ipIdx) {
+                if ($snrIpIdx != $ipIdx || ! isset($freqs[$snrFreqIdx])) {
                     continue;
                 }
 
                 $ret[$ip][$freqs[$snrFreqIdx]] = $snr / 10;
+            }
+
+            // fallback to D2.0 to retrive at least one US SNR value
+            if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
+                $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
             }
         }
 
