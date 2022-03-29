@@ -176,6 +176,15 @@ class ModemObserver
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
 
+        // special handling for SmartONT devices
+        if (\Module::collections()->has('SmartOnt')) {
+            if ('smartont' == $modem->qos->type) {
+                \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
+
+                return;
+            }
+        }
+
         if ($modem->isTR069()) {
             $modem->deleteGenieAcsProvision();
             $modem->deleteGenieAcsPreset();

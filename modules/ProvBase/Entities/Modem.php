@@ -312,6 +312,11 @@ class Modem extends \BaseModel
         return $this->belongsTo(Contract::class, 'contract_id');
     }
 
+    public function netgw()
+    {
+        return $this->belongsTo(NetGW::class, 'netgw_id');
+    }
+
     /**
      * Format Contracts for edit view select field and allow for searching.
      *
