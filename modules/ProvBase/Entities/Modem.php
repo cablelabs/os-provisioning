@@ -1302,7 +1302,21 @@ class Modem extends \BaseModel
                 continue;
             }
 
-            $config[$idx][$name] = property_exists($model, $param) ? $model->{$param}->_value : 'n/a';
+            if ($name == 'Encryption Mode') {
+                $config[$idx][$name] = isset($model->{$param}->_value) ? str_replace('11i', 'WPA2', $model->{$param}->_value) : 'n/a';
+            } elseif ($name == 'Channel') {
+                $freq = '';
+                $ch = $model->{$param}->_value ?? 'n/a';
+                if (is_numeric($ch) && $ch <= 13) {
+                    $freq = ' (2.4 GHz)';
+                }
+                if (is_numeric($ch) && $ch > 13) {
+                    $freq = ' (5 GHz)';
+                }
+                $config[$idx][$name] = $ch.$freq;
+            } else {
+                $config[$idx][$name] = $model->{$param}->_value ?? 'n/a';
+            }
         }
 
         return $config;
