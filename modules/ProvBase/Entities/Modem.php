@@ -1289,9 +1289,15 @@ class Modem extends \BaseModel
         foreach ($scheme as $name => $param) {
             if (Str::contains($param, '.')) {
                 foreach (explode('.', $param) as $next) {
-                    $iteration = $model->$next ?? $iteration->$next;
+                    if (property_exists($model, $next)) {
+                        $iteration = $model->{$next};
+                    } elseif ($iteration && property_exists($iteration, $next)) {
+                        $iteration = $iteration->{$next};
+                    } else {
+                        $iteration = null;
+                    }
                 }
-                $config[$idx][$name] = $iteration->_value;
+                $config[$idx][$name] = $iteration->_value ?? 'n/a';
 
                 continue;
             }
@@ -1307,12 +1313,16 @@ class Modem extends \BaseModel
      *
      * @param  mixed  $model
      * @param  array  $scheme
-     * @return array
+     * @return mixed
      *
      * @author Roy Schneider
      */
     protected function generateConfigOverview($model, $scheme)
     {
+        if (count((array) $model) <= 2) {
+            return true;
+        }
+
         if (! is_numeric(key($model))) {
             return $this->mergeGenieModelAndConfigOverview($model, $scheme);
         }
