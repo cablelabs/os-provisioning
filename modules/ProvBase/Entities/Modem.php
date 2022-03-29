@@ -1035,7 +1035,7 @@ class Modem extends \BaseModel
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
             $vals = str_getcsv(trim($line), ';');
-            if (! count($vals) || ! in_array($vals[0], ['add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw', 'raw'])) {
+            if (! count($vals) || ! in_array($vals[0], ['acl', 'add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw', 'raw'])) {
                 continue;
             }
 
@@ -1046,6 +1046,16 @@ class Modem extends \BaseModel
             $path = trim("$prefix.$vals[1]", '.');
 
             switch ($vals[0]) {
+                case 'acl':
+                    if (isset($vals[1])) {
+                        $acl = '';
+                        if ($vals[2] != '') {
+                            $acl = "'$vals[2]'";
+                        }
+
+                        $prov[] = "declare('$vals[1]', {accessList: Date.now()}, {accessList: [$acl]});";
+                    }
+                    break;
                 case 'add':
                     if (isset($vals[2])) {
                         $prov[] = "declare('$path.[$vals[2]]', {value: Date.now()}, {path: 1});";
