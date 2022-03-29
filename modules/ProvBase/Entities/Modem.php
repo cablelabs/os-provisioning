@@ -1244,7 +1244,7 @@ class Modem extends \BaseModel
         $lookup = [
             'InternetGatewayDevice.DeviceInfo.SpecVersion',
             'Device.DeviceInfo.SpecVersion',
-            'Device.DeviceInfo.SupportedDataModels'
+            'Device.DeviceInfo.SupportedDataModels',
         ];
         $model = $this->getGenieAcsModel(implode(',', $lookup));
 

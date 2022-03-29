@@ -521,7 +521,6 @@ class ModemController extends \BaseController
         $cwmpModel->blockDhcp();
 
         return response()->v0ApiReply([], true, $id);
-
     }
 
     /**
@@ -543,7 +542,6 @@ class ModemController extends \BaseController
         $cwmpModel->unblockDhcp();
 
         return response()->v0ApiReply([], true, $id);
-
     }
 
     /**
