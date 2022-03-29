@@ -108,6 +108,12 @@ class NetGwController extends \BaseController
             array_push($ret, $elem);
         }
 
+        if (\Module::collections()->has('SmartOnt')) {
+            if ('GESA' == config('smartont.flavor.active')) {
+                $ret[] = ['form_type' => 'text', 'name' => 'internal_id', 'description' => 'VLAN offset'];
+            }
+        }
+
         return $ret;
     }
 

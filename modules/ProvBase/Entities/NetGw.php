@@ -53,6 +53,7 @@ class NetGw extends \BaseModel
             'type' => "required|in:$types",
             'coa_port' => 'nullable|numeric|min:1|max:65535',
             'ssh_port' => 'nullable|numeric|min:1|max:65535',
+            'internal_id' => 'nullable|numeric',
         ];
     }
 
