@@ -156,7 +156,7 @@ class BaseModel extends Eloquent
     /**
      * Relation to Ticket if Ticketsystem is present.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Support\Optional
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|\Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tickets()
     {
@@ -164,7 +164,7 @@ class BaseModel extends Eloquent
             return  $this->morphMany(\Modules\Ticketsystem\Entities\Ticket::class, 'ticketable');
         }
 
-        return optional();
+        return new \Illuminate\Database\Eloquent\Relations\HasMany($this->newQuery(), $this, '', '', '');
     }
 
     /**
