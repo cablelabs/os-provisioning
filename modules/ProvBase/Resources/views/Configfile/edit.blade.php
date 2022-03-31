@@ -80,47 +80,57 @@
                                     <div style="width:150px">{{ trans('view.configfile.dragdrop.analysisOperand') }}</div>
                                     <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.analysisOperandPlaceholder') }}" type="number" step="0.0001" name="calcVal" v-model="item.calcVal" v-on:blur="refreshJson"/>
                                 </div>
-                                <div class="d-flex mb-2 align-items-center">
-                                    <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramColumn') }}</div>
-                                    <div style="flex:1 1 100px;min-width:0;">
-                                        <select data-placeholder="{{ trans('view.configfile.dragdrop.diagramColumnPlaceholder') }}" name="diagramVar" v-model="item.diagramVar" v-dispatchsel2 v-on:change="refreshJson">
-                                            <option value=""></option>
-                                            @foreach ($additional_data['columns'] as $column)
-                                                <option value="{{$column}}">{{$column}}</option>
-                                            @endforeach
-                                        </select>
+                                <div>
+                                    <div class="d-flex mb-2 align-items-center">
+                                        <div style="width:150px">{{ trans('view.configfile.dragdrop.monitorInDiagram') }}</div>
+                                        <div class="d-flex justify-content-center" style="flex:1;">
+                                            <input title="Monitor?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.monitorInDiagram">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex mb-2 align-items-center">
-                                    <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramOperator') }}</div>
-                                    <div style="flex:1;">
-                                        <select data-placeholder="{{ trans('view.configfile.dragdrop.operatorPlaceholder') }}" name="calcOp" v-model="item.calcOp" v-dispatchsel2 v-on:change="refreshJson">
-                                            <option value=""></option>
-                                            <option value="+">{{ trans('view.configfile.dragdrop.add') }} (+)</option>
-                                            <option value="-">{{ trans('view.configfile.dragdrop.sustract') }} (-)</option>
-                                            <option value="*">{{ trans('view.configfile.dragdrop.multiply') }} (*)</option>
-                                            <option value="/">{{ trans('view.configfile.dragdrop.divide') }} (/)</option>
-                                            <option value="%">{{ trans('view.configfile.dragdrop.modulo') }} (%)</option>
-                                        </select>
+                                    <div v-show="item.monitorInDiagram">
+                                        <div class="d-flex mb-2 align-items-center">
+                                            <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramColumn') }}</div>
+                                            <div style="flex:1 1 100px;min-width:0;">
+                                                <select data-allow-clear="true" data-placeholder="{{ trans('view.configfile.dragdrop.diagramColumnPlaceholder') }}" name="diagramVar" v-model="item.diagramVar" v-dispatchsel2 v-on:change="refreshJson">
+                                                    <option value=""></option>
+                                                    @foreach ($additional_data['columns'] as $column)
+                                                        <option value="{{$column}}">{{$column}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2 align-items-center">
+                                            <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramOperator') }}</div>
+                                            <div style="flex:1;">
+                                                <select data-allow-clear="true" data-placeholder="{{ trans('view.configfile.dragdrop.operatorPlaceholder') }}" name="diagramOp" v-model="item.diagramOp" v-dispatchsel2 v-on:change="refreshJson">
+                                                    <option value=""></option>
+                                                    <option value="+">{{ trans('view.configfile.dragdrop.add') }} (+)</option>
+                                                    <option value="-">{{ trans('view.configfile.dragdrop.sustract') }} (-)</option>
+                                                    <option value="*">{{ trans('view.configfile.dragdrop.multiply') }} (*)</option>
+                                                    <option value="/">{{ trans('view.configfile.dragdrop.divide') }} (/)</option>
+                                                    <option value="%">{{ trans('view.configfile.dragdrop.modulo') }} (%)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2 align-items-center">
+                                            <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramOperand') }}</div>
+                                            <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.diagramOperandPlaceholder') }}" type="number" step="0.0001" name="diagramVal" v-model="item.diagramVal" v-on:blur="refreshJson"/>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex mb-2 align-items-center">
-                                    <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramOperand') }}</div>
-                                    <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.diagramOperandPlaceholder') }}" type="number" step="0.0001" name="diagramVal" v-model="item.diagramVal" v-on:blur="refreshJson"/>
                                 </div>
 
                                 <div>
                                     <div class="d-flex mb-2 align-items-center">
                                         <div style="width:150px">{{ trans('view.configfile.dragdrop.colorize') }}</div>
                                         <div class="d-flex justify-content-center" style="flex:1;">
-                                            <input title="Colorize?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.colorize">
+                                            <input title="Colorize?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.colorize" v-on:change="refreshJson">
                                         </div>
                                     </div>
                                     <div v-show="item.colorize" class="d-flex flex-column">
                                         <input type="text" name="colorDanger" style="background-color: #ffddbb;margin-top:.5rem;" placeholder="{{ $tmp = trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.critical'), 'color' => trans('view.orange')]) }}" title="{{ $tmp }}" v-model="item.colorDanger" v-on:blur="refreshJson"/>
                                         <input type="text" name="colorWarning" style="background-color: #ffffdd;margin-top:.5rem;" placeholder="{{ $tmp = trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.warning'), 'color' => trans('view.yellow')]) }}" title="{{ $tmp }}" v-model="item.colorWarning" v-on:blur="refreshJson"/>
                                         <input type="text" name="colorSuccess" style="background-color: #ddffdd;margin-top:.5rem;" placeholder="{{ $tmp = trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.success'), 'color' => trans('view.green')]) }}" title="{{ $tmp }}" v-model="item.colorSuccess" v-on:blur="refreshJson"/>
-                                        <select data-placeholder="{{ trans('view.configfile.dragdrop.selectMapParameter') }}" style="margin-top:.5rem;width:auto;" name="valueType" v-model="item.valueType" title="Usage e.g. in topo map" v-dispatchsel2 v-on:change="refreshJson">
+                                        <select data-allow-clear="true" data-placeholder="{{ trans('view.configfile.dragdrop.selectMapParameter') }}" style="margin-top:.5rem;width:auto;" name="valueType" v-model="item.valueType" title="Usage e.g. in topo map" v-dispatchsel2 v-on:change="refreshJson">
                                             <option value=""></option>
                                             <option value="us_pwr">US PWR</option>
                                             <option value="us_snr">US SNR</option>
@@ -339,17 +349,22 @@ var app=new Vue({
                         let colorSuccess = content.colorSuccess;
                         let valueType = content.valueType;
 
-                        var calc = null;
+                        let calc = null
                         if (calcOp !== null && calcVal !== null) {
                             calc = [calcOp, calcVal];
                         }
 
-                        var diagram = null;
+                        let diagram = null
                         if (diagramVar !== null && diagramOp !== null && diagramVal !== null) {
                             diagram = [diagramVar, diagramOp, diagramVal];
                         }
 
-                        params[listName][content.name] = [content.id, calc, diagram, [colorize, colorDanger, colorWarning, colorSuccess, valueType]];
+                        let colors = null
+                        if (colorize) {
+                            colors = [colorize, colorDanger, colorWarning, colorSuccess, valueType]
+                        }
+
+                        params[listName][content.name] = [content.id, calc, diagram, colors];
                         json[listName] = params[listName];
                     }
                 }
@@ -359,6 +374,14 @@ var app=new Vue({
         },
         blurInput: function (e) {
             e.target.blur()
+        }
+    },
+    mounted() {
+        for (let key = 1; key < this.lists.length; key++) {
+            for (let i = 0; i < this.lists[key].content.length; i++) {
+                let content = this.lists[key].content[i];
+                content.monitorInDiagram = content.diagramVar || content.diagramOp || content.diagramVal
+            }
         }
     }
 });

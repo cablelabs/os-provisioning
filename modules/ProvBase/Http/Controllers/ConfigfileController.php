@@ -300,6 +300,7 @@ class ConfigfileController extends \BaseController
                         'id' => $jElement[0] ?? null,
                         'calcOp' => $jElement[1][0] ?? null,
                         'calcVal' => $jElement[1][1] ?? null,
+                        'monitorInDiagram' => false,
                         'diagramVar' => $jElement[2][0] ?? null,
                         'diagramOp' => $jElement[2][1] ?? null,
                         'diagramVal' => $jElement[2][2] ?? null,
