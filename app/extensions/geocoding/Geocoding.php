@@ -46,6 +46,13 @@ trait Geocoding
      */
     public function geocode($save = true): ?array
     {
+        // don't ask API in testing mode (=faked data)
+        if (config('app.env') == 'testing') {
+            Log::debug('Testing mode – will not ask Geo-APIs with faked data');
+
+            return $this->noGeoPositionFound($save);
+        }
+
         // first try to get geocoding from OSM
         $geodata = $this->tryGeocode('OSM Nominatim');
 
@@ -183,13 +190,6 @@ trait Geocoding
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
-        // don't ask API in testing mode (=faked data)
-        if (env('APP_ENV') == 'testing') {
-            Log::debug('Testing mode – will not ask OSM Nominatim with faked data');
-
-            return null;
-        }
-
         $geodata = null;
         $base_url = 'https://nominatim.openstreetmap.org/search';
 
@@ -226,7 +226,7 @@ trait Geocoding
                 'postalcode' => $this->zip,
                 'city' => $this->city,
                 'country_code' => $country_code,
-                'email' => env('OSM_NOMINATIM_EMAIL'),  // has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
+                'email' => config('app.osmNominatimApiMail'),  // has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
                 'format' => 'json',         // return format
                 'dedupe' => '1',            // only one geolocation (even if address is split to multiple places)?
                 'polygon' => '0',           // include surrounding polygons?
@@ -302,13 +302,6 @@ trait Geocoding
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
-        // don't ask API in testing mode (=faked data)
-        if (env('APP_ENV') == 'testing') {
-            Log::debug('Testing mode – will not ask HERE Geocoding API with faked data');
-
-            return null;
-        }
-
         if (! config('app.hereApiKey', false)) {
             $message = 'Unable to ask Here Geocoding API – HERE_API_KEY not set';
             Session::push('tmp_warning_above_form', $message);
@@ -365,13 +358,6 @@ trait Geocoding
     protected function geocodeGoogle(): ?array
     {
         Log::debug(__METHOD__.' started for '.$this->hostname);
-
-        // don't ask API in testing mode (=faked data)
-        if (config('app.env') == 'testing') {
-            Log::debug('Testing mode – will not ask Google Geocoding API with faked data');
-
-            return null;
-        }
 
         if (! $key = config('app.googleApiKey')) {
             $message = 'Unable to ask Google Geocoding API – GOOGLE_API_KEY not set';
