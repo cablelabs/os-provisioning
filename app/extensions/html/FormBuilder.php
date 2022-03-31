@@ -104,7 +104,7 @@ class FormBuilder extends CollectiveFormBuilder
      * to
      *		public function label($name, $value = null, $options = array(), $escape_html = true)
      */
-    public function label($name, $value = null, $options = [], $escape_html = true)
+    public function label($name, $value = null, $options = [], $escape_html = true, $wrapperCol = null, $wrapperClass = 'd-flex')
     {
         $col = 4;
         if (isset(static::$layout_form_col_md['label'])) {
@@ -120,7 +120,7 @@ class FormBuilder extends CollectiveFormBuilder
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
-        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $col, 'd-flex');
+        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $wrapperCol ?? $col, $wrapperClass);
     }
 
     /**
