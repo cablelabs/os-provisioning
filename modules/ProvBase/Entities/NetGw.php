@@ -429,45 +429,47 @@ class NetGw extends \BaseModel
         $d2ChIdxs = [];
         $d2Snrs = [];
 
+        $ret['OFDMA'] = $this->mapOfdmaChannelDataToMac();
+        Storage::put(self::US_OFDMA_PATH."/$this->id.json", json_encode($ret['OFDMA']));
+
         $fn = self::US_SNR_PATH."/{$this->id}.php";
-        if (Storage::exists($fn)) {
-            require_once storage_path("app/$fn");
-            Storage::delete($fn);
+        if (! Storage::exists($fn)) {
+            return;
+        }
 
-            $freqs = array_map(function ($freq) {
-                return strval($freq / 1000000);
-            }, $freqs);
+        require_once storage_path("app/$fn");
+        Storage::delete($fn);
 
-            $ips = array_map(function ($hex) {
-                return long2ip(hexdec(preg_replace('/[^[:xdigit:]]/', '', $hex)));
-            }, $ips);
+        $freqs = array_map(function ($freq) {
+            return strval($freq / 1000000);
+        }, $freqs);
 
-            foreach ($ips as $ipIdx => $ip) {
-                if ($ip == '0.0.0.0') {
+        $ips = array_map(function ($hex) {
+            return long2ip(hexdec(preg_replace('/[^[:xdigit:]]/', '', $hex)));
+        }, $ips);
+
+        foreach ($ips as $ipIdx => $ip) {
+            if ($ip == '0.0.0.0') {
+                continue;
+            }
+
+            foreach ($snrs as $snrOid => $snr) {
+                [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
+
+                if ($snrIpIdx != $ipIdx) {
                     continue;
                 }
 
-                foreach ($snrs as $snrOid => $snr) {
-                    [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
-
-                    if ($snrIpIdx != $ipIdx) {
-                        continue;
-                    }
-
-                    $ret['SNR'][$ip][$freqs[$snrFreqIdx]] = $snr / 10;
-                }
-
-                // fallback to D2.0 to retrive at least one US SNR value
-                if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
-                    $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
-                }
+                $ret['SNR'][$ip][$freqs[$snrFreqIdx]] = $snr / 10;
             }
 
-            Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret['SNR']));
+            // fallback to D2.0 to retrive at least one US SNR value
+            if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
+                $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
+            }
         }
 
-        $ret['OFDMA'] = $this->mapOfdmaChannelDataToMac();
-        Storage::put(self::US_OFDMA_PATH."/$this->id.json", json_encode($ret['OFDMA']));
+        Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret['SNR']));
     }
 
     public function mapOfdmaChannelDataToMac()

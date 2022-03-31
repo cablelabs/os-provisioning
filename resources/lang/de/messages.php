@@ -797,4 +797,5 @@ return [
     'Latitude'                  => 'Breitengrad',
     'Longitude'                 => 'Längengrad',
     'Value'                     => 'Wert',
+    'Entries'                   => 'Einträge',
 ];
