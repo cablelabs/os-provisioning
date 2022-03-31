@@ -778,6 +778,7 @@ return [
             'modulo' => 'Modulo-Operation',
             'analysisOperand' => 'Analyseseite-Operand',
             'analysisOperandPlaceholder' => 'Wert zur Berechnung des Parameters auf der Analyseseite',
+            'monitorInDiagram' => 'Wert in ein Diagramm eintragen?',
             'diagramColumn' => 'Monitoringdiagramm',
             'diagramColumnPlaceholder' => 'Bitte eine Spalte auswählen, zur Überwachung dieses Parameters',
             'diagramOperator' => 'Diagramm-Operator',
@@ -786,6 +787,11 @@ return [
             'colorize' => 'Auf der Karte farbig darstellen?',
             'selectMapParameter' => 'Auswählen, als welcher Parameter der Wert auf der Karte angezeigt werden soll.',
             'threshholds' => 'Optional: Schwellwerte für ":Severity" (:color) – z.B.: “..10”, “-1.5..1.5”, “-20..-10;10..20” oder “20..”',
+            'listtype' => [
+                'list' => 'Zeilen',
+                'table' => 'Spalten',
+                'paginated' => 'Mehrseitig',
+            ],
         ],
     ],
     'geocoding' => [

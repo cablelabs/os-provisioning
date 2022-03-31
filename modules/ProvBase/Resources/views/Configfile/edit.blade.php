@@ -42,9 +42,16 @@
     <div class="box" id="left">
         <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" :options="{draggable: '.list-group', filter: 'input', preventOnFilter: false}" v-on:change="refreshSelect();refreshJson();">
             <div v-for="(list, key) in lists" v-if="key != '0'" class="list-group">
-                <div class="listbox">
-                    <div class="h">
-                        <input type="text" v-model="list.name" v-on:blur="refreshJson" v-on:keydown.enter.prevent='blurInput'>
+                <div class="listbox" style="padding-bottom: 1.5rem;">
+                    <div class="h" style="display:flex;align-items:center;flex-wrap:wrap;">
+                        <input type="text" style="flex:1 auto;" v-model="list.name" v-on:blur="setType(list);refreshSelectNextTick();refreshJson();" v-on:keydown.enter.prevent='blurInput'>
+                        <div>
+                            <select name="listtype" v-model="list.type" v-dispatchsel2 v-on:change="renameTitle(list);refreshJson();">
+                                <option value="list">{{ trans('view.configfile.dragdrop.listtype.list') }}</option>
+                                <option value="table">{{ trans('view.configfile.dragdrop.listtype.table') }}</option>
+                                <option value="paginated">{{ trans('view.configfile.dragdrop.listtype.paginated') }}</option>
+                            </select>
+                        </div>
                         <button class="btn btn-primary" v-on:click="delList(key);refreshJson();">{{ trans('view.Button_DragDrop DeleteList') }}</button>
                     </div>
                     <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}" v-on:change="refreshSelect();refreshJson();">
@@ -329,6 +336,9 @@ var app=new Vue({
         refreshSelect: function () {
             $('select').select2()
         },
+        refreshSelectNextTick: function() {
+            this.$nextTick(() => this.refreshSelect())
+        },
         refreshJson: function () {
             this.$nextTick(function () {
                 json = {};
@@ -374,6 +384,28 @@ var app=new Vue({
         },
         blurInput: function (e) {
             e.target.blur()
+        },
+        renameTitle: function (list) {
+            list.name = list.name.replace(/^DT\_|^PT\_/g, '')
+
+            if (list.type == 'table') {
+                list.name = 'DT_' + list.name
+            }
+
+            if (list.type == 'paginated') {
+                list.name = 'PT_' + list.name
+            }
+        },
+        setType: function (list) {
+            if (list.name.startsWith('DT_')) {
+                return list.type = 'table'
+            }
+
+            if (list.name.startsWith('PT_')) {
+                return list.type = 'paginated'
+            }
+
+            list.type = 'list'
         }
     },
     mounted() {

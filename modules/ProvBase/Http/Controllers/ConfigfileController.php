@@ -294,6 +294,12 @@ class ConfigfileController extends \BaseController
         if ($jsonDecoded !== null) {
             foreach ($jsonDecoded as $jsName => $jsonArray) {
                 $jsonArrayPage[$listCounter]['name'] = $jsName;
+                $jsonArrayPage[$listCounter]['type'] = match (true) {
+                    Str::startsWith($jsName, 'PT_') => 'paginated',
+                    Str::startsWith($jsName, 'DT_') => 'table',
+                    default => 'list',
+                };
+
                 foreach ($jsonArray as $jKey => $jElement) {
                     $jsonArrayPage[$listCounter]['content'][] = [
                         'name' => $jKey,

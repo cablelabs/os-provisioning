@@ -778,6 +778,7 @@ return [
             'analysisOperand' => 'Analysis Page Operand',
             'analysisOperandPlaceholder' => 'Calculation value for modem analysis page',
             'diagramColumn' => 'Diagram Storage Column',
+            'monitorInDiagram' => 'Write Value to Diagram?',
             'diagramColumnPlaceholder' => 'Select a column, that is used to monitor this parameter',
             'diagramOperator' => 'Diagram Operator',
             'diagramOperand' => 'Diagram Operand',
@@ -785,6 +786,11 @@ return [
             'colorize' => 'Colorize On Map?',
             'selectMapParameter' => 'Select as which parameter it should appear on the map',
             'threshholds' => 'Optional: Threshold(s) for :severity (:color) – e.g. “..10” or “-1.5..1.5” or “-20..-10;10..20” or “20..”',
+            'listtype' => [
+                'list' => 'Rows',
+                'table' => 'Columns',
+                'paginated' => 'Paginated',
+            ],
         ],
     ],
     'geocoding' => [
