@@ -225,7 +225,7 @@ trait Geocoding
                 'street' => "$housenumber_prepared $this->street",
                 'postalcode' => $this->zip,
                 'city' => $this->city,
-                'country' => $country_code,
+                'country_code' => $country_code,
                 'email' => env('OSM_NOMINATIM_EMAIL'),  // has to be set (https://operations.osmfoundation.org/policies/nominatim); else 403 Forbidden
                 'format' => 'json',         // return format
                 'dedupe' => '1',            // only one geolocation (even if address is split to multiple places)?
