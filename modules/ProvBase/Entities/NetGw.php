@@ -422,7 +422,7 @@ class NetGw extends \BaseModel
      */
     public function storeUsValues()
     {
-        $ret = [];
+        $ret['SNR'] = [];
         $freqs = [];
         $ips = [];
         $snrs = [];
@@ -464,8 +464,8 @@ class NetGw extends \BaseModel
             }
 
             // fallback to D2.0 to retrive at least one US SNR value
-            if (empty($ret[$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
-                $ret[$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
+            if (empty($ret['SNR'][$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
+                $ret['SNR'][$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
             }
         }
 
