@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="d-flex mb-2 align-items-center">
                                     <div style="width:150px">{{ trans('view.configfile.dragdrop.analysisOperand') }}</div>
-                                    <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.analysisOperandPlaceholder') }}" type="number" step="0.0001" name="calcVal" v-model="item.calcVal" v-on:blur="refreshJson"/>
+                                    <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.analysisOperandPlaceholder') }}" type="number" step="0.0001" name="calcVal" v-model.number="item.calcVal" v-on:blur="refreshJson"/>
                                 </div>
                                 <div>
                                     <div class="d-flex mb-2 align-items-center">
@@ -121,7 +121,7 @@
                                         </div>
                                         <div class="d-flex mb-2 align-items-center">
                                             <div style="width:150px">{{ trans('view.configfile.dragdrop.diagramOperand') }}</div>
-                                            <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.diagramOperandPlaceholder') }}" type="number" step="0.0001" name="diagramVal" v-model="item.diagramVal" v-on:blur="refreshJson"/>
+                                            <input style="flex:1;" placeholder="{{ trans('view.configfile.dragdrop.diagramOperandPlaceholder') }}" type="number" step="0.0001" name="diagramVal" v-model.number="item.diagramVal" v-on:blur="refreshJson"/>
                                         </div>
                                     </div>
                                 </div>
@@ -412,7 +412,7 @@ var app=new Vue({
         for (let key = 1; key < this.lists.length; key++) {
             for (let i = 0; i < this.lists[key].content.length; i++) {
                 let content = this.lists[key].content[i];
-                content.monitorInDiagram = content.diagramVar || content.diagramOp || content.diagramVal
+                content.monitorInDiagram = Boolean(content.diagramVar || content.diagramOp || content.diagramVal)
             }
         }
     }
