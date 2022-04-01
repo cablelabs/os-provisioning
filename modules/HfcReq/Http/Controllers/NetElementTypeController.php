@@ -55,8 +55,14 @@ class NetElementTypeController extends HfcReqController
             ['form_type' => 'text', 'name' => 'pre_conf_time_offset', 'description' => 'PreConfiguration Time Offset', 'hidden' => $hidden4Net || $hidden4Tap, 'space' => 1, 'help' => trans('helper.netelementtype_time_offset')],
             ['form_type' => 'text', 'name' => 'page_reload_time', 'description' => 'Reload Time - Controlling View', 'hidden' => $hidden4Tap, 'help' => trans('helper.netelementtype_reload')],
             ['form_type' => 'text', 'name' => 'icon_name', 'description' => 'Icon'],
-            ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
         ];
+
+        if (Module::collections()->has('CoreMon')) {
+            $b[] = ['form_type' => 'text', 'name' => 'sidebar_pos', 'description' => 'Sidebar position', 'help' => trans('helper.sidebarPos')];
+        }
+
+        $b[array_key_last($b)]['space'] = 1;
+        $b[] = ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'];
 
         if ($hidden4Net) {
             $a[0]['help'] = trans('helper.undeleteables');

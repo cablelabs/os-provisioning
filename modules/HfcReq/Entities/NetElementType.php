@@ -33,8 +33,11 @@ class NetElementType extends \BaseModel
     // Add your validation rules here
     public function rules()
     {
+        $id = $this->id ?: 0;
+
         return [
-            'name' => 'required',
+            'name' => ['required'],
+            'sidebar_pos' => ["unique:netelementtype,sidebar_pos,{$id},id,deleted_at,NULL", 'nullable', 'numeric'],
         ];
     }
 
