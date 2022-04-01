@@ -2401,9 +2401,9 @@ class Modem extends \BaseModel
         if ($refresh) {
             $request = ['name' => 'getParameterValues'];
             $entries = $this->configfile->getValidMonitoringEntries();
-            $request['parameterNames'] = array_values(array_map(function ($entry) {
-                return $entry[0];
-            }, $entries['entries']));
+            $request['parameterNames'] = array_values(
+                array_map(fn ($entry) => $entry[0], $entries['entries'])
+            );
 
             $id = rawurlencode($this->getGenieAcsModel('_id'));
             self::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', json_encode($request));

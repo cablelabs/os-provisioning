@@ -328,7 +328,7 @@ var app=new Vue({
                         refThis.prevSearch = refThis.search;
                     }
                 };
-                xhttp.open("GET", "{{route('Configfile.searchDeviceParams', $view_var->id )}}?search="+this.search, true);
+                xhttp.open('GET', '{{ route('Configfile.searchDeviceParams', $view_var->id) }}?search=' + this.search, true);
                 xhttp.send();
             }, 300);
 
