@@ -30,5 +30,6 @@ return [
         'link' => '/grafana',
         'website' => 'https://grafana.com/',
         'rpmName' => 'grafana',
+        'maxDiagrams' => env('GRAFANA_MAX_DIAGRAMS', 200),
     ],
 ];

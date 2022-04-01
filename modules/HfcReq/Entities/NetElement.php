@@ -18,9 +18,9 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Auth;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\SnmpAccessException;
@@ -860,15 +860,6 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Build net and cluster index for $this NetElement Objects - Currently not used
-     */
-    // public function relation_index_build ()
-    // {
-    // 	$this->net     = $this->get_native_net();
-    // 	$this->cluster = $this->get_native_cluster();
-    // }
-
-    /**
      * Build net and cluster index for all NetElement Objects
      *
      * @params call_from_cmd: set if called from artisan cmd for state info
@@ -983,13 +974,15 @@ class NetElement extends \BaseModel
         $enabledModules = Module::collections();
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
+        session(['lastNetElement' => $this->id]);
 
         $tabs = [['name' => $i18nNetElement = trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
-        $i18nModem = trans_choice('view.Header_Modem', 1);
 
         if (! $enabledModules->has('ProvBase')) {
             return $tabs;
         }
+
+        $i18nModem = trans_choice('view.Header_Modem', 1);
 
         if ($this->prov_device_id) {
             $tabs[] = [

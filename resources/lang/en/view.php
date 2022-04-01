@@ -645,6 +645,8 @@ return [
         'modemAnalysis' => 'Modem Analysis',
         'netGWAnalysis' => 'NetGw Analysis',
         'Diagrams' => 'Diagrams',
+        'Back to last selected NetElement' => 'Back to last selected NetElement',
+        'Back to Provisioning Dashboard' => 'Back to Provisioning Dashboard',
     ],
     'ticket' => [
         'comment' => [

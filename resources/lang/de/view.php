@@ -646,6 +646,8 @@ return [
         'modemAnalysis' => 'Modem Analyse',
         'netGWAnalysis' => 'NetGw Analyse',
         'Diagrams' => 'Diagramme',
+        'Back to last selected NetElement' => 'Zurück zum zuletzt ausgewählten Netzelement',
+        'Back to Provisioning Dashboard' => 'Zurück zum Provisioning Dashboard',
     ],
     'ticket' => [
         'comment' => [

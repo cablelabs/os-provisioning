@@ -283,6 +283,7 @@ return [
     'modem_monitoring_error'=> 'This could be because the Modem was not online until now. Please note that Diagrams are only available
     from the point that a modem was online. If all diagrams did not show properly then it should be a
     bigger problem and there should be a cacti misconfiguration. Please consider the administrator on bigger problems.',
+    'limitedDiagrams'           => 'There were too many modems selected. Due to performance reasons, only the first :max of :count Modems are displayed.',
     'Connection Info Template'  => 'Connection Info Template',
     'Upload Template'           => 'Upload Template',
     'SNMP Read Only Community'  => 'SNMP Read Only Community',
