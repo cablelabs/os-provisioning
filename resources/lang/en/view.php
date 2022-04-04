@@ -618,6 +618,7 @@ return [
         'Corrected CW' => 'Corrected CW',
         'Unreliable CW' => 'Unreliable CW',
         'Discontinuity Time' => 'Discontinuity Time',
+        'channels' => 'Channels',
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',

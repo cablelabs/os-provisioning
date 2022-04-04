@@ -619,6 +619,7 @@ return [
         'Corrected CW' => 'Korrigierte CW',
         'Unreliable CW' => 'Unzuverlässige CW',
         'Discontinuity Time' => 'Letzte Unterbrechung',
+        'channels' => 'Kanäle',
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
