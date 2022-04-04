@@ -286,6 +286,7 @@ return [
     'Button_create'             => 'Shortcut for the create ability for all pages of this module.',
     'Button_update'             => 'Shortcut for the update ability for all pages of this module.',
     'Button_delete'             => 'Shortcut for the delete ability for all pages of this module.',
+    'Button_close'              => 'Close',
     'Button_downloadCSV'        => 'Download CSV',
     'Button_Create Product'     => 'Create Product',
     'Button_Create SettlementRun' => 'Create Settlement Run',

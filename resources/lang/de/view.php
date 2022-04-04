@@ -286,6 +286,7 @@ return [
     'Button_create'             => 'Schnellauswahl um auf allen Seiten neue Elemente zu erstellen.',
     'Button_update'             => 'Schnellauswahl um auf allen Seiten Elemente zu verändern.',
     'Button_delete'             => 'Schnellauswahl um auf allen Seiten Elemente zu löschen.',
+    'Button_close'              => 'Schließen',
     'Button_downloadCSV'        => 'CSV herunterladen',
     'Button_Create Product'     => 'Neues Produkt',
     'Button_Create SettlementRun' => 'Abrechnungslauf erstellen',
