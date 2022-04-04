@@ -485,6 +485,7 @@ return [
         'NMS Prime' => '<b>NMS Prime Headquarter</b><br />This is where the magic happens!<br />Íf you like NMS Prime, come visit and drink a coffee/beer/coke with us 😊',
         'noData' => 'Unfortunately, there is no Data to Display on the map!',
     ],
+
     //
     // Numberrange
     //
