@@ -53,6 +53,7 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem'], 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem'], 'options' => ['readonly']],
             ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'options' => ['readonly'], 'space' => '1'],
+            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'create' => ['Modem'], 'options' => ['readonly'], 'space' => '1'],
 
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address', 'space' => '1'],
@@ -85,12 +86,13 @@ class ContractController extends \BaseController
     {
         if (! $model) {
             $model = new Contract;
+            $model->country_code = $config->default_country_code;
         }
 
         if (Module::collections()->has('SmartOnt')) {
             if (
                 in_array($model->type, ['OTO', 'OTO_STORAGE']) ||
-                in_array(Request::get('type'), ['OTO', 'OTO_STORAGE'])
+                in_array(\Request::get('type'), ['OTO', 'OTO_STORAGE'])
             ) {
                 return $this->viewFormFieldsDfOto($model);
             }
@@ -261,31 +263,33 @@ class ContractController extends \BaseController
      */
     public function prepare_input($data)
     {
-        $data['contract_start'] = $data['contract_start'] ?: date('Y-m-d');
+        if (! Module::collections()->has('SmartOnt')) {
+            $data['contract_start'] = $data['contract_start'] ?: date('Y-m-d');
 
-        // generate contract number
-        if (! $data['number'] && Module::collections()->has('BillingBase') && $data['costcenter_id']) {
             // generate contract number
-            $num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
+            if (! $data['number'] && Module::collections()->has('BillingBase') && $data['costcenter_id']) {
+                // generate contract number
+                $num = \Modules\BillingBase\Entities\NumberRange::get_new_number('contract', $data['costcenter_id']);
 
-            if ($num) {
-                $data['number'] = $num;
+                if ($num) {
+                    $data['number'] = $num;
 
-                if (! Session::has('alert')) {
-                    Session::forget('alert');
-                }
-            } else {
-                // show default alert when there is a numberrange for costcenter but there are no more
-                // free numbers and no more specific error message is already set
-                $numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
-                    ->where('costcenter_id', $data['costcenter_id'])->count();
-
-                if ($numberrange_exists) {
-                    if (! Session::has('tmp_error_above_form')) {
-                        Session::push('tmp_error_above_form', trans('messages.contract.numberrange.failure'));
+                    if (! Session::has('alert')) {
+                        Session::forget('alert');
                     }
                 } else {
-                    Session::push('tmp_error_above_form', trans('messages.contract.numberrange.missing'));
+                    // show default alert when there is a numberrange for costcenter but there are no more
+                    // free numbers and no more specific error message is already set
+                    $numberrange_exists = \Modules\BillingBase\Entities\NumberRange::where('type', '=', 'contract')
+                        ->where('costcenter_id', $data['costcenter_id'])->count();
+
+                    if ($numberrange_exists) {
+                        if (! Session::has('tmp_error_above_form')) {
+                            Session::push('tmp_error_above_form', trans('messages.contract.numberrange.failure'));
+                        }
+                    } else {
+                        Session::push('tmp_error_above_form', trans('messages.contract.numberrange.missing'));
+                    }
                 }
             }
         }

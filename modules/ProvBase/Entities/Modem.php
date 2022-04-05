@@ -2875,14 +2875,54 @@ class Modem extends \BaseModel
         ];
     }
 
-    public static function resolveModemsWithFiberNames()
+    public function selectOTO()
     {
-        $distinctFiberNames = self::select('fiber_name')
-            ->whereNotNull('fiber_name')
-            ->distinct()
-            ->get();
+        if (Module::collections()->has('SmartOnt') && $this->exists) {
 
-        return self::whereIn('fiber_name', $distinctFiberNames->pluck('fiber_name'))
-             ->get();
+            /* // not attached to an OTO contract – not an ONT */
+            /* if (! in_array($model->contract->type, ['OTO', 'OTO_STORAGE'])) { */
+            /*     // default – use version of BaseController */
+            /*     return parent::setupSelect2Field($model, $class, $field, $fn); */
+            /* }; */
+
+            // can move every ONT to every storage
+            $contractsStorage = Contract::where('type', '=', 'OTO_STORAGE')->where('id', '<>', $this->contract->id)->get();
+
+            $contractsOTO = collect();
+            if ('OTO_STORAGE' == $this->contract->type) {
+                $contractsOTO = \DB::table('contract')
+                    ->where('type', '=', 'OTO')
+                    ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
+                    ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
+                    ->whereNotIn('id', function ($q) {
+                        $q->select('contract_id')->from('modem');
+                    })
+                    ->get();
+            }
+
+            $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOTO);
+            $ret = [];
+            foreach ($contracts as $contract) {
+                if ('OTO' == $contract->type) {
+                    $ret[$contract->id] = $contract->zip;
+                    $ret[$contract->id] .= ' '.$contract->city;
+                    $ret[$contract->id] .= ', '.$contract->street;
+                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
+                    /* $ret[$contract->id] .= ' – SEP-ID: '.$contract->sep_id; */
+                    $ret[$contract->id] .= ', OTO-ID: '.$contract->oto_id;
+                    $ret[$contract->id] .= ' – '.$contract->oto_status;
+                    $ret[$contract->id] .= ' – '.$contract->alex_status;
+                } else {
+                    $ret[$contract->id] = 'STORAGE: ';
+                    $ret[$contract->id] .= $contract->zip;
+                    $ret[$contract->id] .= ' '.$contract->city;
+                    $ret[$contract->id] .= ', '.$contract->street;
+                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
+                }
+            }
+            asort($ret);
+
+            return $ret;
+        }
     }
 }

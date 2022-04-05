@@ -133,16 +133,39 @@ class ModemController extends \BaseController
         }
 
         // label has to be the same like column in sql table
+        $contractSelectHidden = Module::collections()->has('SmartOnt') ? '' : 'E';
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'select', 'name' => 'configfile_id', 'description' => 'Configfile', 'value' => $this->setupSelect2Field($model, 'Configfile'), 'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Modem.select2', ['relation' => 'configfiles'])], 'select' => $cfIds['keyById']],
+            [
+                'form_type' => 'select',
+                'name' => 'configfile_id',
+                'description' => 'Configfile',
+                'value' => $this->setupSelect2Field($model, 'Configfile'),
+                'help' => trans('helper.configfile_count').' '.trans('helper.modem.configfileSelect'),
+                'options' => [
+                    'class' => 'select2-ajax',
+                    'ajax-route' => route('Modem.select2', ['relation' => 'configfiles']),
+                ],
+                'select' => $cfIds['keyById'],
+            ],
             ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'options' => ['readonly'], 'hidden' => 'C', 'space' => 1],
             // TODO: show this dropdown only if necessary (e.g. not if creating a modem from contract context)
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'autocomplete' => ['modem'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number / CWMP-ID'],
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => 'PPP Username', 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
             ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'PPP Password', 'select' => $cfIds['tr069']],
-            array_merge(['form_type' => 'select', 'name' => 'contract_id', 'description' => 'Contract', 'hidden' => 'E', 'value' => $this->setupSelect2Field($model, 'Contract'), 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Modem.select2', ['relation' => 'contracts'])]], $help['contract']),
+            [
+                'form_type' => 'select',
+                'name' => 'contract_id',
+                'description' => 'Contract',
+                'hidden' => $contractSelectHidden,
+                'value' => Module::collections()->has('SmartOnt') ? $model->selectOTO() : $this->setupSelect2Field($model, 'Contract'),
+                'options' => Module::collections()->has('SmartOnt') ? [] : [
+                    'class' => 'select2-ajax',
+                    'ajax-route' => route('Modem.select2', ['relation' => 'contracts']),
+                ],
+                $help['contract'],
+            ],
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access',
                 'value' => '1', 'help' => trans('helper.Modem_InternetAccess'),
@@ -212,6 +235,12 @@ class ModemController extends \BaseController
         if (Module::collections()->has('SmartOnt')) {
             $smartont[] = [
                 'form_type' => 'text',
+                'name' => 'model',
+                'description' => 'Model',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
                 'name' => 'netgw_id',
                 'description' => 'NetGW ID',
                 'options' => ['readonly'],
@@ -276,7 +305,7 @@ class ModemController extends \BaseController
         }
 
         // default – use version of BaseController
-        return parent::setupSelect2Field($model, $class);
+        return parent::setupSelect2Field($model, $class, $field, $fn);
     }
 
     /**

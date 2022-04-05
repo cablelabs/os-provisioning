@@ -88,8 +88,48 @@ class ModemObserver
             return;
         }
 
-        if (! ($modem->wasRecentlyCreated && $modem->lng && $modem->lat && $modem->geocode_source)) {
-            $modem->setGeocodes();
+        // if testing: do not try to geocode or position modems (faked data; slows down the process)
+        if (\App::runningUnitTests()) {
+            return;
+        }
+
+        // get changed values
+        $diff = $modem->getDirty();
+
+        // special handling for SmartONT devices
+        if (\Module::collections()->has('SmartOnt')) {
+            if ('smartont' == $modem->qos->type) {
+                if (array_key_exists('contract_id', $diff)) {
+                    $modem->salutation = $modem->contract->salutation;
+                    $modem->company = $modem->contract->company;
+                    $modem->department = $modem->contract->department;
+                    $modem->firstname = $modem->contract->firstname;
+                    $modem->lastname = $modem->contract->lastname;
+                    $modem->country_code = $modem->contract->country_code;
+                    $modem->zip = $modem->contract->zip;
+                    $modem->city = $modem->contract->city;
+                    $modem->district = $modem->contract->district;
+                    $modem->street = $modem->contract->street;
+                    $modem->house_number = $modem->contract->house_number;
+                }
+            }
+        }
+
+        // get changed values
+        $diff = $modem->getDirty();
+
+        // Use Updating to set the geopos before a save() is called.
+        // Notice: that we can not call save() in update(). This will re-trigger
+        //         the Observer and re-call update() -> endless loop is the result.
+        if ($modem->wasRecentlyCreated && $modem->lng && $modem->lat && $modem->geocode_source) {
+            // do nothing
+        } elseif (multi_array_key_exists(['street', 'house_number', 'zip', 'city'], $diff)) {
+            $modem->geocode(false);
+        } elseif (multi_array_key_exists(['lng', 'lat'], $diff) && ! \App::runningInConsole()) {
+            // Manually changed geodata
+            // Change geocode_source only from MVC (and do not overwrite data from geocode command)
+            $user = \Auth::user();
+            $modem->geocode_source = $user->first_name.' '.$user->last_name;
         }
 
         // check if more values have changed – especially “x” and “y” which refreshes MPR
@@ -116,8 +156,9 @@ class ModemObserver
             return;
         }
 
-        // Only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         $diff = $modem->getDirty();
+
+        // Only restart, make dhcp and configfile and only restart dhcpd via systemdobserver when it's necessary
         if (multi_array_key_exists(['contract_id', 'public', 'internet_access', 'configfile_id', 'qos_id', 'mac', 'serial_num'], $diff)) {
             Modem::create_ignore_cpe_dhcp_file();
             $modem->make_dhcp_cm();
@@ -147,26 +188,21 @@ class ModemObserver
             $modem->updateAddressFromProperty();
         }
 
-        if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
-            if ($modem->isDirty('qos_id')) {
-                $deleteL2UserJob = new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem);
-                $createL2Job = new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem);
-                $deleteL2UserJob
-                    ->withChain([$createL2Job])
-                    ->catch(function () use ($modem) {
-                        Log::error('There was an error creating one or more intents', [$modem]);
-                    })->dispatch($modem);
+        if ($modem->isAltiplano() && Module::collections()->has('Altiplano') && $modem->isDirty('qos_id')) {
+            Bus::chain([
+                new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem),
+                new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem),
+            ])->catch(function (Throwable $e) {
+                Log::info('There was an error updating the intent');
+            })->dispatch();
+        }
 
-                return;
-            }
-
-            if ((bool) $modem->getOriginal('internet_access') !== (bool) $modem->internet_access) {
-                if ($modem->internet_access) {
-                    Log::error('internet_access activated. Try and create L2User.');
-                    \Queue::pushOn('high', new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem));
-                } else {
-                    Log::error('internet_access deactivated. Try and delete L2User.');
-                    \Queue::pushOn('high', new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem));
+        // special handling for SmartONT devices
+        if (\Module::collections()->has('SmartOnt')) {
+            if ('smartont' == $modem->qos->type) {
+                if (array_key_exists('contract_id', $diff)) {
+                    Log::debug('Pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id) to queue');
+                    \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
                 }
             }
         }
