@@ -226,7 +226,7 @@ class PhonenumberObserver
 
             // prepare the link (for view) for old modem (this may be useful as we get the breadcrumb for the new modem on our return to phonenumber.edit)
             $parameters = [
-                'modem' => $old_modem->id,
+                'Modem' => $old_modem->id,
             ];
             $title = 'modem '.$old_modem->id.' ('.$old_modem->mac.')';
             $modem_href = \HTML::linkRoute('Modem.edit', $title, $parameters, $attributes);
@@ -236,7 +236,7 @@ class PhonenumberObserver
             foreach ($old_modem->mtas as $tmp_mta) {
                 foreach ($tmp_mta->phonenumbers->all() as $tmp_phonenumber) {
                     $tmp_parameters = [
-                        'phonenumber' => $tmp_phonenumber->id,
+                        'Phonenumber' => $tmp_phonenumber->id,
                     ];
                     $tmp_title = $tmp_phonenumber->prefix_number.'/'.$tmp_phonenumber->number;
                     $tmp_href = \HTML::linkRoute('Phonenumber.edit', $tmp_title, $tmp_parameters, $attributes);
