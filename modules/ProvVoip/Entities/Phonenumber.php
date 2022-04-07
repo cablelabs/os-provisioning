@@ -332,7 +332,7 @@ class Phonenumber extends \BaseModel
      *
      * @author Patrick Reichel, Christian Schramm
      */
-    protected function isPhonenumberReassignmentAllowed($currentModem, $newModem): bool
+    public function isPhonenumberReassignmentAllowed($currentModem, $newModem): bool
     {
         $intersect = array_intersect_assoc($currentModem->getAttributes(), $newModem->getAttributes());
         $check = ['salutation', 'company', 'department', 'firstname', 'lastname', 'street',

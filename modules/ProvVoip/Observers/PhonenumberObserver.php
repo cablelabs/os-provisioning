@@ -87,7 +87,7 @@ class PhonenumberObserver
             return true;
         }
 
-        if (! $phonenumber->phonenumber_reassignment_allowed($old_mta->modem, $new_mta->modem)) {
+        if (! $phonenumber->isPhonenumberReassignmentAllowed($old_mta->modem, $new_mta->modem)) {
             $msg = trans('validation.reassign_phonenumber_to_mta_fail', ['id' => $new_mta->id]);
             $phonenumber->addAboveMessage($msg, 'error', 'form');
 
