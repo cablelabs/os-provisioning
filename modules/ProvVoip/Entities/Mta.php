@@ -42,8 +42,8 @@ class Mta extends \BaseModel
     {
         return [
             'mac' => ['mac'],
-            'modem_id' => ['required', 'exists:modem,id,deleted_at,NULL', 'min:1'],
-            'configfile_id' => ['required', 'exists:configfile,id,deleted_at,NULL', 'min:1'],
+            'modem_id' => ['required', 'exists:modem,id,deleted_at,NULL'],
+            'configfile_id' => ['required', 'exists:configfile,id,deleted_at,NULL,public,yes,device,mta'],
             'type' => ['required'],
             // 'hostname' => ['required', "unique:mta,hostname,$id"],
         ];
