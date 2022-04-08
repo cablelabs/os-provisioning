@@ -1877,12 +1877,13 @@ class BaseController extends Controller
      */
     protected function select2ViaRequestParam(array $models, BaseModel $model, string $class, string $field, string $placeholder): array
     {
-        $model = $models[$class]::findOrFail(request($field));
+        $select = [null => $placeholder];
 
-        return [
-            null => $placeholder,
-            $model->id => $model->label(),
-        ];
+        if ($model = $models[$class]::find(request($field))) {
+            $select[$model->id] = $model->label();
+        }
+
+        return $select;
     }
 
     /**
