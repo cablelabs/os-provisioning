@@ -678,12 +678,6 @@ class NetElement extends \BaseModel
     }
 
     /**
-     * Get List of netelements for edit view select field
-     *
-     * @return array
-     */
-
-    /**
      * Format Parent (NetElements) for Select 2 field and allow for searching.
      *
      * @param  string|null  $search
