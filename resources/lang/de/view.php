@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'address' => 'Adresse',
     'buttons' => [
         'revertDebtUpload' => 'OP Upload rückgängig machen',
     ],
@@ -624,6 +625,7 @@ return [
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Offene Posten',
+    'overview' => 'Übersicht',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',
     'preeq' => [
         'energy' => 'Amplitude / dB',
@@ -756,7 +758,7 @@ return [
         'polyTooltipEnd' => 'Den ersten Punkt klicken, um die Form abzuschließen',
         'polyTooltipCont' => 'Klicken, um der Form einen weiteren Punkt hinzuzufügen',
     ],
-    'address' => 'Adresse',
+    'topology' => 'Topologie',
     'true' => 'ja',
     'Type' => 'Typ',
     'users' => 'Nutzer',

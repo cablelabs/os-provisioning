@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'address' => 'Adress',
     'buttons' => [
         'revertDebtUpload' => 'Revert Debt Upload',
     ],
@@ -624,6 +625,7 @@ return [
     ],
     'name' => 'Name',
     'OverdueDebts' => 'Overdue Debts',
+    'overview' => 'Overview',
     'parentNetelement' => 'Parent <br> netelement',
     'preeq' => [
         'energy' => 'Amplitude / dB',
@@ -756,7 +758,7 @@ return [
         'polyTooltipEnd' => 'Click first point to close this shape.',
         'polyTooltipCont' => 'Click to continue drawing shape.',
     ],
-    'address' => 'Adress',
+    'topology' => 'Topology',
     'true' => 'true',
     'Type' => 'Type',
     'users' => 'User',

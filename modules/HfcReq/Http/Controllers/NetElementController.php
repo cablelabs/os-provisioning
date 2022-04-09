@@ -172,7 +172,11 @@ class NetElementController extends BaseController
         $defaultTabs = parent::editTabs($netelement);
 
         $tabs = $netelement->tabs();
-        unset($tabs[0]['route']);
+
+        if (isset($tabs[0]['route']) && $tabs[0]['route'] == 'NetElement.edit') {
+            unset($tabs[0]['route']);
+        }
+
         $tabs[] = $defaultTabs[1];
 
         return $tabs;

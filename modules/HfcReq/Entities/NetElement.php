@@ -972,6 +972,12 @@ class NetElement extends \BaseModel
         }
 
         $enabledModules = Module::collections();
+
+        // TODO: In future the user should be able to switch between Core and (yet available) access network view
+        if ($enabledModules->has('CoreMon')) {
+            return (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
+        }
+
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
         session(['lastNetElement' => $this->id]);
