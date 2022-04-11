@@ -1,9 +1,14 @@
 <?php
 
 return [
+    'debt' => [
+        'amount' => 'Postive when customer is charged, negative when customer gets credit',
+        'totalFee' => 'Deprecated. Just used to show the old total fee that is now determined by the sum of bank and extra fee. The field will probably be removed in future to reduce redundant informations.',
+    ],
+
     /*
-  * Authentication and Base
-  */
+     * Authentication and Base
+     */
     'translate'                 => 'You can help translating NMS PRIME at',
     'assign_role'                   => 'Assign one or more Roles to this User. Users without a Role cant use the NMS because they got no Permissions.',
     'assign_users'                  => 'Assign one or more Users to this Role. Changes made here are not visible in the GuiLog of the user.',
@@ -17,12 +22,13 @@ return [
     'View analysis pages of netgw' => 'This ability allows or forbids to access the analysis pages of a NetGw.',
     'Download settlement runs'  => 'This ability allows or forbids the download of settlement runs. This ability has no impact if it is forbidden to manage settlement runs.',
     /*
-  * Index Page - Datatables
-  */
+     * Index Page - Datatables
+     */
     'SortSearchColumn'              => 'This Column cannot be searched or ordered.',
     'PrintVisibleTable'             => 'Prints the shown table. If the table is filtered make sure to select the \\"All\\" option to display everything. Loading can take a few seconds.',
     'ExportVisibleTable'            => 'Exports the shown table. If the table is filtered make sure to select the \\"All\\" option to display everything. Loading can take a few seconds.',
     'ChangeVisibilityTable'         => 'Select the columns that should be visible.',
+    'clearFilter'                   => 'Clear column and table search filter.',
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'              => 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
@@ -48,6 +54,7 @@ return [
     //ProductController
     'product' => [
         'bundle'                => 'On bundled tarifs the minimum runtime of the contract is determined only be the internet tariff. Otherwise the last starting valid tariff (Voip or Internet) dictates this date.',
+        'markon'                => 'Additional charge to call data records. This percentual extra charge is currently only added to Opennumbers CDRs.',
         'maturity_min'          => 'Tariff minimum period/runtime/term. E.g. 14D (14 days), 3M (three months), 1Y (one year)',
         'maturity'              => 'Tariff period/runtime/term extension after the minimum runtime. <br> Will be automatically added when tariff was not canceled before period of notice. Default 1 month. If no maturity is given the end of term of the item is always set to the last day of the month. <br><br> E.g. 14D (14 days), 3M (three months), 1Y (one year)',
         'Name'                  => 'For Credits it is possible to assign a Type by adding the type name to the Name of the Credit - e.g.: \'Credit Device\'',
@@ -69,8 +76,8 @@ return [
     'settlement_verification'       => 'If activated it\'s not possible to repeat the Settlement Run. Customer Invoices are only visible when this checkbox is activated.',
 
     /*
-  * MODULE: Dashboard
-  */
+     * MODULE: Dashboard
+     */
     'next'                          => 'Next step: ',
     'set_isp_name'                  => 'Set internet service provider name',
     'create_netgw'                  => 'Create first NetGw/CMTS',
@@ -87,15 +94,16 @@ return [
     'create_modem'                  => 'Create first modem',
 
     /*
-  * MODULE: HfcReq
-  */
+     * MODULE: HfcReq
+     */
     'netelementtype_reload'         => 'In Seconds. Zero to deactivate autoreload. Decimals possible.',
     'netelementtype_time_offset'    => 'In Seconds. Decimals possible.',
     'undeleteables'                 => 'Net & Cluster can not be changed due to there relevance for all the Entity Relation Diagrams',
+    'gpsUpload'                     => 'Has to be a GPS file of type WKT, EWKT, WKB, EWKB, GeoJSON, KML, GPX or GeoRSS',
 
     /*
-  * MODULE: HfcSnmp
-  */
+     * MODULE: HfcSnmp
+     */
     'mib_filename'                  => 'The Filename is composed by MIB name & Revision. If there is already an existent identical File it\'s not possible to create it again.',
     'oid_link'                      => 'Go to OID Settings',
     'oid_table'                     => 'INFO: This Parameter belongs to a Table-OID. If you add/specify SubOIDs or/and indices, only these are considered for the snmpwalk. Besides the better Overview this can dramatically speed up the Creation of the Controlling View for the corresponding NetElement.',
@@ -107,14 +115,17 @@ return [
     'parameter_html_id'             => 'By adding an ID you can order this parameter in sequence to other parameters. In tables you can change the column order by setting the Sub-Params html id.',
 
     /*
-  * MODULE: ProvBase
-  */
+     * MODULE: ProvBase
+     */
     'contract' => [
         'valueDate' => 'Day of month for specific date of value. Overrides the requested collection date from global config for this contract in the SEPA XML.',
     ],
     'rate_coefficient'              => 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',
     'additional_modem_reset'        => 'Check if an additional button should be displayed, which resets the modem via SNMP without querying the NetGw.',
+    'auto_factory_reset'            => 'Performs an automatic factory reset for TR-069 CPEs, if relevant configurations have been changed, which reqiure a reprovision. (i.e. change of phonenumbers, PPPoE credentials or configfile)',
+    'acct_interim_interval'         => 'The number of seconds between each interim update to be sent from the NAS for a session (PPPoE).',
     'openning_new_tab_for_modem' => 'Check the box to open the modem edit page in new tab in topography view.',
+    'ppp_session_timeout'           => 'In seconds. PPP session will not be terminated when setting the value to zero.',
     //ModemController
     'Modem_InternetAccess'          => 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes.',
     'Modem_InstallationAddressChangeDate'   => 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at Envia.',
@@ -140,10 +151,13 @@ return [
     'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
     'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
     'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
+    'modem' => [
+        'configfileSelect' => 'It\'s not possible to change the device type of a modem via configfile (e.g. from \'cm\' to \'tr-69\'). Therefore please delete the modem and create a new one!',
+    ],
 
     /*
-  * MODULE: ProvVoip
-  */
+     * MODULE: ProvVoip
+     */
     //PhonenumberManagementController
     'PhonenumberManagement_activation_date' => 'Will be sent to provider as desired date, triggers active state of the phonenumber.',
     'PhonenumberManagement_deactivation_date' => 'Will be sent to provider as desired date, triggers active state of the phonenumber.',
@@ -159,8 +173,8 @@ return [
     'PhonenumberManagement_ExternalDeactivationDateWithEnvia' => 'Date of deactivation at envia TEL.',
     'PhonenumberManagement_Autogenerated' => 'This management has been created automatically. Please verify/change values, then uncheck this box.',
     /*
-  * MODULE VoipMon
-  */
+     * MODULE VoipMon
+     */
     'mos_min_mult10'                => 'Minimal Mean Opionion Score experienced during call',
     'caller'                        => 'Call direction from Caller to Callee',
     'a_mos_f1_min_mult10'           => 'Minimal Mean Opionion Score experienced during call for a fixed jitter buffer of 50ms',
@@ -175,12 +189,21 @@ return [
     'a_d300' => 'Number of packets experiencing a packet delay variation (i.e. jitter) greater than 300ms',
     'called' => 'Call direction from Callee to Caller',
     /*
- * Module Ticketsystem
- */
+     * Module Ticketsystem
+     */
     'assign_user' => 'Allowed to assign an user to a ticket.',
     'mail_env'    => 'Next: Set your Host/Username/Password in /etc/nmsprime/env/global.env to enable receiving Emails concerning Tickets',
     'noReplyMail' => 'The E-mail address which should be displayed as the sender, while creating/editing tickets. This address does not have to exist. For example: example@example.com',
     'noReplyName' => 'The name which should be displayed as the sender, while creating/editing tickets. For example: NMS Prime',
-    'ticket_settings' => 'Next: Set noreply name and address in Global Config Page.',
+    'ticket_settings' => 'Next: Set noreply name and address in Global Ticket Config Page.',
     'carrier_out'      => 'Carrier code of the future contractual partner. If left blank the phonenumber will be deleted.',
+    'ticketDistance' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the distance factor becomes. (default: 1)',
+    'ticketModemcount' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the affected Modem count becomes. (default: 1)',
+    'ticketOpentickets' => 'Multiplier for the auto ticket assignment. The higher the value, the more important the number of new and open Tickets for technicians becomes. (default: 1)',
+    'mailLink' => "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:",
+
+    /*
+     * Start alphabetical order
+     */
+    'endpointMac' => 'Can be left empty for all PPPoE provisioned modems (PPP username is used instead of MAC). With DHCP it can be left empty for IPv4. Then all devices behind the modem will get the specified IP, but only the last one that requested the IP will have a working IP connectivity. This is not yet implemented for IPv6 - please always specify the CPE MAC that shall get the public or fixed IP.',
 ];

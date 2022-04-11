@@ -17,5 +17,8 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'NoRoles' => 'You have no role(s) associated with your account!. Please contact your administrator.',
 
+    'accessDenied'      => 'Access Denied',
+    'permissionDenied'  => 'Permission Denied',
+    'This action is unauthorized.' => 'This action is unauthorized',
     'EnviaOrderDocument' => 'Access to EnviaOrderDocument not allowed.\nYou might be missing Permissions for ProvVoipEnvia - Please contact your administrator.',
 ];
