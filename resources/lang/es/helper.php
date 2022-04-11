@@ -28,6 +28,7 @@ return [
     'PrintVisibleTable'             => 'Imprime la tabla mostrada. Si la tabla esta filtrada, asegurarse de seleccionar la opcion \\"Todo\\" para mostrar todo. Espere algunos segundos.',
     'ExportVisibleTable'            => 'Exporta la tabla seleccionada. Si la tabla esta filtrada, asegurarse de seleccionar la opcion \\"Todo\\" para mostrar todo. Espere algunos segundos.',
     'ChangeVisibilityTable'         => 'Seleccione las columnas que deberian ser visibles.',
+    'clearFilter'                   => 'Clear column and table search filter.',
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'              => 'ISO 3166 ALPHA-2 (dos caracteres, p.e. “US”). Usado en formularios de direccion para especificar el pais.',
