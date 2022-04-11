@@ -4,6 +4,9 @@ return [
     // Index DataTable Header
     'active' => 'Active',
     'amount' => 'Cantidad',
+    'buttons' => [
+        'clearFilter' => 'Clear Search Filter',
+    ],
     'city' => 'Ciudad',
     'connected' => 'Conectado',
     'connection_type' => 'Tipo de conexión',
@@ -238,6 +241,7 @@ return [
     'modem.phy_updated_at' => 'PHY updated at',
     'modem.support_state' => 'Estado de Soporte',
     'modem.formatted_support_state' => 'Estado de Soporte',
+    'modem.last_inform' => 'Last Inform',
     'contract_valid' => 'Contrato valido?',
     // Modem option
     'modem_option' => [
@@ -273,12 +277,14 @@ return [
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Fecha de activacion',
     'phonenumbermanagement.deactivation_date' => 'Fecha de desactivacion',
-    // PhoneTariff
-    'phonetariff.name' => 'Tarifa telefonica',
-    'phonetariff.type' => 'Tipo',
-    'phonetariff.description' => 'Descripcion',
-    'phonetariff.voip_protocol' => 'Protocolo VOIP',
-    'phonetariff.usable' => 'Usable',
+    'phonetariff' => [
+        'name' => 'Tarifa telefonica',
+        'type' => 'Tipo',
+        'description' => 'Descripción 	',
+        'external_identifier' => 'External Identifier',
+        'voip_protocol' => 'Protocolo VOIP',
+        'usable' => 'Usable',
+    ],
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Tipo de orden',
     'enviaorder.orderstatus'  => 'Estado de orden',
@@ -288,11 +294,13 @@ return [
     'enviaorder.orderdate'  => 'Fecha de orden',
     'enviaorder_current'  => 'Acciones necesarias?',
     'enviaorder.contract.number' => 'Contrato',
+    'enviaorder.modem.id' => 'Modem ID',
     'phonenumber.number' => 'Numero',
     //ENVIA Contract
     'enviacontract.contract.number' => 'Contrato',
     'enviacontract.end_date' => 'Fecha de desenlace',
     'enviacontract.envia_contract_reference' => 'envia TEL referencia de contrato',
+    'enviacontract.modem.id' => 'Modem ID',
     'enviacontract.start_date' => 'Fecha de inicio',
     'enviacontract.state' => 'Estado',
     // CDR
@@ -310,6 +318,7 @@ return [
     'numberrange.type' => 'Tipo',
     'numberrange.costcenter.name' => 'Centro de costes',
     'realty' => [
+        'administration' => 'Administración',
         'agreement_from' => 'Válido desde',
         'agreement_to' => 'Válido hasta',
         'apartmentCount' => 'Total de apartamentos',
