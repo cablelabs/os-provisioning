@@ -4,6 +4,9 @@ return [
     // Index DataTable Header
     'active' => 'Active',
     'amount' => 'Amount',
+    'buttons' => [
+        'clearFilter' => 'Clear Search Filter',
+    ],
     'city' => 'City',
     'connected' => 'Connected',
     'connection_type' => 'Connection type',
@@ -238,6 +241,7 @@ return [
     'modem.phy_updated_at' => 'PHY updated at',
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
+    'modem.last_inform' => 'Last Inform',
     'contract_valid' => 'Contract valid?',
     // Modem option
     'modem_option' => [
@@ -273,12 +277,14 @@ return [
     'phonenumbermanagement.id' => 'ID',
     'phonenumbermanagement.activation_date' => 'Activation date',
     'phonenumbermanagement.deactivation_date' => 'Deactivation date',
-    // PhoneTariff
-    'phonetariff.name' => 'Phone Tariff',
-    'phonetariff.type' => 'Type',
-    'phonetariff.description' => 'Description',
-    'phonetariff.voip_protocol' => 'VOIP Protocol',
-    'phonetariff.usable' => 'Usable',
+    'phonetariff' => [
+        'name' => 'Phone Tariff',
+        'type' => 'Type',
+        'description' => 'Description',
+        'external_identifier' => 'External Identifier',
+        'voip_protocol' => 'VOIP Protocol',
+        'usable' => 'Usable',
+    ],
     // ENVIA enviaorder
     'enviaorder.ordertype'  => 'Order Type',
     'enviaorder.orderstatus'  => 'Order Status',
@@ -288,11 +294,13 @@ return [
     'enviaorder.orderdate'  => 'Order date',
     'enviaorder_current'  => 'Action needed?',
     'enviaorder.contract.number' => 'Contract',
+    'enviaorder.modem.id' => 'Modem Number',
     'phonenumber.number' => 'Number',
     //ENVIA Contract
     'enviacontract.contract.number' => 'Contract',
     'enviacontract.end_date' => 'End Date',
     'enviacontract.envia_contract_reference' => 'envia TEL Contract reference',
+    'enviacontract.modem.id' => 'Modem Number',
     'enviacontract.start_date' => 'Start Date',
     'enviacontract.state' => 'Status',
     // CDR
@@ -310,6 +318,7 @@ return [
     'numberrange.type' => 'Type',
     'numberrange.costcenter.name' => 'Cost center',
     'realty' => [
+        'administration' => 'Administration',
         'agreement_from' => 'Valid from',
         'agreement_to' => 'Valid to',
         'apartmentCount' => 'Total apartments',
