@@ -344,21 +344,27 @@ class ModemController extends \BaseController
             return trans('messages.modemAnalysis.actionExecuted');
         }
 
-        if (json_decode($task) === null) {
+        if ($taskDecode = json_decode($task) === null) {
             return trans('messages.JsonDecodeFailed');
         }
 
-        $id = rawurlencode($modem->getGenieAcsModel('_id'));
-        $taskDecode = json_decode($task, true);
+        $genieId = rawurlencode($modem->getGenieAcsModel('_id'));
+        if ($taskDecode == ['name' => 'connection_request']) {
+            $modem->callGenieAcsApi("/devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '');
+
+            Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
+
+            return trans('messages.modemAnalysis.actionExecuted');
+        }
 
         foreach (['factoryReset', 'reboot'] as $action) {
             if ($taskDecode === ['name' => $action] &&
-                json_decode(Modem::callGenieAcsApi("tasks?query={\"device\":\"$id\",\"name\":\"$action\"}", 'GET'))) {
+                json_decode(Modem::callGenieAcsApi("tasks?query={\"device\":\"$genieId\",\"name\":\"$action\"}", 'GET'))) {
                 return $action.trans('messages.modemAnalysis.actionAlreadyScheduled');
             }
         }
 
-        Modem::callGenieAcsApi("devices/$id/tasks?connection_request", 'POST', $task);
+        Modem::callGenieAcsApi("devices/$genieId/tasks?connection_request", 'POST', $task);
 
         return trans('messages.modemAnalysis.actionExecuted');
     }

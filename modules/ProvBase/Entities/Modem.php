@@ -2225,6 +2225,7 @@ class Modem extends \BaseModel
                 }, $genieCmds);
                 $genieCmds = array_flip($genieCmds);
                 $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
+                $genieCmds[json_encode(['name' => 'connection_request'])] = trans('messages.modemAnalysis.connectionRequest');
 
                 $genieId = $this->getGenieId();
                 $cwmpModel = $this->getCwmpDataModel($genieId);

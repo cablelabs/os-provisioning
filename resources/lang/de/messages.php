@@ -317,6 +317,7 @@ return [
         'setDns' => 'DNS setzen',
         'blockDhcp' => 'DHCP deaktivieren',
         'unblockDhcp' => 'DHCP aktivieren',
+        'connectionRequest' => 'Verbindungsanfrage',
         'setWlanFinished' => 'WLAN Einstellungen wurden erfolgreich übernommen',
         'setDnsFinished' => 'Dns wurde erfolgreich gesetzt',
         'blockDhcpFinished' => 'DHCP wurde erfolgreich deaktiviert - Modem wird neu gestartet',
