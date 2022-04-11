@@ -81,9 +81,15 @@
         <template v-if="selectedTask == 'custom/setWlan'">
             <form v-on:submit.prevent="setWlan" style="margin-top: 10px;">
                 <div class="form-group row">
+                    <label for="WLANIndex" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('view.modemAnalysis.index') }}</label>
+                    <div class="col-sm-10">
+                        <input v-model="getWlanSettings['index']" type="number" class="form-control" id="WLANIndex">
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="Channel" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('view.modemAnalysis.channel') }}</label>
                     <div class="col-sm-10">
-                        <input v-model="getWlanSettings['channel']" type="number" class="form-control" id="Channel">
+                        <input v-model="getWlanSettings['channel']" type="number" class="form-control" id="Channel" placeholder="{{ trans('view.modemAnalysis.wlanChannelInfo') }}" title="{{ trans('view.modemAnalysis.wlanChannelInfo') }}">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -162,7 +168,7 @@
             <table class="table streamtable table-bordered">
                 <thead>
                     <tr class="active">
-                        <th class="text-center" style="min-width: 20px;">#</th>
+                        <th class="text-center" style="min-width: 20px;">{{ trans('view.modemAnalysis.index') }}</th>
                         @foreach ($configInterface[array_key_first($configInterface)] as $name => $value)
                             <th class="text-center">{{ $name }}</th>
                         @endforeach
