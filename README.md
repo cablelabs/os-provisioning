@@ -1,10 +1,10 @@
 <p align="center">
-<a target="_blank" href="https://nmsprime.com"><img src="https://github.com/nmsprime/nmsprime/raw/master/public/images/nmsprime-logo.png" alt="NMS Prime Logo" title="NMS Prime - Open Source Provisioning Tool for Cable-, DOCSIS- and Broadband-Networks" width="250"/></a> <b>hosted</b> by
+<a target="_blank" href="https://nmsprime.com"><img src="https://github.com/cablelabs/os-provisioning/raw/dev/public/images/nmsprime-logo.png" alt="NMS Prime Logo" title="NMS Prime - Open Source Provisioning Tool for Cable-, DOCSIS- and Broadband-Networks" width="250"/></a> <b>hosted</b> by
 <a target="_blank" href="https://cablelabs.com"><img src="http://www.displaysummit.com/wp-content/uploads/2019/07/Cable-Labs-Logo-Red.png" alt="CableLabs Logo" width="250"/></a>
 </p>
 <br>
 
-[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/cablelabs/os-provisioning)
+[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://github.dev/cablelabs/os-provisioning)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/nmsprime/localized.svg)](https://crowdin.com/project/nmsprime)
 [![StyleCI](https://github.styleci.io/repos/109520753/shield?branch=dev)](https://github.styleci.io/repos/109520753)
 
@@ -12,7 +12,7 @@
 
 [NMS PRIME](https://nmsprime.com) is an Open Source Network **Provisioning Tool** and **Network Management Platform** that enables access across multiple access technologies/domains, like **DOCSIS**, **FTTH**, FTTx, **DSL** and WiFi. It allows a seamless user experience across multiple connectivity services. It reduces complexity for network operators through a simple and easy to adapt **application marketplace**.
 
-<div align="center"><a href="https://nmsprime.com"><img src="https://github.com/nmsprime/nmsprime/raw/i18n/public/images/apps_row.png" alt="NMS Prime Marketplace" title="NMS Prime Marketplace"/></a></div><br>
+<div align="center"><a href="https://nmsprime.com"><img src="https://github.com/cablelabs/os-provisioning/raw/dev/public/images/apps_row.png" alt="NMS Prime Marketplace" title="NMS Prime Marketplace"/></a></div><br>
 
 ## **Community** Applications
 - **Provisioning**
@@ -29,7 +29,7 @@
 - **CMTS**, OLT, **Router** and Switch Management via SNMP or TR-069
 - **Cable ingress detection**
 - Show and manage your IT infrastructure in real-time in **topographic maps** and entity relation diagrams
-- Auto configuration of **[Icinga2](https://icinga.com/)** and **[Cacti](https://www.cacti.net/index.php)** from one database
+- Auto configuration of **[Icinga2](https://icinga.com/)** and **[Cacti](https://www.cacti.net/)** from one database
 - **Ticket System**
 - Generic **SNMP GUI** creator
 - Basic billing functionality
@@ -49,7 +49,7 @@ NMS Prime is build with standard Linux tools, like
 - [Kea](https://www.isc.org/kea/) for IPv6
 - [BIND](https://linux.die.net/man/8/named)
 - [Icinga2](https://icinga.com/)
-- [Cacti](https://www.cacti.net/index.php)
+- [Cacti](https://www.cacti.net/)
 
 These tools are actively developed, approved and used. See [Design Architecture](https://devel.nmsprime.com/confluence/display/NMS/Architecture+Guidelines) for more information.
 
@@ -61,7 +61,7 @@ These tools are actively developed, approved and used. See [Design Architecture]
 **From RPM for CentOS 7 (RHEL 7)**
 
 ```bash
-curl -vsL https://raw.githubusercontent.com/nmsprime/nmsprime/master/INSTALL-REPO.sh | bash
+curl -vsL https://github.com/cablelabs/os-provisioning/raw/dev/INSTALL-REPO.sh | bash
 yum install nmsprime-*
 ```
 ### Enterprise Version
