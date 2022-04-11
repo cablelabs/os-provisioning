@@ -524,7 +524,11 @@ class ModemController extends \BaseController
         $modem = static::get_model_obj()->findOrFail($id);
 
         $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
-        $cwmpModel->blockDhcp();
+        ModemOption::updateOrCreate(['modem_id' => $modem->id, 'key' => 'dhcp_enable'], ['value' => 'false']);
+
+        if ($cwmpModel) {
+            $cwmpModel->blockDhcp();
+        }
 
         return response()->v0ApiReply([], true, $id);
     }
@@ -545,7 +549,11 @@ class ModemController extends \BaseController
         $modem = static::get_model_obj()->findOrFail($id);
 
         $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
-        $cwmpModel->unblockDhcp();
+        ModemOption::updateOrCreate(['modem_id' => $modem->id, 'key' => 'dhcp_enable'], ['value' => 'true']);
+
+        if ($cwmpModel) {
+            $cwmpModel->unblockDhcp();
+        }
 
         return response()->v0ApiReply([], true, $id);
     }
@@ -566,7 +574,12 @@ class ModemController extends \BaseController
         $modem = static::get_model_obj()->findOrFail($id);
 
         $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
-        $cwmpModel->setDns(request('dns'));
+        ModemOption::updateOrCreate(['modem_id' => $modem->id, 'key' => 'custom_dns_enable'], ['value' => 'true']);
+        ModemOption::updateOrCreate(['modem_id' => $modem->id, 'key' => 'custom_dns'], ['value' => request('dns')]);
+
+        if ($cwmpModel) {
+            $cwmpModel->setDns(request('dns'));
+        }
 
         return response()->v0ApiReply([], true, $id);
     }
@@ -587,7 +600,11 @@ class ModemController extends \BaseController
         $modem = static::get_model_obj()->findOrFail($id);
 
         $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
-        $cwmpModel->setDns('0.0.0.0,0.0.0.0');
+        ModemOption::updateOrCreate(['modem_id' => $modem->id, 'key' => 'custom_dns_enable'], ['value' => 'false']);
+
+        if ($cwmpModel) {
+            $cwmpModel->setDns('0.0.0.0,0.0.0.0');
+        }
 
         return response()->v0ApiReply([], true, $id);
     }
