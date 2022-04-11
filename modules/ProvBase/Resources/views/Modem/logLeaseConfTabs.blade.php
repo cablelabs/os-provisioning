@@ -163,13 +163,13 @@
                 <thead>
                     <tr class="active">
                         <th class="text-center" style="min-width: 20px;">#</th>
-                        @foreach ($wifi[array_key_first($wifi)] as $name => $value)
+                        @foreach ($configInterface[array_key_first($configInterface)] as $name => $value)
                             <th class="text-center">{{ $name }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($wifi as $entry => $config)
+                    @foreach ($configInterface as $entry => $config)
                         <tr>
                             <td>{{ $entry }}</td>
                             @foreach ($config as $name => $value)
