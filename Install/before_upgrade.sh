@@ -14,11 +14,14 @@ read -r -a auths <<< $(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsp
 
 # Avoid pgloader exceptions
 mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
+    UPDATE configfile set device = 'cm' where device is NULL or device = '';
     UPDATE contract set birthday = NULL where birthday = '0000-00-00';
     UPDATE item set valid_from = NULL where valid_from = '0000-00-00';
     UPDATE item set valid_to = NULL where valid_to = '0000-00-00';
+    UPDATE mta set type = 'sip' where type is NULL or type = '';
     UPDATE oid set type = 'u' where type = '' or type is null;
     UPDATE phonetariff set voip_protocol = 'SIP' where voip_protocol = '' or voip_protocol is null;
+    UPDATE sepamandate set valid_to = NULL where valid_to = '0000-00-00';
     ALTER TABLE settlementrun modify month smallint(6) null;
     ALTER TABLE invoice modify month smallint(6) null;
     ALTER TABLE costcenter modify billing_month smallint(6) null;
