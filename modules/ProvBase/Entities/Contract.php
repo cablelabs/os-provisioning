@@ -370,8 +370,8 @@ class Contract extends \BaseModel
         }
 
         if (Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
-            $ret['Edit']['DfSubscription']['class'] = 'DfSubscription';
-            $ret['Edit']['DfSubscription']['relation'] = $this->dfsubscriptions;
+            $ret[$i18nContract]['DfSubscription']['class'] = 'DfSubscription';
+            $ret[$i18nContract]['DfSubscription']['relation'] = $this->dfsubscriptions;
         }
 
         return $ret;
