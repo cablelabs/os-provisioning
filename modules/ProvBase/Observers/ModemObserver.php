@@ -111,6 +111,20 @@ class ModemObserver
                     $modem->district = $modem->contract->district;
                     $modem->street = $modem->contract->street;
                     $modem->house_number = $modem->contract->house_number;
+
+                    // use special format; later used as “description” in provisioning process
+                    // modules/SmartOnt/Console/SnmpTrapHandlerCommand.php
+                    $name = [
+                        $modem->zip,
+                        $modem->city,
+                        $modem->street,
+                        $modem->house_number,
+                    ];
+                    $name = implode('  ', $name);
+                    $name = \Str::ascii($name);
+                    $name = preg_replace('/[^\.a-zA-Z0-9_-]/', '_', $name);
+                    $name = \Str::limit($name, 128, '');
+                    $modem->name = $name;
                 }
             }
         }
