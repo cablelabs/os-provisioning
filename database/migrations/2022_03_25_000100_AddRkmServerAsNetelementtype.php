@@ -16,8 +16,6 @@
  * limitations under the License.
  */
 
-use Modules\HfcReq\Entities\HfcReq;
-use Modules\HfcReq\Entities\NetElement;
 use Illuminate\Database\Schema\Blueprint;
 use Modules\HfcReq\Entities\NetElementType;
 use Illuminate\Database\Migrations\Migration;
