@@ -207,7 +207,11 @@ class Modem extends \BaseModel
 
     public function label()
     {
-        $label = $this->mac ?: $this->ppp_username;
+        if (Module::collections()->has('SmartOnt')) {
+            $label = $this->serial_num;
+        } else {
+            $label = $this->mac ?: $this->ppp_username;
+        }
         $label .= $this->name ? ' - '.$this->name : '';
         $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
         $label .= $this->ppp_username ? ' - '.$this->ppp_username : '';

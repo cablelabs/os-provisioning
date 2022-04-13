@@ -133,7 +133,7 @@ class ModemController extends \BaseController
         }
 
         // label has to be the same like column in sql table
-        $contractSelectHidden = Module::collections()->has('SmartOnt') ? '' : 'E';
+        $contractSelectHidden = Module::collections()->has('SmartOnt') ? 'C' : 'E';
         $a = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
             [
