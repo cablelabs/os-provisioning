@@ -79,12 +79,16 @@ Vue.component("select2", {
       multiple: {
         type: Boolean,
         default: false
+      },
+      asArray: {
+        type: Boolean,
+        default: false
       }
     },
     template: "#select2-template",
     mounted() {
         this.select = $(this.$el)
-        this.value = this.multiple ? [this.initialValue] : this.initialValue
+        this.value = this.multiple || this.asArray ? [this.initialValue] : this.initialValue
 
         this.select.select2({
           data: this.options,

@@ -1192,6 +1192,56 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Create all commands that can be executed by GenieACS calls.
+     * These commands are used in the select field
+     * in the configfile pill of the modem analysis.
+     *
+     * @author Roy Schneider
+     *
+     * @return array $genieCmds
+     */
+    public function createGenieCommands()
+    {
+        $genieCmds = [];
+
+        // add custom command from configfile
+        preg_match_all('/^cmd;(.*)$/m', $this->configfile->text, $match);
+        foreach ($match[1] as $match) {
+            $match = explode(';', trim($match));
+            $genieCmds[$match[0]] = $genieCmds[$match[0]] ?? [];
+            if ($match[1] == 'get') {
+                $val = json_encode([
+                    'name' => 'getParameterValues',
+                    'parameterNames' => [$match[2]],
+                ]);
+            }
+
+            if ($match[1] == 'set') {
+                $val = json_encode([
+                    'name' => 'setParameterValues',
+                    'parameterValues' => [[$match[2], $match[3]]],
+                ]);
+            }
+
+            array_push($genieCmds[$match[0]], $val);
+        }
+
+        $genieCmds[trans('messages.factory_reset')] = json_encode(['name' => 'factoryReset']);
+        $genieCmds[trans('messages.modemAnalysis.connectionRequest')] = json_encode(['name' => 'connection_request']);
+
+        // add setDns, setWlan, blockDhcp, unblockDhcp
+        $genieId = $this->getGenieId();
+        $cwmpModel = $this->getCwmpDataModel($genieId);
+        if ($cwmpModel) {
+            foreach ($cwmpModel::$tasks as $task) {
+                $genieCmds[trans("messages.modemAnalysis.$task")] = "custom/$task";
+            }
+        }
+
+        return $genieCmds;
+    }
+
+    /**
      * Delete GenieACS presets.
      *
      * @author Roy Schneider
@@ -2205,50 +2255,24 @@ class Modem extends \BaseModel
             // Configfile tab
             $prov = json_decode(self::callGenieAcsApi("provisions?query={\"_id\":\"prov-{$this->id}\"}", 'GET'));
 
+            $configfile['text'] = [];
             if ($prov && isset($prov[0]->script)) {
                 $configfile['text'] = preg_split('/\r\n|\r|\n/', $prov[0]->script);
-
-                preg_match_all('/^cmd;(.*)$/m', $this->configfile->text, $match);
-                foreach ($match[1] as $match) {
-                    $match = explode(';', trim($match));
-                    if (count($match) != 3) {
-                        continue;
-                    }
-                    $genieCmds[array_shift($match)][] = $match;
-                }
-
-                $genieCmds = array_map(function ($cmd) {
-                    return json_encode([
-                        'name' => 'setParameterValues',
-                        'parameterValues' => $cmd,
-                    ]);
-                }, $genieCmds);
-                $genieCmds = array_flip($genieCmds);
-                $genieCmds[json_encode(['name' => 'factoryReset'])] = trans('messages.factory_reset');
-                $genieCmds[json_encode(['name' => 'connection_request'])] = trans('messages.modemAnalysis.connectionRequest');
-
-                $genieId = $this->getGenieId();
-                $cwmpModel = $this->getCwmpDataModel($genieId);
-                if ($cwmpModel) {
-                    foreach ($cwmpModel::$tasks as $task) {
-                        $genieCmds["custom/$task"] = trans("messages.modemAnalysis.$task");
-                    }
-                }
-            } else {
-                $configfile['text'] = [];
+                $genieCmds = $this->createGenieCommands();
             }
 
             foreach (json_decode($this->getGenieAcsTasks(), true) as $task) {
-                $genieCmds["tasks/{$task['_id']}"] = trans('messages.delete_task')." {$task['name']} {$task['device']}";
+                $genieCmds[trans('messages.delete_task')." {$task['name']} {$task['device']}"] = "tasks/{$task['_id']}";
             }
 
-            foreach ($genieCmds as $cmd => $name) {
+            // set task and name attribute to use it with Select2
+            foreach ($genieCmds as $name => $cmd) {
                 $genieCmds[] = ['task' => $cmd, 'name' => $name];
-                unset($genieCmds[$cmd]);
+                unset($genieCmds[$name]);
             }
 
             // Wifi and LAN tab
-            $genieId = $genieId ?? $this->getGenieId();
+            $genieId = $this->getGenieId();
             $dataModel = $this->getCwmpDataModel($genieId);
             $wifi = $this->getWifiConfigOverview($dataModel?->getName(), $genieId);
             $lan = $this->getLanConfigOverview($dataModel?->getName(), $genieId);

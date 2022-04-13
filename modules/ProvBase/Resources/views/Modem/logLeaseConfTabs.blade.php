@@ -68,7 +68,7 @@
                 </script>
                 <div class="row d-flex">
                     <div style="flex: 1;">
-                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task" v-on:input="setTask">
+                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task" v-on:input="setTask" :as-array="true">
                             <template v-for="option in taskOptions">
                                 <option :value="option.task" v-text="option.name"></option>
                             </template>

@@ -328,9 +328,30 @@ class ModemController extends \BaseController
             return trans('messages.modemNotFound');
         }
 
+        if (! $genieId = $modem->getGenieId()) {
+            return;
+        }
+
+        // setWlan and setDns
+        $formInput = request('taskName');
+
         $task = Request::get('task');
-        if (is_array($task) || \Str::startsWith($task, 'custom/')) {
-            $modem = Modem::find($id);
+        // used for commands like: "cmd;Fernzugang aktivieren;set;InternetGatewayDevice.User.1.Enable;1"
+        if (is_array($task) && ! $formInput) {
+            foreach ($task as $data) {
+                if (str_contains($data, 'getParameterValues')) {
+                    $modem->callGenieAcsApi("devices/$genieId/tasks?connection_request", 'POST', $data);
+                    continue;
+                }
+
+                $modem->callGenieAcsApi("devices/$genieId/tasks?connection_request", 'POST', $data);
+            }
+
+            return trans('messages.modemAnalysis.actionExecuted');
+        }
+
+        // setWlan, setDns, blockDhcp, unblockDhcp
+        if ($formInput || \Str::startsWith($task, 'custom/')) {
             $cwmpModel = $modem->getCwmpDataModel($modem->getGenieId());
             $task = request('taskName') ?? $task;
             $taskName = \Str::after($task, 'custom/');
@@ -338,6 +359,7 @@ class ModemController extends \BaseController
             return $cwmpModel->$taskName();
         }
 
+        // manually delete tasks
         if (\Str::startsWith($task, 'tasks/')) {
             Modem::callGenieAcsApi($task, 'DELETE');
 
@@ -348,7 +370,6 @@ class ModemController extends \BaseController
             return trans('messages.JsonDecodeFailed');
         }
 
-        $genieId = rawurlencode($modem->getGenieAcsModel('_id'));
         if ($taskDecode == ['name' => 'connection_request']) {
             $modem->callGenieAcsApi("/devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '');
 
