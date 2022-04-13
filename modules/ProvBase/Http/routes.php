@@ -57,6 +57,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\ProvBase\Entities\Configfile'],
     ]);
 
+    BaseRoute::post('Modem/{id}/refreshgenieobject', [
+        'as' => 'Modem.refreshGenieObject',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@refreshGenieObject',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     BaseRoute::get('Configfile/{id}/searchdeviceparams', [
         'as' => 'Configfile.searchDeviceParams',
         'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@searchDeviceParams',

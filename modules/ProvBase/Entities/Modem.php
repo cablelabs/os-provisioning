@@ -1419,9 +1419,6 @@ class Modem extends \BaseModel
             return;
         }
 
-        // it would be better to refresh it async or to retrieve it via notifications
-        self::callGenieAcsApi("devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '{"name":"refreshObject", "objectName": "InternetGatewayDevice.LANDevice.1.WLANConfiguration.*"}');
-
         return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.WLANConfiguration'),
             [
                 'Enabled' => 'Enable',
@@ -1448,9 +1445,6 @@ class Modem extends \BaseModel
         if ($dataModel != 'InternetGatewayDevice') {
             return;
         }
-
-        // it would be better to refresh it async or to retrieve it via notifications
-        self::callGenieAcsApi("devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '{"name":"refreshObject", "objectName": "InternetGatewayDevice.LANDevice.1.LANHostConfigManagement.*"}');
 
         return $this->generateConfigOverview($this->getGenieAcsModel('InternetGatewayDevice.LANDevice.1.LANHostConfigManagement'),
             [

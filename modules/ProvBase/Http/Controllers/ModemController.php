@@ -391,6 +391,26 @@ class ModemController extends \BaseController
     }
 
     /**
+     * Refresh a GenieACS object.
+     *
+     * @author Roy Schneider
+     *
+     * @return string
+     */
+    public function refreshGenieObject($id)
+    {
+        $modem = Modem::find($id);
+
+        $modem::callGenieAcsApi(
+            "devices/".$modem->getGenieId()."/tasks?timeout=3000&connection_request",
+            'POST',
+            json_encode(['name' => 'refreshObject', 'objectName' => request('object')])
+        );
+
+        return trans('messages.modemAnalysis.refreshFinished');
+    }
+
+    /**
      * Return tree view of all used firmwares
      *
      * @return View

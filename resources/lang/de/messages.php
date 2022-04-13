@@ -324,6 +324,8 @@ return [
         'unblockDhcpFinished' => 'DHCP wurde erfolgreich aktivieren - Modem wird neu gestartet',
         'missingInput' => 'Ungültige Eingabe - bitte füllen Sie alle Felder aus.',
         'notCapable' => 'Das Gerät unterstützt diese Aufgabe nicht.',
+        'refreshInProgress' => 'Die Werte werden aktualisiert. Das kann einige Sekunden dauern.',
+        'refreshFinished' => 'Die Werte wurden erfolgreich aktualisiert.',
     ],
     'modem_no_diag'         => 'Keine Diagramme verfügbar',
     'SvgGenerationFailed'   => 'Erzeugung der SVG Datei fehlgeschlagen',
