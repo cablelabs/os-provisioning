@@ -260,6 +260,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('voipmon:match_records')->everyFiveMinutes();
             $schedule->command('voipmon:delete_old_records')->daily();
         }
+
+        // TODO: run Kernel.php and supervisor queue workers as user 'apache'
+        exec('chown -R apache:apache '.storage_path('framework/cache'));
     }
 
     /**
