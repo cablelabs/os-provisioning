@@ -289,31 +289,12 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
 
         system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
         echo "radius\n";
-        exec("sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///$db", $ret);
-        echo implode(PHP_EOL, $ret)."\n";
 
-        // Same DB as nmsprime -> remove all tables that dont belong to radius, move radius tables to schema public
-        $radTables = ['nas', 'radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radippool', 'radpostauth', 'radreply', 'radusergroup'];
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
+        \Artisan::call('nms:raddb-repopulate');
 
-        exec('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -t -c "SELECT table_name FROM information_schema.tables WHERE table_schema = \'nmsprime\'"', $tables);
-
-        foreach ($tables as $table) {
-            $table = trim($table);
-
-            if (! $table) {
-                continue;
-            }
-
-            if (in_array($table, $radTables)) {
-                // Move table to schema public
-                system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'ALTER TABLE nmsprime.$table SET SCHEMA public'");
-            } else {
-                // drop table
-                echo "Drop table $table of schema nmsprime in db radius\n";
-                system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'DROP TABLE nmsprime.$table cascade'");
-            }
-        }
-
+        // Add radius user
         system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"
             CREATE USER $user PASSWORD '$psw';
             GRANT USAGE ON SCHEMA public TO $user;
@@ -326,16 +307,6 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" radius`;
             do sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"alter table ".'$tbl'." owner to $user\"; done");
 
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'alter function on_update_current_timestamp_radpostauth set schema public'");
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c 'alter function on_update_current_timestamp_authreminders set schema public'");
-
-        system('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "ALTER table radippool
-            ALTER COLUMN calledstationid drop not null,
-            ALTER COLUMN callingstationid drop not null,
-            ALTER COLUMN pool_key drop not null
-        "');
-
-        system('sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c "DROP SCHEMA nmsprime cascade"');
         system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' /etc/raddb/mods-available/sql");
     }
 
