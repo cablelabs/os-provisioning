@@ -1889,8 +1889,10 @@ class Modem extends \BaseModel
         }
 
         // renew RadCheck, if non-exisiting or not as expected
-        if ($this->radcheck()->count() != 2) {
-            $this->radcheck()->delete();
+        if ($count = $this->radcheck()->count() != 2) {
+            if ($count) {
+                $this->radcheck()->delete();
+            }
 
             $check = new RadCheck;
             $check->username = $this->ppp_username;
