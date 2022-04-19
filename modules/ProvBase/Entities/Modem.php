@@ -2931,4 +2931,50 @@ class Modem extends \BaseModel
             return $ret;
         }
     }
+
+    /**
+     * In case of SmartOnt devices we have to take care of deprovisoning at OLT.
+     * We implement some strict rules related to deletion.
+     *
+     * @author Patrick Reichel
+     */
+    public function delete()
+    {
+
+        if (\Module::collections()->has('SmartOnt')) {
+
+            if ('GESA' == config('smartont.flavor.active')) {
+
+                // deletion only allowed from storage OTO
+                if ('OTO' == $this->contract->type) {
+                    $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
+                    $msg .= ': ';
+                    $msg .= trans('smartont::messages.ontNotDeletableFromOTO');
+                    $this->addAboveMessage($msg, 'error');
+                    return false;
+                }
+
+                // check if deprovisioning was successful
+                if ('OTO_STORAGE' == $this->contract->type) {
+                    if (
+                        (! is_null($this->ont_id)) ||
+                        (! is_null($this->netgw_id)) ||
+                        (! is_null($this->frame_id)) ||
+                        (! is_null($this->slot_id)) ||
+                        (! is_null($this->port_id)) ||
+                        (! is_null($this->service_port_id))
+                    ) {
+                        $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
+                        $msg .= ': ';
+                        $msg .= trans('smartont::messages.ontNotDeletableWithoutDeprovisioning');
+                        $this->addAboveMessage($msg, 'error');
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // when arriving here: start the standard deletion procedure
+        return parent::delete();
+    }
 }
