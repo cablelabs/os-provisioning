@@ -5,6 +5,8 @@ ret=$(sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "SELECT EXISTS(SELE
 exists=$(echo $ret | cut -d ' ' -f 3)
 
 if [ exists = 't' ]; then
+    echo 'ERROR: nmsprime database already exists. Exit'
+
     exit
 fi
 
