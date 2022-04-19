@@ -54,11 +54,6 @@ class NetGwController extends \BaseController
             ];
         }
 
-        $nas_secret = '';
-        if ($model->type == 'bras' && $model->nas) {
-            $nas_secret = $model->nas->secret;
-        }
-
         // NETGW series selection based on NETGW company
         if (\Request::filled('company')) { // for auto reload
             $company = \Request::get('company');
@@ -84,7 +79,7 @@ class NetGwController extends \BaseController
             ['form_type' => 'ip', 'name' => 'ipv6', 'description' => 'IPv6', 'help' => 'Online'],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'SNMP Private Community String'],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'SNMP Public Community String'],
-            ['form_type' => 'text', 'name' => 'nas_secret', 'description' => 'RADIUS Client secret', 'select' => 'BRAS', 'init_value' => $nas_secret],
+            ['form_type' => 'text', 'name' => 'nas_secret', 'description' => 'RADIUS Client secret', 'select' => 'BRAS'],
             ['form_type' => 'text', 'name' => 'coa_port', 'description' => 'RADIUS Change of Authorization port', 'select' => 'BRAS'],
             ['form_type' => 'checkbox', 'name' => 'ssh_auto_prov', 'description' => 'Auto-Provisioning via SSH', 'value' => '1', 'select' => 'OLT', 'help' => trans('helper.ssh_auto_prov')],
             ['form_type' => 'text', 'name' => 'username', 'description' => 'SSH username', 'checkbox' => 'show_on_ssh_auto_prov'],

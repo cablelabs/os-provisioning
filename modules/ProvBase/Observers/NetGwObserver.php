@@ -97,8 +97,7 @@ class NetGwObserver
             return;
         }
 
-        // we need to use \Request::get() since nas_secret is guarded
-        $update = ['nasname' => $netgw->ip, 'secret' => \Request::get('nas_secret')];
+        $update = ['nasname' => $netgw->ip, 'secret' => $netgw->nas_secret];
 
         if ($netgw->nas()->count()) {
             $netgw->nas()->update($update);

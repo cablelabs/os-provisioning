@@ -37,7 +37,7 @@ class NetGw extends \BaseModel
     public $table = 'netgw';
 
     // Attributes
-    public $guarded = ['formatted_support_state', 'nas_secret'];
+    public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
     protected $with = ['ippools', 'netelement:id,cluster,net,ip,parent_id,netelementtype_id,prov_device_id,_lft,_rgt'];
     protected $without = ['netelement.netelementtype'];
