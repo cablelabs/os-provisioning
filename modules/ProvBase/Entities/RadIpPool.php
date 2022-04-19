@@ -39,9 +39,9 @@ class RadIpPool extends \BaseModel
      */
     public static function repopulateDb()
     {
-        RadIpPool::truncate();
-
         echo "Build ippool related radippool table ...\n";
+
+        $allocatedIps = RadIpPool::whereNotNull('expiry_time')->where('expiry_time', '>', now())->get();
 
         $ippoolQuery = IpPool::join('netgw', 'netgw.id', 'ippool.netgw_id')
             ->where('netgw.type', 'bras')
@@ -53,11 +53,21 @@ class RadIpPool extends \BaseModel
         $count = $ippoolQuery->count();
         $i = 0;
 
+        RadIpPool::truncate();
+
         foreach ($ippoolQuery->get() as $pool) {
             $job = new RadIpPoolJob($pool, [], [], true);
             $job->handle();
 
             echo ($i++).'/'.$count."\r";
+        }
+
+        foreach ($allocatedIps as $radip) {
+            RadIpPool::where('framedipaddress', $radip->framedipaddress)->update([
+                'callingstationid' => $radip->callingstationid,
+                'expiry_time' => $radip->expiry_time,
+                'username' => $radip->username,
+            ]);
         }
     }
 }
