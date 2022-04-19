@@ -63,6 +63,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::post('provmon/{id}/refreshRealtime', [
+        'as' => 'ProvMon.refreshRealtimeTr069',
+        'uses' => 'Modules\ProvMon\Http\Controllers\ProvMonController@refreshRealtimeTr069',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     BaseRoute::get('Configfile/{id}/searchdeviceparams', [
         'as' => 'Configfile.searchDeviceParams',
         'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@searchDeviceParams',
