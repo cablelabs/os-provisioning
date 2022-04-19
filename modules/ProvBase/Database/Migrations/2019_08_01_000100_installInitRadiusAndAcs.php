@@ -26,7 +26,6 @@ class InstallInitRadiusAndAcs extends BaseMigration
      */
     public function up()
     {
-        // Use schema from git, since it adds the id column in radusergroup
         DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
         \Artisan::call('nms:radgroupreply-repopulate');
 
