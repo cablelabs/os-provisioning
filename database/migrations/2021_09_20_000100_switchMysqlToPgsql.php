@@ -132,6 +132,8 @@ class SwitchMysqltoPgsql extends BaseMigration
 
             system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = '$schema';\" $db`;
                 do sudo -u postgres /usr/pgsql-13/bin/psql $db -c \"alter table $schema.".'$tbl'." owner to $user\"; done");
+
+            system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c 'DROP function nmsprime.on_update_current_timestamp_authreminders CASCADE; DROP function nmsprime.on_update_current_timestamp_radpostauth CASCADE;'");
         }
     }
 
