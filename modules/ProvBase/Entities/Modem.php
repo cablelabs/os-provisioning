@@ -2898,9 +2898,11 @@ class Modem extends \BaseModel
                     ->where('type', '=', 'OTO')
                     ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
                     ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
-                    ->whereNotIn('id', function ($q) {
-                        $q->select('contract_id')->from('modem');
-                    })
+                    // hint: there may be more than one ONT at an OTO (for different services)
+                    // at least at GESA (leave clause here if needed for othere flavors)
+                    /* ->whereNotIn('id', function ($q) { */
+                    /*     $q->select('contract_id')->from('modem'); */
+                    /* }) */
                     ->get();
             }
 
