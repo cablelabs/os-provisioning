@@ -307,7 +307,15 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" radius`;
             do sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"alter table ".'$tbl'." owner to $user\"; done");
 
-        system("sed -i 's/dialect = \"mysql\"/dialect = \"postgresql\"/' /etc/raddb/mods-available/sql");
+        // Adapt /etc/raddb/ config
+        system("sed -e 's|dialect = \"mysql\"|dialect = \"postgresql\"|' \\
+            -i /etc/raddb/mods-available/sql /etc/raddb/mods-available/sqlippool");
+        system("sed -e 's|driver = \"rlm_sql_mysql\"|driver = \"rlm_sql_postgresql\"|' \\
+            -e 's|login = \"nmsprime\"|login = \"$user\"|' \\
+            -e 's|password = \".*\"|password = \"$psw\"|' \\
+            -e 's|radius_db = \".*\"|radius_db = \"radius\"|' \\
+            -e 's|#server = \".*\"|server = \"localhost\"|' \\
+            -i /etc/raddb/mods-available/sql");
     }
 
     private function changeConfig()
