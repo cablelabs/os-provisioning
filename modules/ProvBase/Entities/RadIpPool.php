@@ -47,7 +47,7 @@ class RadIpPool extends \BaseModel
             ->where('netgw.type', 'bras')
             ->where(function ($query) {
                 $query->where('ippool.type', 'CPEPriv')
-                    ->orWhere('ippool.type', 'CPEPriv');
+                    ->orWhere('ippool.type', 'CPEPub');
             });
 
         $count = $ippoolQuery->count();
