@@ -16,6 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+use Modules\ProvBase\Entities\RadAcct;
+use Modules\ProvBase\Entities\RadIpPool;
+use Illuminate\Database\Schema\Blueprint;
+use Modules\ProvBase\Entities\RadPostAuth;
+
 class SwitchMysqltoPgsql extends BaseMigration
 {
     public $migrationScope = 'system';
@@ -316,6 +322,47 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
             -e 's|radius_db = \".*\"|radius_db = \"radius\"|' \\
             -e 's|#server = \".*\"|server = \"localhost\"|' \\
             -i /etc/raddb/mods-available/sql");
+
+        // Add nas_secret column to netgw
+        Schema::table('netgw', function (Blueprint $table) {
+            $table->string('nas_secret')->nullable();
+        });
+
+        // Get entries of radippool, radacct, radpostauth
+        $allocatedIps = DB::connection('mysql')->table('radippool')->whereNotNull('expiry_time')->where('expiry_time', '>', now())->get();
+        foreach ($allocatedIps as $radip) {
+            RadIpPool::where('framedipaddress', $radip->framedipaddress)->update([
+                'callingstationid' => $radip->callingstationid,
+                'expiry_time' => $radip->expiry_time,
+                'username' => $radip->username,
+            ]);
+        }
+
+        $radaccts = DB::connection('mysql')->table('radacct')->orderBy('radacctid', 'desc')->groupBy('framedipaddress')->get();
+        foreach ($radaccts as $radacct) {
+            $data = (array) $radacct;
+            unset($data['radacctid']);
+
+            $radacct = new RadAcct();
+            foreach ($data as $key => $value) {
+                $radacct->$key = $value;
+            }
+
+            $radacct->saveQuietly();
+        }
+
+        $radpostauths = DB::connection('mysql')->table('radpostauth')->orderBy('id', 'desc')->groupBy('username')->get();
+        foreach ($radpostauths as $radpa) {
+            $data = (array) $radpa;
+            unset($data['id']);
+
+            $radpa = new RadPostAuth();
+            foreach ($data as $key => $value) {
+                $radpa->$key = $value;
+            }
+
+            $radpa->saveQuietly();
+        }
     }
 
     private function changeConfig()
