@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Modules\ProvBase\Observers\NetGwObserver;
+
 class Nas extends \BaseModel
 {
     protected $connection = 'pgsql-radius';
@@ -31,5 +33,24 @@ class Nas extends \BaseModel
     // freeradius-mysql does not use softdeletes
     public static function bootSoftDeletes()
     {
+    }
+
+    /**
+     * Truncate nas table and refresh all entries - corresponds to Netgw
+     */
+    public static function repopulateDb()
+    {
+        echo "Build netgw related nas table ...\n";
+
+        Nas::truncate();
+
+        $netgws = NetGw::where('type', 'bras')->get();
+        $count = $netgws->count();
+
+        foreach ($netgws as $i => $netgw) {
+            NetGwObserver::updateNas($netgw);
+
+            echo $i.'/'.$count."\r";
+        }
     }
 }

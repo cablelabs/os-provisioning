@@ -19,9 +19,11 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\Qos;
-use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Observers\QosObserver;
+use Modules\ProvBase\Entities\Nas;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\RadCheck;
+use Modules\ProvBase\Entities\RadIpPool;
+use Modules\ProvBase\Entities\RadUserGroup;
 use Modules\ProvBase\Entities\RadGroupReply;
 
 class RepopulateRadGroupReplyCommand extends Command
@@ -31,14 +33,14 @@ class RepopulateRadGroupReplyCommand extends Command
      *
      * @var string
      */
-    protected $name = 'nms:radgroupreply-repopulate';
+    protected $name = 'nms:raddb-repopulate';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Truncate radgroupreply table and refresh all entries';
+    protected $description = 'Truncate radius config tables and refresh all entries';
 
     /**
      * Execute the console command.
@@ -46,7 +48,8 @@ class RepopulateRadGroupReplyCommand extends Command
      * This is called during an nmsprime update,
      * since $radiusAttributes may have changed
      *
-     * @return mixed
+     * The command truncates all radius tables that configure the RADIUS server and repopulates them.
+     * It is the corresponding command to the DHCP command 'nms:dhcp'
      */
     public function handle()
     {
@@ -61,29 +64,42 @@ class RepopulateRadGroupReplyCommand extends Command
             }
         }
 
-        RadGroupReply::truncate();
+        Nas::repopulateDb();                    // NetGw
+        RadGroupReply::repopulateDb();          // QoS
+        RadIpPool::repopulateDb();              // IpPool
 
-        $provbase = ProvBase::first();
+        $this->repopulateRadModems();
+    }
 
-        $insert = [
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Port-Limit', 'op' => ':=', 'value' => '1'],
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-MTU', 'op' => ':=', 'value' => '1492'],
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-Protocol', 'op' => ':=', 'value' => 'PPP'],
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Service-Type', 'op' => ':=', 'value' => 'Framed-User'],
-            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Acct-Interim-Interval', 'op' => ':=', 'value' => $provbase->acct_interim_interval],
-        ];
+    /**
+     * Repopulate modem related tables radcheck and radusergroup
+     *
+     * For performance reasons this is done in one function to not query all modems from DB twice
+     */
+    public function repopulateRadModems()
+    {
+        $chunksize = 1000;
+        $modemQuery = Modem::join('configfile as cf', 'cf.id', 'modem.configfile_id')
+            ->where('cf.device', 'tr069')
+            ->where('internet_access', 1);
+        $count = $modemQuery->count();
 
-        if ($sessionTimeout = $provbase->ppp_session_timeout) {
-            $insert[] = ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Session-Timeout', 'op' => ':=', 'value' => $sessionTimeout];
-        }
+        echo "Build modem related radcheck and radusergroup table ...\n";
 
-        // this (Fall-Through) MUST be the last entry of $defaultGroup
-        $insert[] = ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Fall-Through', 'op' => '=', 'value' => 'Yes'];
-        RadGroupReply::insert($insert);
+        RadCheck::truncate();                   // Modem
+        RadUserGroup::truncate();              // Pivot of QoS to Modem
 
-        $observer = new QosObserver;
-        foreach (Qos::all() as $qos) {
-            $observer->created($qos);
-        }
+        echo "0/$count\r";
+
+        $modemQuery->chunk($chunksize, function ($modems) use ($count, $chunksize) {
+            static $i = 1;
+
+            foreach ($modems as $modem) {
+                // TODO: Write INSERT statements to file and hand it over to DB to improve performance
+                $modem->updateRadius();
+            }
+
+            echo $i * $chunksize.'/'.$count."\r";
+        });
     }
 }

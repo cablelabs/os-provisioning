@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Modules\ProvBase\Jobs\RadIpPoolJob;
+
 class RadIpPool extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -30,5 +32,32 @@ class RadIpPool extends \BaseModel
     // freeradius-mysql does not use softdeletes
     public static function bootSoftDeletes()
     {
+    }
+
+    /**
+     * Truncate radippool table and refresh all entries - corresponds to IpPool
+     */
+    public static function repopulateDb()
+    {
+        RadIpPool::truncate();
+
+        echo "Build ippool related radippool table ...\n";
+
+        $ippoolQuery = IpPool::join('netgw', 'netgw.id', 'ippool.netgw_id')
+            ->where('netgw.type', 'bras')
+            ->where(function ($query) {
+                $query->where('ippool.type', 'CPEPriv')
+                    ->orWhere('ippool.type', 'CPEPriv');
+            });
+
+        $count = $ippoolQuery->count();
+        $i = 0;
+
+        foreach ($ippoolQuery->get() as $pool) {
+            $job = new RadIpPoolJob($pool, [], [], true);
+            $job->handle();
+
+            echo ($i++).'/'.$count."\r";
+        }
     }
 }

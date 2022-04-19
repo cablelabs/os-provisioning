@@ -87,7 +87,7 @@ class NetGwObserver
      *
      * @author Ole Ernst
      */
-    private static function updateNas($netgw)
+    public static function updateNas($netgw)
     {
         // netgw is deleted or its type was changed to != bras
         if ($netgw->deleted_at || $netgw->type != 'bras') {

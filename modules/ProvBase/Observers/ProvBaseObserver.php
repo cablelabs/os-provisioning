@@ -66,7 +66,7 @@ class ProvBaseObserver
         }
 
         if (array_key_exists('acct_interim_interval', $changes)) {
-            Artisan::call('nms:radgroupreply-repopulate');
+            RadGroupReply::repopulateDB();
         }
 
         if (array_key_exists('random_ip_allocation', $changes)) {

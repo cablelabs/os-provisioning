@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Entities;
 
+use Modules\ProvBase\Observers\QosObserver;
+
 class RadGroupReply extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -54,5 +56,36 @@ class RadGroupReply extends \BaseModel
     // freeradius-mysql does not use softdeletes
     public static function bootSoftDeletes()
     {
+    }
+
+    /**
+     * Truncate radgroupreply table and refresh all entries - corresponds to Qos
+     */
+    public static function repopulateDb()
+    {
+        RadGroupReply::truncate();
+
+        $provbase = ProvBase::first();
+
+        $insert = [
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Port-Limit', 'op' => ':=', 'value' => '1'],
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-MTU', 'op' => ':=', 'value' => '1492'],
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Framed-Protocol', 'op' => ':=', 'value' => 'PPP'],
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Service-Type', 'op' => ':=', 'value' => 'Framed-User'],
+            ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Acct-Interim-Interval', 'op' => ':=', 'value' => $provbase->acct_interim_interval],
+        ];
+
+        if ($sessionTimeout = $provbase->ppp_session_timeout) {
+            $insert[] = ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Session-Timeout', 'op' => ':=', 'value' => $sessionTimeout];
+        }
+
+        // this (Fall-Through) MUST be the last entry of $defaultGroup
+        $insert[] = ['groupname' => RadGroupReply::$defaultGroup, 'attribute' => 'Fall-Through', 'op' => '=', 'value' => 'Yes'];
+        RadGroupReply::insert($insert);
+
+        $observer = new QosObserver;
+        foreach (Qos::all() as $qos) {
+            $observer->created($qos);
+        }
     }
 }
