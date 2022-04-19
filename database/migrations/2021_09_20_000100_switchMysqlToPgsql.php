@@ -173,7 +173,7 @@ class SwitchMysqltoPgsql extends BaseMigration
             DB::statement('ALTER table modem drop column ipv4_tmp;');
             // ALTER COLUMN broadcast_ip type inet USING broadcast_ip::inet,
 
-            foreach (\Modules\ProvBase\Entities\IpPool::all() as $ippool) {
+            foreach (\Modules\ProvBase\Entities\IpPool::withTrashed()->get() as $ippool) {
                 \Modules\ProvBase\Entities\IpPool::where('id', $ippool->id)->update(['net' => $ippool->net.$ippool->maskToCidr()]);
             }
 
