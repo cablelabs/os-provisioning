@@ -2138,7 +2138,8 @@ CREATE TABLE nmsprime.netgw (
     ssh_port integer,
     ssh_auto_prov boolean DEFAULT false,
     coa_port integer,
-    ipv6 character varying(191)
+    ipv6 character varying(191),
+    nas_secret character varying(191),
 );
 
 
