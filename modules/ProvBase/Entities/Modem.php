@@ -209,12 +209,13 @@ class Modem extends \BaseModel
     {
         if (Module::collections()->has('SmartOnt')) {
             $label = $this->serial_num;
+            $label .= $this->model ? ' - '.$this->model : '';
         } else {
             $label = $this->mac ?: $this->ppp_username;
+            $label .= $this->name ? ' - '.$this->name : '';
+            $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
+            $label .= $this->ppp_username ? ' - '.$this->ppp_username : '';
         }
-        $label .= $this->name ? ' - '.$this->name : '';
-        $label .= $this->firstname ? ' - '.$this->firstname.' '.$this->lastname : '';
-        $label .= $this->ppp_username ? ' - '.$this->ppp_username : '';
 
         return $label;
     }

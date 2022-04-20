@@ -146,4 +146,10 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@realtimePing',
         'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
+
+    BaseRoute::post('Modem/import', [
+        'as' => 'Modem.import',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@import',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
+    ]);
 });

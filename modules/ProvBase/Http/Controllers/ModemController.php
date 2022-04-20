@@ -18,21 +18,22 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use App\GlobalConfig;
-use App\Http\Controllers\BaseViewController;
-use App\Sla;
-use App\V1\Repository;
-use Bouncer;
-use Illuminate\Support\Facades\Session;
-use Modules\ProvBase\Entities\Configfile;
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\ModemOption;
-use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Services\ModemService;
-use Nwidart\Modules\Facades\Module;
-use Request;
 use View;
+use App\Sla;
+use Bouncer;
+use Request;
+use App\GlobalConfig;
+use App\V1\Repository;
+use Modules\ProvBase\Entities\Qos;
+use Nwidart\Modules\Facades\Module;
+use Modules\ProvBase\Entities\Modem;
+use Illuminate\Support\Facades\Session;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\ModemOption;
+use Modules\ProvBase\Services\ModemService;
+use App\Http\Controllers\BaseViewController;
 
 class ModemController extends \BaseController
 {
@@ -1110,5 +1111,186 @@ class ModemController extends \BaseController
             '}<br />';
 
         return $lease;
+    }
+
+    /**
+     * Create/update modems by import.
+     *
+     * @author Patrick Reichel
+     */
+    public function import()
+    {
+        $this->redirectUrl = Request::get('redirect_url');
+        $method = Request::get('method');
+
+        if ('importOntFromCsv' == $method) {
+            return $this->importOntFromCsv();
+        }
+
+        \Session::push('tmp_error_above_form', 'Unknown method: '.$method);
+        return redirect($this->redirectUrl);
+    }
+
+    /**
+     * Create/update ONT by import from CSV file.
+     *
+     * @author Patrick Reichel
+     */
+    public function importOntFromCsv()
+    {
+        if ('GESA' == config('smartont.flavor.active')) {
+            return $this->importGesaOntFromCsv();
+        }
+
+        \Session::push('tmp_error_above_form', 'Not implemented for flavor '.config('smartont.flavor.active'));
+        return redirect($this->redirectUrl);
+    }
+
+    /**
+     * Create/update ONT by import from CSV file for GESA.
+     *
+     * @author Patrick Reichel
+     */
+    public function importGesaOntFromCsv()
+    {
+        $contractId = Request::get('contract_id');
+        $contract = Contract::findOrFail($contractId);
+
+        $qos = Qos::firstOrNew(array('type' => 'smartont'));
+        if (! $qos->exists()) {
+            $qos->name = 'SmartONT dummy';
+            $qos->save();
+        }
+        $qosId = $qos->id;
+
+        $configfile = Configfile::firstOrNew(array('device' => 'ont'));
+        if (! $configfile->exists()) {
+            $configfile->name = 'SmartONT dummy';
+            $configfile->save();
+        }
+        $configfileId = $configfile->id;
+
+        // check if a file has been uploded
+        if (! Request::hasFile('modem_csv_upload')) {
+            \Session::push('tmp_error_above_form', 'No file given');
+            return redirect($this->redirectUrl);
+        }
+
+        // check if a valid file has been uploaded
+        if (! Request::file('modem_csv_upload')->isValid()) {
+            \Session::push('tmp_error_above_form', 'Uploaded file is invalid');
+            return redirect($this->redirectUrl);
+        }
+
+        // check the mimetype (we expect a csv)
+        $mimeType = Request::file('modem_csv_upload')->getMimeType();
+        if (! in_array(
+            $mimeType,
+            ['text/plain', 'text/csv']
+        )) {
+            \Session::push('tmp_error_above_form', 'File seems not to be a CSV file, mime type is: '.$mimeType);
+            return redirect($this->redirectUrl);
+        }
+
+        try {
+            $filehandle = fopen(Request::file('modem_csv_upload')->path(), 'r');
+        } catch (\Exception $ex) {
+            \Session::push('tmp_error_above_form', 'Exception thrown: '.$ex->getMessage());
+            return redirect($this->redirectUrl);
+        }
+
+        $filename = Request::file('modem_csv_upload')->getClientOriginalName();
+
+        $csv = [];
+        while(($data = fgetcsv($filehandle, null, ";")) !== FALSE) {
+            array_push($csv, $data);
+        }
+
+        $header = array_shift($csv);
+        $header = array_map('strtolower', $header);
+
+        $fieldMap = [
+            'serial' => [
+                's/n',
+                'serial',
+                'serialnumber',
+                'sn',
+            ],
+            'model' => [
+                'model',
+            ],
+            'macAddress' => [
+                'mac',
+                'mac-address',
+                'macaddress',
+            ]
+        ];
+
+        $headerPos = [];
+        foreach ($fieldMap as $field => $mappings) {
+            foreach ($mappings as $mapping) {
+                $pos = array_search($mapping, $header);
+                if (FALSE !== $pos) {
+                    $headerPos[$field] = $pos;
+                    break;
+                }
+            }
+        }
+
+        $modemsCreated = 0;
+        $modemsUpdated = 0;
+
+        foreach ($csv as $line) {
+            $model = $macAddress = null;
+            $serial = $line[$headerPos['serial']];
+            if (isset($headerPos['model'])) {
+                $model = $line[$headerPos['model']] ?: null;
+            }
+            if (isset($headerPos['macAddress'])) {
+                $macAddress = $line[$headerPos['macAddress']] ?: null;
+            }
+
+            $modem = Modem::FirstOrNew(['serial_num' => $serial]);
+            $modem->mac = $macAddress;
+            $modem->model = $model;
+
+            $modem->contract_id = $modem->contract_id ?: $contractId;
+            $modem->qos_id = $modem->qos_id ?: $qosId;
+            $modem->configfile_id = $modem->configfile_id ?: $configfileId;
+
+            $modem->company = $contract->company;
+            $modem->department = $contract->department;
+            $modem->salutation = $contract->salutation;
+            $modem->firstname = $contract->firstname;
+            $modem->lastname = $contract->lastname;
+            $modem->street = $contract->street;
+            $modem->house_number = $contract->house_number;
+            $modem->city = $contract->city;
+            $modem->zip = $contract->zip;
+            $modem->district = $contract->district;
+            $modem->country_code = $contract->country_code;
+
+            $user = auth()->user();
+            if (! $modem->description) {
+                $modem->description = date('Y-m-d H:i:s').': Created from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
+            } else {
+                $modem->description .= "\n\n".date('Y-m-d H:i:s').': Updated from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
+
+            }
+
+            if ($modem->exists) {
+                $modemsUpdated++;
+            } else {
+                $modemsCreated++;
+            }
+
+            // save without triggering ModemObserver (to prevent running into timeouts in larger CSV files)
+            $modem->saveQuietly();
+        }
+
+        \Session::push('tmp_success_above_form', "Created $modemsCreated ONT.");
+        \Session::push('tmp_success_above_form', "Updated $modemsUpdated ONT.");
+
+        return redirect($this->redirectUrl);
     }
 }

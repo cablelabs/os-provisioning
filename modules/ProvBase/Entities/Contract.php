@@ -268,6 +268,25 @@ class Contract extends \BaseModel
         $relationThreshhold = config('datatables.relationThreshhold');
         $i18nContract = trans_choice('view.Header_Contract', 1);
 
+        if (
+            (Module::collections()->has('SmartOnt')) &&
+            ('GESA' == config('smartont.flavor.active')) &&
+            ('OTO_STORAGE' == $this->type)
+        ) {
+            $ret[$i18nContract]['Import ONT CSV']['class'] = 'bar';
+            $ret[$i18nContract]['Import ONT CSV']['view']['view'] = 'provbase::Modem.uploadCsv';
+            $ret[$i18nContract]['Import ONT CSV']['view']['vars']['context'] = [
+                'route' => 'Modem.import',
+                'method' => 'importOntFromCsv',
+                'contract' => $this->id,
+                'mimetypes' => [
+                    'text/csv',
+                ],
+            ];
+        }
+
+        /* $ret[$i18nContract]['Modem']['view']['vars']['apiActions'] = $this->viewApiActions(); */
+
         $ret[$i18nContract]['icon'] = 'pencil';
         $ret[$i18nContract]['Modem']['class'] = 'Modem';
         $ret[$i18nContract]['Modem']['count'] = $this->modems_count;
@@ -373,6 +392,27 @@ class Contract extends \BaseModel
             $ret[$i18nContract]['DfSubscription']['class'] = 'DfSubscription';
             $ret[$i18nContract]['DfSubscription']['relation'] = $this->dfsubscriptions;
         }
+
+        return $ret;
+    }
+
+    /**
+     * Provide a view usable array of possible API jobs
+     *
+     * @return array for use in view
+     *
+     * @author Patrick Reichel
+     */
+    public function viewApiActions()
+    {
+        $ret = [];
+        $action = 'boo';
+        $url = \URL::route('Dreamfiber.action', ['type' => $action, 'subscription_id' => $this->id]);
+        $data = [
+            'url' => $url,
+            'linktext' => trans($action),
+        ];
+        $ret[] = $data;
 
         return $ret;
     }
