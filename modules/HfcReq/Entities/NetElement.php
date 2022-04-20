@@ -674,6 +674,7 @@ class NetElement extends \BaseModel
             ->where('netelementtype.base_type_id', $netelementtypeId)
             // ->select(['netelement.id', 'netelement.parent_id', 'netelement.name', 'netelementtype_id'])
             ->select('netelement.*')
+            ->withOut('netelementtype')
             ->first();
     }
 
