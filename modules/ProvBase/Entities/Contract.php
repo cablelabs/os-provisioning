@@ -801,6 +801,11 @@ class Contract extends \BaseModel
      */
     public function daily_conversion()
     {
+        // ignore SmartOnt OTO
+        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
+            return;
+        }
+
         // we don't check old invalid items that ended before this number of days in past
         // 90 days is a security span in case it was somehow not possible to examine this function for some days
         // To let the contractCommand belatedly correct everything all former items are needed as well
@@ -1090,6 +1095,11 @@ class Contract extends \BaseModel
     {
         // with billing module -> done by daily conversion
         if (Module::collections()->has('BillingBase')) {
+            return;
+        }
+
+        // ignore SmartOnt OTO
+        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
             return;
         }
 

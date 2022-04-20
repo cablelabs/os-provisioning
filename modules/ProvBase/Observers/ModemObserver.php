@@ -115,6 +115,7 @@ class ModemObserver
                     // use special format; later used as “description” in provisioning process
                     // modules/SmartOnt/Console/SnmpTrapHandlerCommand.php
                     $name = [
+                        $modem->serial_num,
                         $modem->zip,
                         $modem->city,
                         $modem->street,

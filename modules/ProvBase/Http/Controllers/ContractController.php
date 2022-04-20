@@ -43,30 +43,31 @@ class ContractController extends \BaseController
     public function viewFormFieldsDfOto($model)
     {
         $fields = [
-            ['form_type' => 'text', 'name' => 'sep_id', 'description' => 'SEP ID', 'create' => ['Modem'], 'space' => '1', 'options' => ['readonly']],
+            ['form_type' => 'text', 'name' => 'sep_id', 'description' => 'SEP ID', 'create' => ['Modem'], 'space' => '1'],
 
             ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => ['Modem'], 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House number', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'options' => ['readonly'], 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'create' => ['Modem'], 'options' => ['readonly'], 'space' => '1'],
+            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House number', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'space' => '1'],
+            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'create' => ['Modem'], 'space' => '1'],
 
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
             ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address', 'space' => '1'],
 
-            ['form_type' => 'text', 'name' => 'oto_id', 'description' => 'OTO ID', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'oto_port', 'description' => 'OTO Port', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'oto_socket_usage', 'description' => 'OTO Socket Usage', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'oto_status', 'description' => 'OTO Status', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'flat_id', 'description' => 'Flat ID', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'alex_status', 'description' => 'ALEX Status', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'omdf_id', 'description' => 'OMDF ID', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'boc_label', 'description' => 'BOC Label', 'create' => ['Modem'], 'options' => ['readonly']],
-            ['form_type' => 'text', 'name' => 'bof_label', 'description' => 'BOF Label', 'create' => ['Modem'], 'options' => ['readonly'], 'space' => '1'],
+            ['form_type' => 'text', 'name' => 'oto_id', 'description' => 'OTO ID', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'oto_port', 'description' => 'OTO Port', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'oto_socket_usage', 'description' => 'OTO Socket Usage', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'oto_status', 'description' => 'OTO Status', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'flat_id', 'description' => 'Flat ID', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'alex_status', 'description' => 'ALEX Status', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'omdf_id', 'description' => 'OMDF ID', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'boc_label', 'description' => 'BOC Label', 'create' => ['Modem']],
+            ['form_type' => 'text', 'name' => 'bof_label', 'description' => 'BOF Label', 'create' => ['Modem'], 'space' => '1'],
 
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
 
