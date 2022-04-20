@@ -18,10 +18,11 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Modules\HfcReq\Entities\NetElementType;
-use Illuminate\Database\Migrations\Migration;
 
-class AddRkmServerAsNetelementtype extends Migration
+class AddRkmServerAsNetelementtype extends BaseMigration
 {
+    public $migrationScope = 'database';
+
     /**
      * Run the migrations.
      *
