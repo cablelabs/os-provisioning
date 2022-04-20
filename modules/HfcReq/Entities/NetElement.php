@@ -669,17 +669,12 @@ class NetElement extends \BaseModel
      */
     public function getParentNetelementOfType($netelementtypeId)
     {
-        $parent = $this;
-
-        do {
-            $parent = $parent->parent()->with('netelementtype')->first();
-
-            if (! $parent) {
-                break;
-            }
-        } while (! $parent->netelementtype || $parent->netelementtype->base_type_id != $netelementtypeId);
-
-        return $parent;
+        return self::join('netelementtype', 'netelement.netelementtype_id', 'netelementtype.id')
+            ->whereAncestorOf($this->id)->reversed()
+            ->where('netelementtype.base_type_id', $netelementtypeId)
+            // ->select(['netelement.id', 'netelement.parent_id', 'netelement.name', 'netelementtype_id'])
+            ->select('netelement.*')
+            ->first();
     }
 
     /**
