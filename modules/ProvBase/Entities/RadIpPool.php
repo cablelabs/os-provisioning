@@ -59,7 +59,7 @@ class RadIpPool extends \BaseModel
             $job = new RadIpPoolJob($pool, [], [], true);
             $job->handle();
 
-            echo ($i++).'/'.$count."\r";
+            echo($i++).'/'.$count."\r";
         }
 
         foreach ($allocatedIps as $radip) {
