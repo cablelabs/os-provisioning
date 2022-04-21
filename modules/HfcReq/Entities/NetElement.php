@@ -352,14 +352,25 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
-    public function geoPosModems()
+    /**
+     * Get all modem counts (all/offline) belonging to a netelement (appearing in bubble) grouped by geoposition
+     * with a valid contract
+     *
+     * This function shall be used to detect if the connection of a whole building is interrupted - so it shall only count
+     * the offline modems if all modems of the building are offline
+     *
+     * Note: The function doesn't work as is and is deactivated via config hfccustomer.geopos
+     *
+     * @author Christian Schramm
+     */
+    public function offlineModemsPerGeopos()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id')
-            ->select('modem.id', 'modem.lng', 'modem.lat', 'modem.netelement_id')
+            // ->select('modem.id', 'modem.lng', 'modem.lat', 'modem.netelement_id')
             ->selectRaw('COUNT(*) AS count')
-            ->selectRaw('COUNT(CASE WHEN `us_pwr` = 0 THEN 1 END) as offline')
+            ->selectRaw('COUNT(CASE WHEN us_pwr = 0 THEN 1 ELSE 0 END) as offline')
             ->groupBy('modem.lng', 'modem.lat')
-            ->havingRaw('max(us_pwr) > 0 AND min(us_pwr) = 0 AND count > 1')
+            ->havingRaw('max(us_pwr) > 0 AND min(us_pwr) = 0 AND COUNT(*) > 1')
             ->join('contract', 'contract.id', 'modem.contract_id')
             ->whereNull('modem.deleted_at')
             ->whereNull('contract.deleted_at')
