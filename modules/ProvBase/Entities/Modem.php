@@ -1049,7 +1049,7 @@ class Modem extends \BaseModel
                 case 'acl':
                     if (isset($vals[1])) {
                         $acl = '';
-                        if ($vals[2] != '') {
+                        if (! empty($vals[2])) {
                             $acl = "'$vals[2]'";
                         }
 
