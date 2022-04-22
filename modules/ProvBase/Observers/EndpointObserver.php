@@ -126,6 +126,6 @@ class EndpointObserver
         }
 
         preg_match('/hw_mac = "(.+?)";/', $lease[0], $mac);
-        Modem::where('mac', $mac[1])->first()->restart_modem();
+        Modem::where('mac', $mac[1])->first()?->restart_modem();
     }
 }
