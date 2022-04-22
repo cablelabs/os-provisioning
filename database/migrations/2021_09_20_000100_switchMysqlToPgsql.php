@@ -152,15 +152,6 @@ class SwitchMysqltoPgsql extends BaseMigration
             \Modules\HfcSnmp\Entities\OID::where('type', 'u')->update(['type' => null]);
         }
 
-        // Timestamps are with timezone now - hasMany with Timestamps results in errors in pivot tables
-        if (Schema::hasTable('enviaorder_phonenumber')) {
-            DB::statement('ALTER TABLE enviaorder_phonenumber
-                ALTER COLUMN created_at TYPE TIMESTAMP without time zone,
-                ALTER COLUMN updated_at TYPE TIMESTAMP without time zone,
-                ALTER COLUMN deleted_at TYPE TIMESTAMP without time zone
-            ');
-        }
-
         DB::table('ippool')->where('netmask', '')->orWhere('ip_pool_start', '')->orWhere('ip_pool_end', '')->orWhere('router_ip', '')->delete();
 
         // IPs are stored as inet type and compared not with INET_ATON anymore
@@ -184,37 +175,6 @@ class SwitchMysqltoPgsql extends BaseMigration
             }
 
             DB::statement('ALTER table ippool drop column netmask;');
-
-            // Change wrong not nullable fields (already in Mysql)
-            DB::statement('ALTER table contract
-                ALTER COLUMN internet_access drop not null,
-                ALTER COLUMN create_invoice drop not null,
-                ALTER COLUMN has_telephony drop not null
-            ');
-            DB::statement('ALTER table modem ALTER COLUMN next_passive_id drop not null');
-        }
-
-        if (Schema::hasTable('settlementrun')) {
-            DB::statement('ALTER table settlementrun
-                ALTER COLUMN verified drop not null,
-                ALTER COLUMN fullrun drop not null;
-            ');
-        }
-
-        if (Schema::hasTable('cccauthuser')) {
-            DB::connection('pgsql-ccc')->statement('ALTER table cccauthuser ALTER COLUMN description drop not null');
-        }
-
-        if (Schema::hasTable('netelement')) {
-            // Simulate virtual column of netelement
-            DB::statement('ALTER TABLE netelement drop column id_name');
-            DB::statement("ALTER TABLE netelement add column id_name varchar generated always as (CASE WHEN name IS NULL THEN cast(id as varchar) WHEN id is NULL THEN name ELSE name || '_' || cast(id as varchar) END) stored");
-        }
-
-        if (Schema::hasTable('notifications')) {
-            DB::statement('ALTER TABLE notifications alter COLUMN read_at type timestamp without time zone;');
-            DB::statement('ALTER TABLE notifications alter COLUMN created_at type timestamp without time zone;');
-            DB::statement('ALTER TABLE notifications alter COLUMN updated_at type timestamp without time zone;');
         }
 
         if (Schema::hasTable('mpr')) {
@@ -222,13 +182,6 @@ class SwitchMysqltoPgsql extends BaseMigration
             DB::statement('ALTER TABLE mpr drop COLUMN type;');
             DB::statement('ALTER TABLE mprgeopos drop COLUMN name;');
             DB::statement('ALTER TABLE mprgeopos drop COLUMN description;');
-        }
-
-        // Drop RADIUS tables as they will be in own database
-        $radTables = ['nas', 'radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radippool', 'radpostauth', 'radreply', 'radusergroup'];
-
-        foreach ($radTables as $table) {
-            DB::statement("DROP table $table");
         }
     }
 

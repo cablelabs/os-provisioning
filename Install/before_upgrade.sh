@@ -32,7 +32,17 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
 read -r -a credentials <<< $(grep '^ROOT_DB_USERNAME\|^ROOT_DB_PASSWORD=' /etc/nmsprime/env/root.env | cut -d '=' -f2)
 mysql -u "${credentials[0]}" -p"${credentials[1]}" --exec='Create user psqlconverter; GRANT select ON *.* TO psqlconverter;'
 
-sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
+sudo -u postgres psql nmsprime < /etc/nmsprime/sql-schemas/nmsprime.pgsql
+
+echo "LOAD DATABASE
+  FROM mysql://psqlconverter@localhost/nmsprime
+  INTO postgresql:///nmsprime
+  WITH data only, truncate, batch rows = 5000, prefetch rows = 5000
+  EXCLUDING TABLE NAMES MATCHING 'hfcbase','nas','radacct','radcheck','radgroupcheck','radgroupreply','radippool','radpostauth','radreply','radusergroup'
+    ;" > /tmp/nmsprime.load
+
+sudo -u postgres pgloader -q /tmp/nmsprime.load
+#sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
 
 sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     CREATE USER ${auths[2]} PASSWORD '${auths[1]}';

@@ -923,7 +923,7 @@ CREATE TABLE nmsprime.debt (
     voucher_nr character varying(191),
     due_date date,
     cleared boolean,
-    indicator boolean,
+    indicator smallint,
     dunning_date date,
     parent_id bigint,
     missing_amount numeric(10,2),
@@ -1181,9 +1181,9 @@ ALTER SEQUENCE nmsprime.enviaorder_id_seq OWNED BY nmsprime.enviaorder.id;
 
 CREATE TABLE nmsprime.enviaorder_phonenumber (
     id bigint NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    deleted_at timestamp with time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     enviaorder_id bigint,
     phonenumber_id bigint
 );
@@ -2039,7 +2039,7 @@ CREATE TABLE nmsprime.netelement (
 CASE
     WHEN (name IS NULL) THEN ((id)::character varying)::text
     WHEN (id IS NULL) THEN (name)::text
-    ELSE (((name)::text || '_'::text) || ((id)::character varying)::text)
+    ELSE (((id)::character varying)::text || '_'::text) || ((name)::text)
 END) STORED
 );
 
@@ -2139,7 +2139,7 @@ CREATE TABLE nmsprime.netgw (
     ssh_auto_prov boolean DEFAULT false,
     coa_port integer,
     ipv6 character varying(191),
-    nas_secret character varying(191),
+    nas_secret character varying(191)
 );
 
 
