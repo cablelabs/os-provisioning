@@ -176,13 +176,6 @@ class SwitchMysqltoPgsql extends BaseMigration
 
             DB::statement('ALTER table ippool drop column netmask;');
         }
-
-        if (Schema::hasTable('mpr')) {
-            DB::statement('ALTER TABLE mpr drop COLUMN prio;');
-            DB::statement('ALTER TABLE mpr drop COLUMN type;');
-            DB::statement('ALTER TABLE mprgeopos drop COLUMN name;');
-            DB::statement('ALTER TABLE mprgeopos drop COLUMN description;');
-        }
     }
 
     /**

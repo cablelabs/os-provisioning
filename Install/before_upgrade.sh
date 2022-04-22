@@ -27,6 +27,10 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
     ALTER TABLE settlementrun modify month smallint(6) null;
     ALTER TABLE invoice modify month smallint(6) null;
     ALTER TABLE costcenter modify billing_month smallint(6) null;
+    ALTER TABLE mpr drop column type;
+    ALTER TABLE mpr drop column prio;
+    ALTER TABLE mprgeopos drop column name;
+    ALTER TABLE mprgeopos drop column description;
 "
 
 read -r -a credentials <<< $(grep '^ROOT_DB_USERNAME\|^ROOT_DB_PASSWORD=' /etc/nmsprime/env/root.env | cut -d '=' -f2)
