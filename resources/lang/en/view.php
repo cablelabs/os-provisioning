@@ -383,6 +383,7 @@ return [
         'Parent' => 'a parent Element',
         'Phonenumber' => 'a Phone Number',
         'provDevice' => 'a provisioning device',
+        'Realty' => 'a realty',
     ],
 
     // Index

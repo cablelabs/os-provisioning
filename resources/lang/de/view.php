@@ -383,6 +383,7 @@ return [
         'Parent' => 'ein übergeordnetes Element',
         'Phonenumber' => 'eine Telefonnummer',
         'provDevice' => 'ein entsprechendes Gerät aus dem Provisionierungsmodul',
+        'Realty' => 'eine Liegenschaft',
     ],
 
     // Index
