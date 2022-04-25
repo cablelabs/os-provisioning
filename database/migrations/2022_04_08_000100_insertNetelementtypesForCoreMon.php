@@ -49,7 +49,7 @@ class InsertNetelementtypesForCoreMon extends BaseMigration
         foreach ($netelementtypes as $name) {
             $id++;
             $pos++;
-            DB::statement("INSERT INTO $this->tablename (id, created_at, updated_at, name, sidebar_pos, base_type_id) VALUES ($id, NOW(), NOW(), '$name', $pos, $id)");
+            DB::statement("INSERT INTO $this->tablename (id, created_at, updated_at, name, sidebar_pos, base_type_id) VALUES ($id, current_timestamp(0), current_timestamp(0), '$name', $pos, $id)");
         }
     }
 
