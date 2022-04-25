@@ -152,11 +152,11 @@ class SwitchMysqltoPgsql extends BaseMigration
             \Modules\HfcSnmp\Entities\OID::where('type', 'u')->update(['type' => null]);
         }
 
-        DB::table('ippool')->where('netmask', '')->orWhere('ip_pool_start', '')->orWhere('ip_pool_end', '')->orWhere('router_ip', '')->delete();
-
         // IPs are stored as inet type and compared not with INET_ATON anymore
         // Generally we should use type cidr Using net::cidr for first column, but this can result in errors on insert and it's harder to validate - Possible validation could be: https://www.phpclasses.org/browse/file/70429.html
         if (Schema::hasTable('ippool')) {
+            DB::table('ippool')->where('netmask', '')->orWhere('ip_pool_start', '')->orWhere('ip_pool_end', '')->orWhere('router_ip', '')->delete();
+
             DB::statement('ALTER table ippool
                 ALTER COLUMN net type inet USING net::inet,
                 ALTER COLUMN ip_pool_start type inet USING ip_pool_start::inet,
