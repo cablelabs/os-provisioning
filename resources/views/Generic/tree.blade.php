@@ -114,29 +114,62 @@
               "mta": {
                 "icon": "fa fa-fax text-info fa-lg"
               },
-              "Net": {
+              "1": { // Net
                 "icon": "fa fa-cloud text-info fa-lg"
               },
-              "Cluster": {
+              "2": { // Cluster
                 "icon": "fa fa-soundcloud text-warning fa-lg"
               },
-              "NetGw": {
+              "3": { // NetGw
                 "icon": "fa fa-building text-success fa-lg"
               },
-              "Amplifier": {
+              "4": { // Amplifier
                 "icon": "fa fa-toggle-right text-danger fa-lg"
               },
-              "Node": {
+              "5": { // Node
                 "icon": "fa fa-arrow-circle-o-right text-warning fa-lg"
               },
-              "Data": {
+              "6": { // Data
                 "icon": "fa fa-database text-active fa-lg"
               },
-              "UPS": {
+              "7": { // UPS
                 "icon": "fa fa-stack fa-bolt text-warning fa-lg"
               },
-              "NMSPrime ProvHA slave": {
+              "8": { // Tap
+                "icon": "fa fa-code-fork text-info fa-lg"
+              },
+              "9": { // Tap-Port
+                "icon": "fa fa-dot-circle-o text-info fa-lg"
+              },
+              "10": { // NMSPrime ProvHA slave
                 "icon": "fa fa-server text-secondary fa-lg"
+              },
+              "15": { // RKM-Server
+                "icon": "fa fa-server text-warning fa-lg"
+              },
+              "16": { // Market
+                "icon": "fa fa-cart-plus text-success fa-lg"
+              },
+              "17": { // Hub
+                "icon": "fa fa-forumbee text-success fa-lg"
+              },
+              "18": { // CCAP Core
+                "icon": "fa fa-building text-danger fa-lg"
+              },
+              "19": { // Core Leaf
+                "icon": "fa fa-leaf text-success fa-lg"
+              },
+              "20": { // Spine
+                "icon": "fa fa-support text-info fa-lg"
+              },
+              "21": { // Node Leaf
+                "icon": "fa fa-leaf text-secondary fa-lg"
+              },
+              "22": { // RPD
+                "icon": "fa fa-toggle-right text-warning fa-lg"
+              },
+              "23": { // CM
+                "icon": "fa fa-hdd-o text-info fa-lg"
               },
               "default": {
                   "icon": "fa fa-file-code-o text-success fa-lg"

@@ -91,15 +91,7 @@ class NetElementType extends \BaseModel
     // icon type for tree view
     public function get_icon_type()
     {
-        $type = $this->name ?: 'default';
-        if ($parent = $this->parent) {
-            $type = $parent->name;
-            while ($parent = $parent->parent) {
-                $type = $parent->name;
-            }
-        }
-
-        return $type;
+        return $this->base_type_id;
     }
 
     // Deprecated
