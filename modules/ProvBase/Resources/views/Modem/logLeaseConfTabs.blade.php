@@ -164,8 +164,8 @@
 
 @foreach (['wifi' => $wifi, 'lan' => $lan] as $tab => $configInterface)
     <div class="tab-pane fade in" id="{{ $tab }}">
-        @if ($configInterface)
-            <button id="{{ 'refresh'.ucfirst($tab) }}" v-on:click="refreshGenieObject" :refreshObject="{{ $tab }}" type="button" class="btn btn-info submit-button" style="margin-bottom: 5px;">
+        @if ($configInterface && is_array($configInterface))
+            <button id="{{ 'refresh'.ucfirst($tab) }}" v-on:click="refreshGenieObject" :refreshObject="'{{ $tab }}'" type="button" class="btn btn-info submit-button" style="margin-bottom: 5px;">
                 <i class="fa fa-refresh" aria-hidden="true"></i>
             </button>
             <table class="table streamtable table-bordered">
