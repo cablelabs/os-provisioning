@@ -319,7 +319,7 @@ return [
         'unblockDhcp' => 'unblock DHCP',
         'connectionRequest' => 'Connecion Request',
         'setWlanFinished' => 'WiFi settings are successfully updated',
-        'setDnsFinished' => 'Dns is successfully updated',
+        'setDnsFinished' => 'DNS is successfully updated',
         'blockDhcpFinished' => 'DHCP is successfully deactivated - Modem will restart',
         'unblockDhcpFinished' => 'DHCP is successfully activated - Modem will restart',
         'refreshFinished' => 'The data has been successfully updated.',
