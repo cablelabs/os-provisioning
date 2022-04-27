@@ -367,7 +367,8 @@ class ModemController extends \BaseController
             return trans('messages.modemAnalysis.actionExecuted');
         }
 
-        if ($taskDecode = json_decode($task) === null) {
+        $taskDecode = json_decode($task, true);
+        if ($taskDecode === null) {
             return trans('messages.JsonDecodeFailed');
         }
 
