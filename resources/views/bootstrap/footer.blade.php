@@ -75,7 +75,7 @@ $(document).ready(function() {
 Vue.component("select2", {
     props: {
       options: [Object, Array],
-      initialValue: [String, Number],
+      initialValue: [String, Number, Array],
       multiple: {
         type: Boolean,
         default: false
