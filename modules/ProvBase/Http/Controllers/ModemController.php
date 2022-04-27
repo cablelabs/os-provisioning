@@ -373,7 +373,7 @@ class ModemController extends \BaseController
         }
 
         if ($taskDecode == ['name' => 'connection_request']) {
-            $modem->callGenieAcsApi("/devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '');
+            $modem->callGenieAcsApi("devices/$genieId/tasks?timeout=3000&connection_request", 'POST', '');
 
             Session::push('tmp_info_above_form', trans('messages.modemAnalysis.actionExecuted'));
 
