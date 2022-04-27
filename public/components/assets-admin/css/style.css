@@ -2446,10 +2446,6 @@ code {
 
 .m-auto { margin: 0 auto !important; }
 .m-0 { margin: 0px !important; }
-.m-1 { margin: 1px !important; }
-.m-2 { margin: 2px !important; }
-.m-3 { margin: 3px !important; }
-.m-4 { margin: 4px !important; }
 .m-5 { margin: 5px !important; }
 .m-10 { margin: 10px !important; }
 .m-15 { margin: 15px !important; }
@@ -2516,10 +2512,6 @@ code {
 .m-l-40 { margin-left: 40px !important; }
 
 .p-0 { padding: 0px !important; }
-.p-1 { padding: 1px !important; }
-.p-2 { padding: 2px !important; }
-.p-3 { padding: 3px !important; }
-.p-4 { padding: 4px !important; }
 .p-5 { padding: 5px !important; }
 .p-10 { padding: 10px !important; }
 .p-15, .wrapper { padding: 15px !important; }
