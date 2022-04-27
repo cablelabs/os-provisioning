@@ -173,6 +173,13 @@ class ModemController extends \BaseController
                 'options' => $model->contract?->isCanceled() ? ['onclick' => 'return false;', 'readonly'] : [],
             ],
         ];
+        if (Module::collections()->has('SmartOnt')) {
+            $a[] = [
+                'form_type' => 'text',
+                'name' => 'model',
+                'description' => 'Model',
+            ];
+        }
 
         if (false && Sla::first()->valid()) {
             $a[] = ['form_type'=> 'text', 'name' => 'formatted_support_state', 'description' => 'Support State', 'field_value' => ucfirst(str_replace('-', ' ', $model->support_state)), 'help'=>trans('helper.modemSupportState.'.$model->support_state), 'help_icon'=> $model->getFaSmileClass()['fa-class'], 'options' =>['readonly'], 'color'=>$model->getFaSmileClass()['bs-class']];
@@ -234,12 +241,25 @@ class ModemController extends \BaseController
 
         $smartont = [];
         if (Module::collections()->has('SmartOnt')) {
-            $smartont[] = [
-                'form_type' => 'text',
-                'name' => 'model',
-                'description' => 'Model',
-                'options' => ['readonly'],
-            ];
+            if ('LFO' == config('smartont.flavor.active')) {
+                $smartont[] = [
+                    'form_type' => 'text',
+                    'name' => 'ont_state',
+                    'description' => 'ONT state',
+                    'options' => ['readonly'],
+                ];
+                $smartont[] = [
+                    'form_type' => 'text',
+                    'name' => 'next_ont_state',
+                    'description' => 'Next ONT state',
+                ];
+                $smartont[] = [
+                    'form_type' => 'text',
+                    'name' => 'ont_state_switchdate',
+                    'description' => 'ONT state switchdate',
+                    'space' => '1',
+                ];
+            }
             $smartont[] = [
                 'form_type' => 'text',
                 'name' => 'netgw_id',
@@ -1153,22 +1173,12 @@ class ModemController extends \BaseController
      */
     public function importGesaOntFromCsv()
     {
+        $smartOnt = \Modules\SmartOnt\Entities\Smartont::first();
         $contractId = Request::get('contract_id');
         $contract = Contract::findOrFail($contractId);
 
-        $qos = Qos::firstOrNew(array('type' => 'smartont'));
-        if (! $qos->exists()) {
-            $qos->name = 'SmartONT dummy';
-            $qos->save();
-        }
-        $qosId = $qos->id;
-
-        $configfile = Configfile::firstOrNew(array('device' => 'ont'));
-        if (! $configfile->exists()) {
-            $configfile->name = 'SmartONT dummy';
-            $configfile->save();
-        }
-        $configfileId = $configfile->id;
+        $qosId = $smartOnt->default_qos_id;
+        $configfileId = $smartOnt->default_configfile_id;
 
         // check if a file has been uploded
         if (! Request::hasFile('modem_csv_upload')) {
@@ -1248,6 +1258,11 @@ class ModemController extends \BaseController
             }
             if (isset($headerPos['macAddress'])) {
                 $macAddress = $line[$headerPos['macAddress']] ?: null;
+                if ($macAddress) {
+                    $tmp = unifyMac(['mac' => $macAddress]);
+                    $mac = $tmp['mac'];
+                    $macAddress = $mac;
+                };
             }
 
             $modem = Modem::FirstOrNew(['serial_num' => $serial]);
