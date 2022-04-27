@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Session;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\ModemOption;
 use Modules\ProvBase\Services\ModemService;
 use App\Http\Controllers\BaseViewController;
 
