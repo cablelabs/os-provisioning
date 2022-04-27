@@ -71,5 +71,4 @@ $(document).ready(function() {
   {{-- init modals --}}
   $("#alertModal").modal();
 });
-
 </script>

@@ -78,81 +78,10 @@
     @yield ('javascript')
     @yield ('javascript_extra')
     @yield ('mycharts')
-    <script>
-        Vue.component("select2", {
-            props: {
-            options: [Object, Array],
-            initialValue: [String, Number],
-            multiple: {
-                type: Boolean,
-                default: false
-            }
-            },
-            template: "#select2-template",
-            mounted() {
-                this.select = $(this.$el)
-                this.value = this.multiple ? [this.initialValue] : this.initialValue
-
-                this.select.select2({
-                data: this.options,
-                multiple: this.multiple
-                }).val(this.value)
-                .trigger('change')
-
-                if (! this.multiple) {
-                return this.select.on('change', (e) => this.$emit("input", e.target.value))
-                }
-
-                this.select.on('select2:select', (e) => this.selected(e.params.data.id))
-                this.select.on('select2:unselect', (e) => this.unselected(e.params.data.id))
-            },
-            data() {
-            return {
-                select: undefined,
-                value: undefined,
-                i18nAll: '{{ trans('messages.all') }}'
-            }
-            },
-            methods: {
-            selected: function (value) {
-                if (value == this.i18nAll) {
-                this.value = []
-                }
-
-                if (value != this.i18nAll && this.value.includes(this.i18nAll)) {
-                this.value.splice(this.value.indexOf(this.i18nAll), 1)
-                }
-
-                this.value.push(value)
-                this.publishChanges()
-            },
-            unselected: function (value) {
-                if (value == this.i18nAll) {
-                return this.$emit("input", [])
-                }
-
-                this.value.splice(this.value.indexOf(value), 1)
-                this.publishChanges()
-            },
-            publishChanges: function () {
-                this.$emit("input", this.value)
-                this.select.val(this.value).trigger("change")
-            }
-            },
-            watch: {
-                options: function(options) {
-                this.select.empty().select2({ data: options })
-                }
-            },
-            destroyed() {
-            this.select.off().select2("destroy")
-            }
-        })
-    </script>
-    @if (Module::collections()->has('CoreMon'))
-        @include ('bootstrap.sidebar-vue')
-    @else
+    @if (! Module::collections()->has('CoreMon'))
         @include ('page_vue')
+    @else
+        @include ('bootstrap.sidebar-vue')
     @endif
 
     {{-- scroll to top btn --}}
