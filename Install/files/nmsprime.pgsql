@@ -796,7 +796,7 @@ CREATE TABLE nmsprime.contract (
     firstname character varying(191),
     lastname character varying(191),
     street character varying(191),
-    house_number character varying(8),
+    house_number character varying(20),
     zip character varying(16),
     city character varying(191),
     district character varying(191),
