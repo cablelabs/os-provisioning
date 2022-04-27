@@ -19,7 +19,7 @@
 {{-- begin Navbar --}}
 <nav id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
   {{-- only one row Navbar --}}
-    <div class="d-flex">
+    <div class="flex">
       {{-- begin mobile sidebar expand / collapse button --}}
         <button type="button" class="navbar-toggle m-l-20" data-click="sidebar-toggled">
             <span class="icon-bar"></span>

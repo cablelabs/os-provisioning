@@ -61,19 +61,18 @@
     <div class="row flex-wrap-reverse" style="{{ $flex }}">
 
         @yield('contentLeftLeft')
-
         <div class="d-flex col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
             <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
                 @if(isset($tabs))
-                <div class="card-header m-b-15 d-print-none" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="nav nav-tabs card-header-tabs d-flex" style="width:100%;">
+                <div class="bg-gray-200 border-b border-gray-300 px-2 m-b-15 d-print-none" style="padding-top:0;display:flex;">
+                    <ul id="tabs" class="nav card-header-tabs flex" style="width:100%;">
                         @foreach ($tabs as $tab)
 
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
-                                <li class="nav-item order-12 ml-auto" role="tab" style="float: right">
-                                    <a id="loggingtab" class="" href="#logging" data-toggle="tab">
-                                        <i class="fa fa-lg fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging
+                                <li class="p-1 order-12 ml-auto" role="tab" style="float: right">
+                                    <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
+                                        <span class="text-gray-800"><i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging</span>
                                     </a>
                                 </li>
                                 @continue
@@ -81,12 +80,14 @@
 
                             {{-- Link to separate view --}}
                             @if (isset($tab['route']))
-                                <li class="nav-item" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}}">
+                                <li class="p-1 " role="tab">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
+                                        <span class="text-white">
                                         @if (isset($tab['icon']))
-                                            <i class="fa fa-lg fa-{{ $tab['icon'] }}"></i>
+                                            <i class="fa fa-{{ $tab['icon'] }}"></i>
                                         @endif
                                         {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
+                                        </span>
                                     </a>
                                 </li>
                                 @continue
@@ -94,12 +95,14 @@
 
                             {{-- Other tabs --}}
                             {{-- probably the <a> tag must be set to active according to docu --}}
-                            <li class="nav-item" role="tab">
-                                <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }}" href="#{{ $tab['name'] }}" data-toggle="tab">
+                            <li class="p-1 " role="tab">
+                                <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }} p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
+                                    <span class="text-gray-800">
                                     @if (isset($tab['icon']))
-                                        <i class="fa fa-lg fa-{{$tab['icon']}}"></i>
+                                        <i class="fa fa-{{$tab['icon']}}"></i>
                                     @endif
                                     {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
+                                    </span>
                                 </a>
                             </li>
                         @endforeach

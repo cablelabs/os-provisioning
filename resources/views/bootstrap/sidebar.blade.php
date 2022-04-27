@@ -18,17 +18,17 @@
 ?>
 <div class="fixed h-full flex flex-col top-0 left-0 z-[1010]">
   <div class="mt-20 md:mt-[70px] flex flex-1 text-gray-200">
-      <div class="bg-zinc-800 w-24 flex flex-col justify-between">
+      <div class="bg-sidebar-dark w-16 flex flex-col justify-between">
           <div>
-              <div class="flex flex-col items-center justify-center space-y-2 border-b border-gray-200 text-sm text-center">
-                  <div class="flex flex-col items-center bg-zinc-900 hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
-                      <svg version="1.1" viewBox="0 0 96 96" class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <div class="flex flex-col items-center justify-center space-y-2 border-b border-gray-200 text-xs text-center">
+                  <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2" :class="{'bg-zinc-900': menu == 'Core Network'}" v-on:click="menu = 'Core Network';openSidebar();">
+                      <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                           <path d=" M 53.5 79.5 C 60 71.5 67.2 61.4 67.9 50 L 79.9 50 C 79 64.9 67.9 77 53.5 79.5 Z M 16.1 50 L 28.1 50 C 28.9 61.4 36 71.5 42.5 79.5 C 28.1 77 17 64.9 16.1 50 Z M 42.5 16.5 C 36 24.5 28.8 34.6 28.1 46 L 16.1 46 C 17 31.1 28.1 19 42.5 16.5 Z M 50 50 L 63.9 50 C 63.1 60.3 56.4 69.6 50 77.5 L 50 50 Z M 46 50 L 46 77.5 C 39.6 69.6 32.9 60.3 32.1 50 L 46 50 Z M 50 18.5 C 56.4 26.4 63.1 35.6 63.9 46 L 50 46 L 50 18.5 Z M 46 46 L 32.1 46 C 32.9 35.7 39.6 26.4 46 18.5 L 46 46 Z M 79.9 46 L 67.9 46 C 67.2 34.6 60 24.5 53.5 16.5 C 67.9 19 79 31.1 79.9 46 Z M 48 10 C 27 10 10 27 10 48 C 10 69 27 86 48 86 C 69 86 86 69 86 48 C 86 27 69 10 48 10 Z" stroke="none" stroke-width="1" stroke-dashoffset="1" fill="currentColor" fill-opacity="1"/>
                       </svg>
-                      <div class="pt-1">Core Network</div>
+                      <div class="pt-2">Core Network</div>
                   </div>
-                  <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 367 341" class="h-10 w-10" fill="CurrentColor">
+                  <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-1" :class="{'bg-zinc-900': menu == 'Access Network'}" v-on:click="menu = 'Access Network';openSidebar();">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 367 341" class="h-6 w-6" fill="CurrentColor">
                           <path d="M80.482 339.661c-1.056-.271-3.504-.53-5.44-.575-2.264-.053-4.741-.65-6.944-1.676l-3.423-1.594-26.977-.006-26.976-.006-3.2-1.513c-4.289-2.027-6.479-4.53-7.066-8.074-.679-4.093-.71-77.07-.034-81.127.458-2.757 1.02-3.782 3.1-5.662 4.305-3.888 5.325-4.09 20.62-4.09h13.78v-68.059c0-77.315-.31-72.518 5.43-83.942 6.587-13.106 18.956-22.996 33.232-26.572 4.556-1.141 7.261-1.268 27.04-1.268h21.978V10.948l1.603-3.217c2.19-4.397 4.153-6.055 8.136-6.877 3.99-.824 78.911-.926 84.165-.114 3.914.604 6.897 3.092 9.056 7.552 1.306 2.698 1.36 3.683 1.36 25.006v22.198h25.498c29.245 0 31.045.236 41.382 5.431 9.864 4.957 17.452 12.546 22.409 22.41 5.213 10.373 5.43 12.058 5.43 42.022v26.137l15.2.006c14.645.006 15.318.062 18.4 1.52 4.29 2.027 6.48 4.53 7.067 8.074.663 3.996.69 77.736.03 81.28-.635 3.417-3.38 6.66-7.096 8.384-2.269 1.053-4.327 1.19-18.08 1.202l-15.52.014v22.937c0 26.378-.318 28.648-5.431 38.823-6.655 13.242-20.035 24.01-31.661 25.481-5.83.737-204.272 1.163-207.068.444zm199.68-12.744c1.76-.448 5.626-1.973 8.59-3.39 4.237-2.023 6.449-3.632 10.329-7.512 3.88-3.88 5.489-6.092 7.512-10.328 1.416-2.965 2.913-6.83 3.325-8.59.448-1.91.888-11.65 1.092-24.16l.342-20.96-15.915-.007c-15.32-.006-16.035-.062-19.12-1.498-1.762-.821-4.139-2.557-5.281-3.858-4.13-4.703-3.994-3.2-3.99-44.476.001-23.196.249-38.407.647-39.84.86-3.093 5.11-7.818 8.518-9.468 2.57-1.243 3.846-1.333 18.941-1.333h16.187l-.326-24.16c-.205-15.283-.604-25.336-1.085-27.36-2.615-11.012-11.12-21.629-21.175-26.432-2.965-1.416-6.831-2.916-8.591-3.333-2.004-.475-11.989-.88-26.72-1.086l-23.52-.329v10.824c0 10.35-.072 10.97-1.65 14.135-1.86 3.733-4.454 6.185-8.394 7.936-2.54 1.129-4.828 1.184-42.56 1.019-44.612-.195-42.16.058-47.088-4.87-4.08-4.079-4.598-6.13-4.614-18.262l-.014-10.797-20 .347c-11.67.203-21.333.659-23.2 1.094C71.449 72.78 60.777 81.324 55.97 91.386c-1.417 2.964-2.938 6.83-3.382 8.59-.615 2.44-.864 18.912-1.047 69.28l-.241 66.08 17.47.014c16.19.013 17.682.11 20.35 1.318 3.73 1.688 6.148 4.018 8.06 7.767l1.54 3.019v38.122c0 32.021-.15 38.48-.936 40.364l-.937 2.242 90.057-.225c70.219-.175 90.762-.404 93.257-1.04z"/>
                       </svg>
                       <div class="pt-2">Access Network</div>
@@ -40,36 +40,51 @@
                       <div>Activity</div>
                   </div>
                   <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
-                      <svg version="1.1" viewBox="0 0 96 96" class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                           <rect x="0" y="0" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><rect x="0" y="50" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><rect x="50" y="0" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><rect x="50" y="50" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1" class="text-lime-600" fill="currentColor" fill-opacity="1"/>
                       </svg>
                       <div class="pt-2">Apps</div>
                   </div>
                   <div class="mb-2 hover:cursor-pointer hover:text-lime-600 transition duration-150 ease-out hover:ease-in">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                   </div>
               </div>
               <div class="my-2 flex flex-col justify-center items-center hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in space-y-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <div class="text-sm">Help</div>
+                  <div>Help</div>
               </div>
           </div>
-          <div  class="flex flex-col items-center mb-6 space-y-2 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in">
-              <svg version="1.1" viewBox="0 0 96 96" class="h-10 w-10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <div  class="flex flex-col items-center mb-6 space-y-2 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in text-xs">
+              <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <circle cx="69.25" cy="56.53" r="7.78" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><circle cx="27.76" cy="56.53" r="7.78" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><path d=" M 83.26 71.05 C 81.0154 69.3044 78.4191 68.066 75.65 67.42 C 73.5687 66.812 71.4175 66.4758 69.25 66.42 C 67.0807 66.4151 64.9241 66.7526 62.86 67.42 C 60.7943 67.97 58.8201 68.819 57 69.94 L 56.64 70.35 C 59.5474 71.1348 62.2677 72.495 64.64 74.35 C 66.5046 75.7199 67.5923 77.9065 67.56 80.22 L 67.56 82 L 84.81 82 L 84.81 74.17 C 84.8441 72.937 84.2632 71.7677 83.26 71.05 Z" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><path d=" M 29.48 80.22 C 29.4816 77.9674 30.5176 75.8402 32.29 74.45 L 32.4 74.35 L 32.53 74.26 C 34.9304 72.5518 37.5868 71.2354 40.4 70.36 C 40.2 70.15 40.01 69.93 39.83 69.71 C 38.0558 68.6793 36.143 67.9081 34.15 67.42 C 32.072 66.8128 29.9242 66.4767 27.76 66.42 C 25.5873 66.4144 23.4274 66.7519 21.36 67.42 C 18.6297 68.1732 16.0536 69.402 13.75 71.05 C 12.78 71.7965 12.2053 72.9461 12.19 74.17 L 12.19 82 L 29.48 82 Z" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><path d=" M 32.94 88 L 32.94 80.22 C 32.9447 78.9963 33.522 77.8454 34.5 77.11 C 36.799 75.4543 39.3765 74.2248 42.11 73.48 C 44.1731 72.8082 46.3303 72.4706 48.5 72.48 C 50.668 72.5309 52.8198 72.8672 54.9 73.48 C 57.6721 74.1175 60.2701 75.3567 62.51 77.11 C 63.5168 77.8211 64.1021 78.9879 64.07 80.22 L 64.07 88 Z" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><circle cx="48.5" cy="62.58" r="7.78" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/><path d=" M 81 8 L 16.25 8 C 14.0409 8 12.25 9.79086 12.25 12 L 12.25 34 C 12.25 36.2091 14.0409 38 16.25 38 L 31 38 L 31 44 L 37.3 38 L 44.1 38 L 48 44 L 51.6 38 L 58.7 38 L 65 44 L 65 38 L 81 38 C 83.2091 38 85 36.2091 85 34 L 85 12 C 85 9.79086 83.2091 8 81 8 Z M 22.25 17 L 69 17 L 69 19 L 22.25 19 Z M 59 29 L 22.25 29 L 22.25 27 L 59 27 Z M 75 24 L 22.25 24 L 22.25 22 L 75 22 Z" stroke="none" stroke-width="1" fill="currentColor" fill-opacity="1"/>
               </svg>
               <div>Community</div>
           </div>
       </div>
-      <div class="flex">
+      <div v-show="menu == 'Core Network'" class="flex">
+        <div v-show="!minified" class="bg-sidebar-light w-56 translate-x-0 transition-all duration-500" :class="{'-translate-x-full': minified}">
+            <div class="p-2">
+                <div class="text-base font-semibold mb-4">Filter</div>
+                <div class="flex flex-col space-y-4 text-sm">
+                    @foreach (['Network', 'Market', 'Hub', 'CCAP Core', 'Core Leaf', 'Spine', 'Node Leaf', 'RPD', 'CM'] as $netType)
+                        @include('_sidebar-filter-select', [
+                            'name' => $netType,
+                            'selected' => $loop->first
+                        ])
+                    @endforeach
+                </div>
+            </div>
+        </div>
+      </div>
+      <div v-show="menu == 'Access Network'" class="flex relative">
         {{-- begin #sidebar --}}
-        <div v-cloak id="sidebar" class="sidebar d-print-none">
+        <div v-show="!minified" v-cloak id="sidebar" class="sidebar overflow-y-auto d-print-none w-56" style="position: absolute;padding-top:0;">
           {{-- begin sidebar scrollbar --}}
-          <div data-scrollbar="true" data-height="100%">
+          <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
             {{-- begin sidebar user --}}
             <ul class="nav">
               <li class="nav-profile">
@@ -102,21 +117,21 @@
                 <li id="{{ $moduleNameSlug }}" class="has-sub"
                   :class="{active: (lastActive == '{{ $moduleNameSlug }}'), 'position-relative': minified}"
                   style="z-index:10000;">
-                  <div class="recolor sidebar-element"
+                  <div class="recolor sidebar-element flex"
                     v-on:mouseEnter="minified ? setMenu('{{ $moduleNameSlug }}') : ''"
                     v-on:mouseLeave="minified ? leaveMinifiedSidebar() : ''">
-                    <a class="caret-link"
+                    <a class="caret-link flex flex-1"
                       v-on:click="{{ isset($typearray['link']) ? "!minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug }')" }}"
                       href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;'}}">
                       @if (is_file(public_path('images/apps/').$typearray['icon']))
-                        <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="mr-2" style="height: 20px; margin-right: 7px; filter: saturate(25%) brightness(80%);">
+                        <img src="{{ asset('images/apps/'.$typearray['icon']) }}" class="mr-2" style="height: 20px; filter: saturate(25%) brightness(80%);">
                       @else
                         <i class="fa fa-fw {{ $typearray['icon'] }} mr-2"></i>
                       @endif
                       <span>{{$typearray['translated_name'] ?? $module_name}}</span>
                     </a>
                     @if (isset($typearray['submenu']))
-                      <a class="caret-link" href="javascript:;" v-on:click.stop="setMenu('{{ $moduleNameSlug }}')" style="width: 100%; height: 20px; display:block; text-align: right">
+                      <a class="caret-link" href="javascript:;" v-on:click.stop="setMenu('{{ $moduleNameSlug }}')" style="height: 20px; display:block; text-align: right">
                         <i class="fa fa-caret-right" :class="{'fa-rotate-90': showSubMenu('{{ $moduleNameSlug }}')}" style="transition:all .25s;"></i>
                       </a>
                     @endif
@@ -155,8 +170,8 @@
               @if ($externalApp['state'] == 'active' && file_exists(public_path('images/'.$externalApp['icon'])))
                 <li>
                   <div class="sidebar-element recolor">
-                    <a href="{{ $externalApp['link'] }}">
-                        <img src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini h-20 w-20 mr-2">
+                    <a href="{{ $externalApp['link'] }}" class="flex">
+                        <img src="{{ asset('images/'.$externalApp['icon']) }}" class="external-app-mini mr-4">
                         <span>{{ $appName }}</span>
                     </a>
                   </div>
@@ -257,19 +272,35 @@
                 <li v-if="isSearchMode && clusterSearch.length && loadingSearch" class="m-l-20 m-t-10 text-center w-75"><i class="fa fa-circle-o-notch fa-spin"></i></li>
               </template>
             @endif
-            {{-- sidebar minify button --}}
-            <li>
-              <a href="javascript:;" class="sidebar-minify-btn hidden-xs hover-not-supported" v-on:click="handleMinify" data-click="sidebar-minify">
-                <i class="fa fa-angle-double-left"></i>
-              </a>
-            </li>
           </ul>
           {{-- end sidebar nav --}}
-          </div>
-        {{-- end sidebar scrollbar --}}
         </div>
-        {{-- end #sidebar --}}
-        <div class="sidebar-bg d-print-none" style="transition: all .25s ease-in-out"></div>
+        <div class="bg-lime-600 w-6 pt-2 space-y-4 absolute top-0 h-full" :class="{'left-56': !minified, 'left-0': minified}">
+          <div v-if="! minified" class="hover:cursor-pointer ease-in-out duration-300" :class="{'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned}" v-on:click="pinSidebar">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 384 512" stroke="none" stroke-width="2">
+                  <path d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z"/>
+              </svg>
+          </div>
+          <div class="hover:cursor-pointer ease-in-out duration-300" :class="{'rotate-180': !minified, 'rotate-0': minified}" v-on:click="handleMinify">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+          </div>
+        </div>
+        {{-- end sidebar scrollbar --}}
+      </div>
+      <div v-show="menu != 'Access Network'" class="bg-lime-600 w-6 pt-2 space-y-4">
+        <div v-if="!minified" class="hover:cursor-pointer ease-in-out duration-300" :class="{'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned}" v-on:click="pinSidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 384 512" stroke="none" stroke-width="2">
+                <path d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z"/>
+            </svg>
+        </div>
+        <div class="hover:cursor-pointer ease-in-out duration-300" :class="{'rotate-180': !minified, 'rotate-0': minified}" v-on:click="handleMinify">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        </div>
+      </div>
   </div>
 </div>
 
@@ -299,15 +330,3 @@
     </div>
    {{-- end theme-panel --}}
 @endif
-
- <script language="javascript">
-  if (typeof(Storage) === "undefined") {
-    console.error("Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser")
-  }
-
-  if (localStorage.getItem('minified-state') === 'true') {
-    document.getElementById('page-container').classList.add('page-sidebar-minified')
-  } else {
-    document.getElementById('page-container').classList.remove('page-sidebar-minified')
-  }
-</script>

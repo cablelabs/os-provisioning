@@ -743,7 +743,7 @@ label {
     margin-right: auto;
 }
 .page-sidebar-minified .sidebar {
-    width: 60px;
+    width: 80px;
     position: absolute;
     padding-top: 63px;
 }
@@ -6135,10 +6135,10 @@ body.flat-black {
 }
 .page-with-wide-sidebar.page-sidebar-minified .sidebar,
 .page-with-wide-sidebar.page-sidebar-minified .sidebar + .sidebar-bg {
-    width: 60px;
+    width: 80px;
 }
-.page-with-wide-sidebar.page-sidebar-minified .content {
-    margin-left: 60px;
+.page-with-wide-sidebar.page-sidebar-minified #content {
+    margin-left: 80px;
 }
 
 

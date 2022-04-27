@@ -26,15 +26,15 @@
 </head>
 <body {{ isset($body_onload) ? "onload=$body_onload()" : ""}}>
 
-    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
+    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" :class="{'page-sidebar-minified': minified}" style="min-height:100%;">
         @include ('bootstrap.menu')
-        @if (! Module::collections()->has('CoreMon'))
-            @include ('sidebar')
-        @else
+        @if (Module::collections()->has('CoreMon'))
             @include ('bootstrap.sidebar')
+        @else
+            @include ('sidebar')
         @endif
 
-        <div id="content" class="d-flex flex-column content pt-2 pb-0 pr-2" :class="expanded ? 'ml-[360px]' : 'ml-[100px]'" style="flex:1;transition: all .15s">
+        <div id="content" class="d-flex flex-column pt-2 pb-0 pr-2" :class="!minified ? 'ml-80' : 'ml-[100px]'" style="flex:1;transition: all .15s">
             @if(session('GlobalNotification'))
             <div style="padding-top:1rem;">
                 @foreach (session('GlobalNotification') as $name => $options)
@@ -65,7 +65,7 @@
                     </div>
                 @endforeach
             @endif
-            <div class="d-flex flex-column d-print-flex" style="flex:1;">
+            <div class="d-flex flex-column d-print-flex row" style="flex:1;">
                 @yield ('content')
             </div>
         </div>
@@ -149,10 +149,10 @@
             }
         })
     </script>
-    @if (! Module::collections()->has('CoreMon'))
-        @include ('page_vue')
-    @else
+    @if (Module::collections()->has('CoreMon'))
         @include ('bootstrap.sidebar-vue')
+    @else
+        @include ('page_vue')
     @endif
 
     {{-- scroll to top btn --}}
