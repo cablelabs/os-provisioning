@@ -191,31 +191,3 @@
     </div>
   </div> {{-- End ROW --}}
 </nav>
-
-<script type="text/javascript">
-
-function getSearchTag()
-{
-  var element = document.getElementById('prefillSearchbar');
-  document.getElementById('globalSearch').value = element.options[element.selectedIndex].value;
-}
-
-function linkTag()
-{
-  var element = document.getElementById('prefillSearchbar');
-  var select = element.options[element.selectedIndex];
-  var search = document.getElementById('globalSearch');
-
-  // if you search 'ip:...' in 'all', still use the 'ip:' tag
-  // if there is no tag, you search in 'all'
-  Array.from(element.options).forEach(function(option) {
-    if (search.value.startsWith(option.value) && option.value != '') {
-      var querySelector = `[value='${option.value}']`;
-      document.getElementById('globalSearchForm').action = document.querySelectorAll(querySelector)[0].dataset.route;
-    } else {
-      document.getElementById('globalSearchForm').action = select.dataset.route;
-    }
-  });
-}
-
-</script>
