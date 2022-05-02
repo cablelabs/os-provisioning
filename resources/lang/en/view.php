@@ -587,6 +587,8 @@ return [
     'HfcReq' => 'HFC',
     'info' => 'info',
     'Level' => 'Level',
+    'loginImg' => 'Login background image',
+    'loginImgUpload' =>  'Upload login background image',
     'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
     'modemAnalysis' => [

@@ -28,6 +28,7 @@ use Nwidart\Modules\Facades\Module;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use App\Http\Controllers\GlobalConfigController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -76,15 +77,19 @@ class LoginController extends Controller
         $globalConfig = GlobalConfig::first();
         $head1 = $globalConfig->headline1;
         $head2 = $globalConfig->headline2;
-        $image = 'main-pic-1.jpg';
         $loginPage = 'admin';
         $logo = asset('images/nmsprime-logo-white.png');
+
+        $bgImageRoute = asset('images/main-pic-1.jpg');
+        if ($globalConfig->login_img && is_file(storage_path(GlobalConfigController::BG_IMAGES_PATH_REL.$globalConfig->login_img))) {
+            $bgImageRoute = asset('images/base/bg-images/'.$globalConfig->login_img);
+        }
 
         if (session()->has('url.intended') && $pos = strpos($url = session('url.intended'), 'admin')) {
             $intended = substr($url, $pos + 6); // pos + admin/
         }
 
-        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'image', 'loginPage', 'logo', 'intended'));
+        return \View::make('auth.login', compact('head1', 'head2', 'prefix', 'bgImageRoute', 'loginPage', 'logo', 'intended'));
     }
 
     /**

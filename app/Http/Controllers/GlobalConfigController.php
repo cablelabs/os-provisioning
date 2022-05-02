@@ -28,11 +28,27 @@ class GlobalConfigController extends BaseController
 {
     protected $log_level = ['0 - Emergency', '1 - Alert', '2 - Critical', '3 - Error', '4 - Warning', '5 - Notice', '6 - Info', '7 - Debug'];
 
+    public const BG_IMAGES_PATH_REL = 'app/config/base/bg-images/';
+
+    protected function getFileUploadPaths(): array
+    {
+        return [
+            'login_img' => self::BG_IMAGES_PATH_REL,
+        ];
+    }
+
     /**
      * defines the formular fields for the edit and create view
      */
     public function view_form_fields($model = null)
     {
+        $pics = array_map(function ($file) {
+            return $file->getRelativePathName();
+        }, \File::allfiles(storage_path(self::BG_IMAGES_PATH_REL)));
+
+        $pictures[null] = null;
+        $pictures += array_combine($pics, $pics);
+
         $ret = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'ISP Name'],
             ['form_type' => 'text', 'name' => 'street', 'description' => 'Street'],
@@ -47,7 +63,9 @@ class GlobalConfigController extends BaseController
             ['form_type' => 'text', 'name' => 'alert1', 'description' => trans('view.Global notification').' - '.trans('view.info')],
             ['form_type' => 'text', 'name' => 'alert2', 'description' => trans('view.Global notification').' - '.trans('view.warning')],
             ['form_type' => 'text', 'name' => 'alert3', 'description' => trans('view.Global notification').' - '.trans('view.critical')],
-            ['form_type' => 'text', 'name' => 'alert3', 'description' => trans('view.Global notification').' - '.trans('view.critical')],
+
+            ['form_type' => 'select', 'name' => 'login_img', 'description' => trans('view.loginImg'), 'value' => $pictures],
+            ['form_type' => 'file', 'name' => 'login_img_upload', 'description' => trans('view.loginImgUpload')],
         ];
 
         if (Module::collections()->has('HfcBase')) {

@@ -32,7 +32,7 @@
     {{-- Background Image --}}
     <div class="login-cover">
         <div class="login-cover-image">
-            <img id="login-img" data-id="login-cover-image" src="{{asset('images/'.$image)}}">
+            <img id="login-img" class="mh-100 w-100" data-id="login-cover-image" src="{{ $bgImageRoute }}">
         </div>
         <div class="login-cover-bg"></div>
         @if ($loginPage == 'customer')

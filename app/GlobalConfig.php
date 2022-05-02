@@ -23,6 +23,8 @@ class GlobalConfig extends BaseModel
     // The associated SQL table for this Model
     public $table = 'global_config';
 
+    public $guarded = ['login_img_upload'];
+
     // Add your validation rules here
     public function rules()
     {
