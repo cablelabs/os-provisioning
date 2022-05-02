@@ -1,4 +1,8 @@
-const map = L.map('map')
+const map = L.map('map', {
+    zoomSnap: 0.25,
+    zoomDelta: 0.5,
+    wheelPxPerZoomLevel: 150
+})
 
 @if (isset($bounds['maxLat']) && $bounds['maxLng'] && $bounds['minLat'] && $bounds['minLng'])
     map.fitBounds([
