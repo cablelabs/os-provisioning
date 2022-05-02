@@ -5,6 +5,9 @@ return [
     'buttons' => [
         'revertDebtUpload' => 'OP Upload rückgängig machen',
     ],
+    'ccc' => [
+        'bgImg' => 'Hintergrundbild der Loginseite',
+    ],
     //SEARCH
     'Search_EnterKeyword'       => 'Suchbegriff eingeben',
     'Search_MatchesFor'         => 'Ergebnisse für',

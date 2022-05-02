@@ -811,4 +811,5 @@ return [
     'Longitude'                 => 'Längengrad',
     'Value'                     => 'Wert',
     'Entries'                   => 'Einträge',
+    'Upload image'              => 'Bild hochladen',
 ];

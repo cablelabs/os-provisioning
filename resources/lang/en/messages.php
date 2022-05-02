@@ -811,4 +811,5 @@ return [
     'Longitude'                 => 'Longitude',
     'Value'                     => 'Value',
     'Entries'                   => 'entries',
+    'Upload image'              => 'Upload image',
 ];

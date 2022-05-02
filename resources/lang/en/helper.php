@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'ccc' => [
+        'imgUpload' => 'Upload for logo and backgound image. Please set the according image after the upload!',
+    ],
     'debt' => [
         'amount' => 'Postive when customer is charged, negative when customer gets credit',
         'totalFee' => 'Deprecated. Just used to show the old total fee that is now determined by the sum of bank and extra fee. The field will probably be removed in future to reduce redundant informations.',

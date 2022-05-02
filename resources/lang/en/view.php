@@ -5,6 +5,9 @@ return [
     'buttons' => [
         'revertDebtUpload' => 'Revert Debt Upload',
     ],
+    'ccc' => [
+        'bgImg' => 'Login page background image',
+    ],
     //SEARCH
     'Search_EnterKeyword'       => 'Enter Keyword',
     'Search_MatchesFor'         => 'Matches for',
