@@ -76,6 +76,7 @@ return [
     'Debt'                      => 'Offener Posten',
     'Debt to clear'             => 'Zu verrechnender OP',
     'Debt Management Type'      => 'Form der OP-Verwaltung',
+    'Default country code'      => 'Default Ländercode',
     'Default login page'        => 'Default Login Seite',
     'Delete'                    => 'Lösche',
     'Day'                       => 'Tag',
