@@ -51,7 +51,7 @@ sudo -u postgres pgloader -q /tmp/nmsprime.load
 
 sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     CREATE USER ${auths[2]} PASSWORD '${auths[1]}';
-    GRANT USAGE ON SCHEMA ${auths[0]} TO ${auths[2]};
+    GRANT USAGE, CREATE ON SCHEMA ${auths[0]} TO ${auths[2]};
     GRANT ALL PRIVILEGES ON ALL Tables in schema ${auths[0]} TO ${auths[2]};
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA ${auths[0]} TO ${auths[2]};
 "
