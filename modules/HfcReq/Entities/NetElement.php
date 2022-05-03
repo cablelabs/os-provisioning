@@ -690,6 +690,33 @@ class NetElement extends \BaseModel
     }
 
     /**
+     * Get all children that are of a specific netelementtype
+     *
+     * See NetElementType::undeletables for the list of IDs
+     *
+     * @param mixed int|array ID|IDs of NetelementType
+     * @return obj Collection
+     *
+     * @author Nino Ryschawy
+     */
+    public function getAllChildrenOfType($netelementtypeId)
+    {
+        $query = self::join('netelementtype', 'netelement.netelementtype_id', 'netelementtype.id')
+            ->whereDescendantOf($this->id);
+
+        if (is_array($netelementtypeId)) {
+            $query->whereIn('netelementtype.base_type_id', $netelementtypeId);
+        } else {
+            $query->where('netelementtype.base_type_id', $netelementtypeId);
+        }
+
+        return $query
+            ->select('netelement.*', 'base_type_id')
+            ->withOut('netelementtype')
+            ->get();
+    }
+
+    /**
      * Format Parent (NetElements) for Select 2 field and allow for searching.
      *
      * @param  string|null  $search

@@ -1162,3 +1162,7 @@ textarea.select2-search__field {
     font-size: large;
     font-weight: bold;
 }
+
+.marketPopup > .leaflet-popup-content-wrapper {
+    background-color: #343a40;
+}

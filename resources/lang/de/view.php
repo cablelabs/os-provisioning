@@ -592,6 +592,15 @@ return [
     'Level' => 'Level',
     'loginImg' =>  'Login Hintergrundbild',
     'loginImgUpload' =>  'Login Hintergrundbild hochladen',
+    'marketPopup' => [
+        'ccapTotal' => 'CCAP\'s gesamt',
+        'rpdTotal' => 'RPD\'s gesamt',
+        'cmTotal' => 'CM\'s gesamt',
+        'cinTotal' => 'CIN Elemente gesamt',
+        'rpdOfflinePct' => '% RPD Offline',
+        'cmOfflinePct' => '% CM Offline',
+        'cinOfflinePct' => '% CIN Geräte Offline',
+    ],
     'markon' => 'Preisaufschlag in %',
     'Message' => 'Nachricht',
     'modemAnalysis' => [

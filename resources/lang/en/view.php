@@ -592,6 +592,15 @@ return [
     'Level' => 'Level',
     'loginImg' => 'Login background image',
     'loginImgUpload' =>  'Upload login background image',
+    'marketPopup' => [
+        'ccapTotal' => 'Total CCAP',
+        'rpdTotal' => 'Total RPD',
+        'cmTotal' => 'Total CM',
+        'cinTotal' => 'Total CIN Elements',
+        'rpdOfflinePct' => '% RPD Offline',
+        'cmOfflinePct' => '% CM Offline',
+        'cinOfflinePct' => '$ CIN Devices Offline',
+    ],
     'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
     'modemAnalysis' => [
