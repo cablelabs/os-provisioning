@@ -1127,3 +1127,38 @@ textarea.select2-search__field {
 .no-underline:hover {
     text-decoration: none !important;
 }
+
+.marketCircle {
+    position: relative;
+    display: inline-block;
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+    bottom: 100%;
+    right: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background: #7d92d2;
+    color: white;
+    font-size: medium;
+    /* TODO: Fix bug with box shadow creating small white space between border and outline on firefox - also see https://stackoverflow.com/questions/48560223/white-pixels-showing-for-div-with-corner-radius */
+    box-shadow: -2px 2px 7px 0 black;
+}
+
+.marketPlusSign {
+    position: relative;
+    display: flex;
+    width: 12px;
+    height: 12px;
+    z-index: 9;
+    bottom: 450%;
+    left: 150%;
+    border-radius: 100%;
+    background: black;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    font-weight: bold;
+}
