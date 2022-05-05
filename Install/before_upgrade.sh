@@ -37,6 +37,10 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
 read -r -a credentials <<< $(grep '^ROOT_DB_USERNAME\|^ROOT_DB_PASSWORD=' /etc/nmsprime/env/root.env | cut -d '=' -f2)
 mysql -u "${credentials[0]}" -p"${credentials[1]}" --exec='Create user psqlconverter; GRANT select ON *.* TO psqlconverter;'
 
+sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
+    CREATE USER ${auths[2]} PASSWORD '${auths[1]}';
+"
+
 sudo -u postgres psql nmsprime < /etc/nmsprime/sql-schemas/nmsprime.pgsql
 
 echo "LOAD DATABASE
@@ -50,7 +54,6 @@ sudo -u postgres pgloader -q /tmp/nmsprime.load
 #sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
 
 sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
-    CREATE USER ${auths[2]} PASSWORD '${auths[1]}';
     GRANT USAGE, CREATE ON SCHEMA ${auths[0]} TO ${auths[2]};
     GRANT ALL PRIVILEGES ON ALL Tables in schema ${auths[0]} TO ${auths[2]};
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA ${auths[0]} TO ${auths[2]};

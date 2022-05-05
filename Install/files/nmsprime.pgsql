@@ -17,10 +17,10 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: nmsprime; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: nmsprime; Type: DATABASE; Schema: -; Owner: nmsprime
 --
 
-ALTER DATABASE nmsprime OWNER TO postgres;
+ALTER DATABASE nmsprime OWNER TO nmsprime;
 
 \connect nmsprime
 
@@ -36,16 +36,16 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: nmsprime; Type: SCHEMA; Schema: -; Owner: postgres
+-- Name: nmsprime; Type: SCHEMA; Schema: -; Owner: nmsprime
 --
 
 CREATE SCHEMA nmsprime;
 
 
-ALTER SCHEMA nmsprime OWNER TO postgres;
+ALTER SCHEMA nmsprime OWNER TO nmsprime;
 
 --
--- Name: billingbase_userlang; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: billingbase_userlang; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.billingbase_userlang AS ENUM (
@@ -54,10 +54,10 @@ CREATE TYPE nmsprime.billingbase_userlang AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.billingbase_userlang OWNER TO postgres;
+ALTER TYPE nmsprime.billingbase_userlang OWNER TO nmsprime;
 
 --
--- Name: configfile_device; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: configfile_device; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.configfile_device AS ENUM (
@@ -67,10 +67,10 @@ CREATE TYPE nmsprime.configfile_device AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.configfile_device OWNER TO postgres;
+ALTER TYPE nmsprime.configfile_device OWNER TO nmsprime;
 
 --
--- Name: configfile_public; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: configfile_public; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.configfile_public AS ENUM (
@@ -79,10 +79,10 @@ CREATE TYPE nmsprime.configfile_public AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.configfile_public OWNER TO postgres;
+ALTER TYPE nmsprime.configfile_public OWNER TO nmsprime;
 
 --
--- Name: domain_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: domain_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.domain_type AS ENUM (
@@ -92,10 +92,10 @@ CREATE TYPE nmsprime.domain_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.domain_type OWNER TO postgres;
+ALTER TYPE nmsprime.domain_type OWNER TO nmsprime;
 
 --
--- Name: enviaorderdocument_document_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument_document_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.enviaorderdocument_document_type AS ENUM (
@@ -111,10 +111,10 @@ CREATE TYPE nmsprime.enviaorderdocument_document_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.enviaorderdocument_document_type OWNER TO postgres;
+ALTER TYPE nmsprime.enviaorderdocument_document_type OWNER TO nmsprime;
 
 --
--- Name: invoice_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: invoice_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.invoice_type AS ENUM (
@@ -123,10 +123,10 @@ CREATE TYPE nmsprime.invoice_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.invoice_type OWNER TO postgres;
+ALTER TYPE nmsprime.invoice_type OWNER TO nmsprime;
 
 --
--- Name: ippool_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: ippool_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.ippool_type AS ENUM (
@@ -137,10 +137,10 @@ CREATE TYPE nmsprime.ippool_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.ippool_type OWNER TO postgres;
+ALTER TYPE nmsprime.ippool_type OWNER TO nmsprime;
 
 --
--- Name: mta_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: mta_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.mta_type AS ENUM (
@@ -149,10 +149,10 @@ CREATE TYPE nmsprime.mta_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.mta_type OWNER TO postgres;
+ALTER TYPE nmsprime.mta_type OWNER TO nmsprime;
 
 --
--- Name: numberrange_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: numberrange_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.numberrange_type AS ENUM (
@@ -161,10 +161,10 @@ CREATE TYPE nmsprime.numberrange_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.numberrange_type OWNER TO postgres;
+ALTER TYPE nmsprime.numberrange_type OWNER TO nmsprime;
 
 --
--- Name: oid_html_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: oid_html_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.oid_html_type AS ENUM (
@@ -175,10 +175,10 @@ CREATE TYPE nmsprime.oid_html_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.oid_html_type OWNER TO postgres;
+ALTER TYPE nmsprime.oid_html_type OWNER TO nmsprime;
 
 --
--- Name: oid_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: oid_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.oid_type AS ENUM (
@@ -195,10 +195,10 @@ CREATE TYPE nmsprime.oid_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.oid_type OWNER TO postgres;
+ALTER TYPE nmsprime.oid_type OWNER TO nmsprime;
 
 --
--- Name: phonetariff_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.phonetariff_type AS ENUM (
@@ -210,10 +210,10 @@ CREATE TYPE nmsprime.phonetariff_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.phonetariff_type OWNER TO postgres;
+ALTER TYPE nmsprime.phonetariff_type OWNER TO nmsprime;
 
 --
--- Name: phonetariff_voip_protocol; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff_voip_protocol; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.phonetariff_voip_protocol AS ENUM (
@@ -222,10 +222,10 @@ CREATE TYPE nmsprime.phonetariff_voip_protocol AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.phonetariff_voip_protocol OWNER TO postgres;
+ALTER TYPE nmsprime.phonetariff_voip_protocol OWNER TO nmsprime;
 
 --
--- Name: product_billing_cycle; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: product_billing_cycle; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.product_billing_cycle AS ENUM (
@@ -236,10 +236,10 @@ CREATE TYPE nmsprime.product_billing_cycle AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.product_billing_cycle OWNER TO postgres;
+ALTER TYPE nmsprime.product_billing_cycle OWNER TO nmsprime;
 
 --
--- Name: product_type; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: product_type; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.product_type AS ENUM (
@@ -253,10 +253,10 @@ CREATE TYPE nmsprime.product_type AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.product_type OWNER TO postgres;
+ALTER TYPE nmsprime.product_type OWNER TO nmsprime;
 
 --
--- Name: sepamandate_state; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate_state; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.sepamandate_state AS ENUM (
@@ -267,10 +267,10 @@ CREATE TYPE nmsprime.sepamandate_state AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.sepamandate_state OWNER TO postgres;
+ALTER TYPE nmsprime.sepamandate_state OWNER TO nmsprime;
 
 --
--- Name: ticket_priority; Type: TYPE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_priority; Type: TYPE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TYPE nmsprime.ticket_priority AS ENUM (
@@ -281,10 +281,10 @@ CREATE TYPE nmsprime.ticket_priority AS ENUM (
 );
 
 
-ALTER TYPE nmsprime.ticket_priority OWNER TO postgres;
+ALTER TYPE nmsprime.ticket_priority OWNER TO nmsprime;
 
 --
--- Name: on_update_current_timestamp_authreminders(); Type: FUNCTION; Schema: nmsprime; Owner: postgres
+-- Name: on_update_current_timestamp_authreminders(); Type: FUNCTION; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE FUNCTION nmsprime.on_update_current_timestamp_authreminders() RETURNS trigger
@@ -297,11 +297,11 @@ END;
 $$;
 
 
-ALTER FUNCTION nmsprime.on_update_current_timestamp_authreminders() OWNER TO postgres;
+ALTER FUNCTION nmsprime.on_update_current_timestamp_authreminders() OWNER TO nmsprime;
 
 
 --
--- Name: abilities; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: abilities; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.abilities (
@@ -318,10 +318,10 @@ CREATE TABLE nmsprime.abilities (
 );
 
 
-ALTER TABLE nmsprime.abilities OWNER TO postgres;
+ALTER TABLE nmsprime.abilities OWNER TO nmsprime;
 
 --
--- Name: abilities_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: abilities_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.abilities_id_seq
@@ -332,17 +332,17 @@ CREATE SEQUENCE nmsprime.abilities_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.abilities_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.abilities_id_seq OWNER TO nmsprime;
 
 --
--- Name: abilities_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: abilities_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.abilities_id_seq OWNED BY nmsprime.abilities.id;
 
 
 --
--- Name: accountingrecord; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.accountingrecord (
@@ -362,10 +362,10 @@ CREATE TABLE nmsprime.accountingrecord (
 );
 
 
-ALTER TABLE nmsprime.accountingrecord OWNER TO postgres;
+ALTER TABLE nmsprime.accountingrecord OWNER TO nmsprime;
 
 --
--- Name: accountingrecord_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.accountingrecord_id_seq
@@ -376,17 +376,17 @@ CREATE SEQUENCE nmsprime.accountingrecord_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.accountingrecord_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.accountingrecord_id_seq OWNER TO nmsprime;
 
 --
--- Name: accountingrecord_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.accountingrecord_id_seq OWNED BY nmsprime.accountingrecord.id;
 
 
 --
--- Name: apartment; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: apartment; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.apartment (
@@ -405,10 +405,10 @@ CREATE TABLE nmsprime.apartment (
 );
 
 
-ALTER TABLE nmsprime.apartment OWNER TO postgres;
+ALTER TABLE nmsprime.apartment OWNER TO nmsprime;
 
 --
--- Name: apartment_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: apartment_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.apartment_id_seq
@@ -419,17 +419,17 @@ CREATE SEQUENCE nmsprime.apartment_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.apartment_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.apartment_id_seq OWNER TO nmsprime;
 
 --
--- Name: apartment_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: apartment_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.apartment_id_seq OWNED BY nmsprime.apartment.id;
 
 
 --
--- Name: assigned_roles; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: assigned_roles; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.assigned_roles (
@@ -442,10 +442,10 @@ CREATE TABLE nmsprime.assigned_roles (
 );
 
 
-ALTER TABLE nmsprime.assigned_roles OWNER TO postgres;
+ALTER TABLE nmsprime.assigned_roles OWNER TO nmsprime;
 
 --
--- Name: authreminders; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: authreminders; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.authreminders (
@@ -455,10 +455,10 @@ CREATE TABLE nmsprime.authreminders (
 );
 
 
-ALTER TABLE nmsprime.authreminders OWNER TO postgres;
+ALTER TABLE nmsprime.authreminders OWNER TO nmsprime;
 
 --
--- Name: billingbase; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: billingbase; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.billingbase (
@@ -483,10 +483,10 @@ CREATE TABLE nmsprime.billingbase (
 );
 
 
-ALTER TABLE nmsprime.billingbase OWNER TO postgres;
+ALTER TABLE nmsprime.billingbase OWNER TO nmsprime;
 
 --
--- Name: billingbase_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: billingbase_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.billingbase_id_seq
@@ -497,17 +497,17 @@ CREATE SEQUENCE nmsprime.billingbase_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.billingbase_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.billingbase_id_seq OWNER TO nmsprime;
 
 --
--- Name: billingbase_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: billingbase_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.billingbase_id_seq OWNED BY nmsprime.billingbase.id;
 
 
 --
--- Name: carriercode; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: carriercode; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.carriercode (
@@ -520,10 +520,10 @@ CREATE TABLE nmsprime.carriercode (
 );
 
 
-ALTER TABLE nmsprime.carriercode OWNER TO postgres;
+ALTER TABLE nmsprime.carriercode OWNER TO nmsprime;
 
 --
--- Name: carriercode_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: carriercode_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.carriercode_id_seq
@@ -534,17 +534,17 @@ CREATE SEQUENCE nmsprime.carriercode_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.carriercode_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.carriercode_id_seq OWNER TO nmsprime;
 
 --
--- Name: carriercode_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: carriercode_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.carriercode_id_seq OWNED BY nmsprime.carriercode.id;
 
 
 --
--- Name: ccc; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ccc; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ccc (
@@ -561,10 +561,10 @@ CREATE TABLE nmsprime.ccc (
 );
 
 
-ALTER TABLE nmsprime.ccc OWNER TO postgres;
+ALTER TABLE nmsprime.ccc OWNER TO nmsprime;
 
 --
--- Name: ccc_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ccc_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ccc_id_seq
@@ -575,17 +575,17 @@ CREATE SEQUENCE nmsprime.ccc_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ccc_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ccc_id_seq OWNER TO nmsprime;
 
 --
--- Name: ccc_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ccc_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ccc_id_seq OWNED BY nmsprime.ccc.id;
 
 
 --
--- Name: comment; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: comment; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.comment (
@@ -599,10 +599,10 @@ CREATE TABLE nmsprime.comment (
 );
 
 
-ALTER TABLE nmsprime.comment OWNER TO postgres;
+ALTER TABLE nmsprime.comment OWNER TO nmsprime;
 
 --
--- Name: comment_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.comment_id_seq
@@ -613,17 +613,17 @@ CREATE SEQUENCE nmsprime.comment_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.comment_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.comment_id_seq OWNER TO nmsprime;
 
 --
--- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.comment_id_seq OWNED BY nmsprime.comment.id;
 
 
 --
--- Name: company; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: company; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.company (
@@ -652,10 +652,10 @@ CREATE TABLE nmsprime.company (
 );
 
 
-ALTER TABLE nmsprime.company OWNER TO postgres;
+ALTER TABLE nmsprime.company OWNER TO nmsprime;
 
 --
--- Name: company_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: company_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.company_id_seq
@@ -666,17 +666,17 @@ CREATE SEQUENCE nmsprime.company_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.company_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.company_id_seq OWNER TO nmsprime;
 
 --
--- Name: company_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: company_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.company_id_seq OWNED BY nmsprime.company.id;
 
 
 --
--- Name: configfile; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: configfile; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.configfile (
@@ -696,10 +696,10 @@ CREATE TABLE nmsprime.configfile (
 );
 
 
-ALTER TABLE nmsprime.configfile OWNER TO postgres;
+ALTER TABLE nmsprime.configfile OWNER TO nmsprime;
 
 --
--- Name: configfile_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: configfile_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.configfile_id_seq
@@ -710,17 +710,17 @@ CREATE SEQUENCE nmsprime.configfile_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.configfile_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.configfile_id_seq OWNER TO nmsprime;
 
 --
--- Name: configfile_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: configfile_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.configfile_id_seq OWNED BY nmsprime.configfile.id;
 
 
 --
--- Name: contact; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: contact; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.contact (
@@ -749,10 +749,10 @@ CREATE TABLE nmsprime.contact (
 );
 
 
-ALTER TABLE nmsprime.contact OWNER TO postgres;
+ALTER TABLE nmsprime.contact OWNER TO nmsprime;
 
 --
--- Name: contact_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: contact_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.contact_id_seq
@@ -763,17 +763,17 @@ CREATE SEQUENCE nmsprime.contact_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.contact_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.contact_id_seq OWNER TO nmsprime;
 
 --
--- Name: contact_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: contact_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.contact_id_seq OWNED BY nmsprime.contact.id;
 
 
 --
--- Name: contract; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: contract; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.contract (
@@ -836,10 +836,10 @@ CREATE TABLE nmsprime.contract (
 );
 
 
-ALTER TABLE nmsprime.contract OWNER TO postgres;
+ALTER TABLE nmsprime.contract OWNER TO nmsprime;
 
 --
--- Name: contract_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: contract_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.contract_id_seq
@@ -850,17 +850,17 @@ CREATE SEQUENCE nmsprime.contract_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.contract_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.contract_id_seq OWNER TO nmsprime;
 
 --
--- Name: contract_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: contract_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.contract_id_seq OWNED BY nmsprime.contract.id;
 
 
 --
--- Name: costcenter; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: costcenter; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.costcenter (
@@ -876,10 +876,10 @@ CREATE TABLE nmsprime.costcenter (
 );
 
 
-ALTER TABLE nmsprime.costcenter OWNER TO postgres;
+ALTER TABLE nmsprime.costcenter OWNER TO nmsprime;
 
 --
--- Name: costcenter_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: costcenter_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.costcenter_id_seq
@@ -890,17 +890,17 @@ CREATE SEQUENCE nmsprime.costcenter_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.costcenter_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.costcenter_id_seq OWNER TO nmsprime;
 
 --
--- Name: costcenter_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: costcenter_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.costcenter_id_seq OWNED BY nmsprime.costcenter.id;
 
 
 --
--- Name: debt; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: debt; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.debt (
@@ -928,10 +928,10 @@ CREATE TABLE nmsprime.debt (
 );
 
 
-ALTER TABLE nmsprime.debt OWNER TO postgres;
+ALTER TABLE nmsprime.debt OWNER TO nmsprime;
 
 --
--- Name: debt_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: debt_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.debt_id_seq
@@ -942,17 +942,17 @@ CREATE SEQUENCE nmsprime.debt_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.debt_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.debt_id_seq OWNER TO nmsprime;
 
 --
--- Name: debt_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: debt_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.debt_id_seq OWNED BY nmsprime.debt.id;
 
 
 --
--- Name: domain; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: domain; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.domain (
@@ -966,10 +966,10 @@ CREATE TABLE nmsprime.domain (
 );
 
 
-ALTER TABLE nmsprime.domain OWNER TO postgres;
+ALTER TABLE nmsprime.domain OWNER TO nmsprime;
 
 --
--- Name: domain_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: domain_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.domain_id_seq
@@ -980,17 +980,17 @@ CREATE SEQUENCE nmsprime.domain_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.domain_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.domain_id_seq OWNER TO nmsprime;
 
 --
--- Name: domain_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: domain_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.domain_id_seq OWNED BY nmsprime.domain.id;
 
 
 --
--- Name: ekpcode; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ekpcode (
@@ -1003,10 +1003,10 @@ CREATE TABLE nmsprime.ekpcode (
 );
 
 
-ALTER TABLE nmsprime.ekpcode OWNER TO postgres;
+ALTER TABLE nmsprime.ekpcode OWNER TO nmsprime;
 
 --
--- Name: ekpcode_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ekpcode_id_seq
@@ -1017,17 +1017,17 @@ CREATE SEQUENCE nmsprime.ekpcode_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ekpcode_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ekpcode_id_seq OWNER TO nmsprime;
 
 --
--- Name: ekpcode_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ekpcode_id_seq OWNED BY nmsprime.ekpcode.id;
 
 
 --
--- Name: endpoint; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: endpoint; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.endpoint (
@@ -1047,10 +1047,10 @@ CREATE TABLE nmsprime.endpoint (
 );
 
 
-ALTER TABLE nmsprime.endpoint OWNER TO postgres;
+ALTER TABLE nmsprime.endpoint OWNER TO nmsprime;
 
 --
--- Name: endpoint_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: endpoint_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.endpoint_id_seq
@@ -1061,17 +1061,17 @@ CREATE SEQUENCE nmsprime.endpoint_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.endpoint_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.endpoint_id_seq OWNER TO nmsprime;
 
 --
--- Name: endpoint_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: endpoint_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.endpoint_id_seq OWNED BY nmsprime.endpoint.id;
 
 
 --
--- Name: enviacontract; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.enviacontract (
@@ -1099,10 +1099,10 @@ CREATE TABLE nmsprime.enviacontract (
 );
 
 
-ALTER TABLE nmsprime.enviacontract OWNER TO postgres;
+ALTER TABLE nmsprime.enviacontract OWNER TO nmsprime;
 
 --
--- Name: enviacontract_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.enviacontract_id_seq
@@ -1113,17 +1113,17 @@ CREATE SEQUENCE nmsprime.enviacontract_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.enviacontract_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.enviacontract_id_seq OWNER TO nmsprime;
 
 --
--- Name: enviacontract_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.enviacontract_id_seq OWNED BY nmsprime.enviacontract.id;
 
 
 --
--- Name: enviaorder; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.enviaorder (
@@ -1149,10 +1149,10 @@ CREATE TABLE nmsprime.enviaorder (
 );
 
 
-ALTER TABLE nmsprime.enviaorder OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorder OWNER TO nmsprime;
 
 --
--- Name: enviaorder_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.enviaorder_id_seq
@@ -1163,17 +1163,17 @@ CREATE SEQUENCE nmsprime.enviaorder_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.enviaorder_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorder_id_seq OWNER TO nmsprime;
 
 --
--- Name: enviaorder_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.enviaorder_id_seq OWNED BY nmsprime.enviaorder.id;
 
 
 --
--- Name: enviaorder_phonenumber; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.enviaorder_phonenumber (
@@ -1186,10 +1186,10 @@ CREATE TABLE nmsprime.enviaorder_phonenumber (
 );
 
 
-ALTER TABLE nmsprime.enviaorder_phonenumber OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorder_phonenumber OWNER TO nmsprime;
 
 --
--- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.enviaorder_phonenumber_id_seq
@@ -1200,17 +1200,17 @@ CREATE SEQUENCE nmsprime.enviaorder_phonenumber_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.enviaorder_phonenumber_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorder_phonenumber_id_seq OWNER TO nmsprime;
 
 --
--- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.enviaorder_phonenumber_id_seq OWNED BY nmsprime.enviaorder_phonenumber.id;
 
 
 --
--- Name: enviaorderdocument; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.enviaorderdocument (
@@ -1226,10 +1226,10 @@ CREATE TABLE nmsprime.enviaorderdocument (
 );
 
 
-ALTER TABLE nmsprime.enviaorderdocument OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorderdocument OWNER TO nmsprime;
 
 --
--- Name: enviaorderdocument_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.enviaorderdocument_id_seq
@@ -1240,17 +1240,17 @@ CREATE SEQUENCE nmsprime.enviaorderdocument_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.enviaorderdocument_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.enviaorderdocument_id_seq OWNER TO nmsprime;
 
 --
--- Name: enviaorderdocument_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.enviaorderdocument_id_seq OWNED BY nmsprime.enviaorderdocument.id;
 
 
 --
--- Name: failed_jobs; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.failed_jobs (
@@ -1263,10 +1263,10 @@ CREATE TABLE nmsprime.failed_jobs (
 );
 
 
-ALTER TABLE nmsprime.failed_jobs OWNER TO postgres;
+ALTER TABLE nmsprime.failed_jobs OWNER TO nmsprime;
 
 --
--- Name: failed_jobs_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.failed_jobs_id_seq
@@ -1277,17 +1277,17 @@ CREATE SEQUENCE nmsprime.failed_jobs_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.failed_jobs_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.failed_jobs_id_seq OWNER TO nmsprime;
 
 --
--- Name: failed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.failed_jobs_id_seq OWNED BY nmsprime.failed_jobs.id;
 
 
 --
--- Name: favorite_netelements; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.favorite_netelements (
@@ -1299,10 +1299,10 @@ CREATE TABLE nmsprime.favorite_netelements (
 );
 
 
-ALTER TABLE nmsprime.favorite_netelements OWNER TO postgres;
+ALTER TABLE nmsprime.favorite_netelements OWNER TO nmsprime;
 
 --
--- Name: favorite_netelements_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.favorite_netelements_id_seq
@@ -1313,17 +1313,17 @@ CREATE SEQUENCE nmsprime.favorite_netelements_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.favorite_netelements_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.favorite_netelements_id_seq OWNER TO nmsprime;
 
 --
--- Name: favorite_netelements_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.favorite_netelements_id_seq OWNED BY nmsprime.favorite_netelements.id;
 
 
 --
--- Name: global_config; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: global_config; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.global_config (
@@ -1348,10 +1348,10 @@ CREATE TABLE nmsprime.global_config (
 );
 
 
-ALTER TABLE nmsprime.global_config OWNER TO postgres;
+ALTER TABLE nmsprime.global_config OWNER TO nmsprime;
 
 --
--- Name: global_config_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: global_config_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.global_config_id_seq
@@ -1362,17 +1362,17 @@ CREATE SEQUENCE nmsprime.global_config_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.global_config_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.global_config_id_seq OWNER TO nmsprime;
 
 --
--- Name: global_config_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: global_config_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.global_config_id_seq OWNED BY nmsprime.global_config.id;
 
 
 --
--- Name: guilog; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: guilog; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.guilog (
@@ -1389,10 +1389,10 @@ CREATE TABLE nmsprime.guilog (
 );
 
 
-ALTER TABLE nmsprime.guilog OWNER TO postgres;
+ALTER TABLE nmsprime.guilog OWNER TO nmsprime;
 
 --
--- Name: guilog_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: guilog_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.guilog_id_seq
@@ -1403,17 +1403,17 @@ CREATE SEQUENCE nmsprime.guilog_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.guilog_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.guilog_id_seq OWNER TO nmsprime;
 
 --
--- Name: guilog_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: guilog_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.guilog_id_seq OWNED BY nmsprime.guilog.id;
 
 
 --
--- Name: hfcreq; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.hfcreq (
@@ -1433,10 +1433,10 @@ CREATE TABLE nmsprime.hfcreq (
 );
 
 
-ALTER TABLE nmsprime.hfcreq OWNER TO postgres;
+ALTER TABLE nmsprime.hfcreq OWNER TO nmsprime;
 
 --
--- Name: hfcreq_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.hfcreq_id_seq
@@ -1447,17 +1447,17 @@ CREATE SEQUENCE nmsprime.hfcreq_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.hfcreq_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.hfcreq_id_seq OWNER TO nmsprime;
 
 --
--- Name: hfcreq_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.hfcreq_id_seq OWNED BY nmsprime.hfcreq.id;
 
 
 --
--- Name: indices; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: indices; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.indices (
@@ -1471,10 +1471,10 @@ CREATE TABLE nmsprime.indices (
 );
 
 
-ALTER TABLE nmsprime.indices OWNER TO postgres;
+ALTER TABLE nmsprime.indices OWNER TO nmsprime;
 
 --
--- Name: indices_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: indices_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.indices_id_seq
@@ -1485,17 +1485,17 @@ CREATE SEQUENCE nmsprime.indices_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.indices_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.indices_id_seq OWNER TO nmsprime;
 
 --
--- Name: indices_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: indices_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.indices_id_seq OWNED BY nmsprime.indices.id;
 
 
 --
--- Name: invoice; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: invoice; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.invoice (
@@ -1516,10 +1516,10 @@ CREATE TABLE nmsprime.invoice (
 );
 
 
-ALTER TABLE nmsprime.invoice OWNER TO postgres;
+ALTER TABLE nmsprime.invoice OWNER TO nmsprime;
 
 --
--- Name: invoice_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: invoice_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.invoice_id_seq
@@ -1530,17 +1530,17 @@ CREATE SEQUENCE nmsprime.invoice_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.invoice_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.invoice_id_seq OWNER TO nmsprime;
 
 --
--- Name: invoice_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: invoice_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.invoice_id_seq OWNED BY nmsprime.invoice.id;
 
 
 --
--- Name: ippool; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ippool; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ippool (
@@ -1569,10 +1569,10 @@ CREATE TABLE nmsprime.ippool (
 );
 
 
-ALTER TABLE nmsprime.ippool OWNER TO postgres;
+ALTER TABLE nmsprime.ippool OWNER TO nmsprime;
 
 --
--- Name: ippool_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ippool_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ippool_id_seq
@@ -1583,17 +1583,17 @@ CREATE SEQUENCE nmsprime.ippool_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ippool_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ippool_id_seq OWNER TO nmsprime;
 
 --
--- Name: ippool_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ippool_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ippool_id_seq OWNED BY nmsprime.ippool.id;
 
 
 --
--- Name: item; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: item; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.item (
@@ -1616,10 +1616,10 @@ CREATE TABLE nmsprime.item (
 );
 
 
-ALTER TABLE nmsprime.item OWNER TO postgres;
+ALTER TABLE nmsprime.item OWNER TO nmsprime;
 
 --
--- Name: item_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: item_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.item_id_seq
@@ -1630,17 +1630,17 @@ CREATE SEQUENCE nmsprime.item_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.item_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.item_id_seq OWNER TO nmsprime;
 
 --
--- Name: item_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: item_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.item_id_seq OWNED BY nmsprime.item.id;
 
 
 --
--- Name: jobs; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: jobs; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.jobs (
@@ -1654,10 +1654,10 @@ CREATE TABLE nmsprime.jobs (
 );
 
 
-ALTER TABLE nmsprime.jobs OWNER TO postgres;
+ALTER TABLE nmsprime.jobs OWNER TO nmsprime;
 
 --
--- Name: jobs_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: jobs_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.jobs_id_seq
@@ -1668,17 +1668,17 @@ CREATE SEQUENCE nmsprime.jobs_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.jobs_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.jobs_id_seq OWNER TO nmsprime;
 
 --
--- Name: jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.jobs_id_seq OWNED BY nmsprime.jobs.id;
 
 
 --
--- Name: mibfile; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: mibfile; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.mibfile (
@@ -1693,10 +1693,10 @@ CREATE TABLE nmsprime.mibfile (
 );
 
 
-ALTER TABLE nmsprime.mibfile OWNER TO postgres;
+ALTER TABLE nmsprime.mibfile OWNER TO nmsprime;
 
 --
--- Name: mibfile_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: mibfile_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.mibfile_id_seq
@@ -1707,17 +1707,17 @@ CREATE SEQUENCE nmsprime.mibfile_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.mibfile_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.mibfile_id_seq OWNER TO nmsprime;
 
 --
--- Name: mibfile_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: mibfile_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.mibfile_id_seq OWNED BY nmsprime.mibfile.id;
 
 
 --
--- Name: migrations; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: migrations; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.migrations (
@@ -1727,10 +1727,10 @@ CREATE TABLE nmsprime.migrations (
 );
 
 
-ALTER TABLE nmsprime.migrations OWNER TO postgres;
+ALTER TABLE nmsprime.migrations OWNER TO nmsprime;
 
 --
--- Name: migrations_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: migrations_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.migrations_id_seq
@@ -1741,17 +1741,17 @@ CREATE SEQUENCE nmsprime.migrations_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.migrations_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.migrations_id_seq OWNER TO nmsprime;
 
 --
--- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.migrations_id_seq OWNED BY nmsprime.migrations.id;
 
 
 --
--- Name: modem; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: modem; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.modem (
@@ -1813,10 +1813,10 @@ CREATE TABLE nmsprime.modem (
 );
 
 
-ALTER TABLE nmsprime.modem OWNER TO postgres;
+ALTER TABLE nmsprime.modem OWNER TO nmsprime;
 
 --
--- Name: modem_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: modem_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.modem_id_seq
@@ -1827,17 +1827,17 @@ CREATE SEQUENCE nmsprime.modem_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.modem_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.modem_id_seq OWNER TO nmsprime;
 
 --
--- Name: modem_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: modem_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.modem_id_seq OWNED BY nmsprime.modem.id;
 
 
 --
--- Name: modem_option; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: modem_option; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.modem_option (
@@ -1851,10 +1851,10 @@ CREATE TABLE nmsprime.modem_option (
 );
 
 
-ALTER TABLE nmsprime.modem_option OWNER TO postgres;
+ALTER TABLE nmsprime.modem_option OWNER TO nmsprime;
 
 --
--- Name: modem_option_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: modem_option_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.modem_option_id_seq
@@ -1865,17 +1865,17 @@ CREATE SEQUENCE nmsprime.modem_option_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.modem_option_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.modem_option_id_seq OWNER TO nmsprime;
 
 --
--- Name: modem_option_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: modem_option_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.modem_option_id_seq OWNED BY nmsprime.modem_option.id;
 
 
 --
--- Name: mpr; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: mpr; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.mpr (
@@ -1890,10 +1890,10 @@ CREATE TABLE nmsprime.mpr (
 );
 
 
-ALTER TABLE nmsprime.mpr OWNER TO postgres;
+ALTER TABLE nmsprime.mpr OWNER TO nmsprime;
 
 --
--- Name: mpr_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: mpr_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.mpr_id_seq
@@ -1904,17 +1904,17 @@ CREATE SEQUENCE nmsprime.mpr_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.mpr_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.mpr_id_seq OWNER TO nmsprime;
 
 --
--- Name: mpr_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: mpr_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.mpr_id_seq OWNED BY nmsprime.mpr.id;
 
 
 --
--- Name: mprgeopos; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.mprgeopos (
@@ -1928,10 +1928,10 @@ CREATE TABLE nmsprime.mprgeopos (
 );
 
 
-ALTER TABLE nmsprime.mprgeopos OWNER TO postgres;
+ALTER TABLE nmsprime.mprgeopos OWNER TO nmsprime;
 
 --
--- Name: mprgeopos_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.mprgeopos_id_seq
@@ -1942,17 +1942,17 @@ CREATE SEQUENCE nmsprime.mprgeopos_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.mprgeopos_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.mprgeopos_id_seq OWNER TO nmsprime;
 
 --
--- Name: mprgeopos_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.mprgeopos_id_seq OWNED BY nmsprime.mprgeopos.id;
 
 
 --
--- Name: mta; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: mta; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.mta (
@@ -1969,10 +1969,10 @@ CREATE TABLE nmsprime.mta (
 );
 
 
-ALTER TABLE nmsprime.mta OWNER TO postgres;
+ALTER TABLE nmsprime.mta OWNER TO nmsprime;
 
 --
--- Name: mta_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: mta_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.mta_id_seq
@@ -1983,17 +1983,17 @@ CREATE SEQUENCE nmsprime.mta_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.mta_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.mta_id_seq OWNER TO nmsprime;
 
 --
--- Name: mta_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: mta_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.mta_id_seq OWNED BY nmsprime.mta.id;
 
 
 --
--- Name: netelement; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: netelement; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.netelement (
@@ -2041,10 +2041,10 @@ END) STORED
 );
 
 
-ALTER TABLE nmsprime.netelement OWNER TO postgres;
+ALTER TABLE nmsprime.netelement OWNER TO nmsprime;
 
 --
--- Name: netelement_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: netelement_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.netelement_id_seq
@@ -2055,17 +2055,17 @@ CREATE SEQUENCE nmsprime.netelement_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.netelement_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.netelement_id_seq OWNER TO nmsprime;
 
 --
--- Name: netelement_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: netelement_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.netelement_id_seq OWNED BY nmsprime.netelement.id;
 
 
 --
--- Name: netelementtype; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.netelementtype (
@@ -2087,10 +2087,10 @@ CREATE TABLE nmsprime.netelementtype (
 );
 
 
-ALTER TABLE nmsprime.netelementtype OWNER TO postgres;
+ALTER TABLE nmsprime.netelementtype OWNER TO nmsprime;
 
 --
--- Name: netelementtype_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.netelementtype_id_seq
@@ -2101,17 +2101,17 @@ CREATE SEQUENCE nmsprime.netelementtype_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.netelementtype_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.netelementtype_id_seq OWNER TO nmsprime;
 
 --
--- Name: netelementtype_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.netelementtype_id_seq OWNED BY nmsprime.netelementtype.id;
 
 
 --
--- Name: netgw; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: netgw; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.netgw (
@@ -2140,10 +2140,10 @@ CREATE TABLE nmsprime.netgw (
 );
 
 
-ALTER TABLE nmsprime.netgw OWNER TO postgres;
+ALTER TABLE nmsprime.netgw OWNER TO nmsprime;
 
 --
--- Name: netgw_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: netgw_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.netgw_id_seq
@@ -2154,17 +2154,17 @@ CREATE SEQUENCE nmsprime.netgw_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.netgw_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.netgw_id_seq OWNER TO nmsprime;
 
 --
--- Name: netgw_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: netgw_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.netgw_id_seq OWNED BY nmsprime.netgw.id;
 
 
 --
--- Name: node; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: node; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.node (
@@ -2189,10 +2189,10 @@ CREATE TABLE nmsprime.node (
 );
 
 
-ALTER TABLE nmsprime.node OWNER TO postgres;
+ALTER TABLE nmsprime.node OWNER TO nmsprime;
 
 --
--- Name: node_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: node_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.node_id_seq
@@ -2203,17 +2203,17 @@ CREATE SEQUENCE nmsprime.node_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.node_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.node_id_seq OWNER TO nmsprime;
 
 --
--- Name: node_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: node_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.node_id_seq OWNED BY nmsprime.node.id;
 
 
 --
--- Name: notifications; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: notifications; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.notifications (
@@ -2228,10 +2228,10 @@ CREATE TABLE nmsprime.notifications (
 );
 
 
-ALTER TABLE nmsprime.notifications OWNER TO postgres;
+ALTER TABLE nmsprime.notifications OWNER TO nmsprime;
 
 --
--- Name: numberrange; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: numberrange; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.numberrange (
@@ -2249,10 +2249,10 @@ CREATE TABLE nmsprime.numberrange (
 );
 
 
-ALTER TABLE nmsprime.numberrange OWNER TO postgres;
+ALTER TABLE nmsprime.numberrange OWNER TO nmsprime;
 
 --
--- Name: numberrange_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: numberrange_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.numberrange_id_seq
@@ -2263,17 +2263,17 @@ CREATE SEQUENCE nmsprime.numberrange_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.numberrange_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.numberrange_id_seq OWNER TO nmsprime;
 
 --
--- Name: numberrange_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: numberrange_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.numberrange_id_seq OWNED BY nmsprime.numberrange.id;
 
 
 --
--- Name: oid; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: oid; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.oid (
@@ -2302,10 +2302,10 @@ CREATE TABLE nmsprime.oid (
 );
 
 
-ALTER TABLE nmsprime.oid OWNER TO postgres;
+ALTER TABLE nmsprime.oid OWNER TO nmsprime;
 
 --
--- Name: oid_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: oid_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.oid_id_seq
@@ -2316,17 +2316,17 @@ CREATE SEQUENCE nmsprime.oid_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.oid_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.oid_id_seq OWNER TO nmsprime;
 
 --
--- Name: oid_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: oid_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.oid_id_seq OWNED BY nmsprime.oid.id;
 
 
 --
--- Name: overduedebts; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.overduedebts (
@@ -2349,10 +2349,10 @@ CREATE TABLE nmsprime.overduedebts (
 );
 
 
-ALTER TABLE nmsprime.overduedebts OWNER TO postgres;
+ALTER TABLE nmsprime.overduedebts OWNER TO nmsprime;
 
 --
--- Name: overduedebts_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.overduedebts_id_seq
@@ -2363,17 +2363,17 @@ CREATE SEQUENCE nmsprime.overduedebts_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.overduedebts_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.overduedebts_id_seq OWNER TO nmsprime;
 
 --
--- Name: overduedebts_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.overduedebts_id_seq OWNED BY nmsprime.overduedebts.id;
 
 
 --
--- Name: parameter; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: parameter; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.parameter (
@@ -2393,10 +2393,10 @@ CREATE TABLE nmsprime.parameter (
 );
 
 
-ALTER TABLE nmsprime.parameter OWNER TO postgres;
+ALTER TABLE nmsprime.parameter OWNER TO nmsprime;
 
 --
--- Name: parameter_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: parameter_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.parameter_id_seq
@@ -2407,17 +2407,17 @@ CREATE SEQUENCE nmsprime.parameter_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.parameter_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.parameter_id_seq OWNER TO nmsprime;
 
 --
--- Name: parameter_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: parameter_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.parameter_id_seq OWNED BY nmsprime.parameter.id;
 
 
 --
--- Name: permissions; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: permissions; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.permissions (
@@ -2431,10 +2431,10 @@ CREATE TABLE nmsprime.permissions (
 );
 
 
-ALTER TABLE nmsprime.permissions OWNER TO postgres;
+ALTER TABLE nmsprime.permissions OWNER TO nmsprime;
 
 --
--- Name: phonebookentry; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.phonebookentry (
@@ -2470,10 +2470,10 @@ CREATE TABLE nmsprime.phonebookentry (
 );
 
 
-ALTER TABLE nmsprime.phonebookentry OWNER TO postgres;
+ALTER TABLE nmsprime.phonebookentry OWNER TO nmsprime;
 
 --
--- Name: phonebookentry_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.phonebookentry_id_seq
@@ -2484,17 +2484,17 @@ CREATE SEQUENCE nmsprime.phonebookentry_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.phonebookentry_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.phonebookentry_id_seq OWNER TO nmsprime;
 
 --
--- Name: phonebookentry_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.phonebookentry_id_seq OWNED BY nmsprime.phonebookentry.id;
 
 
 --
--- Name: phonenumber; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.phonenumber (
@@ -2516,10 +2516,10 @@ CREATE TABLE nmsprime.phonenumber (
 );
 
 
-ALTER TABLE nmsprime.phonenumber OWNER TO postgres;
+ALTER TABLE nmsprime.phonenumber OWNER TO nmsprime;
 
 --
--- Name: phonenumber_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.phonenumber_id_seq
@@ -2530,17 +2530,17 @@ CREATE SEQUENCE nmsprime.phonenumber_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.phonenumber_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.phonenumber_id_seq OWNER TO nmsprime;
 
 --
--- Name: phonenumber_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.phonenumber_id_seq OWNED BY nmsprime.phonenumber.id;
 
 
 --
--- Name: phonenumbermanagement; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.phonenumbermanagement (
@@ -2579,10 +2579,10 @@ CREATE TABLE nmsprime.phonenumbermanagement (
 );
 
 
-ALTER TABLE nmsprime.phonenumbermanagement OWNER TO postgres;
+ALTER TABLE nmsprime.phonenumbermanagement OWNER TO nmsprime;
 
 --
--- Name: phonenumbermanagement_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.phonenumbermanagement_id_seq
@@ -2593,17 +2593,17 @@ CREATE SEQUENCE nmsprime.phonenumbermanagement_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.phonenumbermanagement_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.phonenumbermanagement_id_seq OWNER TO nmsprime;
 
 --
--- Name: phonenumbermanagement_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.phonenumbermanagement_id_seq OWNED BY nmsprime.phonenumbermanagement.id;
 
 
 --
--- Name: phonetariff; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.phonetariff (
@@ -2620,10 +2620,10 @@ CREATE TABLE nmsprime.phonetariff (
 );
 
 
-ALTER TABLE nmsprime.phonetariff OWNER TO postgres;
+ALTER TABLE nmsprime.phonetariff OWNER TO nmsprime;
 
 --
--- Name: phonetariff_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.phonetariff_id_seq
@@ -2634,17 +2634,17 @@ CREATE SEQUENCE nmsprime.phonetariff_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.phonetariff_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.phonetariff_id_seq OWNER TO nmsprime;
 
 --
--- Name: phonetariff_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.phonetariff_id_seq OWNED BY nmsprime.phonetariff.id;
 
 
 --
--- Name: product; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: product; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.product (
@@ -2673,10 +2673,10 @@ CREATE TABLE nmsprime.product (
 );
 
 
-ALTER TABLE nmsprime.product OWNER TO postgres;
+ALTER TABLE nmsprime.product OWNER TO nmsprime;
 
 --
--- Name: product_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: product_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.product_id_seq
@@ -2687,17 +2687,17 @@ CREATE SEQUENCE nmsprime.product_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.product_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.product_id_seq OWNER TO nmsprime;
 
 --
--- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.product_id_seq OWNED BY nmsprime.product.id;
 
 
 --
--- Name: provbase; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: provbase; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.provbase (
@@ -2729,10 +2729,10 @@ CREATE TABLE nmsprime.provbase (
 );
 
 
-ALTER TABLE nmsprime.provbase OWNER TO postgres;
+ALTER TABLE nmsprime.provbase OWNER TO nmsprime;
 
 --
--- Name: provbase_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: provbase_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.provbase_id_seq
@@ -2743,17 +2743,17 @@ CREATE SEQUENCE nmsprime.provbase_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.provbase_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.provbase_id_seq OWNER TO nmsprime;
 
 --
--- Name: provbase_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: provbase_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.provbase_id_seq OWNED BY nmsprime.provbase.id;
 
 
 --
--- Name: provmon; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: provmon; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.provmon (
@@ -2767,10 +2767,10 @@ CREATE TABLE nmsprime.provmon (
 );
 
 
-ALTER TABLE nmsprime.provmon OWNER TO postgres;
+ALTER TABLE nmsprime.provmon OWNER TO nmsprime;
 
 --
--- Name: provmon_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: provmon_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.provmon_id_seq
@@ -2781,17 +2781,17 @@ CREATE SEQUENCE nmsprime.provmon_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.provmon_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.provmon_id_seq OWNER TO nmsprime;
 
 --
--- Name: provmon_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: provmon_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.provmon_id_seq OWNED BY nmsprime.provmon.id;
 
 
 --
--- Name: provvoip; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: provvoip; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.provvoip (
@@ -2806,10 +2806,10 @@ CREATE TABLE nmsprime.provvoip (
 );
 
 
-ALTER TABLE nmsprime.provvoip OWNER TO postgres;
+ALTER TABLE nmsprime.provvoip OWNER TO nmsprime;
 
 --
--- Name: provvoip_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: provvoip_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.provvoip_id_seq
@@ -2820,17 +2820,17 @@ CREATE SEQUENCE nmsprime.provvoip_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.provvoip_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.provvoip_id_seq OWNER TO nmsprime;
 
 --
--- Name: provvoip_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: provvoip_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.provvoip_id_seq OWNED BY nmsprime.provvoip.id;
 
 
 --
--- Name: qos; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: qos; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.qos (
@@ -2848,10 +2848,10 @@ CREATE TABLE nmsprime.qos (
 );
 
 
-ALTER TABLE nmsprime.qos OWNER TO postgres;
+ALTER TABLE nmsprime.qos OWNER TO nmsprime;
 
 --
--- Name: qos_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: qos_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.qos_id_seq
@@ -2862,17 +2862,17 @@ CREATE SEQUENCE nmsprime.qos_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.qos_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.qos_id_seq OWNER TO nmsprime;
 
 --
--- Name: qos_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: qos_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.qos_id_seq OWNED BY nmsprime.qos.id;
 
 
 --
--- Name: realty; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: realty; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.realty (
@@ -2904,10 +2904,10 @@ CREATE TABLE nmsprime.realty (
 );
 
 
-ALTER TABLE nmsprime.realty OWNER TO postgres;
+ALTER TABLE nmsprime.realty OWNER TO nmsprime;
 
 --
--- Name: realty_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: realty_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.realty_id_seq
@@ -2918,17 +2918,17 @@ CREATE SEQUENCE nmsprime.realty_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.realty_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.realty_id_seq OWNER TO nmsprime;
 
 --
--- Name: realty_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: realty_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.realty_id_seq OWNED BY nmsprime.realty.id;
 
 
 --
--- Name: roles; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: roles; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.roles (
@@ -2945,10 +2945,10 @@ CREATE TABLE nmsprime.roles (
 );
 
 
-ALTER TABLE nmsprime.roles OWNER TO postgres;
+ALTER TABLE nmsprime.roles OWNER TO nmsprime;
 
 --
--- Name: roles_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.roles_id_seq
@@ -2959,17 +2959,17 @@ CREATE SEQUENCE nmsprime.roles_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.roles_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.roles_id_seq OWNER TO nmsprime;
 
 --
--- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.roles_id_seq OWNED BY nmsprime.roles.id;
 
 
 --
--- Name: salesman; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: salesman; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.salesman (
@@ -2985,10 +2985,10 @@ CREATE TABLE nmsprime.salesman (
 );
 
 
-ALTER TABLE nmsprime.salesman OWNER TO postgres;
+ALTER TABLE nmsprime.salesman OWNER TO nmsprime;
 
 --
--- Name: salesman_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: salesman_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.salesman_id_seq
@@ -2999,17 +2999,17 @@ CREATE SEQUENCE nmsprime.salesman_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.salesman_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.salesman_id_seq OWNER TO nmsprime;
 
 --
--- Name: salesman_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: salesman_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.salesman_id_seq OWNED BY nmsprime.salesman.id;
 
 
 --
--- Name: sepaaccount; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.sepaaccount (
@@ -3036,10 +3036,10 @@ CREATE TABLE nmsprime.sepaaccount (
 );
 
 
-ALTER TABLE nmsprime.sepaaccount OWNER TO postgres;
+ALTER TABLE nmsprime.sepaaccount OWNER TO nmsprime;
 
 --
--- Name: sepaaccount_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.sepaaccount_id_seq
@@ -3050,17 +3050,17 @@ CREATE SEQUENCE nmsprime.sepaaccount_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.sepaaccount_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.sepaaccount_id_seq OWNER TO nmsprime;
 
 --
--- Name: sepaaccount_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.sepaaccount_id_seq OWNED BY nmsprime.sepaaccount.id;
 
 
 --
--- Name: sepamandate; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.sepamandate (
@@ -3084,10 +3084,10 @@ CREATE TABLE nmsprime.sepamandate (
 );
 
 
-ALTER TABLE nmsprime.sepamandate OWNER TO postgres;
+ALTER TABLE nmsprime.sepamandate OWNER TO nmsprime;
 
 --
--- Name: sepamandate_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.sepamandate_id_seq
@@ -3098,17 +3098,17 @@ CREATE SEQUENCE nmsprime.sepamandate_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.sepamandate_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.sepamandate_id_seq OWNER TO nmsprime;
 
 --
--- Name: sepamandate_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.sepamandate_id_seq OWNED BY nmsprime.sepamandate.id;
 
 
 --
--- Name: settlementrun; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.settlementrun (
@@ -3127,10 +3127,10 @@ CREATE TABLE nmsprime.settlementrun (
 );
 
 
-ALTER TABLE nmsprime.settlementrun OWNER TO postgres;
+ALTER TABLE nmsprime.settlementrun OWNER TO nmsprime;
 
 --
--- Name: settlementrun_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.settlementrun_id_seq
@@ -3141,17 +3141,17 @@ CREATE SEQUENCE nmsprime.settlementrun_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.settlementrun_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.settlementrun_id_seq OWNER TO nmsprime;
 
 --
--- Name: settlementrun_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.settlementrun_id_seq OWNED BY nmsprime.settlementrun.id;
 
 
 --
--- Name: sla; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: sla; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.sla (
@@ -3164,10 +3164,10 @@ CREATE TABLE nmsprime.sla (
 );
 
 
-ALTER TABLE nmsprime.sla OWNER TO postgres;
+ALTER TABLE nmsprime.sla OWNER TO nmsprime;
 
 --
--- Name: sla_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: sla_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.sla_id_seq
@@ -3178,17 +3178,17 @@ CREATE SEQUENCE nmsprime.sla_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.sla_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.sla_id_seq OWNER TO nmsprime;
 
 --
--- Name: sla_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: sla_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.sla_id_seq OWNED BY nmsprime.sla.id;
 
 
 --
--- Name: supportrequest; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.supportrequest (
@@ -3205,10 +3205,10 @@ CREATE TABLE nmsprime.supportrequest (
 );
 
 
-ALTER TABLE nmsprime.supportrequest OWNER TO postgres;
+ALTER TABLE nmsprime.supportrequest OWNER TO nmsprime;
 
 --
--- Name: supportrequest_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.supportrequest_id_seq
@@ -3219,17 +3219,17 @@ CREATE SEQUENCE nmsprime.supportrequest_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.supportrequest_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.supportrequest_id_seq OWNER TO nmsprime;
 
 --
--- Name: supportrequest_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.supportrequest_id_seq OWNED BY nmsprime.supportrequest.id;
 
 
 --
--- Name: ticket; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ticket; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ticket (
@@ -3250,10 +3250,10 @@ CREATE TABLE nmsprime.ticket (
 );
 
 
-ALTER TABLE nmsprime.ticket OWNER TO postgres;
+ALTER TABLE nmsprime.ticket OWNER TO nmsprime;
 
 --
--- Name: ticket_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ticket_id_seq
@@ -3264,17 +3264,17 @@ CREATE SEQUENCE nmsprime.ticket_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ticket_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_id_seq OWNER TO nmsprime;
 
 --
--- Name: ticket_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ticket_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ticket_id_seq OWNED BY nmsprime.ticket.id;
 
 
 --
--- Name: ticket_type; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ticket_type (
@@ -3288,10 +3288,10 @@ CREATE TABLE nmsprime.ticket_type (
 );
 
 
-ALTER TABLE nmsprime.ticket_type OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_type OWNER TO nmsprime;
 
 --
--- Name: ticket_type_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ticket_type_id_seq
@@ -3302,17 +3302,17 @@ CREATE SEQUENCE nmsprime.ticket_type_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ticket_type_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_type_id_seq OWNER TO nmsprime;
 
 --
--- Name: ticket_type_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ticket_type_id_seq OWNED BY nmsprime.ticket_type.id;
 
 
 --
--- Name: ticket_type_ticket; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ticket_type_ticket (
@@ -3323,10 +3323,10 @@ CREATE TABLE nmsprime.ticket_type_ticket (
 );
 
 
-ALTER TABLE nmsprime.ticket_type_ticket OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_type_ticket OWNER TO nmsprime;
 
 --
--- Name: ticket_type_ticket_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ticket_type_ticket_id_seq
@@ -3337,17 +3337,17 @@ CREATE SEQUENCE nmsprime.ticket_type_ticket_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ticket_type_ticket_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_type_ticket_id_seq OWNER TO nmsprime;
 
 --
--- Name: ticket_type_ticket_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ticket_type_ticket_id_seq OWNED BY nmsprime.ticket_type_ticket.id;
 
 
 --
--- Name: ticket_user; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ticket_user (
@@ -3360,10 +3360,10 @@ CREATE TABLE nmsprime.ticket_user (
 );
 
 
-ALTER TABLE nmsprime.ticket_user OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_user OWNER TO nmsprime;
 
 --
--- Name: ticket_user_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ticket_user_id_seq
@@ -3374,17 +3374,17 @@ CREATE SEQUENCE nmsprime.ticket_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ticket_user_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ticket_user_id_seq OWNER TO nmsprime;
 
 --
--- Name: ticket_user_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ticket_user_id_seq OWNED BY nmsprime.ticket_user.id;
 
 
 --
--- Name: ticketsystem; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.ticketsystem (
@@ -3400,10 +3400,10 @@ CREATE TABLE nmsprime.ticketsystem (
 );
 
 
-ALTER TABLE nmsprime.ticketsystem OWNER TO postgres;
+ALTER TABLE nmsprime.ticketsystem OWNER TO nmsprime;
 
 --
--- Name: ticketsystem_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.ticketsystem_id_seq
@@ -3414,17 +3414,17 @@ CREATE SEQUENCE nmsprime.ticketsystem_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.ticketsystem_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.ticketsystem_id_seq OWNER TO nmsprime;
 
 --
--- Name: ticketsystem_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.ticketsystem_id_seq OWNED BY nmsprime.ticketsystem.id;
 
 
 --
--- Name: trcclass; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: trcclass; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.trcclass (
@@ -3438,10 +3438,10 @@ CREATE TABLE nmsprime.trcclass (
 );
 
 
-ALTER TABLE nmsprime.trcclass OWNER TO postgres;
+ALTER TABLE nmsprime.trcclass OWNER TO nmsprime;
 
 --
--- Name: trcclass_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: trcclass_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.trcclass_id_seq
@@ -3452,17 +3452,17 @@ CREATE SEQUENCE nmsprime.trcclass_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.trcclass_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.trcclass_id_seq OWNER TO nmsprime;
 
 --
--- Name: trcclass_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: trcclass_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.trcclass_id_seq OWNED BY nmsprime.trcclass.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: users; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.users (
@@ -3491,10 +3491,10 @@ CREATE TABLE nmsprime.users (
 );
 
 
-ALTER TABLE nmsprime.users OWNER TO postgres;
+ALTER TABLE nmsprime.users OWNER TO nmsprime;
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.users_id_seq
@@ -3505,17 +3505,17 @@ CREATE SEQUENCE nmsprime.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.users_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.users_id_seq OWNER TO nmsprime;
 
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.users_id_seq OWNED BY nmsprime.users.id;
 
 
 --
--- Name: websockets_statistics_entries; Type: TABLE; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries; Type: TABLE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TABLE nmsprime.websockets_statistics_entries (
@@ -3529,10 +3529,10 @@ CREATE TABLE nmsprime.websockets_statistics_entries (
 );
 
 
-ALTER TABLE nmsprime.websockets_statistics_entries OWNER TO postgres;
+ALTER TABLE nmsprime.websockets_statistics_entries OWNER TO nmsprime;
 
 --
--- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE SEQUENCE nmsprime.websockets_statistics_entries_id_seq
@@ -3543,507 +3543,507 @@ CREATE SEQUENCE nmsprime.websockets_statistics_entries_id_seq
     CACHE 1;
 
 
-ALTER TABLE nmsprime.websockets_statistics_entries_id_seq OWNER TO postgres;
+ALTER TABLE nmsprime.websockets_statistics_entries_id_seq OWNER TO nmsprime;
 
 --
--- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER SEQUENCE nmsprime.websockets_statistics_entries_id_seq OWNED BY nmsprime.websockets_statistics_entries.id;
 
 
 --
--- Name: abilities id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: abilities id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.abilities ALTER COLUMN id SET DEFAULT nextval('nmsprime.abilities_id_seq'::regclass);
 
 
 --
--- Name: accountingrecord id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.accountingrecord ALTER COLUMN id SET DEFAULT nextval('nmsprime.accountingrecord_id_seq'::regclass);
 
 
 --
--- Name: apartment id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: apartment id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.apartment ALTER COLUMN id SET DEFAULT nextval('nmsprime.apartment_id_seq'::regclass);
 
 
 --
--- Name: billingbase id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: billingbase id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.billingbase ALTER COLUMN id SET DEFAULT nextval('nmsprime.billingbase_id_seq'::regclass);
 
 
 --
--- Name: carriercode id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: carriercode id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.carriercode ALTER COLUMN id SET DEFAULT nextval('nmsprime.carriercode_id_seq'::regclass);
 
 
 --
--- Name: ccc id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ccc id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ccc ALTER COLUMN id SET DEFAULT nextval('nmsprime.ccc_id_seq'::regclass);
 
 
 --
--- Name: comment id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: comment id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.comment ALTER COLUMN id SET DEFAULT nextval('nmsprime.comment_id_seq'::regclass);
 
 
 --
--- Name: company id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: company id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.company ALTER COLUMN id SET DEFAULT nextval('nmsprime.company_id_seq'::regclass);
 
 
 --
--- Name: configfile id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: configfile id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.configfile ALTER COLUMN id SET DEFAULT nextval('nmsprime.configfile_id_seq'::regclass);
 
 
 --
--- Name: contact id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: contact id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.contact ALTER COLUMN id SET DEFAULT nextval('nmsprime.contact_id_seq'::regclass);
 
 
 --
--- Name: contract id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: contract id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.contract ALTER COLUMN id SET DEFAULT nextval('nmsprime.contract_id_seq'::regclass);
 
 
 --
--- Name: costcenter id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: costcenter id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.costcenter ALTER COLUMN id SET DEFAULT nextval('nmsprime.costcenter_id_seq'::regclass);
 
 
 --
--- Name: debt id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: debt id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.debt ALTER COLUMN id SET DEFAULT nextval('nmsprime.debt_id_seq'::regclass);
 
 
 --
--- Name: domain id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: domain id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.domain ALTER COLUMN id SET DEFAULT nextval('nmsprime.domain_id_seq'::regclass);
 
 
 --
--- Name: ekpcode id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ekpcode ALTER COLUMN id SET DEFAULT nextval('nmsprime.ekpcode_id_seq'::regclass);
 
 
 --
--- Name: endpoint id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: endpoint id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.endpoint ALTER COLUMN id SET DEFAULT nextval('nmsprime.endpoint_id_seq'::regclass);
 
 
 --
--- Name: enviacontract id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviacontract ALTER COLUMN id SET DEFAULT nextval('nmsprime.enviacontract_id_seq'::regclass);
 
 
 --
--- Name: enviaorder id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorder ALTER COLUMN id SET DEFAULT nextval('nmsprime.enviaorder_id_seq'::regclass);
 
 
 --
--- Name: enviaorder_phonenumber id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorder_phonenumber ALTER COLUMN id SET DEFAULT nextval('nmsprime.enviaorder_phonenumber_id_seq'::regclass);
 
 
 --
--- Name: enviaorderdocument id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorderdocument ALTER COLUMN id SET DEFAULT nextval('nmsprime.enviaorderdocument_id_seq'::regclass);
 
 
 --
--- Name: failed_jobs id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.failed_jobs ALTER COLUMN id SET DEFAULT nextval('nmsprime.failed_jobs_id_seq'::regclass);
 
 
 --
--- Name: favorite_netelements id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.favorite_netelements ALTER COLUMN id SET DEFAULT nextval('nmsprime.favorite_netelements_id_seq'::regclass);
 
 
 --
--- Name: global_config id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: global_config id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.global_config ALTER COLUMN id SET DEFAULT nextval('nmsprime.global_config_id_seq'::regclass);
 
 
 --
--- Name: guilog id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: guilog id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.guilog ALTER COLUMN id SET DEFAULT nextval('nmsprime.guilog_id_seq'::regclass);
 
 
 --
--- Name: hfcreq id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.hfcreq ALTER COLUMN id SET DEFAULT nextval('nmsprime.hfcreq_id_seq'::regclass);
 
 
 --
--- Name: indices id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: indices id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.indices ALTER COLUMN id SET DEFAULT nextval('nmsprime.indices_id_seq'::regclass);
 
 
 --
--- Name: invoice id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: invoice id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.invoice ALTER COLUMN id SET DEFAULT nextval('nmsprime.invoice_id_seq'::regclass);
 
 
 --
--- Name: ippool id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ippool id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ippool ALTER COLUMN id SET DEFAULT nextval('nmsprime.ippool_id_seq'::regclass);
 
 
 --
--- Name: item id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: item id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.item ALTER COLUMN id SET DEFAULT nextval('nmsprime.item_id_seq'::regclass);
 
 
 --
--- Name: jobs id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: jobs id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.jobs ALTER COLUMN id SET DEFAULT nextval('nmsprime.jobs_id_seq'::regclass);
 
 
 --
--- Name: mibfile id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: mibfile id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mibfile ALTER COLUMN id SET DEFAULT nextval('nmsprime.mibfile_id_seq'::regclass);
 
 
 --
--- Name: migrations id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: migrations id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.migrations ALTER COLUMN id SET DEFAULT nextval('nmsprime.migrations_id_seq'::regclass);
 
 
 --
--- Name: modem id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: modem id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.modem ALTER COLUMN id SET DEFAULT nextval('nmsprime.modem_id_seq'::regclass);
 
 
 --
--- Name: modem_option id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: modem_option id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.modem_option ALTER COLUMN id SET DEFAULT nextval('nmsprime.modem_option_id_seq'::regclass);
 
 
 --
--- Name: mpr id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: mpr id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mpr ALTER COLUMN id SET DEFAULT nextval('nmsprime.mpr_id_seq'::regclass);
 
 
 --
--- Name: mprgeopos id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mprgeopos ALTER COLUMN id SET DEFAULT nextval('nmsprime.mprgeopos_id_seq'::regclass);
 
 
 --
--- Name: mta id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: mta id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mta ALTER COLUMN id SET DEFAULT nextval('nmsprime.mta_id_seq'::regclass);
 
 
 --
--- Name: netelement id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: netelement id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netelement ALTER COLUMN id SET DEFAULT nextval('nmsprime.netelement_id_seq'::regclass);
 
 
 --
--- Name: netelementtype id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netelementtype ALTER COLUMN id SET DEFAULT nextval('nmsprime.netelementtype_id_seq'::regclass);
 
 
 --
--- Name: netgw id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: netgw id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netgw ALTER COLUMN id SET DEFAULT nextval('nmsprime.netgw_id_seq'::regclass);
 
 
 --
--- Name: node id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: node id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.node ALTER COLUMN id SET DEFAULT nextval('nmsprime.node_id_seq'::regclass);
 
 
 --
--- Name: numberrange id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: numberrange id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.numberrange ALTER COLUMN id SET DEFAULT nextval('nmsprime.numberrange_id_seq'::regclass);
 
 
 --
--- Name: oid id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: oid id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.oid ALTER COLUMN id SET DEFAULT nextval('nmsprime.oid_id_seq'::regclass);
 
 
 --
--- Name: overduedebts id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.overduedebts ALTER COLUMN id SET DEFAULT nextval('nmsprime.overduedebts_id_seq'::regclass);
 
 
 --
--- Name: parameter id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: parameter id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.parameter ALTER COLUMN id SET DEFAULT nextval('nmsprime.parameter_id_seq'::regclass);
 
 
 --
--- Name: phonebookentry id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonebookentry ALTER COLUMN id SET DEFAULT nextval('nmsprime.phonebookentry_id_seq'::regclass);
 
 
 --
--- Name: phonenumber id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonenumber ALTER COLUMN id SET DEFAULT nextval('nmsprime.phonenumber_id_seq'::regclass);
 
 
 --
--- Name: phonenumbermanagement id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonenumbermanagement ALTER COLUMN id SET DEFAULT nextval('nmsprime.phonenumbermanagement_id_seq'::regclass);
 
 
 --
--- Name: phonetariff id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonetariff ALTER COLUMN id SET DEFAULT nextval('nmsprime.phonetariff_id_seq'::regclass);
 
 
 --
--- Name: product id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: product id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.product ALTER COLUMN id SET DEFAULT nextval('nmsprime.product_id_seq'::regclass);
 
 
 --
--- Name: provbase id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: provbase id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provbase ALTER COLUMN id SET DEFAULT nextval('nmsprime.provbase_id_seq'::regclass);
 
 
 --
--- Name: provmon id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: provmon id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provmon ALTER COLUMN id SET DEFAULT nextval('nmsprime.provmon_id_seq'::regclass);
 
 
 --
--- Name: provvoip id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: provvoip id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provvoip ALTER COLUMN id SET DEFAULT nextval('nmsprime.provvoip_id_seq'::regclass);
 
 
 --
--- Name: qos id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: qos id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.qos ALTER COLUMN id SET DEFAULT nextval('nmsprime.qos_id_seq'::regclass);
 
 
 --
--- Name: realty id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: realty id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.realty ALTER COLUMN id SET DEFAULT nextval('nmsprime.realty_id_seq'::regclass);
 
 
 --
--- Name: roles id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: roles id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.roles ALTER COLUMN id SET DEFAULT nextval('nmsprime.roles_id_seq'::regclass);
 
 
 --
--- Name: salesman id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: salesman id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.salesman ALTER COLUMN id SET DEFAULT nextval('nmsprime.salesman_id_seq'::regclass);
 
 
 --
--- Name: sepaaccount id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sepaaccount ALTER COLUMN id SET DEFAULT nextval('nmsprime.sepaaccount_id_seq'::regclass);
 
 
 --
--- Name: sepamandate id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sepamandate ALTER COLUMN id SET DEFAULT nextval('nmsprime.sepamandate_id_seq'::regclass);
 
 
 --
--- Name: settlementrun id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.settlementrun ALTER COLUMN id SET DEFAULT nextval('nmsprime.settlementrun_id_seq'::regclass);
 
 
 --
--- Name: sla id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: sla id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sla ALTER COLUMN id SET DEFAULT nextval('nmsprime.sla_id_seq'::regclass);
 
 
 --
--- Name: supportrequest id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.supportrequest ALTER COLUMN id SET DEFAULT nextval('nmsprime.supportrequest_id_seq'::regclass);
 
 
 --
--- Name: ticket id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ticket id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket ALTER COLUMN id SET DEFAULT nextval('nmsprime.ticket_id_seq'::regclass);
 
 
 --
--- Name: ticket_type id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_type ALTER COLUMN id SET DEFAULT nextval('nmsprime.ticket_type_id_seq'::regclass);
 
 
 --
--- Name: ticket_type_ticket id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_type_ticket ALTER COLUMN id SET DEFAULT nextval('nmsprime.ticket_type_ticket_id_seq'::regclass);
 
 
 --
--- Name: ticket_user id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_user ALTER COLUMN id SET DEFAULT nextval('nmsprime.ticket_user_id_seq'::regclass);
 
 
 --
--- Name: ticketsystem id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticketsystem ALTER COLUMN id SET DEFAULT nextval('nmsprime.ticketsystem_id_seq'::regclass);
 
 
 --
--- Name: trcclass id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: trcclass id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.trcclass ALTER COLUMN id SET DEFAULT nextval('nmsprime.trcclass_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: users id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.users ALTER COLUMN id SET DEFAULT nextval('nmsprime.users_id_seq'::regclass);
 
 
 --
--- Name: websockets_statistics_entries id; Type: DEFAULT; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries id; Type: DEFAULT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.websockets_statistics_entries ALTER COLUMN id SET DEFAULT nextval('nmsprime.websockets_statistics_entries_id_seq'::regclass);
 
 
 --
--- Data for Name: abilities; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: abilities; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.abilities (id, name, title, entity_id, entity_type, only_owned, scope, created_at, updated_at, deleted_at) FROM stdin;
@@ -4062,7 +4062,7 @@ COPY nmsprime.abilities (id, name, title, entity_id, entity_type, only_owned, sc
 
 
 --
--- Data for Name: accountingrecord; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: accountingrecord; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.accountingrecord (id, created_at, updated_at, deleted_at, contract_id, name, product_id, ratio, count, charge, sepaaccount_id, invoice_nr, settlementrun_id) FROM stdin;
@@ -4070,7 +4070,7 @@ COPY nmsprime.accountingrecord (id, created_at, updated_at, deleted_at, contract
 
 
 --
--- Data for Name: apartment; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: apartment; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.apartment (id, created_at, updated_at, deleted_at, realty_id, number, floor, connected, occupied, description, connection_type, code) FROM stdin;
@@ -4078,7 +4078,7 @@ COPY nmsprime.apartment (id, created_at, updated_at, deleted_at, realty_id, numb
 
 
 --
--- Data for Name: assigned_roles; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: assigned_roles; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.assigned_roles (role_id, entity_id, entity_type, scope, created_at, updated_at) FROM stdin;
@@ -4088,7 +4088,7 @@ COPY nmsprime.assigned_roles (role_id, entity_id, entity_type, scope, created_at
 
 
 --
--- Data for Name: authreminders; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: authreminders; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.authreminders (email, token, created_at) FROM stdin;
@@ -4096,7 +4096,7 @@ COPY nmsprime.authreminders (email, token, created_at) FROM stdin;
 
 
 --
--- Data for Name: billingbase; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: billingbase; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.billingbase (id, created_at, updated_at, deleted_at, rcd, currency, tax, mandate_ref_template, split, termination_fix, userlang, cdr_offset, voip_extracharge_default, voip_extracharge_mobile_national, cdr_retention_period, fluid_valid_dates, show_ags, adapt_item_start) FROM stdin;
@@ -4105,7 +4105,7 @@ COPY nmsprime.billingbase (id, created_at, updated_at, deleted_at, rcd, currency
 
 
 --
--- Data for Name: carriercode; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: carriercode; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.carriercode (id, created_at, updated_at, deleted_at, carrier_code, company) FROM stdin;
@@ -4480,7 +4480,7 @@ COPY nmsprime.carriercode (id, created_at, updated_at, deleted_at, carrier_code,
 
 
 --
--- Data for Name: ccc; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ccc; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ccc (id, created_at, updated_at, deleted_at, template_filename, headline1, headline2, language, logo, speedtest_url) FROM stdin;
@@ -4489,7 +4489,7 @@ COPY nmsprime.ccc (id, created_at, updated_at, deleted_at, template_filename, he
 
 
 --
--- Data for Name: comment; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: comment; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.comment (id, created_at, updated_at, deleted_at, user_id, ticket_id, comment) FROM stdin;
@@ -4497,7 +4497,7 @@ COPY nmsprime.comment (id, created_at, updated_at, deleted_at, user_id, ticket_i
 
 
 --
--- Data for Name: company; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: company; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.company (id, created_at, updated_at, deleted_at, name, street, zip, city, phone, fax, web, mail, registration_court_1, registration_court_2, registration_court_3, management, directorate, tax_id_nr, tax_nr, transfer_reason, logo, conn_info_template_fn) FROM stdin;
@@ -4506,7 +4506,7 @@ COPY nmsprime.company (id, created_at, updated_at, deleted_at, name, street, zip
 
 
 --
--- Data for Name: configfile; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: configfile; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.configfile (id, created_at, updated_at, deleted_at, name, text, device, public, parent_id, firmware, is_dummy, monitoring, dashboard) FROM stdin;
@@ -4516,7 +4516,7 @@ COPY nmsprime.configfile (id, created_at, updated_at, deleted_at, name, text, de
 
 
 --
--- Data for Name: contact; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: contact; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.contact (id, created_at, updated_at, deleted_at, firstname1, lastname1, firstname2, lastname2, company, tel, tel_private, email1, email2, street, house_nr, city, zip, district, administration, invoice_text1, invoice_text2, invoice_text3) FROM stdin;
@@ -4524,7 +4524,7 @@ COPY nmsprime.contact (id, created_at, updated_at, deleted_at, firstname1, lastn
 
 
 --
--- Data for Name: contract; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: contract; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.contract (id, created_at, updated_at, deleted_at, number, number2, number3, number4, customer_external_id, company, department, salutation, academic_degree, firstname, lastname, street, house_number, zip, city, district, country_id, country_code, phone, fax, email, birthday, contract_start, contract_end, internet_access, purchase_tariff, next_purchase_tariff, qos_id, next_qos_id, voip_id, next_voip_id, sepa_iban, sepa_bic, sepa_holder, sepa_institute, create_invoice, login, password, net, cluster, description, costcenter_id, salesman_id, has_telephony, apartment_nr, additional, ground_for_dismissal, group_contract, contact, value_date, apartment_id, contact_id) FROM stdin;
@@ -4533,7 +4533,7 @@ COPY nmsprime.contract (id, created_at, updated_at, deleted_at, number, number2,
 
 
 --
--- Data for Name: costcenter; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: costcenter; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.costcenter (id, created_at, updated_at, deleted_at, name, number, sepaaccount_id, billing_month, description) FROM stdin;
@@ -4542,7 +4542,7 @@ COPY nmsprime.costcenter (id, created_at, updated_at, deleted_at, name, number, 
 
 
 --
--- Data for Name: debt; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: debt; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.debt (id, created_at, updated_at, deleted_at, contract_id, sepamandate_id, invoice_id, date, amount, bank_fee, total_fee, description, number, voucher_nr, due_date, cleared, indicator, dunning_date, parent_id, missing_amount, extra_fee) FROM stdin;
@@ -4550,7 +4550,7 @@ COPY nmsprime.debt (id, created_at, updated_at, deleted_at, contract_id, sepaman
 
 
 --
--- Data for Name: domain; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: domain; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.domain (id, created_at, updated_at, deleted_at, name, alias, type) FROM stdin;
@@ -4558,7 +4558,7 @@ COPY nmsprime.domain (id, created_at, updated_at, deleted_at, name, alias, type)
 
 
 --
--- Data for Name: ekpcode; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ekpcode; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ekpcode (id, created_at, updated_at, deleted_at, ekp_code, company) FROM stdin;
@@ -5191,7 +5191,7 @@ COPY nmsprime.ekpcode (id, created_at, updated_at, deleted_at, ekp_code, company
 
 
 --
--- Data for Name: endpoint; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: endpoint; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.endpoint (id, created_at, updated_at, deleted_at, hostname, mac, description, fixed_ip, modem_id, ip, add_reverse, version, prefix) FROM stdin;
@@ -5199,7 +5199,7 @@ COPY nmsprime.endpoint (id, created_at, updated_at, deleted_at, hostname, mac, d
 
 
 --
--- Data for Name: enviacontract; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: enviacontract; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.enviacontract (id, created_at, updated_at, deleted_at, external_creation_date, external_termination_date, envia_customer_reference, envia_contract_reference, state, start_date, end_date, next_id, prev_id, end_reason, lock_level, method, sla_id, tariff_id, variation_id, contract_id, modem_id) FROM stdin;
@@ -5207,7 +5207,7 @@ COPY nmsprime.enviacontract (id, created_at, updated_at, deleted_at, external_cr
 
 
 --
--- Data for Name: enviaorder; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: enviaorder; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.enviaorder (id, created_at, updated_at, deleted_at, orderid, method, ordertype_id, ordertype, orderstatus_id, orderstatus, orderdate, ordercomment, related_order_id, customerreference, contractreference, contract_id, modem_id, enviacontract_id, last_user_interaction) FROM stdin;
@@ -5215,7 +5215,7 @@ COPY nmsprime.enviaorder (id, created_at, updated_at, deleted_at, orderid, metho
 
 
 --
--- Data for Name: enviaorder_phonenumber; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: enviaorder_phonenumber; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.enviaorder_phonenumber (id, created_at, updated_at, deleted_at, enviaorder_id, phonenumber_id) FROM stdin;
@@ -5223,7 +5223,7 @@ COPY nmsprime.enviaorder_phonenumber (id, created_at, updated_at, deleted_at, en
 
 
 --
--- Data for Name: enviaorderdocument; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: enviaorderdocument; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.enviaorderdocument (id, created_at, updated_at, deleted_at, document_type, mime_type, filename, enviaorder_id, upload_order_id) FROM stdin;
@@ -5231,7 +5231,7 @@ COPY nmsprime.enviaorderdocument (id, created_at, updated_at, deleted_at, docume
 
 
 --
--- Data for Name: failed_jobs; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: failed_jobs; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.failed_jobs (id, connection, queue, payload, failed_at, exception) FROM stdin;
@@ -5239,7 +5239,7 @@ COPY nmsprime.failed_jobs (id, connection, queue, payload, failed_at, exception)
 
 
 --
--- Data for Name: favorite_netelements; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: favorite_netelements; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.favorite_netelements (id, user_id, netelement_id, created_at, updated_at) FROM stdin;
@@ -5247,7 +5247,7 @@ COPY nmsprime.favorite_netelements (id, user_id, netelement_id, created_at, upda
 
 
 --
--- Data for Name: global_config; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: global_config; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.global_config (id, created_at, updated_at, deleted_at, name, street, city, phone, mail, log_level, headline1, headline2, default_country_code, passwordresetinterval, alert1, alert2, alert3, isallnetssidebarenabled) FROM stdin;
@@ -5256,7 +5256,7 @@ COPY nmsprime.global_config (id, created_at, updated_at, deleted_at, name, stree
 
 
 --
--- Data for Name: guilog; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: guilog; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.guilog (id, created_at, updated_at, deleted_at, user_id, username, method, model, model_id, text) FROM stdin;
@@ -5264,7 +5264,7 @@ COPY nmsprime.guilog (id, created_at, updated_at, deleted_at, user_id, username,
 
 
 --
--- Data for Name: hfcreq; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: hfcreq; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.hfcreq (id, created_at, updated_at, deleted_at, ro_community, rw_community, rkm_server, rkm_server_username, rkm_server_password, video_controller, video_controller_username, video_controller_password, video_encoder) FROM stdin;
@@ -5273,7 +5273,7 @@ COPY nmsprime.hfcreq (id, created_at, updated_at, deleted_at, ro_community, rw_c
 
 
 --
--- Data for Name: indices; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: indices; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.indices (id, created_at, updated_at, deleted_at, netelement_id, parameter_id, indices) FROM stdin;
@@ -5281,7 +5281,7 @@ COPY nmsprime.indices (id, created_at, updated_at, deleted_at, netelement_id, pa
 
 
 --
--- Data for Name: invoice; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: invoice; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.invoice (id, created_at, updated_at, deleted_at, contract_id, settlementrun_id, sepaaccount_id, year, month, filename, type, number, charge, charge_gross) FROM stdin;
@@ -5289,7 +5289,7 @@ COPY nmsprime.invoice (id, created_at, updated_at, deleted_at, contract_id, sett
 
 
 --
--- Data for Name: ippool; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ippool; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ippool (id, created_at, updated_at, deleted_at, netgw_id, type, net, netmask, ip_pool_start, ip_pool_end, router_ip, broadcast_ip, dns1_ip, dns2_ip, dns3_ip, optional, description, version, prefix, prefix_len, delegated_len, active) FROM stdin;
@@ -5297,7 +5297,7 @@ COPY nmsprime.ippool (id, created_at, updated_at, deleted_at, netgw_id, type, ne
 
 
 --
--- Data for Name: item; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: item; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.item (id, created_at, updated_at, deleted_at, contract_id, product_id, count, valid_from, valid_from_fixed, valid_to, valid_to_fixed, credit_amount, costcenter_id, accounting_text, payed_month, smartcardids) FROM stdin;
@@ -5305,7 +5305,7 @@ COPY nmsprime.item (id, created_at, updated_at, deleted_at, contract_id, product
 
 
 --
--- Data for Name: jobs; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: jobs; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.jobs (id, queue, payload, attempts, reserved_at, available_at, created_at) FROM stdin;
@@ -5313,7 +5313,7 @@ COPY nmsprime.jobs (id, queue, payload, attempts, reserved_at, available_at, cre
 
 
 --
--- Data for Name: mibfile; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: mibfile; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.mibfile (id, created_at, updated_at, deleted_at, name, filename, version, description) FROM stdin;
@@ -5321,7 +5321,7 @@ COPY nmsprime.mibfile (id, created_at, updated_at, deleted_at, name, filename, v
 
 
 --
--- Data for Name: migrations; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: migrations; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.migrations (id, migration, batch) FROM stdin;
@@ -5329,7 +5329,7 @@ COPY nmsprime.migrations (id, migration, batch) FROM stdin;
 
 
 --
--- Data for Name: modem; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: modem; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.modem (id, created_at, updated_at, deleted_at, name, hostname, contract_id, contract_external_id, contract_ext_creation_date, contract_ext_termination_date, salutation, company, department, firstname, lastname, street, house_number, zip, city, district, birthday, country_id, country_code, installation_address_change_date, mac, us_pwr, us_snr, ds_pwr, ds_snr, public, internet_access, serial_num, inventar_num, description, parent, configfile_id, netelement_id, qos_id, lng, lat, geocode_source, number, tdr, fft_max, model, sw_rev, support_state, ppp_username, ppp_password, apartment_nr, next_passive_id, phy_updated_at, ipv4, address_to_invoice, apartment_id) FROM stdin;
@@ -5337,7 +5337,7 @@ COPY nmsprime.modem (id, created_at, updated_at, deleted_at, name, hostname, con
 
 
 --
--- Data for Name: modem_option; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: modem_option; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.modem_option (id, created_at, updated_at, deleted_at, modem_id, key, value) FROM stdin;
@@ -5345,7 +5345,7 @@ COPY nmsprime.modem_option (id, created_at, updated_at, deleted_at, modem_id, ke
 
 
 --
--- Data for Name: mpr; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: mpr; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.mpr (id, created_at, updated_at, deleted_at, name, value, netelement_id, description) FROM stdin;
@@ -5353,7 +5353,7 @@ COPY nmsprime.mpr (id, created_at, updated_at, deleted_at, name, value, neteleme
 
 
 --
--- Data for Name: mprgeopos; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: mprgeopos; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.mprgeopos (id, created_at, updated_at, deleted_at, mpr_id, lng, lat) FROM stdin;
@@ -5361,7 +5361,7 @@ COPY nmsprime.mprgeopos (id, created_at, updated_at, deleted_at, mpr_id, lng, la
 
 
 --
--- Data for Name: mta; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: mta; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.mta (id, created_at, updated_at, deleted_at, modem_id, mac, hostname, configfile_id, type, is_dummy) FROM stdin;
@@ -5369,7 +5369,7 @@ COPY nmsprime.mta (id, created_at, updated_at, deleted_at, modem_id, mac, hostna
 
 
 --
--- Data for Name: netelement; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: netelement; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.netelement (id, created_at, updated_at, deleted_at, name, series, options, ip, lng, lat, link, "user", access, net, cluster, layer, descr, infrastructure_file, draw, line, parent_id, netelementtype_id, community_ro, community_rw, address1, address2, controlling_link, prov_device_id, netgw_id, agc_offset, rkm_line_number, state, _lft, _rgt, apartment_id) FROM stdin;
@@ -5377,7 +5377,7 @@ COPY nmsprime.netelement (id, created_at, updated_at, deleted_at, name, series, 
 
 
 --
--- Data for Name: netelementtype; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: netelementtype; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.netelementtype (id, created_at, updated_at, deleted_at, name, vendor, version, description, parent_id, icon_name, pre_conf_oid_id, pre_conf_value, pre_conf_time_offset, page_reload_time, base_type_id) FROM stdin;
@@ -5399,7 +5399,7 @@ COPY nmsprime.netelementtype (id, created_at, updated_at, deleted_at, name, vend
 
 
 --
--- Data for Name: netgw; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: netgw; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.netgw (id, created_at, updated_at, deleted_at, hostname, series, ip, community_rw, community_ro, company, network, state, monitoring, support_state, type, username, password, ssh_port, ssh_auto_prov, coa_port, ipv6) FROM stdin;
@@ -5407,7 +5407,7 @@ COPY nmsprime.netgw (id, created_at, updated_at, deleted_at, hostname, series, i
 
 
 --
--- Data for Name: node; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: node; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.node (id, created_at, updated_at, deleted_at, netelement_id, name, street, house_nr, zip, city, type, headend, description, lng, lat, country_code, geocode_source, district) FROM stdin;
@@ -5415,7 +5415,7 @@ COPY nmsprime.node (id, created_at, updated_at, deleted_at, netelement_id, name,
 
 
 --
--- Data for Name: notifications; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: notifications; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.notifications (id, type, notifiable_type, notifiable_id, data, read_at, created_at, updated_at) FROM stdin;
@@ -5423,7 +5423,7 @@ COPY nmsprime.notifications (id, type, notifiable_type, notifiable_id, data, rea
 
 
 --
--- Data for Name: numberrange; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: numberrange; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.numberrange (id, created_at, updated_at, deleted_at, name, start, "end", prefix, suffix, costcenter_id, type) FROM stdin;
@@ -5431,7 +5431,7 @@ COPY nmsprime.numberrange (id, created_at, updated_at, deleted_at, name, start, 
 
 
 --
--- Data for Name: oid; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: oid; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.oid (id, created_at, updated_at, deleted_at, mibfile_id, html_type, name, oid, oid_table, type, type_array, phpcode_pre, phpcode_post, description, name_gui, unit_divisor, startvalue, endvalue, stepsize, syntax, access, value_set) FROM stdin;
@@ -5439,7 +5439,7 @@ COPY nmsprime.oid (id, created_at, updated_at, deleted_at, mibfile_id, html_type
 
 
 --
--- Data for Name: overduedebts; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: overduedebts; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.overduedebts (id, created_at, updated_at, deleted_at, fee, total, dunning_charge1, dunning_charge2, dunning_charge3, dunning_text1, dunning_text2, dunning_text3, payment_period, import_inet_block_amount, import_inet_block_debts, import_inet_block_indicator) FROM stdin;
@@ -5448,7 +5448,7 @@ COPY nmsprime.overduedebts (id, created_at, updated_at, deleted_at, fee, total, 
 
 
 --
--- Data for Name: parameter; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: parameter; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.parameter (id, created_at, updated_at, deleted_at, netelementtype_id, oid_id, diff_param, divide_by, parent_id, third_dimension, html_frame, html_properties, html_id) FROM stdin;
@@ -5456,7 +5456,7 @@ COPY nmsprime.parameter (id, created_at, updated_at, deleted_at, netelementtype_
 
 
 --
--- Data for Name: permissions; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: permissions; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.permissions (ability_id, entity_id, entity_type, forbidden, scope, created_at, updated_at) FROM stdin;
@@ -5482,7 +5482,7 @@ COPY nmsprime.permissions (ability_id, entity_id, entity_type, forbidden, scope,
 
 
 --
--- Data for Name: phonebookentry; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: phonebookentry; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.phonebookentry (id, created_at, updated_at, deleted_at, phonenumbermanagement_id, reverse_search, publish_in_print_media, publish_in_electronic_media, directory_assistance, entry_type, publish_address, company, salutation, academic_degree, noble_rank, nobiliary_particle, lastname, other_name_suffix, firstname, street, houseno, zipcode, city, urban_district, business, usage, tag, external_creation_date, external_update_date) FROM stdin;
@@ -5490,7 +5490,7 @@ COPY nmsprime.phonebookentry (id, created_at, updated_at, deleted_at, phonenumbe
 
 
 --
--- Data for Name: phonenumber; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: phonenumber; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.phonenumber (id, created_at, updated_at, deleted_at, mta_id, port, country_code, prefix_number, number, username, password, sipdomain, active, is_dummy, contract_external_id) FROM stdin;
@@ -5498,7 +5498,7 @@ COPY nmsprime.phonenumber (id, created_at, updated_at, deleted_at, mta_id, port,
 
 
 --
--- Data for Name: phonenumbermanagement; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: phonenumbermanagement; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.phonenumbermanagement (id, created_at, updated_at, deleted_at, phonenumber_id, trcclass, voipaccount_ext_creation_date, activation_date, external_activation_date, porting_in, carrier_in, ekp_in, deactivation_date, external_deactivation_date, voipaccount_ext_termination_date, porting_out, carrier_out, ekp_out, subscriber_company, subscriber_department, subscriber_salutation, subscriber_academic_degree, subscriber_firstname, subscriber_lastname, subscriber_street, subscriber_house_number, subscriber_zip, subscriber_city, subscriber_district, subscriber_country, autogenerated, enviacontract_id) FROM stdin;
@@ -5506,7 +5506,7 @@ COPY nmsprime.phonenumbermanagement (id, created_at, updated_at, deleted_at, pho
 
 
 --
--- Data for Name: phonetariff; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: phonetariff; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.phonetariff (id, created_at, updated_at, deleted_at, external_identifier, name, type, description, usable, voip_protocol) FROM stdin;
@@ -5517,7 +5517,7 @@ COPY nmsprime.phonetariff (id, created_at, updated_at, deleted_at, external_iden
 
 
 --
--- Data for Name: product; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: product; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.product (id, created_at, updated_at, deleted_at, name, type, qos_id, voip_sales_tariff_id, voip_purchase_tariff_id, billing_cycle, maturity, costcenter_id, price, tax, bundled_with_voip, email_count, period_of_notice, maturity_min, proportional, record_monthly, deprecated, markon) FROM stdin;
@@ -5525,7 +5525,7 @@ COPY nmsprime.product (id, created_at, updated_at, deleted_at, name, type, qos_i
 
 
 --
--- Data for Name: provbase; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: provbase; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.provbase (id, created_at, updated_at, deleted_at, provisioning_server, ro_community, rw_community, notif_mail, domain_name, dns_password, dhcp_def_lease_time, dhcp_max_lease_time, startid_contract, startid_modem, startid_endpoint, max_cpe, ds_rate_coefficient, us_rate_coefficient, multiple_provisioning_systems, additional_modem_reset, modem_edit_page_new_tab, random_ip_allocation, ppp_session_timeout, auto_factory_reset, acct_interim_interval) FROM stdin;
@@ -5534,7 +5534,7 @@ COPY nmsprime.provbase (id, created_at, updated_at, deleted_at, provisioning_ser
 
 
 --
--- Data for Name: provmon; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: provmon; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.provmon (id, created_at, updated_at, deleted_at, start_frequency, stop_frequency, span) FROM stdin;
@@ -5543,7 +5543,7 @@ COPY nmsprime.provmon (id, created_at, updated_at, deleted_at, start_frequency, 
 
 
 --
--- Data for Name: provvoip; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: provvoip; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.provvoip (id, created_at, updated_at, deleted_at, startid_mta, mta_domain, default_sip_registrar, default_country_code) FROM stdin;
@@ -5552,7 +5552,7 @@ COPY nmsprime.provvoip (id, created_at, updated_at, deleted_at, startid_mta, mta
 
 
 --
--- Data for Name: qos; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: qos; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.qos (id, created_at, updated_at, deleted_at, ds_rate_max, us_rate_max, ds_rate_max_help, us_rate_max_help, name, ds_name, us_name) FROM stdin;
@@ -5561,7 +5561,7 @@ COPY nmsprime.qos (id, created_at, updated_at, deleted_at, ds_rate_max, us_rate_
 
 
 --
--- Data for Name: realty; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: realty; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.realty (id, created_at, updated_at, deleted_at, node_id, name, number, street, house_nr, district, zip, city, expansion_degree, concession_agreement, agreement_from, agreement_to, last_restoration_on, description, contact_id, contact_local_id, lng, lat, geocode_source, country_code, contract_id) FROM stdin;
@@ -5569,7 +5569,7 @@ COPY nmsprime.realty (id, created_at, updated_at, deleted_at, node_id, name, num
 
 
 --
--- Data for Name: roles; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: roles; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.roles (id, name, title, description, rank, level, scope, created_at, updated_at, deleted_at) FROM stdin;
@@ -5582,7 +5582,7 @@ COPY nmsprime.roles (id, name, title, description, rank, level, scope, created_a
 
 
 --
--- Data for Name: salesman; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: salesman; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.salesman (id, created_at, updated_at, deleted_at, firstname, lastname, commission, products, description) FROM stdin;
@@ -5590,7 +5590,7 @@ COPY nmsprime.salesman (id, created_at, updated_at, deleted_at, firstname, lastn
 
 
 --
--- Data for Name: sepaaccount; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: sepaaccount; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.sepaaccount (id, created_at, updated_at, deleted_at, name, holder, creditorid, iban, bic, institute, company_id, invoice_headline, invoice_text, invoice_text_negativ, invoice_text_sepa, invoice_text_sepa_negativ, template_invoice, template_cdr, description, invoice_nr_start) FROM stdin;
@@ -5599,7 +5599,7 @@ COPY nmsprime.sepaaccount (id, created_at, updated_at, deleted_at, name, holder,
 
 
 --
--- Data for Name: sepamandate; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: sepamandate; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.sepamandate (id, created_at, updated_at, deleted_at, contract_id, reference, signature_date, holder, iban, bic, institute, valid_from, valid_to, state, costcenter_id, disable, description) FROM stdin;
@@ -5607,7 +5607,7 @@ COPY nmsprime.sepamandate (id, created_at, updated_at, deleted_at, contract_id, 
 
 
 --
--- Data for Name: settlementrun; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: settlementrun; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.settlementrun (id, created_at, updated_at, deleted_at, executed_at, uploaded_at, year, month, path, description, verified, fullrun) FROM stdin;
@@ -5615,7 +5615,7 @@ COPY nmsprime.settlementrun (id, created_at, updated_at, deleted_at, executed_at
 
 
 --
--- Data for Name: sla; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: sla; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.sla (id, created_at, updated_at, deleted_at, name, license) FROM stdin;
@@ -5624,7 +5624,7 @@ COPY nmsprime.sla (id, created_at, updated_at, deleted_at, name, license) FROM s
 
 
 --
--- Data for Name: supportrequest; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: supportrequest; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.supportrequest (id, created_at, updated_at, deleted_at, category, priority, mail, phone, text, sla_name) FROM stdin;
@@ -5632,7 +5632,7 @@ COPY nmsprime.supportrequest (id, created_at, updated_at, deleted_at, category, 
 
 
 --
--- Data for Name: ticket; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ticket; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ticket (id, created_at, updated_at, deleted_at, name, description, user_id, state, priority, duedate, ticketable_type, ticketable_id, started_at, finished_at) FROM stdin;
@@ -5640,7 +5640,7 @@ COPY nmsprime.ticket (id, created_at, updated_at, deleted_at, name, description,
 
 
 --
--- Data for Name: ticket_type; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ticket_type; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ticket_type (id, created_at, updated_at, deleted_at, name, parent_id, description) FROM stdin;
@@ -5648,7 +5648,7 @@ COPY nmsprime.ticket_type (id, created_at, updated_at, deleted_at, name, parent_
 
 
 --
--- Data for Name: ticket_type_ticket; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ticket_type_ticket; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ticket_type_ticket (id, created_at, ticket_type_id, ticket_id) FROM stdin;
@@ -5656,7 +5656,7 @@ COPY nmsprime.ticket_type_ticket (id, created_at, ticket_type_id, ticket_id) FRO
 
 
 --
--- Data for Name: ticket_user; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ticket_user; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ticket_user (id, created_at, updated_at, deleted_at, user_id, ticket_id) FROM stdin;
@@ -5664,7 +5664,7 @@ COPY nmsprime.ticket_user (id, created_at, updated_at, deleted_at, user_id, tick
 
 
 --
--- Data for Name: ticketsystem; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: ticketsystem; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.ticketsystem (id, created_at, updated_at, deleted_at, noreplymail, noreplyname, distance, modemcount, opentickets) FROM stdin;
@@ -5673,7 +5673,7 @@ COPY nmsprime.ticketsystem (id, created_at, updated_at, deleted_at, noreplymail,
 
 
 --
--- Data for Name: trcclass; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: trcclass; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.trcclass (id, created_at, updated_at, deleted_at, trc_id, trc_short, trc_description) FROM stdin;
@@ -5683,7 +5683,7 @@ COPY nmsprime.trcclass (id, created_at, updated_at, deleted_at, trc_id, trc_shor
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: users; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.users (id, created_at, updated_at, deleted_at, first_name, last_name, email, phonenumber, login_name, password, api_token, description, active, remember_token, language, last_login_at, password_changed_at, initial_dashboard, geopos_updated_at, lng, lat, hastruck) FROM stdin;
@@ -5692,7 +5692,7 @@ COPY nmsprime.users (id, created_at, updated_at, deleted_at, first_name, last_na
 
 
 --
--- Data for Name: websockets_statistics_entries; Type: TABLE DATA; Schema: nmsprime; Owner: postgres
+-- Data for Name: websockets_statistics_entries; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
 COPY nmsprime.websockets_statistics_entries (id, app_id, peak_connection_count, websocket_message_count, api_message_count, created_at, updated_at) FROM stdin;
@@ -5700,497 +5700,497 @@ COPY nmsprime.websockets_statistics_entries (id, app_id, peak_connection_count, 
 
 
 --
--- Name: abilities_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: abilities_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.abilities_id_seq', 60, true);
 
 
 --
--- Name: accountingrecord_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.accountingrecord_id_seq', 1, true);
 
 
 --
--- Name: apartment_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: apartment_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.apartment_id_seq', 1, true);
 
 
 --
--- Name: billingbase_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: billingbase_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.billingbase_id_seq', 1, true);
 
 
 --
--- Name: carriercode_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: carriercode_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.carriercode_id_seq', 367, true);
 
 
 --
--- Name: ccc_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ccc_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ccc_id_seq', 1, true);
 
 
 --
--- Name: comment_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: comment_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.comment_id_seq', 1, true);
 
 
 --
--- Name: company_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: company_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.company_id_seq', 1, true);
 
 
 --
--- Name: configfile_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: configfile_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.configfile_id_seq', 3, true);
 
 
 --
--- Name: contact_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: contact_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.contact_id_seq', 1, true);
 
 
 --
--- Name: contract_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: contract_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.contract_id_seq', 1, true);
 
 
 --
--- Name: costcenter_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: costcenter_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.costcenter_id_seq', 1, true);
 
 
 --
--- Name: debt_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: debt_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.debt_id_seq', 1, true);
 
 
 --
--- Name: domain_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: domain_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.domain_id_seq', 1, true);
 
 
 --
--- Name: ekpcode_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ekpcode_id_seq', 625, true);
 
 
 --
--- Name: endpoint_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: endpoint_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.endpoint_id_seq', 1, true);
 
 
 --
--- Name: enviacontract_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.enviacontract_id_seq', 1, true);
 
 
 --
--- Name: enviaorder_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.enviaorder_id_seq', 1, true);
 
 
 --
--- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.enviaorder_phonenumber_id_seq', 1, true);
 
 
 --
--- Name: enviaorderdocument_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.enviaorderdocument_id_seq', 1, true);
 
 
 --
--- Name: failed_jobs_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.failed_jobs_id_seq', 1, false);
 
 
 --
--- Name: favorite_netelements_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.favorite_netelements_id_seq', 1, true);
 
 
 --
--- Name: global_config_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: global_config_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.global_config_id_seq', 1, true);
 
 
 --
--- Name: guilog_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: guilog_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.guilog_id_seq', 1, false);
 
 
 --
--- Name: hfcreq_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.hfcreq_id_seq', 1, true);
 
 
 --
--- Name: indices_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: indices_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.indices_id_seq', 1, true);
 
 
 --
--- Name: invoice_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: invoice_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.invoice_id_seq', 1, true);
 
 
 --
--- Name: ippool_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ippool_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ippool_id_seq', 1, true);
 
 
 --
--- Name: item_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: item_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.item_id_seq', 1, true);
 
 
 --
--- Name: jobs_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: jobs_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.jobs_id_seq', 1, true);
 
 
 --
--- Name: mibfile_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: mibfile_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.mibfile_id_seq', 1, true);
 
 
 --
--- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.migrations_id_seq', 1, true);
 
 
 --
--- Name: modem_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: modem_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.modem_id_seq', 1, true);
 
 
 --
--- Name: modem_option_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: modem_option_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.modem_option_id_seq', 1, true);
 
 
 --
--- Name: mpr_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: mpr_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.mpr_id_seq', 1, true);
 
 
 --
--- Name: mprgeopos_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.mprgeopos_id_seq', 1, true);
 
 
 --
--- Name: mta_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: mta_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.mta_id_seq', 1, false);
 
 
 --
--- Name: netelement_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: netelement_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.netelement_id_seq', 1, false);
 
 
 --
--- Name: netelementtype_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.netelementtype_id_seq', 1000, false);
 
 
 --
--- Name: netgw_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: netgw_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.netgw_id_seq', 1, true);
 
 
 --
--- Name: node_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: node_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.node_id_seq', 1, true);
 
 
 --
--- Name: numberrange_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: numberrange_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.numberrange_id_seq', 1, true);
 
 
 --
--- Name: oid_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: oid_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.oid_id_seq', 1, true);
 
 
 --
--- Name: overduedebts_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.overduedebts_id_seq', 1, true);
 
 
 --
--- Name: parameter_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: parameter_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.parameter_id_seq', 1, true);
 
 
 --
--- Name: phonebookentry_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.phonebookentry_id_seq', 1, true);
 
 
 --
--- Name: phonenumber_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.phonenumber_id_seq', 1, false);
 
 
 --
--- Name: phonenumbermanagement_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.phonenumbermanagement_id_seq', 1, true);
 
 
 --
--- Name: phonetariff_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.phonetariff_id_seq', 3, true);
 
 
 --
--- Name: product_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: product_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.product_id_seq', 1, true);
 
 
 --
--- Name: provbase_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: provbase_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.provbase_id_seq', 1, true);
 
 
 --
--- Name: provmon_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: provmon_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.provmon_id_seq', 1, true);
 
 
 --
--- Name: provvoip_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: provvoip_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.provvoip_id_seq', 1, true);
 
 
 --
--- Name: qos_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: qos_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.qos_id_seq', 2, true);
 
 
 --
--- Name: realty_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: realty_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.realty_id_seq', 1, true);
 
 
 --
--- Name: roles_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.roles_id_seq', 5, true);
 
 
 --
--- Name: salesman_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: salesman_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.salesman_id_seq', 1, true);
 
 
 --
--- Name: sepaaccount_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.sepaaccount_id_seq', 1, true);
 
 
 --
--- Name: sepamandate_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.sepamandate_id_seq', 1, true);
 
 
 --
--- Name: settlementrun_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.settlementrun_id_seq', 1, true);
 
 
 --
--- Name: sla_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: sla_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.sla_id_seq', 1, true);
 
 
 --
--- Name: supportrequest_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.supportrequest_id_seq', 1, true);
 
 
 --
--- Name: ticket_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ticket_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ticket_id_seq', 1, true);
 
 
 --
--- Name: ticket_type_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ticket_type_id_seq', 1, true);
 
 
 --
--- Name: ticket_type_ticket_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ticket_type_ticket_id_seq', 1, true);
 
 
 --
--- Name: ticket_user_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ticket_user_id_seq', 1, true);
 
 
 --
--- Name: ticketsystem_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.ticketsystem_id_seq', 1, true);
 
 
 --
--- Name: trcclass_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: trcclass_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.trcclass_id_seq', 2, true);
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.users_id_seq', 1, true);
 
 
 --
--- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries_id_seq; Type: SEQUENCE SET; Schema: nmsprime; Owner: nmsprime
 --
 
 SELECT pg_catalog.setval('nmsprime.websockets_statistics_entries_id_seq', 1, true);
 
 
 --
--- Name: abilities idx_17263_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: abilities idx_17263_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.abilities
@@ -6198,7 +6198,7 @@ ALTER TABLE ONLY nmsprime.abilities
 
 
 --
--- Name: accountingrecord idx_17273_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: accountingrecord idx_17273_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.accountingrecord
@@ -6206,7 +6206,7 @@ ALTER TABLE ONLY nmsprime.accountingrecord
 
 
 --
--- Name: apartment idx_17279_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: apartment idx_17279_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.apartment
@@ -6214,7 +6214,7 @@ ALTER TABLE ONLY nmsprime.apartment
 
 
 --
--- Name: billingbase idx_17294_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: billingbase idx_17294_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.billingbase
@@ -6222,7 +6222,7 @@ ALTER TABLE ONLY nmsprime.billingbase
 
 
 --
--- Name: carriercode idx_17303_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: carriercode idx_17303_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.carriercode
@@ -6230,7 +6230,7 @@ ALTER TABLE ONLY nmsprime.carriercode
 
 
 --
--- Name: ccc idx_17309_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ccc idx_17309_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ccc
@@ -6238,7 +6238,7 @@ ALTER TABLE ONLY nmsprime.ccc
 
 
 --
--- Name: comment idx_17319_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: comment idx_17319_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.comment
@@ -6246,7 +6246,7 @@ ALTER TABLE ONLY nmsprime.comment
 
 
 --
--- Name: company idx_17328_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: company idx_17328_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.company
@@ -6254,7 +6254,7 @@ ALTER TABLE ONLY nmsprime.company
 
 
 --
--- Name: configfile idx_17337_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: configfile idx_17337_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.configfile
@@ -6262,7 +6262,7 @@ ALTER TABLE ONLY nmsprime.configfile
 
 
 --
--- Name: contact idx_17349_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: contact idx_17349_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.contact
@@ -6270,7 +6270,7 @@ ALTER TABLE ONLY nmsprime.contact
 
 
 --
--- Name: contract idx_17358_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: contract idx_17358_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.contract
@@ -6278,7 +6278,7 @@ ALTER TABLE ONLY nmsprime.contract
 
 
 --
--- Name: costcenter idx_17367_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: costcenter idx_17367_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.costcenter
@@ -6286,7 +6286,7 @@ ALTER TABLE ONLY nmsprime.costcenter
 
 
 --
--- Name: debt idx_17376_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: debt idx_17376_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.debt
@@ -6294,7 +6294,7 @@ ALTER TABLE ONLY nmsprime.debt
 
 
 --
--- Name: domain idx_17385_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: domain idx_17385_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.domain
@@ -6302,7 +6302,7 @@ ALTER TABLE ONLY nmsprime.domain
 
 
 --
--- Name: ekpcode idx_17391_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ekpcode idx_17391_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ekpcode
@@ -6310,7 +6310,7 @@ ALTER TABLE ONLY nmsprime.ekpcode
 
 
 --
--- Name: endpoint idx_17397_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: endpoint idx_17397_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.endpoint
@@ -6318,7 +6318,7 @@ ALTER TABLE ONLY nmsprime.endpoint
 
 
 --
--- Name: enviacontract idx_17407_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: enviacontract idx_17407_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviacontract
@@ -6326,7 +6326,7 @@ ALTER TABLE ONLY nmsprime.enviacontract
 
 
 --
--- Name: enviaorder idx_17413_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder idx_17413_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorder
@@ -6334,7 +6334,7 @@ ALTER TABLE ONLY nmsprime.enviaorder
 
 
 --
--- Name: enviaorderdocument idx_17422_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorderdocument idx_17422_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorderdocument
@@ -6342,7 +6342,7 @@ ALTER TABLE ONLY nmsprime.enviaorderdocument
 
 
 --
--- Name: enviaorder_phonenumber idx_17428_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: enviaorder_phonenumber idx_17428_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.enviaorder_phonenumber
@@ -6350,7 +6350,7 @@ ALTER TABLE ONLY nmsprime.enviaorder_phonenumber
 
 
 --
--- Name: failed_jobs idx_17434_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: failed_jobs idx_17434_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.failed_jobs
@@ -6358,7 +6358,7 @@ ALTER TABLE ONLY nmsprime.failed_jobs
 
 
 --
--- Name: favorite_netelements idx_17444_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: favorite_netelements idx_17444_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.favorite_netelements
@@ -6366,7 +6366,7 @@ ALTER TABLE ONLY nmsprime.favorite_netelements
 
 
 --
--- Name: global_config idx_17450_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: global_config idx_17450_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.global_config
@@ -6374,7 +6374,7 @@ ALTER TABLE ONLY nmsprime.global_config
 
 
 --
--- Name: guilog idx_17461_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: guilog idx_17461_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.guilog
@@ -6382,7 +6382,7 @@ ALTER TABLE ONLY nmsprime.guilog
 
 
 --
--- Name: hfcreq idx_17470_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: hfcreq idx_17470_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.hfcreq
@@ -6390,7 +6390,7 @@ ALTER TABLE ONLY nmsprime.hfcreq
 
 
 --
--- Name: indices idx_17479_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: indices idx_17479_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.indices
@@ -6398,7 +6398,7 @@ ALTER TABLE ONLY nmsprime.indices
 
 
 --
--- Name: invoice idx_17488_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: invoice idx_17488_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.invoice
@@ -6406,7 +6406,7 @@ ALTER TABLE ONLY nmsprime.invoice
 
 
 --
--- Name: ippool idx_17494_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ippool idx_17494_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ippool
@@ -6414,7 +6414,7 @@ ALTER TABLE ONLY nmsprime.ippool
 
 
 --
--- Name: item idx_17505_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: item idx_17505_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.item
@@ -6422,7 +6422,7 @@ ALTER TABLE ONLY nmsprime.item
 
 
 --
--- Name: jobs idx_17517_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: jobs idx_17517_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.jobs
@@ -6430,7 +6430,7 @@ ALTER TABLE ONLY nmsprime.jobs
 
 
 --
--- Name: mibfile idx_17526_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: mibfile idx_17526_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mibfile
@@ -6438,7 +6438,7 @@ ALTER TABLE ONLY nmsprime.mibfile
 
 
 --
--- Name: migrations idx_17535_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: migrations idx_17535_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.migrations
@@ -6446,7 +6446,7 @@ ALTER TABLE ONLY nmsprime.migrations
 
 
 --
--- Name: modem idx_17541_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: modem idx_17541_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.modem
@@ -6454,7 +6454,7 @@ ALTER TABLE ONLY nmsprime.modem
 
 
 --
--- Name: modem_option idx_17551_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: modem_option idx_17551_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.modem_option
@@ -6462,7 +6462,7 @@ ALTER TABLE ONLY nmsprime.modem_option
 
 
 --
--- Name: mpr idx_17557_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: mpr idx_17557_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mpr
@@ -6470,7 +6470,7 @@ ALTER TABLE ONLY nmsprime.mpr
 
 
 --
--- Name: mprgeopos idx_17566_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: mprgeopos idx_17566_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mprgeopos
@@ -6478,7 +6478,7 @@ ALTER TABLE ONLY nmsprime.mprgeopos
 
 
 --
--- Name: mta idx_17575_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: mta idx_17575_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.mta
@@ -6486,7 +6486,7 @@ ALTER TABLE ONLY nmsprime.mta
 
 
 --
--- Name: netelement idx_17596_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: netelement idx_17596_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netelement
@@ -6494,7 +6494,7 @@ ALTER TABLE ONLY nmsprime.netelement
 
 
 --
--- Name: netelementtype idx_17605_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: netelementtype idx_17605_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netelementtype
@@ -6502,7 +6502,7 @@ ALTER TABLE ONLY nmsprime.netelementtype
 
 
 --
--- Name: netgw idx_17614_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: netgw idx_17614_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.netgw
@@ -6510,7 +6510,7 @@ ALTER TABLE ONLY nmsprime.netgw
 
 
 --
--- Name: node idx_17626_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: node idx_17626_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.node
@@ -6518,7 +6518,7 @@ ALTER TABLE ONLY nmsprime.node
 
 
 --
--- Name: notifications idx_17633_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: notifications idx_17633_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.notifications
@@ -6526,7 +6526,7 @@ ALTER TABLE ONLY nmsprime.notifications
 
 
 --
--- Name: numberrange idx_17641_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: numberrange idx_17641_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.numberrange
@@ -6534,7 +6534,7 @@ ALTER TABLE ONLY nmsprime.numberrange
 
 
 --
--- Name: oid idx_17652_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: oid idx_17652_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.oid
@@ -6542,7 +6542,7 @@ ALTER TABLE ONLY nmsprime.oid
 
 
 --
--- Name: overduedebts idx_17661_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: overduedebts idx_17661_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.overduedebts
@@ -6550,7 +6550,7 @@ ALTER TABLE ONLY nmsprime.overduedebts
 
 
 --
--- Name: parameter idx_17670_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: parameter idx_17670_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.parameter
@@ -6558,7 +6558,7 @@ ALTER TABLE ONLY nmsprime.parameter
 
 
 --
--- Name: phonebookentry idx_17685_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: phonebookentry idx_17685_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonebookentry
@@ -6566,7 +6566,7 @@ ALTER TABLE ONLY nmsprime.phonebookentry
 
 
 --
--- Name: phonenumber idx_17694_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: phonenumber idx_17694_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonenumber
@@ -6574,7 +6574,7 @@ ALTER TABLE ONLY nmsprime.phonenumber
 
 
 --
--- Name: phonenumbermanagement idx_17705_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: phonenumbermanagement idx_17705_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonenumbermanagement
@@ -6582,7 +6582,7 @@ ALTER TABLE ONLY nmsprime.phonenumbermanagement
 
 
 --
--- Name: phonetariff idx_17718_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: phonetariff idx_17718_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.phonetariff
@@ -6590,7 +6590,7 @@ ALTER TABLE ONLY nmsprime.phonetariff
 
 
 --
--- Name: product idx_17728_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: product idx_17728_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.product
@@ -6598,7 +6598,7 @@ ALTER TABLE ONLY nmsprime.product
 
 
 --
--- Name: provbase idx_17735_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: provbase idx_17735_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provbase
@@ -6606,7 +6606,7 @@ ALTER TABLE ONLY nmsprime.provbase
 
 
 --
--- Name: provmon idx_17748_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: provmon idx_17748_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provmon
@@ -6614,7 +6614,7 @@ ALTER TABLE ONLY nmsprime.provmon
 
 
 --
--- Name: provvoip idx_17754_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: provvoip idx_17754_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provvoip
@@ -6622,7 +6622,7 @@ ALTER TABLE ONLY nmsprime.provvoip
 
 
 --
--- Name: qos idx_17763_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: qos idx_17763_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.qos
@@ -6630,7 +6630,7 @@ ALTER TABLE ONLY nmsprime.qos
 
 
 --
--- Name: realty idx_17858_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: realty idx_17858_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.realty
@@ -6638,7 +6638,7 @@ ALTER TABLE ONLY nmsprime.realty
 
 
 --
--- Name: roles idx_17867_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: roles idx_17867_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.roles
@@ -6646,7 +6646,7 @@ ALTER TABLE ONLY nmsprime.roles
 
 
 --
--- Name: salesman idx_17876_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: salesman idx_17876_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.salesman
@@ -6654,7 +6654,7 @@ ALTER TABLE ONLY nmsprime.salesman
 
 
 --
--- Name: sepaaccount idx_17885_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: sepaaccount idx_17885_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sepaaccount
@@ -6662,7 +6662,7 @@ ALTER TABLE ONLY nmsprime.sepaaccount
 
 
 --
--- Name: sepamandate idx_17894_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: sepamandate idx_17894_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sepamandate
@@ -6670,7 +6670,7 @@ ALTER TABLE ONLY nmsprime.sepamandate
 
 
 --
--- Name: settlementrun idx_17903_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: settlementrun idx_17903_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.settlementrun
@@ -6678,7 +6678,7 @@ ALTER TABLE ONLY nmsprime.settlementrun
 
 
 --
--- Name: sla idx_17909_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: sla idx_17909_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.sla
@@ -6686,7 +6686,7 @@ ALTER TABLE ONLY nmsprime.sla
 
 
 --
--- Name: supportrequest idx_17915_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: supportrequest idx_17915_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.supportrequest
@@ -6694,7 +6694,7 @@ ALTER TABLE ONLY nmsprime.supportrequest
 
 
 --
--- Name: ticket idx_17924_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ticket idx_17924_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket
@@ -6702,7 +6702,7 @@ ALTER TABLE ONLY nmsprime.ticket
 
 
 --
--- Name: ticketsystem idx_17933_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ticketsystem idx_17933_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticketsystem
@@ -6710,7 +6710,7 @@ ALTER TABLE ONLY nmsprime.ticketsystem
 
 
 --
--- Name: ticket_type idx_17942_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type idx_17942_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_type
@@ -6718,7 +6718,7 @@ ALTER TABLE ONLY nmsprime.ticket_type
 
 
 --
--- Name: ticket_type_ticket idx_17948_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_type_ticket idx_17948_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_type_ticket
@@ -6726,7 +6726,7 @@ ALTER TABLE ONLY nmsprime.ticket_type_ticket
 
 
 --
--- Name: ticket_user idx_17954_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: ticket_user idx_17954_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.ticket_user
@@ -6734,7 +6734,7 @@ ALTER TABLE ONLY nmsprime.ticket_user
 
 
 --
--- Name: trcclass idx_17960_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: trcclass idx_17960_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.trcclass
@@ -6742,7 +6742,7 @@ ALTER TABLE ONLY nmsprime.trcclass
 
 
 --
--- Name: users idx_17966_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: users idx_17966_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.users
@@ -6750,7 +6750,7 @@ ALTER TABLE ONLY nmsprime.users
 
 
 --
--- Name: websockets_statistics_entries idx_17978_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: websockets_statistics_entries idx_17978_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.websockets_statistics_entries
@@ -6758,371 +6758,371 @@ ALTER TABLE ONLY nmsprime.websockets_statistics_entries
 
 
 --
--- Name: idx_17263_abilities_scope_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17263_abilities_scope_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17263_abilities_scope_index ON nmsprime.abilities USING btree (scope);
 
 
 --
--- Name: idx_17279_apartment_realty_id_foreign; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17279_apartment_realty_id_foreign; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17279_apartment_realty_id_foreign ON nmsprime.apartment USING btree (realty_id);
 
 
 --
--- Name: idx_17286_assigned_roles_entity_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17286_assigned_roles_entity_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17286_assigned_roles_entity_index ON nmsprime.assigned_roles USING btree (entity_id, entity_type, scope);
 
 
 --
--- Name: idx_17286_assigned_roles_role_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17286_assigned_roles_role_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17286_assigned_roles_role_id_index ON nmsprime.assigned_roles USING btree (role_id);
 
 
 --
--- Name: idx_17286_assigned_roles_scope_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17286_assigned_roles_scope_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17286_assigned_roles_scope_index ON nmsprime.assigned_roles USING btree (scope);
 
 
 --
--- Name: idx_17289_authreminders_email_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17289_authreminders_email_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17289_authreminders_email_index ON nmsprime.authreminders USING btree (email);
 
 
 --
--- Name: idx_17289_authreminders_token_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17289_authreminders_token_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17289_authreminders_token_index ON nmsprime.authreminders USING btree (token);
 
 
 --
--- Name: idx_17303_carriercode_carrier_code_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17303_carriercode_carrier_code_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17303_carriercode_carrier_code_unique ON nmsprime.carriercode USING btree (carrier_code);
 
 
 --
--- Name: idx_17337_configfile_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17337_configfile_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17337_configfile_parent_id_index ON nmsprime.configfile USING btree (parent_id);
 
 
 --
--- Name: idx_17358_contract_apartment_id_foreign; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_apartment_id_foreign; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_apartment_id_foreign ON nmsprime.contract USING btree (apartment_id);
 
 
 --
--- Name: idx_17358_contract_costcenter_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_costcenter_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_costcenter_id_index ON nmsprime.contract USING btree (costcenter_id);
 
 
 --
--- Name: idx_17358_contract_next_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_next_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_next_qos_id_index ON nmsprime.contract USING btree (next_qos_id);
 
 
 --
--- Name: idx_17358_contract_number_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_number_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_number_index ON nmsprime.contract USING btree (number);
 
 
 --
--- Name: idx_17358_contract_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_qos_id_index ON nmsprime.contract USING btree (qos_id);
 
 
 --
--- Name: idx_17358_contract_salesman_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17358_contract_salesman_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17358_contract_salesman_id_index ON nmsprime.contract USING btree (salesman_id);
 
 
 --
--- Name: idx_17391_ekpcode_ekp_code_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17391_ekpcode_ekp_code_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17391_ekpcode_ekp_code_unique ON nmsprime.ekpcode USING btree (ekp_code);
 
 
 --
--- Name: idx_17397_endpoint_modem_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17397_endpoint_modem_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17397_endpoint_modem_id_index ON nmsprime.endpoint USING btree (modem_id);
 
 
 --
--- Name: idx_17413_enviaorder_orderid_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17413_enviaorder_orderid_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17413_enviaorder_orderid_unique ON nmsprime.enviaorder USING btree (orderid);
 
 
 --
--- Name: idx_17444_favorite_netelements_user_id_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17444_favorite_netelements_user_id_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17444_favorite_netelements_user_id_netelement_id_index ON nmsprime.favorite_netelements USING btree (user_id, netelement_id);
 
 
 --
--- Name: idx_17444_favorite_netelements_user_id_netelement_id_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17444_favorite_netelements_user_id_netelement_id_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17444_favorite_netelements_user_id_netelement_id_unique ON nmsprime.favorite_netelements USING btree (user_id, netelement_id);
 
 
 --
--- Name: idx_17494_ippool_netgw_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17494_ippool_netgw_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17494_ippool_netgw_id_index ON nmsprime.ippool USING btree (netgw_id);
 
 
 --
--- Name: idx_17505_by_contract_id; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17505_by_contract_id; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17505_by_contract_id ON nmsprime.item USING btree (contract_id);
 
 
 --
--- Name: idx_17505_by_product_id; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17505_by_product_id; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17505_by_product_id ON nmsprime.item USING btree (product_id);
 
 
 --
--- Name: idx_17517_jobs_queue_reserved_at_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17517_jobs_queue_reserved_at_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17517_jobs_queue_reserved_at_index ON nmsprime.jobs USING btree (queue, reserved_at);
 
 
 --
--- Name: idx_17541_modem_configfile_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17541_modem_configfile_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17541_modem_configfile_id_index ON nmsprime.modem USING btree (configfile_id);
 
 
 --
--- Name: idx_17541_modem_contract_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17541_modem_contract_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17541_modem_contract_id_index ON nmsprime.modem USING btree (contract_id);
 
 
 --
--- Name: idx_17541_modem_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17541_modem_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17541_modem_netelement_id_index ON nmsprime.modem USING btree (netelement_id);
 
 
 --
--- Name: idx_17541_modem_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17541_modem_qos_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17541_modem_qos_id_index ON nmsprime.modem USING btree (qos_id);
 
 
 --
--- Name: idx_17557_mpr_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17557_mpr_netelement_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17557_mpr_netelement_id_index ON nmsprime.mpr USING btree (netelement_id);
 
 
 --
--- Name: idx_17566_mprgeopos_mpr_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17566_mprgeopos_mpr_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17566_mprgeopos_mpr_id_index ON nmsprime.mprgeopos USING btree (mpr_id);
 
 
 --
--- Name: idx_17575_mta_configfile_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17575_mta_configfile_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17575_mta_configfile_id_index ON nmsprime.mta USING btree (configfile_id);
 
 
 --
--- Name: idx_17575_mta_modem_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17575_mta_modem_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17575_mta_modem_id_index ON nmsprime.mta USING btree (modem_id);
 
 
 --
--- Name: idx_17596_netelement_netelementtype_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17596_netelement_netelementtype_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17596_netelement_netelementtype_id_index ON nmsprime.netelement USING btree (netelementtype_id);
 
 
 --
--- Name: idx_17596_netelement_netgw_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17596_netelement_netgw_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17596_netelement_netgw_id_index ON nmsprime.netelement USING btree (netgw_id);
 
 
 --
--- Name: idx_17596_netelement_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17596_netelement_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17596_netelement_parent_id_index ON nmsprime.netelement USING btree (parent_id);
 
 
 --
--- Name: idx_17605_netelementtype_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17605_netelementtype_parent_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17605_netelementtype_parent_id_index ON nmsprime.netelementtype USING btree (parent_id);
 
 
 --
--- Name: idx_17626_node_netelement_id_foreign; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17626_node_netelement_id_foreign; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17626_node_netelement_id_foreign ON nmsprime.node USING btree (netelement_id);
 
 
 --
--- Name: idx_17633_notifications_notifiable_type_notifiable_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17633_notifications_notifiable_type_notifiable_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17633_notifications_notifiable_type_notifiable_id_index ON nmsprime.notifications USING btree (notifiable_type, notifiable_id);
 
 
 --
--- Name: idx_17679_permissions_ability_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17679_permissions_ability_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17679_permissions_ability_id_index ON nmsprime.permissions USING btree (ability_id);
 
 
 --
--- Name: idx_17679_permissions_entity_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17679_permissions_entity_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17679_permissions_entity_index ON nmsprime.permissions USING btree (entity_id, entity_type, scope);
 
 
 --
--- Name: idx_17679_permissions_scope_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17679_permissions_scope_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17679_permissions_scope_index ON nmsprime.permissions USING btree (scope);
 
 
 --
--- Name: idx_17694_phonenumber_mta_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17694_phonenumber_mta_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17694_phonenumber_mta_id_index ON nmsprime.phonenumber USING btree (mta_id);
 
 
 --
--- Name: idx_17858_realty_node_id_foreign; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17858_realty_node_id_foreign; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17858_realty_node_id_foreign ON nmsprime.realty USING btree (node_id);
 
 
 --
--- Name: idx_17867_roles_name_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17867_roles_name_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17867_roles_name_unique ON nmsprime.roles USING btree (name, scope);
 
 
 --
--- Name: idx_17867_roles_scope_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17867_roles_scope_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17867_roles_scope_index ON nmsprime.roles USING btree (scope);
 
 
 --
--- Name: idx_17894_by_contract_id; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17894_by_contract_id; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17894_by_contract_id ON nmsprime.sepamandate USING btree (contract_id);
 
 
 --
--- Name: idx_17894_by_costcenter_id; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17894_by_costcenter_id; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17894_by_costcenter_id ON nmsprime.sepamandate USING btree (costcenter_id);
 
 
 --
--- Name: idx_17924_ticket_ticketable_type_ticketable_id_index; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17924_ticket_ticketable_type_ticketable_id_index; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE INDEX idx_17924_ticket_ticketable_type_ticketable_id_index ON nmsprime.ticket USING btree (ticketable_type, ticketable_id);
 
 
 --
--- Name: idx_17960_trc_id; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17960_trc_id; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17960_trc_id ON nmsprime.trcclass USING btree (trc_id);
 
 
 --
--- Name: idx_17960_trcclass_trc_id_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17960_trcclass_trc_id_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17960_trcclass_trc_id_unique ON nmsprime.trcclass USING btree (trc_id);
 
 
 --
--- Name: idx_17966_users_api_token_unique; Type: INDEX; Schema: nmsprime; Owner: postgres
+-- Name: idx_17966_users_api_token_unique; Type: INDEX; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE UNIQUE INDEX idx_17966_users_api_token_unique ON nmsprime.users USING btree (api_token);
 
 
 --
--- Name: authreminders on_update_current_timestamp; Type: TRIGGER; Schema: nmsprime; Owner: postgres
+-- Name: authreminders on_update_current_timestamp; Type: TRIGGER; Schema: nmsprime; Owner: nmsprime
 --
 
 CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON nmsprime.authreminders FOR EACH ROW EXECUTE FUNCTION nmsprime.on_update_current_timestamp_authreminders();
 
 
 --
--- Name: assigned_roles assigned_roles_role_id_foreign; Type: FK CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: assigned_roles assigned_roles_role_id_foreign; Type: FK CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.assigned_roles
@@ -7130,7 +7130,7 @@ ALTER TABLE ONLY nmsprime.assigned_roles
 
 
 --
--- Name: permissions permissions_ability_id_foreign; Type: FK CONSTRAINT; Schema: nmsprime; Owner: postgres
+-- Name: permissions permissions_ability_id_foreign; Type: FK CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.permissions
@@ -7147,4 +7147,3 @@ GRANT USAGE ON SCHEMA nmsprime TO nmsprime;
 --
 -- PostgreSQL database dump complete
 --
-
