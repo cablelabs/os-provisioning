@@ -269,11 +269,6 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
             -e 's|#server = \".*\"|server = \"localhost\"|' \\
             -i /etc/raddb/mods-available/sql");
 
-        // Add nas_secret column to netgw
-        Schema::table('netgw', function (Blueprint $table) {
-            $table->string('nas_secret')->nullable();
-        });
-
         // Get entries of radippool, radacct, radpostauth
         $allocatedIps = DB::connection('mysql')->table('radippool')->whereNotNull('expiry_time')->where('expiry_time', '>', now())->get();
         foreach ($allocatedIps as $radip) {
