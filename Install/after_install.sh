@@ -56,6 +56,7 @@ systemctl enable postgresql-13.service
 systemctl start postgresql-13.service
 
 # sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE database nmsprime' # Is done via dump: sudo -u postgres pg_dump nmsprime -C -x > /tmp/nmsprime.pgsql (-N nmsprime for just dumping schema nmsprime)
+sudo -u postgres /usr/pgsql-13/bin/psql -c "CREATE DATBASE nmsprime;"
 sudo -u postgres /usr/pgsql-13/bin/psql -c "CREATE USER nmsprime PASSWORD '$pw';"
 sudo -u postgres /usr/pgsql-13/bin/psql < /etc/nmsprime/sql-schemas/nmsprime.pgsql
 sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c "

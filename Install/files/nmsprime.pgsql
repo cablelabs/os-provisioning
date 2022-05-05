@@ -20,9 +20,6 @@ SET row_security = off;
 -- Name: nmsprime; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE nmsprime WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE = 'en_US.UTF-8';
-
-
 ALTER DATABASE nmsprime OWNER TO postgres;
 
 \connect nmsprime
