@@ -49,7 +49,6 @@
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/plugins/vue-snotify/snotify.css')}}" rel="stylesheet" />
       <!-- SITE -->
       <link href="{{asset('components/nmsprime.css')}}" rel="stylesheet" />
       <link href="{{asset('css/app.css')}}" rel="stylesheet" />

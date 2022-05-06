@@ -17,22 +17,11 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/jquery/jquery-3.2.0.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/jquery/jquery-migrate-1.4.1.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/vue/dist/vue.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/Abilities/axios.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/vue-snotify/snotify.min.js')}}"></script>
-
-{{-- When in Development use this Version
-  <script src="{{asset('components/assets-admin/plugins/vue/dist/vue.js')}}"></script>
---}}
+<script src="{{ asset('js/app.js') }}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/select2/dist/js/select2.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/select2/dist/js/i18n/'.App::getLocale().'.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/main/media/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/main/media/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
@@ -42,7 +31,6 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap/js/fixedHeader.bootstrap4.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
-
 <script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
 
 <!-- ================== END BASE JS ================== -->
@@ -53,12 +41,9 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.html5.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.colVis.min.js')}}"></script>
-
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
-
-
 <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
-<script src="{{asset('components/nmsprime.js?ver=211215')}}"></script>
+
 <!-- ================== END PAGE LEVEL JS ================== -->
 
 <script language="javascript">
