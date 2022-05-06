@@ -19,7 +19,6 @@
 
 use Modules\ProvBase\Entities\RadAcct;
 use Modules\ProvBase\Entities\RadIpPool;
-use Illuminate\Database\Schema\Blueprint;
 use Modules\ProvBase\Entities\RadPostAuth;
 
 class SwitchMysqltoPgsql extends BaseMigration
