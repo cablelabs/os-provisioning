@@ -82,7 +82,7 @@ class LoginController extends Controller
 
         $bgImageRoute = asset('images/main-pic-1.jpg');
         if ($globalConfig->login_img && is_file(storage_path(GlobalConfigController::BG_IMAGES_PATH_REL.$globalConfig->login_img))) {
-            $bgImageRoute = asset('images/base/bg-images/'.$globalConfig->login_img);
+            $bgImageRoute = '/storage/base/bg-images/'.$globalConfig->login_img;
         }
 
         if (session()->has('url.intended') && $pos = strpos($url = session('url.intended'), 'admin')) {

@@ -28,7 +28,7 @@ class GlobalConfigController extends BaseController
 {
     protected $log_level = ['0 - Emergency', '1 - Alert', '2 - Critical', '3 - Error', '4 - Warning', '5 - Notice', '6 - Info', '7 - Debug'];
 
-    public const BG_IMAGES_PATH_REL = 'app/config/base/bg-images/';
+    public const BG_IMAGES_PATH_REL = 'app/public/base/bg-images/';
 
     protected function getFileUploadPaths(): array
     {

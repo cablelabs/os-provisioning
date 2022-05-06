@@ -103,7 +103,7 @@ cd "$dir"
 # L5 setup
 install -Dm640 -o apache -g root /dev/null /var/www/nmsprime/storage/logs/laravel.log
 mkdir -p -m755 "$dir/storage/app/tmp/"
-mkdir -p -m755 "$dir/storage/app/config/base/bg-images/"
+mkdir -p -m755 "$dir/storage/app/public/base/bg-images/"
 chown -R apache "$dir/storage/"
 rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/remi/php80/root/usr/bin/php artisan clear-compiled

@@ -38,12 +38,15 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
             $table->string('bgimg')->nullable();
         });
 
-        if (! is_dir(storage_path('app/config/base/bg-images/'))) {
-            mkdir(storage_path('app/config/base/bg-images/'), 0755, true);
+        foreach (['app/public/base/bg-images/'] as $relDirPath) {
+            if (! is_dir(storage_path($relDirPath))) {
+                mkdir(storage_path($relDirPath), 0755, true);
+            }
         }
 
-        system('chown -R apache:apache '.storage_path('app/config/'));
-        system('mv '.storage_path('app/config/ccc/logos/').' '.storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+        system('chown -R apache:apache '.storage_path('app/public/'));
+        rename(storage_path('app/config/ccc/logos/'), storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+        symlink(storage_path('app/public/'), base_path('public-ccc/storage'));
     }
 
     /**
@@ -60,5 +63,9 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
         Schema::table('ccc', function (Blueprint $table) {
             $table->dropColumn('bgimg');
         });
+
+        unlink(base_path('public-ccc/storage'));
+        rename(storage_path('app/public/ccc/images/'), storage_path('app/config/ccc/logos/'));
+        system('rm -rf '.storage_path('app/public/base/'));
     }
 }
