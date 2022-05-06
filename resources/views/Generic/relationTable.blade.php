@@ -17,10 +17,11 @@
             @endforeach
         </table>
     @else
-        @php
-            $dtName = strtolower($tab['name']).$class.'Datatable';
-        @endphp
-        <table id="{{ $dtName }}" class="table table-hover datatable table-bordered d-table w-100">
+        <table id="{{ strtolower($tab['name']).$class }}Datatable"
+            class="table table-hover datatable table-bordered d-table w-100"
+            data-table="true"
+            data-ajax="{{ route((new ReflectionClass($view_var))->getShortName().'.relationDatatable', ['model' => $view_var->id, 'relation' => $class]) }}"
+        >
             <thead>
                 <tr>
                     <th class="w-5"></th>
@@ -30,29 +31,6 @@
             <tbody>
             </tbody>
         </table>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let {{ $dtName }} = $('#{{ $dtName }}').DataTable({
-                    @include('datatables.lang')
-                    dom: 'rt'+"<'row'<'col-12 pb-1'i><'col-9 ml-auto'p>>",
-                    columnDefs: [
-                        {
-                            defaultContent: "",
-                            targets: "_all"
-                        }
-                    ],
-                    {{-- AJAX CONFIGURATION --}}
-                    processing: true, {{-- show loader--}}
-                    serverSide: true, {{-- enable Serverside Handling--}}
-                    deferRender: true,
-                    ajax: '{{ route((new ReflectionClass($view_var))->getShortName().'.relationDatatable', ['model' => $view_var->id, 'relation' => $class]) }}',
-                    columns:[
-                        {data: 'checkbox', orderable: false, searchable: false},
-                        {data: 'label', orderable: false, searchable: false}
-                    ]
-                })
-            });
-        </script>
     @endif
     {!! Form::close() !!}
 @DivClose()

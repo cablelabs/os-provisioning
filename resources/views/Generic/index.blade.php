@@ -43,33 +43,17 @@
 
 @section('content_left')
     {{-- Headline: means icon followed by headline --}}
-    <div class="col-md-12">
-        <div class="row m-b-25">
-            <div class="col">
-                <h3 class="card-title">
-                    {!! $model->view_icon().' '.$headline !!}
-                </h3>
-                @if (Request::has('show_filter'))
-                    <div id="filter">
-                        <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
-                        <a class="badge badge-primary" href="{{ Request::url() }}"
-                            style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
-                            title="{{ trans('messages.removeFilter') }}">
-                            {{ trans("view.filter.{$filter['key']}", ['data' => $filter['data']]) }}
-                            <i class="fa fa-close p-l-5"></i>
-                        </a>
-                    </div>
-                {{-- TODO: Make this generic and let the user select the filter from dropdown or via link --}}
-                @elseif (! empty($model::AVAILABLE_FILTERS) && $model instanceof Modules\ProvVoipEnvia\Entities\EnviaOrder)
-                    <a href="?show_filter=action_needed" target="_self"> <i class="fa fa-filter"></i> {{ trans('provvoipenvia::view.enviaOrder.showInteractionNeeding')}} </a><br>
-                @endif
-            </div>
+    <div class="mb-6">
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl flex-1">
+                {!! $model->view_icon().' '.$headline !!}
+            </h3>
         {{-- Create Form --}}
         @can('create', $model)
             <div class="align-self-end m-r-20">
                 @if ($create_allowed)
                     {{ Form::open(array('method' => 'GET', 'id' => 'createModel')) }}
-                    <a href={{route($route_name.'.create')}} onclick="form.submit();" class="btn btn-outline-primary float-right m-b-10"
+                    <a href={{route($route_name.'.create')}} onclick="form.submit();" class="btn btn-outline-primary float-right"
                         style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
                         title="{{ \App\Http\Controllers\BaseViewController::translate_view('Create '.$model->view_headline(), 'Button' )}}">
                         <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
@@ -81,7 +65,7 @@
         @can('delete', $model)
             <div class="align-self-end m-r-30">
                 @if ($delete_allowed)
-                    <button type="submit" class="btn btn-outline-danger m-b-10 float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
+                    <button type="submit" class="btn btn-outline-danger float-right" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="top"
                         title="{{ \App\Http\Controllers\BaseViewController::translate_view('Delete', 'Button' ) }}" form="IndexForm" name="_delete">
                         <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
                     </button>
@@ -91,8 +75,26 @@
 
         {{--Help Section--}}
         @include('Generic.documentation')
-
         </div>
+
+        @if (Request::has('show_filter'))
+        <div class="mt-4">
+                <div id="filter">
+                    <i class="fa fa-filter" style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right" title="{{ trans("messages.hardFilter") }}"></i>
+                    <a class="badge badge-primary" href="{{ Request::url() }}"
+                        style="simple" data-toggle="tooltip" data-delay='{"show":"250"}' data-placement="right"
+                        title="{{ trans('messages.removeFilter') }}">
+                        {{ trans("view.filter.{$filter['key']}", ['data' => $filter['data']]) }}
+                        <i class="fa fa-close p-l-5"></i>
+                    </a>
+                </div>
+            {{-- TODO: Make this generic and let the user select the filter from dropdown or via link --}}
+        </div>
+        @elseif (! empty($model::AVAILABLE_FILTERS) && $model instanceof Modules\ProvVoipEnvia\Entities\EnviaOrder)
+        <div class="mt-4">
+            <a href="?show_filter=action_needed" target="_self"> <i class="fa fa-filter"></i> {{ trans('provvoipenvia::view.enviaOrder.showInteractionNeeding')}} </a>
+        </div>
+        @endif
     </div>
 
     @include('Generic.above_infos')

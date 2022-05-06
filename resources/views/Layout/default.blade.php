@@ -18,46 +18,50 @@
 ?>
 <!doctype html>
 <html lang="{{ App::getLocale() }}">
+
 <head>
     <meta charset="utf-8">
-    <title>{{$html_title}}</title>
-    @include ('bootstrap.header')
+    <title>{{ $html_title }}</title>
+    @include('bootstrap.header')
     @yield('head')
 </head>
-<body {{ isset($body_onload) ? "onload=$body_onload()" : ""}}>
 
-    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" :class="{'page-sidebar-minified': minified}" style="min-height:100%;">
-        @include ('bootstrap.menu')
-        @if (Module::collections()->has('CoreMon'))
-            @include ('bootstrap.sidebar')
-        @else
-            @include ('sidebar')
-        @endif
+<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
+    @include('Layout.navbar')
+    @include('Layout.sidebar')
 
-        <div id="content" class="d-flex flex-column pt-2 pb-0 pr-2" :class="!minified ? 'ml-80' : 'ml-[100px]'" style="flex:1;transition: all .15s">
-            @if(session('GlobalNotification'))
-            <div style="padding-top:1rem;">
-                @foreach (session('GlobalNotification') as $name => $options)
-                    <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
-                        <h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
-                        <p class="mb-0 text-center">
-                            {{ trans('messages.' . $options['reason']) }}
-                            <a href="{{ route('User.profile', $user->id) }}" class="alert-link">
+    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
+        :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
+
+        <div id="content"
+            class="d-flex flex-column flex-1"
+            :class="store.minified ? 'ml-[5.5rem]' : 'ml-[19.5rem]'"
+            style="transition: all .15s">
+            <vue-snotify></vue-snotify>
+
+            @if (session('GlobalNotification'))
+                <div style="padding-top:1rem;">
+                    @foreach (session('GlobalNotification') as $name => $options)
+                        <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
+                            <h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
+                            <p class="mb-0 text-center">
+                                {{ trans('messages.' . $options['reason']) }}
+                                <a href="{{ route('User.profile', $user->id) }}" class="alert-link">
                                     {{ trans('messages.PasswordClick') }}
-                            </a>
-                        </p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endforeach
-            </div>
+                                </a>
+                            </p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             @endif
-            @if(session('DashboardNotification'))
+            @if (session('DashboardNotification'))
                 @foreach (session('DashboardNotification') as $name => $options)
                     <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
                         <p class="mb-0 text-center">
-                            {{$options['message'] }}
+                            {{ $options['message'] }}
                         </p>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -65,32 +69,26 @@
                     </div>
                 @endforeach
             @endif
-            <div class="d-flex flex-column d-print-flex row" style="flex:1;">
+            <div class="d-flex flex-column d-print-flex flex-1">
                 @yield ('content')
             </div>
         </div>
     </div>
 
-    @include ('Generic.userGeopos')
 
-    @include ('bootstrap.footer')
+    @include('bootstrap.footer')
     @yield ('form-javascript')
     @yield ('javascript')
     @yield ('javascript_extra')
     @yield ('mycharts')
-    @if (! Module::collections()->has('CoreMon'))
-        @include ('page_vue')
-    @else
-        @include ('bootstrap.sidebar-vue')
-    @endif
+    @include('Generic.userGeopos')
 
     {{-- scroll to top btn --}}
-    <a href="javascript:;"
-        class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade d-flex"
-        data-click="scroll-top"
-        style="justify-content: space-around;align-items: center">
+    <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade d-flex"
+        data-click="scroll-top" style="justify-content: space-around;align-items: center">
         <i class="fa fa-angle-up m-0"></i>
     </a>
 
 </body>
+
 </html>
