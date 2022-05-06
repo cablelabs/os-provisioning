@@ -3,6 +3,7 @@
 composer.phar
 composer.lock
 /node_modules
+package-lock.json
 .env
 .DS_Store
 *.sublime*
@@ -59,5 +60,10 @@ storage/app/config/provvoip/ekp_codes__sha1sum
 
 # linked storage folder
 public/storage
+# compiled assets
+public/css
+public/js
+public/images
+public/mix-manifest.json
 
 _ide_helper.php
