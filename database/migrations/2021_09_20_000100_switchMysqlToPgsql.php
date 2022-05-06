@@ -260,7 +260,7 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
             -e 's|login = \"nmsprime\"|login = \"$user\"|' \\
             -e 's|password = \".*\"|password = \"$psw\"|' \\
             -e 's|radius_db = \".*\"|radius_db = \"radius\"|' \\
-            -e 's|#server = \".*\"|server = \"localhost\"|' \\
+            -e 's|#\s*server = \".*\"|\tserver = \"localhost\"|' \\
             -i /etc/raddb/mods-available/sql");
 
         // Get entries of radippool, radacct, radpostauth
