@@ -231,25 +231,22 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
     private function adaptRadius()
     {
         $db = $user = 'radius';
-        $psw = \Str::random(12);
-
-        system('sed -i "s/^#RADIUS_DB/RADIUS_DB/" /etc/nmsprime/env/provbase.env');
-        system("sed -i 's/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$psw/' /etc/nmsprime/env/provbase.env");
+        $psw = DB::connection('pgsql-radius')->getConfig('password');
 
         system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
         echo "radius\n";
 
-        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
-        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
-        \Artisan::call('nms:raddb-repopulate');
-
         // Add radius user
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"
+        system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c \"
             CREATE USER $user PASSWORD '$psw';
             GRANT USAGE ON SCHEMA public TO $user;
             GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
             \"");
+
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
+        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
+        \Artisan::call('nms:raddb-repopulate');
 
         system('sudo -u postgres /usr/pgsql-13/bin/psql radius -c "ALTER ROLE postgres set search_path to \'public\'"');
 

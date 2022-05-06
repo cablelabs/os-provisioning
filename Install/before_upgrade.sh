@@ -63,4 +63,7 @@ sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA ${auths[0]} TO ${auths[2]};
 "
 
+sed -i 's/^#RADIUS_DB/RADIUS_DB/' /etc/nmsprime/env/provbase.env
+sed -i "s/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$(pwgen 12 1)/" /etc/nmsprime/env/provbase.env
+
 /opt/remi/php80/root/usr/bin/php /var/www/nmsprime/artisan config:cache
