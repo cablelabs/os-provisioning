@@ -58,14 +58,17 @@
 @endphp
 
 @section ('content')
-    <div class="row flex-wrap-reverse" style="{{ $flex }}">
+    <div class="flex-wrap-reverse" style="{{ $flex }}">
 
         @yield('contentLeftLeft')
-        <div class="d-flex col-12 col-lg-{{ $leftMdSizeLg }} col-xl-{{ $leftMdSizeXl }} m-t-10">
-            <div class="card card-inverse p-b-5 p-t-10" style="display:flex;flex: 1;">
+        <div class="d-flex">
+            <div class="card card-inverse flex flex-1">
+                <ul class="flex pl-2 space-x-2 p-2 list-none divide-x-4 divide-amber-400">
+                    @yield('content_top')
+                </ul>
                 @if(isset($tabs))
                 <div class="bg-gray-200 border-b border-gray-300 px-2 m-b-15 d-print-none" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="nav card-header-tabs flex" style="width:100%;">
+                    <ul id="tabs" class="nav card-header-tabs flex space-x-2 pl-3" style="width:100%;">
                         @foreach ($tabs as $tab)
 
                             {{-- Logging tab --}}
@@ -82,7 +85,7 @@
                             @if (isset($tab['route']))
                                 <li class="p-1 " role="tab">
                                     <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
-                                        <span class="text-white">
+                                        <span class="">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
                                         @endif

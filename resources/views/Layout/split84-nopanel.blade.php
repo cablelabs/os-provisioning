@@ -20,7 +20,7 @@
 
 @section ('content')
 
-<div class="col-md-12" style="padding-top:1rem;">
+<div class="col-md-12 p-2">
 	<div class="card bg-white">
 		<div class="card-block">
 		{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
