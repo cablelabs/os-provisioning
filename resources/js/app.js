@@ -1,36 +1,34 @@
 /**
- * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
- * and others – powered by CableLabs. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
  * First we will load all of this project's JavaScript dependencies which
- * include Vue and Vue Resource. This gives a great starting point for
+ * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+require('./bootstrap')
+require('./nmsprime')
 
-require('./bootstrap');
+import { createApp } from 'vue'
+import sidebar from './components/Sidebar.vue'
+import app from './components/App.vue'
+import snotify from 'vue3-snotify'
+import 'vue3-snotify/style'
+import select2Component from './components/Select2.vue'
+import skeletonComponent from './components/Skeleton.vue'
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+window.main = createApp(app)
+  .component('select2', select2Component)
+  .component('skeleton', skeletonComponent)
+  .use(snotify)
+  .mount('#page-container')
 
-Vue.component('example', require('./components/Example.vue'));
+window.navbar = createApp({}).mount('#header')
 
-const app = new Vue({
-  el: '#app',
-});
+let propData = document.querySelector("#sidebar").dataset
+window.sidebar = createApp(sidebar, {
+  favorites: JSON.parse(propData.favorites),
+  netelements: JSON.parse(propData.netelements),
+  netCount: propData.netCount
+})
+.component('select2', select2Component)
+.mount('#sidebar')
+
+

@@ -227,6 +227,7 @@ $('.erd-popover').mousemove(
  * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
  */
 $('.datatable, .clickableRow').click(function (e) {
+  console.log('I was triggered', e)
   if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
     window.location = $(e.target.parentNode).find('a').attr("href");
   }
@@ -328,7 +329,29 @@ function linkTag()
   });
 }
 
-var NMS = function () {
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('[data-table]').forEach(function (el) {
+      let id = el.getAttribute('id')
+      $(`#${id}`).DataTable({
+          dom: 'rt'+"<'row'<'col-12 pb-1'i><'col-9 ml-auto'p>>",
+          columnDefs: [
+              {
+                  defaultContent: "",
+                  targets: "_all"
+              }
+          ],
+          processing: true,
+          serverSide: true,
+          deferRender: true,
+          columns:[
+              {data: 'checkbox', orderable: false, searchable: false},
+              {data: 'label', orderable: false, searchable: false}
+          ]
+      })
+    })
+});
+
+window.NMS = function () {
 	"use strict";
 
 	return {
