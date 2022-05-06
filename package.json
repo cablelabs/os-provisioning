@@ -19,8 +19,13 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "jquery": "^3.2.0",
+        "jquery-migrate": "^1.4.1",
+        "jquery-ui": "^1.12.1",
+        "jquery-ui-dist": "^1.12.1",
         "laravel-echo": "^1.11.7",
         "pusher-js": "^7.1.0-beta",
+        "select2": "^4.1.0-rc.0",
         "vue": "^3.2.33",
         "vue3-snotify": "0.0.6"
     }

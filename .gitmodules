@@ -1,7 +1,3 @@
-[submodule "public/components/assets-admin/plugins/vue"] # @v2.6.11
-	path = public/components/assets-admin/plugins/vue
-	url = https://github.com/vuejs/vue
-	ignore = all
 [submodule "public/components/assets-admin/plugins/sortable"] # @1.10.2
 	path = public/components/assets-admin/plugins/sortable
 	url = https://github.com/SortableJS/Sortable
@@ -40,18 +36,12 @@
 [submodule "public/components/assets-admin/plugins/pdfmake"]
 	path = public/components/assets-admin/plugins/pdfmake
 	url = https://github.com/bpampuch/pdfmake
-[submodule "public/vendor/pusher-js"]
-	path = public/vendor/pusher-js
-	url = https://github.com/pusher/pusher-js.git
 [submodule "public/components/assets-admin/plugins/backbone"]
 	path = public/components/assets-admin/plugins/backbone
 	url = https://github.com/jashkenas/backbone
 [submodule "public/components/assets-admin/plugins/joint-js"]
 	path = public/components/assets-admin/plugins/joint-js
 	url = https://github.com/clientIO/joint.git
-[submodule "public/components/assets-admin/plugins/select2"]
-	path = public/components/assets-admin/plugins/select2
-	url = https://github.com/select2/select2
 [submodule "public/components/assets-admin/plugins/leaflet"]
 	path = public/components/assets-admin/plugins/leaflet
 	url = https://github.com/Leaflet/Leaflet.git
