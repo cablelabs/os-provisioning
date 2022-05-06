@@ -1185,3 +1185,8 @@ textarea.select2-search__field {
 .marketPopup > .leaflet-popup-content-wrapper {
     background-color: #343a40;
 }
+
+#rpdSearch::placeholder {
+    color: white;
+    opacity: 1;
+}
