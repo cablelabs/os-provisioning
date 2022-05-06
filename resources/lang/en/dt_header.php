@@ -346,6 +346,16 @@ return [
         'street' => 'Street',
         'zip' => 'ZIP',
     ],
+    'rpd' => [
+        'name' => 'Name',
+        'mac' => 'Mac',
+        'status' => 'Status',
+        'ccap_core_if' => 'CCAP core interface',
+        'cable_if' => 'Cable interface',
+        'nc_vid_if' => 'Nearcast video interface',
+        'aux_status' => 'Aux status',
+        'bc_vid_if' => 'Broadcast video interface',
+    ],
     // NAS
     'nas' => [
         'nasname' => 'Name',
