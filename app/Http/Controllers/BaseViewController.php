@@ -726,15 +726,15 @@ class BaseViewController extends Controller
             // See: Confluence API  - get_view_headline()
             $name = static::__get_view_icon($model);
             if (is_array($model->view_index_label())) {
-                $name .= $model->view_index_label()['header'];
+                $name .= Str::limit($model->view_index_label()['header'], 40);
             } else {
-                $name .= $model->view_index_label();
+                $name .= Str::limit($model->view_index_label(), 40);
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<li class='nav-tabs'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
+                $breadcrumb_path = "<li class='px-2'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</li>';
             } else {
-                $breadcrumb_path = '<li>'.static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
+                $breadcrumb_path = "<li  class='px-2 flex items-center space-x-2'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</li>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;
@@ -826,9 +826,9 @@ class BaseViewController extends Controller
         // else if (Route::has($route_name.'.index'))
         //  $s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
         if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
-            $breadcrumb_path_base = "<li class='active'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</li>';
+            $breadcrumb_path_base = "<li class='border-l-4 border-amber-400 px-2'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</li>';
         } else {
-            $breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="active">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).$view_header).'</li>' : '';
+            $breadcrumb_path_base = Route::has($route_name.'.index') ? '<li class="border-l-4 border-amber-400 px-2">'.static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40)).'</li>' : '';
         }
 
         if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array
