@@ -108,6 +108,7 @@ chown -R apache "$dir/storage/"
 rm -rf /var/www/nmsprime/bootstrap/cache/*
 /opt/remi/php80/root/usr/bin/php artisan clear-compiled
 /opt/remi/php80/root/usr/bin/php artisan optimize
+/opt/remi/php80/root/usr/bin/php artisan storage:link
 
 # key:generate needs .env in root dir – create symlink to our env file
 ln -srf "$env/global.env" "$dir/.env"
