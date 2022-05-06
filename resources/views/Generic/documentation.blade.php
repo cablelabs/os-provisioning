@@ -18,7 +18,7 @@
 ?>
         {{--Help Section--}}
     <div class="align-self-end m-r-5 dropdown btn-group">
-        <button id="dropdownMenuButton" type="button" class="btn btn-outline m-b-10 float-right dropdown-toggle"
+        <button id="dropdownMenuButton" type="button" class="btn btn-outline float-right dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             data-delay='{"show":"250"}' data-placement="top"
             title="{{ trans('messages.support') }}" form="IndexForm" name="support">
