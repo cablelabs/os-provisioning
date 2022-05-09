@@ -120,6 +120,9 @@ class NetElement extends \BaseModel
             $ret[$tabName]['SubNetElement']['relation'] = $this->children;
         }
 
+        $ret[$tabName]['Link']['class'] = 'Link';
+        $ret[$tabName]['Link']['relation'] = $this->links;
+
         $this->addViewHasManyTickets($ret, $tabName);
 
         return $ret;
@@ -350,6 +353,11 @@ class NetElement extends \BaseModel
     public function indices()
     {
         return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
+    }
+
+    public function links()
+    {
+        return $this->hasMany(\Modules\CoreMon\Entities\Link::class, 'from');
     }
 
     public function modems()

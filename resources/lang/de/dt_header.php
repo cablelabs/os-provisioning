@@ -217,6 +217,18 @@ return [
     'ippool.netmask' => 'Netzmaske',
     'ippool.router_ip' => 'Router IP',
     'ippool.description' => 'Beschreibung',
+    'link' => [
+        'fromNetelement' => [
+            'name' => 'Von',
+            'id' => 'Von Netzelement ID',
+        ],
+        'if1' => 'Interface 1',
+        'if2' => 'Interface 2',
+        'toNetelement' => [
+            'name' => 'Zu',
+            'id' => 'Zu Netzelement ID',
+        ],
+    ],
     // Modem
     'modem.city' => 'Stadt',
     'modem.district' => 'Bezirk',
@@ -338,7 +350,7 @@ return [
     'nas' => [
         'nasname' => 'Name',
     ],
-    // Ticket
+    'state' => 'Status',
     'ticket' => [
         'id' => 'ID',
         'name' => 'Titel',

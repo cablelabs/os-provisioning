@@ -63,14 +63,16 @@ class NamespaceController
      */
     private static function __module_get_mvc_namespace()
     {
-        $route = Route::getCurrentRoute();
-        if (! $route) {
+        $action = Route::getCurrentRoute()?->getActionName();
+
+        if (! $action) {
             return;
         }
 
-        $a = explode('\\', $route->getActionName());
+        $a = explode('\\', $action);
+        $key = $action[0] == '\\' ? 1 : 0;
 
-        return $a[0].'\\'.$a[1];
+        return $a[$key].'\\'.$a[$key + 1];
     }
 
     /**
