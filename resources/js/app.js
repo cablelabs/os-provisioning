@@ -22,13 +22,11 @@ window.main = createApp(app)
 
 window.navbar = createApp({}).mount('#header')
 
-let propData = document.querySelector("#sidebar").dataset
+let propData = document.querySelector('#sidebar').dataset
 window.sidebar = createApp(sidebar, {
   favorites: JSON.parse(propData.favorites),
   netelements: JSON.parse(propData.netelements),
   netCount: propData.netCount
 })
-.component('select2', select2Component)
-.mount('#sidebar')
-
-
+  .component('select2', select2Component)
+  .mount('#sidebar')

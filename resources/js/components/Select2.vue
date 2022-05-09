@@ -1,13 +1,13 @@
 <template>
-    <select ref="select">
-        <slot></slot>
-    </select>
+  <select ref="select">
+    <slot></slot>
+  </select>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, onDeactivated } from 'vue'
-import $ from 'jquery';
-import 'select2';
+import $ from 'jquery'
+import 'select2'
 
 const props = defineProps({
   options: [Object, Array],
@@ -37,7 +37,10 @@ onMounted(() => {
   select.value = $(select.value)
 
   if (props.initialValue) {
-    value.value = props.multiple || props.asArray ? [props.initialValue] : props.initialValue
+    value.value =
+      props.multiple || props.asArray
+        ? [props.initialValue]
+        : props.initialValue
   }
 
   i18nAll.value = ''
@@ -45,14 +48,16 @@ onMounted(() => {
     i18nAll.value = props.i18n.all
   }
 
-  select.value.select2({
-    data: props.options,
-    multiple: props.multiple
-  }).val(value.value)
-  .trigger('change')
+  select.value
+    .select2({
+      data: props.options,
+      multiple: props.multiple
+    })
+    .val(value.value)
+    .trigger('change')
 
-  if (! props.multiple) {
-    return select.value.on('change', (e) => emit("input", e.target.value))
+  if (!props.multiple) {
+    return select.value.on('change', (e) => emit('input', e.target.value))
   }
 
   select.value.on('select2:select', (e) => selected(e.params.data.id))
@@ -79,7 +84,7 @@ function selected(value) {
 
 function unselected(value) {
   if (value == i18nAll.value) {
-    return emit("input", [])
+    return emit('input', [])
   }
 
   value.value.splice(value.value.indexOf(value), 1)
@@ -87,16 +92,15 @@ function unselected(value) {
 }
 
 function publishChanges() {
-  emit("input", value.value)
-  select.value.val(value.value).trigger("change")
+  emit('input', value.value)
+  select.value.val(value.value).trigger('change')
 }
 
 watch(props.options, (options) => {
   select.value.empty().select2({ data: options })
 })
 
-onDeactivated(() =>{
-  select.value.off().select2("destroy")
+onDeactivated(() => {
+  select.value.off().select2('destroy')
 })
-
 </script>
