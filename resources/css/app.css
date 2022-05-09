@@ -1,4 +1,5 @@
 @import "nmsprime.css";
+@import 'select2/dist/css/select2';
 
 @tailwind base;
 @tailwind components;
