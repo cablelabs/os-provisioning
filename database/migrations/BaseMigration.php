@@ -107,21 +107,13 @@ class BaseMigration extends Migration
     {
         $this->calledUpTableGeneric = true;
 
-        // choose database engine and other stuff depending on date of migration
+        $table->increments('id');
         // older migrations e.g. used MyISAM to build fulltext indexes
-        if ($this->callerMigrationFile < '2018_08_07') {
-            $table->increments('id');
-            $table->engine = 'MyISAM'; // InnoDB doesn't support fulltext index in MariaDB < 10.0.5
-            $table->timestamps();
-            $table->softDeletes();
-        } else {
-            $table->increments('id');
-            $table->engine = 'InnoDB';
-            $table->timestamps();
-            $table->softDeletes();
-            $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_unicode_ci';
-        }
+        $table->engine = 'InnoDB';
+        $table->timestampsTz();
+        $table->softDeletesTz();
+        $table->charset = 'utf8mb4';
+        $table->collation = 'utf8mb4_unicode_ci';
     }
 
     public function up()
