@@ -46,7 +46,6 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
 
         system('chown -R apache:apache '.storage_path('app/public/'));
         rename(storage_path('app/config/ccc/logos/'), storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
-        symlink(storage_path('app/public/'), base_path('public-ccc/storage'));
     }
 
     /**
@@ -64,7 +63,6 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
             $table->dropColumn('bgimg');
         });
 
-        unlink(base_path('public-ccc/storage'));
         rename(storage_path('app/public/ccc/images/'), storage_path('app/config/ccc/logos/'));
         system('rm -rf '.storage_path('app/public/base/'));
     }
