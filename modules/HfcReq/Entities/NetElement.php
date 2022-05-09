@@ -342,9 +342,30 @@ class NetElement extends \BaseModel
     /**
      * Relations
      */
+    public function apartment()
+    {
+        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
+    }
+
+    public function indices()
+    {
+        return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
+    }
+
     public function modems()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
+    }
+
+    // Relation to MPRs Modem Positioning Rules
+    public function mprs()
+    {
+        return $this->hasMany(\Modules\HfcCustomer\Entities\Mpr::class, 'netelement_id');
+    }
+
+    public function netelementtype()
+    {
+        return $this->belongsTo(NetElementType::class);
     }
 
     public function passive_modems()
@@ -378,30 +399,9 @@ class NetElement extends \BaseModel
             ->where(whereLaterOrEqual('contract_end', date('Y-m-d')));
     }
 
-    // Relation to MPRs Modem Positioning Rules
-    public function mprs()
-    {
-        return $this->hasMany(\Modules\HfcCustomer\Entities\Mpr::class, 'netelement_id');
-    }
-
     public function snmpvalues()
     {
         return $this->hasMany(\Modules\HfcSnmp\Entities\SnmpValue::class, 'netelement_id');
-    }
-
-    public function netelementtype()
-    {
-        return $this->belongsTo(NetElementType::class);
-    }
-
-    public function indices()
-    {
-        return $this->hasMany(\Modules\HfcSnmp\Entities\Indices::class, 'netelement_id');
-    }
-
-    public function apartment()
-    {
-        return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
     }
 
     /**
