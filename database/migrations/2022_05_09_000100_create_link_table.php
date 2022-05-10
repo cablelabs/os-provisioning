@@ -44,6 +44,38 @@ class CreateLinkTable extends BaseMigration
             $table->string('state')->nullable();
             $table->text('description')->nullable();
         });
+
+        // Create Link for each parent-child relationship
+        if (Module::collections()->has('CoreMon')) {
+            $netelements = \Modules\HfcReq\Entities\NetElement::get()->toTree();
+
+            $this->createLinks($netelements);
+        }
+    }
+
+    private function createLinks($netelements)
+    {
+        foreach ($netelements as $ne) {
+            if ($ne->parent_id) {
+                \Modules\CoreMon\Entities\Link::create([
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'name' => $ne->parent->name.' → '.$ne->name,
+                    'from' => $ne->parent_id,
+                    'to' => $ne->id,
+                ]);
+            }
+
+            if ($ne->children->isEmpty()) {
+                continue;
+            }
+
+            foreach ($ne->children as $child) {
+                $child->setRelation('parent', $ne);
+            }
+
+            $this->createLinks($ne->children);
+        }
     }
 
     /**
