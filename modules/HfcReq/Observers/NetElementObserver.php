@@ -18,6 +18,7 @@
 
 namespace Modules\HfcReq\Observers;
 
+use Module;
 use Session;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
@@ -41,6 +42,10 @@ class NetElementObserver
 
         $netelement->observer_enabled = false;  // don't execute functions in updating again
         $netelement->save();
+
+        if (Module::collections()->has('CoreMon')) {
+            $netelement->createLink();
+        }
     }
 
     public function updating($netelement)
@@ -62,6 +67,12 @@ class NetElementObserver
                     'net' => $netelement->net,
                     'cluster' => $netelement->cluster,
                 ]);
+
+            // Change link
+            if (Module::collections()->has('CoreMon')) {
+                \Modules\CoreMon\Entities\Link::where('from', $netelement->getOriginal('parent_id'))
+                    ->where('to', $netelement->id)->update(['from' => $netelement->parent_id]);
+            }
         }
 
         // if netelementtype_id changes -> indices have to change there parameter id
@@ -83,9 +94,21 @@ class NetElementObserver
         }
     }
 
-    public function deleted()
+    public function deleted($netelement)
     {
         $this->flushSidebarNetCache();
+
+        if (Module::collections()->has('CoreMon')) {
+            $netelement->links()->delete();
+            $netelement->parent->links()->where('to', $netelement->id)->delete();
+        }
+    }
+
+    public function restored($netelement)
+    {
+        if (Module::collections()->has('CoreMon')) {
+            \Modules\CoreMon\Entities\Link::withTrashed()->where('from', $netelement->id)->update(['deleted_at' => null]);
+        }
     }
 
     protected function flushSidebarNetCache()

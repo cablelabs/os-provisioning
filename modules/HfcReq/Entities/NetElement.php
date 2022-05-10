@@ -1317,4 +1317,15 @@ class NetElement extends \BaseModel
 
         return $community;
     }
+
+    public function createLink()
+    {
+        \Modules\CoreMon\Entities\Link::create([
+            'created_at' => now(),
+            'updated_at' => now(),
+            'name' => $this->parent->name.' → '.$this->name,
+            'from' => $this->parent_id,
+            'to' => $this->id,
+        ]);
+    }
 }

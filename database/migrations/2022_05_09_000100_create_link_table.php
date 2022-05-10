@@ -57,13 +57,7 @@ class CreateLinkTable extends BaseMigration
     {
         foreach ($netelements as $ne) {
             if ($ne->parent_id) {
-                \Modules\CoreMon\Entities\Link::create([
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                    'name' => $ne->parent->name.' → '.$ne->name,
-                    'from' => $ne->parent_id,
-                    'to' => $ne->id,
-                ]);
+                $ne->createLink();
             }
 
             if ($ne->children->isEmpty()) {
