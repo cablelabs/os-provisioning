@@ -1336,6 +1336,7 @@ class Modem extends \BaseModel
     protected function mergeGenieModelAndConfigOverview($model, $scheme, $idx = 0)
     {
         $config = [];
+        $iteration = null;
         foreach ($scheme as $name => $param) {
             if (Str::contains($param, '.')) {
                 foreach (explode('.', $param) as $next) {
