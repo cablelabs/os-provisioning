@@ -296,6 +296,14 @@ class ModemController extends \BaseController
                 'description' => 'Service port ID',
                 'options' => ['readonly'],
             ];
+            if ('LFO' == config('smartont.flavor.active')) {
+                $smartont[] = [
+                    'form_type' => 'text',
+                    'name' => 'or_id',
+                    'description' => 'OR ID',
+                    'options' => ['readonly'],
+                ];
+            }
         }
 
         return array_merge($a, $b, $c, $d, $smartont);

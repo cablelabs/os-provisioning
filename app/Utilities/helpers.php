@@ -608,113 +608,22 @@ function valuesFromThresholdString($thresholds)
     return $ret;
 }
 
-function snmpDateAndTimeToCarbon($snmpDateAndTime)
-{
-    $unpack = unpack(
-        'nyear/Cmonth/Cday/Chour/Cminute/Csecond/CdeciSecond/Ctz/CoffsetHour/CoffsetMinute',
-        $snmpDateAndTime
-    );
-
-    $unpack['second'] += $unpack['deciSecond'] / 10;
-    unset($unpack['deciSecond']);
-    $unpack['tz'] = chr($unpack['tz'])."{$unpack['offsetHour']}:{$unpack['offsetMinute']}";
-
-    return \Carbon\Carbon::create(...array_slice($unpack, 0, 7));
-}
-
-function snmpIpAddrToInet($suffix)
-{
-    $str = '';
-
-    foreach (explode('.', $suffix) as $i) {
-        $str .= str_pad(dechex($i), 2, '0', STR_PAD_LEFT);
-    }
-
-    return inet_ntop(hex2bin($str));
-}
-
 /**
- * Convert sysUpTime (in hundredths of a second) into human readable string.
+ * Return a MAC in DC250 format (xxxx-xxxx-xxxx)
+ * 
+ * @param string $mac MAC address
+ * @param boolean $forceLower if true return mac in lower case, else leave untouched
+ * @return string MAC in DC250 format
  *
- * @author Ole Ernst
+ * @author Patrick Reichel
  */
-function sysUpTimeForHumans(array $hundredthSecond): array
+function dc250Mac($mac, $forceLower=True)
 {
-    return array_map(function ($hundredthSecond) {
-        return \Carbon\CarbonInterval::seconds($hundredthSecond / 100)
-            ->cascade()
-            ->forHumans();
-    }, $hundredthSecond);
-}
-
-/**
- * Convert datarate in human readable format
- *
- * See https://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
- */
-function bitsForHumans($rate): string
-{
-    if ($rate === null) {
-        return '';
+    if ($forceLower) {
+        $mac = strtolower($mac);
     }
+    $mac = preg_replace('/[^a-f\d]/i', '', $mac);
+    $mac = wordwrap($mac, 4, '-', true);
 
-    if ($rate === 0) {
-        return '0 Bit';
-    }
-
-    $units = ['Bit', 'KBit', 'MBit', 'GBit', 'TBit', 'PBit'];
-
-    $pow = floor(($rate ? log($rate) : 0) / log(1000));
-    $pow = min($pow, count($units) - 1);
-    $rate /= pow(1000, $pow);
-
-    return round($rate, 2).' '.$units[$pow];
-}
-
-/**
- * Parse and decipher system location (sysLocation) of devices and return them as an array.
- *
- * @author Farshid Ghiasimanesh
- */
-function parseLocation($location)
-{
-    $result = [
-        'city' => '',
-        'hub' => '',
-        'market' => '',
-        'site' => '',
-        'state' => '',
-        'street' => '',
-    ];
-
-    if (! $location) {
-        return $result;
-    }
-
-    $explodedAddress = explode(';', $location);
-    if (count($explodedAddress) < 8) {
-        return $result;
-    }
-
-    $result = [
-        'city' => $explodedAddress[4],
-        'hub' => $explodedAddress[6],
-        'market' => $explodedAddress[7],
-        'site' => $explodedAddress[8],
-        'state' => $explodedAddress[5],
-        'street' => $explodedAddress[3],
-    ];
-
-    return $result;
-}
-
-/**
- * Sanitizes HTML content.
- * Removes specified HTML tags and attributes along with their content
- *
- * @author Wali Razzaq
- */
-function sanitizeHtml(string $content, array $tags = ['script'], array $attributes = ['x-data', 'x-init'])
-{
-    return new \App\Utilities\HTMLSanitizer($content, $tags, $attributes);
+    return $mac;
 }
