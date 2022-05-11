@@ -865,4 +865,10 @@ return [
             'DATA_VERIFICATION_FAILED' => 'Daten ungültig oder konnten vom Geocoding Dienst nicht aufgelöst werden.',
         ],
     ],
+    'erd' => [
+        'totalNumberOfModems' => 'Gesamtzahl der Modems',
+        'numberOnlineCriticalModems' => 'Anzahl der online/kritischen Modems',
+        'avgUpstreamPower' => 'Durchschnittlicher Rückkanalpegel',
+        'avgUpstreamSnr' => 'Durchschnittliches Rückkanal-SNR',
+    ],
 ];

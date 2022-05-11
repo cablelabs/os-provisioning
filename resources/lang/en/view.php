@@ -865,4 +865,10 @@ return [
             'DATA_VERIFICATION_FAILED' => 'Entered Data is invalid or could not be resolved by the geocoding providers.',
         ],
     ],
+    'erd' => [
+        'totalNumberOfModems' => 'Total Number of Modems',
+        'numberOnlineCriticalModems' => 'Number of online/critical Modems',
+        'avgUpstreamPower' => 'Avg. Upstream Power',
+        'avgUpstreamSnr' => 'Avg. Upstream SNR',
+    ],
 ];
