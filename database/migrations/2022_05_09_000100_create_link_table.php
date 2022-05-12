@@ -38,8 +38,8 @@ class CreateLinkTable extends BaseMigration
             $table->integer('to')->unsigned();
 
             $table->string('name')->nullable();
-            $table->string('if1')->nullable();
-            $table->string('if2')->nullable();
+            $table->string('if_from')->nullable();
+            $table->string('if_to')->nullable();
             $table->string('type')->nullable();
             $table->string('state')->nullable();
             $table->text('description')->nullable();

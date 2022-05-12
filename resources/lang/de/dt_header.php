@@ -222,8 +222,8 @@ return [
             'name' => 'Von',
             'id' => 'Von Netzelement ID',
         ],
-        'if1' => 'Interface 1',
-        'if2' => 'Interface 2',
+        'if1' => 'Von Interface',
+        'if2' => 'Zu Interface',
         'toNetelement' => [
             'name' => 'Zu',
             'id' => 'Zu Netzelement ID',
