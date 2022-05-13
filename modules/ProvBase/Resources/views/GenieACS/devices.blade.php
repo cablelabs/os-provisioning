@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             @foreach ($discoveredDevices as $device)
-                <tr class="success">
+                <tr class="{{ $device[2] }}">
                     <td>{{ $device[0] }}</td>
                     <td>{{ $device[1] }}</td>
                 </tr>

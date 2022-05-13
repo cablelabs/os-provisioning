@@ -435,10 +435,13 @@ class ModemController extends \BaseController
 
     public function cwmpDeviceView()
     {
-        $discoveredDevices = array_map(function ($m) {
+        $knownDevices = Modem::join('configfile', 'modem.configfile_id', 'configfile.id')->where('configfile.device', 'tr069')->pluck('serial_num');
+
+        $discoveredDevices = array_map(function ($m) use ($knownDevices) {
             return [
                 $m['_deviceId']['_SerialNumber'] ?? null,
                 isset($m['_lastInform']) ? \Carbon\Carbon::parse($m['_lastInform'])->diffForHumans() : null,
+                $knownDevices->contains($m['_deviceId']['_SerialNumber']) ? 'success' : 'warning',
             ];
         }, json_decode(Modem::callGenieAcsApi('devices?projection=_deviceId._SerialNumber,_lastInform', 'GET'), true));
 
