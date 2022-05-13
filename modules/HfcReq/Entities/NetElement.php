@@ -1320,6 +1320,10 @@ class NetElement extends \BaseModel
 
     public function createLink()
     {
+        if (! $this->parent_id) {
+            return;
+        }
+
         \Modules\CoreMon\Entities\Link::create([
             'created_at' => now(),
             'updated_at' => now(),
