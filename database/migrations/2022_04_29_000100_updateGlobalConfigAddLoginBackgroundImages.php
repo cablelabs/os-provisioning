@@ -38,14 +38,19 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
             $table->string('bgimg')->nullable();
         });
 
-        foreach (['app/public/base/bg-images/'] as $relDirPath) {
-            if (! is_dir(storage_path($relDirPath))) {
-                mkdir(storage_path($relDirPath), 0755, true);
-            }
+        if (! is_dir(storage_path('app/public/base/bg-images/'))) {
+            mkdir(storage_path('app/public/base/bg-images/'), 0755, true);
         }
 
         system('chown -R apache:apache '.storage_path('app/public/'));
-        rename(storage_path('app/config/ccc/logos/'), storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+
+        if (is_dir(storage_path('app/config/ccc/logos/'))) {
+            rename(storage_path('app/config/ccc/logos/'), storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+        } elseif (! is_dir(storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL))) {
+            mkdir(storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+        }
+
+        system('chown -R apache:apache '.storage_path('app/config/ccc/'));
     }
 
     /**
