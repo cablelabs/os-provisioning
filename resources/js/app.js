@@ -49,5 +49,20 @@ window.sidebar = createApp(sidebar, {
   .component('select2', select2Component)
   .mount('#sidebar')
 
-window.sidebarRight = createApp(sidebarRight)
-  .mount('#sidebar-right')
+window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
+
+if (document.getElementById('rpds')) {
+  window.rpd = createApp({
+    mounted() {
+      $(document).ready(function () {
+        window.dTable = $(`#rpd-table`).DataTable()
+        // reinit table
+        window.dTable.destroy()
+        // search bar above table
+        $('#rpdSearch').keyup(function () {
+          window.dTable.search($(this).val()).draw()
+        })
+      })
+    }
+  }).mount('#rpds')
+}
