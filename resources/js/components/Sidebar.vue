@@ -119,27 +119,16 @@ function openSidebar(menuItem) {
  */
 function handleMinify() {
   let sidebar = document.getElementById('sidebar')
-  let pageContainer = document.getElementById('page-container')
 
   sidebar.style.marginTop = 0
   sidebar.style.overflow = 'visible'
   sidebar.removeAttribute('data-init')
 
   if (!store.minified) {
-    //pageContainer.classList.add('page-sidebar-minified')
     pinSidebar()
   }
 
-  if (store.minified) {
-    //pageContainer.classList.remove('page-sidebar-minified')
-    $(sidebar).slimScroll({ destroy: true })
-  }
-
-  if (
-    !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  ) {
+  if (store.minified || !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     $(sidebar).slimScroll({ destroy: true })
   }
 

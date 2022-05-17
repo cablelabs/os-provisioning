@@ -107,42 +107,51 @@
                         @foreach ([
                             'Network' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 1
+                                'netTypeId' => 1,
+                                'var' => 'network',
                             ],
                             'Market' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 16
+                                'netTypeId' => 16,
+                                'var' => 'market',
                             ],
                             'Hub' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 17
+                                'netTypeId' => 17,
+                                'var' => 'hub',
                             ],
                             'CCAP Core' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 18
+                                'netTypeId' => 18,
+                                'var' => 'ccap',
                             ],
                             'Core Leaf' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 19
+                                'netTypeId' => 19,
+                                'var' => 'leaf',
                             ],
                             'Spine' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 20
+                                'netTypeId' => 20,
+                                'var' => 'spine',
                             ],
                             'Node Leaf' => [
                                 'route' => 'CoreMon.overview',
-                                'netTypeId' => 21
+                                'netTypeId' => 21,
+                                'var' => 'node',
                             ],
                             'RPD' => [
                                 'route' => 'CoreMon.rpd',
-                                'netTypeId' => 22
+                                'netTypeId' => 22,
+                                'var' => 'rpd',
                             ],
                             'CM' => [
                                 'route' => 'CoreMon.cm',
-                                'netTypeId' => 23
+                                'netTypeId' => 23,
+                                'var' => 'cm',
                             ],
                         ] as $netType => $options)
-                            @include('_sidebar-filter-select', [
+                            @include('Layout.sidebar._filter-select', [
                                 'name' => $netType,
                                 'selected' => $loop->first,
                                 'options' => $options,
@@ -154,7 +163,7 @@
         </div>
         <div v-show="menu == 'Access Network'" class="flex relative">
             <!-- begin #sidebar -->
-            <div v-show="!store.minified" v-cloak id="sidebar" class="sidebar overflow-y-auto d-print-none w-56"
+            <div v-show="!store.minified" class="sidebar overflow-y-auto d-print-none w-56"
                 style="position: absolute;padding-top:0;">
                 <!-- begin sidebar scrollbar -->
                 <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
@@ -193,14 +202,13 @@
                             @endphp
                             <li id="{{ $moduleNameSlug }}" class="has-sub"
                                 :class="{
-                                    active: (lastActive ==
-                                        '{{ $moduleNameSlug }}'),
+                                    'active': (lastActive == '{{ $moduleNameSlug }}'),
                                     'position-relative': store.minified
                                 }"
                                 style="z-index:10000;">
                                 <div class="recolor sidebar-element flex">
                                     <a class="caret-link flex"
-                                        v-on:click="{{ isset($typearray['link'])? "!store.minified ? setMenu('{$moduleNameSlug}', false) : ''": "setMenu('{$moduleNameSlug}')" }}"
+                                        v-on:click="{{ isset($typearray['link']) ? "!store.minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug}')" }}"
                                         href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;' }}">
                                         @if (is_file(public_path('images/apps/') . $typearray['icon']))
                                             <img src="{{ asset('images/apps/' . $typearray['icon']) }}"
@@ -217,9 +225,8 @@
                                             style="height: 20px; display:block; text-align: right">
                                             <i class="fa fa-caret-right"
                                                 :class="{
-                                                    'fa-rotate-90': this.activeItem == '{{ $moduleNameSlug }}' &&
-                                                        !
-                                                        isCollapsed
+                                                    'fa-rotate-90': activeItem == '{{ $moduleNameSlug }}' &&
+                                                        ! isCollapsed
                                                 }"
                                                 style="transition:all .25s;"></i>
                                         </a>
@@ -229,10 +236,10 @@
                                 @isset($typearray['submenu'])
                                     <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter"
                                         v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
-                                        <ul v-show="this.activeItem == '{{ $moduleNameSlug }}' && ! isCollapsed"
+                                        <ul v-show="activeItem == '{{ $moduleNameSlug }}' && ! isCollapsed"
                                             class="sidebar-hover pl-0 p-b-10 m-0"
                                             :class="{
-                                                'minifiedMenu': (showMinifiedHoverMenu && this.activeItem ==
+                                                'minifiedMenu': (showMinifiedHoverMenu && activeItem ==
                                                     '{{ $moduleNameSlug }}' && !isCollapsed)
                                             }"
                                             style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
