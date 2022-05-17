@@ -8,6 +8,7 @@ require('./nmsprime')
 
 import { createApp } from 'vue'
 import sidebar from './components/Sidebar.vue'
+import sidebarRight from './components/SidebarRight.vue'
 import app from './components/App.vue'
 import snotify from 'vue3-snotify'
 import 'vue3-snotify/style'
@@ -30,3 +31,6 @@ window.sidebar = createApp(sidebar, {
 })
   .component('select2', select2Component)
   .mount('#sidebar')
+
+window.sidebarRight = createApp(sidebarRight)
+  .mount('#sidebar-right')

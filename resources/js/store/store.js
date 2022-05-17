@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 
 export const store = reactive({
-  minified: true
+  minified: true,
+  minifiedRight: true
 })

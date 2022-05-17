@@ -29,14 +29,14 @@
 <body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
     @include('Layout.navbar')
     @include('Layout.sidebar')
+    @include('Layout.sidebar-right')
 
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
         :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
 
         <div id="content"
-            class="d-flex flex-column flex-1"
-            :class="store.minified ? 'ml-[5.5rem]' : 'ml-[19.5rem]'"
-            style="transition: all .15s">
+            class="d-flex flex-column flex-1 transition-all duration-200"
+            :class="{'ml-[5.5rem]': store.minified, 'ml-[19.5rem]': !store.minified, 'mr-6': store.minifiedRight, 'mr-[17.5rem]': !store.minifiedRight}">
             <vue-snotify></vue-snotify>
 
             @if (session('GlobalNotification'))
