@@ -7,11 +7,11 @@ require('./bootstrap')
 require('./nmsprime')
 
 import { createApp } from 'vue'
+import snotify from 'vue3-snotify'
+
+import app from './components/App.vue'
 import sidebar from './components/Sidebar.vue'
 import sidebarRight from './components/SidebarRight.vue'
-import app from './components/App.vue'
-import snotify from 'vue3-snotify'
-import 'vue3-snotify/style'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 

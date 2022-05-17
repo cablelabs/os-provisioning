@@ -1,5 +1,6 @@
 @import "nmsprime.css";
 @import 'select2/dist/css/select2';
+@import 'vue3-snotify/style';
 
 @tailwind base;
 @tailwind components;

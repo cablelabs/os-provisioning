@@ -42,7 +42,6 @@
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons/js/buttons.colVis.min.js')}}"></script>
 <script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
-<script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 
 <!-- ================== END PAGE LEVEL JS ================== -->
 
