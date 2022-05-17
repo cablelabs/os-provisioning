@@ -449,4 +449,39 @@ function netElementSearchHoverClass(netelement) {
 function setNetActive(id) {
   localStorage.setItem('clicked-netelement', id)
 }
+
+const network = ref(0)
+const market = ref(0)
+const hub = ref(0)
+const ccap = ref(0)
+const leaf = ref(0)
+const spine = ref(0)
+const node = ref(0)
+const rpd = ref(0)
+const cm = ref(0)
+
+function route(id, route) {
+  if (!id) {
+    return '#';
+  }
+
+  return route.replace('NETELEMENT_ID', id)
+}
+
+function ajaxRoute(route) {
+  let url = new URL(route)
+
+  url.searchParams.set('network', network.value)
+  url.searchParams.set('market', market.value)
+  url.searchParams.set('hub', hub.value)
+  url.searchParams.set('ccap', ccap.value)
+  url.searchParams.set('leaf', leaf.value)
+  url.searchParams.set('spine', spine.value)
+  url.searchParams.set('node', node.value)
+  url.searchParams.set('spine', spine.value)
+  url.searchParams.set('rpd', rpd.value)
+  url.searchParams.set('cm', cm.value)
+
+  return url.toString()
+}
 </script>
