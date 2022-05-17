@@ -1,33 +1,23 @@
 <template>
-    <div id="skeleton">
-        <div style="height: 200px">
-            <span class="skeleton" style="border-radius: 2px; margin: 12px; width: 10%"></span>
-            <div class="skeleton" style="border-radius: 5px; margin: 10px 20px 10px 10px; width: 30%; height: 60%; float: right; vertical-align: middle;"></div>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-                <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-        </div>
-
-        <div style="height: 200px">
-            <span class="skeleton" style="border-radius: 2px; margin: 12px; width: 10%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-        </div>
-        <div style="height: 200px">
-            <span class="skeleton" style="border-radius: 2px; margin: 12px; width: 10%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-            <span class="skeleton" style="border-radius: 2px; margin: 10px; width: 60%"></span>
-        </div>
+  <div id="skeleton">
+    <div class="flex justify-between">
+      <div class="w-1/12">
+        <div
+          v-for="n in 6"
+          :key="n"
+          class="skeleton m-3 w-full rounded-sm"
+        ></div>
+      </div>
+      <div class="skeleton rounded my-2 mx-3 w-1/3 h-48"></div>
     </div>
+
+    <div>
+      <div class="skeleton m-3 w-1/12 rounded-sm"></div>
+      <div v-for="n in 6" :key="n" class="skeleton m-3 w-2/3 rounded-sm"></div>
+    </div>
+    <div>
+      <div class="skeleton m-3 w-1/12 rounded-sm"></div>
+      <div v-for="n in 6" :key="n" class="skeleton m-3 w-2/3 rounded-sm"></div>
+    </div>
+  </div>
 </template>
