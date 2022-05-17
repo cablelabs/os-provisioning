@@ -1036,20 +1036,22 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     filter: saturate(25%) brightness(80%);
 }
 
-.select2-container--default .select2-selection--single .select2-selection__clear {
-    cursor: pointer;
-    float: right;
-    font-weight: bold;
-    height: 20px;
-    margin-right: 28px;
-    padding: 0px 4px;
-    background-color: rgba(85, 85, 85. .5);
-    margin-top: 6px;
-    border-radius: 100%;
+.select2-container--default .select2-selection--single.select2-selection--clearable {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.select2-container--default .select2-selection--single.select2-selection--clearable>span {
+    flex: 1 auto;
+}
+
+.select2-container--default .select2-selection--single.select2-selection--clearable>button {
     font-size: 1.25rem;
-    fill: currentColor;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 2rem;
     opacity: .5;
-    border: none;
     line-height: 1;
 }
 
