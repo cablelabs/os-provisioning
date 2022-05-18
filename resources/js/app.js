@@ -31,6 +31,7 @@ import sidebar from './components/Sidebar.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
+import CoreMonDataTable from './components/CoreMonDataTable.vue'
 
 window.main = createApp(app)
   .component('select2', select2Component)
@@ -52,17 +53,5 @@ window.sidebar = createApp(sidebar, {
 window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
 
 if (document.getElementById('rpds')) {
-  window.rpd = createApp({
-    mounted() {
-      $(document).ready(function () {
-        window.dTable = $(`#rpd-table`).DataTable()
-        // reinit table
-        window.dTable.destroy()
-        // search bar above table
-        $('#rpdSearch').keyup(function () {
-          window.dTable.search($(this).val()).draw()
-        })
-      })
-    }
-  }).mount('#rpds')
+  window.rpd = createApp(CoreMonDataTable).mount('#rpds')
 }
