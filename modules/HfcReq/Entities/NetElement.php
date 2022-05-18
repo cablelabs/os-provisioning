@@ -1016,7 +1016,11 @@ class NetElement extends \BaseModel
 
         // TODO: In future the user should be able to switch between Core and (yet available) access network view
         if ($enabledModules->has('CoreMon')) {
-            return (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
+            $coremonTabs = (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
+
+            if (in_array($this->netelementtype->base_type_id, [16, 17, 18, 19, 20, 21, 22, 23])) {
+                return $coremonTabs;
+            }
         }
 
         $provmonEnabled = $enabledModules->has('ProvMon');
@@ -1110,6 +1114,10 @@ class NetElement extends \BaseModel
                 $tabs[array_key_last($tabs)]['route'] = 'missingModule';
                 $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring & Prime Detect';
             }
+        }
+
+        if (isset($coremonTabs)) {
+            $tabs = array_merge($tabs, $coremonTabs);
         }
 
         return $tabs;
