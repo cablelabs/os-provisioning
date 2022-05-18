@@ -21,7 +21,15 @@
             </div>
         </div>
         <div class="mt-12 p-2">
-            Content goes here
+            <div>
+                <b>Details</b>
+            </div>
+            <ul v-for="(data, key) in store.panelRightData">
+                <li style="margin-right: 5px; margin-left: 5px; margin-bottom: 20px; font-family: Arial;">
+                    <b v-text="store.panelRightKeys[key] + ': '"></b>
+                    <span v-text="data" style="float: right;"></span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
