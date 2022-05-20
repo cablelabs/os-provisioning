@@ -106,47 +106,47 @@
                     <div class="flex flex-col space-y-4 text-sm">
                         @foreach ([
                             'Network' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.net.overview',
                                 'netTypeId' => 1,
                                 'var' => 'network',
                             ],
                             'Market' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.market.overview',
                                 'netTypeId' => 16,
                                 'var' => 'market',
                             ],
                             'Hub' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.hub.overview',
                                 'netTypeId' => 17,
                                 'var' => 'hub',
                             ],
                             'CCAP Core' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.ccap-core.overview',
                                 'netTypeId' => 18,
                                 'var' => 'ccap',
                             ],
                             'Core Leaf' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.core-leaf.overview',
                                 'netTypeId' => 19,
                                 'var' => 'leaf',
                             ],
                             'Spine' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.spine.overview',
                                 'netTypeId' => 20,
                                 'var' => 'spine',
                             ],
                             'Node Leaf' => [
-                                'route' => 'CoreMon.overview',
+                                'route' => 'CoreMon.node-leaf.overview',
                                 'netTypeId' => 21,
                                 'var' => 'node',
                             ],
                             'RPD' => [
-                                'route' => 'CoreMon.rpd',
+                                'route' => 'CoreMon.rpd.overview',
                                 'netTypeId' => 22,
                                 'var' => 'rpd',
                             ],
                             'CM' => [
-                                'route' => 'CoreMon.cm',
+                                'route' => 'CoreMon.cm.overview',
                                 'netTypeId' => 23,
                                 'var' => 'cm',
                             ],
