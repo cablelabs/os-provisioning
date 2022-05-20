@@ -231,7 +231,7 @@ class BaseRoute
      */
     public static function group(array $attributes, \Closure $callback)
     {
-        $attributes['prefix'] = self::$admin_prefix;
+        $attributes['prefix'] = self::$admin_prefix.(isset($attributes['prefix']) ? $attributes['prefix'] : '');
         $attributes['as'] = ''; // clear route name prefix
 
         Route::group($attributes, $callback);
