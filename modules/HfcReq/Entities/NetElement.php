@@ -18,6 +18,7 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Auth;
@@ -1121,6 +1122,25 @@ class NetElement extends \BaseModel
         }
 
         return $tabs;
+    }
+
+    /**
+     * Returns the name of the Base NetElementType of this NetElement. It gets
+     * the name from the staticundeletables array of Netelementtype model to
+     * be resistant against renaming.
+     *
+     * @param  string|array  $modifiers  string modifiers - order matters!
+     * @return string
+     */
+    public function getOriginalTypeName(string|array $modifiers): string
+    {
+        $originalTypeName = NetElementType::$undeletables[$this->netelementType->base_type_id];
+
+        foreach (collect($modifiers) as $modifier) {
+            $originalTypeName = Str::$modifier($originalTypeName);
+        }
+
+        return $originalTypeName;
     }
 
     /**
