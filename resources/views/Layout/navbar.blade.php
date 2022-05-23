@@ -29,9 +29,8 @@
 
         {{-- NMSPrime Logo with link to global dashboard --}}
         <span class="navbar-brand d-none d-sm-none d-md-block">
-            {!! '<a' . ($nmsprimeLogoLink ? ' href="' . $nmsprimeLogoLink . '">' : '>') !!}
-            <img src="{{ asset('images/nmsprime-logo.png') }}" style="width:80%; margin-top:-10px; margin-left:5px"
-                class="">
+            <a href="{{ $nmsprimeLogoLink }}" target="_top" alt="NMS Prime Logo">
+            <img src="{{ asset('images/nmsprime-logo.png') }}" class="h-10 ml-2 -mt-2">
             </a>
         </span>
 

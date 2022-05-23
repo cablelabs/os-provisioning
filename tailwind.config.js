@@ -10,6 +10,7 @@ module.exports = {
         colors: {
         'sidebar-dark': '#1a2229',
         'sidebar-light': '#2d353c',
+        'lime-nmsprime': '#98d145',
         }
       }
     },

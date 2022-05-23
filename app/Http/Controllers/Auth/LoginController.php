@@ -202,6 +202,14 @@ class LoginController extends Controller
 
         Log::debug($user->login_name.' logged in successfully!');
 
+        if ($activeModules->has('CoreMon')) {
+            $netelement = Modules\HfcReq\Entities\NetElement::where('netelementtype_id', 1)
+                ->orderBy('id')
+                ->first();
+
+            return route('CoreMon.net.overview', [$netelement]);
+        }
+
         if ($activeModules->has('Ticketsystem') && $this->isMobileDevice()) {
             return route('TicketReceiver.index');
         }

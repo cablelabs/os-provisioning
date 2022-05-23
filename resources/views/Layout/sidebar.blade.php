@@ -1,11 +1,11 @@
 <sidebar id="sidebar" data-net-count='{{ $netCount ?? 0 }}' data-netelements='@json($networks ?? new stdClass())'
     data-favorites='@json($favorites ?? new stdClass())' class="fixed h-full flex flex-col top-0 left-0 z-[1010]">
     <div class="mt-16 md:mt-[3.25rem] flex flex-1 text-gray-200">
-        <div class="bg-sidebar-dark w-16 flex flex-col justify-between">
+        <div class="bg-sidebar-dark w-16 flex flex-col justify-between z-20">
             <div>
                 <div
                     class="flex flex-col items-center justify-center space-y-2 border-b border-gray-200 text-xs text-center">
-                    <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2"
+                    <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2"
                         :class="{ 'bg-zinc-900': menu == 'Core Network' }" v-on:click="openSidebar('Core Network');">
                         <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -16,7 +16,7 @@
                         </svg>
                         <div class="pt-2">Core Network</div>
                     </div>
-                    <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-1"
+                    <div class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-1"
                         :class="{ 'bg-zinc-900': menu == 'Access Network' }"
                         v-on:click="openSidebar('Access Network');">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 367 341" class="h-6 w-6"
@@ -27,7 +27,7 @@
                         <div class="pt-2">Access Network</div>
                     </div>
                     <a href="{{ route('GuiLog.index') }}"
-                        class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
+                        class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
                         <svg version="1.1" viewBox="0 0 96 96" class="h-12 w-12" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect x="20" y="43.79" rx="2" ry="2" width="10" height="10" stroke="none" stroke-width="1"
@@ -40,7 +40,7 @@
                         <div>Activity</div>
                     </a>
                     <a href="{{ route('Apps.active') }}"
-                        class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
+                        class="flex flex-col items-center hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in w-full p-2">
                         <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect x="0" y="0" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1"
@@ -50,12 +50,12 @@
                             <rect x="50" y="0" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1"
                                 fill="currentColor" fill-opacity="1" />
                             <rect x="50" y="50" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1"
-                                class="text-lime-600" fill="currentColor" fill-opacity="1" />
+                                class="text-lime-nmsprime" fill="currentColor" fill-opacity="1" />
                         </svg>
                         <div class="pt-2">Apps</div>
                     </a>
                     <div
-                        class="mb-2 hover:cursor-pointer hover:text-lime-600 transition duration-150 ease-out hover:ease-in">
+                        class="mb-2 hover:cursor-pointer hover:text-lime-nmsprime transition duration-150 ease-out hover:ease-in">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div
-                    class="my-2 flex flex-col justify-center items-center hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in space-y-2">
+                    class="my-2 flex flex-col justify-center items-center hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in space-y-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="1">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <a href="https://devel.nmsprime.com/confluence/display/nmsprimeforum/The+Official+NMS+Prime+Forum"
-                class="flex flex-col items-center mb-6 space-y-2 hover:text-lime-600 hover:cursor-pointer transition duration-150 ease-out hover:ease-in text-xs">
+                class="flex flex-col items-center mb-6 space-y-2 hover:text-lime-nmsprime hover:cursor-pointer transition duration-150 ease-out hover:ease-in text-xs">
                 <svg version="1.1" viewBox="0 0 96 96" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink">
                     <circle cx="69.25" cy="56.53" r="7.78" stroke="none" stroke-width="1" fill="currentColor"
@@ -98,10 +98,10 @@
                 <div>Community</div>
             </a>
         </div>
-        <div v-cloak v-show="menu == 'Core Network'" class="flex">
-            <div v-show="!store.minified" class="bg-sidebar-light w-56 translate-x-0 transition-all duration-500"
-                :class="{ '-translate-x-full': store.minified }">
-                <div class="p-2 text-gray-400">
+        <div class="relative transition-all duration-200 z-10"
+            :class="{ '-translate-x-full': store.minified }">
+            <div v-cloak v-show="menu == 'Core Network'" class="flex bg-zinc-900 w-64 h-full">
+                <div class="px-3 py-2 w-full text-gray-400">
                     <div class="text-base font-semibold mb-4 text-gray-100">Filter</div>
                     <div class="flex flex-col space-y-4 text-sm">
                         @foreach ([
@@ -160,10 +160,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div v-cloak v-show="menu == 'Access Network'" class="flex relative">
-            <!-- begin #sidebar -->
-            <div v-show="!store.minified" class="sidebar overflow-y-auto d-print-none w-56"
+            <!-- begin "old" sidebar -->
+            <div v-cloak v-show="menu == 'Access Network' && !store.minified" class="sidebar flex overflow-y-auto d-print-none w-64"
                 style="position: absolute;padding-top:0;">
                 <!-- begin sidebar scrollbar -->
                 <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
@@ -433,41 +431,20 @@
                     </ul>
                     <!-- end sidebar nav -->
             </div>
-            <div class="bg-lime-600 w-6 pt-2 space-y-4 absolute top-0 h-full"
-                :class="{ 'left-56': !store.minified, 'left-0': store.minified }">
-                <div v-if="! store.minified" class="hover:cursor-pointer ease-in-out duration-300"
-                    :class="{ 'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned }" v-on:click="pinSidebar">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+            <div class="flex flex-col items-center bg-lime-nmsprime w-5 pt-2 space-y-6 absolute top-0 h-full -right-5" :class="{'left-64': menu == 'Access Network' && !store.minified}">
+                <div v-cloak class="hover:cursor-pointer" v-on:click="handleMinify">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ease-in-out duration-300" :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+                <div v-cloak v-if="!store.minified" class="hover:cursor-pointer" v-on:click="pinSidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ease-in-out duration-300" :class="{ 'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned }" fill="currentColor"
                         viewBox="0 0 384 512" stroke="none" stroke-width="2">
                         <path
                             d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z" />
                     </svg>
                 </div>
-                <div class="hover:cursor-pointer ease-in-out duration-300"
-                    :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" v-on:click="handleMinify">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </div>
-            <!-- end sidebar scrollbar -->
-        </div>
-        <div v-show="menu != 'Access Network'" class="bg-lime-600 w-6 pt-2 space-y-4">
-            <div v-cloak v-if="!store.minified" class="hover:cursor-pointer ease-in-out duration-300"
-                :class="{ 'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned }" v-on:click="pinSidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
-                    viewBox="0 0 384 512" stroke="none" stroke-width="2">
-                    <path
-                        d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z" />
-                </svg>
-            </div>
-            <div v-cloak class="hover:cursor-pointer ease-in-out duration-300"
-                :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" v-on:click="handleMinify">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
             </div>
         </div>
     </div>
