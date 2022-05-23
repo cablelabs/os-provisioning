@@ -45,11 +45,12 @@
         'CustomerTopo.show_impaired',
         'CustomerModem.showModems',
         'CustomerTopo.show_prox',
-        'VicinityGraph.show'
+        'VicinityGraph.show',
+        'CoreMon.net.overview',
     ];
 
     if (in_array($routeName = request()->route()->getName(), $fullscreenRoutes)) {
-        $flex = 'flex:1;';
+        $flex = 'flex:1 auto;';
     }
 
     if (! isset($firstTab)) {
@@ -58,10 +59,10 @@
 @endphp
 
 @section ('content')
-    <div class="flex-wrap-reverse" style="{{ $flex }}">
+    <div class="flex flex-wrap-reverse" style="{{ $flex }}">
 
         @yield('contentLeftLeft')
-        <div class="d-flex">
+        <div class="flex flex-1">
             <div class="card card-inverse flex flex-1">
                 <ul class="flex pl-2 space-x-2 p-2 list-none divide-x-4 divide-amber-400">
                     @yield('content_top')
