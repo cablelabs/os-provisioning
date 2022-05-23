@@ -458,12 +458,15 @@ class NetGw extends \BaseModel
                     continue;
                 }
 
-                $ret['SNR'][$ip][$freqs[$snrFreqIdx]] = $snr / 10;
+                try {
+                    $ret['SNR'][$ip][$freqs[$snrFreqIdx]] = $snr / 10;
+                } catch (\ErrorException $e) {
+                }
             }
 
             // fallback to D2.0 to retrive at least one US SNR value
-            if (empty($ret['SNR'][$ip]) && isset($d2ChIdxs[$snrIpIdx]) && isset($freqs[$d2ChIdxs[$snrIpIdx]]) && isset($d2Snrs[$snrIpIdx])) {
-                $ret['SNR'][$ip][$freqs[$d2ChIdxs[$snrIpIdx]]] = $d2Snrs[$snrIpIdx] / 10;
+            if (empty($ret['SNR'][$ip]) && isset($d2ChIdxs[$ipIdx]) && isset($freqs[$d2ChIdxs[$ipIdx]]) && isset($d2Snrs[$ipIdx])) {
+                $ret['SNR'][$ip][$freqs[$d2ChIdxs[$ipIdx]]] = $d2Snrs[$ipIdx] / 10;
             }
         }
 
