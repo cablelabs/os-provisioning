@@ -1,4 +1,4 @@
-<div id="sidebar-right" class="fixed h-screen right-0 z-[1010] flex text-gray-100">
+<div v-cloak id="sidebar-right" class="fixed h-screen right-0 z-[1010] flex text-gray-100">
     <div class="h-full bg-sidebar-dark w-64 transition-all duration-200 relative"
         :class="{ 'translate-x-0': !store.minifiedRight, 'translate-x-full': store.minifiedRight }">
         <div class="absolute -left-6 bg-lime-600 w-6 pt-2 space-y-4 h-full mt-12">

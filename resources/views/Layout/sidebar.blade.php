@@ -98,7 +98,7 @@
                 <div>Community</div>
             </a>
         </div>
-        <div v-show="menu == 'Core Network'" class="flex">
+        <div v-cloak v-show="menu == 'Core Network'" class="flex">
             <div v-show="!store.minified" class="bg-sidebar-light w-56 translate-x-0 transition-all duration-500"
                 :class="{ '-translate-x-full': store.minified }">
                 <div class="p-2 text-gray-400">
@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-        <div v-show="menu == 'Access Network'" class="flex relative">
+        <div v-cloak v-show="menu == 'Access Network'" class="flex relative">
             <!-- begin #sidebar -->
             <div v-show="!store.minified" class="sidebar overflow-y-auto d-print-none w-56"
                 style="position: absolute;padding-top:0;">
@@ -454,7 +454,7 @@
             <!-- end sidebar scrollbar -->
         </div>
         <div v-show="menu != 'Access Network'" class="bg-lime-600 w-6 pt-2 space-y-4">
-            <div v-if="!store.minified" class="hover:cursor-pointer ease-in-out duration-300"
+            <div v-cloak v-if="!store.minified" class="hover:cursor-pointer ease-in-out duration-300"
                 :class="{ 'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned }" v-on:click="pinSidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
                     viewBox="0 0 384 512" stroke="none" stroke-width="2">
@@ -462,7 +462,7 @@
                         d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z" />
                 </svg>
             </div>
-            <div class="hover:cursor-pointer ease-in-out duration-300"
+            <div v-cloak class="hover:cursor-pointer ease-in-out duration-300"
                 :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" v-on:click="handleMinify">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
