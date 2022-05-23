@@ -112,7 +112,7 @@ class PhonenumberController extends \BaseController
                 'name' => 'sipdomain',
                 'description' =>'SIP domain',
                 'autocomplete' => [],
-                'init_value' => $hasProvVoipEnvia ? '' : $provVoip->default_sip_registrar,
+                'init_value' => $hasProvVoipEnvia ? '' : ($model->exists ? $model->sipdomain : $provVoip->default_sip_registrar),
                 'options' =>  $roOption,
             ],
         ];
