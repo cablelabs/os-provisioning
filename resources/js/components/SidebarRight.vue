@@ -43,7 +43,7 @@ function pinSidebarRight() {
 function minifySidebarRight() {
   store.minifiedRight = !store.minifiedRight
 
-  if (pinned.value) {
+if (pinned.value) {
     pinSidebarRight()
   }
 }

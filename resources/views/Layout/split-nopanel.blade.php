@@ -62,7 +62,7 @@
     <div class="flex flex-wrap-reverse" style="{{ $flex }}">
 
         @yield('contentLeftLeft')
-        <div class="flex flex-1">
+        <div class="flex flex-1 overflow-y-auto">
             <div class="card card-inverse flex flex-1">
                 <ul class="flex pl-2 space-x-2 p-2 list-none divide-x-4 divide-amber-400">
                     @yield('content_top')

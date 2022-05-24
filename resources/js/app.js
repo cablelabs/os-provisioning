@@ -41,17 +41,25 @@ window.main = createApp(app)
 
 window.navbar = createApp({}).mount('#header')
 
-let propData = document.querySelector('#sidebar').dataset
-window.sidebar = createApp(sidebar, {
-  favorites: JSON.parse(propData.favorites),
-  netelements: JSON.parse(propData.netelements),
-  netCount: propData.netCount
-})
-  .component('select2', select2Component)
-  .mount('#sidebar')
+if (document.getElementById('sidebar')) {
+  let propData = document.querySelector('#sidebar').dataset
+  window.sidebar = createApp(sidebar, {
+    favorites: JSON.parse(propData.favorites),
+    netelements: JSON.parse(propData.netelements),
+    netCount: propData.netCount
+  })
+    .component('select2', select2Component)
+    .mount('#sidebar')
+}
 
-window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
+if (document.getElementById('sidebar-right')) {
+  window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
+}
 
 if (document.getElementById('rpds')) {
   window.rpd = createApp(CoreMonDataTable).mount('#rpds')
+}
+
+if (document.getElementById('vue-body')) {
+  window.real = createApp(Analysis).mount('#vue-body')
 }
