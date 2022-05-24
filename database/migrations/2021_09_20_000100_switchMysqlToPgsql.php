@@ -173,6 +173,12 @@ class SwitchMysqltoPgsql extends BaseMigration
 
             DB::statement('ALTER table ippool drop column netmask;');
         }
+
+        DB::statement('ALTER table global_config RENAME COLUMN passwordresetinterval to password_reset_interval');
+        DB::statement('ALTER table global_config RENAME COLUMN isallnetssidebarenabled to is_all_nets_sidebar_enabled');
+        DB::statement('ALTER table ticketsystem RENAME COLUMN noreplymail to noreply_mail');
+        DB::statement('ALTER table ticketsystem RENAME COLUMN noreplyname to noreply_name');
+        DB::statement('ALTER table ticketsystem RENAME COLUMN opentickets to open_tickets');
     }
 
     /**

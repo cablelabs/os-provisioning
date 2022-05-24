@@ -247,7 +247,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         $passwordInterval = Cache::get('GlobalConfig', function () {
             return \App\GlobalConfig::first();
-        })->passwordResetInterval;
+        })->password_reset_interval;
 
         if ($passwordInterval === 0) {
             return false;

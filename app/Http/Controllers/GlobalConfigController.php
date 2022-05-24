@@ -56,7 +56,7 @@ class GlobalConfigController extends BaseController
             ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phonenumber'],
             ['form_type' => 'text', 'name' => 'mail', 'description' => 'E-Mail Address'],
             ['form_type' => 'select', 'name' => 'log_level', 'description' => 'System Log Level', 'value' => $this->log_level, 'hidden' => 1],
-            ['form_type' => 'text', 'name' => 'passwordResetInterval', 'description' => 'Password Reset Interval', 'help' => trans('helper.PasswordReset')],
+            ['form_type' => 'text', 'name' => 'password_reset_interval', 'description' => 'Password Reset Interval', 'help' => trans('helper.PasswordReset')],
             ['form_type' => 'text', 'name' => 'headline1', 'description' => 'Headline 1'],
             ['form_type' => 'text', 'name' => 'headline2', 'description' => 'Headline 2'],
             ['form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default country code', 'help' => trans('helper.ISO_3166_ALPHA-2')],
@@ -69,7 +69,7 @@ class GlobalConfigController extends BaseController
         ];
 
         if (Module::collections()->has('HfcBase')) {
-            $ret[] = ['form_type' => 'checkbox', 'name' => 'isAllNetsSidebarEnabled', 'description' => 'isAllNetsSidebarEnabled'];
+            $ret[] = ['form_type' => 'checkbox', 'name' => 'is_all_nets_sidebar_enabled', 'description' => 'isAllNetsSidebarEnabled'];
         }
 
         return $ret;
