@@ -231,7 +231,7 @@ var initSelect2Fields = function () {
               }
             }
           },
-          cache: true
+          cache: false
         }
       })
     })
