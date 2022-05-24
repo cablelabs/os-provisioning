@@ -1019,7 +1019,7 @@ class NetElement extends \BaseModel
         if ($enabledModules->has('CoreMon')) {
             $coremonTabs = (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
 
-            if (in_array($this->netelementtype->base_type_id, [16, 17, 18, 19, 20, 21, 22, 23])) {
+            if (in_array($this->netelementtype->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
                 return $coremonTabs;
             }
         }
@@ -1118,7 +1118,7 @@ class NetElement extends \BaseModel
         }
 
         if (isset($coremonTabs)) {
-            $tabs = array_merge($tabs, $coremonTabs);
+            $tabs = array_merge($coremonTabs, $tabs);
         }
 
         return $tabs;

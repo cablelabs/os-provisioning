@@ -63,18 +63,18 @@
 
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
-            <div class="card card-inverse flex flex-1">
-                <ul class="flex pl-2 space-x-2 p-2 list-none divide-x-4 divide-amber-400">
+            <div class="flex flex-1 card card-inverse">
+                <ul class="flex p-2 pl-2 space-x-2 list-none divide-x-4 divide-amber-400">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="bg-gray-200 border-b border-gray-300 px-2 m-b-15 d-print-none" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="nav card-header-tabs flex space-x-2 pl-3" style="width:100%;">
+                <div class="px-2 bg-gray-200 border-b border-gray-300 m-b-15 d-print-none" style="padding-top:0;display:flex;">
+                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs" style="width:100%;">
                         @foreach ($tabs as $tab)
 
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
-                                <li class="p-1 order-12 ml-auto" role="tab" style="float: right">
+                                <li class="order-12 p-1 ml-auto" role="tab" style="float: right">
                                     <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
                                         <span class="text-gray-800"><i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging</span>
                                     </a>
@@ -87,9 +87,9 @@
                                 <li class="p-1 " role="tab">
                                     <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
                                         <span class="">
-                                        @if (isset($tab['icon']))
+                                        {{-- @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
-                                        @endif
+                                        @endif --}}
                                         {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                         </span>
                                     </a>
@@ -102,9 +102,9 @@
                             <li class="p-1 " role="tab">
                                 <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }} p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
                                     <span class="text-gray-800">
-                                    @if (isset($tab['icon']))
+                                    {{-- @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>
-                                    @endif
+                                    @endif --}}
                                     {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                     </span>
                                 </a>
@@ -113,7 +113,7 @@
                     </ul>
                 </div>
                 @endif
-                <div class="d-flex flex-wrap" style="display:flex;flex: 1;">
+                <div class="flex-wrap d-flex" style="display:flex;flex: 1;">
                     <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>
