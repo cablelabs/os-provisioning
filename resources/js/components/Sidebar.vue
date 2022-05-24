@@ -18,10 +18,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { store } from './../store/store'
+import $ from 'jquery'
 
 onMounted(() => {
   if (document.getElementById('sidebar')) {
     initSidebar()
+    $(window).trigger('sidebar-loaded');
   }
 })
 
