@@ -122,6 +122,68 @@ class Contract extends \BaseModel
         return '<i class="fa fa-address-book-o"></i>';
     }
 
+    /**
+     * Get the header for index table depending on activated modules.
+     *
+     * @author Patrick Reichel
+     */
+    protected function getIndexHeader()
+    {
+        $ret = [];
+
+        // special header set for SmartOnt installations
+        if (Module::collections()->has('SmartOnt')) {
+
+            if ('GESA' == config('smartont.flavor.active')) {
+                $ret[] = $this->table.'.sep_id';
+                $ret[] = $this->table.'.oto_id';
+                $ret[] = $this->table.'.oto_status';
+                $ret[] = $this->table.'.alex_status';
+                $ret[] = $this->table.'.omdf_id';
+                $ret[] = $this->table.'.boc_label';
+                $ret[] = $this->table.'.bof_label';
+                $ret[] = $this->table.'.type';
+            }
+
+            $ret[] = $this->table.'.zip';
+            $ret[] = $this->table.'.city';
+            if ('GESA' != config('smartont.flavor.active')) {
+                $ret[] = 'district';
+            }
+            $ret[] = $this->table.'.street';
+            $ret[] = $this->table.'.house_number';
+
+            return $ret;
+        }
+
+        // default header set
+        $ret[] = $this->table.'.number';
+        $ret[] = $this->table.'.firstname';
+        $ret[] = $this->table.'.lastname';
+        $ret[] = 'company';
+        $ret[] = 'email';
+        $ret[] = $this->table.'.zip';
+        $ret[] = $this->table.'.city';
+        $ret[] = 'district';
+        $ret[] = $this->table.'.street';
+        $ret[] = $this->table.'.house_number';
+        $ret[] = $this->table.'.apartment_nr';
+        $ret[] = $this->table.'.additional';
+        $ret[] = $this->table.'.contract_start';
+        $ret[] = $this->table.'.contract_end';
+        $ret[] = $this->table.'.ground_for_dismissal';
+
+        if (Module::collections()->has('BillingBase')) {
+            $ret[] = 'costcenter.name';
+        }
+
+        if (Module::collections()->has('PropertyManagement')) {
+            $ret[] = 'contact_id';
+        }
+
+        return $ret;
+    }
+
     // AJAX Index list function
     // generates datatable content and classes for model
     public function view_index_label()
@@ -130,7 +192,7 @@ class Contract extends \BaseModel
 
         $ret = [
             'table' => $this->table,
-            'index_header' => [],
+            'index_header' => $this->getIndexHeader(),
             'header' =>  $this->label(),
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
             'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
@@ -138,47 +200,12 @@ class Contract extends \BaseModel
             'order_by' => ['0' => 'asc'],
         ];
 
-        if (Module::collections()->has('SmartOnt')) {
-            $ret['index_header'] = array_merge(
-                $ret['index_header'],
-                [
-                    $this->table.'.sep_id',
-                    $this->table.'.oto_id',
-                    $this->table.'.oto_status',
-                    $this->table.'.alex_status',
-                ]
-            );
-        }
-
-        $ret['index_header'] = array_merge(
-            $ret['index_header'],
-            [
-                $this->table.'.number',
-                $this->table.'.firstname',
-                $this->table.'.lastname',
-                'company',
-                'email',
-                $this->table.'.zip',
-                $this->table.'.city',
-                'district',
-                $this->table.'.street',
-                $this->table.'.house_number',
-                $this->table.'.apartment_nr',
-                $this->table.'.additional',
-                $this->table.'.contract_start',
-                $this->table.'.contract_end',
-                $this->table.'.ground_for_dismissal',
-            ]
-        );
-
         if (Module::collections()->has('BillingBase')) {
-            $ret['index_header'][] = 'costcenter.name';
             $ret['eager_loading'] = ['costcenter'];
             $ret['edit']['costcenter.name'] = 'get_costcenter_name';
         }
 
         if (Module::collections()->has('PropertyManagement')) {
-            $ret['index_header'][] = 'contact_id';
             $ret['edit']['contact_id'] = 'isGroupContractAsString';
             $ret['filter']['contact_id'] = $this->groupContractFilterQuery();
         }

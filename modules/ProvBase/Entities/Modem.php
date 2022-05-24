@@ -147,24 +147,86 @@ class Modem extends \BaseModel
         return '<i class="fa fa-hdd-o"></i>';
     }
 
+    /**
+     * Get the header for index table depending on activated modules.
+     *
+     * @author Patrick Reichel
+     */
+    protected function getIndexHeader()
+    {
+        // default case
+        if (! Module::collections()->has('SmartOnt')) {
+            return [
+                $this->table.'.id',
+                $this->table.'.mac',
+                $this->table.'.serial_num',
+                'configfile.name',
+                this->table.'.model',
+                $this->table.'.sw_rev',
+                $this->table.'.name',
+                $this->table.'.ppp_username',
+                'qos.name',
+                $this->table.'.firstname',
+                $this->table.'.lastname',
+                $this->table.'.city',
+                $this->table.'.district',
+                $this->table.'.street',
+                $this->table.'.house_number',
+                $this->table.'.apartment_nr',
+                $this->table.'.geocode_source',
+                $this->table.'.inventar_num',
+                'contract_valid'
+            ];
+        }
+
+        // SmartOnt needs another set of fields
+        $ret = [
+            $this->table.'.id',
+            $this->table.'.mac',
+            $this->table.'.serial_num',
+            'configfile.name',
+            $this->table.'.model',
+            'qos.name',
+            $this->table.'.city',
+            $this->table.'.street',
+            $this->table.'.house_number',
+            'netgw.hostname',
+            $this->table.'.frame_id',
+            $this->table.'.slot_id',
+            $this->table.'.port_id',
+            $this->table.'.ont_id',
+            $this->table.'.service_port_id',
+        ];
+        if ('LFO' == config('smartont.flavor.active')) {
+            $ret[] = $this->table.'.ont_state';
+            $ret[] = $this->table.'.next_ont_state';
+            $ret[] = $this->table.'.ont_state_switchdate';
+        }
+        if ('GESA' == config('smartont.flavor.active')) {
+            $ret[] = 'contract.type';
+        }
+        $ret[] = $this->table.'.geocode_source';
+
+        return $ret;
+    }
+
     // AJAX Index list function
     // generates datatable content and classes for model
     public function view_index_label()
     {
         $bsclass = $this->get_bsclass();
 
-        $ret = ['table' => $this->table,
-            'index_header' => [$this->table.'.id', $this->table.'.mac', $this->table.'.serial_num', 'configfile.name', $this->table.'.model', $this->table.'.sw_rev', $this->table.'.name', $this->table.'.ppp_username', 'qos.name', $this->table.'.firstname', $this->table.'.lastname', $this->table.'.city', $this->table.'.district', $this->table.'.street', $this->table.'.house_number', $this->table.'.apartment_nr', $this->table.'.geocode_source', $this->table.'.inventar_num', 'contract_valid'],
-            'bsclass' => $bsclass,
-            'header' => $this->label(),
-            'edit' => ['contract_valid' => 'get_contract_valid'],
-            'eager_loading' => ['configfile', 'contract', 'qos'],
-            'disable_sortsearch' => ['contract_valid' => 'false'],
-            'help' => [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'],
-            'globalFilter' => ['sw_rev' => e(session('filter_data', ''))],
-        ];
+        $ret = ['table' => $this->table];
+        $ret['index_header'] = $this->getIndexHeader();
+        $ret['bsclass'] = $bsclass;
+        $ret['header'] = $this->label();
+        $ret['edit'] = ['contract_valid' => 'get_contract_valid'];
+        $ret['eager_loading'] = ['configfile', 'contract', 'qos', 'netgw'];
+        $ret['disable_sortsearch'] = ['contract_valid' => 'false'];
+        $ret['help'] = [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'];
+        $ret['globalFilter'] = ['sw_rev' => e(session('filter_data', ''))];
 
-        if (Module::collections()->has('ProvMon')) {
+        if ((Module::collections()->has('ProvMon')) && (! Module::collections()->has('SmartOnt'))) {
             $hfParameters = [$this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr', $this->table.'.phy_updated_at'];
 
             $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
