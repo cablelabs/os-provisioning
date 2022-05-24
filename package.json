@@ -10,23 +10,23 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "autoprefixer": "^10.4.5",
+        "autoprefixer": "^10.4.7",
         "axios": "^0.25",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.4.12",
+        "postcss": "^8.4.14",
         "tailwindcss": "^3.0.24",
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
-        "jquery": "^3.2.0",
+        "jquery": "^3.6.0",
         "jquery-migrate": "^1.4.1",
-        "jquery-ui": "^1.12.1",
-        "jquery-ui-dist": "^1.12.1",
+        "jquery-ui": "^1.13.1",
+        "jquery-ui-dist": "^1.13.1",
         "laravel-echo": "^1.11.7",
         "pusher-js": "^7.1.0-beta",
         "select2": "^4.1.0-rc.0",
-        "vue": "^3.2.33",
+        "vue": "^3.2.36",
         "vue3-snotify": "0.0.6"
     }
 }
