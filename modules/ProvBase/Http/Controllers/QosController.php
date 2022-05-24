@@ -58,11 +58,13 @@ class QosController extends \BaseController
                 'name' => 'ont_line_profile_id',
                 'description' => 'ONT line profile ID',
             ];
-            $ret[] = [
-                'form_type' => 'text',
-                'name' => 'service_profile_id',
-                'description' => 'Service profile ID',
-            ];
+            if ('GESA' != config('smartont.flavor.active')) {
+                $ret[] = [
+                    'form_type' => 'text',
+                    'name' => 'service_profile_id',
+                    'description' => 'Service profile ID',
+                ];
+            }
             $ret[] = [
                 'form_type' => 'text',
                 'name' => 'gem_port',

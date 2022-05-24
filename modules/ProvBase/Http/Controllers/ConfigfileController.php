@@ -90,6 +90,16 @@ class ConfigfileController extends \BaseController
             array_push($form, ['form_type' => 'file', 'name' => 'import', 'description' => trans('messages.import'), 'help' => trans('messages.importTree')]);
         }
 
+        if (Module::collections()->has('SmartOnt')) {
+            if ('GESA' == config('smartont.flavor.active')) {
+                $form[] = [
+                    'form_type' => 'text',
+                    'name' => 'service_profile_id',
+                    'description' => 'Service profile ID',
+                ];
+            }
+        }
+
         return $form;
     }
 
