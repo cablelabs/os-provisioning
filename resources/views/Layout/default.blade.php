@@ -29,7 +29,10 @@
 <body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
     @include('Layout.navbar')
     @include('Layout.sidebar')
-    @include('Layout.sidebar-right')
+
+    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association']))
+        @include('Layout.sidebar-right')
+    @endif
 
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
         :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
@@ -69,7 +72,7 @@
                     </div>
                 @endforeach
             @endif
-            <div class="flex flex-1 flex-col d-print-flex">
+            <div class="flex flex-col flex-1 d-print-flex">
                 @yield ('content')
             </div>
         </div>
@@ -86,7 +89,7 @@
     {{-- scroll to top btn --}}
     <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade d-flex"
         data-click="scroll-top" style="justify-content: space-around;align-items: center">
-        <i class="fa fa-angle-up m-0"></i>
+        <i class="m-0 fa fa-angle-up"></i>
     </a>
 
 </body>
