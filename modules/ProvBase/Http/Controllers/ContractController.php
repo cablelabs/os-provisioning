@@ -68,12 +68,30 @@ class ContractController extends \BaseController
             ['form_type' => 'text', 'name' => 'omdf_id', 'description' => 'OMDF ID', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'boc_label', 'description' => 'BOC Label', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'bof_label', 'description' => 'BOF Label', 'create' => ['Modem'], 'space' => '1'],
-
-            ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
-
-            ['form_type' => 'text', 'name' => 'type', 'description' => 'Type', 'create' => ['Modem'], 'options' => ['readonly'], 'hidden' => '1'],
-
         ];
+
+        if ('GESA' == config('smartont.flavor.active')) {
+            $fields[] = [
+                'form_type' => 'select',
+                'name' => 'type',
+                'description' => 'Type',
+                'create' => ['Modem'],
+                'value' => $model->getTypesForForm(),
+                'space' => '1',
+            ];
+        } else {
+            $fields[] = [
+                'form_type' => 'text',
+                'name' => 'type',
+                'description' => 'Type',
+                'create' => ['Modem'],
+                'options' => ['readonly'],
+                'hidden' => '1',
+            ];
+        }
+
+        $fields[] = ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'];
+
 
         return $fields;
     }
@@ -91,12 +109,7 @@ class ContractController extends \BaseController
         }
 
         if (Module::collections()->has('SmartOnt')) {
-            if (
-                in_array($model->type, ['OTO', 'OTO_STORAGE']) ||
-                in_array(\Request::get('type'), ['OTO', 'OTO_STORAGE'])
-            ) {
-                return $this->viewFormFieldsDfOto($model);
-            }
+            return $this->viewFormFieldsDfOto($model);
         }
 
         // Compose related phonenumbers as readonly info field

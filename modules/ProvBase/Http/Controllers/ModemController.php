@@ -326,7 +326,7 @@ class ModemController extends \BaseController
             Module::collections()->has('SmartOnt') &&
             (! $model->exists) &&
             ('Configfile' == $class) &&
-            (in_array(Request::get('type'), ['OTO_STORAGE', 'OTO']))
+            (in_array(Request::get('type'), ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE']))
         ) {
             $cf = Configfile::where('device', '=', 'ont')->select('id', 'name')->first();
 

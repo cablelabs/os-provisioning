@@ -2958,7 +2958,7 @@ class Modem extends \BaseModel
             $contractsOTO = collect();
             if ('OTO_STORAGE' == $this->contract->type) {
                 $contractsOTO = \DB::table('contract')
-                    ->where('type', '=', 'OTO')
+                    ->whereIn('type', ['OTO_FTTH_FR', 'OTO_OWN'])
                     ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
                     ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
                     // hint: there may be more than one ONT at an OTO (for different services)
@@ -2972,7 +2972,7 @@ class Modem extends \BaseModel
             $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOTO);
             $ret = [];
             foreach ($contracts as $contract) {
-                if ('OTO' == $contract->type) {
+                if ('OTO_FTTH_FR' == $contract->type) {
                     $ret[$contract->id] = $contract->zip;
                     $ret[$contract->id] .= ' '.$contract->city;
                     $ret[$contract->id] .= ', '.$contract->street;
@@ -2981,6 +2981,11 @@ class Modem extends \BaseModel
                     $ret[$contract->id] .= ', OTO-ID: '.$contract->oto_id;
                     $ret[$contract->id] .= ' – '.$contract->oto_status;
                     $ret[$contract->id] .= ' – '.$contract->alex_status;
+                } elseif ('OTO_OWN' == $contract->type) {
+                    $ret[$contract->id] = $contract->zip;
+                    $ret[$contract->id] .= ' '.$contract->city;
+                    $ret[$contract->id] .= ', '.$contract->street;
+                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
                 } else {
                     $ret[$contract->id] = 'STORAGE: ';
                     $ret[$contract->id] .= $contract->zip;
@@ -3009,7 +3014,7 @@ class Modem extends \BaseModel
             if ('GESA' == config('smartont.flavor.active')) {
 
                 // deletion only allowed from storage OTO
-                if ('OTO' == $this->contract->type) {
+                if (in_array($this->contract->type, ['OTO_FTTH_FR', 'OTO_OWN'])) {
                     $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
                     $msg .= ': ';
                     $msg .= trans('smartont::messages.ontNotDeletableFromOTO');

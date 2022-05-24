@@ -88,7 +88,7 @@ class Contract extends \BaseModel
 
         // adapt ruleset for smartont contract types (=OTO)
         $type = Request::get('type');
-        if (in_array($type, ['OTO', 'OTO_STORAGE'])) {
+        if (in_array($type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
             $rules['birthday'] = 'nullable';
             $rules['company'] = 'nullable';
             $rules['contract_start'] = 'nullable|date_format:Y-m-d';
@@ -246,7 +246,7 @@ class Contract extends \BaseModel
     public function get_bsclass()
     {
         // special case SmartOnt OTO
-        if (in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
+        if (in_array($this->type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
             return $this->getBsclassDfOto();
         }
 
@@ -275,7 +275,7 @@ class Contract extends \BaseModel
     public function label()
     {
         // special case SmartOnt OTO
-        if (in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
+        if (in_array($this->type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
             return "$this->sep_id – $this->omfd_id";
         }
 
@@ -829,7 +829,7 @@ class Contract extends \BaseModel
     public function daily_conversion()
     {
         // ignore SmartOnt OTO
-        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
+        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
             return;
         }
 
@@ -1126,7 +1126,7 @@ class Contract extends \BaseModel
         }
 
         // ignore SmartOnt OTO
-        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO', 'OTO_STORAGE'])) {
+        if (Module::collections()->has('SmartOnt') && in_array($this->type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
             return;
         }
 
@@ -1926,29 +1926,25 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Get related Phonenumbers of all modems as comma separated string
+     * Get possible types for form select.
+     *
+     * @author Patrick Reichel
      */
-    public function relatedPns(): string
+    public function getTypesForForm()
     {
-        if (! Module::collections()->has('ProvVoip')) {
-            return '';
+        if (! Module::collections()->has('SmartOnt')) {
+            return [];
         }
 
-        // Get some necessary relations by one DB query as first step to reduce further queries when accessing related models
-        $modems = $this->modems()->with([
-            'mtas:id,modem_id',
-            'mtas.phonenumbers:id,mta_id,country_code,prefix_number,number',
-        ])->get();
-
-        $this->setRelation('modems', $modems);
-        $pns = [];
-
-        foreach ($modems as $modem) {
-            foreach ($modem->related_phonenumbers() as $pn) {
-                $pns[] = $pn->asString();
-            }
+        if ('GESA' == config('smartont.flavor.active')) {
+            return [
+                '' => '',
+                'OTO_FTTH_FR' => 'OTO_FTTH_FR',
+                'OTO_OWN' => 'OTO_OWN',
+                'OTO_STORAGE' => 'OTO_STORAGE',
+            ];
         }
 
-        return implode(', ', $pns);
+        return [];
     }
 }
