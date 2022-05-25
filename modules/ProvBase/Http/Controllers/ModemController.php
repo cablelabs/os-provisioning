@@ -780,13 +780,11 @@ class ModemController extends \BaseController
             }
         }
 
-        // Log
         if (isset($cpeMac[0][0])) {
             $cpeMac = $cpeMac[0][0];
             $log = getSyslogEntries($cpeMac, '| tail -n 20 | tac');
+            $this->addIPv6LeaseInfo($cpeMac, $lease);
         }
-
-        $this->addIPv6LeaseInfo($cpeMac, $lease);
 
         // Ping
         if (isset($lease['text'][0])) {
