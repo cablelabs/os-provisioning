@@ -103,7 +103,7 @@ class Contract extends \BaseModel
             $rules['sep_id'] = 'string|unique';
         }
 
-        if ($type == 'OTO_STORAGE') {
+        if (in_array($type, ['OTO_OWN', 'OTO_STORAGE'])) {
             $rules['sep_id'] = 'nullable|string';
         }
 

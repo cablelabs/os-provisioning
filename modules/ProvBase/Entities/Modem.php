@@ -961,6 +961,12 @@ class Modem extends \BaseModel
             return;
         }
 
+        if ($this->isOnt()) {
+
+            // ATM no configfile needed (service_port_id taken directly later on)
+            return;
+        }
+
         /* Configfile */
         $dir = '/tftpboot/cm/';
         $cf_file = $dir."cm-$this->id.conf";
@@ -2232,6 +2238,18 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Check if modem ONT
+     *
+     * @return true if ONT, else false
+     *
+     * @author Patrick Reichel
+     */
+    public function isOnt()
+    {
+        return $this->configfile->device === 'ont';
+    }
+
+    /**
      * Synchronize radcheck with modem table, if PPPoE is used.
      *
      * @author Ole Ernst
@@ -2955,10 +2973,14 @@ class Modem extends \BaseModel
             // can move every ONT to every storage
             $contractsStorage = Contract::where('type', '=', 'OTO_STORAGE')->where('id', '<>', $this->contract->id)->get();
 
-            $contractsOTO = collect();
+            $contractsOwn = collect();
+            $contractsFtthFr = collect();
             if ('OTO_STORAGE' == $this->contract->type) {
-                $contractsOTO = \DB::table('contract')
-                    ->whereIn('type', ['OTO_FTTH_FR', 'OTO_OWN'])
+                $contractsOwn = \DB::table('contract')
+                    ->where('type', '=', 'OTO_OWN')
+                    ->get();
+                $contractsFtthFr = \DB::table('contract')
+                    ->where('type', '=', 'OTO_FTTH_FR')
                     ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
                     ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
                     // hint: there may be more than one ONT at an OTO (for different services)
@@ -2969,7 +2991,7 @@ class Modem extends \BaseModel
                     ->get();
             }
 
-            $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOTO);
+            $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOwn)->concat($contractsFtthFr);
             $ret = [];
             foreach ($contracts as $contract) {
                 if ('OTO_FTTH_FR' == $contract->type) {
