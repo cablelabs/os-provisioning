@@ -600,7 +600,7 @@ return [
         'cinTotal' => 'Total CIN Elements',
         'rpdOfflinePct' => '% RPD Offline',
         'cmOfflinePct' => '% CM Offline',
-        'cinOfflinePct' => '$ CIN Devices Offline',
+        'cinOfflinePct' => '% CIN Devices Offline',
     ],
     'markon' => 'Mark-On/Extra charge in %',
     'Message' => 'Message',
