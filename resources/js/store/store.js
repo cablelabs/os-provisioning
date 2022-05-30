@@ -21,5 +21,5 @@ export const store = reactive({
   minified: true,
   minifiedRight: true,
   panelRightKeys: [],
-  panelRightData: []
+  panelRightData: {}
 })

@@ -4,18 +4,21 @@ import { store } from './../store/store'
 
 const dTable = ref(null)
 
-let propData = document.querySelector('#rpds').dataset
-store.panelRightKeys = JSON.parse(propData.translatedFields)
+let propData = document.querySelector('#coremon-index-table').dataset
+store.panelRightKeys = JSON.parse(propData.headers)
 
 onMounted(() => {
   $(document).ready(function () {
-    dTable.value = $('#rpd-table').DataTable()
+    dTable.value = $('#coremon-datatable').DataTable()
     // reinit table
     dTable.value.destroy()
 
+    let panelKeys = Object.keys(store.panelRightKeys)
+
 		dTable.value.on('click', 'tr', function() {
 			for (let cell of this.cells) {
-        store.panelRightData[cell.cellIndex] = cell.innerText
+        let panelKey = panelKeys[cell.cellIndex]
+        store.panelRightData[panelKey] = cell.innerText
 
         store.minifiedRight = false
 			}

@@ -56,8 +56,8 @@ if (document.getElementById('sidebar-right')) {
   window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
 }
 
-if (document.getElementById('rpds')) {
-  window.rpd = createApp(CoreMonDataTable).mount('#rpds')
+if (document.getElementById('coremon-index-table')) {
+  window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
 }
 
 if (document.getElementById('vue-body')) {
