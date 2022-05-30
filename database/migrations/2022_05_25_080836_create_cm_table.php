@@ -30,7 +30,6 @@ class CreateCmTable extends BaseMigration
             $table->string('status', 64)->nullable();
             $table->timestamp('last_reg_time', null);
             $table->string('last_mac_state', 64)->nullable();
-            $table->string('if', 64)->nullable();
             $table->string('ds_data_service_grp', 64)->nullable();
             $table->string('us_data_service_grp', 64)->nullable();
             $table->string('ccap_core', 64)->nullable();
@@ -42,6 +41,7 @@ class CreateCmTable extends BaseMigration
             $table->string('reg_ver', 64)->nullable();
             $table->string('prim_sid', 64)->nullable();
             $table->string('reg_priv', 64)->nullable();
+            $table->string('cable_if', 64)->nullable();
         });
     }
 
