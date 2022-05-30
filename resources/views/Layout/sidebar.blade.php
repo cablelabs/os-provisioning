@@ -146,7 +146,7 @@
                                 'var' => 'rpd',
                             ],
                             'CPE' => [
-                                'route' => 'CoreMon.cpe.overview',
+                                'route' => 'CoreMon.cpe',
                                 'netTypeId' => 23,
                                 'var' => 'cpe',
                             ],
