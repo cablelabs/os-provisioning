@@ -24,7 +24,9 @@ class AdditionalRpdColumns extends BaseMigration
             $table->string('us_data_cont_profile')->nullable();
             $table->string('cin_rpa')->nullable();
             $table->string('cin_dpa')->nullable();
-            $table->string('cm_no_service_group')->nullable();
+            $table->string('ccap_core_name')->nullable();
+            $table->string('hubsite_name')->nullable();
+            $table->integer('cm_no_service_group')->nullable();
             $table->string('dpa')->nullable();
             $table->string('rpa1')->nullable();
             $table->string('rpa2')->nullable();
@@ -46,6 +48,8 @@ class AdditionalRpdColumns extends BaseMigration
             $table->dropColumn('us_data_cont_profile');
             $table->dropColumn('cin_rpa');
             $table->dropColumn('cin_dpa');
+            $table->dropColumn('ccap_core_name');
+            $table->dropColumn('hubsite_name');
             $table->dropColumn('cm_no_service_group');
             $table->dropColumn('dpa');
             $table->dropColumn('rpa1');
