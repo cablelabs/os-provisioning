@@ -361,6 +361,11 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\CoreMon\Entities\Link::class, 'from');
     }
 
+    public function rpds()
+    {
+        return $this->hasMany(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id');
+    }
+
     public function modems()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'netelement_id');
