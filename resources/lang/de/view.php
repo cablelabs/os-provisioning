@@ -264,6 +264,7 @@ return [
 
     // Responsive Navbar Button
     'Header_Dependencies'       => 'Abhängigkeiten',
+    'Header_Functions'          => 'Funktionen',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
