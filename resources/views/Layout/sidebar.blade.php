@@ -125,10 +125,10 @@
                                 'netTypeId' => 18,
                                 'var' => 'ccap',
                             ],
-                            'Core Leaf' => [
-                                'route' => 'CoreMon.core-leaf.overview',
+                            'DPA' => [
+                                'route' => 'CoreMon.dpa.overview',
                                 'netTypeId' => 19,
-                                'var' => 'leaf',
+                                'var' => 'dpa',
                             ],
                             'Spine' => [
                                 'route' => 'CoreMon.spine.overview',

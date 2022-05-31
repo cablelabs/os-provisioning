@@ -156,7 +156,7 @@
               "18": { // CCAP Core
                 "icon": "fa fa-building text-danger fa-lg"
               },
-              "19": { // Core Leaf
+              "19": { // DPA
                 "icon": "fa fa-leaf text-success fa-lg"
               },
               "20": { // Spine

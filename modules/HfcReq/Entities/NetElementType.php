@@ -47,7 +47,7 @@ class NetElementType extends \BaseModel
         16 => 'Market',
         17 => 'Hubsite',
         18 => 'CCAP Core',
-        19 => 'Core Leaf',
+        19 => 'DPA',
         20 => 'Spine',
         21 => 'Node Leaf',
         22 => 'RPD',
