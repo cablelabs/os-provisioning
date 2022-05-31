@@ -34,7 +34,7 @@ class CreateRpdTable extends BaseMigration
     {
         /**
          * off = offline; pct = percentage; part = partial; dg = downgrade;
-         * nc = nearcast; bc = broadcast; cont = controller
+         * nc = narrowcast; bc = broadcast; cont = controller
          */
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->increments('id');
