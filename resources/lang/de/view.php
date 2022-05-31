@@ -695,6 +695,7 @@ return [
         'Documents' => 'Dokumente',
         'dpicCards' => 'DPIC Karten',
         'dpicInterfaces' => 'DPIC Schnittstellen',
+        'dpic' => 'DPIC',
         'Entity Diagram' => 'ERD',
         'fiberNodes' => 'Fiber Nodes',
         'interfaces' => 'Schnittstellen',
@@ -708,6 +709,7 @@ return [
         'topology' => 'Topology',
         'util' => 'Auslastung',
         'usCh' => 'US Kanäle',
+        'cpe' => 'CPE Detail',
     ],
     'ticket' => [
         'comment' => [

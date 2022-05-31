@@ -477,7 +477,7 @@ const leaf = ref(0)
 const spine = ref(0)
 const node = ref(0)
 const rpd = ref(0)
-const cm = ref(0)
+const cpe = ref(0)
 
 function route(id, route) {
   if (!id) {
@@ -499,7 +499,7 @@ function ajaxRoute(route) {
   url.searchParams.set('node', node.value)
   url.searchParams.set('spine', spine.value)
   url.searchParams.set('rpd', rpd.value)
-  url.searchParams.set('cm', cm.value)
+  url.searchParams.set('cpe', cpe.value)
 
   return url.toString()
 }

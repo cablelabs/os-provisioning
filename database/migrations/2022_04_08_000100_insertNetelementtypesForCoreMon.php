@@ -38,7 +38,7 @@ class InsertNetelementtypesForCoreMon extends BaseMigration
             'Spine',
             'Node Leaf',
             'RPD',
-            'CM',
+            'CPE',
         ];
 
         $id = 15;

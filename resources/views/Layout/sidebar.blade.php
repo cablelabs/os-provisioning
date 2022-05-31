@@ -145,10 +145,10 @@
                                 'netTypeId' => 22,
                                 'var' => 'rpd',
                             ],
-                            'CM' => [
-                                'route' => 'CoreMon.cm.overview',
+                            'CPE' => [
+                                'route' => 'CoreMon.cpe.overview',
                                 'netTypeId' => 23,
-                                'var' => 'cm',
+                                'var' => 'cpe',
                             ],
                         ] as $netType => $options)
                             @include('Layout.sidebar._filter-select', [

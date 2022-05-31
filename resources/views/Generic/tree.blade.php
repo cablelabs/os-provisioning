@@ -168,7 +168,7 @@
               "22": { // RPD
                 "icon": "fa fa-toggle-right text-warning fa-lg"
               },
-              "23": { // CM
+              "23": { // CPE
                 "icon": "fa fa-hdd-o text-info fa-lg"
               },
               "default": {

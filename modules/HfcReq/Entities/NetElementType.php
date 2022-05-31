@@ -51,7 +51,7 @@ class NetElementType extends \BaseModel
         20 => 'Spine',
         21 => 'Node Leaf',
         22 => 'RPD',
-        23 => 'CM',
+        23 => 'CPE',
     ];
 
     public static function boot()
