@@ -135,10 +135,10 @@
                                 'netTypeId' => 20,
                                 'var' => 'ncs',
                             ],
-                            'Node Leaf' => [
-                                'route' => 'CoreMon.node-leaf.overview',
+                            'RPA' => [
+                                'route' => 'CoreMon.rpa.overview',
                                 'netTypeId' => 21,
-                                'var' => 'node',
+                                'var' => 'rpa',
                             ],
                             'RPD' => [
                                 'route' => 'CoreMon.rpd.overview',

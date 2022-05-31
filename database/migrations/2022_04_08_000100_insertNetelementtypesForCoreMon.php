@@ -36,7 +36,7 @@ class InsertNetelementtypesForCoreMon extends BaseMigration
             'CCAP Core',
             'DPA',
             'NCS',
-            'Node Leaf',
+            'RPA',
             'RPD',
             'CPE',
         ];

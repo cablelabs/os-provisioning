@@ -162,7 +162,7 @@
               "20": { // NCS
                 "icon": "fa fa-support text-info fa-lg"
               },
-              "21": { // Node Leaf
+              "21": { // RPA
                 "icon": "fa fa-leaf text-secondary fa-lg"
               },
               "22": { // RPD

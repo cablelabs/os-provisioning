@@ -475,7 +475,7 @@ const hubsite = ref(0)
 const ccap = ref(0)
 const dpa = ref(0)
 const ncs = ref(0)
-const node = ref(0)
+const rpa = ref(0)
 const rpd = ref(0)
 const cpe = ref(0)
 
@@ -496,7 +496,7 @@ function ajaxRoute(route) {
   url.searchParams.set('ccap', ccap.value)
   url.searchParams.set('dpa', dpa.value)
   url.searchParams.set('ncs', ncs.value)
-  url.searchParams.set('node', node.value)
+  url.searchParams.set('rpa', rpa.value)
   url.searchParams.set('rpd', rpd.value)
   url.searchParams.set('cpe', cpe.value)
 

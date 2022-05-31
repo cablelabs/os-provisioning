@@ -49,7 +49,7 @@ class NetElementType extends \BaseModel
         18 => 'CCAP Core',
         19 => 'DPA',
         20 => 'NCS',
-        21 => 'Node Leaf',
+        21 => 'RPA',
         22 => 'RPD',
         23 => 'CPE',
     ];
