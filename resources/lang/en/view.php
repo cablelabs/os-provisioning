@@ -695,6 +695,7 @@ return [
         'Documents' => 'Dokuments',
         'dpicCards' => 'DPIC Cards',
         'dpicInterfaces' => 'DPIC Interfaces',
+        'dpic' => 'DPIC',
         'Entity Diagram' => 'ERD',
         'fiberNodes' => 'Fiber Nodes',
         'interfaces' => 'Interfaces',
