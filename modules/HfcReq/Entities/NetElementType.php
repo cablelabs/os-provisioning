@@ -45,7 +45,7 @@ class NetElementType extends \BaseModel
         14 => 'Node',
         15 => 'RKM-Server',
         16 => 'Market',
-        17 => 'Hub',
+        17 => 'Hubsite',
         18 => 'CCAP Core',
         19 => 'Core Leaf',
         20 => 'Spine',

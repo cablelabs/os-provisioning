@@ -32,7 +32,7 @@ class InsertNetelementtypesForCoreMon extends BaseMigration
     {
         $netelementtypes = [
             'Market',
-            'Hub',
+            'Hubsite',
             'CCAP Core',
             'Core Leaf',
             'Spine',

@@ -471,7 +471,7 @@ function setNetActive(id) {
 
 const network = ref(0)
 const market = ref(0)
-const hub = ref(0)
+const hubsite = ref(0)
 const ccap = ref(0)
 const leaf = ref(0)
 const spine = ref(0)
@@ -492,7 +492,7 @@ function ajaxRoute(route) {
 
   url.searchParams.set('network', network.value)
   url.searchParams.set('market', market.value)
-  url.searchParams.set('hub', hub.value)
+  url.searchParams.set('hubsite', hubsite.value)
   url.searchParams.set('ccap', ccap.value)
   url.searchParams.set('leaf', leaf.value)
   url.searchParams.set('spine', spine.value)

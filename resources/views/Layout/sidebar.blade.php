@@ -115,10 +115,10 @@
                                 'netTypeId' => 16,
                                 'var' => 'market',
                             ],
-                            'Hub' => [
-                                'route' => 'CoreMon.hub.overview',
+                            'Hubsite' => [
+                                'route' => 'CoreMon.hubsite.overview',
                                 'netTypeId' => 17,
-                                'var' => 'hub',
+                                'var' => 'hubsite',
                             ],
                             'CCAP Core' => [
                                 'route' => 'CoreMon.ccap-core.overview',

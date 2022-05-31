@@ -150,7 +150,7 @@
               "16": { // Market
                 "icon": "fa fa-cart-plus text-success fa-lg"
               },
-              "17": { // Hub
+              "17": { // Hubsite
                 "icon": "fa fa-forumbee text-success fa-lg"
               },
               "18": { // CCAP Core
