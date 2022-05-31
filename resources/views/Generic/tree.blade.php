@@ -159,7 +159,7 @@
               "19": { // DPA
                 "icon": "fa fa-leaf text-success fa-lg"
               },
-              "20": { // Spine
+              "20": { // NCS
                 "icon": "fa fa-support text-info fa-lg"
               },
               "21": { // Node Leaf

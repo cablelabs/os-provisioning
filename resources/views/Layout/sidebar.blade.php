@@ -130,10 +130,10 @@
                                 'netTypeId' => 19,
                                 'var' => 'dpa',
                             ],
-                            'Spine' => [
-                                'route' => 'CoreMon.spine.overview',
+                            'NCS' => [
+                                'route' => 'CoreMon.ncs.overview',
                                 'netTypeId' => 20,
-                                'var' => 'spine',
+                                'var' => 'ncs',
                             ],
                             'Node Leaf' => [
                                 'route' => 'CoreMon.node-leaf.overview',

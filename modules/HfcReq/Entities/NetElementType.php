@@ -48,7 +48,7 @@ class NetElementType extends \BaseModel
         17 => 'Hubsite',
         18 => 'CCAP Core',
         19 => 'DPA',
-        20 => 'Spine',
+        20 => 'NCS',
         21 => 'Node Leaf',
         22 => 'RPD',
         23 => 'CPE',
