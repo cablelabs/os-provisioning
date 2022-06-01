@@ -294,17 +294,26 @@ class Kernel extends ConsoleKernel
         // TODO: run Kernel.php and supervisor queue workers as user 'apache'
         exec('chown -R apache:apache '.storage_path('framework/cache'));
 
-        if (\Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
+        if (\Module::collections()->has('SmartOnt')) {
 
-            // get updates for pending DfSubscriptions
-            $schedule->call(function () {
-                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\DfSubscriptionGetterJob('pending'));
-            })->dailyAt(date('H:i', strtotime("03:13 + $time_offset min")));
+           if (config('smartont.flavor.hasDreamfiberSubscriptions')) {
 
-            // get updates for OTO from CSV file
-            $schedule->call(function () {
-                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OtoFromCsvUpdaterJob());
-            })->dailyAt('06:43');
+                // get updates for pending DfSubscriptions
+                $schedule->call(function () {
+                    Queue::pushOn('low', new \Modules\SmartOnt\Jobs\DfSubscriptionGetterJob('pending'));
+                })->dailyAt(date('H:i', strtotime("03:13 + $time_offset min")));
+
+                // get updates for OTO from CSV file
+                $schedule->call(function () {
+                    Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OtoFromCsvUpdaterJob());
+                })->dailyAt('06:43');
+           }
+
+           if ('LFO' == config('smartont.flavor.active')) {
+                $schedule->call(function () {
+                    Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
+                })->everyFiveMinutes();
+           }
         }
     }
 
