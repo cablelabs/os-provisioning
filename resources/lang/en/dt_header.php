@@ -346,7 +346,7 @@ return [
         'street' => 'Street',
         'zip' => 'ZIP',
     ],
-    'cm' => [
+    'cpe' => [
         'cable_if' => 'Cable Interface',
         'ccap_core' => 'CCAP Core Name',
         'core_ipv6' => "CM Core's Core IPv6",

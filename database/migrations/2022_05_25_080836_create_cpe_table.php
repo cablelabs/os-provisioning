@@ -7,7 +7,7 @@ class CreateCmTable extends BaseMigration
 {
     public $migrationScope = 'system';
 
-    protected $tableName = 'cms';
+    protected $tableName = 'cpes';
 
     /**
      * Run the migrations.
