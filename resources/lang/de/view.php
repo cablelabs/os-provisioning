@@ -709,7 +709,7 @@ return [
         'topology' => 'Topology',
         'util' => 'Auslastung',
         'usCh' => 'US Kanäle',
-        'cpe' => 'CPE Detail',
+        'cpe' => 'CPE Details',
     ],
     'ticket' => [
         'comment' => [
