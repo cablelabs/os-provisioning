@@ -35,7 +35,7 @@
     {{-- detach all button --}}
     <div>
         {!! Form::open(['route' => [$model.'.detach_all', $view_var->id], 'method' => 'delete']) !!}
-            {!! Form::submit(trans('view.Detach all', ['model' => $description[$model]]), ['!class' => 'btn btn-danger', 'style' => 'simple']) !!}
+            {!! Form::submit(trans('view.Detach all', ['model' => $description[$model]]), ['class' => 'btn btn-danger', 'style' => 'simple']) !!}
         {!! Form::close() !!}
     </div>
 
