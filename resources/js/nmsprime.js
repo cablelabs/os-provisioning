@@ -320,7 +320,7 @@ function rezizeTextareas() {
     })
 }
 
-function debounce(func, wait, immediate) {
+window.debounce = function(func, wait, immediate) {
   let timeout
   return function () {
     let context = this,
