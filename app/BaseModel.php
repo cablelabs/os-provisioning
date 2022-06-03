@@ -740,7 +740,10 @@ class BaseModel extends Eloquent
                 return $start < strtotime('midnight first day of next month', $time) && (! $end || $end >= $time);
 
             case 'quarterly':
-                // TODO: implement
+                /* TODO: implement - 2 cases
+                    * quarterly (quartalsweise): 1-3, 4-6, 7-9, 10-12 -> was already charged and wont be valid in next settlementrun
+                    * quarter of a year (vierteljährlich): always 3 months from item start ->
+                */
                 break;
 
             case 'yearly':
