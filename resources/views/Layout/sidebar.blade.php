@@ -394,8 +394,8 @@
                                                 }"
                                                 :style="(!store.minified ? 'transition:max-height .3s linear;' : '') +
                                                 'overflow:hidden;list-style-type: none;background: #1a2229;'">
-                                                <template v-for="cluster in netelement.clusters">
-                                                    <li :id="'cluster_' + cluster.id" :key="cluster.id"
+                                                <template v-for="cluster in netelement.clusters" :key="cluster.id">
+                                                    <li :id="'cluster_' + cluster.id"
                                                         v-on:click="setNetActive(cluster.id)"
                                                         :class="{
                                                             active: (clickedNetelement == cluster.id),

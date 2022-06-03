@@ -30,7 +30,7 @@ onMounted(() => {
 const props = defineProps({
   netelements: [Object, Array],
   favorites: [Object, Array],
-  netCount: Number
+  netCount: [Number, String]
 })
 
 const loopNetElements = computed(() => {
