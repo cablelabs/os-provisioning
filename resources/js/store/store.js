@@ -22,5 +22,6 @@ export const store = reactive({
   minifiedRight: true,
   panelRightKeys: [],
   panelRightData: {},
-  overlay: false
+  overlay: false,
+  hfcStorageRequest: {}
 })

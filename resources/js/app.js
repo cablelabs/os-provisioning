@@ -33,6 +33,9 @@ import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import CoreMonDataTable from './components/CoreMonDataTable.vue'
 import overlay from "./components/Overlay.vue"
+import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
+import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
+import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
 
 window.main = createApp(app)
   .component('overlay', overlay)
@@ -64,4 +67,18 @@ if (document.getElementById('coremon-index-table')) {
 
 if (document.getElementById('vue-body')) {
   window.real = createApp(Analysis).mount('#vue-body')
+}
+
+if (document.getElementById('map-actions')) {
+  window.mapActions = createApp(HfcBaseMapActions).mount('#map-actions')
+}
+
+if (document.getElementById('HfcBase-history-table')) {
+  window.hfcBaseHistoryTable = createApp(HfcBaseHistoryTable).use(snotify)
+    .mount('#HfcBase-history-table')
+}
+
+if (document.getElementById('HfcBase-history-slider')) {
+  window.hfcBaseHistorySlider = createApp(HfcBaseHistorySlider)
+    .mount('#HfcBase-history-slider')
 }
