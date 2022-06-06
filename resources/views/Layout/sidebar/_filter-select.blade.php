@@ -13,7 +13,7 @@
                 data-allow-clear="true"
                 :ajax-route="ajaxRoute('{{ route('Sidebar.select2', ['nettype' => $options['netTypeId']] ) }}')"
                 @if (isset($ids) && $net = $ids->where('netelementtype.base_type_id', $options['netTypeId']))
-                    :initial="{{ $net->first()?->id }}"
+                    :initial="{{ $net->first()?->id ?? 0 }}"
                 @endif
             >
                 @if (isset($ids) && $net = $ids->where('netelementtype.base_type_id', $options['netTypeId']))
