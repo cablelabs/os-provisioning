@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateUtilizationTable extends BaseMigration
 {
-    public $migrationScope = 'system';
+    public $migrationScope = 'database';
 
     protected $tableName = 'utilizations';
 

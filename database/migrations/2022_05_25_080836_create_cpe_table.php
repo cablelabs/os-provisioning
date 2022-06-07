@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCmTable extends BaseMigration
+class CreateCpeTable extends BaseMigration
 {
-    public $migrationScope = 'system';
+    public $migrationScope = 'database';
 
     protected $tableName = 'cpes';
 

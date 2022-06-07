@@ -1190,3 +1190,14 @@ textarea.select2-search__field {
     color: white;
     opacity: 1;
 }
+
+#coremon-datatable_filter label .form-control {
+    background: #2f383e;
+    border-radius: 30px;
+    border: 2px solid #2f383e;
+    font-family: FontAwesome, Arial;
+    color: white;
+    margin-bottom: 10px;
+    display: block;
+    float: right;
+}

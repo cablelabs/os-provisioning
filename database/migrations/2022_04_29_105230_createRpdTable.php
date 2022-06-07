@@ -21,7 +21,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateRpdTable extends BaseMigration
 {
-    public $migrationScope = 'system';
+    public $migrationScope = 'database';
 
     protected $tableName = 'rpds';
 
