@@ -1288,29 +1288,6 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Get all tariffs (Items of product type Internet, Voip, TV)
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
-    public function getTariffs()
-    {
-        if (! Module::collections()->has('BillingBase')) {
-            return;
-        }
-
-        return $this->items()->join('product', 'item.product_id', '=', 'product.id')
-            ->where(function ($query) {
-                $query
-                ->where('product.type', 'Internet')
-                ->orWhere('product.type', 'Voip');
-                // ->orWhere('product.type', 'TV');
-            })
-            ->select('item.*', 'product.type as type')
-            ->with('product')
-            ->get();
-    }
-
-    /**
      * Returns valid sepa mandate for specific timespan
      *
      * @param 	string 		Timespan - LAST (!!) 'year'/'month' or 'now
