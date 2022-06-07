@@ -502,4 +502,36 @@ function ajaxRoute(route) {
 
   return url.toString()
 }
+
+function updateref(payload) {
+  switch(payload.ref) {
+    case 'network':
+      network.value = payload.value;
+      break;
+    case 'market':
+      market.value = payload.value;
+      break;
+    case 'hubsite':
+      hubsite.value = payload.value;
+      break;
+    case 'ccap':
+      ccap.value = payload.value;
+      break;
+    case 'dpa':
+      dpa.value = payload.value;
+      break;
+    case 'ncs':
+      ncs.value = payload.value;
+      break;
+    case 'rpa':
+      rpa.value = payload.value;
+      break;
+    case 'rpd':
+      rpd.value = payload.value;
+      break;
+    case 'cpe':
+      cpe.value = payload.value;
+      break;
+  }
+}
 </script>

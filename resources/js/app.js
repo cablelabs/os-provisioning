@@ -32,8 +32,10 @@ import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import CoreMonDataTable from './components/CoreMonDataTable.vue'
+import overlay from "./components/Overlay.vue"
 
 window.main = createApp(app)
+  .component('overlay', overlay)
   .component('select2', select2Component)
   .component('skeleton', skeletonComponent)
   .use(snotify)

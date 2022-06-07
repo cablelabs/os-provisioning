@@ -1,23 +1,29 @@
-<div>
+<div class="col-item">
     <div class="mb-2">{{ $name }}:</div>
     <div>
         @php
             $$name = Modules\HfcReq\Entities\NetElement::where('netelementtype_id', $options['netTypeId'])->get();
         @endphp
         <div class="flex items-center text-gray-900">
+            @php
+            $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
+            @endphp
             <select2 id="{{ $name }}"
                 class="select2-ajax"
                 name="{{ $name }}"
                 v-model="{{ $options['var'] }}"
+                data-model="{{ $options['var'] }}"
+                @updateref="updateref"
                 data-placeholder="Choose a {{ $name }}"
                 data-allow-clear="true"
                 :ajax-route="ajaxRoute('{{ route('Sidebar.select2', ['nettype' => $options['netTypeId']] ) }}')"
-                @if (isset($ids) && $net = $ids->where('netelementtype.base_type_id', $options['netTypeId']))
-                    :initial="{{ $net->first()?->id ?? 0 }}"
+                @if ($net)
+                    :initial="{{ $net->id ?? 0 }}"
+                    data-net="{{$net->id}}"
                 @endif
             >
-                @if (isset($ids) && $net = $ids->where('netelementtype.base_type_id', $options['netTypeId']))
-                    <option value="{{ $net->first()?->id }}" selected="selected">{{ $net->first()?->name }}</option>
+                @if ($net)
+                    <option value="{{ $net->id }}" selected="selected">{{ $net->name }}</option>
                 @endif
             </select2>
             <a :href="route({{ $options['var'] }}, '{{ route($options['route'], ['netelement' => 'NETELEMENT_ID'])}}')">

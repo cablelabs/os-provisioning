@@ -153,91 +153,98 @@ var initSelect2Fields = function () {
 
   if ($('.select2-ajax').length) {
     $('.select2-ajax').each(function () {
-      let searchTerm = ''
-      let full = false
-
-      // credit to https://github.com/select2/select2/issues/3902#issuecomment-708772383
-      $(this)
-        .on('select2:closing', function (e) {
-          // Preserve typed value
-          searchTerm = $('.select2-search input').prop('value')
-        })
-        .on('select2:open', function (e) {
-          // Fill preserved value back into Select2 input field and trigger the AJAX loading (if any)
-          let search = $('.select2-search input')
-            .val(searchTerm)
-            .trigger('change')
-
-          if (searchTerm) {
-            search.trigger('input')
-          }
-
-          if (full) {
-            $('.loading-results').hide()
-          }
-        })
-        .on('select2:select', function (e) {
-          $('.select2-search input').val('').trigger('change')
-        })
-
-      $(this).select2({
-        language: lang,
-        search: '',
-        placeholder: $(this).find('option[value=""]').text(),
-        ajax: {
-          url: $(this).attr('ajax-route'),
-          type: 'get',
-          dataType: 'json',
-          delay: 500,
-          transport: function (params, success, failure) {
-            if (
-              (params.data.search === searchTerm ||
-                params.data.search === undefined) &&
-              full
-            ) {
-              return false
-            }
-
-            full = false
-
-            let $request = $.ajax(params)
-            $request.then(success)
-            $request.fail(failure)
-
-            return $request
-          },
-          data: function (params) {
-            return {
-              search: params.term, // search term
-              page: params.page || 1
-            }
-          },
-          processResults: function (response) {
-            for (element in response.data) {
-              if (response.data[element].count) {
-                response.data[element].text +=
-                  ' (' + response.data[element].count + ')'
-              }
-            }
-
-            if (response.current_page == response.last_page) {
-              full = true
-            }
-
-            return {
-              results: response.data,
-              pagination: {
-                more: !!response.next_page_url
-              }
-            }
-          },
-          cache: false
-        }
-      })
+      window.initAjaxSelect2($(this), lang)
     })
   }
 
   $('select').not('.select2-ajax').select2({ language: lang })
+}
+
+window.initAjaxSelect2 = function (item, lang = null) {
+  if(!lang) {
+    lang = document.documentElement.lang
+  }
+  let searchTerm = ''
+  let full = false
+
+  // credit to https://github.com/select2/select2/issues/3902#issuecomment-708772383
+  item
+    .on('select2:closing', function (e) {
+      // Preserve typed value
+      searchTerm = $('.select2-search input').prop('value')
+    })
+    .on('select2:open', function (e) {
+      // Fill preserved value back into Select2 input field and trigger the AJAX loading (if any)
+      let search = $('.select2-search input')
+        .val(searchTerm)
+        .trigger('change')
+
+      if (searchTerm) {
+        search.trigger('input')
+      }
+
+      if (full) {
+        $('.loading-results').hide()
+      }
+    })
+    .on('select2:select', function (e) {
+      $('.select2-search input').val('').trigger('change')
+    })
+
+  item.select2({
+    language: lang,
+    search: '',
+    placeholder: item.find('option[value=""]').text(),
+    ajax: {
+      url: item.attr('ajax-route'),
+      type: 'get',
+      dataType: 'json',
+      delay: 500,
+      transport: function (params, success, failure) {
+        if (
+          (params.data.search === searchTerm ||
+            params.data.search === undefined) &&
+          full
+        ) {
+          return false
+        }
+
+        full = false
+
+        let $request = $.ajax(params)
+        $request.then(success)
+        $request.fail(failure)
+
+        return $request
+      },
+      data: function (params) {
+        return {
+          search: params.term, // search term
+          page: params.page || 1
+        }
+      },
+      processResults: function (response) {
+        for (element in response.data) {
+          if (response.data[element].count) {
+            response.data[element].text +=
+              ' (' + response.data[element].count + ')'
+          }
+        }
+
+        if (response.current_page == response.last_page) {
+          full = true
+        }
+
+        return {
+          results: response.data,
+          pagination: {
+            more: !!response.next_page_url
+          }
+        }
+      },
+      cache: false
+    }
+  })
 }
 
 var positionErdPopover = function () {
