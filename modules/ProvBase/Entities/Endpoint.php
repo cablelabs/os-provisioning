@@ -18,6 +18,7 @@
 
 namespace Modules\ProvBase\Entities;
 
+use DB;
 use Request;
 
 class Endpoint extends \BaseModel
@@ -144,6 +145,19 @@ class Endpoint extends \BaseModel
         return $query->first();
 
         // return new \Illuminate\Database\Eloquent\Relations\BelongsTo($query, new NetGw, null, 'deleted_at', 'netGw');
+    }
+
+    /**
+     * return all QoS Objects for CPEs
+     */
+    public function qualities()
+    {
+        return DB::table('qos')->whereNull('deleted_at')->get();
+    }
+
+    public function qos()
+    {
+        return $this->belongsTo(Qos::class);
     }
 
     /**

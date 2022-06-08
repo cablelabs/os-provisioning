@@ -18,6 +18,9 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Modules\ProvBase\Entities\Qos;
+use Nwidart\Modules\Facades\Module;
+
 class EndpointController extends \BaseController
 {
     protected $index_create_allowed = false;
@@ -32,16 +35,84 @@ class EndpointController extends \BaseController
         }
 
         // label has to be the same like column in sql table
-        return [
-            ['form_type' => 'text', 'name' => 'hostname', 'description' => 'Hostname', 'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name],
-            ['form_type' => 'text', 'name' => 'modem_id', 'description' => 'Modem', 'hidden' => 1],
-            ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'help' => trans('helper.endpointMac').' '.trans('helper.mac_formats')],
-            ['form_type' => 'checkbox', 'name' => 'fixed_ip', 'description' => 'Fixed IP', 'value' => '1', 'help' => trans('helper.fixed_ip_warning')],
-            ['form_type' => 'text', 'name' => 'ip', 'description' => 'Fixed IP', 'checkbox' => 'show_on_fixed_ip'],
-            ['form_type' => 'text', 'name' => 'prefix', 'description' => trans('messages.prefix').' (IPv6)', 'checkbox' => 'show_on_fixed_ip', 'options' => ['placeholder' => 'fd00:1::/64']],
-            ['form_type' => 'text', 'name' => 'add_reverse', 'description' => 'Additional rDNS record', 'checkbox' => 'show_on_fixed_ip', 'help' => trans('helper.addReverse')],
-            ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
+        $ret = [
+            [
+                'form_type' => 'text',
+                'name' => 'hostname',
+                'description' => 'Hostname',
+                'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'modem_id',
+                'description' => 'Modem',
+                'hidden' => 1,
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'mac',
+                'description' => 'MAC Address',
+                'options' => [
+                    'placeholder' => 'AA:BB:CC:DD:EE:FF',
+                ],
+                'help' => trans('helper.endpointMac').' '.trans('helper.mac_formats'),
+            ],
+            [
+                'form_type' => 'checkbox',
+                'name' => 'fixed_ip',
+                'description' => 'Fixed IP',
+                'value' => '1',
+                'help' => trans('helper.fixed_ip_warning'),
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'ip',
+                'description' => 'Fixed IP',
+                'checkbox' => 'show_on_fixed_ip',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'prefix',
+                'description' => trans('messages.prefix').' (IPv6)',
+                'checkbox' => 'show_on_fixed_ip',
+                'options' => [
+                    'placeholder' => 'fd00:1::/64',
+                ],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'add_reverse',
+                'description' => 'Additional rDNS record',
+                'checkbox' => 'show_on_fixed_ip',
+                'help' => trans('helper.addReverse'),
+            ],
+            [
+                'form_type' => 'textarea',
+                'name' => 'description',
+                'description' => 'Description',
+            ],
         ];
+
+        $qos = $model->html_list($model->qualities(), 'name', true);
+        $qos[null] = 'Same as ONT';
+        if (Module::collections()->has('SmartOnt')) {
+            $ret[] = [
+                'form_type' => 'select',
+                'name' => 'qos_id',
+                'description' => 'QoS',
+                'value' => $qos,
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'device_id',
+                'description' => 'Device ID',
+                'options' => [
+                    'readonly',
+                ],
+            ];
+        }
+
+        return $ret;
     }
 
     protected function prepare_input($data)

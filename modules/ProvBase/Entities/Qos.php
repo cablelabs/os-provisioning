@@ -46,6 +46,11 @@ class Qos extends \BaseModel
         return $this->hasMany(Modem::class);
     }
 
+    public function endpoint()
+    {
+        return $this->hasMany(Endpoint::class);
+    }
+
     public function prices()
     {
         return $this->hasMany(\Modules\BillingBase\Entities\Price::class);
