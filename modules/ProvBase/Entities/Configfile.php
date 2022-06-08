@@ -627,4 +627,25 @@ class Configfile extends \BaseModel
             ['time', 'device_id', 'in_octets', 'out_octets']
         ));
     }
+
+    /**
+     * Checks if a configfile is used at a modem
+     *
+     * @author Patrick Reichel
+     */
+    public function isInUseOnModem()
+    {
+        $modemCount = Modem::where('configfile_id', '=', $this->id)->count();
+        return (0 == $modemCount) ? False : True;
+    }
+
+    /**
+     * Checks if a configfile is used
+     *
+     * @author Patrick Reichel
+     */
+    public function isInUse()
+    {
+        return $this->isInUseOnModem();
+    }
 }

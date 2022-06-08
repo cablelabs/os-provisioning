@@ -141,6 +141,39 @@ class Qos extends \BaseModel
     }
 
     /**
+     * Checks if a QoS is used at a modem
+     *
+     * @author Patrick Reichel
+     */
+    public function isInUseOnModem()
+    {
+        $modemCount = Modem::where('qos_id', '=', $this->id)->count();
+        return (0 == $modemCount) ? False : True;
+    }
+
+    /**
+     * Checks if a QoS is used at a endpoint
+     *
+     * @author Patrick Reichel
+     */
+    public function isInUseOnEndpoint()
+    {
+        $endpointCount = endpoint::where('qos_id', '=', $this->id)->count();
+        return (0 == $endpointCount) ? False : True;
+    }
+
+    /**
+     * Checks if a QoS is used
+     *
+     * @author Patrick Reichel
+     */
+    public function isInUse()
+    {
+        return ($this->isInUseOnModem() || $this->isInUseOnEndpoint());
+    }
+
+
+    /**
      * BOOT: init quality observer
      */
     public static function boot()
