@@ -564,6 +564,11 @@ return [
     'Assign' => 'Assign :model',
     'BillingBase' => 'Billing',
     'Ccc' => 'Customer Control Center',
+    'ccap' => [
+        'serial_num' => 'Serial number',
+        'model' => 'Model',
+        'configCompliance' => 'Configuration Compliance',
+    ],
     'commandCenter' => 'Command Center',
     'company' => 'Company',
     'Credit' => 'Credit',

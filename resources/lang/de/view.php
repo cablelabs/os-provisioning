@@ -563,6 +563,11 @@ return [
     'analysis' => 'Analyse',
     'Assign' => ':model hinzufügen',
     'BillingBase' => 'Billing',
+    'ccap' => [
+        'serial_num' => 'Seriennummer',
+        'model' => 'Modell',
+        'configCompliance' => 'Konfigurationsübereinstimmung',
+    ],
     'Ccc' => 'Kundenkontrollzentrum',
     'commandCenter' => 'Kommandozentrale',
     'company' => 'Firma',
