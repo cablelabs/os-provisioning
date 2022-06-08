@@ -18,9 +18,11 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Modules\ProvBase\Entities\Configfile;
-use Modules\ProvBase\Entities\Modem;
 use Queue;
+use Illuminate\Support\Facades\Log;
+use Nwidart\Modules\Facades\Module;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Configfile;
 
 /**
  * Configfile Observer Class
@@ -36,6 +38,23 @@ class ConfigfileObserver
     {
         $this->updateProvision($configfile, false);
         // When a Configfile was created we can not already have a relation - so dont call command
+    }
+
+    public function updating($configfile)
+    {
+        // SmartOnt: To not confuse the provsioning logic
+        // changes of certain fields are not allowed
+        if (Module::collections()->has('SmartOnt')) {
+            if (! $configfile->isInUse()) {
+                return;
+            }
+            $unchangables = [
+                'device',
+                'service_profile_id',
+            ];
+            $configfile->restoreUnchangeableFields($unchangables, 'Configfile is in use');
+            return;
+        }
     }
 
     public function updated($configfile)

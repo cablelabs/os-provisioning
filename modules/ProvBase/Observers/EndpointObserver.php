@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Illuminate\Support\Facades\Log;
+use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadReply;
@@ -52,6 +54,22 @@ class EndpointObserver
         if (! $endpoint->fixed_ip) {
             $endpoint->ip = null;
         }
+
+        // SmartOnt: To not confuse the provsioning logic
+        // changes of certain fields are not allowed
+        if (Module::collections()->has('SmartOnt')) {
+            // check if endpoint is provisioned
+            if (! $endpoint->device_id) {
+                return;
+            }
+            $unchangables = [
+                'mac',
+                'qos_id'
+            ];
+            $endpoint->restoreUnchangeableFields($unchangables);
+            return;
+        }
+
         $endpoint->nsupdate(true);
     }
 

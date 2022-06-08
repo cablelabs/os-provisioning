@@ -18,6 +18,8 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Illuminate\Support\Facades\Log;
+use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\RadGroupReply;
 
 /**
@@ -41,6 +43,28 @@ class QosObserver
                 }
                 self::addRadGroupReply($qos, $attribute, $key);
             }
+        }
+    }
+
+    public function updating($qos)
+    {
+        // SmartOnt: To not confuse the provsioning logic
+        // changes of certain fields are not allowed
+        if (Module::collections()->has('SmartOnt')) {
+            if (! $qos->isInUse()) {
+                return;
+            }
+            $unchangables = [
+                'type',
+                'vlan_id',
+                'ont_line_profile_id',
+                'service_profile_id',
+                'gem_port',
+                'traffic_table_in',
+                'traffic_table_out',
+            ];
+            $qos->restoreUnchangeableFields($unchangables, 'QoS is in use');
+            return;
         }
     }
 

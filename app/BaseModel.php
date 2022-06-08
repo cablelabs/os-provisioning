@@ -18,15 +18,15 @@
 
 namespace App;
 
-use App\Observers\BaseObserver;
 use DB;
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
+use Str;
 use Module;
 use Schema;
 use Session;
-use Str;
+use App\Observers\BaseObserver;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models
@@ -952,5 +952,33 @@ class BaseModel extends Eloquent
         // GUI output
         $msg = trans(strtoupper($type)).': '.trans($msg, $transArgs);
         $this->addAboveMessage($msg, $type, $place);
+    }
+
+    /**
+     * Restore unchangeable fields to original values, warn in GUI
+     *
+     * @param unchangables array of fields not allowed to change
+     * @param reason optional reason to be shown/logged
+     *
+     * @return number of restored fields
+     *
+     * @author Patrick Reichel
+     */
+    public function restoreUnchangeableFields($unchangables, $reason='')
+    {
+        $restored = 0;
+        foreach ($unchangables as $field) {
+            if ($this->isDirty($field)) {
+                $restored++;
+                $msg = "Change of $field is not allowed – restoring original value!";
+                if ($reason) {
+                    $msg .= " Reason: $reason";
+                }
+                $this->addAboveMessage($msg, 'warning');
+                Log::warning($msg);
+                $this->{$field} = $this->getOriginal($field);
+            }
+        }
+        return $restored;
     }
 }

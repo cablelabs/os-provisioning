@@ -97,8 +97,15 @@ class ModemObserver
         $diff = $modem->getDirty();
 
         // special handling for SmartONT devices
-        if (\Module::collections()->has('SmartOnt')) {
+        if (Module::collections()->has('SmartOnt')) {
             if ('smartont' == $modem->qos->type) {
+                if ($modem->service_port_id) {
+                    $unchangables = [
+                        'qos_id',
+                        'configfile_id',
+                    ];
+                    $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
+                }
                 if (array_key_exists('contract_id', $diff)) {
                     $modem->salutation = $modem->contract->salutation;
                     $modem->company = $modem->contract->company;
