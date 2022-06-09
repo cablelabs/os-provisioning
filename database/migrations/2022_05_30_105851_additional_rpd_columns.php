@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 
 class AdditionalRpdColumns extends BaseMigration
 {
-    public $migrationScope = 'system';
+    public $migrationScope = 'database';
 
-    protected $tableName = 'rpds';
+    protected $tableName = 'rpd';
 
     /**
      * Run the migrations.

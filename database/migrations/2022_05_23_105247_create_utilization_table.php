@@ -7,7 +7,7 @@ class CreateUtilizationTable extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'utilizations';
+    protected $tableName = 'utilization';
 
     /**
      * Run the migrations.

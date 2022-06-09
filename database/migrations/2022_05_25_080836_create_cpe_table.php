@@ -7,7 +7,7 @@ class CreateCpeTable extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'cpes';
+    protected $tableName = 'cpe';
 
     /**
      * Run the migrations.
