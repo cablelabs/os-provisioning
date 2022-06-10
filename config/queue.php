@@ -52,7 +52,7 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'connection' => env('QUEUE_DRIVER_DATABASE_CONNECTION', 'mysql'),
+            'connection' => env('QUEUE_DRIVER_DATABASE_CONNECTION', 'pgsql'),
             'table' => 'jobs',
             'queue' => 'medium',
             'retry_after' => 10101, // should be slightly greater than “--timeout” value in supervisord config
