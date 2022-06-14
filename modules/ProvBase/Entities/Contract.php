@@ -100,7 +100,7 @@ class Contract extends \BaseModel
             $rules['number3'] = 'nullable';
             $rules['number4'] = 'nullable';
             $rules['salutation'] = 'nullable';
-            $rules['sep_id'] = 'string|unique';
+            $rules['sep_id'] = 'string|unique:contract,sep_id,'.$id.',id,deleted_at,NULL';
         }
 
         if (in_array($type, ['OTO_OWN', 'OTO_STORAGE'])) {
