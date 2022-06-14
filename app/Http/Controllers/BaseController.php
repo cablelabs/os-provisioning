@@ -341,7 +341,7 @@ class BaseController extends Controller
     }
 
     /**
-     * Check if tab of relations (defined in view_has_many()) is already defined tabs from editTabs()
+     * Check if tab of relations (defined in view_has_many()) is already defined in tabs from editTabs()
      *
      * @return bool
      */
@@ -1005,7 +1005,10 @@ class BaseController extends Controller
         // view_has_many should actually be a controller function!
         $relations = $view_var->view_has_many();
         $tabs = collect($this->prepare_tabs($relations, $this->editTabs($view_var)));
-        $firstTab = $tabs->reject(fn ($tab) => isset($tab['route']))->first()['name'];
+        $firstTab = $tabs->reject(fn ($tab) => isset($tab['route']))->first();
+        if ($firstTab) {
+            $firstTab = $firstTab['name'];
+        }
 
         // check if there is additional data to be passed to blade template
         // on demand overwrite base method getAdditionalDataForEditView($model)
