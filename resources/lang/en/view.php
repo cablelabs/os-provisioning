@@ -221,6 +221,7 @@ return [
     'Header_TicketType'         => 'Ticket Types',
     'Header_TicketReceiver'     => 'Ticket Receiver',
     //HFC
+    'Header_Link'               => 'Link',
     //Topography
     'Header_Topography - Modems'=> 'Topography - Modems',
     'Header_NetElement'         => 'Net Element|Net Elements',
