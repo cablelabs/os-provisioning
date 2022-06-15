@@ -115,14 +115,14 @@ onMounted(() => {
 async function onSelect(value) {
   store.overlay = true;
 
-  const res = await axios.get(`/admin/CoreMon/api/v1/Market/${value}`);
+  const res = await axios.get(`/admin/CoreMon/api/v0/Market/${value}`);
 
   res.data.result.forEach(async (el) => {
     if(!el.active){
       el.type = el.type === 'Net' ? 'Network' : el.type
 
       const prevSelect = $(`[id='${el.type}']`)
-      
+
       retrySelect2(prevSelect, ["RemoveOptions", "AddOption"], {name: el.name, value: el.id})
     }
   })
