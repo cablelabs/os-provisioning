@@ -34,7 +34,6 @@ import { store } from './../../store/store'
 let propData = document.querySelector('#HfcBase-history-table').dataset
 let propData_url = propData.url
 let propData_token = propData.token
-let propData_datatable_langs = propData.datatablelangs
 let propData_viewjqueryall = propData.viewjqueryall
 let language = {}
 
