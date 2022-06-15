@@ -30,7 +30,7 @@
     @include('Layout.navbar')
     @include('Layout.sidebar')
 
-    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association']))
+    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association', 'alarms']))
         @include('Layout.sidebar-right')
     @endif
 
