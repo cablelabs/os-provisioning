@@ -346,6 +346,16 @@ return [
         'street' => 'Street',
         'zip' => 'ZIP',
     ],
+    'alarm' => [
+        'action' => 'Action',
+        'agent_host' => 'Agent Host',
+        'alertname' => 'Name',
+        'fw' => 'Firmware',
+        'host' => 'Host',
+        'instance' => 'Instance',
+        'job' => 'Job',
+        'severity' => 'Severity',
+    ],
     'cpe' => [
         'cable_if' => 'Cable Interface',
         'ccap_core' => 'CCAP Core Name',
