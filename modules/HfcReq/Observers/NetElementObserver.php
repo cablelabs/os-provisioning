@@ -100,7 +100,7 @@ class NetElementObserver
 
         if (Module::collections()->has('CoreMon')) {
             $netelement->links()->delete();
-            $netelement->parent->links()->where('to', $netelement->id)->delete();
+            $netelement->parent?->links()->where('to', $netelement->id)->delete();
         }
     }
 
