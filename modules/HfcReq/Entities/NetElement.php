@@ -1018,18 +1018,25 @@ class NetElement extends \BaseModel
             return [];
         }
 
+        $tabs = [];
+        $i18nNetElement = trans_choice('view.Header_NetElement', 1);
+
+        if (\Route::getCurrentRoute()->getAction('as') != 'NetElement.edit') {
+            $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+        }
+
         $enabledModules = Module::collections();
 
-        // TODO: In future the user should be able to switch between Core and (yet available) access network view
         if ($enabledModules->has('CoreMon') && in_array($this->netelementtype->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
             $coremonTabs = (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
+
+            // Note: Net could be an exception here as it belongs to both (Core & Access network) and therefor could have both tabs
+            return array_merge($coremonTabs, $tabs);
         }
 
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->netelementtype->base_type_id;
         session(['lastNetElement' => $this->id]);
-
-        $tabs = [['name' => $i18nNetElement = trans_choice('view.Header_NetElement', 1), 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
 
         if (! $enabledModules->has('ProvBase')) {
             return $tabs;
