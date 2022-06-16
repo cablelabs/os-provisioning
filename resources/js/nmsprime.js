@@ -186,6 +186,8 @@ window.initAjaxSelect2 = function (item, lang = null) {
       if (full) {
         $('.loading-results').hide()
       }
+
+      setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
     })
     .on('select2:select', function (e) {
       $('.select2-search input').val('').trigger('change')
@@ -234,6 +236,8 @@ window.initAjaxSelect2 = function (item, lang = null) {
         if (response.current_page == response.last_page) {
           full = true
         }
+
+        setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
 
         return {
           results: response.data,
