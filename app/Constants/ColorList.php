@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace App\Constants;
 
- class ColorList 
+ class ColorList
  {
     const COLORS = [
-        'bgGray200' => 'rgb(229 231 235)'
+        'bgGray200' => 'rgb(229 231 235)',
     ];
  }

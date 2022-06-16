@@ -28,7 +28,6 @@ use Bouncer;
 use Request;
 use Session;
 use BaseModel;
-use App\Constants\ColorList;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -409,6 +408,7 @@ class BaseViewController extends Controller
                 // $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
             }
             
+			
             // Open Form Group
             $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, 'whitesmoke');
 
