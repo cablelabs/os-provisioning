@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
  * and others – powered by CableLabs. All rights reserved.
@@ -14,15 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace App\Constants;
 
-@import "nmsprime.css";
-@import 'select2/dist/css/select2';
-@import 'vue3-snotify/style';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-[v-cloak] {
-    display: none;
-}
+ class ColorList 
+ {
+    const COLORS = [
+        'bgGray200' => 'rgb(229 231 235)'
+    ];
+ }

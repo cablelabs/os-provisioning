@@ -22,7 +22,7 @@
 buttons: [
     {
         extend: 'print',
-        className: 'btn-sm bg-sidebar-dark',
+        className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         titleAttr: "{!! trans('helper.PrintVisibleTable') !!}",
         exportOptions: {columns: ':visible.content'}
     },
@@ -30,7 +30,7 @@ buttons: [
         extend: 'collection',
         text: "{{ trans('view.jQuery_ExportTo') }}",
         titleAttr: "{!! trans('helper.ExportVisibleTable') !!}",
-        className: 'btn-sm bg-sidebar-dark',
+        className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         autoClose: true,
         buttons: [
             {
@@ -111,7 +111,7 @@ buttons: [
     @if($colvis)
     {
         extend: 'colvis',
-        className: 'btn-sm bg-sidebar-dark',
+        className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         titleAttr: "{!! trans('helper.ChangeVisibilityTable') !!}",
         columns: ':not(.nocolvis)',
         postfixButtons: [
@@ -126,7 +126,7 @@ buttons: [
     @endif
     {
         text: "{{ trans('dt_header.buttons.clearFilter') }}",
-        className: 'btn-sm bg-sidebar-dark',
+        className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         titleAttr: "{!! trans('helper.ClearFilter') !!}",
         action: function ( e, dt, node, config ) {
             dt.columns().eq(0).each(function (colIdx) {

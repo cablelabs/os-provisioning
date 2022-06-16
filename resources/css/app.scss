@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
  * and others – powered by CableLabs. All rights reserved.
@@ -15,32 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-?>
-{{--
 
-@param $headline: the link header description in HTML
+@import "nmsprime.scss";
+@import 'select2/dist/css/select2';
+@import 'vue3-snotify/style';
 
-@param $form_path: the form view to be displayed inside this blade (mostly Generic.edit)
-@param $route_name: the base route name of this object class which will be added
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
---}}
-
-@extends ('Layout.split-nopanel')
-
-@section('content_top')
-
-	{!! $headline !!}
-	<li class='px-2'><a onMouseOver="this.style.backgroundColor='#FFFFFF'"><span>{{ \App\Http\Controllers\BaseViewController::translate_view('Create', 'Header') }}</span></a></li>
-
-@stop
-
-
-@section('content_left')
-
-	{{ Form::open(['route' => [$route_name.'.store'], 'method' => 'POST', 'files' => true]) }}
-
-		@include($form_path)
-
-	{{ Form::close() }}
-
-@stop
+[v-cloak] {
+    display: none;
+}

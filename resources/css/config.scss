@@ -1,0 +1,87 @@
+/*/*
+
+::  1.0 Table color variable
+::  2.0 Button & Background color variable
+*/
+
+/* -------------------------------
+   1.0 Table color variable
+------------------------------- */
+
+$blue-100: #3498db;
+$blue-200: #b6e2ef;
+$blue-300: #e0edff;
+
+$red-100: #ffc2c2;
+$red-200: #ffb3b3;
+
+$orange-100: #fbd7a3;
+
+$yellow-100: #fafac1;
+
+$green-100: #D9F99D;
+$green-200: #aff7aa;
+$green-300: #A3E635;
+
+$cyan-100: #99dede;
+
+$gray-100: #f3f3f3;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-1000: #333;
+
+$info-100: #f0f3f5;
+$info-200: #e2e7e9;
+
+/* -------------------------------
+   2.0 primary, success, default, warning, danger, info color variable
+------------------------------- */
+
+$blue: #348fe2; // primary
+$blue-darker: #2a72b5; // button focus
+$blue-lighter: #5da5e8; // text focus
+
+$green: #8ec73a; //success
+$green-darker: #7fb433;
+$green-lighter: #33bdbd;
+$green-extra-light: #7cdda7;
+
+$yellow: #e3fa3e; //bg-yellow
+$yellow-darker: #b6c832;
+$yellow-lighter: #e9fb65;
+
+$orange: #f59c1a; //warning
+$orange-darker: #c47d15;
+$orange-lighter: #f7b048;
+$orange-extra-light: #ffead0;
+
+$red: #ff5b57; //danger
+$red-darker: #cc4946;
+$red-lighter: #ff7c79;
+$red-extra-light: #f8b2b2;
+
+$aqua: #49b6d6; //info
+$aqua-darker: #3a92ab;
+$aqua-lighter: #6dc5de;
+$aqua-extra-light: #93cfe5;
+
+$purple: #727cb6; //bg-purple
+$purple-darker: #5b6392;
+$purple-lighter: #8e96c5;
+
+$gray: #b6c2c9; //default
+$gray-darker: #929ba1;
+$gray-lighter: #c5ced4;
+
+$dark-gray: #2d353c; //inverse bg-black
+$dark-gray-darker: #242a30;
+$dark-gray-lighter: #575d63;
+
+$silver: #f0f3f4; //bg-silver text focus
+$silver-darker: #b4b6b7;
+$silver-lighter: #f4f6f7;
+
+$silver-100: #ddd; //btn-white focus
+$silver-200: #eee; 
+$silver-300: #d8dde1;
+$silver-400: #d9e0e7;

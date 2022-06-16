@@ -28,6 +28,7 @@ use Bouncer;
 use Request;
 use Session;
 use BaseModel;
+use App\Constants\ColorList;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -370,7 +371,7 @@ class BaseViewController extends Controller
             if (! isset($options['style'])) {
                 $options['style'] = '';
             }
-            $options['style'] .= $options['style'] == 'simple' ? '' : "background-color:$color";
+            $options['style'] .= $options['style'] == 'simple' ? '' : "background-color:'whitesmoke'";
 
             // Help: add help msg to form fields - mouse on hover
             if (isset($field['help'])) {
@@ -407,9 +408,9 @@ class BaseViewController extends Controller
                 // TODO: add the collapse button
                 // $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
             }
-
+            
             // Open Form Group
-            $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, $color);
+            $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, 'whitesmoke');
 
             // Output the Form Elements
             switch ($field['form_type']) {
@@ -482,8 +483,7 @@ class BaseViewController extends Controller
             // Space Element between fields and color switching
             if (array_key_exists('space', $field)) {
                 $s .= '<div class=col-md-12><br></div>';
-                $color_array = \Acme\php\ArrayHelper::array_rotate($color_array);
-                $color = $color_array[0];
+                $color = 'whitesmoke';
             }
 
             // add ['html'] parameter

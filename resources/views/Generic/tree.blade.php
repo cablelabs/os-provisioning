@@ -109,79 +109,79 @@
             },
           "types": {
               "cm":{
-                "icon": "fa fa-hdd-o text-warning fa-lg"
+                "icon": "fa fa-hdd-o text-gray-500 fa-lg"
               },
               "mta": {
-                "icon": "fa fa-fax text-info fa-lg"
+                "icon": "fa fa-fax text-gray-500 fa-lg"
               },
               "1": { // Net
-                "icon": "fa fa-cloud text-info fa-lg"
+                "icon": "fa fa-cloud text-gray-500 fa-lg"
               },
               "2": { // Cluster
-                "icon": "fa fa-soundcloud text-warning fa-lg"
+                "icon": "fa fa-soundcloud text-gray-500 fa-lg"
               },
               "3": { // NetGw
-                "icon": "fa fa-building text-success fa-lg"
+                "icon": "fa fa-building text-gray-500 fa-lg"
               },
               "4": { // Amplifier
-                "icon": "fa fa-toggle-right text-danger fa-lg"
+                "icon": "fa fa-toggle-right text-gray-500 fa-lg"
               },
               "5": { // Node
-                "icon": "fa fa-arrow-circle-o-right text-warning fa-lg"
+                "icon": "fa fa-arrow-circle-o-right text-gray-500 fa-lg"
               },
               "6": { // Data
-                "icon": "fa fa-database text-active fa-lg"
+                "icon": "fa fa-database text-gray-500 fa-lg"
               },
               "7": { // UPS
-                "icon": "fa fa-stack fa-bolt text-warning fa-lg"
+                "icon": "fa fa-stack fa-bolt text-gray-500 fa-lg"
               },
               "8": { // Tap
-                "icon": "fa fa-code-fork text-info fa-lg"
+                "icon": "fa fa-code-fork text-gray-500 fa-lg"
               },
               "9": { // Tap-Port
-                "icon": "fa fa-dot-circle-o text-info fa-lg"
+                "icon": "fa fa-dot-circle-o text-gray-500 fa-lg"
               },
               "10": { // NMSPrime ProvHA slave
-                "icon": "fa fa-server text-secondary fa-lg"
+                "icon": "fa fa-server text-gray-500 fa-lg"
               },
               "15": { // RKM-Server
-                "icon": "fa fa-server text-warning fa-lg"
+                "icon": "fa fa-server text-gray-500 fa-lg"
               },
               "16": { // Market
-                "icon": "fa fa-cart-plus text-success fa-lg"
+                "icon": "fa fa-cart-plus text-gray-500 fa-lg"
               },
               "17": { // Hubsite
-                "icon": "fa fa-forumbee text-success fa-lg"
+                "icon": "fa fa-forumbee text-gray-500 fa-lg"
               },
               "18": { // CCAP Core
-                "icon": "fa fa-building text-danger fa-lg"
+                "icon": "fa fa-building text-gray-500 fa-lg"
               },
               "19": { // DPA
-                "icon": "fa fa-leaf text-success fa-lg"
+                "icon": "fa fa-leaf text-gray-500 fa-lg"
               },
               "20": { // NCS
-                "icon": "fa fa-support text-info fa-lg"
+                "icon": "fa fa-support text-gray-500 fa-lg"
               },
               "21": { // RPA
-                "icon": "fa fa-leaf text-secondary fa-lg"
+                "icon": "fa fa-leaf text-gray-500 fa-lg"
               },
               "22": { // RPD
-                "icon": "fa fa-toggle-right text-warning fa-lg"
+                "icon": "fa fa-toggle-right text-gray-500 fa-lg"
               },
               "23": { // CPE
-                "icon": "fa fa-hdd-o text-info fa-lg"
+                "icon": "fa fa-hdd-o text-gray-500 fa-lg"
               },
               "default": {
-                  "icon": "fa fa-file-code-o text-success fa-lg"
+                  "icon": "fa fa-file-code-o text-gray-500 fa-lg"
               },
               "default-2": {
-                  "icon": "fa fa-file-excel-o text-warning fa-lg"
+                  "icon": "fa fa-file-excel-o text-gray-500 fa-lg"
               },
               "default-3": {
-                  "icon": "fa fa-file-pdf-o text-danger fa-lg"
+                  "icon": "fa fa-file-pdf-o text-gray-500 fa-lg"
               },
               "default-4": {
-                  "icon": "fa fa-file-image-o text-info fa-lg"
+                  "icon": "fa fa-file-image-o text-gray-500 fa-lg"
               }
           }
       });
