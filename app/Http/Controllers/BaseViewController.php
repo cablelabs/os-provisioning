@@ -407,8 +407,7 @@ class BaseViewController extends Controller
                 // TODO: add the collapse button
                 // $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
             }
-            
-			
+
             // Open Form Group
             $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, 'whitesmoke');
 
