@@ -21,6 +21,7 @@ import { store } from './../store/store'
 import $ from 'jquery'
 
 onMounted(() => {
+  netelements.value = props.netelements
   if (document.getElementById('sidebar')) {
     initSidebar()
     $(window).trigger('sidebar-loaded');
@@ -38,7 +39,7 @@ const loopNetElements = computed(() => {
     return searchResults.value
   }
 
-  return props.netelements
+  return netelements.value
 })
 
 const menu = ref('Core Network')
@@ -62,6 +63,7 @@ const clusterSearch = ref('') // v-model for search
 const searchResults = ref([])
 const activeNetelement = ref(null)
 const clickedNetelement = ref(null)
+const netelements = ref([])
 
 function initSidebar() {
   initialNE.value = props.favorites.length === 0
@@ -100,13 +102,13 @@ function initSidebar() {
 
   // init collapse
   isCollapsed.value = false
-  props.netelements.forEach((n) => {
+  netelements.value.forEach((n) => {
     n.isCollapsed = true
 
     if (
       activeNetelement.value &&
       clickedNetelement.value &&
-      n.id == activeNetelement.value &&
+      parseInt(n.id) == parseInt(activeNetelement.value) &&
       !isSearchMode.value
     ) {
       loadCluster(n)
@@ -154,7 +156,7 @@ function handleMinify() {
   sidebar.style.transition = 'all .15s ease-in-out'
   store.minified = !store.minified
   isCollapsed.value = true
-  props.netelements.forEach((n) => (n.isCollapsed = true))
+  netelements.value.forEach((n) => (n.isCollapsed = true))
 
   if (isVisible.value && isSearchMode.value) {
     setSearchMode()
@@ -176,7 +178,7 @@ function handleMinify() {
 function leaveMinifiedSidebar(netelement = 'null') {
   if (netelement !== 'null') {
     return (leaveTimer.value = setTimeout(() => {
-      props.netelements.forEach((n) => (n.isCollapsed = true))
+      netelements.value.forEach((n) => (n.isCollapsed = true))
       showMinifiedHoverNet.value = false
     }, 250))
   }
@@ -193,7 +195,7 @@ function leaveMinifiedSidebar(netelement = 'null') {
  */
 function toggleNetMinified(netelement) {
   clearTimeout(leaveTimer.value)
-  props.netelements.forEach((n) => (n.isCollapsed = n.id !== netelement.id))
+  netelements.value.forEach((n) => (n.isCollapsed = n.id !== netelement.id))
   showMinifiedHoverNet.value = true
 }
 
@@ -264,11 +266,15 @@ function showSubMenu(name, minified = false) {
  * The following methods handle the accordion animation
  */
 function beforeEnter(el) {
-  el.style.maxHeight = '0'
+  if (el.style.maxHeight) {
+    el.style.maxHeight = '0'
+  }
 }
 
 function enter(el) {
-  el.style.maxHeight = el.scrollHeight + 'px'
+  if (el.style.maxHeight) {
+    el.style.maxHeight = el.scrollHeight + 'px'
+  }
 }
 
 function beforeLeave(el) {
@@ -332,8 +338,10 @@ function loadCluster(netelement) {
   }
 
   localStorage.setItem('sidebar-net', netelement.id)
+  setNetActive(netelement.id)
   if (netelement.isCollapsed) {
     localStorage.removeItem('sidebar-net')
+    removeNetActive(netelement.id)
   }
 
   if (netelement.clustersLoaded) {
@@ -364,12 +372,12 @@ function loadCluster(netelement) {
         )
       }
 
-      props.netelements[
-        props.netelements.findIndex((n) => n.id === netelement.id)
+      netelements.value[
+        netelements.value.findIndex((n) => n.id === netelement.id)
       ].clusters = response.data
 
       if (loadingClusters.value.length === 0) {
-        props.netelements = jQuery.extend(true, [], props.netelements)
+        netelements.value = jQuery.extend(true, [], netelements.value)
       }
     })
     .catch((error) => {
@@ -409,8 +417,8 @@ function favorNetelement(netelement) {
       )
 
       if (props.favorites.includes(netelement.id)) {
-        props.netelements.splice(
-          props.netelements.findIndex(
+        netelements.value.splice(
+          netelements.value.findIndex(
             (n) => !initialNE.value && n.id === netelement.id
           ),
           1
@@ -425,13 +433,13 @@ function favorNetelement(netelement) {
         return
       }
 
-      if (props.netelements.findIndex((n) => n.id == netelement.id) === -1) {
-        props.netelements.push(netelement)
-        props.netelements.sort((a, b) => a.id > b.id)
+      if (netelements.value.findIndex((n) => n.id == netelement.id) === -1) {
+        netelements.value.push(netelement)
+        netelements.value.sort((a, b) => a.id > b.id)
       }
 
       if (loadingFavorites.value.length === 0) {
-        props.netelements = jQuery.extend(true, [], props.netelements)
+        netelements.value = jQuery.extend(true, [], netelements.value)
       }
 
       props.favorites.push(netelement.id)
@@ -448,7 +456,7 @@ function setHover(netelement, state) {
   }
 
   netelement.hover = state
-  props.netelements = jQuery.extend(true, [], props.netelements)
+  netelements.value = jQuery.extend(true, [], netelements.value)
 }
 
 function netElementSearchHoverClass(netelement) {
@@ -467,6 +475,10 @@ function netElementSearchHoverClass(netelement) {
 
 function setNetActive(id) {
   localStorage.setItem('clicked-netelement', id)
+}
+
+function removeNetActive(id) {
+  localStorage.removeItem('clicked-netelement', id)
 }
 
 const network = ref(0)

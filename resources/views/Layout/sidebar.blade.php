@@ -333,9 +333,8 @@
                                         </div>
                                     </li>
                                 @endif
-                                <template v-for="netelement in loopNetElements">
-                                    <li v-if="!loadingSearch || !isSearchMode" class="has-sub"
-                                        :key="netelement.id">
+                                <template v-for="netelement in loopNetElements" :key="netelement.id">
+                                    <li v-if="!loadingSearch || !isSearchMode" class="has-sub">
                                         <div v-cloak class="recolor sidebar-element align-items-baseline"
                                             style="display: flex;padding: 0.5rem 1.25rem;">
                                             <template v-if="isSearchMode" style="cursor: pointer;">
@@ -382,9 +381,14 @@
                                                     style="transition:all .25s;"></i>
                                             </a>
                                         </div>
-                                        <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter"
-                                            v-on:before-leave="beforeLeave" v-on:leave="leave"
-                                            v-on:after-leave="afterLeave">
+                                        <transition 
+                                            name="accordion" 
+                                            v-on:before-enter="beforeEnter" 
+                                            v-on:enter="enter"
+                                            v-on:before-leave="beforeLeave" 
+                                            v-on:leave="leave"
+                                            v-on:after-leave="afterLeave"
+                                        >
                                             <ul :id="'network_' + netelement.id"
                                                 v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && netelement.clusters.length && !netelement.isCollapsed"
                                                 class="m-0 sidebar-hover p-b-10 p-l-20"
