@@ -12,7 +12,7 @@ module.exports = {
         'sidebar-light': '#2d353c',
         'lime-nmsprime': '#98d145',
         }
-      }
+      },
     },
     plugins: [],
   }
