@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
- @import 'config';
-
+ @import '/public-ccc/components/assets-admin/css/config.css';
+ 
 /*General */
 body {
     font-family: 'Roboto', "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -297,8 +297,8 @@ table .index_check {
 .table > thead > tr.green > th,
 .table > tbody > tr.green > th,
 .table > tfoot > tr.green > th {
-    background:$green-100;
-    border-color:$green-300;
+    background:var(--green-100);
+    border-color:var(--green-300);
 }
 
 .table > thead > tr > td.info,
@@ -313,8 +313,8 @@ table .index_check {
 .table > thead > tr.info > th,
 .table > tbody > tr.info > th,
 .table > tfoot > tr.info > th {
-    background: $blue-300;
-    border-color: $blue-200;
+    background: var(--blue-300);
+    border-color: var(--blue-200);
 }
 .table > thead > tr > td.success,
 .table > tbody > tr > td.success,
@@ -328,8 +328,8 @@ table .index_check {
 .table > thead > tr.success > th,
 .table > tbody > tr.success > th,
 .table > tfoot > tr.success > th {
-    background: $green-200;
-    border-color: $cyan-100;
+    background: var(--green-200);
+    border-color: var(--cyan-100);
 }
 .table > thead > tr > td.danger,
 .table > tbody > tr > td.danger,
@@ -343,8 +343,8 @@ table .index_check {
 .table > thead > tr.danger > th,
 .table > tbody > tr.danger > th,
 .table > tfoot > tr.danger > th {
-    background: $red-100;
-    border-color: $red-200;
+    background: var(--red-100);
+    border-color: var(--red-200);
 }
 .table > thead > tr > td.warning,
 .table > tbody > tr > td.warning,
@@ -358,8 +358,8 @@ table .index_check {
 .table > thead > tr.warning > th,
 .table > tbody > tr.warning > th,
 .table > tfoot > tr.warning > th {
-    background: $yellow-100;
-    border-color: $orange-100;
+    background: var(--yellow-100);
+    border-color: var(--orange-100);
 }
 .table > thead > tr > td.active,
 .table > tbody > tr > td.active,
@@ -373,7 +373,7 @@ table .index_check {
 .table > thead > tr.active > th,
 .table > tbody > tr.active > th,
 .table > tfoot > tr.active > th {
-    background: $gray-200;
+    background: var(--gray-200);
     border-color: #ffffff;
 }
 
@@ -436,8 +436,8 @@ table .index_check {
 }
 
 #loader {
-    border: 16px solid $gray-100; /* Light grey */
-    border-top: 16px solid $blue-100; /* Blue */
+    border: 16px solid var(--gray-100); /* Light grey */
+    border-top: 16px solid var(--blue-100); /* Blue */
     border-radius: 50%;
     width: 120px;
     height: 120px;
@@ -1191,6 +1191,10 @@ textarea.select2-search__field {
 #rpdSearch::placeholder {
     color: white;
     opacity: 1;
+}
+
+.bg-top-div {
+    background-color: var(--silver-400);
 }
 
 #coremon-datatable_filter label .form-control {
