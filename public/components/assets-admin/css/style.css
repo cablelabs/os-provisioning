@@ -202,7 +202,7 @@ html {
     height: 100%;
 }
 body {
-    background: var(--silver-400);
+    background: var(--slate-300);
     font-size: 12px;
     font-family: 'Open Sans', "Helvetica Neue",Helvetica,Arial,sans-serif;
     color: #707478;
@@ -6868,7 +6868,7 @@ body .bootstrap-datetimepicker-widget table td {
     -webkit-box-shadow: 0 0px 30px rgba(0,0,0,0.5);
     box-shadow: 0 0px 30px rgba(0,0,0,0.5);
     min-height: 100%;
-    background: var(--silver-400);
+    background: var(--slate-300);
     overflow: hidden;
     position: relative;
 }

@@ -1193,10 +1193,6 @@ textarea.select2-search__field {
     opacity: 1;
 }
 
-.bg-top-div {
-    background-color: var(--silver-400);
-}
-
 #coremon-datatable_filter label .form-control {
     background: #2f383e;
     border-radius: 30px;

@@ -68,7 +68,7 @@
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="px-2 bg-top-div border-b border-gray-300 m-b-15 d-print-none" style="padding-top:0;display:flex;">
+                <div class="px-2 bg-slate-300 border-b border-gray-300 m-b-15 d-print-none" style="padding-top:0;display:flex;">
                     <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs" style="width:100%;">
                         @foreach ($tabs as $tab)
 
