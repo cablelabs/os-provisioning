@@ -25,8 +25,9 @@
       aria-haspopup="true"
       aria-expanded="false"
       style="padding: 12px 10x 8px 8px;">
-      <i class="fa fa-inbox fa-2x" aria-hidden="true"></i>
-      <span class="label {{ $user->unreadNotifications->count() ?  '' : 'd-none' }}">{{ $user->unread_notifications_count }}</span>
+      <i class="fa fa-bell fa-2x relative" aria-hidden="true">
+          <div class="absolute top-0 right-0 text-[.5rem] p-[.1rem] rounded-full {{ $user->unread_notifications_count ?  'bg-blue-400 text-white' : 'hidden' }}">{{ $user->unread_notifications_count }}</div>
+      </i>
     </a>
     <div class="dropdown-menu media-list" aria-labelledby="navbarDropdown" style="right: 0;left:auto;">
         <div class="dropdown-header">{{ Str::upper(trans('messages.notifications')) }} ({{ $user->unread_notifications_count }})</div>
