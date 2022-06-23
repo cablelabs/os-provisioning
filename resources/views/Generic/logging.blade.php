@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 ?>
-<div class="col-12 card-block">
+<div class="card-block">
     <div id="logging" class="col-md-12 card tab-content" style="display:none;">
         <table id="datatable" class="table table-hover datatable table-bordered d-table">
             <thead>

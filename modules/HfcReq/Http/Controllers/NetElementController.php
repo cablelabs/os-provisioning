@@ -172,15 +172,15 @@ class NetElementController extends BaseController
      */
     protected function editTabs($netelement)
     {
-        $defaultTabs = parent::editTabs($netelement);
-
         $tabs = $netelement->tabs();
 
         if (isset($tabs[0]['route']) && $tabs[0]['route'] == 'NetElement.edit') {
             unset($tabs[0]['route']);
         }
 
-        $tabs[] = $defaultTabs[1];
+        if (! Module::collections()->has('CoreMon')) {
+            $tabs[] = parent::editTabs($netelement)[1];
+        }
 
         return $tabs;
     }

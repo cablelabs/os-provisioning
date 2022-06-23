@@ -194,6 +194,18 @@ class NetElement extends \BaseModel
         return $this->get_bsclass();
     }
 
+    /**
+     * Get the logging route for CorMon logging tab.
+     *
+     * @author Roy Schneider
+     *
+     * @return string
+     */
+    public function getLoggingRoute()
+    {
+        return route(Str::ucfirst($this->getOriginalTypeName(['lower', 'kebab'])).'.guilog', ['netelement' => $this->id]);
+    }
+
     public function mapColor()
     {
         $lookup = [
