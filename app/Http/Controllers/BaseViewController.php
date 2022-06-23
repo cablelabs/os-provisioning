@@ -370,7 +370,7 @@ class BaseViewController extends Controller
             if (! isset($options['style'])) {
                 $options['style'] = '';
             }
-            $options['style'] .= $options['style'] == 'simple' ? '' : "background-color:'whitesmoke'";
+            $options['style'] .= $options['style'] == 'simple' ? '' : "background-color:$color";
 
             // Help: add help msg to form fields - mouse on hover
             if (isset($field['help'])) {
@@ -409,7 +409,7 @@ class BaseViewController extends Controller
             }
 
             // Open Form Group
-            $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, 'whitesmoke');
+            $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, $color);
 
             // Output the Form Elements
             switch ($field['form_type']) {
@@ -482,7 +482,8 @@ class BaseViewController extends Controller
             // Space Element between fields and color switching
             if (array_key_exists('space', $field)) {
                 $s .= '<div class=col-md-12><br></div>';
-                $color = 'whitesmoke';
+				$color_array = \Acme\php\ArrayHelper::array_rotate($color_array);
+                $color = $color_array[0];
             }
 
             // add ['html'] parameter
