@@ -121,7 +121,7 @@
                                 'var' => 'hubsite',
                             ],
                             'CCAP Core' => [
-                                'route' => 'CoreMon.ccap-core.overview',
+                                'route' => 'CoreMon.ccap.overview',
                                 'netTypeId' => 18,
                                 'var' => 'ccap',
                             ],
