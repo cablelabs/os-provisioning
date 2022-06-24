@@ -18,13 +18,14 @@
 ?>
 @php
     $colvis = $colvis ?? true;
+    $export = $data['export'] ?? ':visible.content';
 @endphp
 buttons: [
     {
         extend: 'print',
         className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         titleAttr: "{!! trans('helper.PrintVisibleTable') !!}",
-        exportOptions: {columns: ':visible.content'}
+        exportOptions: {columns: "{{ $export }}" }
     },
     {
         extend: 'collection',
@@ -36,7 +37,7 @@ buttons: [
             {
                 extend: 'csvHtml5',
                 text: "<i class='fa fa-file-code-o'></i> .CSV",
-                exportOptions: {columns: ':visible.content'},
+                exportOptions: {columns: "{{ $export }}" },
                 fieldSeparator: ';'
             },
             {
@@ -53,7 +54,7 @@ buttons: [
                           }
                         })
                 },
-                exportOptions: {columns: ':visible.content'}
+                exportOptions: {columns: "{{ $export }}" }
             },
             {
                 extend: 'pdfHtml5',
@@ -77,7 +78,7 @@ buttons: [
                     })
                 },
                 exportOptions: {
-                    columns: ':visible.content'
+                    columns: "{{ $export }}"
                     },
                 customize: function(doc, config) {
                     var tableNode;
@@ -99,12 +100,12 @@ buttons: [
             {
                 extend: 'print',
                 text: "<i class='fa fa-print'></i> {{ trans('view.jQuery_Print') }}",
-                exportOptions: { columns: ':visible.content' },
+                exportOptions: { columns: "{{ $export }}"  },
             },
             {
                 extend: 'copy',
                 text: "<i class='fa fa-clipboard'></i> {{ trans('view.jQuery_copyToClipboard') }}",
-                exportOptions: { columns: ':visible.content' },
+                exportOptions: { columns: "{{ $export }}"  },
             }
         ]
     },
