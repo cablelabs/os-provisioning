@@ -157,7 +157,14 @@ var initSelect2Fields = function () {
     })
   }
 
-  $('select').not('.select2-ajax').select2({ language: lang })
+  window.initDefaultSelect2($('select').not('.select2-ajax'))
+}
+
+window.initDefaultSelect2 = function (item, lang = null) {
+  item.select2({ language: lang })
+  .on('select2:open', function (e) {
+    setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
+  })
 }
 
 window.initAjaxSelect2 = function (item, lang = null) {
