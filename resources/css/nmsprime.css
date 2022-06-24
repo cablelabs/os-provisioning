@@ -466,9 +466,11 @@ table .index_check {
   from{ opacity:0 }
   to{ opacity:1 }
 }
+
 .panel-body {
   overflow-y: auto;
 }
+
 .nav-tabs > li.active > a:hover {
   border: 1px solid #ddd !important;
   border-bottom-color: #fff !important;
@@ -1202,4 +1204,8 @@ textarea.select2-search__field {
     margin-bottom: 10px;
     display: block;
     float: right;
+}
+
+.nav > li > a.active {
+  background: var(--silver);
 }

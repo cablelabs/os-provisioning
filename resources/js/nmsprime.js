@@ -108,7 +108,7 @@ var saveTabPillState = function () {
         tabsState = localStorage.getItem('tabs-state')
         json = JSON.parse(tabsState || '{}')
         parentId = $(e.target)
-          .parents('ul.nav.nav-pills, ul.nav.nav-tabs')
+          .parents('ul.nav.nav-pills, ul.nav.nav-tabs, .nms-tabs')
           .attr('id')
         href = $(e.target).attr('href')
         json[parentId] = href
