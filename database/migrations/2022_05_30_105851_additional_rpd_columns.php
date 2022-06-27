@@ -7,7 +7,7 @@ class AdditionalRpdColumns extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'rpd';
+    protected $tableName = 'rpds';
 
     /**
      * Run the migrations.

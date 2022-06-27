@@ -26,14 +26,13 @@
     @yield('head')
 </head>
 
-<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
+<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }} data-theme="{{$user->theme_color}}">
     @include('Layout.navbar')
     @include('Layout.sidebar')
 
     @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association', 'alarms']))
         @include('Layout.sidebar-right')
     @endif
-
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
         :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
 

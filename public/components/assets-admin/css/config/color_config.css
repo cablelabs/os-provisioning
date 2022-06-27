@@ -9,6 +9,7 @@
 ------------------------------- */
 :root {
 
+   --white: #ffffff;
    --blue-100: #3498db;
    --blue-200: #b6e2ef;
    --blue-300: #e0edff;
@@ -23,12 +24,15 @@
    --green-100: #D9F99D;
    --green-200: #aff7aa;
    --green-300: #A3E635;
+   --green-700: #24B498;
 
    --cyan-100: #99dede;
 
    --gray-100: #f3f3f3;
    --gray-200: #e5e7eb;
    --gray-300: #d1d5db;
+   --gray-800: #a8acb1;
+   --gray-900: #707478;
    --gray-1000: #333;
 
    --info-100: #f0f3f5;
@@ -69,6 +73,7 @@
    --purple: #727cb6; /*bg-purple */
    --purple-darker: #5b6392;
    --purple-lighter: #8e96c5;
+   --purple-extra-lighter: #a8acc3;
 
    --gray: #b6c2c9; /*default */
    --gray-darker: #929ba1;
@@ -86,5 +91,7 @@
    --silver-200: #eee; 
    --silver-300: #d8dde1;
 
+   --slate-200: #e2e7eb;
    --slate-300: #cbd5e1;
+   --slate-400: #ccd0d4;
 }

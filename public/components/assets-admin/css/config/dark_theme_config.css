@@ -1,0 +1,340 @@
+@import 'color_config.css';
+
+[data-theme="dark"] {
+
+    /* body color variable */
+    --bg-body : var(--slate-300);
+    --text-body: var(--gray-900);
+
+     /* heading color variable */
+    --text-heading : var(--dark-gray);
+    --text-heading-small :  var(--gray-900);
+
+    /* spinner-small color variable  */
+    --border-spinner-small : var(--green-700);
+
+    /* navbar color variable */
+    --text-navbar :  var(--gray-800);
+    --text-navbar-default : var(--gray-1000);
+    --text-navbar-nav-open : var(--gray-1000);
+    --border-navbar-nav-dropdown : var(--silver-200);
+    --bg-icon-navbar : var(--gray-1000);
+
+    /* sidebar color variable */
+    --bg-sidebar : var(--dark-gray);
+    --text-sidebar-nav-li-a : var(--gray-800);
+    --bg-sidebar-nav-li-active : var(--green);
+    --bg-sidebar-nav-li-label-success : var(--green-darker);
+
+    /* page header color variable */
+    --text-page-header : var(--dark-gray);
+
+    /* breadcrumb color variable */
+    --text-breadcrumb : var(--gray-1000);
+
+    /* form control color variable */
+    --border-form-control : var(--slate-400);
+
+    /* form group */
+    --border-form-horizontal : var(--silver-200);
+
+    /* has color variable */
+    --text-has-success : var(--green);
+    --border-has-success : var(--green);
+    --border-focus-has-success : var(--green-darker);
+
+    --text-has-warning : var(--orange);
+    --border-has-warning : var(--orange);
+    --border-focus-has-warning : var(--orange-darker);
+
+    --text-has-error :  var(--red);
+    --border-has-error : var(--red);
+    --border-focus-has-error : var(--red-darker);
+
+    /* select color variable */
+    --border-select : var(--slate-400);
+    
+    /* legend color variable */
+    --border-legend : var(--slate-200);
+
+    /* dropdown item color variable */
+    --text-dropdown-item : var(--dark-gray);
+    --bg-dropdown-item : var(--silver-lighter);
+    --bg-dropdown-item-active : var(--aqua-extra-light);
+
+    /* alert color variable */
+    --bg-alert-success : var(--green-extra-light);
+    --bg-alert-info : var(--aqua-extra-light);
+    --bg-alert-danger : var(--red-extra-light);
+    --bg-alert-warning : var(--orange-extra-light);
+
+    /* note color variable */
+    --bg-note-success : var(--green-extra-light);
+    --border-note-success : var(--green-darker);
+    --text-note-success : var(--green-darker);
+
+    --bg-note-danger : var(--red-extra-light);
+    --border-note-danger : var(--red-darker);
+    --text-note-danger : var(--red-darker);
+
+    --bg-note-info : var(--aqua-extra-light);
+    --border-note-info : var(--aqua-darker);
+    --text-note-info : var(--aqua-darker);
+
+    --bg-note-warning : var(--orange-extra-light);
+    --border-note-warning : var(--orange-darker);
+    --text-note-warning : var(--orange-darker);
+
+    /* badge & label color variable  */
+    --text-label : var(--dark-gray);
+    --bg-badge-label-default : var(--gray);
+    --bg-badge-label-danger : var(--red);
+    --bg-badge-label-warning : var(--warning);
+    --bg-badge-label-success : var(--green);
+    --bg-badge-label-info : var(--aqua);
+    --bg-badge-label-primary : var(--blue);
+    --bg-badge-label-inverse : var(--dark-gray);
+
+    /* pagination color variable  */
+    --text-pagination : var(--dark-gray);
+    --bg-pagination-focus : var(--slate-200);
+    --bg-pagination-active : var(--gray-200);
+    --border-pagination : var(--gray-300);
+
+    /* Progress bar  color variable */
+    --bg-progress : var(--slate-200);
+    --bg-progress-bar : var(--blue);
+    --bg-progress-bar-success : var(--green);
+    --bg-progress-bar-info : var(--aqua);
+    --bg-progress-bar-warning : var(--orange);
+    --bg-progress-bar-danger : var(--red);
+    --bg-progress-bar-inverse : var(--dark-gray);
+
+    /* nav-tab && nav-pills color variable */
+    --bg-nav-tabs-inverse : var(--dark-gray-darker);
+    --text-nav-tabs-inverse : var(--dark-gray);
+    --bg-nav-pills-active : var(--dark-gray-darker);
+
+    /* button color variable */
+    --text-btn-default : var(--white);
+    --bg-btn-default : var(--gray);
+    --border-btn-default : var(--gray);
+    --bg-btn-default-hover : var(--gray-darker);
+    --border-btn-default-hover : var(--gray-darker);
+
+    --text-btn-white : var(--gray-1000);
+    --bg-btn-white : var(--white);
+    --bg-btn-white : var(--info-200);
+    --bg-btn-white-hover :var(--info-200);
+    --border-btn-white-hover : var(--silver-300);
+    --btn-white-without-border-hover : var(--silver-200);
+    --btn-white-without-border-active : var(--silver-100);
+
+    --text-btn-inverse :  var(--white);
+    --bg-btn-inverse :  var(--dark-gray);
+    --border-btn-inverse :  var(--dark-gray);
+    --bg-btn-inverse-hover :  var(--dark-gray-darker);
+    --border-btn-inverse-hover :  var(--dark-gray-darker);
+
+    --text-btn-primary :  var(--white);
+    --bg-btn-primary :  var(--blue);
+    --border-btn-primary :  var(--blue);
+    --bg-btn-primary-hover :  var(--blue-darker);
+    --border-btn-primary-hover :  var(--blue-darker);
+
+    --text-btn-success :  var(--white);
+    --bg-btn-success :  var(--green);
+    --border-btn-success :  var(--green);
+    --bg-btn-success-hover :  var(--green-darker);
+    --border-btn-success-hover :  var(--green-darker);
+
+    --text-btn-warning :  var(--white);
+    --bg-btn-warning :  var(--orange);
+    --border-btn-warning :  var(--orange);
+    --bg-btn-warning-hover :  var(--orange-darker);
+    --border-btn-warning-hover :  var(--orange-darker);
+
+    --text-btn-danger :  var(--white);
+    --bg-btn-danger :  var(--red);
+    --border-btn-danger :  var(--red);
+    --bg-btn-danger-hover :  var(--red-darker);
+    --border-btn-danger-hover :  var(--red-darker);
+
+    --text-btn-info :  var(--white);
+    --bg-btn-info :  var(--aqua);
+    --border-btn-info :  var(--aqua);
+    --bg-btn-info-hover :  var(--aqua-darker);
+    --border-btn-info-hover :  var(--aqua-darker);
+
+    /* panel color variable */
+    --bg-panel-inverse-heading : var(--dark-gray-darker);
+    --bg-panel-success-heading : var(--green-darker);
+    --bg-panel-warning-heading : var(--orange-darker);
+    --bg-panel-danger-heading : var(--red-darker);
+    --bg-panel-primary-heading : var(--blue-darker);
+    --bg-panel-info-heading : var(--aqua-darker);
+
+    /* text color variable */
+    --text-inverse : var(--dark-gray);
+    --text-inverse-a : var(--dark-gray-lighter);
+
+    --text-success : var(--green);
+    --text-success-a : var(--green-lighter);
+
+    --text-info : var(--aqua);
+    --text-info-a : var(--aqua-lighter);
+
+    --text-primary : var(--blue);
+    --text-primary-a : var(--blue-lighter);
+
+    --text-warning : var(--orange);
+    --text-warning-a : var(--orange-lighter);
+
+    --text-danger : var(--red);
+    --text-danger-a : var(--red-lighter);
+
+    --text-white : var(--white);
+    --text-white-a : var(--silver);
+
+    /* background color variable  */
+    --bg-white : var(--white);
+    --bg-silver-lighter : var(--silver-lighter);
+    --bg-silver : var(--silver);
+    --bg-silver-darker : var(--silver-darker);
+
+    --bg-black : var(--dark-gray);
+    --bg-black-darker : var(--dark-gray-darker);
+    --bg-black-lighter : var(--dark-gray-lighter);
+
+    --bg-grey : var(--gray);
+    --bg-grey-darker : var(--gray-darker);
+    --bg-grey-lighter : var(--gray-lighter);
+
+    --bg-red : var(--red);
+    --bg-red-darker : var(--red-darker);
+    --bg-red-lighter : var(--red-lighter);
+
+    --bg-orange : var(--orange);
+    --bg-orange-darker : var(--orange-darker);
+    --bg-orange-lighter : var(--orange-lighter);
+
+    --bg-yellow : var(--yellow);
+    --bg-yellow-darker : var(--yellow-darker);
+    --bg-yellow-lighter : var(--yellow-lighter);
+
+    --bg-green : var(--green);
+    --bg-green-darker : var(--green-darker);
+    --bg-green-lighter : var(--green-lighter);
+
+    --bg-blue : var(--blue);
+    --bg-blue-darker : var(--blue-darker);
+    --bg-blue-lighter : var(--blue-lighter);
+
+    --bg-aqua : var(--aqua);
+    --bg-aqua-darker : var(--aqua-darker);
+    --bg-aqua-lighter : var(--aqua-lighter);
+
+    --bg-purple : var(--purple);
+    --bg-purple-darker : var(--purple-darker);
+    --bg-purple-lighter : var(--purple-lighter);
+
+    /*  ul tagit color variable */
+    --bg-ul-tagit-inverse : var(--dark-gray);
+    --bg-ul-tagit-white : var(--white);
+    --bg-ul-tagit-primary : var(--blue);
+    --bg-ul-tagit-info : var(--aqua);
+    --bg-ul-tagit-success : var(--green);
+    --bg-ul-tagit-warning : var(--orange);
+    --bg-ul-tagit-danger : var(--red);
+    
+    /* Powerange Slider color variable */
+    --bg-range-quantity : var(--green);
+    --bg-range-quantity-red : var(--red);
+    --bg-range-quantity-blue : var(--blue);
+    --bg-range-quantity-purple : var(--purple);
+    --bg-range-quantity-orange : var(--orange);
+    --bg-range-quantity-black : var(--black);
+
+    /* list email color variable */
+    --bg-list-email-success : var(--green);
+    --bg-list-email-info : var(--aqua);
+    --bg-list-email-danger : var(--red);
+    --bg-list-email-primary : var(--blue);
+    --bg-list-email-inverse : var(--dark-gray);
+    --bg-list-email-warning : var(--orange);
+    --bg-list-email-purple : var(--purple);
+    --bg-list-email-default : var(--gray);
+
+    --text-list-email-title : var(--dark-gray-darker);
+
+    /* checkbox color variable */
+    --bg-checkbox : var(--blue);
+    --border-checkbox : var(--blue);
+
+    --bg-checkbox-success : var(--green);
+    --border-checkbox-success : var(--green);
+
+    --bg-checkbox-info : var(--aqua);
+    --border-checkbox-info : var(--aqua);
+
+    --bg-checkbox-danger : var(--red);
+    --border-checkbox-danger : var(--red);
+
+    --bg-checkbox-warning : var(--orange);
+    --border-checkbox-warning : var(--orange);
+
+    --bg-checkbox-inverse : var(--dark-gray);
+    --border-checkbox-inverse : var(--dark-gray);
+
+    /* radio color variable */
+    --bg-radio : var(--blue);
+    --border-radio : var(--blue);
+
+    --bg-radio-success : var(--green);
+    --border-radio-success : var(--green);
+
+    --bg-radio-info : var(--aqua);
+    --border-radio-info : var(--aqua);
+
+    --bg-radio-danger : var(--red);
+    --border-radio-danger : var(--red);
+
+    --bg-radio-warning : var(--orange);
+    --border-radio-warning : var(--orange);
+
+    --bg-radio-inverse : var(--dark-gray);
+    --border-radio-inverse : var(--dark-gray);
+
+    /* sweet-alert color variable */
+    --border-sweet-alert-success : var(--green);
+    --bg-sweet-alert-success : var(--green);
+    --border-sweet-alert-success-focus : var(--green-darker);
+
+    --border-sweet-alert-info : var(--aqua);
+    --bg-sweet-alert-info : var(--aqua);
+    --border-sweet-alert-info-focus : var(--aqua-darker);
+
+    --border-sweet-alert-warning : var(--orange);
+    --bg-sweet-alert-warning : var(--orange);
+    --border-sweet-alert-warning-focus : var(--orange-darker);
+
+    --border-sweet-alert-danger : var(--red);
+    --bg-sweet-alert-danger : var(--red);
+    --border-sweet-alert-danger-focus : var(--red-darker);
+
+    /* card color variable */
+    --bg-card-primary : var(--blue);
+    --border-card-primary : var(--blue);
+
+    --bg-card-success : var(--green);
+    --border-card-success : var(--green);
+
+    --bg-card-info : var(--aqua);
+    --border-card-info : var(--aqua);
+
+    --bg-card-warning : var(--orange);
+    --border-card-warning : var(--orange);
+
+    --bg-card-danger : var(--red);
+    --border-card-danger : var(--red);
+}

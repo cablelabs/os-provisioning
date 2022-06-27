@@ -103,6 +103,9 @@ class UserController extends BaseController
             ],
             ['form_type' => 'text', 'name' => 'geopos_updated_at', 'description' => 'Last update of geoposition', 'options' => ['readonly']],
             ['form_type' => 'checkbox', 'name' => 'hastruck', 'description' => 'Has a truck'],
+            ['form_type' => 'select', 'name' => 'theme_color', 'description' => 'Dashboard theme color',
+                'value' => ['normal' => 'Normal mode', 'dark' => 'Dark mode', 'light' => 'Light mode', 'color_blind' => 'Red green Blindness mode'],
+            ]
         ];
     }
 
