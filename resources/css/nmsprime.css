@@ -587,6 +587,10 @@ table .index_check {
     display: block;
 }
 
+.sidebar .slimScrollDiv{
+    min-width: 100%;
+}
+
 li.expand div img {
     filter: none !important;
 }
