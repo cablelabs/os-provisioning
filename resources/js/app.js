@@ -37,6 +37,20 @@ import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
 
+// dataTables
+require('datatables.net-buttons/js/buttons.colVis.js')
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+import * as JSZip from "jszip";
+window.JSZip = JSZip;
+
+import 'datatables.net-buttons-bs4'
+import "datatables.net-responsive";
+import "datatables.net-buttons/js/buttons.html5.js";
+import "datatables.net-buttons/js/buttons.print.js";
+
 window.main = createApp(app)
   .component('overlay', overlay)
   .component('select2', select2Component)

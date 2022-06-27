@@ -38,10 +38,6 @@
       <link href="{{asset('components/assets-admin/css/theme/default.css')}}" rel="stylesheet" id="theme" />
 
       <!-- Plugins -->
-      <link href="{{asset('components/assets-admin/plugins/DataTables/main/media/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/responsive-bootstrap/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap/css/fixedHeader.bootstrap4.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/plugins/DataTables/extensions/buttons-bootstrap/css/buttons.bootstrap4.min.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/plugins/jstree/dist/themes/default/style.min.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
