@@ -116,7 +116,7 @@ class UserController extends BaseController
             ['form_type' => 'checkbox', 'name' => 'hastruck', 'description' => 'Has a truck'],
             ['form_type' => 'select', 'name' => 'theme_color', 'description' => 'System color theme',
                 'value' => $themes,
-            ]
+            ],
         ];
     }
 
