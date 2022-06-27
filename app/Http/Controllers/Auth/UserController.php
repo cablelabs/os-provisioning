@@ -73,6 +73,13 @@ class UserController extends BaseController
             throw new \App\Exceptions\AuthException(trans('Not allowed to acces this user').'!');
         }
 
+        $roleOptions = [
+            'multiple' => 'multiple',
+        ];
+        if (! Bouncer::can('update', User::class)) {
+            $roleOptions['disabled'] = 'true';
+        }
+
         return [
             ['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
             ['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],
@@ -88,9 +95,7 @@ class UserController extends BaseController
                 'value' => '1', 'checked' => true, ],
             ['form_type' => 'select', 'name' => 'roles_ids[]', 'description' => 'Assign Role',
                 'value' => $model->html_list(Role::where('rank', '<=', $current_user_rank)->get(), 'name'),
-                'options' => [
-                    'multiple' => 'multiple',
-                    Bouncer::can('update', User::class) ? '' : 'disabled' => 'true', ],
+                'options' => $roleOptions,
                 'help' => trans('helper.assign_role'),
                 'selected' => $model->html_list($model->roles, 'name'), ],
             ['form_type' => 'select', 'name' => 'initial_dashboard', 'description' => 'Default login page',
