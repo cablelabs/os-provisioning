@@ -37,6 +37,7 @@ import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
 import ticketSystemReceiver from './components/TicketSystem/TicketSystemReceiver.vue'
+import TicketSystemComments from './components/TicketSystem/TicketSystemComments.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -106,4 +107,9 @@ if (document.getElementById('HfcBase-history-slider')) {
 if (document.getElementById('ticketsystem-receiver')) {
   window.ticketSystemReceiver = createApp(ticketSystemReceiver)
     .mount('#ticketsystem-receiver')
+}
+
+if (document.getElementById('ticketsystem-comments')) {
+  window.ticketSystemComments = createApp(TicketSystemComments)
+    .mount('#ticketsystem-comments')
 }
