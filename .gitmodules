@@ -9,33 +9,6 @@
 [submodule "public/components/assets-admin/plugins/vue-touch-events"]
 	path = public/components/assets-admin/plugins/vue-touch-events
 	url = https://github.com/jerrybendy/vue-touch-events
-[submodule "public/components/assets-admin/plugins/DataTables/main"]
-	path = public/components/assets-admin/plugins/DataTables/main
-	url = https://github.com/DataTables/DataTables
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/responsive"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/responsive
-	url = https://github.com/DataTables/Dist-DataTables-Responsive
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/responsive-bootstrap"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/responsive-bootstrap
-	url = https://github.com/DataTables/Dist-DataTables-Responsive-Bootstrap4
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/buttons"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/buttons
-	url = https://github.com/DataTables/Dist-DataTables-Buttons
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/buttons-bootstrap"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/buttons-bootstrap
-	url = https://github.com/DataTables/Dist-DataTables-Buttons-Bootstrap4
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/fixedHeader"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/fixedHeader
-	url = https://github.com/DataTables/Dist-DataTables-FixedHeader
-[submodule "public/components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap"]
-	path = public/components/assets-admin/plugins/DataTables/extensions/fixedHeader-bootstrap
-	url = https://github.com/DataTables/Dist-DataTables-FixedHeader-Bootstrap4
-[submodule "public/components/assets-admin/plugins/jszip"]
-	path = public/components/assets-admin/plugins/jszip
-	url = https://github.com/Stuk/jszip
-[submodule "public/components/assets-admin/plugins/pdfmake"]
-	path = public/components/assets-admin/plugins/pdfmake
-	url = https://github.com/bpampuch/pdfmake
 [submodule "public/components/assets-admin/plugins/backbone"]
 	path = public/components/assets-admin/plugins/backbone
 	url = https://github.com/jashkenas/backbone
