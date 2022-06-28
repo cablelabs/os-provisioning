@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BaseViewController;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends BaseController
 {
@@ -80,6 +81,16 @@ class UserController extends BaseController
             $roleOptions['disabled'] = 'true';
         }
 
+        $color_files = Storage::disk('public-ccc')->allFiles('components/assets-admin/css/config');
+
+        $themes = [];
+        foreach ($color_files as $key => $color_file_path) {
+            $file_name_array = explode("/", $color_file_path);
+            $file_name = end($file_name_array);
+            $filename_without_extension = explode(".", $file_name)[0];
+            $themes[$file_name] = str_replace("_", " ", $filename_without_extension);
+        }
+        
         return [
             ['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
             ['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],
@@ -103,8 +114,8 @@ class UserController extends BaseController
             ],
             ['form_type' => 'text', 'name' => 'geopos_updated_at', 'description' => 'Last update of geoposition', 'options' => ['readonly']],
             ['form_type' => 'checkbox', 'name' => 'hastruck', 'description' => 'Has a truck'],
-            ['form_type' => 'select', 'name' => 'theme_color', 'description' => 'Dashboard theme color',
-                'value' => ['normal' => 'Normal mode', 'dark' => 'Dark mode', 'light' => 'Light mode', 'color_blind' => 'Red green Blindness mode'],
+            ['form_type' => 'select', 'name' => 'theme_color', 'description' => 'System color theme',
+                'value' => $themes,
             ]
         ];
     }

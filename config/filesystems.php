@@ -105,6 +105,11 @@ return [
             'driver' => 'local',
             'root' => '/run/nmsprime',
         ],
+
+        'public-ccc' => [
+            'driver' => 'local',
+            'root'   => public_path(),
+        ],
     ],
 
 ];
