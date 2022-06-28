@@ -14,7 +14,7 @@ class AddThemeColorColumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('theme_color', 50)->nullable();
+            $table->string('theme_color', 50)->default('normal_theme_config.css');
         });
     }
 

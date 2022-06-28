@@ -26,7 +26,7 @@
     @yield('head')
 </head>
 
-<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }} data-theme="{{$user->theme_color}}">
+<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
     @include('Layout.navbar')
     @include('Layout.sidebar')
 
