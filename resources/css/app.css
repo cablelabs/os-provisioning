@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@import '/public-ccc/components/assets-admin/css/color_config.css';
+
 @import "nmsprime.css";
 @import 'select2/dist/css/select2';
 @import 'vue3-snotify/style';
@@ -22,6 +24,7 @@
 @import 'datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4';
 @import 'datatables.net-responsive-bs4/css/responsive.bootstrap4';
 @import 'datatables.net-bs4/css/dataTables.bootstrap4';
+
 
 @tailwind base;
 @tailwind components;
