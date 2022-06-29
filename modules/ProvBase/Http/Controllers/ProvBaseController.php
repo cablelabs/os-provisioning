@@ -93,10 +93,9 @@ class ProvBaseController extends BaseController
     public static function serverSentEvents($cmd)
     {
         $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($cmd) {
-
             $handle = popen($cmd, 'r');
 
-            if (!is_resource($handle)) {
+            if (! is_resource($handle)) {
                 echo "data: finished\n\n";
                 ob_flush();
                 flush();
@@ -104,7 +103,7 @@ class ProvBaseController extends BaseController
                 return;
             }
 
-            while (!feof($handle)) {
+            while (! feof($handle)) {
                 $line = fgets($handle);
                 $line = str_replace("\n", '', $line);
                 // echo 'data: {"message": "'. $line . '"}'."\n";
