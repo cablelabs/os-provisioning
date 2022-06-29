@@ -81,7 +81,7 @@ class UserController extends BaseController
             $roleOptions['disabled'] = 'true';
         }
 
-        $color_files = Storage::disk('public-ccc')->allFiles('components/assets-admin/css/config');
+        $color_files = Storage::disk('public-folder')->allFiles('components/assets-admin/css/config');
 
         $themes = [];
         foreach ($color_files as $key => $color_file_path) {
