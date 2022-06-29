@@ -38,6 +38,7 @@ import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
 import ticketSystemReceiver from './components/TicketSystem/TicketSystemReceiver.vue'
 import TicketSystemComments from './components/TicketSystem/TicketSystemComments.vue'
+import ProvBaseConfigFileEdit from './components/ProvBase/ProvBaseConfigFileEdit.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -112,4 +113,20 @@ if (document.getElementById('ticketsystem-receiver')) {
 if (document.getElementById('ticketsystem-comments')) {
   window.ticketSystemComments = createApp(TicketSystemComments)
     .mount('#ticketsystem-comments')
+}
+
+if (document.getElementById('provbase-config-file-edit')) {
+  window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
+    .mount('#provbase-config-file-edit')
+
+  window.provBaseConfigFileEdit.directive('dispatchsel2', {
+    inserted: function(e) {
+      $(e).on('select2:select', function() {
+          e.dispatchEvent(new Event('change'));
+      });
+      $(e).on('select2:unselect', function() {
+          e.dispatchEvent(new Event('change'));
+      });
+    }
+  });
 }
