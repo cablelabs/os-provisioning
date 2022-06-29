@@ -941,52 +941,17 @@ class ModemController extends \BaseController
     }
 
     /**
-     * Send output of Ping in real-time to client browser as Stream with Server Sent Events
-     * called in analysis.blade.php in javascript content
+     * Send output of Ping as Stream
+     * in blade files using Server Sent Events
      *
-     * @param   ip          String
-     * @return response Stream
+     * @param string
+     * @return response
      *
-     * @author Nino Ryschawy
+     * @author Roy Schneider
      */
     public static function realtimePing($ip)
     {
-        // \Log::debug(__FUNCTION__. "called with $ip");
-
-        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($ip) {
-            $cmd = 'ping -c 5 '.escapeshellarg($ip);
-
-            $handle = popen($cmd, 'r');
-
-            if (! is_resource($handle)) {
-                echo "data: finished\n\n";
-                ob_flush();
-                flush();
-
-                return;
-            }
-
-            while (! feof($handle)) {
-                $line = fgets($handle);
-                $line = str_replace("\n", '', $line);
-                // \Log::debug("$line");
-                // echo 'data: {"message": "'. $line . '"}'."\n";
-                echo "data: <br>$line";
-                echo "\n\n";
-                ob_flush();
-                flush();
-            }
-
-            pclose($handle);
-
-            echo "data: finished\n\n";
-            ob_flush();
-            flush();
-        });
-
-        $response->headers->set('Content-Type', 'text/event-stream');
-
-        return $response;
+        return ProvBaseController::serverSentEvents('ping -c 5 '.escapeshellarg($ip));
     }
 
     private function _fake_lease($modem, $ep)

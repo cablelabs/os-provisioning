@@ -81,4 +81,48 @@ class ProvBaseController extends BaseController
             ['form_type' => 'checkbox', 'name' => 'auto_factory_reset', 'description' => 'Automatic factory reset', 'help' => trans('helper.auto_factory_reset')],
         ];
     }
+
+    /**
+     * Base functionality for server-sent event
+     *
+     * @param  string
+     * @return response
+     *
+     * @author Nino Ryschawy
+     */
+    public static function serverSentEvents($cmd)
+    {
+        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($cmd) {
+
+            $handle = popen($cmd, 'r');
+
+            if (!is_resource($handle)) {
+                echo "data: finished\n\n";
+                ob_flush();
+                flush();
+
+                return;
+            }
+
+            while (!feof($handle)) {
+                $line = fgets($handle);
+                $line = str_replace("\n", '', $line);
+                // echo 'data: {"message": "'. $line . '"}'."\n";
+                echo "data: <br>$line";
+                echo "\n\n";
+                ob_flush();
+                flush();
+            }
+
+            pclose($handle);
+
+            echo "data: finished\n\n";
+            ob_flush();
+            flush();
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+
+        return $response;
+    }
 }
