@@ -25,9 +25,9 @@ use App\Role;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BaseViewController;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends BaseController
 {
@@ -85,12 +85,12 @@ class UserController extends BaseController
 
         $themes = [];
         foreach ($color_files as $key => $color_file_path) {
-            $file_name_array = explode("/", $color_file_path);
+            $file_name_array = explode('/', $color_file_path);
             $file_name = end($file_name_array);
-            $filename_without_extension = explode(".", $file_name)[0];
-            $themes[$file_name] = str_replace("_", " ", $filename_without_extension);
+            $filename_without_extension = explode('.', $file_name)[0];
+            $themes[$file_name] = str_replace('_', ' ', $filename_without_extension);
         }
-        
+
         return [
             ['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
             ['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],
