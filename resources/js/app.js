@@ -39,17 +39,18 @@ import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+require('datatables.net-buttons/js/buttons.html5.js')
+require('datatables.net-buttons/js/buttons.print.js')
 
-import * as JSZip from "jszip";
-window.JSZip = JSZip;
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+pdfMake.vfs = pdfFonts.pdfMake.vfs
+
+import * as JSZip from 'jszip'
+window.JSZip = JSZip
 
 import 'datatables.net-buttons-bs4'
-import "datatables.net-responsive";
-import "datatables.net-buttons/js/buttons.html5.js";
-import "datatables.net-buttons/js/buttons.print.js";
+import 'datatables.net-responsive'
 
 window.main = createApp(app)
   .component('overlay', overlay)
