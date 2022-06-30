@@ -1,6 +1,7 @@
 <sidebar id="sidebar" data-net-count='{{ $netCount ?? 0 }}' data-netelements='@json($networks ?? new stdClass())'
     data-favorites='@json($favorites ?? new stdClass())' class="fixed top-0 left-0 z-0 flex flex-col h-full">
     <div class="mt-16 md:mt-[3.25rem] flex flex-1 text-gray-200">
+        @if (Module::collections()->has('CoreMon'))
         <div class="z-20 flex flex-col justify-between w-16 bg-sidebar-dark">
             <div>
                 <div
@@ -98,8 +99,10 @@
                 <div>Community</div>
             </a>
         </div>
+        @endif
         <div class="relative z-10 transition-all duration-200"
             :class="{ '-translate-x-full': store.minified }">
+            @if (Module::collections()->has('CoreMon'))
             <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-zinc-900">
                 <div class="w-full px-3 py-2 text-gray-400">
                     <div class="mb-4 text-base font-semibold text-gray-100">Filter</div>
@@ -160,8 +163,9 @@
                     </div>
                 </div>
             </div>
+            @endif
             <!-- begin "old" sidebar -->
-            <div v-cloak v-show="menu == 'Access Network' && !store.minified" class="flex w-64 overflow-y-auto sidebar d-print-none"
+            <div v-cloak v-show="(menu == 'Access Network' || {{ (int)!Module::collections()->has('CoreMon') }}) && !store.minified" class="flex w-64 overflow-y-auto sidebar d-print-none"
                 style="position: absolute;padding-top:0;">
                 <!-- begin sidebar scrollbar -->
                 <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
