@@ -91,6 +91,13 @@ class UserController extends BaseController
             $themes[$file_name] = str_replace('_', ' ', $filename_without_extension);
         }
 
+        $roleOptions = [
+            'multiple' => 'multiple',
+        ];
+        if (! Bouncer::can('update', User::class)) {
+            $roleOptions['disabled'] = 'true';
+        }
+
         return [
             ['form_type' => 'text', 'name' => 'login_name', 'description' => 'Login'],
             ['form_type' => 'password', 'name' => 'password', 'description' => 'Password'],
