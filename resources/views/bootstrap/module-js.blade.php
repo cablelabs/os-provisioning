@@ -16,6 +16,16 @@
  * limitations under the License.
  */
 ?>
-@if (Module::collections()->has(['CoreMon']))
-<script src="{{ mix('js/core-mon.js') }}"></script>
+@if (isset($routeModule))
+    @switch ($routeModule)
+        @case ('Ticketsystem')
+            <script src="{{ asset('js/ticketsystem.js') }}"></script>
+            @break
+        @case ('ProvBase')
+            <script src="{{ asset('js/prov-base.js') }}"></script>
+            @break
+        @case ('HfcBase')
+            <script src="{{ asset('js/hfc-base.js') }}"></script>
+            @break
+    @endswitch
 @endif
