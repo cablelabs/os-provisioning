@@ -12,19 +12,21 @@ const path = require('path')
  |
  */
 
-/* Allow multiple Laravel Mix applications */
-require('laravel-mix-merge-manifest');
-mix.mergeManifest();
+ /* Allow multiple Laravel Mix applications */
+ require('laravel-mix-merge-manifest');
+ mix.mergeManifest();
 
-/* Make alias for main resource/js directory */
-mix.alias({
+ /* Make alias for main resource/js directory */
+ mix.alias({
   '@': path.join(__dirname, 'resources/js')
-});
+ });
 
-mix.js('resources/js/app.js', 'public/js')
-  .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
-  .vue()
-  .version()
-  .postCss('resources/css/app.css', 'public/css', [
-    require('tailwindcss'),
-  ])
+ mix.js('resources/js/app.js', 'public/js')
+ .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
+ .js('modules/HfcBase/Resources/assets/js/hfc-base.js', 'public/js')
+ .js('modules/ProvBase/Resources/assets/js/prov-base.js', 'public/js')
+ .js('modules/Ticketsystem/Resources/assets/js/ticketsystem.js', 'public/js')
+ .vue()
+ .postCss('resources/css/app.css', 'public/css', [
+   require('tailwindcss'),
+ ])

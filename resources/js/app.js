@@ -32,13 +32,6 @@ import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import overlay from "./components/Overlay.vue"
-import NavbarQuickviewNetwork from "./components/navbar/QuickviewNetwork.vue"
-import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
-import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
-import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
-import ticketSystemReceiver from './components/TicketSystem/TicketSystemReceiver.vue'
-import TicketSystemComments from './components/TicketSystem/TicketSystemComments.vue'
-import ProvBaseConfigFileEdit from './components/ProvBase/ProvBaseConfigFileEdit.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -89,44 +82,4 @@ if (document.getElementById('coremon-index-table')) {
 
 if (document.getElementById('vue-body')) {
   window.real = createApp(Analysis).mount('#vue-body')
-}
-
-if (document.getElementById('map-actions')) {
-  window.mapActions = createApp(HfcBaseMapActions).mount('#map-actions')
-}
-
-if (document.getElementById('HfcBase-history-table')) {
-  window.hfcBaseHistoryTable = createApp(HfcBaseHistoryTable).use(snotify)
-    .mount('#HfcBase-history-table')
-}
-
-if (document.getElementById('HfcBase-history-slider')) {
-  window.hfcBaseHistorySlider = createApp(HfcBaseHistorySlider)
-    .mount('#HfcBase-history-slider')
-}
-
-if (document.getElementById('ticketsystem-receiver')) {
-  window.ticketSystemReceiver = createApp(ticketSystemReceiver)
-    .mount('#ticketsystem-receiver')
-}
-
-if (document.getElementById('ticketsystem-comments')) {
-  window.ticketSystemComments = createApp(TicketSystemComments)
-    .mount('#ticketsystem-comments')
-}
-
-if (document.getElementById('provbase-config-file-edit')) {
-  window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
-    .mount('#provbase-config-file-edit')
-
-  window.provBaseConfigFileEdit.directive('dispatchsel2', {
-    inserted: function(e) {
-      $(e).on('select2:select', function() {
-          e.dispatchEvent(new Event('change'));
-      });
-      $(e).on('select2:unselect', function() {
-          e.dispatchEvent(new Event('change'));
-      });
-    }
-  });
 }
