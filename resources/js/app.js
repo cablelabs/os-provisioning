@@ -44,11 +44,8 @@ require('datatables.net-buttons/js/buttons.print.js')
 
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
-pdfMake.vfs = pdfFonts.pdfMake.vfs
-
 import * as JSZip from 'jszip'
-window.JSZip = JSZip
-
+import 'datatables.net-select-bs4'
 import 'datatables.net-buttons-bs4'
 import 'datatables.net-responsive'
 
@@ -70,6 +67,9 @@ if (document.getElementById('sidebar')) {
   })
     .component('select2', select2Component)
     .mount('#sidebar')
+
+  pdfMake.vfs = pdfFonts.pdfMake.vfs
+  window.JSZip = JSZip
 }
 
 if (document.getElementById('sidebar-right')) {

@@ -18,14 +18,26 @@
 ?>
 @php
     $colvis = $colvis ?? true;
-    $export = $data['export'] ?? ':visible.content';
+    $export =  $data['export'] ?? ':visible.content';
+
+    $exportAll = [
+        'columns' =>  $export,
+        'modifier' =>  [
+            'order' =>  'current',
+            'page' =>  'all',
+            'selected' =>  null,
+        ]
+    ];
+
+    $exportAll = json_encode($exportAll);
+
 @endphp
 buttons: [
     {
         extend: 'print',
         className: 'btn-sm bg-gray-200 text-gray-800 border-gray-300',
         titleAttr: "{!! trans('helper.PrintVisibleTable') !!}",
-        exportOptions: {columns: "{{ $export }}" }
+        exportOptions: {!! $exportAll !!},
     },
     {
         extend: 'collection',
@@ -37,7 +49,7 @@ buttons: [
             {
                 extend: 'csvHtml5',
                 text: "<i class='fa fa-file-code-o'></i> .CSV",
-                exportOptions: {columns: "{{ $export }}" },
+                exportOptions: {!! $exportAll !!},
                 fieldSeparator: ';'
             },
             {
@@ -46,7 +58,7 @@ buttons: [
                 action: function (e, dt, button, config) {
                     $.fn.dataTableExt.buttons.excelHtml5.action.call(this, e, dt, button, config)
                 },
-                exportOptions: {columns: "{{ $export }}" }
+                exportOptions: {!! $exportAll !!},
             },
             {
                 extend: 'pdfHtml5',
@@ -54,9 +66,7 @@ buttons: [
                 action: function ( e, dt, node, config ) {
                     $.fn.dataTableExt.buttons.pdfHtml5.action.call(this, e, dt, node, config)
                 },
-                exportOptions: {
-                    columns: "{{ $export }}"
-                    },
+                exportOptions: {!! $exportAll !!},
                 customize: function(doc, config) {
                     var tableNode;
                     for (i = 0; i < doc.content.length; ++i) {
@@ -77,12 +87,12 @@ buttons: [
             {
                 extend: 'print',
                 text: "<i class='fa fa-print'></i> {{ trans('view.jQuery_Print') }}",
-                exportOptions: { columns: "{{ $export }}"  },
+                exportOptions: {!! $exportAll !!},
             },
             {
                 extend: 'copy',
                 text: "<i class='fa fa-clipboard'></i> {{ trans('view.jQuery_copyToClipboard') }}",
-                exportOptions: { columns: "{{ $export }}"  },
+                exportOptions: {!! $exportAll !!},
             }
         ]
     },
