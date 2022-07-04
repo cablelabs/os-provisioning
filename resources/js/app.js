@@ -35,6 +35,7 @@ import overlay from "./components/Overlay.vue"
 import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
+import Inventory from './components/Inventory.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -92,3 +93,7 @@ if (document.getElementById('HfcBase-history-slider')) {
   window.hfcBaseHistorySlider = createApp(HfcBaseHistorySlider)
     .mount('#HfcBase-history-slider')
 }
+
+if (document.getElementById('inventoryApp')) {
+	window.inventoryApp = createApp(Inventory).mount('#inventoryApp')
+  }
