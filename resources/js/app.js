@@ -35,7 +35,7 @@ import overlay from "./components/Overlay.vue"
 import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
-import Inventory from './components/Inventory.vue'
+import Inventory from './components/inventory/Inventory.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
