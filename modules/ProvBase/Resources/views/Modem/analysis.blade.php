@@ -162,56 +162,6 @@
         });
     });
 @endif
-
-new Vue({
-    el: '#vue-body',
-    data () {
-        return {
-            loading: true,
-            pingStarted: false,
-            selectedPing: 1,
-            floodPingResult: null,
-            pingOptions: [
-                {id: 1, name: '{{ trans('view.modemAnalysis.floodping.lowLoad') }}'},
-                {id: 2, name: '{{ trans('view.modemAnalysis.floodping.averageLoad') }}'},
-                {id: 3, name: '{{ trans('view.modemAnalysis.floodping.bigLoad') }}'},
-                {id: 4, name: '{{ trans('view.modemAnalysis.floodping.hugeLoad') }}'},
-            ]
-        }
-    },
-    methods: {
-        floodPing: function() {
-            let timeout = {
-                1: 5000,
-                2: 10000,
-                3: 30000,
-                4: 30000
-            }
-
-            this.$snotify.success('{{ trans('provmon::messages.analysis.pingInProgress') }}', null, {timeout: timeout[this.selectedPing]})
-            this.pingStarted = true
-            this.floodPingResult = ''
-
-            axios({
-                method: 'post',
-                url: '{{ route("Modem.floodPing", ["modem" => $modem->id]) }}',
-                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                data: {
-                    task: this.selectedPing
-                }
-            })
-            .then((response) => {
-                this.floodPingResult = response.data
-                this.pingStarted = false
-            })
-            .catch((error) => {
-                console.error(error)
-                this.pingStarted = false
-            })
-        },
-    },
-})
 </script>
 
 @include('Generic.handlePanel')

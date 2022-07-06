@@ -27,7 +27,16 @@
 
 @section ('content_left')
 
-<div id="vue-body" class="row">
+<ModemAnalysis
+    id="modem-analysis"
+    class="row"
+    data-modem-analysis-floodping-lowLoad="{{ trans('view.modemAnalysis.floodping.lowLoad') }}"
+    data-modem-analysis-floodping-averageLoad="{{ trans('view.modemAnalysis.floodping.averageLoad') }}"
+    data-modem-analysis-floodping-bigLoad="{{ trans('view.modemAnalysis.floodping.bigLoad') }}"
+    data-modem-analysis-floodping-hugeLoad="{{ trans('view.modemAnalysis.floodping.hugeLoad') }}"
+    data-messages-analysis-ping-in-progress="{{ trans('provmon::messages.analysis.pingInProgress') }}"
+    data-csrf-token="{{ csrf_token() }}"
+>
     <vue-snotify></vue-snotify>
     {{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 
@@ -82,6 +91,6 @@
         </div>
     @endif
 
-</div>
+</ModemAnalysis>
 
 @stop

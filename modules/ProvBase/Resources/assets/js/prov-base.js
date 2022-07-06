@@ -21,10 +21,14 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
  import { createApp } from 'vue'
+ import snotify from 'vue3-snotify'
+
  import ProvBaseConfigFileEdit from './components/ConfigFileEdit.vue'
- 
+ import ModemAnalysis from './components/ModemAnalysis.vue'
+
  if (document.getElementById('provbase-config-file-edit')) {
    window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
+     .use(snotify)
      .mount('#provbase-config-file-edit')
  
    window.provBaseConfigFileEdit.directive('dispatchsel2', {
@@ -37,4 +41,9 @@
        });
      }
    });
+ }
+
+ if (document.getElementById('modem-analysis')) {
+   window.modemAnalysis = createApp(ModemAnalysis)
+     .mount('#modem-analysis')
  }
