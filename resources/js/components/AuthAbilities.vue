@@ -9,7 +9,7 @@ express or implied. * See the License for the specific language governing
 permissions and * limitations under the License. */
 
 <script setup>
-import { ref, reactive, onMounted, toRefs } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 let propData = document.querySelector('#auth-abilities').dataset
 
@@ -18,21 +18,20 @@ const allowAllId = ref(1)
 const allowViewAll = ref(undefined)
 const allowViewAllId = ref(2)
 const loadingSpinner = reactive({})
-const spinner = ref(false)
 const changed = ref([])
 const showSaveColumn = ref(false)
+const customAbilities = ref(JSON.parse(propData.customAbilities))
+const originalRoleAbilities = ref(JSON.parse(propData.roleAbilities))
+const roleAbilities = ref(JSON.parse(propData.roleAbilities))
+const originalForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
+const roleForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
+
 const showCapabilitySaveColumn = ref(false)
 const capabilities = ref(JSON.parse(propData.capabilities))
 const originalCapabilities = ref(JSON.parse(propData.capabilities))
-const customAbilities = ref(JSON.parse(propData.customAbilities))
-const roleAbilities = ref(JSON.parse(propData.roleAbilities))
-const originalRoleAbilities = ref(JSON.parse(propData.roleAbilities))
-const roleForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
-const originalForbiddenAbilities = ref(
-  JSON.parse(propData.roleForbiddenAbilities)
-)
 const modelAbilities = ref(JSON.parse(propData.modelAbilities))
 const originalModelAbilities = ref(JSON.parse(propData.modelAbilities))
+
 const permissions = reactive({
   view: {},
   create: {},
@@ -42,28 +41,29 @@ const permissions = reactive({
   save: {}
 })
 
-const button = reactive({
+const button = {
   allow: propData.abilityAllowTo,
   forbid: propData.abilityForbidTo
-})
+}
 
 // mounted
 onMounted(() => {
   setupCustomAbilities()
-  setupModelAbilities()
+//  setupModelAbilities()
+  document.getElementById('loader').classList.add('hidden')
 })
 
 // methods
 function setupCustomAbilities() {
-  for (id in customAbilities.value) {
-    if (customAbilities.value[id]['title'] == 'All abilities')
+  for (let id in customAbilities.value) {
+    if (customAbilities.value[id]['title'] == 'All abilities') {
       allowAllId.value = id
+    }
 
-    if (customAbilities.value[id]['title'] == 'View everything')
+    if (customAbilities.value[id]['title'] == 'View everything'){
       allowViewAllId.value = id
-  }
+    }
 
-  for (id in customAbilities.value) {
     if (id in originalRoleAbilities.value) {
       document.getElementById(`allowed${id}`).checked = true
       if (id == allowAllId.value) allowAll.value = true
@@ -186,7 +186,11 @@ function changeModelAbility(event) {
 }
 
 function showInput(elementId) {
-  return !document.getElementById(elementId).checked
+  let el = document.getElementById(elementId)
+
+  if (el) {
+    return !el.checked
+  }
 }
 
 function saveButton(module) {
