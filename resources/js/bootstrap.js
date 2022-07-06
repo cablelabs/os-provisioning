@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-// window._ = require('lodash')
+window._ = require('lodash')
 
 import 'jquery-ui/ui/core'
 import 'jquery-ui/ui/widgets/sortable'
