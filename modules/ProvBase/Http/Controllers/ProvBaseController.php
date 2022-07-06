@@ -83,16 +83,19 @@ class ProvBaseController extends BaseController
     }
 
     /**
-     * Base functionality for server-sent event
+     * Base functionality for server-sent event.
+     *
+     * As stated in https://www.php.net/manual/en/function.flush.php,
+     * you sometimes need to send whitespace if you want the browser to display the data.
      *
      * @param  string
-     * @return response
+     * @return \Illuminate\Http\Response
      *
-     * @author Nino Ryschawy
+     * @author Nino Ryschawy, Roy Schneider
      */
     public static function serverSentEvents($cmd)
     {
-        $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function () use ($cmd) {
+        return response()->stream(function () use ($cmd) {
             $handle = popen($cmd, 'r');
 
             if (! is_resource($handle)) {
@@ -106,22 +109,22 @@ class ProvBaseController extends BaseController
             while (! feof($handle)) {
                 $line = fgets($handle);
                 $line = str_replace("\n", '', $line);
-                // echo 'data: {"message": "'. $line . '"}'."\n";
+
                 echo "data: <br>$line";
-                echo "\n\n";
+                // browser won't display anything until it receives enough data
+                echo str_repeat("\n", 4096);
+
                 ob_flush();
                 flush();
             }
 
             pclose($handle);
-
             echo "data: finished\n\n";
             ob_flush();
             flush();
-        });
-
-        $response->headers->set('Content-Type', 'text/event-stream');
-
-        return $response;
+        }, 200, [
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'text/event-stream; charset=utf-8',
+        ]);
     }
 }
