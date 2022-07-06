@@ -310,6 +310,11 @@ class Kernel extends ConsoleKernel
            }
 
            if ('LFO' == config('smartont.flavor.active')) {
+                // get updates for OTO from CSV file
+                $schedule->call(function () {
+                    Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntFromCsvUpdaterJob());
+                })->everyFiveMinutes();
+
                 $schedule->call(function () {
                     Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
                 })->everyFiveMinutes();
