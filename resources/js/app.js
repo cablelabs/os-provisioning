@@ -78,14 +78,21 @@ if (document.getElementById('sidebar-right')) {
   window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
 }
 
+window.main = createApp(app)
+  .component('overlay', overlay)
+  .component('select2', select2Component)
+  .component('skeleton', skeletonComponent)
+  .use(snotify)
+  .mount('#page-container')
+
 if (document.getElementById('coremon-index-table')) {
   window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
 }
 
-if (document.getElementById('auth-abilities')) {
- window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
-}
-
 if (document.getElementById('vue-body')) {
   window.real = createApp(Analysis).mount('#vue-body')
+}
+
+if (document.getElementById('auth-abilities')) {
+  window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
 }
