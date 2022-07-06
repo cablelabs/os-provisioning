@@ -31,20 +31,21 @@ import sidebar from './components/Sidebar.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
-import overlay from "./components/Overlay.vue"
-import AuthAbilities from "./components/AuthAbilities.vue"
+import CoreMonDataTable from './components/CoreMonDataTable.vue'
+import overlay from './components/Overlay.vue'
+import AuthAbilities from './components/AuthAbilities.vue'
 
 // dataTables
-require('datatables.net-buttons/js/buttons.colVis.js')
-require('datatables.net-buttons/js/buttons.html5.js')
-require('datatables.net-buttons/js/buttons.print.js')
+import 'datatables.net-buttons/js/buttons.colVis.js'
+import 'datatables.net-buttons/js/buttons.html5.js'
+import 'datatables.net-buttons/js/buttons.print.js'
+import 'datatables.net-select-bs4'
+import 'datatables.net-buttons-bs4'
+import 'datatables.net-responsive'
 
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import * as JSZip from 'jszip'
-import 'datatables.net-select-bs4'
-import 'datatables.net-buttons-bs4'
-import 'datatables.net-responsive'
 
 // app
 window.main = createApp(app)
@@ -88,10 +89,3 @@ if (document.getElementById('auth-abilities')) {
 if (document.getElementById('vue-body')) {
   window.real = createApp(Analysis).mount('#vue-body')
 }
-
-window.main = createApp(app)
-  .component('overlay', overlay)
-  .component('select2', select2Component)
-  .component('skeleton', skeletonComponent)
-  .use(snotify)
-  .mount('#page-container')
