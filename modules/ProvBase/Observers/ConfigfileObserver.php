@@ -51,6 +51,8 @@ class ConfigfileObserver
             $unchangables = [
                 'device',
                 'service_profile_id',
+                'ont_line_profile_id',
+                'tr069_profile_id',
             ];
             $configfile->restoreUnchangeableFields($unchangables, 'Configfile is in use');
             return;

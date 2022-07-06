@@ -610,7 +610,7 @@ function valuesFromThresholdString($thresholds)
 
 /**
  * Return a MAC in DC250 format (xxxx-xxxx-xxxx)
- * 
+ *
  * @param string $mac MAC address
  * @param boolean $forceLower if true return mac in lower case, else leave untouched
  * @return string MAC in DC250 format
@@ -619,6 +619,10 @@ function valuesFromThresholdString($thresholds)
  */
 function dc250Mac($mac, $forceLower=True)
 {
+    if (! $mac) {
+        return $mac;
+    }
+
     if ($forceLower) {
         $mac = strtolower($mac);
     }

@@ -86,15 +86,9 @@ class EndpointController extends \BaseController
                 'checkbox' => 'show_on_fixed_ip',
                 'help' => trans('helper.addReverse'),
             ],
-            [
-                'form_type' => 'textarea',
-                'name' => 'description',
-                'description' => 'Description',
-            ],
         ];
 
         $qos = $model->html_list($model->qualities(), 'name', true);
-        $qos[null] = 'Same as ONT';
         if (Module::collections()->has('SmartOnt')) {
             $ret[] = [
                 'form_type' => 'select',
@@ -106,11 +100,39 @@ class EndpointController extends \BaseController
                 'form_type' => 'text',
                 'name' => 'device_id',
                 'description' => 'Device ID',
+                'hidden' => 'C',
                 'options' => [
                     'readonly',
+                    'placeholder' => 'Not yet provisioned',
+                ],
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'acl_id',
+                'description' => 'ACL ID',
+                'hidden' => 'C',
+                'options' => [
+                    'readonly',
+                    'placeholder' => 'Not yet provisioned',
+                ],
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'rule_id',
+                'description' => 'Rule ID',
+                'hidden' => 'C',
+                'options' => [
+                    'readonly',
+                    'placeholder' => 'Not yet provisioned',
                 ],
             ];
         }
+
+        $ret[] = [
+            'form_type' => 'textarea',
+            'name' => 'description',
+            'description' => 'Description',
+        ];
 
         return $ret;
     }

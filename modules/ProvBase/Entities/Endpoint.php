@@ -55,6 +55,9 @@ class Endpoint extends \BaseModel
             if ($modem->configfile->device == 'cm') {
                 // Note: For IPv4 this is removed in EndpointController.php
                 $rules['mac'][] = 'required';
+            } elseif ($modem->configfile->is_multiservice_ont) {
+                $rules['fixed_ip'] = [];
+                $rules['mac'][] = 'required';
             } else {
                 $rules['fixed_ip'][] = 'In:1';
                 $rules['ip'][] = 'required';

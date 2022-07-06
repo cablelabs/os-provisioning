@@ -102,6 +102,12 @@ class Modem extends \BaseModel
 
         if (isset($configfile)) {
             if ('tr069' == $configfile->device) {
+                if ($configfile->is_multiservice_ont) {
+                    array_unshift($rules['mac'], 'nullable');
+                    array_unshift($rules['ppp_username'], 'nullable');
+                    array_unshift($rules['serial_num'], 'required');
+                    return $rules;
+                }
                 $rules['mac'][] = 'nullable';
                 $rules['ppp_password'][] = 'required';
                 // we wan't to show the required rule first, before any other validation error
@@ -530,8 +536,10 @@ class Modem extends \BaseModel
             $ret[$tabName][$mtaName]['relation'] = $this->mtas;
         }
 
-        $ret[$tabName]['Endpoint']['class'] = 'Endpoint';
-        $ret[$tabName]['Endpoint']['relation'] = $this->endpoints;
+        if ((! Module::collections()->has('SmartOnt')) || ($this->configfile->is_multiservice_ont)) {
+            $ret[$tabName]['Endpoint']['class'] = 'Endpoint';
+            $ret[$tabName]['Endpoint']['relation'] = $this->endpoints;
+        }
 
         $ret[$tabName]['Option']['class'] = 'ModemOption';
         $ret[$tabName]['Option']['relation'] = $this->options;
@@ -961,7 +969,7 @@ class Modem extends \BaseModel
             return;
         }
 
-        if ($this->isOnt()) {
+        if ($this->isSmartOnt()) {
 
             // ATM no configfile needed (service_port_id taken directly later on)
             return;
@@ -2238,7 +2246,7 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Check if modem ONT
+     * Check if modem is an ONT
      *
      * @return true if ONT, else false
      *
@@ -2247,6 +2255,23 @@ class Modem extends \BaseModel
     public function isOnt()
     {
         return $this->configfile->device === 'ont';
+    }
+
+    /**
+     * Check if modem is a smart ONT (an ONT speaking TR-069, multiservice capable)
+     * This is the case if either the configfile->device is ont or TR-069 with enabled SmartOnt module
+     *
+     * @return true if ONT, else false
+     *
+     * @author Patrick Reichel
+     */
+    public function isSmartOnt()
+    {
+        if (\Module::collections()->has('SmartOnt')) {
+            return ($this->isTR069() || $this->isOnt());
+        }
+
+        return false;
     }
 
     /**

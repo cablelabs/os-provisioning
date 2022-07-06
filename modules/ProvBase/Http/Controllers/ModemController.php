@@ -217,6 +217,9 @@ class ModemController extends \BaseController
                 'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Modem.select2', ['relation' => 'qos'])], 'select' => $qosIds,
             ]];
             $c[] = ['form_type' => 'checkbox', 'name' => 'address_to_invoice', 'description' => trans('billingbase::view.modemAddressToInvoice'), 'space' => '1', 'help' => trans('billingbase::messages.modemAddressToInvoice')];
+        } elseif (Module::collections()->has('SmartOnt') && $model->configfile && $model->configfile->is_multiservice_ont) {
+            // do not use qos in this case
+            $b = [];
         } else {
             $b = [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];
             $c[12] = array_merge($c[12], ['space' => 1]);
@@ -249,7 +252,12 @@ class ModemController extends \BaseController
                     'options' => ['readonly'],
                 ];
                 $smartont[] = [
-                    'form_type' => 'text',
+                    'form_type' => 'select',
+                    'value' => [
+                        null => 'n/a',
+                        'active' => 'active',
+                        'inactive' => 'inactive',
+                    ],
                     'name' => 'next_ont_state',
                     'description' => 'Next ONT state',
                 ];
@@ -839,6 +847,10 @@ class ModemController extends \BaseController
             $this->configfile = Configfile::find($data['configfile_id']);
         }
 
+        if ($this->configfile->is_multiservice_ont) {
+            $data['qos_id'] = null;
+        }
+
         if ($this->configfile && $this->configfile->device != 'tr069') {
             $data['ppp_password'] = null;
         }
@@ -846,6 +858,18 @@ class ModemController extends \BaseController
         $data['mac'] = unifyMac($data['mac'] ?? null);
 
         return $data;
+    }
+
+    /**
+     * @author Patrick Reichel
+     */
+    protected function prepare_rules($rules, $data)
+    {
+        if ($this->configfile->is_multiservice_ont) {
+            $rules['qos_id'] = [];
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 
     /**

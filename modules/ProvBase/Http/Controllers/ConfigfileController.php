@@ -91,13 +91,27 @@ class ConfigfileController extends \BaseController
         }
 
         if (Module::collections()->has('SmartOnt')) {
-            if ('GESA' == config('smartont.flavor.active')) {
-                $form[] = [
-                    'form_type' => 'text',
-                    'name' => 'service_profile_id',
-                    'description' => 'Service profile ID',
-                ];
-            }
+            // @TODO SmartOnt move service_profile_id, line_profile_id and tr069_profile_id to configfile for LFO, too?
+            $form[] = [
+                'form_type' => 'text',
+                'name' => 'ont_line_profile_id',
+                'description' => 'ONT line profile ID',
+            ];
+            $form[] = [
+                'form_type' => 'text',
+                'name' => 'service_profile_id',
+                'description' => 'Service profile ID',
+            ];
+            $form[] = [
+                'form_type' => 'text',
+                'name' => 'tr069_profile_id',
+                'description' => 'TR-069 profile ID',
+            ];
+            $form[] = [
+                'form_type' => 'checkbox',
+                'name' => 'is_multiservice_ont',
+                'description' => 'Is multiservice ONT?',
+            ];
         }
 
         return $form;
@@ -113,7 +127,7 @@ class ConfigfileController extends \BaseController
         $rules['text'] .= ':'.$data['device'];
 
         if ($data['device'] != 'mta' && Module::collections()->has('ProvMon')) {
-            $rules['dashboard'] = 'required';
+            /* $rules['dashboard'] = 'required'; */
         }
 
         return $rules;

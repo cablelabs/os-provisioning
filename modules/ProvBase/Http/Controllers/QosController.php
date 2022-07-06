@@ -29,13 +29,36 @@ class QosController extends \BaseController
     public function view_form_fields($model = null)
     {
         // label has to be the same like column in sql table
-        $ret = [
-            ['form_type' => 'text', 'name' => 'name', 'description' => 'Name'],
-            ['form_type' => 'text', 'name' => 'ds_rate_max', 'description' => 'DS Rate [MBit/s]'],
-            ['form_type' => 'text', 'name' => 'us_rate_max', 'description' => 'US Rate [MBit/s]'],
-            ['form_type' => 'text', 'name' => 'ds_name', 'description' => 'DS PPPoE Name'],
-            ['form_type' => 'text', 'name' => 'us_name', 'description' => 'US PPPoE Name'],
+        $ret = [];
+
+        $ret[] = [
+            'form_type' => 'text',
+            'name' => 'name',
+            'description' => 'Name'
         ];
+
+        if ((! $model) || ('smartont' != $model->type)) {
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'ds_rate_max',
+                'description' => 'DS Rate [MBit/s]',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'us_rate_max',
+                'description' => 'US Rate [MBit/s]',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'ds_name',
+                'description' => 'DS PPPoE Name',
+            ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'us_name',
+                'description' => 'US PPPoE Name',
+            ];
+        }
 
         if (Module::collections()->has('SmartOnt')) {
             $types = [
@@ -55,31 +78,21 @@ class QosController extends \BaseController
             ];
             $ret[] = [
                 'form_type' => 'text',
-                'name' => 'ont_line_profile_id',
-                'description' => 'ONT line profile ID',
-            ];
-            if ('GESA' != config('smartont.flavor.active')) {
-                $ret[] = [
-                    'form_type' => 'text',
-                    'name' => 'service_profile_id',
-                    'description' => 'Service profile ID',
-                ];
-            }
-            $ret[] = [
-                'form_type' => 'text',
                 'name' => 'gem_port',
                 'description' => 'GEM port',
             ];
-            $ret[] = [
-                'form_type' => 'text',
-                'name' => 'traffic_table_in',
-                'description' => 'Traffic table in',
-            ];
-            $ret[] = [
-                'form_type' => 'text',
-                'name' => 'traffic_table_out',
-                'description' => 'Traffic table out',
-            ];
+            if ('GESA' == config('smartont.flavor.active')) {
+                $ret[] = [
+                    'form_type' => 'text',
+                    'name' => 'traffic_table_in',
+                    'description' => 'Traffic table in',
+                ];
+                $ret[] = [
+                    'form_type' => 'text',
+                    'name' => 'traffic_table_out',
+                    'description' => 'Traffic table out',
+                ];
+            }
         }
 
         return $ret;
