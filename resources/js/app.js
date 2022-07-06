@@ -32,6 +32,7 @@ import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import overlay from "./components/Overlay.vue"
+import AuthAbilities from "./components/AuthAbilities.vue"
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -77,9 +78,20 @@ if (document.getElementById('sidebar-right')) {
 }
 
 if (document.getElementById('coremon-index-table')) {
-	window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
+  window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
+}
+
+if (document.getElementById('auth-abilities')) {
+ window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
 }
 
 if (document.getElementById('vue-body')) {
   window.real = createApp(Analysis).mount('#vue-body')
 }
+
+window.main = createApp(app)
+  .component('overlay', overlay)
+  .component('select2', select2Component)
+  .component('skeleton', skeletonComponent)
+  .use(snotify)
+  .mount('#page-container')

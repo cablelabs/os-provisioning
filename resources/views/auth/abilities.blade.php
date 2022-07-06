@@ -21,17 +21,32 @@
 <div class="d-flex justify-content-center">
     <div id="loader"></div>
 </div>
-<div id="app" style="display:none;">
+<AuthAbilities
+    id="auth-abilities"
+    style="display:none;"
+    data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
+    data-capabilities='@json($capabilities)'
+    data-custom-abilities='@json($customAbilities)'
+    data-role-abilities='@json($roleAbilities)'
+    data-role-forbidden-abilities='@json($roleForbiddenAbilities)'
+    data-model-abilities='@json($modelAbilities)'
+    data-ability-allow-to="{{ trans('view.Ability.Allow to') }}"
+    data-ability-forbid-to="{{ trans('view.Ability.Forbid to') }}"
+    data-view-var-id="{{ $view_var->id }}"
+    data-route-capability-update="{!! route('capability.update') !!}"
+    data-route-custom-ability-update="{!! route('customAbility.update') !!}"
+    data-route-model-ability-update="{!! route('modelAbility.update') !!}"
+>
     <div id="accordion" class="panel-group">
         <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="d-flex align-items-center flex-row" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
+            <div class="flex-row d-flex align-items-center" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#customAbilities" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
                         {{ trans('view.Ability.Custom Abilities') }}
                     </a>
                 </h3>
-                <div class="d-flex align-items-center mx-1">
+                <div class="mx-1 d-flex align-items-center">
                     <button class="btn btn-sm btn-primary"
                         v-on:click="customUpdate('all')"
                         v-show="showSaveColumn">
@@ -44,7 +59,7 @@
             </div>
             <div id="customAbilities" class="panel-collapse collapse" aria-expanded="true" style="">
                 <div class="panel-body d-flex flex-column">
-                    <table class="table table-hover mb-5">
+                    <table class="table mb-5 table-hover">
                         <thead class="text-center">
                           <tr>
                             <th class="text-left">{{ trans('view.Ability.Ability') }}</th>
@@ -59,7 +74,7 @@
                             <td v-text="ability['localTitle']"></td>
                             <td align="center">
                                 <input type="checkbox"
-                                    :ref="'allowed' + id"
+                                    :id="'allowed' + id"
                                     :name="'ability[' + id + ']'"
                                     value="allow"
                                     v-show="id == allowAllId || (!allowAll && id != allowAllId) || allowAll == undefined"
@@ -67,7 +82,7 @@
                             </td>
                             <td align="center" v-show="allowAll">
                                 <input type="checkbox"
-                                    :ref="'forbidden' + id"
+                                    :id="'forbidden' + id"
                                     :name="'ability[' + id + ']'"
                                     value="forbid"
                                     v-show="checkForbiddenVisibility(id)"
@@ -106,7 +121,7 @@
         <form method="POST" action="{!! route('modelAbility.update') !!}" accept-charset="UTF-8" id="{{ $module }}" class="form_open" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="d-flex align-items-center flex-row" style="padding:0.5rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
+            <div class="flex-row d-flex align-items-center" style="padding:0.5rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_'.$module }}" aria-expanded="false">
                         <i class="fa fa-plus-circle"></i>
@@ -115,22 +130,22 @@
                 </h3>
                 <span class="d-flex align-items-center">
                         <span
-                            class="badge badge-lg mr-1"
+                            class="mr-1 badge badge-lg"
                             :class="[allowAll ? 'badge-danger' : 'badge-success']" >
                             @{{ allowAll ? button.forbid : button.allow }}
                         </span>
                     @foreach($actions as $action)
                         @if($action['name'] != 'delete' && $action['name'] != 'create' || $module != 'GlobalConfig')
                         <span class="">
-                            <button class="btn btn-sm d-none d-md-block mx-1"
+                            <button class="mx-1 btn btn-sm d-none d-md-block"
                                     name="{!! $action['name'] . '_' . $module !!}"
                                     v-on:click.prevent="shortcutButtonClick"
                                     :class="[{!! $action['name'] !!}All.{!! $module !!} ? 'btn-{!! $action['bsclass'] !!} {!! $action['name'] != 'update' ? 'active' : ''!!}' : 'btn-secondary']"
                                     @if(in_array($action['name'], ['create', 'update', 'delete']))
-                                    v-if="!(manageAll.{!! $module !!})"
+                                    v-if="!(permissions.manage.{!! $module !!})"
                                     @endif
                                     @if($action['name'] == 'view')
-                                    v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined"
+                                    v-if="!(permissions.manage.{!! $module !!}) && allowViewAll == undefined"
                                     @endif
                                     title="{{ trans('view.Button_'.$action['name']) }}"
                                     >
@@ -147,7 +162,7 @@
                         </span>
                         @endif
                     @endforeach
-                    <span class="d-flex ml-1">
+                    <span class="ml-1 d-flex">
                         <button class="btn btn-sm btn-primary"
                             name="{!! 'save' . '_' . $module !!}"
                             v-if="saveButton('{!! $module !!}')"
@@ -176,19 +191,19 @@
                         <th > {{ trans('view.Ability.Allow'). '-'.
                                  trans('view.Ability.Forbid') }} </th>
                         <th > {{ trans('view.Ability.Manage') }} </th>
-                        <th v-if="!(manageAll.{!! $module !!}) && allowViewAll == undefined">
+                        <th v-if="!(permissions.manage.{!! $module !!}) && allowViewAll == undefined">
                             {{ trans('view.Ability.View') }}
                         </th>
                         @if ($module != 'GlobalConfig')
-                        <th v-if="!(manageAll.{!! $module !!})">
+                        <th v-if="!(permissions.manage.{!! $module !!})">
                             {{ trans('view.Ability.Create') }}
                         </th>
                         @endif
-                        <th v-if="!(manageAll.{!! $module !!})">
+                        <th v-if="!(permissions.manage.{!! $module !!})">
                             {{ trans('view.Ability.Update') }}
                         </th>
                         @if ($module != 'GlobalConfig')
-                        <th v-if="!(manageAll.{!! $module !!})">
+                        <th v-if="!(permissions.manage.{!! $module !!})">
                             {{ trans('view.Ability.Delete') }}
                         </th>
                         @endif
@@ -244,7 +259,7 @@
     </div>
     <div id="accordion2" class="panel-group" style="margin-top: 40px" v-if="capabilities">
         <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="d-flex align-items-center flex-row" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
+            <div class="flex-row d-flex align-items-center" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
                 <h3 class="panel-title" style="flex: 1;">
                     <a class="accordion-toggle accordion-toggle-styled collapsed"
                         data-toggle="collapse"
@@ -255,7 +270,7 @@
                         {{ trans('view.Ability.Technical Capabilities') }}
                     </a>
                 </h3>
-                <div class="d-flex align-items-center mx-1">
+                <div class="mx-1 d-flex align-items-center">
                     <button class="btn btn-sm btn-primary"
                         v-on:click="capabilityUpdate('all')"
                         v-show="showCapabilitySaveColumn">
@@ -268,7 +283,7 @@
             </div>
             <div id="customCapabilities" class="panel-collapse collapse" aria-expanded="true" style="">
                 <div class="panel-body d-flex flex-column">
-                    <table class="table table-hover mb-5">
+                    <table class="table mb-5 table-hover">
                         <thead class="text-center">
                             <tr>
                             <th class="text-left">{{ trans('view.Ability.Capability') }}</th>
@@ -307,7 +322,7 @@
             </div>
         </div>
     </div>
-</div>
+</AuthAbilities>
 @DivClose()
 
 @section('javascript_extra')
@@ -315,324 +330,6 @@
 <script src="{{asset('components/assets-admin/plugins/Abilities/lodash.core.min.js')}}"></script>
 
 <script type="text/javascript">
-function handlePanelPositionToPreventCrash() {
-    return new Promise(function(resolve, reject) {
-        let targetPage = window.location.href;
-            targetPage = targetPage.split('?');
-            targetPage = targetPage[0];
-        let panelPositionData = localStorage.getItem(targetPage) ? targetPage : "{!! isset($view_header) ? $view_header : 'undefined'!!}";
-        if (panelPositionData) {
-            localStorage.removeItem(panelPositionData)
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("app").style.display = "block";
-            resolve();
-        } else {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("app").style.display = "block";
-            resolve();
-        }
-    });
-}
-
-handlePanelPositionToPreventCrash().then(function() {
-new Vue({
-  el: '#app',
-  data() {
-    return {
-        allowAll: undefined,
-        allowAllId: 1,
-        allowViewAll: undefined,
-        allowViewAllId: 2,
-        manageAll: {},
-        viewAll: {},
-        createAll: {},
-        updateAll: {},
-        deleteAll: {},
-        saveAll: {},
-        loadingSpinner: {},
-        spinner: false,
-        changed: [],
-        showSaveColumn: false,
-        showCapabilitySaveColumn: false,
-        capabilities: @json($capabilities),
-        originalCapabilities: @json($capabilities),
-        customAbilities: @json($customAbilities),
-        roleAbilities: @json($roleAbilities),
-        originalRoleAbilities: @json($roleAbilities),
-        roleForbiddenAbilities: @json($roleForbiddenAbilities),
-        originalForbiddenAbilities: @json($roleForbiddenAbilities),
-        modelAbilities: @json($modelAbilities),
-        originalModelAbilities: @json($modelAbilities),
-        button: {
-            allow: '{{ trans("view.Ability.Allow to") }}',
-            forbid: '{{ trans("view.Ability.Forbid to") }}'
-            }
-    }
-  },
-  mounted() {
-      this.setupCustomAbilities();
-      this.setupModelAbilities();
-  },
-  methods: {
-    setupCustomAbilities : function () {
-        for (id in this.customAbilities) {
-            if (this.customAbilities[id]['title'] == 'All abilities')
-                this.allowAllId = id;
-
-            if (this.customAbilities[id]['title'] == 'View everything')
-                this.allowViewAllId = id;
-        }
-
-        for (id in this.customAbilities) {
-            if (id in this.originalRoleAbilities) {
-                this.$refs['allowed' + id][0].checked = true;
-                if (id == this.allowAllId)  this.allowAll = true;
-                if (id == this.allowViewAllId) this.allowViewAll = true;
-            }
-
-            if (id in this.originalForbiddenAbilities) {
-                this.$refs['forbidden' + id][0].checked = true;
-                if (id == this.allowAllId) this.allowAll = false;
-                if (id == this.allowViewAllId) this.allowViewAll = false;
-            }
-
-            this.changed[id] = false;
-        }
-
-        this.loadingSpinner.custom = false;
-    },
-    setupModelAbilities : function() {
-        for (let module in this.modelAbilities) {
-            this.manageAll[module] = this.checkShortcutButtons('*', module);
-            this.viewAll[module] = this.checkShortcutButtons('view', module);
-            this.createAll[module] = this.checkShortcutButtons('create', module);
-            this.updateAll[module] = this.checkShortcutButtons('update', module);
-            this.deleteAll[module] = this.checkShortcutButtons('delete', module);
-            this.saveAll[module] = this.checkShortcutButtons('save', module);
-            this.loadingSpinner[module] = false;
-        }
-    },
-    checkForbiddenVisibility : function (id) {
-        if (id == this.allowViewAllId || id == this.allowAllId )
-            return false;
-
-        return ((this.allowAll && id != this.allowAllId) || (this.allowAll == undefined));
-    },
-    checkChangedArray : function (array) {
-        return array.includes(true) ? true : false;
-    },
-    hasChanged : function (id) {
-        if (this.$refs['allowed' + id][0].checked)
-            return id in this.originalRoleAbilities ? false : true;
-
-        if (this.$refs['forbidden' + id][0].checked)
-            return id in this.originalForbiddenAbilities ? false  : true;
-
-        if (!this.$refs['allowed' + id][0].checked || !this.$refs['forbidden' + id][0].checked)
-            return id in this.originalRoleAbilities || id in this.originalForbiddenAbilities ? true : false;
-    },
-    customAllow : function (id) {
-        if (this.$refs['allowed' + id][0].checked) {
-            if (id == this.allowAllId) {
-                this.allowAll = true;
-                this.allowViewAll = undefined;
-                this.$refs['allowed' + this.allowViewAllId][0].checked = false;
-                this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
-                delete this.roleAbilities[this.allowViewAllId];
-            }
-
-            this.allowViewAll =  id == this.allowViewAllId ? true : this.allowViewAll;
-            this.roleAbilities[id] = this.customAbilities[id]['localTitle'];
-            delete this.roleForbiddenAbilities[id];
-        } else {
-            if (id == this.allowAllId) {
-                this.allowAll = undefined;
-                this.changed.splice(this.allowViewAllId, 1, this.hasChanged(this.allowViewAllId));
-            }
-
-            this.allowViewAll =  id == this.allowViewAllId ? undefined : this.allowViewAll;
-            delete this.roleAbilities[id];
-        }
-
-        this.$refs['forbidden' + id][0].checked = false;
-        this.changed.splice(id, 1, this.hasChanged(id));
-        this.showSaveColumn = this.checkChangedArray(this.changed);
-    },
-    customForbid : function (id) {
-        if (this.$refs['forbidden' + id][0].checked) {
-            this.roleForbiddenAbilities[id] = this.customAbilities[id]['localTitle'];
-            delete this.roleAbilities[id];
-        } else {
-            delete this.roleForbiddenAbilities[id];
-        }
-
-        this.$refs['allowed' + id][0].checked = false;
-        this.changed.splice(id, 1, this.hasChanged(id));
-        this.showSaveColumn = this.checkChangedArray(this.changed);
-    },
-    changeModelAbility : function (event) {
-        let name = (event.target.id).split('_');
-        let action = name[0];
-        let actionShortcut = (action == 'manage') ? '*' : action;
-        let module = name[1];
-
-        if (!event.target.checked)
-            this.$data[action + 'All'][module] = false;
-        else {
-            this.$data[action + 'All'][module] = this.checkShortcutButtons(actionShortcut, module);
-        }
-    },
-    showInput : function(elementId) {
-        return !document.getElementById(elementId).checked;
-    },
-    saveButton: function (module) {
-        if (_.isEqual(this.modelAbilities[module], this.originalModelAbilities[module]))
-            return false;
-
-        return true;
-    },
-    shortcutButtonClick : function (event) {
-        let module = event.target.name.split('_');
-        this.setShortcutButtons(module[0], module[1]);
-    },
-    setShortcutButtons : function (action, module) {
-        let actionShortcut = (action == 'manage') ? '*' : action;
-
-        if (!this.$data[action + 'All'][module]) {
-            this.$data[action + 'All'][module] = true;
-            for (let model in this.modelAbilities[module]) {
-                let set = new Set(this.modelAbilities[module][model]);
-                set.add(actionShortcut);
-                this.modelAbilities[module][model] = Array.from(set);
-            }
-        } else {
-            this.$data[action + 'All'][module] = false;
-            for (let model in this.modelAbilities[module]) {
-                if (actionShortcut == '*') document.getElementById('manage' + '_' + module + '_'  + model).checked = false;
-                let set = new Set(this.modelAbilities[module][model]);
-                set.delete(actionShortcut);
-                this.modelAbilities[module][model] = Array.from(set);
-            }
-        }
-    },
-    checkShortcutButtons : function(actionShortcut, module) {
-            let check = true
-
-            for (let model in this.modelAbilities[module]) {
-                let set = new Set(this.modelAbilities[module][model]);
-                check = check && set.has(actionShortcut);
-                this.modelAbilities[module][model] = Array.from(set);
-            }
-
-            return check;
-    },
-    capabilityChange: function (id) {
-        this.capabilities[id].isCapable = !this.capabilities[id].isCapable
-        this.showCapabilitySaveColumn = this.checkChangedArray(
-            Object.keys(this.capabilities).map(key => this.capabilities[key].isCapable));
-    },
-    capabilityUpdate: function (id) {
-        let self = this;
-        let token = document.querySelector('input[name="_token"]').value;
-
-        this.loadingSpinner.capabilities = true;
-        this.loadingSpinner = _.clone(this.loadingSpinner);
-
-        axios({
-            method: 'post',
-            url: '{!! route("capability.update") !!}',
-            headers: {'X-CSRF-TOKEN': token},
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {
-                id: id,
-                capabilities: this.capabilities,
-                roleId: '{{ $view_var->id }}'
-            }
-        })
-        .then(function (response) {
-            self.originalCapabilities = response.data.capabilities
-
-            self.loadingSpinner.capabilities = false;
-            self.showCapabilitySaveColumn = self.checkChangedArray(self.changed);
-        })
-        .catch(function (error) {
-            alert(error);
-        });
-    },
-    customUpdate : function (id) {
-        let self = this;
-        let token = document.querySelector('input[name="_token"]').value;
-
-        this.loadingSpinner.custom = true;
-        this.loadingSpinner = _.clone(this.loadingSpinner);
-
-        axios({
-            method: 'post',
-            url: '{!! route("customAbility.update") !!}',
-            headers: {'X-CSRF-TOKEN': token},
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: {
-                id: id,
-                roleAbilities: this.roleAbilities,
-                roleForbiddenAbilities: this.roleForbiddenAbilities,
-                changed: this.changed,
-                roleId: '{{ $view_var->id }}'
-            }
-        })
-        .then(function (response) {
-            self.originalRoleAbilities = response.data.roleAbilities;
-            self.originalForbiddenAbilities = response.data.roleForbiddenAbilities;
-
-            if(self.changed[self.allowAllId]) {
-                for (module in self.modelAbilities) {
-                    self.modelUpdate(module);
-                }
-            }
-
-            if (typeof response.data.id === 'object'){
-                for (let id in response.data.id) {
-                    self.changed.splice(response.data.id[id], 1, self.hasChanged(response.data.id[id]));
-                }
-            } else {
-                self.changed.splice(response.data.id, 1, self.hasChanged(response.data.id));
-            }
-
-            self.loadingSpinner.custom = false;
-            self.showSaveColumn = self.checkChangedArray(self.changed);
-        })
-        .catch(function (error) {
-            alert(error);
-        });
-    },
-    modelUpdate : function(module) {
-        this.loadingSpinner[module] = true;
-        this.loadingSpinner = _.clone(this.loadingSpinner); // let watcher know something changed
-        let self = this;
-        let form = document.getElementById(module);
-        let formData = new FormData(form);
-
-        formData.append('roleId', {{ $view_var->id }});
-        formData.append('allowAll', this.allowAll);
-        formData.append('module', module);
-
-        axios({
-            method: 'post',
-            url: '{!! route("modelAbility.update") !!}',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: formData,
-        })
-        .then(function (response) {
-            self.originalModelAbilities = response.data;
-            self.modelAbilities[module] = _.clone(response.data[module]);
-            self.loadingSpinner[module] = false;
-        })
-        .catch(function (error) {
-            alert(error);
-        });
-    }
-  }
-});
 $('[data-toggle="popover"]').popover({html:true});
-});
 </script>
 @stop
