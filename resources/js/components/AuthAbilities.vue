@@ -259,7 +259,6 @@ function capabilityUpdate(id) {
   let token = document.querySelector('input[name="_token"]').value
 
   loadingSpinner.capabilities = true
-  loadingSpinner = _.clone(loadingSpinner)
 
   axios({
     method: 'post',
@@ -287,7 +286,6 @@ function customUpdate(id) {
   let token = document.querySelector('input[name="_token"]').value
 
   loadingSpinner.custom = true
-  loadingSpinner = _.clone(loadingSpinner)
 
   axios({
     method: 'post',
@@ -334,7 +332,7 @@ function customUpdate(id) {
 
 function modelUpdate(module) {
   loadingSpinner[module] = true
-  loadingSpinner = _.clone(loadingSpinner) // let watcher know something changed
+
   let form = document.getElementById(module)
   let formData = new FormData(form)
 

@@ -37,7 +37,6 @@
     data-route-capability-update="{!! route('capability.update') !!}"
     data-route-model-ability-update="{!! route('modelAbility.update') !!}"
 >
-<input type="text" v-model=test>
     <div id="accordion" class="panel-group">
         <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
             <div class="flex-row d-flex align-items-center" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
