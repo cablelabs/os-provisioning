@@ -43,7 +43,7 @@
    });
  }
 
- if (document.getElementById('modem-analysis')) {
+ if (document.getElementById('OpenSourceModemAnalysis')) {
    window.modemAnalysis = createApp(ModemAnalysis)
-     .mount('#modem-analysis')
+     .mount('#OpenSourceModemAnalysis')
  }

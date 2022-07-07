@@ -25,6 +25,7 @@ const path = require('path')
  .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
  .js('modules/HfcBase/Resources/assets/js/hfc-base.js', 'public/js')
  .js('modules/ProvBase/Resources/assets/js/prov-base.js', 'public/js')
+ .js('modules/ProvMon/Resources/assets/js/prov-mon.js', 'public/js')
  .js('modules/Ticketsystem/Resources/assets/js/ticketsystem.js', 'public/js')
  .vue()
  .postCss('resources/css/app.css', 'public/css', [

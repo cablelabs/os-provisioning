@@ -27,8 +27,33 @@
 
 @section ('content_left')
 
-<ModemAnalysis
-    id="modem-analysis"
+@if(Module::collections()->has('ProvMon'))
+<div
+    v-pre
+    id="EnterPriseModemAnalysis"
+    class="row"
+    data-realtime-broadcasting="{!! route('ProvMon.realtimeBroadcasting', ['id' => $modem->id]) !!}"
+    data-picture="{{ url($picture) }}"
+    data-genie-cmds='@json($genieCmds, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
+    data-modem-analysis='@json(trans('view.modemAnalysis'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
+    data-messages-entries="{{ trans('messages.Entries') }}"
+    data-csrf-token="{{ csrf_token() }}"
+    data-modem-id="{{ $modem->id }}"
+    data-route-modem-refresh-genie-object="{{ route('Modem.refreshGenieObject', $modem->id) }}"
+    data-route-refresh-realtime-tr069="{{ route('ProvMon.refreshRealtimeTr069', $modem->id) }}"
+    data-route-modem-genie-task="{{ route('Modem.genieTask', $modem->id) }}"
+    data-messages-analysis-ping-in-progress="{{ trans('provmon::messages.analysis.pingInProgress') }}"
+    data-route-modem-flood-ping="{{ route("Modem.floodPing", ["modem" => $modem->id]) }}"
+    data-messages-please-wait="{{ trans('messages.pleaseWait') }}"
+    data-route-create-spectrum="{{ route('ProvMon.createSpectrum', [$modem->id]) }}"
+    data-messages-spectrum-processing="{{ trans('provmon::messages.spectrum.processing') }}"
+    data-messages-no-spectrum="{{ trans('messages.noSpectrum') }}"
+>
+
+@else
+<div 
+    v-pre
+    id="OpenSourceModemAnalysis"
     class="row"
     data-modem-analysis-floodping-lowLoad="{{ trans('view.modemAnalysis.floodping.lowLoad') }}"
     data-modem-analysis-floodping-averageLoad="{{ trans('view.modemAnalysis.floodping.averageLoad') }}"
@@ -36,7 +61,9 @@
     data-modem-analysis-floodping-hugeLoad="{{ trans('view.modemAnalysis.floodping.hugeLoad') }}"
     data-messages-analysis-ping-in-progress="{{ trans('provmon::messages.analysis.pingInProgress') }}"
     data-csrf-token="{{ csrf_token() }}"
+    data-route-modem-flood-ping="{{ route("Modem.floodPing", ["modem" => $modem->id]) }}"
 >
+@endif
     <vue-snotify></vue-snotify>
     {{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 
@@ -91,6 +118,6 @@
         </div>
     @endif
 
-</ModemAnalysis>
+    </div>
 
 @stop

@@ -1,7 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import axios from 'axios'
 
-const propData = document.querySelector('#modem-analysis').dataset
+const propData = document.querySelector('#OpenSourceModemAnalysis').dataset
 
 // refs
 const loading = ref(true)
@@ -30,7 +31,7 @@ function floodPing() {
 
   axios({
     method: 'post',
-    url: '{{ route("Modem.floodPing", ["modem" => $modem->id]) }}',
+    url: propData.routeModemFloodPing,
     headers: {'X-CSRF-TOKEN': propData.csrfToken},
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     data: {
