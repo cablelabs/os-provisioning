@@ -25,6 +25,8 @@ class Ability extends Eloquent
 {
     use IsAbility;
 
+    public $table = 'abilities';
+
     /**
      * The attributes that aren't mass assignable.
      *
