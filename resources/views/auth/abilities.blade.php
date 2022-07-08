@@ -18,7 +18,7 @@
 ?>
 
 <div id="failure" class="alert alert-danger" hidden></div>
-<div class="d-flex justify-content-center">
+<div class="flex justify-center">
     <div id="loader"></div>
 </div>
 <div
@@ -38,15 +38,15 @@
     data-route-model-ability-update="{!! route('modelAbility.update') !!}"
 >
     <div id="accordion" class="panel-group">
-        <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="flex-row d-flex align-items-center" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
-                <h3 class="panel-title" style="flex: 1;">
-                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#customAbilities" aria-expanded="false">
-                        <i class="fa fa-plus-circle"></i>
+        <div class="mb-0 bg-white border panel-inverse">
+            <div class="flex flex-row items-center px-3 py-2 text-white bg-zinc-900 rounded-top">
+                <h3 class="flex-1 panel-title">
+                    <a class="accordion-toggle accordion-toggle-styled collapsed hover:text-gray-300" data-toggle="collapse" data-parent="#accordion" href="#customAbilities" aria-expanded="false">
+                        <i class="mr-2 fa fa-plus-circle"></i>
                         {{ trans('view.Ability.Custom Abilities') }}
                     </a>
                 </h3>
-                <div class="mx-1 d-flex align-items-center">
+                <div class="flex items-center h-8 mx-1">
                     <button class="btn btn-sm btn-primary"
                         v-on:click="customUpdate('all')"
                         v-show="showSaveColumn">
@@ -57,8 +57,8 @@
                     </button>
                 </div>
             </div>
-            <div id="customAbilities" class="panel-collapse collapse" aria-expanded="true" style="">
-                <div class="panel-body d-flex flex-column">
+            <div id="customAbilities" class="panel-collapse collapse" aria-expanded="true">
+                <div class="flex panel-body flex-column">
                     <table class="table mb-5 table-hover">
                         <thead class="text-center">
                             <tr>
@@ -120,31 +120,31 @@
     @foreach ($modelAbilities as $module => $entities)
         <form method="POST" action="{!! route('modelAbility.update') !!}" accept-charset="UTF-8" id="{{ $module }}" class="form_open" enctype="multipart/form-data">
         {{ csrf_field() }}
-        <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="flex-row d-flex align-items-center" style="padding:0.5rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
-                <h3 class="panel-title" style="flex: 1;">
-                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_'.$module }}" aria-expanded="false">
-                        <i class="fa fa-plus-circle"></i>
+        <div class="mb-0 bg-white border panel-inverse">
+            <div class="flex flex-row items-center px-3 py-2 text-white bg-zinc-900">
+                <h3 class="flex-1 panel-title">
+                    <a class="accordion-toggle accordion-toggle-styled collapsed hover:text-gray-300" data-toggle="collapse" data-parent="#accordion" href="#{{ 'group_'.$module }}" aria-expanded="false">
+                        <i class="mr-2 fa fa-plus-circle"></i>
                         {{ trans("view.Ability.{$module}") }}
                     </a>
                 </h3>
-                <span class="d-flex align-items-center">
+                <span class="flex items-center">
                         <span
                             class="mr-1 badge badge-lg"
-                            :class="[allowAll ? 'badge-danger' : 'badge-success']" >
-                            @{{ allowAll ? button.forbid : button.allow }}
+                            :class="[allowAll ? 'badge-danger' : 'badge-success']"
+                            v-text="allowAll ? button.forbid : button.allow"
+                        >
                         </span>
                         @foreach($actions as $action)
                         @if($action['name'] != 'delete' && $action['name'] != 'create' || $module != 'GlobalConfig')
-                        <span class="">
+                        <span class="h-8">
                             <button class="mx-1 btn btn-sm d-none d-md-block"
                                     name="{!! $action['name'] . '_' . $module !!}"
                                     v-on:click.prevent="shortcutButtonClick"
                                     :class="[permissions.{!! $action['name'] !!}.{!! $module !!} ? 'btn-{!! $action['bsclass'] !!} {!! $action['name'] != 'update' ? 'active' : ''!!}' : 'btn-secondary']"
-                                    @if(in_array($action['name'], ['create', 'update', 'delete']))
+                                    @if (in_array($action['name'], ['create', 'update', 'delete']))
                                     v-if="!(permissions.manage.{!! $module !!})"
-                                    @endif
-                                    @if($action['name'] == 'view')
+                                    @elseif ($action['name'] == 'view')
                                     v-if="!(permissions.manage.{!! $module !!}) && allowViewAll == undefined"
                                     @endif
                                     title="{{ trans('view.Button_'.$action['name']) }}"
@@ -162,7 +162,7 @@
                         </span>
                         @endif
                     @endforeach
-                    <span class="ml-1 d-flex">
+                    <span class="flex ml-1">
                         <button class="btn btn-sm btn-primary"
                             name="{!! 'save' . '_' . $module !!}"
                             v-if="saveButton('{!! $module !!}')"
@@ -182,8 +182,8 @@
                     </span>
                 </span>
             </div>
-            <div id="{{'group_'.$module}}" class="panel-collapse collapse" aria-expanded="true" style="">
-                <div class="panel-body d-flex flex-column">
+            <div id="{{'group_'.$module}}" class="panel-collapse collapse" aria-expanded="true">
+                <div class="flex panel-body flex-column">
                 <table class="table table-hover">
                     <thead class="text-center">
                         <tr>
@@ -257,20 +257,20 @@
     </form>
     @endforeach
     </div>
-        <div id="accordion2" class="panel-group" style="margin-top: 40px" v-if="capabilities">
-            <div class="panel-inverse" style="margin-bottom: 0;background-color: #fff;border: 1px solid transparent;">
-            <div class="flex-row d-flex align-items-center" style="padding:0.75rem 1rem;color:#fff;background:#242a30;border: none;border-top-left-radius: 3px;border-top-right-radius: 3px;">
-                <h3 class="panel-title" style="flex: 1;">
-                    <a class="accordion-toggle accordion-toggle-styled collapsed"
+        <div id="accordion2" class="mt-12 panel-group" v-if="capabilities">
+            <div class="mb-0 bg-white border panel-inverse">
+            <div class="flex flex-row items-center px-3 py-2 text-white bg-zinc-900 rounded-top">
+                <h3 class="flex-1 panel-title">
+                    <a class="accordion-toggle accordion-toggle-styled collapsed hover:text-gray-300"
                         data-toggle="collapse"
                         data-parent="#accordion"
                         href="#customCapabilities"
                         aria-expanded="false">
-                        <i class="fa fa-plus-circle"></i>
+                        <i class="mr-2 fa fa-plus-circle"></i>
                         {{ trans('view.Ability.Technical Capabilities') }}
                     </a>
                 </h3>
-                <div class="mx-1 d-flex align-items-center">
+                <div class="flex items-center h-8 mx-1">
                     <button class="btn btn-sm btn-primary"
                         v-on:click="capabilityUpdate('all')"
                         v-show="showCapabilitySaveColumn">
@@ -281,15 +281,14 @@
                     </button>
                 </div>
             </div>
-            <div id="customCapabilities" class="panel-collapse collapse" aria-expanded="true" style="">
-                <div class="panel-body d-flex flex-column">
+            <div id="customCapabilities" class="panel-collapse collapse" aria-expanded="true">
+                <div class="flex panel-body flex-column">
                     <table class="table mb-5 table-hover">
                         <thead class="text-center">
                             <tr>
                             <th class="text-left">{{ trans('view.Ability.Capability') }}</th>
                             <th>{{ trans('view.Ability.Can Maintain') }}</th>
-                            <th v-show="!showCapabilitySaveColumn"></th>
-                            <th v-show="showCapabilitySaveColumn">{{ trans('messages.Save Changes') }}</th>
+                            <th><div v-show="showCapabilitySaveColumn">{{ trans('messages.Save Changes') }}</div></th>
                             </tr>
                         </thead>
                         <tr v-for="(capability, id) in capabilities">
