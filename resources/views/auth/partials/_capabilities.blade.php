@@ -10,10 +10,9 @@
             </h3>
             <div class="flex items-center h-8 mx-1">
                 <button class="btn btn-sm btn-primary" v-on:click="capabilityUpdate('all')"
-                    v-show="showCapabilitySaveColumn">
-                    <i class="fa fa-lg" :class="loadingSpinner.custom ? 'fa-circle-o-notch fa-spin' : 'fa-save'">
-                    </i>
-                    {{ trans('view.Ability.Save All') }}
+                    v-show="loadingSpinner.capabilities">
+                    <i class="fa fa-lg fa-circle-o-notch fa-spin mr-1"></i>
+                    {{ trans('messages.Save') }}
                 </button>
             </div>
         </div>
@@ -24,29 +23,13 @@
                         <tr>
                             <th class="text-left">{{ trans('view.Ability.Capability') }}</th>
                             <th>{{ trans('view.Ability.Can Maintain') }}</th>
-                            <th>
-                                <div v-show="showCapabilitySaveColumn">{{ trans('messages.Save Changes') }}
-                                </div>
-                            </th>
                         </tr>
                     </thead>
                     <tr v-for="(capability, id) in capabilities">
                         <td v-text="capability.title"></td>
                         <td align="center">
                             <input type="checkbox" :ref="'capability' + id" :name="'capability[' + id + ']'"
-                                value="maintain" :checked="capability.isCapable" v-on:change="capabilityChange(id)">
-                        </td>
-                        <td class="text-center">
-                            <div
-                                v-if="(capability.isCapable != originalCapabilities[id].isCapable) && showCapabilitySaveColumn">
-                                <button type="submit" class="btn btn-primary" name="saveAbility" :value="id"
-                                    v-on:click="capabilityUpdate(id)">
-                                    <i class="fa fa-save fa-lg"
-                                        :class="loadingSpinner.capabilities ? 'fa-circle-o-notch fa-spin' : 'fa-save'">
-                                    </i>
-                                    {{ trans('messages.Save') }}
-                                </button>
-                            </div>
+                                value="maintain" :checked="capability.isCapable" v-on:change="capabilityUpdate(id)">
                         </td>
                     </tr>
                 </table>

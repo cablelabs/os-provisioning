@@ -28,7 +28,7 @@ const button = {
 onMounted(() => {
   setupCustomAbilities()
   setupModelAbilities()
-  setupCapabilities()
+
   // hide the loader once everything is initialized properly
   document.getElementById('loader').classList.add('hidden')
 })
@@ -339,26 +339,12 @@ function modelUpdate(module) {
     })
 }
 
-const showCapabilitySaveColumn = ref(false)
-const capabilities = ref(JSON.parse(propData.capabilities))
-const originalCapabilities = ref(JSON.parse(propData.capabilities))
-
-function setupCapabilities() {
-
-}
-
-function capabilityChange(id) {
-  capabilities.value[id].isCapable = !capabilities.value[id].isCapable
-  showCapabilitySaveColumn.value = checkChangedArray(
-    Object.keys(capabilities.value).map(
-      (key) => capabilities.value[key].isCapable
-    )
-  )
-}
+const capabilities = reactive(JSON.parse(propData.capabilities))
 
 function capabilityUpdate(id) {
   let token = document.querySelector('input[name="_token"]').value
 
+  capabilities[id].isCapable = !capabilities[id].isCapable
   loadingSpinner.capabilities = true
 
   axios({
@@ -368,15 +354,19 @@ function capabilityUpdate(id) {
     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
     data: {
       id: id,
-      capabilities: capabilities.value,
+      capabilities: capabilities,
       roleId: propData.viewVarId
     }
   })
     .then(function (response) {
-      originalCapabilities.value = response.data.capabilities
+      if (
+        response.data.capabilities[id].isCapable != capabilities[id].isCapable
+      ) {
+        alert('Error')
+        capabilities[id].isCapable = response.data.capabilities[id].isCapable
+      }
 
       loadingSpinner.capabilities = false
-      showCapabilitySaveColumn.value = checkChangedArray(changed.value)
     })
     .catch(function (error) {
       alert(error)
