@@ -552,7 +552,7 @@ return [
         'Save All'          => 'Save All',
         'Save Changes'      => 'Save Changes',
         'See income chart'  => 'See Income Chart',
-        'Technical Capabilities' => 'Technical Capabilitiesn',
+        'Technical Capabilities' => 'Technical Capabilities',
         'Ticketsystem'      => 'Ticket System',
         'Update'            => 'Update',
         'Use api'           => 'Use API',
