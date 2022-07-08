@@ -31,9 +31,9 @@ class AbilityController extends Controller
 {
     /**
      * Action that indicates a capability. These are no authorization abilities
-     * and only determined to determine if a user is capable of something.
+     * and only there to determine if a user is capable of something.
      *
-     * @var array
+     * @var string
      */
     protected const CAPABILITY_ACTION = 'maintain';
 
@@ -64,38 +64,7 @@ class AbilityController extends Controller
      * Route "customAbility.update" and called via AJAX Requests.
      *
      * @param  Illuminate\Http\Request  $requestData
-     * @return Illuminate\Support\Collection
-     *
-     * @author Christian Schramm
-     */
-    protected function updateCapability(Request $requestData)
-    {
-        $role = Role::find($requestData->roleId);
-        $netElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->get()->keyBy('id');
-
-        foreach ($requestData->capabilities as $id => $netElementType) {
-            if ($netElementType['isCapable']) {
-                Bouncer::allow($role->name)->to(self::CAPABILITY_ACTION, $netElementTypes[$id]);
-                continue;
-            }
-
-            Bouncer::disallow($role->name)->to(self::CAPABILITY_ACTION, $netElementTypes[$id]);
-        }
-
-        Bouncer::refresh();
-
-        return collect([
-            'capabilities' => $this->getCapabilities($role),
-        ])->toJson();
-    }
-
-    /**
-     * Updates the Abilities that are not explicitly bound to a model and some
-     * Helper Abilities (like "allow all", "view all"). It is bound to the
-     * Route "customAbility.update" and called via AJAX Requests.
-     *
-     * @param  Illuminate\Http\Request  $requestData
-     * @return Illuminate\Support\Collection
+     * @return json
      *
      * @author Christian Schramm
      */
@@ -148,6 +117,35 @@ class AbilityController extends Controller
         $this->registerModelAbilities($role, $modelAbilities, $allowAll);
 
         return self::getModelAbilities($role)->toJson();
+    }
+
+    /**
+     *
+     *
+     * @param  Illuminate\Http\Request  $requestData
+     * @return json
+     *
+     * @author Christian Schramm
+     */
+    protected function updateCapability(Request $requestData)
+    {
+        $role = Role::find($requestData->roleId);
+        $netElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->get()->keyBy('id');
+
+        foreach ($requestData->capabilities as $id => $netElementType) {
+            if ($netElementType['isCapable']) {
+                Bouncer::allow($role->name)->to(self::CAPABILITY_ACTION, $netElementTypes[$id]);
+                continue;
+            }
+
+            Bouncer::disallow($role->name)->to(self::CAPABILITY_ACTION, $netElementTypes[$id]);
+        }
+
+        Bouncer::refresh();
+
+        return collect([
+            'capabilities' => $this->getCapabilities($role),
+        ])->toJson();
     }
 
     /**
@@ -235,36 +233,6 @@ class AbilityController extends Controller
         }
 
         Bouncer::refresh();
-    }
-
-    /**
-     * Get all Capabilities and Compose a Collection to use in Blade
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     *
-     * @author Christian Schramm
-     */
-    public static function getCapabilities(Role $role)
-    {
-        if (! Module::collections()->has('HfcReq')) {
-            return;
-        }
-
-        $rootNetElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->pluck('name', 'id');
-        $capableAbilities = $role->abilities()
-            ->where('abilities.entity_type', \Modules\HfcReq\Entities\NetElementType::class)
-            ->whereIn('abilities.entity_id', $rootNetElementTypes->keys())
-            ->pluck('abilities.entity_id');
-
-        return $rootNetElementTypes
-            ->mapWithKeys(function ($netlEmentType, $id) use ($capableAbilities) {
-                return [
-                    $id => [
-                        'title' => $netlEmentType,
-                        'isCapable' => $capableAbilities->contains($id),
-                    ],
-                ];
-            });
     }
 
     /**
@@ -368,6 +336,36 @@ class AbilityController extends Controller
         });
 
         return $modelAbilities;
+    }
+
+    /**
+     * Get all Capabilities and Compose a Collection to use in Blade
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     *
+     * @author Christian Schramm
+     */
+    public static function getCapabilities(Role $role)
+    {
+        if (! Module::collections()->has('HfcReq')) {
+            return;
+        }
+
+        $rootNetElementTypes = \Modules\HfcReq\Entities\NetElementType::rootNodes()->pluck('name', 'id');
+        $capableAbilities = $role->abilities()
+            ->where('abilities.entity_type', \Modules\HfcReq\Entities\NetElementType::class)
+            ->whereIn('abilities.entity_id', $rootNetElementTypes->keys())
+            ->pluck('abilities.entity_id');
+
+        return $rootNetElementTypes
+            ->mapWithKeys(function ($netlEmentType, $id) use ($capableAbilities) {
+                return [
+                    $id => [
+                        'title' => $netlEmentType,
+                        'isCapable' => $capableAbilities->contains($id),
+                    ],
+                ];
+            });
     }
 
     /**
