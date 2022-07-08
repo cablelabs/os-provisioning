@@ -8,12 +8,11 @@ on an "AS IS" BASIS, * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 express or implied. * See the License for the specific language governing
 permissions and * limitations under the License. */
 
-/**
- * This is the Frontend logic for the App\Http\Controllers\Auth\AbilityController::class
- * the template for this module is resources/views/auth/abilities.blade.php
- */
-
 <script setup>
+/**
+ * This is the Frontend logic for the App\Http\Controllers\Auth\AbilityController::class.
+ * The template for this module is resources/views/auth/abilities.blade.php.
+ */
 import { ref, reactive, onMounted } from 'vue'
 
 // prop data
@@ -47,7 +46,7 @@ function checkChangedArray(array) {
  * These abilities are not bound to a model and therefor have effects through
  * the whole system. Also here the basic permission methodology is selected
  * (forbid/allow).
-*/
+ */
 const allowAll = ref(undefined)
 const allowAllId = ref(undefined)
 const allowViewAll = ref(undefined)
@@ -57,7 +56,9 @@ const showSaveColumn = ref(false)
 const customAbilities = ref(JSON.parse(propData.customAbilities))
 const roleAbilities = ref(JSON.parse(propData.roleAbilities))
 const originalRoleAbilities = ref(JSON.parse(propData.roleAbilities))
-const originalForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
+const originalForbiddenAbilities = ref(
+  JSON.parse(propData.roleForbiddenAbilities)
+)
 const roleForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
 
 function setupCustomAbilities() {
@@ -66,7 +67,7 @@ function setupCustomAbilities() {
       allowAllId.value = id
     }
 
-    if (customAbilities.value[id]['title'] == 'View everything'){
+    if (customAbilities.value[id]['title'] == 'View everything') {
       allowViewAllId.value = id
     }
 
