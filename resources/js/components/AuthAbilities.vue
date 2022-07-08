@@ -8,39 +8,17 @@ on an "AS IS" BASIS, * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 express or implied. * See the License for the specific language governing
 permissions and * limitations under the License. */
 
+/**
+ * This is the Frontend logic for the App\Http\Controllers\Auth\AbilityController::class
+ * the template for this module is resources/views/auth/abilities.blade.php
+ */
+
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 
-let propData = document.querySelector('#auth-abilities').dataset
-
-const allowAll = ref(undefined)
-const allowAllId = ref(1)
-const allowViewAll = ref(undefined)
-const allowViewAllId = ref(2)
-const loadingSpinner = reactive({})
-const changed = ref([])
-const showSaveColumn = ref(false)
-const customAbilities = ref(JSON.parse(propData.customAbilities))
-const originalRoleAbilities = ref(JSON.parse(propData.roleAbilities))
-const roleAbilities = ref(JSON.parse(propData.roleAbilities))
-const originalForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
-const roleForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
-
-const showCapabilitySaveColumn = ref(false)
-const capabilities = ref(JSON.parse(propData.capabilities))
-const originalCapabilities = ref(JSON.parse(propData.capabilities))
-const modelAbilities = ref(JSON.parse(propData.modelAbilities))
-const originalModelAbilities = ref(JSON.parse(propData.modelAbilities))
-
-const permissions = reactive({
-  view: {},
-  create: {},
-  update: {},
-  delete: {},
-  manage: {},
-  save: {}
-})
-
+// prop data
+const propData = document.querySelector('#auth-abilities').dataset
+// static
 const button = {
   allow: propData.abilityAllowTo,
   forbid: propData.abilityForbidTo
@@ -49,11 +27,39 @@ const button = {
 // mounted
 onMounted(() => {
   setupCustomAbilities()
-//  setupModelAbilities()
+  setupModelAbilities()
+  setupCapabilities()
+  // hide the loader once everything is initialized properly
   document.getElementById('loader').classList.add('hidden')
 })
 
-// methods
+// utility (used on custom, model and capabilities)
+const loadingSpinner = reactive({})
+const changed = ref([])
+
+function checkChangedArray(array) {
+  return array.includes(true) ? true : false
+}
+
+/**
+ * Custom Abilities
+ *
+ * These abilities are not bound to a model and therefor have effects through
+ * the whole system. Also here the basic permission methodology is selected
+ * (forbid/allow).
+*/
+const allowAll = ref(undefined)
+const allowAllId = ref(undefined)
+const allowViewAll = ref(undefined)
+const allowViewAllId = ref(undefined)
+const showSaveColumn = ref(false)
+
+const customAbilities = ref(JSON.parse(propData.customAbilities))
+const roleAbilities = ref(JSON.parse(propData.roleAbilities))
+const originalRoleAbilities = ref(JSON.parse(propData.roleAbilities))
+const originalForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
+const roleForbiddenAbilities = ref(JSON.parse(propData.roleForbiddenAbilities))
+
 function setupCustomAbilities() {
   for (let id in customAbilities.value) {
     if (customAbilities.value[id]['title'] == 'All abilities') {
@@ -82,28 +88,12 @@ function setupCustomAbilities() {
   loadingSpinner.custom = false
 }
 
-function setupModelAbilities() {
-  for (let module in modelAbilities.value) {
-    permissions.manage[module] = checkShortcutButtons('*', module)
-    permissions.view[module] = checkShortcutButtons('view', module)
-    permissions.create[module] = checkShortcutButtons('create', module)
-    permissions.update[module] = checkShortcutButtons('update', module)
-    permissions.delete[module] = checkShortcutButtons('delete', module)
-    permissions.save[module] = checkShortcutButtons('save', module)
-    loadingSpinner[module] = false
-  }
-}
-
 function checkForbiddenVisibility(id) {
   if (id == allowViewAllId.value || id == allowAllId.value) return false
 
   return (
     (allowAll.value && id != allowAllId.value) || allowAll.value == undefined
   )
-}
-
-function checkChangedArray(array) {
-  return array.includes(true) ? true : false
 }
 
 function hasChanged(id) {
@@ -171,6 +161,83 @@ function customForbid(id) {
   document.getElementById(`allowed${id}`).checked = false
   changed.value.splice(id, 1, hasChanged(id))
   showSaveColumn.value = checkChangedArray(changed.value)
+}
+
+function customUpdate(id) {
+  let token = document.querySelector('input[name="_token"]').value
+
+  loadingSpinner.custom = true
+
+  axios({
+    method: 'post',
+    url: propData.routeCustomAbilityUpdate,
+    headers: { 'X-CSRF-TOKEN': token },
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    data: {
+      id: id,
+      roleAbilities: roleAbilities.value,
+      roleForbiddenAbilities: roleForbiddenAbilities.value,
+      changed: changed.value,
+      roleId: propData.viewVarId
+    }
+  })
+    .then(function (response) {
+      originalRoleAbilities.value = response.data.roleAbilities
+      originalForbiddenAbilities.value = response.data.roleForbiddenAbilities
+
+      if (changed.value[allowAllId.value]) {
+        for (module in modelAbilities.value) {
+          modelUpdate(module)
+        }
+      }
+
+      if (typeof response.data.id === 'object') {
+        for (let id in response.data.id) {
+          changed.value.splice(
+            response.data.id[id],
+            1,
+            hasChanged(response.data.id[id])
+          )
+        }
+      } else {
+        changed.value.splice(response.data.id, 1, hasChanged(response.data.id))
+      }
+
+      loadingSpinner.custom = false
+      showSaveColumn.value = checkChangedArray(changed.value)
+    })
+    .catch(function (error) {
+      alert(error)
+    })
+}
+
+/**
+ * Model Abilities
+ *
+ * These Abilities control the permissions to every Model, that is present
+ * inside NMS Prime.
+ */
+const modelAbilities = ref(JSON.parse(propData.modelAbilities))
+const originalModelAbilities = ref(JSON.parse(propData.modelAbilities))
+const permissions = reactive({
+  view: {},
+  create: {},
+  update: {},
+  delete: {},
+  manage: {},
+  save: {}
+})
+
+function setupModelAbilities() {
+  for (let module in modelAbilities.value) {
+    permissions.manage[module] = checkShortcutButtons('*', module)
+    permissions.view[module] = checkShortcutButtons('view', module)
+    permissions.create[module] = checkShortcutButtons('create', module)
+    permissions.update[module] = checkShortcutButtons('update', module)
+    permissions.delete[module] = checkShortcutButtons('delete', module)
+    permissions.save[module] = checkShortcutButtons('save', module)
+    loadingSpinner[module] = false
+  }
 }
 
 function changeModelAbility(event) {
@@ -246,6 +313,40 @@ function checkShortcutButtons(actionShortcut, module) {
   return check
 }
 
+function modelUpdate(module) {
+  loadingSpinner[module] = true
+
+  let form = document.getElementById(module)
+  let formData = new FormData(form)
+
+  formData.append('roleId', propData.viewVarId)
+  formData.append('allowAll', allowAll.value)
+  formData.append('module', module)
+
+  axios({
+    method: 'post',
+    url: propData.routeModelAbilityUpdate,
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    data: formData
+  })
+    .then(function (response) {
+      originalModelAbilities.value = response.data
+      modelAbilities.value[module] = _.clone(response.data[module])
+      loadingSpinner[module] = false
+    })
+    .catch(function (error) {
+      alert(error)
+    })
+}
+
+const showCapabilitySaveColumn = ref(false)
+const capabilities = ref(JSON.parse(propData.capabilities))
+const originalCapabilities = ref(JSON.parse(propData.capabilities))
+
+function setupCapabilities() {
+
+}
+
 function capabilityChange(id) {
   capabilities.value[id].isCapable = !capabilities.value[id].isCapable
   showCapabilitySaveColumn.value = checkChangedArray(
@@ -276,80 +377,6 @@ function capabilityUpdate(id) {
 
       loadingSpinner.capabilities = false
       showCapabilitySaveColumn.value = checkChangedArray(changed.value)
-    })
-    .catch(function (error) {
-      alert(error)
-    })
-}
-
-function customUpdate(id) {
-  let token = document.querySelector('input[name="_token"]').value
-
-  loadingSpinner.custom = true
-
-  axios({
-    method: 'post',
-    url: propData.routeCustomAbilityUpdate,
-    headers: { 'X-CSRF-TOKEN': token },
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-    data: {
-      id: id,
-      roleAbilities: roleAbilities.value,
-      roleForbiddenAbilities: roleForbiddenAbilities.value,
-      changed: changed.value,
-      roleId: propData.viewVarId
-    }
-  })
-    .then(function (response) {
-      originalRoleAbilities.value = response.data.roleAbilities
-      originalForbiddenAbilities.value = response.data.roleForbiddenAbilities
-
-      if (changed.value[allowAllId.value]) {
-        for (module in modelAbilities.value) {
-          modelUpdate(module)
-        }
-      }
-
-      if (typeof response.data.id === 'object') {
-        for (let id in response.data.id) {
-          changed.value.splice(
-            response.data.id[id],
-            1,
-            hasChanged(response.data.id[id])
-          )
-        }
-      } else {
-        changed.value.splice(response.data.id, 1, hasChanged(response.data.id))
-      }
-
-      loadingSpinner.custom = false
-      showSaveColumn.value = checkChangedArray(changed.value)
-    })
-    .catch(function (error) {
-      alert(error)
-    })
-}
-
-function modelUpdate(module) {
-  loadingSpinner[module] = true
-
-  let form = document.getElementById(module)
-  let formData = new FormData(form)
-
-  formData.append('roleId', propData.viewVarId)
-  formData.append('allowAll', allowAll.value)
-  formData.append('module', module)
-
-  axios({
-    method: 'post',
-    url: propData.routeModelAbilityUpdate,
-    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-    data: formData
-  })
-    .then(function (response) {
-      originalModelAbilities.value = response.data
-      modelAbilities.value[module] = _.clone(response.data[module])
-      loadingSpinner[module] = false
     })
     .catch(function (error) {
       alert(error)
