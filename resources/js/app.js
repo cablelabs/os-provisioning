@@ -31,7 +31,6 @@ import sidebar from './components/Sidebar.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
-import CoreMonDataTable from './components/CoreMonDataTable.vue'
 import overlay from "./components/Overlay.vue"
 import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
@@ -74,10 +73,6 @@ if (document.getElementById('sidebar')) {
 
 if (document.getElementById('sidebar-right')) {
   window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
-}
-
-if (document.getElementById('coremon-index-table')) {
-  window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
 }
 
 if (document.getElementById('vue-body')) {
