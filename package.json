@@ -35,6 +35,8 @@
         "jquery-ui-dist": "^1.13.1",
         "jszip": "^3.10.0",
         "laravel-echo": "^1.11.7",
+        "laravel-mix-merge-manifest": "^2.0.0",
+        "path": "^0.12.7",
         "pdfmake": "^0.2.5",
         "pusher-js": "^7.1.0-beta",
         "select2": "^4.1.0-rc.0",
