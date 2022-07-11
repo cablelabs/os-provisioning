@@ -120,8 +120,6 @@ class AbilityController extends Controller
     }
 
     /**
-     *
-     *
      * @param  Illuminate\Http\Request  $requestData
      * @return json
      *
