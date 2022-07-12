@@ -103,7 +103,7 @@ class Modem extends \BaseModel
         if (isset($configfile)) {
             if ('tr069' == $configfile->device) {
                 if ($configfile->is_multiservice_ont) {
-                    array_unshift($rules['mac'], 'nullable');
+                    array_unshift($rules['mac'], 'required');
                     array_unshift($rules['ppp_username'], 'nullable');
                     array_unshift($rules['serial_num'], 'required');
                     return $rules;
@@ -536,7 +536,7 @@ class Modem extends \BaseModel
             $ret[$tabName][$mtaName]['relation'] = $this->mtas;
         }
 
-        if ((! Module::collections()->has('SmartOnt')) || ($this->configfile->is_multiservice_ont)) {
+        if ((! Module::collections()->has('SmartOnt')) || ($this->configfile && $this->configfile->is_multiservice_ont)) {
             $ret[$tabName]['Endpoint']['class'] = 'Endpoint';
             $ret[$tabName]['Endpoint']['relation'] = $this->endpoints;
         }
@@ -585,7 +585,7 @@ class Modem extends \BaseModel
             $tabs[array_key_last($tabs)]['route'] = 'ProvMon.analysis';
         }
 
-        if ($this->configfile->device == 'cm') {
+        if ($this->configfile && $this->configfile->device == 'cm') {
             $tabs[] = ['name' => 'CPE-'.trans('view.analysis'), 'icon' => 'area-chart', 'route' => 'Modem.cpeAnalysis', 'link' => $this->id];
 
             if (Module::collections()->has('ProvVoip') && isset($this->mtas) && isset($this->mtas[0])) {

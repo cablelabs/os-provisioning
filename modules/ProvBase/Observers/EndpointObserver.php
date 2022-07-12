@@ -63,13 +63,20 @@ class EndpointObserver
         // SmartOnt: To not confuse the provsioning logic
         // changes of certain fields are not allowed
         if (Module::collections()->has('SmartOnt')) {
-            // check if endpoint is provisioned
-            if (! $endpoint->device_id) {
+            if (
+                // state cannot be changed manually
+                (! $endpoint->isDirty('state')) &&
+                // check if endpoint is provisioned
+                ('active' != $endpoint->state)) {
                 return;
             }
             $unchangables = [
                 'mac',
-                'qos_id'
+                'qos_id',
+                'device_id',
+                'acl_id',
+                'rule_id',
+                'state',
             ];
             $endpoint->restoreUnchangeableFields($unchangables, 'Endpoint is active');
             return;

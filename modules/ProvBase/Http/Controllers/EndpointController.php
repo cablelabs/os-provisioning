@@ -126,6 +126,15 @@ class EndpointController extends \BaseController
                     'placeholder' => 'Not yet provisioned',
                 ],
             ];
+            $ret[] = [
+                'form_type' => 'text',
+                'name' => 'state',
+                'description' => 'State',
+                'hidden' => 'C',
+                'options' => [
+                    'readonly',
+                ],
+            ];
         }
 
         $ret[] = [

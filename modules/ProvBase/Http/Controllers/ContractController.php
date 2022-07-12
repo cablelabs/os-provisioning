@@ -18,11 +18,13 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Bouncer;
+use DB;
 use Module;
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\Qos;
+use Bouncer;
 use Session;
+use App\GlobalConfig;
+use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Entities\Contract;
 
 class ContractController extends \BaseController
 {
@@ -33,65 +35,272 @@ class ContractController extends \BaseController
 
     /**
      * SmartOnt OTO uses a very different form set than the rest.
-     * This is defined here.
+     * This is defined here for flavor GESA.
      *
      * @param $model A contract
      * @return array
      *
      * @author Patrick Reichel
      */
-    public function viewFormFieldsDfOto($model)
+    public function viewFormFieldsGesaOto($model)
     {
         $fields = [
-            ['form_type' => 'text', 'name' => 'sep_id', 'description' => 'SEP ID', 'create' => ['Modem'], 'space' => '1'],
+            [
+                'form_type' => 'text',
+                'name' => 'sep_id',
+                'description' => 'SEP ID',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
 
-            ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'firstname', 'description' => 'Firstname', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'lastname', 'description' => 'Lastname', 'create' => ['Modem'], 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'street', 'description' => 'Street', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'house_number', 'description' => 'House number', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'space' => '1'],
-            ['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'create' => ['Modem'], 'space' => '1'],
+            [
+                'form_type' => 'text',
+                'name' => 'company',
+                'description' => 'Company',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'department',
+                'description' => 'Department',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'firstname',
+                'description' => 'Firstname',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'lastname',
+                'description' => 'Lastname',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'street',
+                'description' => 'Street',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'house_number',
+                'description' => 'House number',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'zip',
+                'description' => 'Postcode',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'city',
+                'description' => 'City',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'district',
+                'description' => 'District',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'country_code',
+                'description' => 'Country code',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'phone',
+                'description' => 'Phone',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'email',
+                'description' => 'E-Mail Address',
+                'space' => '1',
+            ],
 
-            ['form_type' => 'text', 'name' => 'phone', 'description' => 'Phone'],
-            ['form_type' => 'text', 'name' => 'email', 'description' => 'E-Mail Address', 'space' => '1'],
-
-            ['form_type' => 'text', 'name' => 'oto_id', 'description' => 'OTO ID', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'oto_port', 'description' => 'OTO Port', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'oto_socket_usage', 'description' => 'OTO Socket Usage', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'oto_status', 'description' => 'OTO Status', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'flat_id', 'description' => 'Flat ID', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'alex_status', 'description' => 'ALEX Status', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'omdf_id', 'description' => 'OMDF ID', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'boc_label', 'description' => 'BOC Label', 'create' => ['Modem']],
-            ['form_type' => 'text', 'name' => 'bof_label', 'description' => 'BOF Label', 'create' => ['Modem'], 'space' => '1'],
-        ];
-
-        if ('GESA' == config('smartont.flavor.active')) {
-            $fields[] = [
+            [
+                'form_type' => 'text',
+                'name' => 'oto_id',
+                'description' => 'OTO ID',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'oto_port',
+                'description' => 'OTO Port',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'oto_socket_usage',
+                'description' => 'OTO Socket Usage',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'oto_status',
+                'description' => 'OTO Status',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'flat_id',
+                'description' => 'Flat ID',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'alex_status',
+                'description' => 'ALEX Status',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'omdf_id',
+                'description' => 'OMDF ID',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'boc_label',
+                'description' => 'BOC Label',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'bof_label',
+                'description' => 'BOF Label',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
                 'form_type' => 'select',
                 'name' => 'type',
                 'description' => 'Type',
                 'create' => ['Modem'],
                 'value' => $model->getTypesForForm(),
                 'space' => '1',
-            ];
-        } else {
-            $fields[] = [
+            ],
+            [
+                'form_type' => 'textarea',
+                'name' => 'description',
+                'description' => 'Description',
+            ],
+        ];
+
+        return $fields;
+    }
+
+    /**
+     * SmartOnt OTO uses a very different form set than the rest.
+     * This is defined here for flavor LFO.
+     *
+     * @param $model A contract
+     * @return array
+     *
+     * @author Patrick Reichel
+     */
+    public function viewFormFieldsLFOOto($model)
+    {
+        $fields = [
+            [
                 'form_type' => 'text',
-                'name' => 'type',
-                'description' => 'Type',
+                'name' => 'company',
+                'description' => 'Company',
                 'create' => ['Modem'],
-                'options' => ['readonly'],
-                'hidden' => '1',
-            ];
-        }
-
-        $fields[] = ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'];
-
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'department',
+                'description' => 'Department',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'firstname',
+                'description' => 'Firstname',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'lastname',
+                'description' => 'Lastname',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'street',
+                'description' => 'Street',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'house_number',
+                'description' => 'House number',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'zip',
+                'description' => 'Postcode',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'city',
+                'description' => 'City',
+                'create' => ['Modem'],
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'district',
+                'description' => 'District',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'country_code',
+                'description' => 'Country code',
+                'create' => ['Modem'],
+                'space' => '1',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'phone',
+                'description' => 'Phone',
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'email',
+                'description' => 'E-Mail Address',
+                'space' => '1',
+            ],
+            /* [ */
+            /*     'form_type' => 'text', */
+            /*     'name' => 'type', */
+            /*     'description' => 'Type', */
+            /*     'create' => ['Modem'], */
+            /*     'options' => ['readonly'], */
+            /*     'hidden' => '1', */
+            /* ], */
+            [
+                'form_type' => 'textarea',
+                'name' => 'description',
+                'description' => 'Description',
+            ],
+        ];
 
         return $fields;
     }
@@ -105,11 +314,17 @@ class ContractController extends \BaseController
     {
         if (! $model) {
             $model = new Contract;
-            $model->country_code = $config->default_country_code;
         }
 
         if (Module::collections()->has('SmartOnt')) {
-            return $this->viewFormFieldsDfOto($model);
+            if ('GESA' == config('smartont.flavor.active')) {
+                return $this->viewFormFieldsGesaOto($model);
+            }
+            if ('LFO' == config('smartont.flavor.active')) {
+                return $this->viewFormFieldsLfoOto($model);
+            }
+
+            throw new Exception(__METHOD__.": Cannot create view form fields for flavor ".config('smartont.flavor.active'));
         }
 
         // Compose related phonenumbers as readonly info field
@@ -277,6 +492,13 @@ class ContractController extends \BaseController
      */
     public function prepare_input($data)
     {
+        if (! $data['country_code']) {
+            $config = GlobalConfig::find(1);
+            $data['country_code'] = $config->default_country_code;
+        }
+        // ISO 3166 country codes are uppercase
+        $data['country_code'] = \Str::upper($data['country_code']);
+
         if (! Module::collections()->has('SmartOnt')) {
             $data['contract_start'] = $data['contract_start'] ?: date('Y-m-d');
 

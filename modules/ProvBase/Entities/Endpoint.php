@@ -104,6 +104,10 @@ class Endpoint extends \BaseModel
         $label = $this->hostname.' ';
         $labelExt = [];
 
+        if ($this->qos) {
+            $labelExt[] = $this->qos->name;
+        }
+
         if ($this->mac) {
             $labelExt[] = $this->mac;
         }

@@ -98,22 +98,24 @@ class ModemObserver
 
         // special handling for SmartONT devices
         if (Module::collections()->has('SmartOnt')) {
-            if ($modem->configfile->is_multiservice_ont) {
-                $unchangables = [
-                    'configfile_id',
-                    'mac',
-                    'serial_num',
-                ];
-                $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
-            } elseif ('smartont' == $modem->qos->type) {
-                if ($modem->service_port_id) {
+            if ($modem->netgw_id) {
+                if ($modem->configfile->is_multiservice_ont) {
                     $unchangables = [
                         'configfile_id',
                         'mac',
-                        'qos_id',
                         'serial_num',
                     ];
                     $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
+                } elseif ('smartont' == $modem->qos->type) {
+                    if ($modem->service_port_id) {
+                        $unchangables = [
+                            'configfile_id',
+                            'mac',
+                            'qos_id',
+                            'serial_num',
+                        ];
+                        $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
+                    }
                 }
             }
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
@@ -247,7 +249,7 @@ class ModemObserver
 
         // special handling for SmartONT devices
         if (\Module::collections()->has('SmartOnt')) {
-            if ('smartont' == $modem->qos->type) {
+            if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
                 \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
 
                 return;

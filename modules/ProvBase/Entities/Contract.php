@@ -61,6 +61,7 @@ class Contract extends \BaseModel
             'company' => 'required_if:salutation,placeholder_salutations_institution',
             'firstname' => 'required_if:salutation,placeholder_salutations_person',
             'lastname' => 'required_if:salutation,placeholder_salutations_person',
+            'country_code' => ['regex:/^[A-Z]{2}$/'],
             'email' => 'nullable|email',
             'birthday' => 'nullable|required_if:salutation,placeholder_salutations_person|date_format:Y-m-d',
             'contract_start' => 'date_format:Y-m-d',
@@ -76,6 +77,11 @@ class Contract extends \BaseModel
             }
         }
 
+        // special rules for smartont contract types (=OTO)
+        if (Module::collections()->has('SmartOnt')) {
+            return $this->rulesSmartOnt($rules);
+        }
+
         if (Module::collections()->has('BillingBase')) {
             $rules['costcenter_id'] = 'required|numeric|min:1';
         } else {
@@ -86,20 +92,45 @@ class Contract extends \BaseModel
             $rules['birthday'] .= '|required_if:salutation,placeholder_salutations_person';
         }
 
-        // adapt ruleset for smartont contract types (=OTO)
+        return $rules;
+    }
+
+    /**
+     * Define rules used for SmartOnt contracts (= OTO)
+     *
+     * @author Patrick Reichel
+     */
+    protected function rulesSmartOnt($rules)
+    {
+        $rules['birthday'] = 'nullable';
+        $rules['company'] = 'nullable';
+        $rules['contract_start'] = 'nullable|date_format:Y-m-d';
+        $rules['costcenter_id'] = 'nullable';
+        $rules['firstname'] = 'nullable';
+        $rules['lastname'] = 'nullable';
+        $rules['number'] = 'nullable';
+        $rules['number2'] = 'nullable';
+        $rules['number3'] = 'nullable';
+        $rules['number4'] = 'nullable';
+        $rules['salutation'] = 'nullable';
+
+        if ('GESA' == config('smartont.flavor.active')) {
+            return $this->rulesSmartOntGesa($rules);
+        }
+        if ('LFO' == config('smartont.flavor.active')) {
+            return $this->rulesSmartOntLfo($rules);
+        }
+    }
+
+    /**
+     * Define rules used for SmartOnt contracts (= OTO) (flavor GESA)
+     *
+     * @author Patrick Reichel
+     */
+    protected function rulesSmartOntGesa($rules)
+    {
         $type = Request::get('type');
         if (in_array($type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
-            $rules['birthday'] = 'nullable';
-            $rules['company'] = 'nullable';
-            $rules['contract_start'] = 'nullable|date_format:Y-m-d';
-            $rules['costcenter_id'] = 'nullable';
-            $rules['firstname'] = 'nullable';
-            $rules['lastname'] = 'nullable';
-            $rules['number'] = 'nullable';
-            $rules['number2'] = 'nullable';
-            $rules['number3'] = 'nullable';
-            $rules['number4'] = 'nullable';
-            $rules['salutation'] = 'nullable';
             $rules['sep_id'] = 'string|unique:contract,sep_id,'.$id.',id,deleted_at,NULL';
         }
 
@@ -109,6 +140,19 @@ class Contract extends \BaseModel
 
         return $rules;
     }
+
+    /**
+     * Define rules used for SmartOnt contracts (= OTO) (flavor LFO)
+     *
+     * @author Patrick Reichel
+     */
+    protected function rulesSmartOntLfo($rules)
+    {
+        $rules['sep_id'] = 'nullable|string';
+
+        return $rules;
+    }
+
 
     // Name of View
     public static function view_headline()

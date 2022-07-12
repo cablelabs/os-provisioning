@@ -82,9 +82,6 @@ class ModemController extends \BaseController
         }
 
         if (! $model->exists) {
-            $config = GlobalConfig::find(1);
-            $model->country_code = $config->default_country_code;
-
             if (! $model->ppp_password) {
                 $model->ppp_password = \Acme\php\Password::generatePassword();
             }
@@ -180,6 +177,7 @@ class ModemController extends \BaseController
                 'options' => $model->contract?->isCanceled() ? ['onclick' => 'return false;', 'readonly'] : [],
             ],
         ];
+
         if (Module::collections()->has('SmartOnt')) {
             $a[] = [
                 'form_type' => 'text',
@@ -316,7 +314,6 @@ class ModemController extends \BaseController
                     'form_type' => 'text',
                     'name' => 'or_id',
                     'description' => 'OR ID',
-                    'options' => ['readonly'],
                 ];
             }
         }
@@ -843,6 +840,10 @@ class ModemController extends \BaseController
         ];
         $data = $this->_nullify_fields($data, $nullable_fields);
 
+        if (! $data['country_code']) {
+            $config = GlobalConfig::find(1);
+            $data['country_code'] = $config->default_country_code;
+        }
         // ISO 3166 country codes are uppercase
         $data['country_code'] = \Str::upper($data['country_code']);
 
@@ -854,8 +855,9 @@ class ModemController extends \BaseController
             $this->configfile = Configfile::find($data['configfile_id']);
         }
 
-        if ($this->configfile->is_multiservice_ont) {
-            $data['qos_id'] = null;
+        if ($this->configfile && $this->configfile->is_multiservice_ont) {
+            $smartOnt = \Modules\SmartOnt\Entities\Smartont::first();
+            $data['qos_id'] = $smartOnt->default_mgmt_qos_id;
         }
 
         if ($this->configfile && $this->configfile->device != 'tr069') {
