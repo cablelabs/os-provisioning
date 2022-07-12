@@ -17,8 +17,8 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
-@include('bootstrap.module-js')
 <script src="{{ asset('js/app.js') }}"></script>
+@include('bootstrap.module-js')
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
