@@ -16,100 +16,108 @@
  */
 
 <template>
-	<img class="object-cover" :src="`/images/inventory/${baseChassis.type}.png`" alt="rear" />
-	<div class="absolute top-0 right-0">
-		<img v-for="(device, index) in rightSideDevices" :key="index" class="object-cover" :src="`/images/inventory/${device.image}.png`" />
+	<img class="object-cover w-full" :src="`/images/inventory/${baseChassis.image}.png`" alt="rear" />
+	<div class="absolute top-0 w-full">
+		<div class="flex w-full">
+			<div class="w-2/3">
+				<template v-for="(device, index) in leftSideDevices" :key="index">
+					<img v-if="device.name" class="object-cover w-full" :src="`/images/inventory/${device.image}.png`" />
+					<div v-else class="h-10"></div>
+				</template>
+			</div>
+			<div class="w-1/3">
+				<template v-for="(device, index) in rightSideDevices" :key="index">
+					<img v-if="device.name" class="object-cover h-24 w-full" :src="`/images/inventory/${device.image}.png`" />
+					<div v-else class="h-24"></div>
+				</template>
+			</div>
+		</div>
+		<div class="w-full">
+			<template v-for="(device, index) in bottomDevices" :key="index">
+				<img v-if="device.name" class="object-cover h-16 w-full" :src="`/images/inventory/${device.image}.png`" />
+				<div v-else class="h-16"></div>
+			</template>
+		</div>
 	</div>
-	<div class="absolute bottom-0">
-		<img v-for="(device, index) in bottomDevices" :key="index" class="object-cover" :src="`/images/inventory/${device.image}.png`" />
-	</div>
-	<div class="absolute left-3 top-0">
-		<img v-for="(device, index) in leftSideDevices" :key="index" class="object-cover" :src="`/images/inventory/${device.image}.png`" />
-	</div>
+	
 </template>
 
 <script setup>
-import { inventoryList } from './inventoryService.js'
+import { inventoryRearList } from './inventoryService.js'
 import _ from 'lodash'
-import { ref, computed, onMounted, onDeactivated, nextTick } from 'vue'
+import { computed } from 'vue'
 
 const backendData = [
 	{
         "name": "Chassis",
-		"type": "CBR-8-CCAP-CHASS"
+		"pid": "CBR-8-CCAP-CHASS"
 	},
 	{
         "name": "clc 0",
-		"type": "CBR-CCAP-LC-40G-R"
-	},
-	{
-        "name": "clc 1",
-		"type": "CBR-CCAP-LC-40G"
-	},
-	{
-        "name": "clc 2",
-		"type": "CBR-CCAP-LC-40G-R"
+		"pid": "CBR-CCAP-LC-40G-R"
 	},
 	{
         "name": "clc 3",
-		"type": "CBR-CCAP-LC-40G-R"
+		"pid": "CBR-CCAP-LC-40G-R"
 	},
 	{
         "name": "ATO clc 0",
-		"type": "CBR-CCAP-LC-40G-R"
+		"pid": "CBR-CCAP-LC-40G-R"
 	},
 	{
         "name": "ATO clc 2",
-		"type": "CBR-CCAP-LC-40G-R"
+		"pid": "CBR-CCAP-LC-40G-R"
 	},
 	{
         "name": "ATO clc 3",
-		"type": "CBR-CCAP-LC-40G-R"
+		"pid": "CBR-CCAP-LC-40G-R"
 	},
 	{
         "name": "ATO sup 0",
-		"type": "CBR-CCAP-SUP-250G"
+		"pid": "CBR-CCAP-SUP-250G"
 	},
 	{
         "name": "ATO sup 1",
-		"type": "CBR-CCAP-SUP-250G"
+		"pid": "CBR-CCAP-SUP-250G"
 	},
 	{
         "name": "Power Shelf Module P0",
-		"type": "CBR-PEM-AC-6M"
+		"pid": "CBR-PEM-AC-6M"
 	},
 	{
         "name": "Power Shelf Module P1",
-		"type": "CBR-PEM-AC-6M"
+		"pid": "CBR-PEM-AC-6M"
 	},
 	{
         "name": "Fan Tray 0",
-		"type": "CBR-FAN-ASSEMBLY"
+		"pid": "CBR-FAN-ASSEMBLY"
 	},
 	{
         "name": "Fan Tray 1",
-		"type": "CBR-FAN-ASSEMBLY"
+		"pid": "CBR-FAN-ASSEMBLY"
 	},
 	{
         "name": "Fan Tray 2",
-		"type": "CBR-FAN-ASSEMBLY"
+		"pid": "CBR-FAN-ASSEMBLY"
 	},
 	{
         "name": "Fan Tray 3",
-		"type": "CBR-FAN-ASSEMBLY"
+		"pid": "CBR-FAN-ASSEMBLY"
 	},
 	{
         "name": "Fan Tray 4",
-		"type": "CBR-FAN-ASSEMBLY"
+		"pid": "CBR-FAN-ASSEMBLY"
 	},
 ];
 
 const mappedBackendData = computed(() => {
-    return _.map(backendData, (data) => {
-        return {
-            ...data,
-            ...inventoryList[`${data.name}:${data.type}`]
-        }
+    return _.map(inventoryRearList, (data, key) => {
+			const [name, pid] = key.split(":");
+			const deviceDetail = _.find(backendData, (device) => device.name === name && device.pid === pid);
+		return {
+			...data,
+			...deviceDetail
+		}
     });
 });
 
@@ -135,3 +143,8 @@ const bottomDevices = computed(() => {
 					.value();
 });
 </script>
+<style>
+.bottom-230 {
+	bottom: 282px;
+}
+</style>

@@ -16,9 +16,28 @@
  */
 
 <template>
-	<RearView />
+	<div class="flex">
+		<div> 
+      <div class="text-lg font-bold text-center mb-6">Front View</div>
+      <div class="relative max-width-content h-screen"><FrontView /></div>
+    </div>
+    <div>
+      <div class="text-lg font-bold text-center mb-6">Rear View</div>
+		  <div class="relative max-width-content h-screen ml-16"><RearView /></div>
+    </div>
+	</div>
 </template>
 
 <script setup>
+import FrontView from './FrontView'
 import RearView from './RearView'
 </script>
+
+<style>
+	.bottom-0 {
+      bottom: 0;
+    }
+    .max-width-content{
+      max-width: max-content;
+    }
+</style>
