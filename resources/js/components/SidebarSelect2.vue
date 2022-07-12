@@ -28,11 +28,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onDeactivated } from 'vue'
+import { ref, computed, onMounted, onDeactivated, nextTick } from 'vue'
 import $ from 'jquery'
 import 'select2'
+import { store } from './../store/store'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'updateref'])
 
 const props = defineProps({
   modelValue: {
@@ -97,7 +98,7 @@ onMounted(() => {
     .trigger('change')
 
   if (!props.multiple && !props.asArray) {
-    return select.value.on('select2:select select2:unselect', (e) => {
+    select.value.on('select2:select select2:unselect', (e) => {
       setValue($(select.value).val())
     })
   }
@@ -111,28 +112,79 @@ onMounted(() => {
   select.value.on('select2:unselect', (e) => onUnselect(e.params.data.id))
 })
 
-function onSelect(value) {
-  if (value == i18nAll.value) {
-    selected.value = []
-  }
+async function onSelect(value) {
+  store.overlay = true;
 
-  if (value != i18nAll.value && selected.value.includes(i18nAll.value)) {
-    selected.value.splice(selected.value.indexOf(i18nAll.value), 1)
-  }
+  const res = await axios.get(`/admin/CoreMon/api/v1/Market/${value}`);
 
-  selected.value.push(value)
+  res.data.result.forEach(async (el) => {
+    if(!el.active){
+      el.type = el.type === 'Net' ? 'Network' : el.type
+
+      const prevSelect = $(`[id='${el.type}']`)
+
+      retrySelect2(prevSelect, ["RemoveOptions", "AddOption"], {name: el.name, value: el.id})
+    }
+  })
+
+  refreshNextSelects()
+
+  publishChanges()
+
+  store.overlay = false;
+}
+
+async function onUnselect(value) {
+  refreshNextSelects()
+
+  // refreshPrevSelects()
+  
+  await nextTick()
+
+  retrySelect2($(select.value), ['RemoveOptions'])  
 
   publishChanges()
 }
 
-function onUnselect(value) {
-  if (value == i18nAll.value) {
-    selected.value = []
-  } else {
-    selected.value.splice(selected.value.indexOf(value), 1)
+function refreshNextSelects() {
+  const _colItem = $(select.value).closest('.col-item')
+
+  let _next = _colItem.next()
+  while(_next.length) {
+    retrySelect2(_next.find('select'), ['RemoveOptions'])
+    _next = _next.next();
+  }
+}
+
+function refreshPrevSelects() {
+  const _colItem = $(select.value).closest('.col-item')
+
+  let _prev = _colItem.prev()
+  while(_prev.length) {
+    retrySelect2(_prev.find('select'))
+    _prev = _prev.prev();
+  }
+}
+
+async function retrySelect2(target, options=[], payload = {}) {
+  target.select2("destroy")
+
+  if(options.includes("RemoveOptions")) {
+    target.find("option").remove()
   }
 
-  publishChanges()
+  if(options.includes("AddOption")) {
+    const newOption = new Option(payload.name, payload.value, true, true)
+    target.append(newOption).trigger('change')
+    emit('updateref', {ref: target.data('model'), value: payload.value ? payload.value : 0})
+  } else {
+    target.val(0)
+    emit('updateref', {ref: target.data('model'), value: 0})
+    target.parent().find("a").attr("href", "#")
+  }
+
+  await nextTick()
+  window.initAjaxSelect2(target)
 }
 
 function publishChanges() {

@@ -8,7 +8,7 @@
             @php
             $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
             @endphp
-            <select2 id="{{ $name }}"
+            <sidebar-select2 id="{{ $name }}"
                 class="select2-ajax"
                 name="{{ $name }}"
                 v-model="{{ $options['var'] }}"
@@ -25,7 +25,7 @@
                 @if ($net)
                     <option value="{{ $net->id }}" selected="selected">{{ $net->name }}</option>
                 @endif
-            </select2>
+            </sidebar-select2>
             <a :href="route({{ $options['var'] }}, '{{ route($options['route'], ['netelement' => 'NETELEMENT_ID'])}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-1 text-gray-50 hover:cursor-pointer hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />

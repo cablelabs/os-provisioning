@@ -30,6 +30,7 @@ import app from './components/App.vue'
 import sidebar from './components/Sidebar.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
+import SidebarSelect2Component from './components/SidebarSelect2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import CoreMonDataTable from './components/CoreMonDataTable.vue'
 import overlay from './components/Overlay.vue'
@@ -67,6 +68,7 @@ if (document.getElementById('sidebar')) {
     netCount: propData.netCount
   })
     .component('select2', select2Component)
+    .component('SidebarSelect2', SidebarSelect2Component)
     .mount('#sidebar')
 
   pdfMake.vfs = pdfFonts.pdfMake.vfs
@@ -81,6 +83,7 @@ if (document.getElementById('sidebar-right')) {
 window.main = createApp(app)
   .component('overlay', overlay)
   .component('select2', select2Component)
+  .component('SidebarSelect2', SidebarSelect2Component)
   .component('skeleton', skeletonComponent)
   .use(snotify)
   .mount('#page-container')
