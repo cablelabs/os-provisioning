@@ -23,5 +23,9 @@ export const store = reactive({
   panelRightKeys: [],
   panelRightData: {},
   overlay: false,
-  hfcStorageRequest: {}
+  hfcStorageRequest: {},
+  icons: {
+    defaultColor: "#333",
+    defaultSize: 20,
+  }
 })
