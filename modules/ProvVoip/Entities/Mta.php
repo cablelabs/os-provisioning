@@ -211,7 +211,8 @@ class Mta extends \BaseModel
                     continue;
                 }
 
-                $data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$mta->id.'"; }'."\n";
+                $optionHostname = ($mta->type == 'packetcable') ? strtolower(str_replace(':', '', $mta->mac)) : $mta->id;
+                $data .= 'host mta-'.$mta->id.' { hardware ethernet '.$mta->mac.'; filename "mta/mta-'.$mta->id.'.cfg"; ddns-hostname "mta-'.$mta->id.'"; option host-name "'.$optionHostname.'"; }'."\n";
             }
 
             $i++;
@@ -257,7 +258,8 @@ class Mta extends \BaseModel
         // Note: dont replace directly as this wouldnt add the entry for a new created mta
         // FF-00-00-00-00 to FF-FF-FF-FF-FF reserved according to RFC7042
         if (! $delete && stripos($this->mac, 'ff:') !== 0 && $this->mac) {
-            $conf[] = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$this->id.'"; }'."\n";
+            $optionHostname = ($this->type == 'packetcable') ? strtolower(str_replace(':', '', $this->mac)) : $this->id;
+            $conf[] = 'host mta-'.$this->id.' { hardware ethernet '.$this->mac.'; filename "mta/mta-'.$this->id.'.cfg"; ddns-hostname "mta-'.$this->id.'"; option host-name "'.$optionHostname.'"; }'."\n";
         }
 
         Modem::_write_dhcp_file(self::CONF_FILE_PATH, implode($conf));
