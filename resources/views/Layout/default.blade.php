@@ -30,7 +30,7 @@
     @include('Layout.navbar')
     @include('Layout.sidebar')
 
-    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association', 'alarms']))
+    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association', 'alarms']) && request()->route()->getName() !== 'TicketReceiver.index')
         @include('Layout.sidebar-right')
     @endif
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
