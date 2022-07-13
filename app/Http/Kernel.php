@@ -77,6 +77,5 @@ class Kernel extends HttpKernel
         'owns'          => \App\Http\Middleware\AuthorizeOwns::class,
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'cccRedirect'   => \Modules\Ccc\Http\Middleware\CccRedirectIfAuthenticated::class,
-        'routeModule'   => \App\Http\Middleware\RouteModule::class,
     ];
 }

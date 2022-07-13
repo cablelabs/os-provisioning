@@ -16,10 +16,6 @@
  * limitations under the License.
  */
 ?>
-@if (isset($routeModule))
-    @switch ($routeModule)
-        @case ('CoreMon')
-            <script src="{{ asset('js/core-mon.js') }}"></script>
-            @break
-    @endswitch
+@if (Module::collections()->has(['CoreMon']))
+<script src="{{ mix('js/core-mon.js') }}"></script>
 @endif

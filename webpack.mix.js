@@ -24,6 +24,7 @@ const path = require('path')
  mix.js('resources/js/app.js', 'public/js')
  .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
  .vue()
+ .version()
  .postCss('resources/css/app.css', 'public/css', [
    require('tailwindcss'),
  ])
