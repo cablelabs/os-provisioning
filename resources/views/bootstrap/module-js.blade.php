@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 ?>
-@if (isset($routeModule))
-    @switch ($routeModule)
-        @case ('Ticketsystem')
-            <script src="{{ asset('js/ticketsystem.js') }}"></script>
-            @break
-        @case ('ProvBase')
-            <script src="{{ asset('js/prov-base.js') }}"></script>
-            @break
-        @case ('HfcBase')
-            <script src="{{ asset('js/hfc-base.js') }}"></script>
-            @break
-    @endswitch
+@if (Module::collections()->has(['Ticketsystem']))
+<script src="{{ mix('js/ticketsystem.js') }}"></script>
+@endif
+@if (Module::collections()->has(['ProvBase']))
+<script src="{{ mix('js/prov-base.js') }}"></script>
+@endif
+@if (Module::collections()->has(['ProvMon']))
+<script src="{{ mix('js/prov-mon.js') }}"></script>
+@endif
+@if (Module::collections()->has(['HfcBase']))
+<script src="{{ mix('js/hfc-base.js') }}"></script>
 @endif
