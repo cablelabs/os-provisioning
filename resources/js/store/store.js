@@ -23,10 +23,11 @@ export const store = reactive({
   panelRightKeys: [],
   panelRightData: {},
   overlay: false,
-  hfcStorageRequest: {},
   icons: {
     defaultColor: "#333",
     defaultSize: 20,
   },
   urlParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
+  snotify: null,
+  hfcStorageRequest: {}
 })

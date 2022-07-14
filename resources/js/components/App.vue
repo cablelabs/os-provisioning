@@ -16,8 +16,11 @@
  */
 
 <script setup>
-import { onMounted } from 'vue'
-import { store } from './../store/store'
+import { onMounted, getCurrentInstance } from 'vue'
+import { store } from '@/store/store'
+
+// prepare snotify
+store.snotify = getCurrentInstance().appContext.config.globalProperties.$snotify
 
 onMounted(() => {
   if (typeof Storage === 'undefined') {

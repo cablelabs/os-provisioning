@@ -35,7 +35,7 @@
     data-realtime-broadcasting="{!! route('ProvMon.realtimeBroadcasting', ['id' => $modem->id]) !!}"
     data-picture="{{ url($picture) }}"
     data-genie-cmds='@json($genieCmds, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
-    data-modem-analysis='@json(trans('view.modemAnalysis'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
+    data-modem-analysis='@json(trans('view.modemAnalysis'))'
     data-messages-entries="{{ trans('messages.Entries') }}"
     data-csrf-token="{{ csrf_token() }}"
     data-modem-id="{{ $modem->id }}"
@@ -48,6 +48,9 @@
     data-route-create-spectrum="{{ route('ProvMon.createSpectrum', [$modem->id]) }}"
     data-messages-spectrum-processing="{{ trans('provmon::messages.spectrum.processing') }}"
     data-messages-no-spectrum="{{ trans('messages.noSpectrum') }}"
+    data-i18ndt='{@include('datatables.lang', ['withoutTrailingComma' => true])}'
+    data-channel="{{ \Modules\ProvMon\Events\NewRealtimeValues::getChannelName($modem->id) }}"
+    data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
 >
 
 @else

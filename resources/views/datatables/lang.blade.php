@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 ?>
-language: {
+"language": {
     "sEmptyTable":          "{{ trans('view.jQuery_sEmptyTable') }}",
     "sInfo":                "{{ trans('view.jQuery_sInfo') }}",
     "sInfoEmpty":           "{{ trans('view.jQuery_sInfoEmpty') }}",
@@ -25,7 +25,7 @@ language: {
     "sInfoThousands":       "{{ trans('view.jQuery_sInfoThousands') }}",
     "sLengthMenu":          "{{ trans('view.jQuery_sLengthMenu') }}",
     "sLoadingRecords":      "{{ trans('view.jQuery_sLoadingRecords') }}",
-    "sProcessing":          "<i class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><span class='sr-only'>{{ trans('view.jQuery_sProcessing') }}",
+    "sProcessing":          "{{"<i class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><span class='sr-only'>"}}{{ trans('view.jQuery_sProcessing') }}",
     "sSearch":              "{{ trans('view.jQuery_sSearch') }}",
     "sZeroRecords":         "{{ trans('view.jQuery_sZeroRecords') }}",
     "oPaginate": {
@@ -41,6 +41,6 @@ language: {
     "buttons": {
         "print":            "{{ trans('view.jQuery_Print') }}",
         "colvis":           "{{ trans('view.jQuery_colvis') }}",
-        "colvisRestore":    "{{ trans('view.jQuery_colvisRestore') }}",
-    }
-},
+        "colvisRestore":    "{{ trans('view.jQuery_colvisRestore') }}"@if(!isset($withoutTrailingComma)),@endif
+    }@if(!isset($withoutTrailingComma)),@endif
+}@if(!isset($withoutTrailingComma)),@endif

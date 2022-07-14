@@ -61,9 +61,7 @@
                 <div class="row d-flex">
                     <div style="flex:1;">
                         <select2 v-model="selectedPing" :initial-value="selectedPing" :i18n="{ all: '{{ trans('messages.all') }}'}">
-                            <template v-for="option in pingOptions">
-                                <option :value="option.id" v-text="option.name"></option>
-                            </template>
+                            <option v-for="option in pingOptions" :key="option.id" :value="option.id" v-text="option.name"></option>
                         </select2>
                     </div>
                     <div class="text-center">
@@ -79,7 +77,7 @@
                 <table>
                     <tr v-for="line in floodPingResult">
                         <td>
-                            <p style="color: grey" v-text="line"></font>
+                            <p style="color: grey" v-text="line"></p>
                         </td>
                     </tr>
                 </table>
