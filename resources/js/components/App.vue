@@ -19,14 +19,13 @@
 import { onMounted, getCurrentInstance } from 'vue'
 import { store } from '@/store/store'
 
-// prepare snotify
-store.snotify = getCurrentInstance().appContext.config.globalProperties.$snotify
-
 onMounted(() => {
   if (typeof Storage === 'undefined') {
     console.error(
       'Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser'
     )
   }
+  // prepare snotify
+  window.snotify = getCurrentInstance().appContext.config.globalProperties.$snotify
 })
 </script>
