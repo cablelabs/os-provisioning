@@ -20,30 +20,43 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
- import { createApp } from 'vue'
- import snotify from 'vue3-snotify'
+import { createApp } from 'vue'
+import snotify from 'vue3-snotify'
 
- import ProvBaseConfigFileEdit from './components/ConfigFileEdit.vue'
- import ModemAnalysis from './components/ModemAnalysis.vue'
+import ProvBaseConfigFileEdit from './components/ConfigFileEdit.vue'
+import ModemAnalysis from './components/ModemAnalysis.vue'
 
- if (document.getElementById('provbase-config-file-edit')) {
-   window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
-     .use(snotify)
-     .mount('#provbase-config-file-edit')
- 
-   window.provBaseConfigFileEdit.directive('dispatchsel2', {
-     inserted: function(e) {
-       $(e).on('select2:select', function() {
-           e.dispatchEvent(new Event('change'));
-       });
-       $(e).on('select2:unselect', function() {
-           e.dispatchEvent(new Event('change'));
-       });
-     }
-   });
- }
+if (document.getElementById('provbase-config-file-edit')) {
+  window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
+    .use(snotify)
+    .mount('#provbase-config-file-edit')
 
- if (document.getElementById('OpenSourceModemAnalysis')) {
-   window.modemAnalysis = createApp(ModemAnalysis)
-     .mount('#OpenSourceModemAnalysis')
- }
+  window.provBaseConfigFileEdit.directive('dispatchsel2', {
+    inserted: function(e) {
+      $(e).on('select2:select', function() {
+        e.dispatchEvent(new Event('change'));
+      });
+      $(e).on('select2:unselect', function() {
+        e.dispatchEvent(new Event('change'));
+      });
+    }
+  });
+}
+
+ // prepare vue instance
+if (document.getElementById('OpenSourceModemAnalysis')) {
+  const propData = document.querySelector('#OpenSourceModemAnalysis').dataset
+  let targetPage = window.location.href.split('?')[0]
+  let panelPositionData = localStorage.getItem(targetPage) ? localStorage.getItem(targetPage) : localStorage.getItem(propData.viewHeader)
+  let event = 'load'
+  if (panelPositionData) {
+    event = 'localstorage-position-loaded'
+  }
+
+  window.$(window).on(event, function() {
+    window.$(document).ready(function() {
+      window.modemAnalysis = createApp(ModemAnalysis)
+        .mount('#OpenSourceModemAnalysis')
+    })
+  })
+}

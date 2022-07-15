@@ -133,6 +133,8 @@
 
 @section ('javascript')
 
+@include ('Generic.broadcasting')
+
 <script type="text/javascript">
 
 @if ($ip)
