@@ -439,7 +439,7 @@
                     </ul>
                     <!-- end sidebar nav -->
             </div>
-            <div class="absolute top-0 flex flex-col items-center w-5 h-full pt-2 space-y-6 bg-lime-nmsprime -right-5" :class="{'left-64': menu == 'Access Network' && !store.minified}">
+            <div class="absolute top-0 flex flex-col items-center w-5 h-full pt-2 space-y-6 bg-lime-nmsprime -right-5" :class="{'left-64': (menu == 'Access Network' && !store.minified) || (!store.minified && {{(int)!Module::collections()->has('CoreMon')}})}">
                 <div v-cloak class="hover:cursor-pointer" v-on:click="handleMinify">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 duration-300 ease-in-out" :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">

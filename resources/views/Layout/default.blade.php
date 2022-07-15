@@ -37,8 +37,8 @@
         :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
 
         <div id="content"
-            class="d-flex flex-column flex-1 transition-all duration-200 ml-[5.25rem]"
-            :class="{'ml-[21.25rem]': !store.minified, 'mr-4': store.minifiedRight, 'mr-[17.5rem]': !store.minifiedRight}">
+            class="d-flex flex-column flex-1 transition-all duration-200 {{ Module::collections()->has('CoreMon') ? 'ml-[5.25rem]' : 'ml-[1.5rem]' }}"
+            :class="{'{{ Module::collections()->has('CoreMon') ? 'ml-[21.25rem]' : 'ml-[17.5rem]' }}': !store.minified, 'mr-4': store.minifiedRight, 'mr-[17.5rem]': !store.minifiedRight}">
             <vue-snotify></vue-snotify>
 
             @if (session('GlobalNotification'))
