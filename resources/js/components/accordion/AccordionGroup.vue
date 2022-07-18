@@ -15,7 +15,7 @@ const props = defineProps({
 // reactive
 let Accordion = reactive({
   count: 0,
-  active: props.active ? parseInt(props.active) : null,
+  active: props.active !== null ? parseInt(props.active) : null,
 })
 
 // provide

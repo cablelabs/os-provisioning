@@ -27,5 +27,6 @@ export const store = reactive({
   icons: {
     defaultColor: "#333",
     defaultSize: 20,
-  }
+  },
+  urlParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
 })
