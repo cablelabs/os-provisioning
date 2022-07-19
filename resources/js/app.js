@@ -35,7 +35,6 @@ import overlay from "./components/Overlay.vue"
 import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
-import Inventory from './components/inventory/Inventory.vue'
 
 // dataTables
 require('datatables.net-buttons/js/buttons.colVis.js')
@@ -50,50 +49,50 @@ import 'datatables.net-buttons-bs4'
 import 'datatables.net-responsive'
 
 window.main = createApp(app)
-  .component('overlay', overlay)
-  .component('select2', select2Component)
-  .component('skeleton', skeletonComponent)
-  .use(snotify)
-  .mount('#page-container')
+	.component('overlay', overlay)
+	.component('select2', select2Component)
+	.component('skeleton', skeletonComponent)
+	.use(snotify)
+	.mount('#page-container')
 
 window.navbar = createApp({}).mount('#header')
 
 if (document.getElementById('sidebar')) {
-  let propData = document.querySelector('#sidebar').dataset
-  window.sidebar = createApp(sidebar, {
-    favorites: JSON.parse(propData.favorites),
-    netelements: JSON.parse(propData.netelements),
-    netCount: propData.netCount
-  })
-    .component('select2', select2Component)
-    .mount('#sidebar')
+	let propData = document.querySelector('#sidebar').dataset
+	window.sidebar = createApp(sidebar, {
+		favorites: JSON.parse(propData.favorites),
+		netelements: JSON.parse(propData.netelements),
+		netCount: propData.netCount
+	})
+		.component('select2', select2Component)
+		.mount('#sidebar')
 
-  pdfMake.vfs = pdfFonts.pdfMake.vfs
-  window.JSZip = JSZip
+	pdfMake.vfs = pdfFonts.pdfMake.vfs
+	window.JSZip = JSZip
 }
 
 if (document.getElementById('sidebar-right')) {
-  window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
+	window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
+}
+
+if (document.getElementById('coremon-index-table')) {
+	window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
 }
 
 if (document.getElementById('vue-body')) {
-  window.real = createApp(Analysis).mount('#vue-body')
+	window.real = createApp(Analysis).mount('#vue-body')
 }
 
 if (document.getElementById('map-actions')) {
-  window.mapActions = createApp(HfcBaseMapActions).mount('#map-actions')
+	window.mapActions = createApp(HfcBaseMapActions).mount('#map-actions')
 }
 
 if (document.getElementById('HfcBase-history-table')) {
-  window.hfcBaseHistoryTable = createApp(HfcBaseHistoryTable).use(snotify)
-    .mount('#HfcBase-history-table')
+	window.hfcBaseHistoryTable = createApp(HfcBaseHistoryTable).use(snotify)
+		.mount('#HfcBase-history-table')
 }
 
 if (document.getElementById('HfcBase-history-slider')) {
-  window.hfcBaseHistorySlider = createApp(HfcBaseHistorySlider)
-    .mount('#HfcBase-history-slider')
+	window.hfcBaseHistorySlider = createApp(HfcBaseHistorySlider)
+		.mount('#HfcBase-history-slider')
 }
-
-if (document.getElementById('inventoryApp')) {
-	window.inventoryApp = createApp(Inventory).mount('#inventoryApp')
-  }
