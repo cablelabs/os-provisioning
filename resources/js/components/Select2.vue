@@ -33,7 +33,7 @@ import { ref, computed, onMounted, onDeactivated } from 'vue'
 import $ from 'jquery'
 import 'select2'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'input'])
 
 const props = defineProps({
   modelValue: {
@@ -139,6 +139,7 @@ function onUnselect(value) {
 function publishChanges() {
   $(select.value).val(selected.value)
   emit('update:modelValue', selected.value)
+  emit('input', selected.value)
 }
 
 function setValue(val) {
