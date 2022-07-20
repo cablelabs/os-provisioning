@@ -17,7 +17,7 @@
  */
 ?>
 {{-- begin Navbar --}}
-<nav id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
+<nav v-pre id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
     {{-- only one row Navbar --}}
     <div class="flex justify-between">
         {{-- begin mobile sidebar expand / collapse button --}}
@@ -95,6 +95,17 @@
             </a>
           </li>
         @endif --}}
+
+            {{-- quickview pre-selected network  --}}
+            <li class="nav-item dropdown d-none d-md-flex">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" style="padding: 12px 10x 8px 8px;">
+                    <img src="{{asset('images/overview_network.webp')}}" class="w-8" />
+                </a>
+                <div class="dropdown-menu QuickviewNetworkChartContainer" aria-labelledby="navbarDropdown" style="right: 0;left:auto; min-width: 270px;">
+                    <navbar-quickview-network title="001-Macon" active_alarms="35" green_mode="100" info="15" warning="25" critical="50"/>
+                </div>
+            </li>
 
             {{-- Help Section --}}
             <li class="nav-item dropdown d-none d-md-flex">

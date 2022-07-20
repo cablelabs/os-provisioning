@@ -32,6 +32,7 @@ import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import overlay from "./components/Overlay.vue"
+import NavbarQuickviewNetwork from "./components/navbar/QuickviewNetwork.vue"
 import HfcBaseMapActions from './components/HfcBase/HfcBaseMapActions.vue'
 import HfcBaseHistoryTable from './components/HfcBase/HfcBaseHistoryTable.vue'
 import HfcBaseHistorySlider from './components/HfcBase/HfcBaseHistorySlider.vue'
@@ -48,6 +49,7 @@ import 'datatables.net-select-bs4'
 import 'datatables.net-buttons-bs4'
 import 'datatables.net-responsive'
 
+// app
 window.main = createApp(app)
   .component('overlay', overlay)
   .component('select2', select2Component)
@@ -55,8 +57,10 @@ window.main = createApp(app)
   .use(snotify)
   .mount('#page-container')
 
-window.navbar = createApp({}).mount('#header')
+// navbar
+window.navbar = createApp({}).component('NavbarQuickviewNetwork', NavbarQuickviewNetwork).mount('#header')
 
+// sidebar
 if (document.getElementById('sidebar')) {
   let propData = document.querySelector('#sidebar').dataset
   window.sidebar = createApp(sidebar, {
@@ -71,6 +75,7 @@ if (document.getElementById('sidebar')) {
   window.JSZip = JSZip
 }
 
+// right sidebar
 if (document.getElementById('sidebar-right')) {
   window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
 }

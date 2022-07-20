@@ -19,6 +19,8 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "chart.js": "^2.9.4",
+        "chartjs-plugin-datalabels": "^1.0.0",
         "datatables.net": "^1.12.1",
         "datatables.net-bs4": "^1.12.1",
         "datatables.net-buttons": "^2.2.3",
