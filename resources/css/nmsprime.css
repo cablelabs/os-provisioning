@@ -1082,8 +1082,16 @@ textarea.select2-search__field {
     height: 1.5rem !important;
 }
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding: 2px !important;
+}
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
-    padding-left: 12px;
+    padding-left: 20px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    font-size: 1.1em !important;
 }
 
 .sidebar .sidebar-hover > li > a:hover,

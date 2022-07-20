@@ -157,13 +157,13 @@ var initSelect2Fields = function () {
     })
   }
 
-  window.initDefaultSelect2($('select').not('.select2-ajax'))
+  window.initDefaultSelect2($('select').not('.select2-ajax,.nms-select2'))
 }
 
 window.initDefaultSelect2 = function (item, lang = null) {
   item.select2({ language: lang })
   .on('select2:open', function (e) {
-    setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
+    setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
   })
 }
 
@@ -194,7 +194,7 @@ window.initAjaxSelect2 = function (item, lang = null) {
         $('.loading-results').hide()
       }
 
-      setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
+      setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
     })
     .on('select2:select', function (e) {
       $('.select2-search input').val('').trigger('change')
@@ -244,7 +244,7 @@ window.initAjaxSelect2 = function (item, lang = null) {
           full = true
         }
 
-        setTimeout(function() {document.querySelector('.select2-search__field').focus();}, 300);
+        setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
 
         return {
           results: response.data,
