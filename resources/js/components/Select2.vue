@@ -115,7 +115,7 @@ onMounted(() => {
 async function onSelect(value) {
   store.overlay = true;
 
-  const res = await axios.get(`/admin/CoreMon/api/v1/Market/${value}`);
+  const res = await axios.get(`/nmsprime/api/v1/CoreMon/Market/${value}`);
 
   res.data.result.forEach(async (el) => {
     if(!el.active){
