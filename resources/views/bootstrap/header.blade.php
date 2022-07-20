@@ -35,6 +35,8 @@
       <link href="{{asset('components/assets-admin/css/style.css')}}" rel="stylesheet" />
       @if(isset($user))
       <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
+	  @else
+	  <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
       @endif
       <link href="{{asset('components/assets-admin/css/style-bs4.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/css/style-responsive.min.css')}}" rel="stylesheet" />
