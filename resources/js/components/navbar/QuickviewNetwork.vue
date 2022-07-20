@@ -1,5 +1,5 @@
 <template>
-<canvas id="QuickviewNetworkChart" class="w-full max-w-screen-sm"></canvas>
+<canvas ref="QuickviewNetworkChart" class="w-full max-w-screen-sm"></canvas>
 <div id="QuickviewNetworkDetail" class="text-center mt-3 pb-3 mx-auto">
   <div class="text-base font-bold">{{ title }}</div>
   <div class="font-medium font-bold">Active Alarms: {{ active_alarms }}</div>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import {Chart} from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -29,6 +29,7 @@ const props = defineProps({
 // data
 const data = [parseInt(props.green_mode), parseInt(props.info), parseInt(props.warning), parseInt(props.critical)]
 
+const QuickviewNetworkChart = ref('')
 let options = reactive({
   type: 'doughnut',
   plugins: [ChartDataLabels],
@@ -70,8 +71,7 @@ let options = reactive({
 
 // mounted
 onMounted(() => {
-  var ctx = document.getElementById('QuickviewNetworkChart');
-  new Chart(ctx, options);
+  new Chart(QuickviewNetworkChart.value, options);
 })
 </script>
  
