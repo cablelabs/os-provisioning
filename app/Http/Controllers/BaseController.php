@@ -473,6 +473,15 @@ class BaseController extends Controller
             }
         }
 
+        if (Module::collections()->has('CoreMon')) {
+            // get favorite Market NetElement
+            $marketNetelement = auth()->user()->favNetelements()->where('netelementtype_id', 16)->first();
+
+            $a['quick_view_network'] = cache()->remember('Marketstatistic-16', 5 * 60, function () {
+                return $this->createQuickViewNetwork($marketNetelement);
+            });
+        }
+
         if (! isset($a['view_header_links'])) {
             $a['view_header_links'] = BaseViewController::view_main_menus();
         }
@@ -1963,5 +1972,63 @@ class BaseController extends Controller
         $message = trans('messages.missingModule', ['module' => $module]);
 
         return \View::make('errors.generic', compact('error', 'message'));
+    }
+
+    /**
+     * create thumbnail of quick view network for navbar
+     *
+     * @author Farshid Ghiasimanesh
+     *
+     * @return array of alerts are related to target netelement
+     */
+    public function createQuickViewNetwork($netelement)
+    {
+
+        // Alarm::where('status', 'active')->whereDescendantsOf([user favorited MarketNetElement])->get()
+
+        // count warning, critical etc.
+        $result = [
+            'title' => '001-Macon',
+            'info' => 15,
+            'warning' => 25,
+            'critical' => 50,
+        ];
+        $result['sum'] = array_sum([$result['info'], $result['warning'], $result['critical']]);
+
+        // create thumbnail
+        $start = -90;
+
+        $thumbnail = imagecreatetruecolor(200, 200);
+        $transColor = imagecolortransparent($thumbnail, imagecolorallocatealpha($thumbnail, 0, 0, 0, 127));
+        imagefill($thumbnail, 0, 0, $transColor);
+
+        if ($result['info']) {
+            $temp = $result['info'] * 360 / $result['sum'];
+            imagefilledarc($thumbnail, 100, 100, 200, 200, $start, $start + $temp - 2, imagecolorallocate($thumbnail, 0x0E, 0xA5, 0xE9), IMG_ARC_PIE);
+            $start += abs($temp);
+        }
+
+        if ($result['warning']) {
+            $temp = $result['warning'] * 360 / $result['sum'];
+            imagefilledarc($thumbnail, 100, 100, 200, 200, $start + 2, $start + $temp - 2, imagecolorallocate($thumbnail, 0xEA, 0xB3, 0x08), IMG_ARC_PIE);
+            $start += abs($temp);
+        }
+
+        if ($result['critical']) {
+            $temp = $result['critical'] * 360 / $result['sum'];
+            imagefilledarc($thumbnail, 100, 100, 200, 200, $start + 2, $start + $temp - 1, imagecolorallocate($thumbnail, 0xEF, 0x44, 0x44), IMG_ARC_PIE);
+            $start += abs($temp);
+        }
+
+        if (! $result['sum']) {
+            imagefilledarc($thumbnail, 100, 100, 200, 200, 0, 360, imagecolorallocate($thumbnail, 0x7F, 0xB4, 0x33), IMG_ARC_PIE);
+        }
+
+        // inner circle
+        imagefilledarc($thumbnail, 100, 100, 100, 100, 0, 360, imagecolorallocate($thumbnail, 0xFF, 0xFF, 0xFF), IMG_ARC_PIE);
+
+        imagewebp($thumbnail, public_path('/images/overview_network.webp'));
+
+        return $result;
     }
 }

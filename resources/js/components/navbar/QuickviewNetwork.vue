@@ -20,14 +20,13 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 const props = defineProps({
   title: { type: String, required: true },
   active_alarms: { type: [String, Number], default: 0 },
-  green_mode: { type: [String, Number], default: 0 },
   info: { type: [String, Number], default: 0 },
   warning: { type: [String, Number], default: 0 },
   critical: { type: [String, Number], default: 0 },
 })
 
 // data
-const data = [parseInt(props.green_mode), parseInt(props.info), parseInt(props.warning), parseInt(props.critical)]
+const data = props.active_alarms == 0 ? [1] : [parseInt(props.info), parseInt(props.warning), parseInt(props.critical)]
 
 const QuickviewNetworkChart = ref('')
 let options = reactive({
@@ -36,7 +35,7 @@ let options = reactive({
   data: {
     datasets: [{
       data: data,
-      backgroundColor: ["#7FB433", "#0EA5E9", "#EAB308", "#EF4444"],
+      backgroundColor: props.active_alarms == 0 ? ['#7FB433'] : ['#0EA5E9', '#EAB308', '#EF4444'],
     }]
   },
   options: {
@@ -45,28 +44,19 @@ let options = reactive({
     },
     plugins: {
       datalabels: {
-        align: 'right',
-        offset: -15,
+        align: 'center',
         display: true,
-        backgroundColor: '#7FB433',
-        borderRadius: 30,
-        borderColor: '#fff',
-        borderWidth: 2,
-        padding: {right: 30, left: 30, top: 5},
         color: '#fff',
         font: {
-          size: 16,
+          size: 10,
           weight: 'bold',
         },
         formatter: (value, ctx) => {
-          return ctx.dataIndex === 0 ? `${parseInt((value/data.reduce((sum, el) => sum + el, 0))*100)}%` : ''
+          return props.active_alarms == 0 ? 'No Alarm' : `${Math.round(((value/data.reduce((sum, el) => sum + el, 0))*100) * 10) / 10}%`
         },
-        display: (ctx) => {
-          return ctx.dataIndex === 0;
-        }
       },
-    }
-  }
+    },
+  },
 })
 
 // mounted

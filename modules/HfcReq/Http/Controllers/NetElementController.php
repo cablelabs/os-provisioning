@@ -185,18 +185,23 @@ class NetElementController extends BaseController
         return $tabs;
     }
 
-    public function favorite($netelement)
+    public function favorite(NetElement $netelement)
     {
+        if ($netelement->netelementtype_id === 16) {
+            $markets = auth()->user()->favNetelements()->where('netelementtype_id', 16)->pluck('favorite_netelements.id')->toArray();
+            auth()->user()->favNetelements()->detach([$markets]);
+        }
+
         cache()->forget(auth()->user()->login_name.'-Nets');
 
-        return auth()->user()->favNetelements()->attach([$netelement]);
+        return auth()->user()->favNetelements()->attach([$netelement->id]);
     }
 
-    public function unfavorite($netelement)
+    public function unfavorite(NetElement $netelement)
     {
         cache()->forget(auth()->user()->login_name.'-Nets');
 
-        return auth()->user()->favNetelements()->detach([$netelement]);
+        return auth()->user()->favNetelements()->detach([$netelement->id]);
     }
 
     public function searchForNetsAndClusters(Request $request)
