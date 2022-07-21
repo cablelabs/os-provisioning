@@ -18,8 +18,12 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Kalnoy\Nestedset\NodeTrait;
+
 class NetElementType extends \BaseModel
 {
+    use NodeTrait;
+
     // The associated SQL table for this Model
     public $table = 'netelementtype';
 

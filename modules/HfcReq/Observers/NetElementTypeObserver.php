@@ -25,7 +25,7 @@ class NetElementTypeObserver
     public function created($netElementType)
     {
         NetElementType::where('id', $netElementType->id)
-            ->update(['base_type_id' => $this->getBaseType($netElementType)]);
+            ->update(['base_type_id' => $this->getBaseTypeId($netElementType->id)]);
     }
 
     public function updating($netElementType)
@@ -34,17 +34,16 @@ class NetElementTypeObserver
             return;
         }
 
-        $netElementType->base_type_id = $this->getBaseType($netElementType);
+        $baseTypeId = $this->getBaseTypeId($netElementType->id);
+        $netElementType->base_type_id = $baseTypeId;
+        $netElementType->netelements()->update(['base_type_id' => $baseTypeId]);
     }
 
     public function deleting($netElementType)
     {
-        // update without Events to save 1 query per NetElementType
-        foreach ($netElementType->children as $nET) {
-            NetElementType::where('id', $nET->id)->update([
-                'parent_id' => $netElementType->parent_id,
-            ]);
-        }
+        NetElementType::whereIn('id', $netElementType->children->pluck('id'))->update([
+            'parent_id' => $netElementType->parent_id,
+        ]);
     }
 
     public function restoring($netElementType)
@@ -59,17 +58,20 @@ class NetElementTypeObserver
      *
      * @note: base device means: parent_id = 0, 2 (cluster)
      *
-     * @param $netElementType
+     * @param  int  $netElementTypeId
      * @return int id of base device netelementtype
      */
-    public function getBaseType($netElementType)
+    public function getBaseTypeId(int $netElementTypeId): int
     {
-        $p = $netElementType;
+        $ancestors = NetElementType::whereAncestorOrSelf($netElementTypeId)
+            ->withDepth()
+            ->get();
+        $special = $ancestors->whereIn('id', [2, 9]);
 
-        while ($p->parent_id && ! in_array($p->id, [2, 9])) {
-            $p = $p->parent;
-        }
-
-        return $p->id;
+        return $ancestors
+            ->when($special->count(),
+                fn () => $special->first(),
+                fn ($ancestors) => $ancestors->firstWhere('depth', 0)
+            )->id;
     }
 }
