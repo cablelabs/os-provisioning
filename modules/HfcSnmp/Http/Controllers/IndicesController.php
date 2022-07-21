@@ -28,10 +28,11 @@ class IndicesController extends BaseController
      */
     public function view_form_fields($model = null)
     {
-        $netelement = NetElement::findOrFail($model->netelement_id ?: request('netelement_id'));
+        $netelement = NetElement::without('netelementtype')
+            ->findOrFail($model->netelement_id ?: request('netelement_id'));
 
         // get params from parent netgw for cluster
-        if ($netelement->netelementtype_id == 2) {
+        if ($netelement->base_type_id == 2) {
             $netelement = $netelement->getParentNetelementOfType(3);
         }
 

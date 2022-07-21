@@ -236,7 +236,7 @@ class ModemController extends \BaseController
 
         if (
             $model->provNetelement &&
-            $model->provNetelement->netelementtype->base_type_id !== array_search('NetGw', \Modules\HfcReq\Entities\NetElementType::$undeletables)
+            $model->provNetelement->base_type_id !== array_search('NetGw', \Modules\HfcReq\Entities\NetElementType::$undeletables)
         ) {
             $tabs = $model->provNetelement->tabs();
             $tabs[] = $defaultTabs[1];

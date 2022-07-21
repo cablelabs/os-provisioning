@@ -349,7 +349,7 @@
                                                         :class="favorites.includes(netelement.id) ? 'fa-star' : 'fa-star-o'"
                                                         v-on:click="favorNetelement(netelement)"></i>
                                                 </a>
-                                                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' :
+                                                <a :href="'/admin/Tree/erd/' + (netelement.base_type_id == 1 ? 'net/' :
                                                     'cluster/') + netelement.id"
                                                     class="no-underline"
                                                     style="max-height: 20px; white-space: nowrap;flex:1;width:80%;"
@@ -364,7 +364,7 @@
                                                     v-on:click="directFavor(netelement, $event)" class="mr-2 fa"
                                                     :class="netElementSearchHoverClass(netelement)"
                                                     style="text-decoration: none;"></i>
-                                                <a :href="'/admin/Tree/erd/' + (netelement.netelementtype_id == 1 ? 'net/' :
+                                                <a :href="'/admin/Tree/erd/' + (netelement.base_type_id == 1 ? 'net/' :
                                                     'cluster/') + netelement.id"
                                                     class="no-underline caret-link d-flex"
                                                     style="max-height: 20px; white-space: nowrap;flex:1;width:80%;"
@@ -373,7 +373,7 @@
                                                         :title="netelement.name" class="d-block text-ellipsis"></span>
                                                 </a>
                                             </template>
-                                            <a href="javascript:;" v-if="netelement.netelementtype_id == 1"
+                                            <a href="javascript:;" v-if="netelement.base_type_id == 1"
                                                 v-on:click="loadCluster(netelement)" class="caret-link"
                                                 style="cursor: pointer;width: 100%; text-align: right;">
                                                 <i v-if="loadingClusters.includes(netelement.id)"
@@ -394,7 +394,7 @@
                                             v-on:after-leave="afterLeave"
                                         >
                                             <ul :id="'network_' + netelement.id"
-                                                v-if="netelement.netelementtype_id == 1 && netelement.clustersLoaded && netelement.clusters.length && !netelement.isCollapsed"
+                                                v-if="netelement.base_type_id == 1 && netelement.clustersLoaded && netelement.clusters.length && !netelement.isCollapsed"
                                                 class="m-0 sidebar-hover p-b-10 p-l-20"
                                                 :class="{
                                                     'minifiedMenu': (showMinifiedHoverNet && netelement

@@ -89,7 +89,7 @@ class SnmpController extends \BaseController
             $this->netelementIp = gethostbyname($netelement->provDevice->hostname);
         }
 
-        if ($netelement->netelementtype_id != 2) {
+        if ($netelement->base_type_id != 2) {
             return;
         }
 
@@ -197,7 +197,7 @@ class SnmpController extends \BaseController
         $netelement = $this->netelement;
 
         // use parent netgw for cluster
-        if ($this->netelement->netelementtype_id == 2) {
+        if ($this->netelement->base_type_id == 2) {
             if (! $this->parent_device) {
                 return [];
             }
@@ -318,7 +318,7 @@ class SnmpController extends \BaseController
                 $indices_o = $param->indices()->where('netelement_id', '=', $this->netelement->id)->first();
                 $indices = $indices_o && $indices_o->indices ? explode(',', $indices_o->indices) : [];
 
-                if ($this->netelement->netelementtype_id == 2 && ! $indices_o) {
+                if ($this->netelement->base_type_id == 2 && ! $indices_o) {
                     Log::error('HFC-Cluster is missing table indices for controlling view!', [$this->netelement->id]);
                     continue;
                 }
@@ -702,7 +702,7 @@ class SnmpController extends \BaseController
         $oid_o = null;
 
         // switch device and parent device if type is cluster so that all functions work properly - switch again to store values
-        if ($this->netelement->netelementtype_id == 2) {
+        if ($this->netelement->base_type_id == 2) {
             $netelement = $this->netelement;
             $this->netelement = $this->parent_device;
         }
@@ -776,7 +776,7 @@ class SnmpController extends \BaseController
                     'username'  => $user ? $user->first_name.' '.$user->last_name : 'cronjob',
                     'method'    => 'updated',
                     'model'     => 'NetElement',
-                    'model_id'  => $this->netelement->netelementtype_id == 2 ? $netelement->id : $this->netelement->id,
+                    'model_id'  => $this->netelement->base_type_id == 2 ? $netelement->id : $this->netelement->id,
                     'text'      => ($oid_o->name_gui ?: $oid_o->name)." ($full_oid):  '".$old_val."' => '$value'",
                 ]);
 
@@ -792,7 +792,7 @@ class SnmpController extends \BaseController
         }
 
         // Store values
-        $this->netelement = $this->netelement->netelementtype_id == 2 ? $netelement : $this->netelement;
+        $this->netelement = $this->netelement->base_type_id == 2 ? $netelement : $this->netelement;
         $this->storeSnmpValues($oldValues);
 
         Cache::forget($this->cacheKey);

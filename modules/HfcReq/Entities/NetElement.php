@@ -102,13 +102,13 @@ class NetElement extends \BaseModel
         $ret = [];
         $tabName = trans_choice('view.Header_NetElement', 1);
 
-        if (Module::collections()->has('HfcCustomer') && $this->netelementtype->base_type_id != array_search('Tap-Port', NetElementType::$undeletables)) {
+        if (Module::collections()->has('HfcCustomer') && $this->base_type_id != array_search('Tap-Port', NetElementType::$undeletables)) {
             $ret[$tabName]['Mpr']['class'] = 'Mpr';
             $ret[$tabName]['Mpr']['relation'] = $this->mprs;
         }
 
         if (Module::collections()->has('HfcSnmp')) {
-            if ($this->netelementtype && ($this->netelementtype->id == 2 || $this->netelementtype->parameters()->count())) {
+            if ($this->netelementtype_id && ($this->base_type_id == 2 || $this->netelementtype()->parameters()->count())) {
                 $ret[$tabName]['Indices']['class'] = 'Indices';
                 $ret[$tabName]['Indices']['relation'] = $this->indices;
             }
@@ -116,7 +116,7 @@ class NetElement extends \BaseModel
             // see NetElementController@controlling_edit for Controlling Tab!
         }
 
-        if ($this->netelementtype->base_type_id == array_search('Tap', NetElementType::$undeletables)) {
+        if ($this->base_type_id == array_search('Tap', NetElementType::$undeletables)) {
             $ret[$tabName]['SubNetElement']['class'] = 'NetElement';
             $ret[$tabName]['SubNetElement']['relation'] = $this->children;
         }
@@ -154,11 +154,11 @@ class NetElement extends \BaseModel
 
     public function get_bsclass()
     {
-        if (in_array($this->netelementtype_id, [1, 2])) {
+        if (in_array($this->base_type_id, [1, 2])) {
             return 'info';
         }
 
-        if ($this->netelementtype && $this->netelementtype_id == 9) {
+        if ($this->netelementtype_id && $this->base_type_id == 9) {
             switch ($this->state) {
                 case 'C': // off
 
@@ -220,7 +220,7 @@ class NetElement extends \BaseModel
 
     public function label()
     {
-        if (! $this->netelementtype) {
+        if (! $this->netelementtype_id) {
             return "{$this->id} - {$this->name}";
         }
 
@@ -230,7 +230,7 @@ class NetElement extends \BaseModel
     //for empty relationships
     public function get_elementtype_name()
     {
-        return $this->netelementtype ? $this->netelementtype->name : '';
+        return $this->netelementtype_id ? $this->netelementtype->name : '';
     }
 
     /**
@@ -483,7 +483,7 @@ class NetElement extends \BaseModel
      */
     public function provDevice()
     {
-        if ($this->netelementtype->base_type_id === array_search('NetGw', NetElementType::$undeletables)) {
+        if ($this->base_type_id === array_search('NetGw', NetElementType::$undeletables)) {
             return $this->belongsTo(\Modules\ProvBase\Entities\NetGw::class);
         }
 
@@ -545,18 +545,15 @@ class NetElement extends \BaseModel
      */
     public function getUrlAttribute()
     {
-        $url = '';
         if ($this->link) {
-            $url = $this->link;
-        } elseif ($this->netelementtype_id == 8) {
-            $url = route('TreeErd.show', ['parent_id', $this->id]);
-        } elseif ($this->netelementtype_id == 9) {
-            $url = Module::collections()->has('Satkabel') ? route('NetElement.tapControlling', $this->id) : '';
-        } else {
-            $url = route('NetElement.controlling_edit', [$this->id, 0, 0]);
+            return $this->link;
         }
 
-        return $url;
+        return match ($this->base_type_id) {
+            8 => route('TreeErd.show', ['parent_id', $this->id]),
+            9 => Module::collections()->has('Satkabel') ? route('NetElement.tapControlling', $this->id) : '',
+            default => route('NetElement.controlling_edit', [$this->id, 0, 0]),
+        };
     }
 
     /**
@@ -611,11 +608,9 @@ class NetElement extends \BaseModel
 
     public function clusters()
     {
-        $cluster_id = array_search('Cluster', NetElementType::$undeletables);
-
         return $this->hasMany(self::class, 'net')
             ->where('id', '!=', $this->id)
-            ->where('netelementtype_id', $cluster_id)
+            ->where('base_type_id', array_search('Cluster', NetElementType::$undeletables))
             ->orderBy('name');
     }
 
@@ -700,18 +695,16 @@ class NetElement extends \BaseModel
      * See NetElementType::undeletables for the list of IDs
      *
      * @param int ID of NetelementType
-     * @return obj NetElement
+     * @return NetElement NetElement
      *
      * @author Nino Ryschawy
      */
-    public function getParentNetelementOfType($netelementtypeId)
+    public function getParentNetelementOfType(int $netelementtypeId)
     {
-        return self::join('netelementtype', 'netelement.netelementtype_id', 'netelementtype.id')
-            ->whereAncestorOf($this->id)->reversed()
-            ->where('netelementtype.base_type_id', $netelementtypeId)
+        return self::whereAncestorOf($this->id)->reversed()
+            ->where('base_type_id', $netelementtypeId)
             // ->select(['netelement.id', 'netelement.parent_id', 'netelement.name', 'netelementtype_id'])
             ->select('netelement.*')
-            ->withOut('netelementtype')
             ->first();
     }
 
@@ -850,16 +843,16 @@ class NetElement extends \BaseModel
             $nets = Auth::user()
                 ->favNetelements()
                 ->without('netelementtype')
-                ->get(['netelement.id', 'name', 'netelementtype_id']);
+                ->get(['netelement.id', 'name', 'base_type_id']);
 
             if ($nets->count()) {
                 return $nets;
             }
 
-            return self::where('netelementtype_id', array_search('Net', NetElementType::$undeletables))
+            return self::where('base_type_id', array_search('Net', NetElementType::$undeletables))
                 ->without('netelementtype')
                 ->limit(25)
-                ->get(['id', 'name', 'netelementtype_id']);
+                ->get(['id', 'name', 'base_type_id']);
         });
     }
 
@@ -958,21 +951,21 @@ class NetElement extends \BaseModel
      */
     public function is_type_net()
     {
-        return $this->netelementtype_id == array_search('Net', NetElementType::$undeletables);
+        return $this->base_type_id == array_search('Net', NetElementType::$undeletables);
     }
 
     public function is_type_cluster()
     {
-        return $this->netelementtype_id == array_search('Cluster', NetElementType::$undeletables);
+        return $this->base_type_id == array_search('Cluster', NetElementType::$undeletables);
     }
 
     public function is_type_netgw()
     {
-        if (! $this->netelementtype) {
+        if (! $this->netelementtype_id) {
             return false;
         }
 
-        return $this->netelementtype->base_type_id == array_search('NetGw', NetElementType::$undeletables);
+        return $this->base_type_id == array_search('NetGw', NetElementType::$undeletables);
     }
 
     /**
@@ -983,7 +976,7 @@ class NetElement extends \BaseModel
      */
     public function get_base_netelementtype()
     {
-        return $this->netelementtype->base_type_id;
+        return $this->base_type_id;
     }
 
     /**
@@ -996,7 +989,7 @@ class NetElement extends \BaseModel
     public function get_options_array($type = null)
     {
         if (! $type) {
-            $type = $this->netelementtype->base_type_id;
+            $type = $this->base_type_id;
         }
 
         if ($type != 2) {  // cluster
@@ -1026,7 +1019,7 @@ class NetElement extends \BaseModel
      */
     public function tabs()
     {
-        if (! $this->netelementtype) {
+        if (! $this->netelementtype_id) {
             return [];
         }
 
@@ -1039,7 +1032,7 @@ class NetElement extends \BaseModel
 
         $enabledModules = Module::collections();
 
-        if ($enabledModules->has('CoreMon') && in_array($this->netelementtype->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
+        if ($enabledModules->has('CoreMon') && in_array($this->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
             $coremonTabs = (new \Modules\CoreMon\Http\Controllers\CoreMonController)->getNetelementtypeSpecificController($this)->tabs($this);
 
             // Note: Net could be an exception here as it belongs to both (Core & Access network) and therefor could have both tabs
@@ -1047,7 +1040,7 @@ class NetElement extends \BaseModel
         }
 
         $provmonEnabled = $enabledModules->has('ProvMon');
-        $type = $this->netelementtype->base_type_id;
+        $type = $this->base_type_id;
         session(['lastNetElement' => $this->id]);
 
         if (! $enabledModules->has('ProvBase')) {
@@ -1157,7 +1150,7 @@ class NetElement extends \BaseModel
      */
     public function getOriginalTypeName(string|array $modifiers = null): string
     {
-        $originalTypeName = NetElementType::$undeletables[$this->netelementType->base_type_id];
+        $originalTypeName = NetElementType::$undeletables[$this->base_type_id];
 
         foreach (collect($modifiers) as $modifier) {
             $originalTypeName = Str::$modifier($originalTypeName);
@@ -1210,7 +1203,7 @@ class NetElement extends \BaseModel
     public function apply_agc()
     {
         // ignore non-clusters
-        if ($this->netelementtype_id != 2) {
+        if ($this->base_type_id != 2) {
             return;
         }
         // ignore cluster if its IP address can't be determined

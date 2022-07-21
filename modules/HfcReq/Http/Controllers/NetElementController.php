@@ -48,7 +48,7 @@ class NetElementController extends BaseController
         // parse which netelementtype we want to edit/create
         // NOTE: this is for auto reload via HTML GET
         $type = NetElementType::find(request('netelementtype_id'))->base_type_id ??
-            ($netelement->exists ? $netelement->netelementtype->base_type_id : null);
+            ($netelement->exists ? $netelement->base_type_id : null);
 
         $hidden4TapPort = $hidden4Tap = 0;
         $addressDesc1 = 'Address Line 1';
@@ -67,7 +67,7 @@ class NetElementController extends BaseController
         }
 
         // netelement is a cluster or will be created as type cluster
-        $cluster = ($netelement->netelementtype_id == 2 || (! $netelement->exists && request('netelementtype_id') == 2));
+        $cluster = ($netelement->base_type_id == 2 || (! $netelement->exists && request('netelementtype_id') == 2));
 
         // this is just a helper and won't be stored in the database
         $netelement->enable_agc = $netelement->exists && $netelement->agc_offset !== null;
@@ -77,7 +77,7 @@ class NetElementController extends BaseController
          * Options array is hidden when not used
          */
         $options_array = ['form_type' => 'text', 'name' => 'options', 'description' => 'Options'];
-        if ($netelement->netelementtype && $type == 2) {
+        if ($netelement->netelementtype_id && $type == 2) {
             $options_array = ['form_type' => 'select', 'name' => 'options', 'description' => 'RF Card Setting (DSxUS)', 'value' => $netelement->get_options_array($type)];
         }
 
@@ -209,21 +209,21 @@ class NetElementController extends BaseController
         $clusterId = array_search('Cluster', NetElementType::$undeletables);
 
         return NetElement::without('netelementtype')
-            ->whereIn('netelementtype_id', [$netId, $clusterId])
+            ->whereIn('base_type_id', [$netId, $clusterId])
             ->where('name', 'like', '%'.$request->get('query').'%')
             ->limit(25)
-            ->orderBy('netelementtype_id', 'ASC')
-            ->get(['name', 'id', 'netelementtype_id'])
+            ->orderBy('base_type_id', 'ASC')
+            ->get(['name', 'id', 'base_type_id'])
             ->toJson();
     }
 
     public function searchClusters($netId)
     {
         return NetElement::without('netelementtype')
-            ->where('netelementtype_id', array_search('Cluster', NetElementType::$undeletables))
+            ->where('base_type_id', array_search('Cluster', NetElementType::$undeletables))
             ->where('net', $netId)
             ->limit(25)
-            ->get(['name', 'id', 'netelementtype_id'])
+            ->get(['name', 'id', 'base_type_id'])
             ->toJson();
     }
 }
