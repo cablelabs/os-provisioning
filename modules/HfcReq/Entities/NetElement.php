@@ -43,7 +43,7 @@ class NetElement extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'netelement';
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
-    protected $with = ['netelementtype'];
+    protected $with = ['netelementtype', 'connectedModel'];
 
     public $guarded = ['infrastructure_file_upload'];
 
@@ -397,6 +397,22 @@ class NetElement extends \BaseModel
     public function passive_modems()
     {
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
+    }
+
+    public function connectedModel()
+    {
+        return match (intval($this->base_type_id)) {
+            1 => $this->hasOne(self::class, 'net'),
+            16 => $this->hasOne(Modules\CoreMon\Entities\Market::class, 'netelement_id'),
+            17 => $this->hasOne(Modules\CoreMon\Entities\Hubsite::class, 'netelement_id'),
+            18 => $this->hasOne(Modules\CoreMon\Entities\Ccap::class, 'netelement_id'),
+            19 => $this->hasOne(Modules\CoreMon\Entities\Dpa::class, 'netelement_id'),
+            20 => $this->hasOne(Modules\CoreMon\Entities\Ncs::class, 'netelement_id'),
+            21 => $this->hasOne(Modules\CoreMon\Entities\Rpa::class, 'netelement_id'),
+            22 => $this->hasOne(Modules\CoreMon\Entities\Rpd::class, 'netelement_id'),
+            23 => $this->hasOne(Modules\CoreMon\Entities\Cpe::class, 'netelement_id'),
+            default => $this->hasOne(self::class, 'net'),
+        };
     }
 
     /**
