@@ -2,10 +2,12 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class AddThemeColorColumnToUsersTable extends Migration
+class AddThemeColorColumnToUsersTable extends BaseMigration
 {
+    public $migrationScope = 'database';
+    protected $table = 'users';
+
     /**
      * Run the migrations.
      *
@@ -13,7 +15,7 @@ class AddThemeColorColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table($this->table, function (Blueprint $table) {
             $table->string('theme_color', 50)->default('default_theme_config.css');
         });
     }
@@ -25,7 +27,7 @@ class AddThemeColorColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table($this->table, function (Blueprint $table) {
             $table->dropColumn('theme_color');
         });
     }
