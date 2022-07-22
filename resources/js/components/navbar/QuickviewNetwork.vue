@@ -19,10 +19,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 // props
 const props = defineProps({
   title: { type: String, required: true },
-  active_alarms: { type: [String, Number], default: 0 },
-  info: { type: [String, Number], default: 0 },
-  warning: { type: [String, Number], default: 0 },
-  critical: { type: [String, Number], default: 0 },
+  active_alarms: { type: Number, default: 0 },
+  info: { type: Number, default: 0 },
+  warning: { type: Number, default: 0 },
+  critical: { type: Number, default: 0 },
 })
 
 // data
@@ -52,7 +52,7 @@ let options = reactive({
           weight: 'bold',
         },
         formatter: (value, ctx) => {
-          return props.active_alarms == 0 ? 'No Alarm' : `${Math.round(((value/data.reduce((sum, el) => sum + el, 0))*100) * 10) / 10}%`
+          return props.active_alarms == 0 ? 'No Alarm' : value == 0 ? '' : `${Math.round(((value/data.reduce((sum, el) => sum + el, 0))*100) * 10) / 10}%`
         },
       },
     },

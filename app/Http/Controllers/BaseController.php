@@ -36,6 +36,7 @@ use App\GlobalConfig;
 use App\V1\Repository;
 use Yajra\DataTables\DataTables;
 use Nwidart\Modules\Facades\Module;
+use Modules\CoreMon\Helpers\PrometheusApi;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -477,9 +478,9 @@ class BaseController extends Controller
             // get favorite Market NetElement
             $marketNetelement = auth()->user()->favNetelements()->where('netelementtype_id', 16)->first();
 
-            $a['quick_view_network'] = cache()->remember('Marketstatistic-16', 5 * 60, function () {
+            $a['quick_view_network'] = $marketNetelement ? cache()->remember("Marketstatistic-$marketNetelement->id", 5 * 60, function () use ($marketNetelement) {
                 return $this->createQuickViewNetwork($marketNetelement);
-            });
+            }) : null;
         }
 
         if (! isset($a['view_header_links'])) {
@@ -1985,14 +1986,31 @@ class BaseController extends Controller
     {
 
         // Alarm::where('status', 'active')->whereDescendantsOf([user favorited MarketNetElement])->get()
-
         // count warning, critical etc.
         $result = [
-            'title' => '001-Macon',
-            'info' => 15,
-            'warning' => 25,
-            'critical' => 50,
+            'title' => $netelement->name,
+            'info' => 0,
+            'warning' => 0,
+            'critical' => 0,
         ];
+
+        $alerts = json_decode(PrometheusApi::callApi('alerts', 'GET', 2), true);
+        if ($alerts) {
+            foreach ($alerts as $alert) {
+                switch ($alert['labels']['severity']) {
+                    case 'info':
+                        $result['info'] += 1;
+                        break;
+                    case 'warning':
+                        $result['warning'] += 1;
+                        break;
+                    case 'critical':
+                        $result['critical'] += 1;
+                        break;
+                }
+            }
+        }
+
         $result['sum'] = array_sum([$result['info'], $result['warning'], $result['critical']]);
 
         // create thumbnail

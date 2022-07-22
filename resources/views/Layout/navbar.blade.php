@@ -97,14 +97,14 @@
         @endif --}}
 
             {{-- quickview pre-selected network  --}}
-            @if (Module::collections()->has('CoreMon'))
+            @if (Module::collections()->has('CoreMon') && isset($quick_view_network))
             <li class="nav-item dropdown d-none d-md-flex">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" style="padding: 12px 10x 8px 8px;">
                     <img src="{{asset('images/overview_network.webp')}}" class="w-8" />
                 </a>
                 <div class="dropdown-menu QuickviewNetworkChartContainer" aria-labelledby="navbarDropdown" style="right: 0;left:auto; min-width: 270px;">
-                    <navbar-quickview-network title="{{ $quick_view_network['title'] }}" active_alarms="{{ $quick_view_network['sum'] }}" info="{{ $quick_view_network['info'] }}" warning="{{ $quick_view_network['warning'] }}" critical="{{ $quick_view_network['critical'] }}"/>
+                    <navbar-quickview-network title="{{ $quick_view_network['title'] }}" v-bind:active_alarms="{{ $quick_view_network['sum'] }}" v-bind:info="{{ $quick_view_network['info'] }}" v-bind:warning="{{ $quick_view_network['warning'] }}" v-bind:critical="{{ $quick_view_network['critical'] }}"/>
                 </div>
             </li>
             @endif
