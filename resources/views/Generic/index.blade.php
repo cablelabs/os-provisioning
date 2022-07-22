@@ -109,7 +109,6 @@
         {{-- Get Headerdata and translate with translation files --}}
         <thead> {{-- TABLE HEADER --}}
             <tr>
-                <th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true) {{-- Checkbox Column if delete is allowed --}}
                     <th class="nocolvis" id="selectall" style="text-align:center; vertical-align:middle;min-width:20px;;width:20px;">
                         <input id ="allCheck" data-trigger="hover" style='simple' type='checkbox' value='1' data-container="body" data-toggle="tooltip" data-placement="top"
@@ -139,7 +138,6 @@
         <tfoot> {{-- TABLE FOOTER--}}
         @if (isset($model) && $methodExists)
             <tr>
-                <th></th>  {{-- Responsive Column --}}
                 @if (isset($delete_allowed) && $delete_allowed == true)
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
@@ -191,26 +189,15 @@ $(document).ready(function() {
         @include('datatables.colsearch')
         {{-- Show Pagination only when the results do not fit on one page --}}
         @include('datatables.paginate')
-        responsive: {
-            details: {
-                type: 'column', {{-- auto resize the Table to fit the viewing device --}}
-            }
-        },
+        scrollX: true,
         autoWidth: false, {{-- Option to ajust Table to Width of container --}}
         dom: 'lBfrtip', {{-- sets order and what to show  --}}
         stateSave: true, {{-- Save Search Filters and visible Columns --}}
         stateDuration: 0, // 60 * 60 * 24, {{-- Time the State is used - set to 24h --}}
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
         order: order,
-        {{-- Responsive Column --}}
-        columnDefs: [ {
-            className: 'control',
-            orderable: false,
-            searchable: false,
-            targets:   [0]
-        },
         {{-- Dont print error message, but fill NULL Fields with empty string --}}
-        {
+        columnDefs: [{
             defaultContent: "",
             targets: "_all"
         },

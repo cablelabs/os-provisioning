@@ -1682,7 +1682,6 @@ class BaseController extends Controller
         }
 
         $DT = DataTables::make($query)
-            ->addColumn('responsive', '')
             ->addColumn('checkbox', '');
 
         if (config('datatables.isIndexCachingEnabled')) {

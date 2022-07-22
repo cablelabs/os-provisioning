@@ -19,7 +19,6 @@
 
 {{-- Add Columns - First 2 Columns are for Responsive Button and Input Checkbox --}}
 columns:[
-        {data: 'responsive', orderable: false, searchable: false},
     @if (isset($delete_allowed) && $delete_allowed == true)
         {data: 'checkbox', orderable: false, searchable: false},
     @endif
