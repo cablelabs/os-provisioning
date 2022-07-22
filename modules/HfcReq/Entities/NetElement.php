@@ -403,7 +403,6 @@ class NetElement extends \BaseModel
     {
         return match (intval($this->base_type_id)) {
             1 => $this->hasOne(self::class, 'net'),
-            16 => $this->hasOne(Modules\CoreMon\Entities\Market::class, 'netelement_id'),
             17 => $this->hasOne(Modules\CoreMon\Entities\Hubsite::class, 'netelement_id'),
             18 => $this->hasOne(Modules\CoreMon\Entities\Ccap::class, 'netelement_id'),
             19 => $this->hasOne(Modules\CoreMon\Entities\Dpa::class, 'netelement_id'),
