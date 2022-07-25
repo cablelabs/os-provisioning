@@ -42,8 +42,8 @@ class CreateAlarmTable extends BaseMigration
             $table->string('job')->nullable();
             $table->string('severity')->nullable();
             $table->json('annotations')->nullable();
-            $table->timestamp('startsAt', null)->nullable();
-            $table->timestamp('endsAt', null)->nullable();
+            $table->timestampTz('startsAt', null);
+            $table->timestampTz('endsAt', null);
             $table->string('generatorURL')->nullable();
             $table->string('fingerprint')->nullable();
         });
