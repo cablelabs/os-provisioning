@@ -108,7 +108,7 @@ class NetElement extends \BaseModel
         }
 
         if (Module::collections()->has('HfcSnmp')) {
-            if ($this->netelementtype_id && ($this->base_type_id == 2 || $this->netelementtype()->parameters()->count())) {
+            if ($this->netelementtype_id && ($this->base_type_id == 2 || $this->netelementtype->parameters()->count())) {
                 $ret[$tabName]['Indices']['class'] = 'Indices';
                 $ret[$tabName]['Indices']['relation'] = $this->indices;
             }
