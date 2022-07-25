@@ -37,7 +37,7 @@ const index = ref(null)
 
 // computed
 const visible = computed(() => {
-  return index.value == Accordion.active
+  return Accordion.multiple ? Accordion.active.includes(index.value) : index.value == Accordion.active
 })
 
 //onBeforeMount
@@ -47,7 +47,10 @@ onBeforeMount(() => {
 
 // mounted
 onMounted(() => {
-  if(index.value === Accordion.active) {
+  if(
+    (Accordion.multiple && Accordion.active.includes(index.value)) ||
+    (!Accordion.multiple && index.value === Accordion.active)
+  ) {
     emit('change', true)
   }
 })
@@ -58,10 +61,10 @@ const emit = defineEmits(['change'])
 // methods
 function open() {
   if (visible.value) {
-    Accordion.active = null;
+    Accordion.active = Accordion.multiple ? Accordion.active.filter(el => el !== index.value) : null
     emit('change', false)
   } else {
-    Accordion.active = index.value;
+    Accordion.multiple ? Accordion.active.push(index.value) : Accordion.active = index.value;
     emit('change', true)
   }
 }
