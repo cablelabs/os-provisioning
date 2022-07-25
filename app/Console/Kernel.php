@@ -100,6 +100,9 @@ class Kernel extends ConsoleKernel
         // Remove all Log Entries older than 4 years
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
+        // Remove all alarms older than 2 years
+        $schedule->call('\Modules\CoreMon\Entities\Alarm@cleanup')->weekly();
+
         // Parse News from repo server and save to local JSON file
         if (\Module::collections()->has('Dashboard')) {
             $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
