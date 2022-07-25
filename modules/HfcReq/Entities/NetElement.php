@@ -402,15 +402,16 @@ class NetElement extends \BaseModel
     public function connectedModel()
     {
         return match (intval($this->base_type_id)) {
-            1 => $this->hasOne(self::class, 'net'),
-            17 => $this->hasOne(Modules\CoreMon\Entities\Hubsite::class, 'netelement_id'),
-            18 => $this->hasOne(Modules\CoreMon\Entities\Ccap::class, 'netelement_id'),
-            19 => $this->hasOne(Modules\CoreMon\Entities\Dpa::class, 'netelement_id'),
-            20 => $this->hasOne(Modules\CoreMon\Entities\Ncs::class, 'netelement_id'),
-            21 => $this->hasOne(Modules\CoreMon\Entities\Rpa::class, 'netelement_id'),
-            22 => $this->hasOne(Modules\CoreMon\Entities\Rpd::class, 'netelement_id'),
-            23 => $this->hasOne(Modules\CoreMon\Entities\Cpe::class, 'netelement_id'),
-            default => $this->hasOne(self::class, 'net'),
+            // 1 => $this->hasOne(self::class, 'net'),
+            17 => $this->hasOne(\Modules\CoreMon\Entities\Hubsite::class, 'netelement_id'),
+            18 => $this->hasOne(\Modules\CoreMon\Entities\Ccap::class, 'netelement_id'),
+            19 => $this->hasOne(\Modules\CoreMon\Entities\Dpa::class, 'netelement_id'),
+            20 => $this->hasOne(\Modules\CoreMon\Entities\Ncs::class, 'netelement_id'),
+            21 => $this->hasOne(\Modules\CoreMon\Entities\Rpa::class, 'netelement_id'),
+            22 => $this->hasOne(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id'),
+            23 => $this->hasOne(\Modules\CoreMon\Entities\Cpe::class, 'netelement_id'),
+            // Note: Use impossible condition to return empty relation - see https://stackoverflow.com/questions/49811825/laravel-return-empty-relationship-on-model-when-condidtion-is-true
+            default => $this->hasOne(self::class, 'net')->whereNull('id'),
         };
     }
 
