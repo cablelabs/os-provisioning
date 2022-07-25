@@ -46,6 +46,7 @@ class CreateAlarmTable extends BaseMigration
             $table->timestampTz('endsAt', null);
             $table->string('generatorURL')->nullable();
             $table->string('fingerprint')->nullable();
+            $table->integer('netelement_id');
         });
     }
 
