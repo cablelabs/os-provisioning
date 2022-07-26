@@ -26,6 +26,11 @@ use Modules\HfcReq\Entities\NetElement;
 
 class NetElementObserver
 {
+    public function creating($netelement)
+    {
+        $netelement->base_type_id = $netelement->netelementtype->baseType->id;
+    }
+
     public function created($netelement)
     {
         if (! $netelement->observer_enabled) {
@@ -59,6 +64,7 @@ class NetElementObserver
 
             $netelement->net = $netelement->get_native_net();
             $netelement->cluster = $netelement->get_native_cluster();
+            $netelement->base_type_id = $netelement->netelementtype->baseType->id;
             $this->checkNetCluster($netelement);
 
             // Change Net & cluster of all childrens too
