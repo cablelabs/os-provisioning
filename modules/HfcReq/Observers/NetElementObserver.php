@@ -164,7 +164,7 @@ class NetElementObserver
     private function handleTypeChangeForCoreMon($netelement)
     {
         // Create
-        $clone = clone($netelement);
+        $clone = clone $netelement;
         $origAttrs = $clone->getOriginal();
         $clone->base_type_id = $origAttrs['base_type_id'];
         $newClass = $clone->getConnectedClass();
