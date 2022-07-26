@@ -91,8 +91,8 @@ class NetElementController extends BaseController
             ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'provDevice', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['base_type_id' => $type, 'relation' => 'provDevice'])]],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],
-            ['form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'select' => 'RKM-Server', 'help' => trans('helper.netelement.credentials')],
-            ['form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'select' => 'RKM-Server', 'help' => trans('helper.netelement.credentials')],
+            ['form_type' => 'text', 'name' => 'username', 'description' => 'Username', 'help' => trans('helper.netelement.credentials')],
+            ['form_type' => 'text', 'name' => 'password', 'description' => 'Password', 'help' => trans('helper.netelement.credentials')],
             array_merge($options_array, ['hidden' => $hidden4TapPort || $hidden4Tap, 'space' => 1]),
 
             ['form_type' => 'select', 'name' => 'parent_id', 'description' => 'Parent Object', 'value' => $this->setupSelect2Field($netelement, 'Parent'), 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['model' => $netelement, 'relation' => 'parent'])]],
