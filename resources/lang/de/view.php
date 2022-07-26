@@ -267,6 +267,8 @@ return [
     'Header_Dependencies'       => 'Abhängigkeiten',
     'Header_Functions'          => 'Funktionen',
 
+    'Header_Ccap'               => 'CCAP',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index

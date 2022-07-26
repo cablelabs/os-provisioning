@@ -43,7 +43,8 @@ class NetElement extends \BaseModel
     // The associated SQL table for this Model
     public $table = 'netelement';
     // Always get netelementtype with it to reduce DB queries as it's very probable that netelementtype is queried
-    protected $with = ['netelementtype', 'connectedModel'];
+    // Note: It's not possible to eager load connectedModel here
+    protected $with = ['netelementtype'];
 
     public $guarded = ['infrastructure_file_upload'];
 
@@ -399,19 +400,34 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
+    /**
+     * Relation to CoreMon model - 1:1
+     *
+     * Attention: can't be eager loaded
+     */
     public function connectedModel()
     {
+        $class = $this->getConnectedClass();
+
+        if ($class) {
+            return $this->hasOne($class, 'netelement_id');
+        }
+
+        // Note: Use impossible condition to return empty relation - see https://stackoverflow.com/questions/49811825/laravel-return-empty-relationship-on-model-when-condidtion-is-true
+        return $this->hasOne(self::class, 'net')->whereNull('id');
+    }
+
+    public function getConnectedClass()
+    {
         return match (intval($this->base_type_id)) {
-            // 1 => $this->hasOne(self::class, 'net'),
-            17 => $this->hasOne(\Modules\CoreMon\Entities\Hubsite::class, 'netelement_id'),
-            18 => $this->hasOne(\Modules\CoreMon\Entities\Ccap::class, 'netelement_id'),
-            19 => $this->hasOne(\Modules\CoreMon\Entities\Dpa::class, 'netelement_id'),
-            20 => $this->hasOne(\Modules\CoreMon\Entities\Ncs::class, 'netelement_id'),
-            21 => $this->hasOne(\Modules\CoreMon\Entities\Rpa::class, 'netelement_id'),
-            22 => $this->hasOne(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id'),
-            23 => $this->hasOne(\Modules\CoreMon\Entities\Cpe::class, 'netelement_id'),
-            // Note: Use impossible condition to return empty relation - see https://stackoverflow.com/questions/49811825/laravel-return-empty-relationship-on-model-when-condidtion-is-true
-            default => $this->hasOne(self::class, 'net')->whereNull('id'),
+            17 => \Modules\CoreMon\Entities\Hubsite::class,
+            18 => \Modules\CoreMon\Entities\Ccap::class,
+            19 => \Modules\CoreMon\Entities\Dpa::class,
+            20 => \Modules\CoreMon\Entities\Ncs::class,
+            21 => \Modules\CoreMon\Entities\Rpa::class,
+            22 => \Modules\CoreMon\Entities\Rpd::class,
+            23 => \Modules\CoreMon\Entities\Cpe::class,
+            default => null,
         };
     }
 

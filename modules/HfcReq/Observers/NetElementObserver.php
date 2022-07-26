@@ -37,6 +37,11 @@ class NetElementObserver
             return;
         }
 
+        $class = $netelement->getConnectedClass();
+        if ($class) {
+            $class::create(['netelement_id' => $netelement->id]);
+        }
+
         $this->flushSidebarNetCache();
 
         // if ($netelement->is_type_cluster())
@@ -97,7 +102,14 @@ class NetElementObserver
                     Session::put('alert.info', trans('messages.indices_unassigned'));
                 }
             }
+
+            $this->handleTypeChangeForCoreMon($netelement);
         }
+    }
+
+    public function deleting($netelement)
+    {
+        $netelement->connectedModel->delete();
     }
 
     public function deleted($netelement)
@@ -144,5 +156,21 @@ class NetElementObserver
         if ($netelement->parent_id && ! $netelement->cluster) {
             Session::push('tmp_error_above_form', trans('hfcreq::messages.netelement.noCluster'));
         }
+    }
+
+    /**
+     * Create new CoreMon model when netelementtype is changed and delete old one
+     */
+    private function handleTypeChangeForCoreMon($netelement)
+    {
+        // Create
+        $clone = clone($netelement);
+        $origAttrs = $clone->getOriginal();
+        $clone->base_type_id = $origAttrs['base_type_id'];
+        $newClass = $clone->getConnectedClass();
+        $newClass::create(['netelement_id' => $clone->id]);
+
+        // Delete
+        $netelement->connectedModel->delete();
     }
 }
