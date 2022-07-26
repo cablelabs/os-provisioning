@@ -355,6 +355,9 @@ return [
         'instance' => 'Instanz',
         'job' => 'Job',
         'severity' => 'Priorität',
+        'startsAt' => 'Von',
+        'endsAt' => 'Bis',
+        'generatorURL' => 'URL',
     ],
     'cpe' => [
         'cable_if' => 'Kabel Interface',
