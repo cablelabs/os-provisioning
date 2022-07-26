@@ -26,7 +26,7 @@ class CreateCoremonTables extends BaseMigration
     protected $tables = [
         'ccap',
         'dpa',
-        'hub',
+        'hubsite',
         'market',
         'ncs',
         'net',
