@@ -1488,8 +1488,8 @@ class NetElement extends \BaseModel
                     continue;
                 }
 
-                $platform = 'other';
-                foreach (['RPCC' => 'ios', 'DPA' => 'junos', 'HUB' => 'ios', 'RPA' => 'junos'] as $deviceNeedle => $devicePlatform) {
+                $platform = ['other', 'undefined'];
+                foreach (['RPCC' => ['ios', 'distribution-router'], 'DPA' => ['junos', 'leaf'], 'HUB' => ['ios', 'spine'], 'RPA' => ['junos', 'access-switch']] as $deviceNeedle => $devicePlatform) {
                     if (str_contains(strtoupper($sysName), $deviceNeedle)) {
                         $platform = $devicePlatform;
                         break;
