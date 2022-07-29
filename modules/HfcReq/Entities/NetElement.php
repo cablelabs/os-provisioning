@@ -18,6 +18,7 @@
 
 namespace Modules\HfcReq\Entities;
 
+use Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
@@ -34,6 +35,7 @@ class NetElement extends \BaseModel
     protected $delete_children = false;
 
     public const SNMP_VALUES_STORAGE_REL_DIR = 'data/hfc/snmpvalues/';
+    public const SCAN_FILE_STORAGE_REL_DIR = 'data/coremon/scan/';
 
     /**
      * Storage for KML, GPX and other GPS based files, that contain topography information
@@ -125,6 +127,11 @@ class NetElement extends \BaseModel
         if (Module::collections()->has('CoreMon')) {
             $ret[$tabName]['Link']['class'] = 'Link';
             $ret[$tabName]['Link']['relation'] = $this->links;
+        }
+
+        if ($this->netelementtype_id == 17) {
+            $ret[$tabName]['ScanRange']['class'] = 'ScanRange';
+            $ret[$tabName]['ScanRange']['relation'] = $this->scanranges;
         }
 
         $this->addViewHasManyTickets($ret, $tabName);
@@ -409,6 +416,11 @@ class NetElement extends \BaseModel
     public function rpds()
     {
         return $this->hasMany(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id');
+    }
+
+    public function scanranges()
+    {
+        return $this->hasMany(\Modules\CoreMon\Entities\ScanRange::class, 'netelement_id');
     }
 
     public function modems()
@@ -1444,5 +1456,117 @@ class NetElement extends \BaseModel
             'from' => $this->parent_id,
             'to' => $this->id,
         ]);
+    }
+
+    public static function scanAllRanges()
+    {
+        foreach (self::where('netelementtype_id', 17)->get() as $hubsite) {
+            $hubsite->scanRange();
+        }
+    }
+
+    public function scanRange()
+    {
+        if (! Module::collections()->has('CoreMon')) {
+            return;
+        }
+
+        $relPath = self::SCAN_FILE_STORAGE_REL_DIR.$this->id;
+        $absPath = Storage::path($relPath);
+        $deaultRoComm = HfcReq::first()->ro_community;
+        snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
+
+        foreach ($this->scanranges()->get() as $range) {
+            Storage::put("$relPath/ranges.txt", $range->range);
+            // we change directory to always use the same sudo command allowed in the sudoers file
+            exec("cd \"$absPath\" && sudo /usr/bin/nmap -sU -p 161 -iL ranges.txt -oG - | grep 'Ports: 161/open/' | cut -d' ' -f2", $ips);
+
+            $entries = [];
+            $comm = $range->community_ro ?: $deaultRoComm;
+            foreach ($ips as $ip) {
+                if (! $sysName = snmpget($ip, $comm, 'system.sysName.0')) {
+                    continue;
+                }
+
+                $platform = 'other';
+                foreach (['RPCC' => 'ios', 'DPA' => 'junos', 'HUB' => 'ios', 'RPA' => 'junos'] as $deviceNeedle => $devicePlatform) {
+                    if (str_contains(strtoupper($sysName), $deviceNeedle)) {
+                        $platform = $devicePlatform;
+                        break;
+                    }
+                }
+
+                $entries[$ip] = [$sysName, $platform];
+            }
+
+            Storage::put("$relPath/hosts.yaml", view('coremon::scan.inventory', compact('entries'))->render());
+
+            $this->updateTopologyFromLLDP();
+        }
+    }
+
+    public function updateTopologyFromLLDP()
+    {
+        if (! Module::collections()->has('CoreMon')) {
+            return;
+        }
+
+        $absPath = Storage::path(self::SCAN_FILE_STORAGE_REL_DIR.$this->id);
+        exec("/opt/topologydetector-nmsprime/generate_topology.sh \"$absPath/hosts.yaml\" \"$absPath/\"");
+        $topology = json_decode(file_get_contents("$absPath/topology.js"), true);
+
+        $validNodes = array_filter($topology['nodes'], function ($node) {
+            return filter_var($node['primaryIP'], FILTER_VALIDATE_IP);
+        });
+
+        /* force delete old NetElements + Links */
+        $deleteNodeIds = self::whereIn('ip', collect($validNodes)->pluck('primaryIP'))->pluck('id');
+        self::whereIn('id', $deleteNodeIds)->forceDelete();
+        \Modules\CoreMon\Entities\Link::whereIn('from', $deleteNodeIds)->orWhereIn('to', $deleteNodeIds)->forceDelete();
+
+        /* recreate NetElements */
+        $netelementIdMap = [];
+        foreach ([18 => 'RPCC', 19 => 'DPA', 20 => 'HUB', 21 => 'RPA'] as $idx => $nodeType) {
+            $nodes = array_filter($validNodes, function ($node) use ($nodeType) {
+                return str_contains($node['name'], $nodeType);
+            });
+
+            foreach ($nodes as $node) {
+                $new = self::create([
+                    'ip' => $node['primaryIP'],
+                    'name' => $node['name'],
+                    // in case no parent is available attach it to the hubsite
+                    'parent_id' => isset($lastId[$idx - 1]) ? $lastId[$idx - 1] : $this->id,
+                    'netelementtype_id' => $idx,
+                ]);
+                $netelementIdMap[$node['id']] = $lastId[$idx] = $new->id;
+            }
+        }
+        self::fixTree();
+
+        /* recreate Links */
+        $validNodeIds = collect($validNodes)->pluck('id')->toArray();
+        $validLinks = array_filter($topology['links'], function ($link) use ($validNodeIds) {
+            return in_array($link['source'], $validNodeIds) &&
+                in_array($link['target'], $validNodeIds) &&
+                ! str_contains(strtolower($link['srcIfName']), 'bundle') &&
+                ! str_contains(strtolower($link['tgtIfName']), 'bundle');
+        });
+
+        $now = now();
+        $insert = [];
+        foreach ($validLinks as $link) {
+            $insert[] = [
+                'created_at' => $now,
+                'updated_at' => $now,
+                'from' => $netelementIdMap[$link['source']],
+                'to' => $netelementIdMap[$link['target']],
+                'if_from' => $link['srcIfName'],
+                'if_to' => $link['tgtIfName'],
+                'name' => "{$link['srcDevice']} → {$link['tgtDevice']}",
+            ];
+        }
+
+        \Modules\CoreMon\Entities\Link::insert($insert);
     }
 }

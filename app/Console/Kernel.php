@@ -220,9 +220,13 @@ class Kernel extends ConsoleKernel
             // $schedule->command('nms:hardware-support')->twiceDaily(10, 14);
         }
 
-        // Automatic Power Control based on measured SNR
         if (\Module::collections()->has('HfcReq')) {
+            // Automatic Power Control based on measured SNR
             $schedule->command('nms:agc')->everyMinute();
+            // Automatic topology discovery via SNMP and LLDP
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\HfcReq\Jobs\ScanAllRangesJob());
+            })->everyTwoHours();
         }
 
         if (\Module::collections()->has('HfcBase')) {
