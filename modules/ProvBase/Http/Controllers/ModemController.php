@@ -748,7 +748,7 @@ class ModemController extends \BaseController
             return ltrim($byte, '0');
         }, explode(':', $modem_mac)));
 
-        $lease['text'] = Modem::searchLease("billing subclass \"Client\" \"$dhcpd_mac\";");
+        $lease['text'] = Modem::searchLease("billing subclass \".*\" \"$dhcpd_mac\";");
         $lease = Modem::validateLease($lease, $type);
 
         $ep = $modem->endpoints->first();

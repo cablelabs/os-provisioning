@@ -2470,12 +2470,12 @@ class Modem extends \BaseModel
         preg_match_all('/^lease(.*?)(^})/ms', implode("\n", $filteredContent), $leases);
 
         // fetch all lines matching $search
-        foreach (array_unique($leases[0]) as $s) {
-            if (strpos($s, $search)) {
-                $s = str_replace('  ', '&nbsp;&nbsp;', $s);
+        foreach (array_unique($leases[0]) as $leaseStr) {
+            if (preg_match("/$search/", $leaseStr)) {
+                $leaseStr = str_replace('  ', '&nbsp;&nbsp;', $leaseStr);
 
                 // push matching results
-                array_push($ret, preg_replace('/\r|\n/', '<br/>', $s));
+                array_push($ret, preg_replace('/\r|\n/', '<br/>', $leaseStr));
             }
         }
 
