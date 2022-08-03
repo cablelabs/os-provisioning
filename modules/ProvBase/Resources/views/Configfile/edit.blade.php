@@ -30,7 +30,7 @@
     @include($form_path, $view_var)
 
 @if (multi_array_key_exists(['lists'], $additional_data))
-<div 
+<div
     id="provbase-config-file-edit"
     class="dragdropfield"
     data-header-drag-drop="{{ trans('view.Header_DragDrop') }}"
@@ -72,8 +72,8 @@
     data-route-configfile-refresh-genie-acs="{{ route('Configfile.refreshGenieAcs', $view_var->id ) }}"
     data-route-configfile-search-device-params="{{ route('Configfile.searchDeviceParams', $view_var->id) }}"
     data-button-search="{{ trans('view.Button_Search') }}"
-    data-lists="{{ $additional_data['lists'] }}"
-    data-columns="{{ $additional_data['columns'] }}"
+    data-lists='@json($additional_data["lists"])'
+    data-columns='@json($additional_data["columns"])'
 >
 </div>
 @endif

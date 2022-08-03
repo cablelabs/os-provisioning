@@ -29,18 +29,17 @@ import ModemAnalysis from './components/ModemAnalysis.vue'
 if (document.getElementById('provbase-config-file-edit')) {
   window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
     .use(snotify)
+    .directive('dispatchsel2', {
+      inserted: function(e) {
+        $(e).on('select2:select', function() {
+          e.dispatchEvent(new Event('change'));
+        });
+        $(e).on('select2:unselect', function() {
+          e.dispatchEvent(new Event('change'));
+        });
+      }
+    })
     .mount('#provbase-config-file-edit')
-
-  window.provBaseConfigFileEdit.directive('dispatchsel2', {
-    inserted: function(e) {
-      $(e).on('select2:select', function() {
-        e.dispatchEvent(new Event('change'));
-      });
-      $(e).on('select2:unselect', function() {
-        e.dispatchEvent(new Event('change'));
-      });
-    }
-  });
 }
 
  // prepare vue instance
