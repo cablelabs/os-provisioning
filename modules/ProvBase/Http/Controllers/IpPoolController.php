@@ -41,6 +41,7 @@ class IpPoolController extends \BaseController
             'CPEPriv' => 'CPE Private',
             'CPEPub' => 'CPE Public',
             'MTA' => 'MTA',
+            'STB' => 'STB',
         ]);
 
         $typesKeys = array_keys($types->all());
@@ -104,6 +105,7 @@ class IpPoolController extends \BaseController
                 'options' => ['translate' => true], 'help' => trans('provbase::help.type'),
                 'select' => array_combine($typesKeys, $typesKeys), ],
             ['form_type' => 'checkbox', 'name' => 'active', 'description' => 'Active', 'value' => '1', 'checked' => true],
+            ['form_type' => 'text', 'name' => 'vendor_class_identifier', 'description' => 'Vendor Class Identifier', 'select' => 'STB', 'help' => trans('provbase::help.vendor_class_identifier')],
             ['form_type' => 'text', 'name' => 'net', 'description' => trans('provbase::view.net'), 'options' => ['placeholder' => '192.168.0.0/23 | fd00:1::/48']],
             ['form_type' => 'text', 'name' => 'ip_pool_start', 'description' => 'First IP'],
             ['form_type' => 'text', 'name' => 'ip_pool_end', 'description' => 'Last IP'],
@@ -140,6 +142,19 @@ class IpPoolController extends \BaseController
             $data[$key] = str_replace(' ', '', $data[$key]);
         }
 
+        if ($data['type'] != 'STB') {
+            $data['vendor_class_identifier'] = null;
+        }
+
         return parent::prepare_input($data);
+    }
+
+    protected function prepare_rules($rules, $data)
+    {
+        if ($data['type'] == 'STB') {
+            $rules['vendor_class_identifier'][] = 'required';
+        }
+
+        return parent::prepare_rules($rules, $data);
     }
 }

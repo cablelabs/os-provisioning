@@ -40,6 +40,7 @@ class IpPool extends \BaseModel
         $rules = [
             'net' => ['required', 'dhcp_config'],
             // 'netmask' => 'required|netmask',     // netmask must not be in first place!
+            'type' => ['required'],
             'ip_pool_start' => ['required', 'ip_in_range:'.$net],
             'ip_pool_end' => ['required', 'ip_in_range:'.$net, 'ip_larger:'.($data['ip_pool_start'] ?? '')],
             'router_ip' => ['required', 'ip_in_range:'.$net],

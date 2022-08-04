@@ -814,4 +814,5 @@ return [
     'Value'                     => 'Value',
     'Entries'                   => 'entries',
     'Upload image'              => 'Upload image',
+    'STB'                       => 'STB',
 ];

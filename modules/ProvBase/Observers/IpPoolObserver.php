@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Observers;
 
 use Modules\ProvBase\Entities\NetGW;
+use Modules\ProvBase\Entities\ProvBase;
 
 /**
  * IP-Pool Observer Class
@@ -40,6 +41,8 @@ class IpPoolObserver
 
         // fetch netgw object that is related to the created ippool and make dhcp conf
         $pool->netgw->makeDhcpConf();
+
+        self::rebuildDhcpGlobalConfig($pool);
     }
 
     public function updated($pool)
@@ -56,6 +59,8 @@ class IpPoolObserver
         if ($pool->isDirty('netgw_id')) {
             NetGw::find($pool->getOriginal('netgw_id'))->makeDhcpConf();
         }
+
+        self::rebuildDhcpGlobalConfig($pool);
     }
 
     public function deleted($pool)
@@ -67,6 +72,8 @@ class IpPoolObserver
         }
 
         $pool->netgw->makeDhcpConf();
+
+        self::rebuildDhcpGlobalConfig($pool);
     }
 
     /**
@@ -78,5 +85,18 @@ class IpPoolObserver
     private static function updateRadIpPool($pool)
     {
         \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getOriginal(), $pool->wasRecentlyCreated));
+    }
+
+    /**
+     * Rebuild DHCP global.conf if needed
+     * This is called on created/updated/deleted in IpPool observer
+     *
+     * @author Ole Ernst
+     */
+    private static function rebuildDhcpGlobalConfig($pool)
+    {
+        if ($pool->deleted_at || multi_array_key_exists(['type', 'vendor_class_identifier'], $pool->getDirty())) {
+            ProvBase::first()->make_dhcp_glob_conf();
+        }
     }
 }

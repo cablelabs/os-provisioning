@@ -635,6 +635,10 @@ class NetGw extends \BaseModel
                             // $data .= "\n\t\t\t".'allow known-clients;';
                             break;
 
+                        case 'STB':
+                            $data .= "\n\t\t\t".'allow members of "STB";';
+                            break;
+
                         default:
                             // code...
                             break;

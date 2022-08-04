@@ -172,8 +172,6 @@ class ProvBase extends \BaseModel
      */
     public function make_dhcp_glob_conf()
     {
-        $file_dhcp_conf = '/etc/dhcp-nmsprime/global.conf';
-
         $ownIp = $this->provisioning_server;
         $ipList = $ownIp;
         if ($this->provha) {
@@ -182,33 +180,43 @@ class ProvBase extends \BaseModel
             $ipList = "$ownIp,$peerIp";
         }
 
-        $data = 'ddns-domainname "'.$this->domain_name.'.";'."\n";
-        $data .= 'option domain-name "'.$this->domain_name.'";'."\n";
-        $data .= 'option domain-name-servers '.$ipList.";\n";
-        $data .= 'default-lease-time '.$this->dhcp_def_lease_time.";\n";
-        $data .= 'max-lease-time '.$this->dhcp_max_lease_time.";\n";
-        $data .= 'next-server '.$ownIp.";\n";
-        if (! is_null($this->provha)) {
-            $data .= "\n# option vivso.2 (CL_V4OPTION_TFTPSERVERS, see https://www.excentis.com/blog/how-provision-cable-modem-using-isc-dhcp-server)\n";
-            $data .= 'option vivso '.$this->getDHCPOptionVivso2([$ownIp, $peerIp]).";\n\n";
+        $domainName = $this->domain_name;
+        $defLeaseTime = $this->dhcp_def_lease_time;
+        $maxLeaseTime = $this->dhcp_max_lease_time;
+        $leaseLimit = $this->max_cpe ?: 4;
+
+        $stbVendorClassIds = IpPool::where('type', 'STB')
+            ->select('vendor_class_identifier')
+            ->distinct()
+            ->pluck('vendor_class_identifier')
+            ->toArray();
+
+        $cpeMatch = [];
+        foreach (array_merge(['docsis', 'pktc'], $stbVendorClassIds) as $nonCpe) {
+            $cpeMatch[] = 'substring(option vendor-class-identifier,0,'.strlen($nonCpe).") != \"$nonCpe\"";
         }
-        $data .= 'option log-servers '.$ipList.";\n";
-        $data .= 'option time-servers '.$ipList.";\n";
-        $data .= 'option time-offset '.date('Z').";\n";
+        $cpeMatch = implode(') and (', $cpeMatch);
 
-        $data .= "\n# zone\nzone ".$this->domain_name." {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
-        $data .= "\n# reverse zone\nzone in-addr.arpa {\n\tprimary 127.0.0.1;\n\tkey dhcpupdate;\n}\n";
+        $stbMatch = [];
+        foreach ($stbVendorClassIds as $stb) {
+            $stbMatch[] = 'substring(option vendor-class-identifier,0,'.strlen($stb).") = \"$stb\"";
+        }
+        $stbMatch = implode(') and (', $stbMatch);
 
+        $mtaDomain = '';
         if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('provvoip')) {
-            // second domain for mta's if existent
-            $mta_domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
-            $data .= $mta_domain ? "\n# zone for voip devices\nzone ".$mta_domain." {\n\tprimary ".$this->provisioning_server.";\n\tkey dhcpupdate;\n}\n" : '';
+            $mtaDomain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
+        }
+
+        $vivso = '';
+        if (! is_null($this->provha)) {
+            $vivso = $this->getDHCPOptionVivso2([$ownIp, $peerIp]);
         }
 
         // provisioning server hostname encoding for dhcp
         $fqdn = exec('hostname');
         $hostname = '';
-        $dhcp_fqdn = '';
+        $dhcpFqdn = '';
 
         if (($pos = strpos($fqdn, $this->domain_name)) !== false) {
             // correct domain name already set
@@ -234,27 +242,17 @@ class ProvBase extends \BaseModel
             }
         }
 
-        $arr = explode('.', $fqdn);
-
         // encode - every word needs a backslash and it's length as octal number (with leading zero's - up to 3 numbers) in front of itself
-        foreach ($arr as $value) {
+        foreach (explode('.', $fqdn) as $value) {
             $nr = strlen($value);
             $nr = decoct((int) $nr);
-            $dhcp_fqdn .= sprintf("\%'.03d%s", $nr, $value);
+            $dhcpFqdn .= sprintf("\%'.03d%s", $nr, $value);
         }
-        $dhcp_fqdn .= '\\000';
+        $dhcpFqdn .= '\\000';
 
-        $leaseLimit = $this->max_cpe ?: 4;
+        $data = view('provbase::DHCP.global', compact('ownIp', 'ipList', 'domainName', 'defLeaseTime', 'maxLeaseTime', 'leaseLimit', 'stbMatch', 'cpeMatch', 'mtaDomain', 'vivso', 'dhcpFqdn'))->render();
 
-        $data .= "\n# CLASS Specs for CM, MTA, CPE\n";
-        $data .= 'class "CM" {'."\n\t".'match if (substring(option vendor-class-identifier,0,6) = "docsis");'."\n\toption ccc.dhcp-server-1 0.0.0.0;\n\tddns-updates on;\n}\n\n";
-        $data .= 'class "MTA" {'."\n\t".'match if (substring(option vendor-class-identifier,0,4) = "pktc");'."\n\t".'option ccc.provision-server 0 "'.$dhcp_fqdn.'"; # number of letters before every through dot seperated word'."\n\t".'option ccc.realm "\005BASIC\0011\000";'."\n\tddns-updates on;\n}\n\n";
-        $data .= 'class "Client" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'spawn with binary-to-ascii(16, 8, ":", substring(option agent.remote-id, 0, 6)); # create a sub-class automatically'."\n\tlease limit $leaseLimit; # max $leaseLimit private cpe per cm\n}\n\n";
-        $data .= 'class "Client-Public" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\t".'match pick-first-value (option agent.remote-id);'."\n\tlease limit $leaseLimit; # max $leaseLimit public cpe per cm\n}\n\n";
-        $data .= "# All CPEs of modems without internet access - will be defined as subclass\n";
-        $data .= 'class "blocked" {'."\n\t".'match if ((substring(option vendor-class-identifier,0,6) != "docsis") and (substring(option vendor-class-identifier,0,4) != "pktc"));'."\n\tmatch pick-first-value (option agent.remote-id);\n\tdeny booting;\n}\n\n";
-
-        File::put($file_dhcp_conf, $data);
+        File::put('/etc/dhcp-nmsprime/global.conf', $data);
     }
 
     /**
