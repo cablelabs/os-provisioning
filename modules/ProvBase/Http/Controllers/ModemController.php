@@ -748,12 +748,12 @@ class ModemController extends \BaseController
             return ltrim($byte, '0');
         }, explode(':', $modem_mac)));
 
-        $lease['text'] = Modem::searchLease("billing subclass \".*\" \"$dhcpd_mac\";");
-        $lease = Modem::validateLease($lease, $type);
-
         $ep = $modem->endpoints->first();
-        if (! $lease['text'] && $ep && $ep->fixed_ip && $ep->ip) {
+        if ($ep?->fixed_ip && $ep?->ip) {
             $lease = $this->_fake_lease($modem, $ep);
+        } else {
+            $lease['text'] = Modem::searchLease("billing subclass \".*\" \"$dhcpd_mac\";");
+            $lease = Modem::validateLease($lease, $type);
         }
 
         /// get MAC of CPE first
