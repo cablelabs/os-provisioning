@@ -33,7 +33,7 @@ class Phonenumber extends \BaseModel
             'prefix_number' => ['required', 'numeric'],
             'number' => ['required', 'numeric'],
             'mta_id' => ['required', 'exists:mta,id,deleted_at,NULL', 'min:1'],
-            'port' => ['required', 'numeric', 'min:1'],
+            'port' => ['required', 'numeric', 'min:0'],
             // inject id to rules (so it is passed to prepare_rules)
             'id' => $this->id ?: 0,
             /* 'active' => ['required', 'boolean'], */
