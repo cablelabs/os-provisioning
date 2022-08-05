@@ -37,20 +37,51 @@ class CreateRpdTable extends BaseMigration
          * nc = narrowcast; bc = broadcast; cont = controller
          */
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->increments('id');
-            $table->engine = 'InnoDB';
-            // https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29_to_store_UTC_times
-            // see 4.2
+            $table->bigIncrements('id');
             $table->timestampsTz(null);
             $table->softDeletesTz('deleted_at', null);
-            $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_unicode_ci';
-            //$this->up_table_generic($table);
             $table->integer('netelement_id');
 
+            // RPD infos
+            $table->string('name', 64)->nullable();
+            $table->boolean('aux')->nullable();
+            $table->integer('cores_no')->nullable();
+            $table->string('uptime')->nullable();
+            $table->string('type', 64)->nullable();
+            $table->string('vendor', 64)->nullable();
+            $table->string('serial_num', 64)->nullable();
+            $table->string('model', 64)->nullable();
+            $table->string('sw_ver', 64)->nullable();
+            $table->string('ccap_if', 64)->nullable();
+
+            $table->ipAddress('ip')->nullable();
+            $table->string('city', 64)->nullable();
+            $table->string('site', 64)->nullable();
+            $table->string('status', 64)->nullable();
+            $table->string('mac', 17)->nullable();
+            $table->decimal('temp', 6, 3)->nullable();
+            $table->decimal('lat', 9, 6)->nullable();
+            $table->decimal('lng', 9, 6)->nullable();
+            $table->string('remote_cores_conn', 64)->nullable();
+            $table->string('cores_conn', 64)->nullable();
+            $table->integer('additional_cores')->nullable();
+            $table->integer('dest_hop')->nullable();
+            $table->string('service_template', 64)->nullable();
+            $table->string('service_template_status', 64)->nullable();
+
+            $table->string('out_of_band_if', 64)->nullable();
+            $table->string('fiber_node_id', 64)->nullable();
+            $table->string('cable_if', 64)->nullable();
+
+            // Statistics
             $table->integer('cm_no')->nullable();
             $table->integer('cm_off_no')->nullable();
             $table->decimal('cm_off_pct', 5, 2)->nullable();
+            $table->integer('mta_no')->nullable();
+            $table->decimal('mta_off_pct', 5, 2)->nullable();
+            $table->integer('dsg_no')->nullable();
+            $table->decimal('dsg_off_pct', 5, 2)->nullable();
+
             $table->decimal('cm_ds_part_service_pct', 5, 2)->nullable();
             $table->integer('cm_ds_part_service_no')->nullable();
             $table->decimal('cm_us_part_service_pct', 5, 2)->nullable();
@@ -100,7 +131,6 @@ class CreateRpdTable extends BaseMigration
             $table->decimal('util_ds_qam', 5, 2)->nullable();
             $table->decimal('util_us_qam', 5, 2)->nullable();
             $table->decimal('util_ds_ofdm', 5, 2)->nullable();
-            // ?
             $table->decimal('util_us_ofdm', 5, 2)->nullable();
             $table->decimal('util_ofdma', 5, 2)->nullable();
             $table->decimal('util_ofdm_ch_1', 5, 2)->nullable();
@@ -109,12 +139,6 @@ class CreateRpdTable extends BaseMigration
 
             $table->integer('l2tpv3_sess_err')->nullable();
             $table->integer('l2tpv3_sess_err_pct')->nullable();
-
-            $table->integer('mta_no')->nullable();
-            $table->decimal('mta_off_pct', 5, 2)->nullable();
-
-            $table->integer('dsg_no')->nullable();
-            $table->decimal('dsg_off_pct', 5, 2)->nullable();
 
             $table->string('nc_vid_if', 64)->nullable();
             $table->string('nc_vid_service_grp', 64)->nullable();
@@ -139,52 +163,7 @@ class CreateRpdTable extends BaseMigration
             $table->string('us_data_service_grp', 64)->nullable();
             $table->string('us_data_cont', 64)->nullable();
 
-            // I guess it's an int
-            $table->integer('aux_status')->nullable();
-            $table->integer('cores_no')->nullable();
-            $table->string('name', 64)->nullable();
-            // time (in hundredths of a second) - maybe timestamp
-            $table->integer('uptime')->nullable();
-            $table->string('type', 64)->nullable();
-            $table->string('vendor', 64)->nullable();
-            $table->string('serial_num', 64)->nullable();
-            $table->string('model', 64)->nullable();
-            $table->string('sw_ver', 64)->nullable();
-            // unsigned?
-            $table->integer('ip')->nullable();
-            $table->string('city', 64)->nullable();
-            $table->string('site', 64)->nullable();
-            $table->string('status', 64)->nullable();
-            $table->string('mac', 17)->nullable();
-            $table->decimal('temp', 6, 3)->nullable();
-            $table->decimal('lat', 9, 6)->nullable();
-            $table->decimal('long', 9, 6)->nullable();
-            $table->string('remote_cores_conn', 64)->nullable();
-            $table->string('cores_conn', 64)->nullable();
-            $table->integer('additional_cores')->nullable();
-            $table->integer('dest_hop')->nullable();
-            $table->string('service_template', 64)->nullable();
-            $table->string('service_template_status', 64)->nullable();
-
             // returns oid table, e.g. docsRphyRpdIfPhysEntSensorTable
-            $table->string('sensors', 128)->nullable();
-            $table->string('interfaces', 128)->nullable();
-            $table->string('sessions', 128)->nullable();
-            // returns table from CLI
-            $table->string('tunnel_summary', 64)->nullable();
-            // returns oid table
-            $table->string('us_channels', 128)->nullable();
-
-            $table->string('l2tp_sess_status', 64)->nullable();
-            $table->integer('l2tp_sess_err')->nullable();
-            $table->integer('l2tp_sess_errp_ct')->nullable();
-
-            $table->string('out_of_band_if', 64)->nullable();
-            $table->string('ccap_core_if', 64)->nullable();
-            $table->string('fiber_node_id', 64)->nullable();
-            $table->string('cable_if', 64)->nullable();
-
-            //add relation of market, hub, ccap and fiber node
         });
     }
 
