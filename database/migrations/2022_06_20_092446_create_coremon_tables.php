@@ -17,6 +17,7 @@
  */
 
 use Illuminate\Support\Facades\Schema;
+use Modules\HfcReq\Entities\NetElement;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoremonTables extends BaseMigration
@@ -45,6 +46,13 @@ class CreateCoremonTables extends BaseMigration
                 $this->up_table_generic($table);
                 $table->integer('netelement_id');
             });
+        }
+
+        $ids = NetElement::join('netelementtype as t', 'netelement.netelementtype_id', '=', 't.id')
+            ->where('t.base_type_id', 18)->pluck('netelement.id');
+
+        foreach ($ids as $id) {
+            Ccap::create(['netelement_id' => $id]);
         }
     }
 
