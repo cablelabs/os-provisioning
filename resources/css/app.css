@@ -33,3 +33,13 @@
 [v-cloak] {
     display: none;
 }
+
+@layer utilities {
+    .scrollbar-small::-webkit-scrollbar {
+        width: 3px;
+    }
+    .scrollbar-small::-webkit-scrollbar-thumb {
+        background: var(--gray-dark);
+        border-radius: 100vh;
+    }
+}
