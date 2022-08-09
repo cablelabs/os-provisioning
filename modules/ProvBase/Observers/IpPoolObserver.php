@@ -95,7 +95,7 @@ class IpPoolObserver
      */
     private static function rebuildDhcpGlobalConfig($pool)
     {
-        if ($pool->deleted_at || multi_array_key_exists(['type', 'vendor_class_identifier'], $pool->getDirty())) {
+        if (($pool->deleted_at && $pool->type == 'STB') || multi_array_key_exists(['type', 'vendor_class_identifier'], $pool->getDirty())) {
             ProvBase::first()->make_dhcp_glob_conf();
         }
     }
