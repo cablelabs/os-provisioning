@@ -26,14 +26,6 @@ zone in-addr.arpa {
     key dhcpupdate;
 }
 
-@if ($mtaDomain)
-# zone for voip devices
-zone {{$mtaDomain}} {
-    primary {{$ownIp}};
-    key dhcpupdate;
-}
-@endif
-
 class "CM" {
     match if (substring(option vendor-class-identifier,0,6) = "docsis");
     option ccc.dhcp-server-1 0.0.0.0;

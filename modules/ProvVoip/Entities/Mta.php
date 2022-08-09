@@ -287,13 +287,7 @@ class Mta extends \BaseModel
 
         // if hostname cant be resolved we dont want to have an php error
         try {
-            $domain = ProvVoip::first()->mta_domain;
-
-            if (! $domain) {
-                $domain = ProvBase::first()->domain_name;
-            }
-
-            $fqdn = $this->hostname.'.'.$domain;
+            $fqdn = $this->hostname.'.'.ProvBase::first()->domain_name;
 
             // restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow
             // NOTES: Version 2 is important!

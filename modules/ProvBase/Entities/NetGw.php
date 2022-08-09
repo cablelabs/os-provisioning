@@ -576,6 +576,11 @@ class NetGw extends \BaseModel
             goto _exit;
         }
 
+        $mtaDomain = null;
+        if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('provvoip')) {
+            $mtaDomain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
+        }
+
         File::put($file, 'shared-network "'.$this->hostname.'"'."\n".'{'."\n");
 
         foreach ($ippools as $pool) {
@@ -602,6 +607,10 @@ class NetGw extends \BaseModel
                 }
                 $pos = strrpos($data_tmp, ',');
                 $data .= substr_replace($data_tmp, '', $pos, 1).';';
+            }
+
+            if ($mtaDomain && $pool->type == 'MTA') {
+                $data .= "\n\t\toption domain-name \"$mtaDomain\";";
             }
 
             if ($ranges) {

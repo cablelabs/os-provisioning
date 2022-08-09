@@ -837,11 +837,7 @@ class ModemController extends \BaseController
         }
 
         // Ping
-        $domain = '';
-        if (Module::collections()->has('ProvVoip')) {
-            $domain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
-        }
-        $hostname = $mta->hostname.'.'.($domain ?: ProvBase::first()->domain_name);
+        $hostname = $mta->hostname.'.'.ProvBase::first()->domain_name;
 
         exec('sudo ping -c3 -i0 -w1 '.$hostname, $ping);
         if (count(array_keys($ping)) <= 7) {

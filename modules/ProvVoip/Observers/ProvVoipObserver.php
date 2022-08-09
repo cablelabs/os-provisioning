@@ -22,6 +22,8 @@ class ProvVoipObserver
 {
     public function updated($provvoip)
     {
-        \Modules\ProvBase\Entities\ProvBase::first()->make_dhcp_glob_conf();
+        foreach (\Modules\ProvBase\Entities\NetGw::where('type', 'cmts')->get() as $cmts) {
+            $cmts->makeDhcpConf();
+        }
     }
 }

@@ -203,11 +203,6 @@ class ProvBase extends \BaseModel
         }
         $stbMatch = implode(') and (', $stbMatch);
 
-        $mtaDomain = '';
-        if (\Module::collections()->has('ProvVoip') && \Schema::hasTable('provvoip')) {
-            $mtaDomain = \Modules\ProvVoip\Entities\ProvVoip::first()->mta_domain;
-        }
-
         $vivso = '';
         if (! is_null($this->provha)) {
             $vivso = $this->getDhcpOptionVivso2([$ownIp, $peerIp]);
@@ -250,7 +245,7 @@ class ProvBase extends \BaseModel
         }
         $dhcpFqdn .= '\\000';
 
-        $data = view('provbase::DHCP.global', compact('ownIp', 'ipList', 'domainName', 'defLeaseTime', 'maxLeaseTime', 'leaseLimit', 'stbMatch', 'cpeMatch', 'mtaDomain', 'vivso', 'dhcpFqdn'))->render();
+        $data = view('provbase::DHCP.global', compact('ownIp', 'ipList', 'domainName', 'defLeaseTime', 'maxLeaseTime', 'leaseLimit', 'stbMatch', 'cpeMatch', 'vivso', 'dhcpFqdn'))->render();
 
         File::put('/etc/dhcp-nmsprime/global.conf', $data);
     }
