@@ -142,7 +142,7 @@ class ProvBase extends \BaseModel
      *
      * @author Patrick Reichel
      */
-    public function getDHCPOptionVivso2($ips)
+    public function getDhcpOptionVivso2($ips)
     {
         $hex_ips = [];
         foreach ($ips as $ip) {
@@ -210,7 +210,7 @@ class ProvBase extends \BaseModel
 
         $vivso = '';
         if (! is_null($this->provha)) {
-            $vivso = $this->getDHCPOptionVivso2([$ownIp, $peerIp]);
+            $vivso = $this->getDhcpOptionVivso2([$ownIp, $peerIp]);
         }
 
         // provisioning server hostname encoding for dhcp
