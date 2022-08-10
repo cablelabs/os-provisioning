@@ -49,7 +49,7 @@
 
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- SITE -->
-      <link href="{{asset('css/app.css')}}" rel="stylesheet" />
+      <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
       <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 
       <!-- ================== END BASE CSS STYLE ================== -->
