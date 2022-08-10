@@ -39,7 +39,7 @@ class EndpointObserver
     public function created($endpoint)
     {
         if (Module::collections()->has('SmartOnt')) {
-            \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
+            \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
             return;
         }
 
@@ -119,7 +119,7 @@ class EndpointObserver
     public function deleted($endpoint)
     {
         if (Module::collections()->has('SmartOnt')) {
-            \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
+            \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
             return;
         }
 

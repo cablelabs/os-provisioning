@@ -237,7 +237,7 @@ class ModemObserver
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
                 if (array_key_exists('contract_id', $diff)) {
                     Log::debug('Pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id) to queue');
-                    \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
+                    \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
                 }
             }
         }
@@ -250,7 +250,7 @@ class ModemObserver
         // special handling for SmartONT devices
         if (\Module::collections()->has('SmartOnt')) {
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
-                \Queue::pushOn('low', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
+                \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
 
                 return;
             }

@@ -316,8 +316,8 @@ class Kernel extends ConsoleKernel
                 })->everyFiveMinutes();
 
                 $schedule->call(function () {
-                    Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
-                })->everyFiveMinutes();
+                    Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
+                })->everyMinute();
            }
         }
     }
