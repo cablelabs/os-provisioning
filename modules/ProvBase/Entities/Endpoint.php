@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Entities;
 
 use DB;
+use Module;
 use Request;
 
 class Endpoint extends \BaseModel
@@ -50,6 +51,11 @@ class Endpoint extends \BaseModel
             'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
             'prefix' => ['nullable', 'unique:endpoint,prefix,'.$id.',id,deleted_at,NULL'],
         ];
+
+        if (Module::collections()->has('SmartOnt')) {
+            $rules['mac'][] = 'not_regex:/^00:00:00:00:00:00$/i';
+            $rules['mac'][] = 'not_regex:/^ff:ff:ff:ff:ff:ff$/i';
+        }
 
         if ($modem) {
             if ($modem->configfile->device == 'cm') {

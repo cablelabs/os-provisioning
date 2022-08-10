@@ -271,6 +271,9 @@ class ModemController extends \BaseController
                     'name' => 'ont_state_switchdate',
                     'description' => 'ONT state switchdate',
                     'space' => '1',
+                    'options' => [
+                        'placeholder' => 'YYYY-MM-DD hh:mm-ss',
+                    ],
                 ];
             }
             $smartont[] = [
@@ -855,18 +858,31 @@ class ModemController extends \BaseController
             $this->configfile = Configfile::find($data['configfile_id']);
         }
 
-        if ($this->configfile && $this->configfile->is_multiservice_ont) {
-            $smartOnt = \Modules\SmartOnt\Entities\Smartont::first();
-            $data['qos_id'] = $smartOnt->default_mgmt_qos_id;
-        }
-
         if ($this->configfile && $this->configfile->device != 'tr069') {
             $data['ppp_password'] = null;
         }
 
-        $data['mac'] = unifyMac($data['mac'] ?? null);
+        if (Module::collections()->has('SmartOnt')) {
 
-        return $data;
+            if ($this->configfile && $this->configfile->is_multiservice_ont) {
+                $smartOnt = \Modules\SmartOnt\Entities\Smartont::first();
+                $data['qos_id'] = $smartOnt->default_mgmt_qos_id;
+            }
+
+            if ('LFO' == config('smartont.flavor.active')) {
+               if (! $data['ont_state']) {
+                    $data['ont_state'] = 'initial';
+               }
+            }
+
+            // add time to given date
+            if (\DateTime::createFromFormat('Y-m-d', $data['ont_state_switchdate'])) {
+                // no time given – set to midnight
+                $data['ont_state_switchdate'] .= ' 00:00:00';
+            }
+        }
+
+        return unifyMac($data);
     }
 
     /**

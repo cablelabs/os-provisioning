@@ -100,6 +100,38 @@ class Modem extends \BaseModel
             $configfile = Configfile::find(Request::get('configfile_id'));
         }
 
+        if (Module::collections()->has('SmartOnt')) {
+            $rules['mac'][] = 'not_regex:/^00:00:00:00:00:00$/i';
+            $rules['mac'][] = 'not_regex:/^ff:ff:ff:ff:ff:ff$/i';
+
+            if ('LFO' == config('smartont.flavor.active')) {
+                // required fields for LFO
+                $rules['ont_state_switchdate'] = ['required', 'regex:/^[0-9]{4}-[0-9]{2}-[0-9]{2} [012][0-9]:[0-5][0-9]:[0-5][0-9]$/'];
+                $required = [
+                    'configfile_id',
+                    'serial_num',
+                    'model',
+                    'qos_id',
+                    'street',
+                    'house_number',
+                    'zip',
+                    'city',
+                    'country_code',
+                    'next_ont_state',
+                    'or_id',
+                ];
+
+                foreach ($required as $field) {
+                    if (! array_key_exists($field, $rules)) {
+                        $rules[$field] = ['required', ];
+                    }
+                    if (! in_array('required', $rules[$field])) {
+                        array_unshift($rules[$field], 'required');
+                    }
+                }
+            }
+        }
+
         if (isset($configfile)) {
             if ('tr069' == $configfile->device) {
                 if ($configfile->is_multiservice_ont) {
