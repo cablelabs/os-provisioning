@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+
 class CreateWebhookUser extends BaseMigration
 {
     public $migrationScope = 'database';
@@ -11,7 +15,13 @@ class CreateWebhookUser extends BaseMigration
      */
     public function up()
     {
-        \DB::table('users')->insert(['first_name' => 'web', 'last_name' => 'hook', 'email' => 'someone@example.com', 'password' => Hash::make('Secretroot123')]);
+        $password = Str::random();
+
+        $env = File::get('/etc/nmsprime/env/global.env');
+        $env .= "WEBHOOK_PASSWORD={$password}\n";
+        File::put('/etc/nmsprime/env/global.env', $env);
+
+        DB::table('users')->insert(['first_name' => 'web', 'last_name' => 'hook', 'email' => 'someone@example.com', 'password' => Hash::make($password)]);
     }
 
     /**
@@ -21,6 +31,6 @@ class CreateWebhookUser extends BaseMigration
      */
     public function down()
     {
-        \DB::table('users')->where('email', 'someone@example.com')->delete();
+        DB::table('users')->where('email', 'someone@example.com')->delete();
     }
 }
