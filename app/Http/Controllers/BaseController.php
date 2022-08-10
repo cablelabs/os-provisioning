@@ -476,7 +476,7 @@ class BaseController extends Controller
 
         if (Module::collections()->has('CoreMon')) {
             // get favorite Market NetElement
-            $marketNetelement = auth()->user()->favNetelements()->where('netelementtype_id', 16)->first();
+            $marketNetelement = auth()->user()->favNetelements()->where('base_type_id', 16)->first();
 
             $a['quick_view_network'] = $marketNetelement ? cache()->remember("Marketstatistic-$marketNetelement->id", 5 * 60, function () use ($marketNetelement) {
                 return $this->createQuickViewNetwork($marketNetelement);
@@ -2045,7 +2045,7 @@ class BaseController extends Controller
         // inner circle
         imagefilledarc($thumbnail, 100, 100, 100, 100, 0, 360, imagecolorallocate($thumbnail, 0xFF, 0xFF, 0xFF), IMG_ARC_PIE);
 
-        imagewebp($thumbnail, public_path('/images/overview_network.webp'));
+        imagewebp($thumbnail, public_path('storage/public/overview_network.webp'));
 
         return $result;
     }
