@@ -557,7 +557,10 @@ class BaseModel extends Eloquent
                     continue;
                 }
 
-                $children = DB::table($table)->where($column, $this->id)->get();
+                $children = DB::table($table)
+                    ->where($column, $this->id)
+                    ->whereNull('deleted_at')
+                    ->get();
 
                 foreach ($children as $child) {
                     $class_child_name = $this->_guess_model_name($table);
