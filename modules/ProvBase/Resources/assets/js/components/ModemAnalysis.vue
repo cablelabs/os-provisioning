@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 
 const propData = document.querySelector('#OpenSourceModemAnalysis').dataset
@@ -9,7 +9,7 @@ const loading = ref(true)
 const pingStarted = ref(false)
 const selectedPing = ref(1)
 const floodPingResult = ref(null)
-const pingOptions = reactive([
+const pingOptions = ref([
   {id: 1, name: propData.modemAnalysisFloodpingLowLoad},
   {id: 2, name: propData.modemAnalysisFloodpingAverageLoad},
   {id: 3, name: propData.modemAnalysisFloodpingBigLoad},

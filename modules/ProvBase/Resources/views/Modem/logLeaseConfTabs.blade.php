@@ -64,9 +64,7 @@
                 <div class="row d-flex">
                     <div style="flex: 1;">
                         <select2 v-model="selectedTask" :initial-value="taskOptions[0].task" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
-                            <template v-for="option in taskOptions">
-                                <option :value="option.task" v-text="option.name"></option>
-                            </template>
+                            <option v-for="(option, i) in taskOptions" :key="i" :value="option.task" v-text="option.name"></option>
                         </select2>
                     </div>
                     <button v-if="! isForm" type="submit" class="btn btn-danger" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
