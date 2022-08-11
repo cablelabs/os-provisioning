@@ -32,7 +32,6 @@ import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import SidebarSelect2Component from './components/SidebarSelect2.vue'
 import skeletonComponent from './components/Skeleton.vue'
-import CoreMonDataTable from './components/CoreMonDataTable.vue'
 import overlay from './components/Overlay.vue'
 import AuthAbilities from './components/AuthAbilities.vue'
 
@@ -52,6 +51,7 @@ import * as JSZip from 'jszip'
 window.main = createApp(app)
   .component('overlay', overlay)
   .component('select2', select2Component)
+  .component('SidebarSelect2', SidebarSelect2Component)
   .component('skeleton', skeletonComponent)
   .use(snotify)
   .mount('#page-container')
@@ -78,18 +78,6 @@ if (document.getElementById('sidebar')) {
 // right sidebar
 if (document.getElementById('sidebar-right')) {
   window.sidebarRight = createApp(sidebarRight).mount('#sidebar-right')
-}
-
-window.main = createApp(app)
-  .component('overlay', overlay)
-  .component('select2', select2Component)
-  .component('SidebarSelect2', SidebarSelect2Component)
-  .component('skeleton', skeletonComponent)
-  .use(snotify)
-  .mount('#page-container')
-
-if (document.getElementById('coremon-index-table')) {
-  window.rpd = createApp(CoreMonDataTable).mount('#coremon-index-table')
 }
 
 if (document.getElementById('vue-body')) {
