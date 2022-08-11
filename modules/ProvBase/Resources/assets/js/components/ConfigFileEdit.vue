@@ -1,12 +1,12 @@
 <template>
-  <h2>{{ propData.headerDragDrop }}
+  <h2>{{ translations.dragDrop }}
     <a data-toggle="popover" data-html="true" data-container="body" data-trigger="hover" title="" data-placement="right"
-      :data-content="propData.headerDragDropInfotext"
-      :data-original-title="propData.headerDragDropInfoheader">
+      :data-content="translations.infotext"
+      :data-original-title="translations.infoheader">
       <i class="fa fa-2x p-t-5 fa-question-circle text-info dragdropinfo"></i>
     </a>
   </h2>
-  
+
   <div class="box" id="left">
     <draggable v-model="lists" :group="{ name: 'g1' }" class="droplist" :options="{draggable: '.list-group', filter: 'input', preventOnFilter: false}" @change="refreshSelect();refreshJson();">
       <template v-for="(list, key) in lists" :key="key">
@@ -15,99 +15,99 @@
             <div class="h" style="display:flex;align-items:center;flex-wrap:wrap;">
               <input type="text" style="flex:1 auto;" v-model="list.name" @blur="setType(list);refreshSelectNextTick();refreshJson();" @keydown.enter.prevent='blurInput'>
               <div>
-                <select name="listtype" v-model="list.type" v-dispatchsel2 @change="renameTitle(list);refreshJson();">
-                  <option value="list">{{ propData.configfileDragdropListtypeList }}</option>
-                  <option value="table">{{ propData.configfileDragdropListtypeTable }}</option>
-                  <option value="paginated">{{ propData.configfileDragdropListtypePaginated }}</option>
-                </select>
+                <select2 name="listtype" v-model="list.type" v-dispatchsel2 @change="renameTitle(list);refreshJson();">
+                  <option value="list">{{ translations.listtype.list }}</option>
+                  <option value="table">{{ translations.listtype.table }}</option>
+                  <option value="paginated">{{ translations.listtype.paginated }}</option>
+                </select2>
               </div>
               <button class="btn btn-primary" @click="delList(key);refreshJson();">
-                {{ propData.buttonDragDropDeleteList }}
+                {{ translations.deleteList }}
               </button>
             </div>
             <draggable v-model="list.content" :group="{ name: 'g2' }" class="dropzone" :options="{draggable: '.dragdroplistitem', filter: 'input', preventOnFilter: false}" @change="refreshSelect();refreshJson();">
               <div class="dragdroplistitem" style="margin-bottom:.25rem;padding:.5rem;background-color: #f2f2f2;cursor: grabbing;" v-for="(item, id) in list.content" :key="item.id">
                 <div class="d-flex flex-column" style="padding:.5rem;">
                   <div class="d-flex justify-content-between pb-2" :class="item.id">
-                    <div style="font-weight: bold;word-break: break-all;">@{{ item.id }}</div>
+                    <div style="font-weight: bold;word-break: break-all;" v-text="item.id"></div>
                     <i class="fa fa-cog dragdropitembutton pl-4" aria-hidden="true" @click="itemmenu($event.target, key, id)"></i>
                     <div class="dragdropitemmenubox">
                       <template v-for="(listname, listkey) in lists" :key="listkey">
                         <span class="dragdropitemmenubutton" v-if="listkey != '0' && listkey !=  key" @click="moveItem(key,listkey, id);refreshJson();">
-                          {{ propData.buttonDragDropMoveTo }} {{ listname.name }}
+                          {{ translations.moveTo }} {{ listname.name }}
                         </span>
                       </template>
                       <span class="dragdropitemmenubutton" @click="moveItem(key, -1, id);refreshJson();">
-                        {{ propData.buttonDragDropMoveToNewList }}
+                        {{ translations.moveToNewList }}
                       </span>
                       <span class="dragdropitemmenubutton" @click="moveItem(key, 0, id);refreshJson();">
-                        {{ propData.buttonDragDropDeleteElement }}
+                        {{ translations.deleteElement }}
                       </span>
                     </div>
                   </div>
                   <div class="d-flex mb-2 align-items-center">
-                    <div style="width:150px">{{ propData.configfileDragDropDisplayName }}</div>
-                    <input :placeholder="propData.configfileDragDropDisplayNamePlaceholder" style="flex:1;" type="text" name="oname" v-model="item.name" @blur="refreshJson"/>
+                    <div style="width:150px">{{ translations.displayName }}</div>
+                    <input :placeholder="translations.displayNamePlaceholder" style="flex:1;" type="text" name="oname" v-model="item.name" @blur="refreshJson"/>
                   </div>
                   <div class="d-flex mb-2 align-items-center">
-                    <div style="width:150px">{{ propData.configfileDragDropAnalysisOperator }}</div>
+                    <div style="width:150px">{{ translations.analysisOperator }}</div>
                     <div style="flex:1;">
-                      <select :data-placeholder="propData.configfileDragDropOperatorPlaceholder" name="calcOp" v-model="item.calcOp" v-dispatchsel2 @change="refreshJson">
+                      <select2 :data-placeholder="translations.operatorPlaceholder" name="calcOp" v-model="item.calcOp" v-dispatchsel2 @change="refreshJson">
                         <option value=""></option>
-                        <option value="+">{{ propData.configfileDragDropAdd }} (+)</option>
-                        <option value="-">{{ propData.configfileDragDropSustract }} (-)</option>
-                        <option value="*">{{ propData.configfileDragDropMultiply }} (*)</option>
-                        <option value="/">{{ propData.configfileDragDropDivide }} (/)</option>
-                        <option value="%">{{ propData.configfileDragDropModulo }} (%)</option>
-                      </select>
+                        <option value="+">{{ translations.add }} (+)</option>
+                        <option value="-">{{ translations.sustract }} (-)</option>
+                        <option value="*">{{ translations.multiply }} (*)</option>
+                        <option value="/">{{ translations.divide }} (/)</option>
+                        <option value="%">{{ translations.modulo }} (%)</option>
+                      </select2>
                     </div>
                   </div>
                   <div class="d-flex mb-2 align-items-center">
-                    <div style="width:150px">{{ propData.configfileDragDropAnalysisOperand }}</div>
-                    <input style="flex:1;" :placeholder="propData.configfileDragDropAnalysisOperandPlaceholder" type="number" step="0.0001" name="calcVal" v-model.number="item.calcVal" @blur="refreshJson"/>
+                    <div style="width:150px">{{ translations.analysisOperand }}</div>
+                    <input style="flex:1;" :placeholder="translations.analysisOperandPlaceholder" type="number" step="0.0001" name="calcVal" v-model.number="item.calcVal" @blur="refreshJson"/>
                   </div>
                   <div>
                     <div class="d-flex mb-2 align-items-center">
-                      <div style="width:150px">{{ propData.configfileDragDropMonitorInDiagram }}</div>
+                      <div style="width:150px">{{ translations.monitorInDiagram }}</div>
                       <div class="d-flex justify-content-center" style="flex:1;">
                         <input title="Monitor?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.monitorInDiagram">
                       </div>
                     </div>
                     <div v-show="item.monitorInDiagram">
                       <div class="d-flex mb-2 align-items-center">
-                        <div style="width:150px">{{ propData.configfileDragDropDiagramColumn }}</div>
+                        <div style="width:150px">{{ translations.diagramColumn }}</div>
                         <div style="flex:1 1 100px;min-width:0;">
-                          <select data-allow-clear="true" :data-placeholder="propData.configfileDragDropDiagramColumnPlaceholder" name="diagramVar" v-model="item.diagramVar" v-dispatchsel2 @change="refreshJson">
+                          <select2 data-allow-clear="true" :data-placeholder="translations.diagramColumnPlaceholder" name="diagramVar" v-model="item.diagramVar" v-dispatchsel2 @change="refreshJson">
                             <option value=""></option>
                             <option v-for="(column, columnKey) in propDataColumns" :value="column" :key="columnKey">
                               {{ column }}
                             </option>
-                          </select>
+                          </select2>
                         </div>
                       </div>
                       <div class="d-flex mb-2 align-items-center">
-                        <div style="width:150px">{{ propData.configfileDragDropDiagramOperator }}</div>
+                        <div style="width:150px">{{ translations.diagramOperator }}</div>
                         <div style="flex:1;">
-                          <select data-allow-clear="true" :data-placeholder="propData.configfileDragDropOperatorPlaceholder" name="diagramOp" v-model="item.diagramOp" v-dispatchsel2 @change="refreshJson">
+                          <select2 data-allow-clear="true" :data-placeholder="translations.operatorPlaceholder" name="diagramOp" v-model="item.diagramOp" v-dispatchsel2 @change="refreshJson">
                             <option value=""></option>
-                            <option value="+">{{ propData.configfileDragDropAdd }} (+)</option>
-                            <option value="-">{{ propData.configfileDragDropSustract }} (-)</option>
-                            <option value="*">{{ propData.configfileDragDropMultiply }} (*)</option>
-                            <option value="/">{{ propData.configfileDragDropDivide }} (/)</option>
-                            <option value="%">{{ propData.configfileDragDropModulo }} (%)</option>
-                          </select>
+                            <option value="+">{{ translations.add }} (+)</option>
+                            <option value="-">{{ translations.sustract }} (-)</option>
+                            <option value="*">{{ translations.multiply }} (*)</option>
+                            <option value="/">{{ translations.divide }} (/)</option>
+                            <option value="%">{{ translations.modulo }} (%)</option>
+                          </select2>
                         </div>
                       </div>
                       <div class="d-flex mb-2 align-items-center">
-                        <div style="width:150px">{{ propData.configfileDragDropDiagramOperand }}</div>
-                        <input style="flex:1;" :placeholder="propData.configfileDragDropDiagramOperandPlaceholder" type="number" step="0.0001" name="diagramVal" v-model.number="item.diagramVal" @blur="refreshJson"/>
+                        <div style="width:150px">{{ translations.diagramOperand }}</div>
+                        <input style="flex:1;" :placeholder="translations.diagramOperandPlaceholder" type="number" step="0.0001" name="diagramVal" v-model.number="item.diagramVal" @blur="refreshJson"/>
                       </div>
                     </div>
                   </div>
 
                   <div>
                     <div class="d-flex mb-2 align-items-center">
-                      <div style="width:150px">{{ propData.configfileDragDropColorize }}</div>
+                      <div style="width:150px">{{ translations.colorize }}</div>
                       <div class="d-flex justify-content-center" style="flex:1;">
                         <input title="Colorize?" type="checkbox" class="toggleColorizeParams" name="colorize" v-model="item.colorize" @change="refreshJson">
                       </div>
@@ -116,13 +116,13 @@
                       <input type="text" name="colorDanger" style="background-color: #ffddbb;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsCriticalOrange" :title="propData.configfileDragDropThreshholdsCriticalOrange" v-model="item.colorDanger" @blur="refreshJson"/>
                       <input type="text" name="colorWarning" style="background-color: #ffffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsWarningYellow" :title="propData.configfileDragDropThreshholdsWarningYellow" v-model="item.colorWarning" @blur="refreshJson"/>
                       <input type="text" name="colorSuccess" style="background-color: #ddffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsSuccessGreen" :title="propData.configfileDragDropThreshholdsSuccessGreen" v-model="item.colorSuccess" @blur="refreshJson"/>
-                      <select data-allow-clear="true" :data-placeholder="ConfigfileDragDropSelectMapParameter" style="margin-top:.5rem;width:auto;" name="valueType" v-model="item.valueType" title="Usage e.g. in topo map" v-dispatchsel2 @change="refreshJson">
+                      <select2 data-allow-clear="true" :data-placeholder="ConfigfileDragDropSelectMapParameter" style="margin-top:.5rem;width:auto;" name="valueType" v-model="item.valueType" title="Usage e.g. in topo map" v-dispatchsel2 @change="refreshJson">
                         <option value=""></option>
                         <option value="us_pwr">US PWR</option>
                         <option value="us_snr">US SNR</option>
                         <option value="ds_pwr">DS PWR</option>
                         <option value="ds_snr">DS SNR</option>
-                      </select>
+                      </select2>
                     </div>
                   </div>
                 </div>
@@ -134,9 +134,9 @@
     </draggable>
 
     <div class="newlist">
-      <input type="text" v-model="listName" :placeholder="propData.headerDragDropListname" @keydown.enter.prevent="addList();refreshJson();" />
+      <input type="text" v-model="listName" :placeholder="translations.listname" @keydown.enter.prevent="addList();refreshJson();" />
       <button class="btn btn-primary" @click.prevent="addList();refreshJson();">
-        {{ propData.headerDragDropAddList }}
+        {{ translations.addlist }}
       </button>
     </div>
   </div>
@@ -147,9 +147,9 @@
         <div v-if="key == '0'" class="list-group">
           <div class="listbox">
             <div class="h d-flex align-items-center">
-              <div class="pr-4">{{ propData.headerDragDropDeviceParameters }}</div>
+              <div class="pr-4">{{ translations.deviceParameters }}</div>
               <a :href="propData.routeConfigfileRefreshGenieAcs" class="btn btn-primary">
-                {{ propData.buttonDragDropRefresh }}
+                {{ translations.refresh }}
               </a>
             </div>
             <input class="mb-3 w-100" type="text" @keyup.prevent="ddFilter" @keydown.enter.prevent='blurInput' v-model="search" :placeholder="propData.buttonSearch"/>
@@ -157,19 +157,19 @@
               <div class="dragdroplistitem" style="margin-bottom:.25rem;padding:.5rem;background-color: #f2f2f2;cursor: grabbing;" v-for="(item, id) in list.content" :key="item.id">
                 <div>
                   <div class="d-flex justify-content-between pb-2" :class="item.id">
-                    <div style="font-weight: bold;word-break: break-all;">@{{ item.id }}</div>
+                    <div style="font-weight: bold;word-break: break-all;" v-text="item.id"></div>
                     <i class="fa fa-cog dragdropitembutton pl-4" aria-hidden="true" @click="itemmenu($event.target, key, id)"></i>
                     <div class="dragdropitemmenubox">
                       <template v-for="(listname, listkey) in lists" :key="listkey">
                         <span class="dragdropitemmenubutton" v-if="listkey != '0'" @click="moveItem(key,listkey, id)">
-                          {{ propData.buttonDragDropMoveTo }} {{ listname.name }}
+                          {{ translations.moveTo }} {{ listname.name }}
                         </span>
                       </template>
-                      <span class="dragdropitemmenubutton" @click="moveItem(key,-1, id)">{{ propData.buttonDragDropMoveToNewList }}</span>
+                      <span class="dragdropitemmenubutton" @click="moveItem(key,-1, id)">{{ translations.moveToNewList }}</span>
                     </div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <div style="margin-right:.5rem;">{{ propData.configfileDragdropDisplayName }}</div>
+                    <div style="margin-right:.5rem;">{{ translations.displayName }}</div>
                     <input style="flex:1;" type="text" name="oname" v-model="item.name"/>
                   </div>
                 </div>
@@ -189,6 +189,7 @@ import { ref, onMounted, nextTick } from 'vue'
 let propData = document.querySelector('#provbase-config-file-edit').dataset
 const propDataLists = propData.lists ? JSON.parse(propData.lists) : {}
 const propDataColumns = propData.columns ? JSON.parse(propData.columns) : {}
+const translations = JSON.parse(propData.translations)
 
 // refs
 const listName = ref('')
@@ -220,7 +221,7 @@ async function moveItem(olist, key, id) {
   // for creating a new list
   if (key == -1) {
   lists.value.push({
-    name: propData.headerDragDropListname,
+    name: translations.listname,
     content: []
   });
   key = lists.value.length-1;
@@ -324,8 +325,8 @@ async function refreshSelectNextTick() {
 
 async function refreshJson() {
   await nextTick();
-  json = {};
-  params = {};
+  let json = {};
+  let params = {};
   for (var key = 1; key < lists.value.length; key++) {
   var listName = lists.value[key].name;
   params[listName] = {};
