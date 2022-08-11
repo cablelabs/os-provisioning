@@ -33,7 +33,7 @@ import { ref, computed, onMounted, onDeactivated } from 'vue'
 import $ from 'jquery'
 import 'select2'
 
-const emit = defineEmits(['update:modelValue', 'input'])
+const emit = defineEmits(['update:modelValue', 'input', 'change'])
 
 const props = defineProps({
   modelValue: {
@@ -100,6 +100,8 @@ onMounted(() => {
   if (!props.multiple && !props.asArray) {
     return select.value.on('select2:select select2:unselect', (e) => {
       setValue($(select.value).val())
+      emit('input', $(select.value).val())
+      emit('change', $(select.value).val())
     })
   }
 
@@ -140,6 +142,7 @@ function publishChanges() {
   $(select.value).val(selected.value)
   emit('update:modelValue', selected.value)
   emit('input', selected.value)
+  emit('change', selected.value)
 }
 
 function setValue(val) {
