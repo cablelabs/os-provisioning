@@ -36,6 +36,7 @@ use App\GlobalConfig;
 use App\V1\Repository;
 use Yajra\DataTables\DataTables;
 use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\File;
 use Modules\CoreMon\Helpers\PrometheusApi;
 
 /*
@@ -2044,6 +2045,10 @@ class BaseController extends Controller
 
         // inner circle
         imagefilledarc($thumbnail, 100, 100, 100, 100, 0, 360, imagecolorallocate($thumbnail, 0xFF, 0xFF, 0xFF), IMG_ARC_PIE);
+
+        if (! File::exists(public_path('storage/public'))) {
+            File::makeDirectory(public_path('storage/public'), 0775, true);
+        }
 
         imagewebp($thumbnail, public_path('storage/public/overview_network.webp'));
 
