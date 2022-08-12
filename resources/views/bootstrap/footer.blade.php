@@ -17,8 +17,10 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ mix('js/app.js') }}"></script>
+@if (Request::is('admin/*'))
 @include('bootstrap.module-js')
+@endif
 
 <script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
 
@@ -34,6 +36,7 @@
 
 <!-- ================== END PAGE LEVEL JS ================== -->
 
+@if (Request::is('admin/*'))
 <script language="javascript">
 /*
  * global document ready function
@@ -45,3 +48,4 @@ $(document).ready(function() {
   $("#alertModal").modal();
 });
 </script>
+@endif

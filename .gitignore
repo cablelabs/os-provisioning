@@ -66,4 +66,9 @@ public/js
 public/images
 public/mix-manifest.json
 
+public-ccc/css
+public-ccc/js
+
+mix-manifest.json
+
 _ide_helper.php

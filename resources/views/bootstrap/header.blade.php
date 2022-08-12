@@ -50,6 +50,8 @@
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- SITE -->
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
+      @if (\Request::is('admin/*'))
       <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
+      @endif
 
       <!-- ================== END BASE CSS STYLE ================== -->
