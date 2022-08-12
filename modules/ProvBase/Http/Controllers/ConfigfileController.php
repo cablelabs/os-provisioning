@@ -209,9 +209,15 @@ class ConfigfileController extends \BaseController
             Storage::put($storagefile, json_encode($parametersArray));
         }
 
-        if ($refresh) {
-            return redirect()->back();
+        if (! $refresh) {
+            return;
         }
+
+        if (isset($parametersArray)) {
+            return array_slice($parametersArray, 0, 50);
+        }
+
+        return array_slice(json_decode(Storage::get($storagefile)), 0, 50);
     }
 
     /**

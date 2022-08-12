@@ -45,6 +45,7 @@
         "select2": "^4.1.0-rc.0",
         "vue": "^3.2.37",
         "vue3-snotify": "0.0.6",
-        "vue3-touch-events": "^4.1.0"
+        "vue3-touch-events": "^4.1.0",
+        "vuedraggable": "^4.1.0"
     }
 }

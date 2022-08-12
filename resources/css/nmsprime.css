@@ -731,48 +731,6 @@ ul.nav.nav-pills li {
     }
   }
 
-.dragdropfield {
-    margin-top: 15px;
-    padding: 10px;
-    background: #f5f5f5;
-}
-.dragdropfield .box {
-    text-align: left;
-    display: inline-block;
-    vertical-align: top;
-    margin: 5px;
-    padding: 10px;
-    width: 100%;
-    height: auto;
-    border: none;
-}
-
-.dragdropfield .h input,
-.dragdropfield .h div {
-    font-weight: normal;
-    font-size: 20px;
-    padding: 10px;
-    background: transparent;
-    border: 0;
-}
-.dragdropfield .dragdroplistitem div {
-    background: #f2f2f2;
-}
-.dragdropfield .dragdroplistitem input {
-    display: block;
-    box-sizing: border-box;
-}
-.dragdropfield .dragdroplistitem select {
-    display: block;
-    box-sizing: border-box;
-}
-.dragdropfield .dropzone {
-    min-height: 50px;
-}
-.dragdropfield .newlist {
-    margin-top: 12px;
-}
-
 @media (min-width: 1600px) {
     .d-wide-table-cell {
         display: table-cell !important;
@@ -791,16 +749,16 @@ ul.nav.nav-pills li {
         word-break: break-all;
     }
 }
-.dragdropinfo {
-    font-size: 28px;
+
+.dragdropfield .dragdroplistitem input {
+    display: block;
+    box-sizing: border-box;
 }
-.dragdroplistitem {
-    position: relative;
+.dragdropfield .dragdroplistitem select {
+    display: block;
+    box-sizing: border-box;
 }
-.dragdropitembutton {
-    float: right;
-    cursor: pointer;
-}
+
 .dragdropitemmenubox {
     padding: 0 !important;
     top: 35px;
@@ -812,25 +770,12 @@ ul.nav.nav-pills li {
     right: 10px;
     z-index: 2;
 }
-.dragdropitemmenubutton {
-    padding: 5px;
-    border-top: 1px solid #ccc;
-    display: block;
-    cursor: pointer;
-}
-.dragdropitemmenubutton:hover {
-    background: #f5f5f5;
-}
+
 #ddsearch {
     margin: 0 0 5px 0;
     display: block;
     box-sizing: border-box;
     width: 100%;
-}
-
-.box {
-    border: 1px solid grey;
-    height: 25px;
 }
 
 div.recolor:hover img {
@@ -956,10 +901,6 @@ div.recolor:hover,
         left: 1rem;
         padding: 1rem;
         border: 1px solid black;
-    }
-
-    .dragdropfield .box {
-        width: 45%;
     }
 }
 

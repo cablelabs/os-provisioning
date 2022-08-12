@@ -24,12 +24,14 @@ import { createApp } from 'vue'
 import snotify from 'vue3-snotify'
 
 import select2 from '@/components/Select2.vue'
+import draggable from 'vuedraggable'
 import ProvBaseConfigFileEdit from './components/ConfigFileEdit.vue'
 import ModemAnalysis from './components/ModemAnalysis.vue'
 
 if (document.getElementById('provbase-config-file-edit')) {
   window.provBaseConfigFileEdit = createApp(ProvBaseConfigFileEdit)
     .component('select2', select2)
+    .component('draggable', draggable)
     .use(snotify)
     .directive('dispatchsel2', {
       inserted: function(e) {

@@ -32,12 +32,12 @@
 @if (multi_array_key_exists(['lists'], $additional_data))
 <div
     id="provbase-config-file-edit"
-    class="dragdropfield"
+    class="mt-4 p-3 bg-gray-100"
     data-button-search="{{ trans('view.Button_Search') }}"
-    data-header-translations="{{ trans('view.configfile') }}"
-    data-configfile-drag-drop-threshholds-critical-orange="{{ trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.critical'), 'color' => trans('view.orange')]) }}"
-    data-configfile-drag-drop-threshholds-warning-yellow="{{ trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.warning'), 'color' => trans('view.yellow')]) }}"
-    data-configfile-drag-drop-threshholds-success-green="{{ trans('view.configfile.dragdrop.threshholds', ['severity' => trans('view.success'), 'color' => trans('view.green')]) }}"
+    data-translations='@json(trans('view.configfile'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
+    data-configfile-drag-drop-threshholds-critical-orange="{{ trans('view.configfile.threshholds', ['severity' => trans('view.critical'), 'color' => trans('view.orange')]) }}"
+    data-configfile-drag-drop-threshholds-warning-yellow="{{ trans('view.configfile.threshholds', ['severity' => trans('view.warning'), 'color' => trans('view.yellow')]) }}"
+    data-configfile-drag-drop-threshholds-success-green="{{ trans('view.configfile.threshholds', ['severity' => trans('view.success'), 'color' => trans('view.green')]) }}"
     data-route-configfile-refresh-genie-acs="{{ route('Configfile.refreshGenieAcs', $view_var->id ) }}"
     data-route-configfile-search-device-params="{{ route('Configfile.searchDeviceParams', $view_var->id) }}"
     data-lists='@json($additional_data["lists"])'
