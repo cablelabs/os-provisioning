@@ -21,7 +21,7 @@ class CreateWebhookUser extends BaseMigration
         $env .= "WEBHOOK_PASSWORD={$password}\n";
         File::put('/etc/nmsprime/env/global.env', $env);
 
-        DB::table('users')->insert(['first_name' => 'web', 'last_name' => 'hook', 'email' => 'someone@example.com', 'password' => Hash::make($password)]);
+        DB::table('users')->insert(['first_name' => 'web', 'last_name' => 'hook', 'login_name' => 'webhook', 'email' => 'someone@example.com', 'password' => Hash::make($password)]);
     }
 
     /**
