@@ -1215,7 +1215,3 @@ textarea.select2-search__field {
     display: block;
     float: right;
 }
-
-.nav > li > a.active {
-  background: var(--silver);
-}
