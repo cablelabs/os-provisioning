@@ -126,6 +126,11 @@ function onSelect(value) {
   selected.value.push(value)
 
   publishChanges()
+
+  // reset values since you don't want to push multiple tasks when executing another task
+  if (props.asArray) {
+    selected.value = []
+  }
 }
 
 function onUnselect(value) {

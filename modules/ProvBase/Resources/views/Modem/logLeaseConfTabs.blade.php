@@ -63,7 +63,7 @@
             <form v-on:submit.prevent="updateGenieTasks">
                 <div class="row d-flex">
                     <div style="flex: 1;">
-                        <select2 v-model="selectedTask" :initial-value="taskOptions[0].task" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
+                        <select2 v-model="selectedTask" :initial="taskOptions[0].task" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
                             <option v-for="(option, i) in taskOptions" :key="i" :value="option.task" v-text="option.name"></option>
                         </select2>
                     </div>
@@ -71,7 +71,7 @@
                 </div>
             </form>
         @endif
-        <template v-if="selectedTask == 'custom/setWlan'">
+        <div v-if="selectedTask == 'custom/setWlan'">
             <form v-on:submit.prevent="setWlan" style="margin-top: 10px;">
                 <div class="form-group row">
                     <label for="WLANIndex" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('view.modemAnalysis.index') }}</label>
@@ -99,8 +99,8 @@
                 </div>
                 <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
             </form>
-        </template>
-        <template v-if="selectedTask == 'custom/setDns'">
+        </div>
+        <div v-if="selectedTask == 'custom/setDns'">
             <form v-on:submit.prevent="setDns" style="margin-top: 10px;">
                 <div class="form-group row">
                     <label for="DNS" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">DNS</label>
@@ -110,7 +110,7 @@
                 </div>
                 <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
             </form>
-        </template>
+        </div>
 
         @foreach ($configfile['text'] as $line)
             <table>
