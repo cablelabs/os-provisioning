@@ -55,7 +55,7 @@ echo "LOAD DATABASE
     ;" > /tmp/nmsprime.load
 
 sudo -u postgres pgloader -q /tmp/nmsprime.load
-#sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
+sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
 
 sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     GRANT USAGE, CREATE ON SCHEMA ${auths[0]} TO ${auths[2]};
