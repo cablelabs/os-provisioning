@@ -2085,4 +2085,61 @@ class BaseController extends Controller
 
         imagewebp($thumbnail, public_path('storage/public/overview_network.webp'));
     }
+
+    /**
+     * Checks if a valid CSV file has been uploaded
+     *
+     * @author Patrick Reichel
+     */
+    public function validCsvFileUploaded($formField, $errorMessagePosition)
+    {
+        // check if a file has been uploded
+        if (! Request::hasFile($formField)) {
+            \Session::push('tmp_error_above_'.$errorMessagePosition, 'No file given');
+            return false;
+        }
+
+        // check if a valid file has been uploaded
+        if (! Request::file($formField)->isValid()) {
+            \Session::push('tmp_error_above_'.$errorMessagePosition, 'Uploaded file is invalid');
+            return false;
+        }
+
+        // check the mimetype (we expect a csv)
+        $mimeType = Request::file($formField)->getMimeType();
+        if (! in_array(
+            $mimeType,
+            ['text/plain', 'text/csv']
+        )) {
+            \Session::push('tmp_error_above_'.$errorMessagePosition, 'File seems not to be a CSV file, mime type is: '.$mimeType);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get content of uploaded csv file
+     *
+     * @return array containing csv file content
+     * @author Patrick Reichel
+     */
+    public function getDataFromUploadedCsv($formField, $errorMessagePosition)
+    {
+        try {
+            $filehandle = fopen(Request::file($formField)->path(), 'r');
+        } catch (\Exception $ex) {
+            \Session::push('tmp_error_above_'.$errorMessagePosition, 'Exception thrown: '.$ex->getMessage());
+            return null;
+        }
+
+        $filename = Request::file($formField)->getClientOriginalName();
+
+        $csv = [];
+        while(($data = fgetcsv($filehandle, null, ";")) !== FALSE) {
+            array_push($csv, $data);
+        }
+
+        return $csv;
+    }
 }

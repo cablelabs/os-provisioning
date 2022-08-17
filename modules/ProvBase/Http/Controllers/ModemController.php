@@ -53,6 +53,16 @@ class ModemController extends \BaseController
      */
     private $configfile;
 
+    /**
+     * Display a listing of all objects of the calling model
+     *
+     * @return View
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+
     public function edit($id)
     {
         $provbase = ProvBase::first();
@@ -1204,8 +1214,154 @@ class ModemController extends \BaseController
             return $this->importOntFromCsv();
         }
 
+        if ('updateOntNextStateFromCsv' == $method) {
+            return $this->updateOntNextStateFromCsv();
+        }
+
         \Session::push('tmp_error_above_form', 'Unknown method: '.$method);
         return redirect($this->redirectUrl);
+    }
+
+    /**
+     * Update next state for given ONT from CSV file
+     *
+     * @author Patrick Reichel
+     */
+    public function updateOntNextStateFromCsv()
+    {
+        if ('LFO' == config('smartont.flavor.active')) {
+            return $this->updateLfoOntNextStateFromCsv();
+        }
+
+        \Session::push('tmp_error_above_form', 'Not implemented for flavor '.config('smartont.flavor.active'));
+        return redirect($this->redirectUrl);
+    }
+
+    /**
+     * Update next state for given LFO ONT from CSV file
+     *
+     * @author Patrick Reichel
+     */
+    public function updateLfoOntNextStateFromCsv()
+    {
+        if (! $this->validCsvFileUploaded('modem_csv_upload', 'index_list')) {
+            return redirect($this->redirectUrl);
+        }
+
+        $csv = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
+        if (! is_array($csv)) {
+            return redirect($this->redirectUrl);
+        }
+
+        $header = array_shift($csv);
+        $header = array_map('mb_strtolower', $header);
+
+        if (1 == count(($header))) {
+            \Session::push('tmp_error_above_index_list', 'Only one column found: “'.$header[0].'”. Hint: Use “;” as delimiter.');
+            return redirect($this->redirectUrl);
+        }
+
+        $fieldMap = [
+            'serial_num' => [
+                'serial number / cwmp-id',
+                'seriennummer / cwmp-id',
+                's/n',
+                'serial',
+                'serialnumber',
+                'sn',
+            ],
+            'next_ont_state' => [
+                'next ont state',
+                'nächster ont-status',
+            ],
+            'ont_state_switchdate' => [
+                'ont state switchdate',
+                'ont-status-änderungs-datum',
+                'switchdate',
+            ]
+        ];
+
+        # add translations (the are used for the export, too)
+        foreach ($fieldMap as $key => $values) {
+            $fieldMap[$key][] = mb_strtolower(trans('dt_header.modem.'.$key));
+        }
+
+        $missingCols = [
+            'serial_num' => 'serial_num',
+            'next_ont_state' => 'next_ont_state',
+            'ont_state_switchdate' => 'ont_state_switchdate',
+        ];
+        $map = [];
+        foreach ($fieldMap as $dbCol => $possibleCsvHeaders) {
+            foreach ($possibleCsvHeaders as $possibleCsvHeader) {
+                if (in_array($possibleCsvHeader, $header)) {
+                    unset($missingCols[$dbCol]);
+                    $map[$dbCol] = array_search($possibleCsvHeader, $header);
+                }
+            }
+        }
+
+        if ($missingCols) {
+            \Session::push('tmp_error_above_index_list', 'Fields missing in CSV file: '.implode(',', $missingCols));
+            return redirect($this->redirectUrl);
+        }
+
+        foreach ($csv as $lineNumber => $entry) {
+            $serial_num = $entry[$map['serial_num']];
+            if (! $serial_num) {
+                \Session::push('tmp_error_above_index_list', 'Serial number missing in line '.($lineNumber + 1).' – ignoring line');
+                continue;
+            }
+
+            $next_ont_state = $entry[$map['next_ont_state']];
+            if (! $next_ont_state) {
+                \Session::push('tmp_error_above_index_list', 'Next ONT state missing in line '.($lineNumber + 1).' – ignoring line');
+                continue;
+            }
+
+            $allowedStates = [
+                'active',
+                'inactive',
+            ];
+            if (! in_array($next_ont_state, $allowedStates)) {
+                \Session::push('tmp_error_above_index_list', 'Next state '.$next_ont_state.' in line '.($lineNumber + 1). ' invalide – ignoring line');
+                continue;
+            }
+
+
+            $ont_state_switchdate = $entry[$map['ont_state_switchdate']];
+            if (! $ont_state_switchdate) {
+                \Session::push('tmp_error_above_index_list', 'ONT state switchdate missing in line '.($lineNumber + 1).' – ignoring line');
+                continue;
+            }
+            $validSwitchdatePattern = '/(20[0-9]{2}-[01][0-9]-[0-3][0-9])( [012][0-9]:[0-5][0-9]:[0-5][0-9])?/';
+            preg_match_all($validSwitchdatePattern, $ont_state_switchdate, $matches, PREG_PATTERN_ORDER);
+            if (! $matches[0]) {
+                \Session::push('tmp_error_above_index_list', 'ONT state switchdate malformed in line '.($lineNumber + 1).' – ignoring line');
+                continue;
+            }
+
+            $modem = Modem::where('serial_num', '=', $serial_num)->first();
+
+            if (is_null($modem)) {
+                \Session::push('tmp_error_above_index_list', 'No ONT with serial number '.$serial_num.' – ignoring');
+                continue;
+            }
+
+            $modem->serial_num = $serial_num;
+            $modem->next_ont_state = $next_ont_state;
+            $modem->ont_state_switchdate = $ont_state_switchdate;
+
+            if ($modem->isDirty()) {
+                \Session::push('tmp_success_above_index_list', "Updated ONT with serial number $serial_num (ID $modem->id)");
+            } else {
+                \Session::push('tmp_info_above_index_list', "No changes to ONT with serial number $serial_num (ID $modem->id)");
+            }
+
+            $modem->save();
+        }
+        return redirect($this->redirectUrl);
+
     }
 
     /**
@@ -1237,44 +1393,17 @@ class ModemController extends \BaseController
         $qosId = $smartOnt->default_qos_id;
         $configfileId = $smartOnt->default_configfile_id;
 
-        // check if a file has been uploded
-        if (! Request::hasFile('modem_csv_upload')) {
-            \Session::push('tmp_error_above_form', 'No file given');
+        if (! $this->validCsvFileUploaded('modem_csv_upload', 'form')) {
             return redirect($this->redirectUrl);
         }
 
-        // check if a valid file has been uploaded
-        if (! Request::file('modem_csv_upload')->isValid()) {
-            \Session::push('tmp_error_above_form', 'Uploaded file is invalid');
+        $csv = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
+        if (! is_array($csv)) {
             return redirect($this->redirectUrl);
-        }
-
-        // check the mimetype (we expect a csv)
-        $mimeType = Request::file('modem_csv_upload')->getMimeType();
-        if (! in_array(
-            $mimeType,
-            ['text/plain', 'text/csv']
-        )) {
-            \Session::push('tmp_error_above_form', 'File seems not to be a CSV file, mime type is: '.$mimeType);
-            return redirect($this->redirectUrl);
-        }
-
-        try {
-            $filehandle = fopen(Request::file('modem_csv_upload')->path(), 'r');
-        } catch (\Exception $ex) {
-            \Session::push('tmp_error_above_form', 'Exception thrown: '.$ex->getMessage());
-            return redirect($this->redirectUrl);
-        }
-
-        $filename = Request::file('modem_csv_upload')->getClientOriginalName();
-
-        $csv = [];
-        while(($data = fgetcsv($filehandle, null, ";")) !== FALSE) {
-            array_push($csv, $data);
         }
 
         $header = array_shift($csv);
-        $header = array_map('strtolower', $header);
+        $header = array_map('mb_strtolower', $header);
 
         $fieldMap = [
             'serial' => [

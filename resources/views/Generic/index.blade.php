@@ -77,6 +77,28 @@
         @include('Generic.documentation')
         </div>
 
+        {{-- Special upload field used only for flavor LFO in module SmartOnt --}}
+        @if(Module::collections()->has('SmartOnt'))
+            @if('Modem' == $model->get_model_name())
+                @if('LFO' == config('smartont.flavor.active'))
+                    <div>
+                        {{ Form::open([
+                            'method' => 'post',
+                            'route' => 'Modem.import',
+                            'enctype' => 'multipart/form-data',
+                        ])}}
+
+                        <input style="background-color:whitesmoke" name="modem_csv_upload" type="file" id="modem_csv_upload">
+                        <input type="hidden" name="redirect_url" value="{{ url()->current() }}" />
+                        <input type="hidden" name="method" value="updateOntNextStateFromCsv" />
+                        <button type="submit" class="btn btn-primary" style="simple" name="upload" value="upload" title="boo">Upload ONT next states CSV</button>
+
+                        {{ Form::close() }}
+                    </div>
+                @endif
+            @endif
+        @endif
+
         @if (Request::has('show_filter'))
         <div class="mt-4">
                 <div id="filter">
