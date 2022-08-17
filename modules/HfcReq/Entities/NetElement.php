@@ -400,6 +400,11 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\ProvBase\Entities\Modem::class, 'next_passive_id');
     }
 
+    public function ccap()
+    {
+        return $this->hasOne(\Modules\CoreMon\Entities\Ccap::class, 'netelement_id');
+    }
+
     /**
      * Relation to CoreMon model - 1:1
      *
