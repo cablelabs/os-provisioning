@@ -130,6 +130,36 @@ class NetElement extends \BaseModel
         return $ret;
     }
 
+    /**
+     * Return collected info for market popups in network overview
+     */
+    public function popupInfo()
+    {
+        // $children = $this->getAllChildrenOfType([18, 22]);
+        $ccapTotal = $rpdTotal = 0;
+        foreach ($this->children as $ne) {
+            if ($ne->base_type_id == 18) {
+                $ccapTotal += 1;
+            } elseif ($ne->base_type_id == 22) {
+                $rpdTotal += 1;
+            }
+        }
+
+        $popupInfo = [
+            'ccapTotal' => ['value' => $ccapTotal, 'color' => 'info'],
+            'rpdTotal' => ['value' => $rpdTotal, 'color' => 'info'],
+
+            // TODO: Get the real data - right now the following is just showcase data
+            'cmTotal' => ['value' => rand(100, 1000), 'color' => 'info'],
+            'cinTotal' => ['value' => rand(10, 100), 'color' => 'info'],
+            'rpdOfflinePct' => ['value' => 6.25, 'color' => 'warning'],
+            'cmOfflinePct' => ['value' => 4.23, 'color' => 'info'],
+            'cinOfflinePct' => ['value' => 0.00, 'color' => 'info'],
+        ];
+
+        return $popupInfo;
+    }
+
     // AJAX Index list function
     // generates datatable content and classes for model
     public function view_index_label()
