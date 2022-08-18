@@ -34,7 +34,6 @@ return [
     'date'                 => ':attribute muss ein gültiges Datum sein.',
     'date_equals'    => ':attribute muss ein Datum gleich :date sein.',
     'date_format'          => ':attribute entspricht nicht dem gültigen Format für :format.',
-    'dhcp_config'          => 'Ungültige DHCP Konfiguration: Der DHCP Server wird nicht neu gestartet, bitte prüfen Sie die Konfiguration via: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
     'different'            => ':attribute und :other müssen sich unterscheiden.',
     'digits'               => ':attribute muss :digits Stellen haben.',
     'digits_between'       => ':attribute muss zwischen :min und :max Stellen haben.',

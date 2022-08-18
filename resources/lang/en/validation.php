@@ -34,7 +34,6 @@ return [
     'date' => 'The :attribute is not a valid date.',
     'date_equals' => 'The :attribute must be a date equal to :date.',
     'date_format' => 'The :attribute does not match the format :format.',
-    'dhcp_config' => 'Invalid DHCP config: DHCP server will not be restarted, please check the output of: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
     'different' => 'The :attribute and :other must be different.',
     'digits' => 'The :attribute must be :digits digits.',
     'digits_between' => 'The :attribute must be between :min and :max digits.',

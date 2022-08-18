@@ -35,7 +35,6 @@ class ExtendedValidatorServiceProvider extends ServiceProvider
          */
         $this->app['validator']->extend('available', 'App\extensions\validators\ExtendedValidator@validateBicAvailable');
         $this->app['validator']->extend('creditor_id', 'App\extensions\validators\ExtendedValidator@validateCreditorId');
-        $this->app['validator']->extend('dhcp_config', 'App\extensions\validators\ExtendedValidator@validateDhcpConfig');
         $this->app['validator']->extend('docsis', 'App\extensions\validators\ExtendedValidator@validateDocsis');
         $this->app['validator']->extend('geopos', 'App\extensions\validators\ExtendedValidator@validateGeopos');
         $this->app['validator']->extend('comma_separated_hostnames_or_ips', 'App\extensions\validators\ExtendedValidator@validateCommaSeparatedHostnamesOrIps');
