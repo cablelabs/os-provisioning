@@ -34,6 +34,7 @@ import SidebarSelect2Component from './components/SidebarSelect2.vue'
 import skeletonComponent from './components/Skeleton.vue'
 import overlay from './components/Overlay.vue'
 import AuthAbilities from './components/AuthAbilities.vue'
+import NavbarQuickviewNetwork from './components/navbar/QuickviewNetwork.vue'
 
 // dataTables
 import 'datatables.net-buttons/js/buttons.colVis.js'
