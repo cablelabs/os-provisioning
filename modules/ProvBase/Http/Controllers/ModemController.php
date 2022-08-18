@@ -186,6 +186,7 @@ class ModemController extends \BaseController
             ['form_type' => 'date', 'name' => 'installation_address_change_date', 'description' => 'Date of installation address change', 'hidden' => 'C', 'options' => $installation_address_change_date_options, 'help' => trans('helper.Modem_InstallationAddressChangeDate')], // Date of adress change for notification at telephone provider - important for localisation of emergency calls
             ['form_type' => 'text', 'name' => 'inventar_num', 'description' => 'Inventar Number'],
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
+            ['form_type' => 'text', 'name' => 'additional', 'description' => 'Additional info', 'create' => ['Modem'], 'autocomplete' => [], 'space' => 1],
         ];
 
         return array_merge($a, $b, $c, $d);
