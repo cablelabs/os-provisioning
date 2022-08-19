@@ -137,7 +137,7 @@ class NetElement extends \BaseModel
     {
         // $children = $this->getAllChildrenOfType([18, 22]);
         $ccapTotal = $rpdTotal = 0;
-        foreach ($this->children as $ne) {
+        foreach ($this->descendants as $ne) {
             if ($ne->base_type_id == 18) {
                 $ccapTotal += 1;
             } elseif ($ne->base_type_id == 22) {

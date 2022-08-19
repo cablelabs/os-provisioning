@@ -37,7 +37,7 @@ use App\V1\Repository;
 use Yajra\DataTables\DataTables;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\File;
-use Modules\CoreMon\Helpers\PrometheusApi;
+use Modules\CoreMon\Helpers\AlertmanagerApi;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -480,7 +480,7 @@ class BaseController extends Controller
             $marketNetelement = auth()->user()->favNetelements()->where('base_type_id', 16)->first();
 
             $a['quick_view_network'] = $marketNetelement ? cache()->remember("Marketstatistic-$marketNetelement->id", 5 * 60, function () use ($marketNetelement) {
-                return $this->createQuickViewNetwork($marketNetelement);
+                return $this->alarmsNetElement($marketNetelement, true);
             }) : null;
         }
 
@@ -1983,7 +1983,7 @@ class BaseController extends Controller
      *
      * @return array of alerts are related to target netelement
      */
-    public function createQuickViewNetwork($netelement)
+    public function alarmsNetElement($netelement, $withThumbnail = false)
     {
 
         // Alarm::where('status', 'active')->whereDescendantsOf([user favorited MarketNetElement])->get()
@@ -1995,7 +1995,7 @@ class BaseController extends Controller
             'critical' => 0,
         ];
 
-        $alerts = json_decode(PrometheusApi::callApi('alerts', 'GET', 2), true);
+        $alerts = json_decode(AlertmanagerApi::callApi("alerts?filter=host%3D$netelement->ip&silenced=false&inhibited=false&active=true", 'GET', 2), true);
         if ($alerts) {
             foreach ($alerts as $alert) {
                 switch ($alert['labels']['severity']) {
@@ -2013,6 +2013,10 @@ class BaseController extends Controller
         }
 
         $result['sum'] = array_sum([$result['info'], $result['warning'], $result['critical']]);
+
+        if (! $withThumbnail) {
+            return $result;
+        }
 
         // create thumbnail
         $start = -90;
@@ -2051,7 +2055,5 @@ class BaseController extends Controller
         }
 
         imagewebp($thumbnail, public_path('storage/public/overview_network.webp'));
-
-        return $result;
     }
 }
