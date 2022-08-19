@@ -1547,7 +1547,11 @@ class Contract extends \BaseModel
         }
 
         if (! $realty) {
-            return;
+            if (! $this->apartment_id) {
+                return;
+            }
+
+            $realty = $this->apartment->realty;
         }
 
         self::whereIn('id', $ids ?: [$this->id])->update([
