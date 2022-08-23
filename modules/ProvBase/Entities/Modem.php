@@ -270,6 +270,12 @@ class Modem extends \BaseModel
             $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
         }
 
+        if (Module::collections()->has('SmartOnt')) {
+            $ret['index_header'][] = $this->table.'.us_pwr';
+            $ret['index_header'][] = $this->table.'.ds_pwr';
+            $ret['index_header'][] = $this->table.'.phy_updated_at';
+        }
+
         if (false && Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
@@ -279,8 +285,23 @@ class Modem extends \BaseModel
         return $ret;
     }
 
+    public function getSmartOntBsclass()
+    {
+        if ('active' != $this->ont_state) {
+            return 'info';
+        }
+        if (is_null($this->us_pwr)) {
+            return 'danger';
+        }
+        return 'success';
+    }
+
     public function get_bsclass()
     {
+        if (\Module::collections()->has('SmartOnt')) {
+            return $this->getSmartOntBsclass();
+        }
+
         $bsclass = 'success';
 
         switch ($this->get_state('int')) {

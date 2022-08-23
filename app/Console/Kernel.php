@@ -319,6 +319,10 @@ class Kernel extends ConsoleKernel
                     Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
                 })->everyMinute();
            }
+
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
+            })->everyFiveMinutes();
         }
     }
 
