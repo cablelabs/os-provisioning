@@ -27,8 +27,7 @@
         "kalnoy/nestedset": "^5.0",
         "beyondcode/laravel-websockets": "^1.13",
         "pusher/pusher-php-server": "~4.0",
-        "swen100/geophp": "^1.0",
-        "guzzlehttp/guzzle": "^7.4"
+        "swen100/geophp": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
