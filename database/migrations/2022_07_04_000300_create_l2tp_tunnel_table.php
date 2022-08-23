@@ -34,7 +34,7 @@ class CreateL2tpTunnelTable extends BaseMigration
         Schema::create($this->table, function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestampsTz(null);
-            $table->integer('netelement_id')->nullable();
+            $table->integer('netelement_id');
 
             $table->string('tunnel_id')->nullable();
             $table->string('remote_tunnel_id')->nullable();

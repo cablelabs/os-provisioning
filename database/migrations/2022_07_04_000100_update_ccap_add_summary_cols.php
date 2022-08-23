@@ -33,7 +33,6 @@ class UpdateCcapAddSummaryCols extends BaseMigration
     public function up()
     {
         Schema::table($this->table, function (Blueprint $table) {
-            $table->integer('netelement_id')->nullable()->change();
             $table->integer('cms')->nullable();
             $table->integer('mtas')->nullable();
             $table->integer('dsgs')->nullable();
