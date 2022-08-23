@@ -378,6 +378,14 @@ return [
         'status' => 'CM Modem Status',
         'us_data_service_grp' => 'US Data Service Group',
     ],
+    'l2tp' => [
+        'tunnel_id' => 'Tunnel ID',
+        'remote_tunnel_id' => 'Remote Tunnel ID',
+        'ip_version' => 'IP Version',
+        'ip' => 'IP',
+        'remote_ip' => 'Remote IP',
+        'error_code' => 'Error Code',
+    ],
     'rpd' => [
         'additional_cores' => 'Additional Associated Cores',
         'aux_status' => 'Aux status',
