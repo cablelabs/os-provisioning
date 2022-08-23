@@ -378,6 +378,17 @@ return [
         'status' => 'CM Modem Status',
         'us_data_service_grp' => 'US Data Service Group',
     ],
+    'inventory' => [
+        'name' => 'Name',
+        'pid' => 'PID',
+        'manufacturer' => 'Manufacturer',
+        'serial_nr' => 'Serial Number',
+        'part_nr' => 'Part Number',
+        'ports' => 'Ports',
+        'status' => 'Status',
+        'inserted' => 'Inserted',
+        'description' => 'Description',
+    ],
     'l2tp' => [
         'tunnel_id' => 'Tunnel ID',
         'remote_tunnel_id' => 'Remote Tunnel ID',

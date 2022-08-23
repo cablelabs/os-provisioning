@@ -378,6 +378,17 @@ return [
         'status' => 'Status',
         'us_data_service_grp' => 'US Data Service Gruppe',
     ],
+    'inventory' => [
+        'name' => 'Name',
+        'pid' => 'PID',
+        'manufacturer' => 'Hersteller',
+        'serial_nr' => 'Seriennummer',
+        'part_nr' => 'Teilenummer',
+        'ports' => 'Ports',
+        'status' => 'Status',
+        'inserted' => 'Eingesetzt In',
+        'description' => 'Beschreibung',
+    ],
     'l2tp' => [
         'tunnel_id' => 'Tunnel ID',
         'remote_tunnel_id' => 'Remote Tunnel ID',
