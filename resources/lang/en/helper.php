@@ -165,6 +165,7 @@ return [
     'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
     'modem' => [
         'configfileSelect' => 'It\'s not possible to change the device type of a modem via configfile (e.g. from \'cm\' to \'tr-69\'). Therefore please delete the modem and create a new one!',
+        'additional' => 'This field can be used to make notes.',
     ],
 
     /*

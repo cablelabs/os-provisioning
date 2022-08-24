@@ -33,7 +33,7 @@ class AddAdditionalFieldToContractAndModem extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('additional', 191)->nullable();
+            $table->string('additional')->nullable();
         });
     }
 

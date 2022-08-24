@@ -165,6 +165,7 @@ return [
     'ssh_auto_prov'                 => 'Periodisches Ausführen eines auf das OLT angepasstes Skript um ONTs automatisch online zu bringen.',
     'modem' => [
         'configfileSelect' => 'Es ist nicht möglich den Typ des Modems über das Configfile zu ändern (z.B. von \'cm\' zu \'tr-69\'). Bitte löschen Sie das Modem dazu und erstellen Sie ein neues!',
+        'additional' => 'Hier können zusätzliche Bemerkungen notiert werden.',
     ],
 
     /*
