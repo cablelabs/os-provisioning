@@ -359,6 +359,13 @@ return [
         'endsAt' => 'Ends At',
         'generatorURL' => 'Generator URL',
     ],
+    'arp' => [
+        'display_key' => 'Display Key',
+        'address' => 'Address',
+        'type' => 'Type',
+        'interface' => 'Interface',
+        'mac' => 'MAC',
+    ],
     'cpe' => [
         'cable_if' => 'Cable Interface',
         'ccap_core' => 'CCAP Core Name',
