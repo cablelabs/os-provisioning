@@ -864,6 +864,12 @@ class Modem extends \BaseModel
     {
         Log::debug(__METHOD__.' started');
 
+        if ($this->isSmartOnt()) {
+
+            // ATM no DHCP config needed
+            return;
+        }
+
         // Note: hostname is changed when modem was created
         if (! $this->isDirty(['hostname', 'mac', 'public']) && ! $delete && ! $mta_added) {
             return;

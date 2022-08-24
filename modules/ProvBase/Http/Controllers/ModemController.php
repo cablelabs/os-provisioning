@@ -900,7 +900,7 @@ class ModemController extends \BaseController
      */
     protected function prepare_rules($rules, $data)
     {
-        if ($this->configfile->is_multiservice_ont) {
+        if ($this->configfile && $this->configfile->is_multiservice_ont) {
             $rules['qos_id'] = [];
         }
 

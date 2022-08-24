@@ -250,7 +250,9 @@ class ModemObserver
         // special handling for SmartONT devices
         if (\Module::collections()->has('SmartOnt')) {
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
-                \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
+                if (! is_null($modem->netgw_id)) {
+                    \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
+                }
 
                 return;
             }
