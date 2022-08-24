@@ -1563,6 +1563,16 @@ class NetElement extends \BaseModel
                 'to' => $netelementIdMap[$link['target']],
                 'if_from' => $link['srcIfName'],
                 'if_to' => $link['tgtIfName'],
+                'is_up_from' => $link['srcIsUp'],
+                'is_up_to' => $link['tgtIsUp'],
+                'speed_from' => $link['srcSpeed'],
+                'speed_to' => $link['tgtSpeed'],
+                'utilization_from' => $link['srcUtilization'],
+                'utilization_to' => $link['tgtUtilization'],
+                'rx_errors_from' => $link['srcRxErrors'],
+                'rx_errors_to' => $link['tgtRxErrors'],
+                'tx_errors_from' => $link['srcTxErrors'],
+                'tx_errors_to' => $link['tgtTxErrors'],
                 'name' => "{$link['srcDevice']} → {$link['tgtDevice']}",
             ];
         }
