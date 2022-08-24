@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateArpTable extends BaseMigration
 {
     public $migrationScope = 'database';
 
     protected $tableName = 'arp';
+
     /**
      * Run the migrations.
      *
