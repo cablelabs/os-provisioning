@@ -360,11 +360,11 @@ return [
         'generatorURL' => 'Generator URL',
     ],
     'arp' => [
-        'display_key' => 'Display Key',
-        'address' => 'Address',
-        'type' => 'Type',
         'interface' => 'Interface',
+        'ip' => 'IP',
         'mac' => 'MAC',
+        'name' => 'Name',
+        'type' => 'Type',
     ],
     'cpe' => [
         'cable_if' => 'Cable Interface',

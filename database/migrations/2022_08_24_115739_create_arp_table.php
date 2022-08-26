@@ -18,11 +18,12 @@ class CreateArpTable extends BaseMigration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $this->up_table_generic($table);
-            $table->string('display_key')->nullable();
-            $table->string('address')->nullable();
             $table->string('type')->nullable();
             $table->string('interface')->nullable();
+            // name = display key of NCS
+            $table->string('name')->nullable();
             $table->string('mac')->nullable();
+            $table->ipAddress('ip')->nullable();
             $table->integer('netelement_id');
         });
     }
