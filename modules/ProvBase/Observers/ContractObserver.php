@@ -91,34 +91,33 @@ class ContractObserver
                 if ($ret['end_of_term'] && $contract->contract_end < $ret['end_of_term']) {
                     Session::put('alert.danger', trans('messages.contract.early_cancel', ['date' => $ret['end_of_term']]));
                 }
+
+                // Show alert when contract is canceled and there are yearly payed items that were charged
+                // already (by probably full amount) - customer should get a credit then
+                $query = $contract->items()->join('product as p', 'item.product_id', '=', 'p.id')
+                        ->where('p.billing_cycle', 'Yearly');
+
+                if (date('Y', strtotime($contract->contract_end)) == date('Y')) {
+                    $query = $query->where('payed_month', '!=', 0);
+                } elseif (date('m') == '01' && $contract->contract_end != date('Y-12-31', strtotime('last year')) &&
+                    date('Y', strtotime($contract->contract_end)) == (date('Y') - 1)
+                    ) {
+                    // e.g. in january of current year the user enters belatedly a cancelation date of last year in dec
+                } else {
+                    return;
+                }
+
+                $concede_credit = $query->count();
+
+                if ($concede_credit) {
+                    Session::put('alert.warning', trans('messages.contract.concede_credit'));
+                }
             }
         }
 
         if (! Module::collections()->has('BillingBase') &&
             (array_key_exists('internet_access', $changed_fields) || array_key_exists('qos_id', $changed_fields) || array_key_exists('has_telephony', $changed_fields))) {
             $contract->pushToModems(array_key_exists('has_telephony', $changed_fields));
-        }
-
-        // Show alert when contract is canceled and there are yearly payed items that were charged already (by probably full amount) - customer should get a credit then
-        if (array_key_exists('contract_end', $changed_fields)) {
-            $query = $contract->items()->join('product as p', 'item.product_id', '=', 'p.id')
-                    ->where('p.billing_cycle', 'Yearly');
-
-            if (date('Y', strtotime($contract->contract_end)) == date('Y')) {
-                $query = $query->where('payed_month', '!=', 0);
-            } elseif (date('m') == '01' && $contract->contract_end != date('Y-12-31', strtotime('last year')) &&
-                date('Y', strtotime($contract->contract_end)) == (date('Y') - 1)
-                ) {
-                // e.g. in january of current year the user enters belatedly a cancelation date of last year in dec
-            } else {
-                return;
-            }
-
-            $concede_credit = $query->count();
-
-            if ($concede_credit) {
-                Session::put('alert.warning', trans('messages.contract.concede_credit'));
-            }
         }
 
         if (multi_array_key_exists(['realty_id', 'apartment_id'], $changed_fields)) {
