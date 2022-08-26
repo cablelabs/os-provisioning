@@ -114,6 +114,10 @@ class Modem extends \BaseModel
         $rules['ppp_username'][] = 'nullable';
         $rules['serial_num'][] = 'nullable';
 
+        if ($this->contract && $this->contract->isCanceled()) {
+            $rules['internet_access'][] = 'In:null,0,false';
+        }
+
         return $rules;
     }
 

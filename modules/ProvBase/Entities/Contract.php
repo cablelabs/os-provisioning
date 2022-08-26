@@ -1530,6 +1530,11 @@ class Contract extends \BaseModel
         return $realty->contract_id ? true : false;
     }
 
+    public function isCanceled()
+    {
+        return $this->contract_end && $this->contract_end <= date('Y-m-d');
+    }
+
     /**
      * Synchronize address of Realty and Contract as contract address is used in e.g. invoice
      *
