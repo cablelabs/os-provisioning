@@ -733,11 +733,11 @@ class BaseModel extends Eloquent
         switch (strtolower($timespan)) {
             case 'once':
                 // E.g. one time or splitted payments of items - no open end! With end date: only on months from start to end
-                return $end ? $start < strtotime('midnight first day of next month', $time) && $end >= $time : date('Y-m', $start) == date('Y-m', $time);
+                return $end ? $start < strtotime('midnight first day of next month', $time) && $end > $time : date('Y-m', $start) == date('Y-m', $time);
 
             case 'monthly':
                 // has valid dates in last month - open end possible
-                return $start < strtotime('midnight first day of next month', $time) && (! $end || $end >= $time);
+                return $start < strtotime('midnight first day of next month', $time) && (! $end || $end > $time);
 
             case 'quarterly':
                 /* TODO: implement - 2 cases
@@ -747,12 +747,12 @@ class BaseModel extends Eloquent
                 break;
 
             case 'yearly':
-                return $start < strtotime('midnight first day of january next year', $time) && (! $end || $end >= strtotime('midnight first day of January this year', $time));
+                return $start < strtotime('midnight first day of january next year', $time) && (! $end || $end > strtotime('midnight first day of January this year', $time));
 
             case 'now':
                 $time = strtotime('today');
 
-                return $start <= $time && (! $end || $end >= $time);
+                return $start <= $time && (! $end || $end > $time);
 
             default:
                 \Log::error('Bad timespan param used in function '.__FUNCTION__);
