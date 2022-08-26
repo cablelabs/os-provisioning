@@ -17,8 +17,12 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
+@if (request()->is('customer*'))
+<script src="{{ asset('js/ccc.js') }}"></script>
+@endif
+
+@if (request()->is('admin*'))
 <script src="{{ mix('js/app.js') }}"></script>
-@if (Request::is('admin/*'))
 @include('bootstrap.module-js')
 @endif
 
@@ -36,7 +40,7 @@
 
 <!-- ================== END PAGE LEVEL JS ================== -->
 
-@if (Request::is('admin/*'))
+@if (request()->is('admin*'))
 <script language="javascript">
 /*
  * global document ready function

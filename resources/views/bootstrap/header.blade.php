@@ -49,8 +49,11 @@
 
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- SITE -->
+      @if (request()->is('customer*'))
+      <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
+      @endif
+      @if (request()->is('admin*'))
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
-      @if (\Request::is('admin/*'))
       <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
       @endif
 

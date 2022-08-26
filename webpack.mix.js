@@ -33,4 +33,4 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
-  .postCss('modules/Ccc/Resources/assets/css/app.css', 'css')
+  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css')
