@@ -22,6 +22,7 @@
 @endif
 
 @if (request()->is('admin*'))
+<script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
 <script src="{{ mix('js/app.js') }}"></script>
 @include('bootstrap.module-js')
 @endif

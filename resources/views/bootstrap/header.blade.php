@@ -35,8 +35,8 @@
       <link href="{{asset('components/assets-admin/css/style.css')}}" rel="stylesheet" />
       @if(isset($user))
       <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
-	  @else
-	  <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
+        @else
+       <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
       @endif
       <link href="{{asset('components/assets-admin/css/style-bs4.css')}}" rel="stylesheet" />
       <link href="{{asset('components/assets-admin/css/style-responsive.min.css')}}" rel="stylesheet" />
@@ -50,11 +50,8 @@
       <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- SITE -->
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
+
       @if (request()->is('customer*'))
       <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
       @endif
-      @if (request()->is('admin*'))
-      <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
-      @endif
-
       <!-- ================== END BASE CSS STYLE ================== -->
