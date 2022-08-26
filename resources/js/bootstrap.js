@@ -16,12 +16,12 @@
  */
 
 window._ = require('lodash')
+window.$ = window.jQuery = require('jquery')
 
 import 'jquery-ui/ui/core'
 import 'jquery-ui/ui/widgets/sortable'
 import 'jquery-ui/ui/widgets/draggable'
-
-window.$ = window.jQuery = require('jquery')
+import 'jquery-ui/ui/widgets/autocomplete'
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
