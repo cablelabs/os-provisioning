@@ -322,7 +322,7 @@ function searchForNetOrCluster(event) {
       })
       .catch((error) => {
         console.error(error)
-        main.$snotify.error(error.message)
+        $snotify.error(error.message)
       })
   }, 500)
 }
@@ -382,7 +382,7 @@ function loadCluster(netelement) {
     })
     .catch((error) => {
       console.error(error)
-      main.$snotify.error(error.message)
+      $snotify.error(error.message)
     })
 }
 
@@ -446,7 +446,7 @@ function favorNetelement(netelement) {
     })
     .catch((error) => {
       console.error(error)
-      main.$snotify.error(error.message)
+      $snotify.error(error.message)
     })
 }
 
