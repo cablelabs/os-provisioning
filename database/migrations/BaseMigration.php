@@ -107,14 +107,11 @@ class BaseMigration extends Migration
     {
         $this->calledUpTableGeneric = true;
 
-        $table->increments('id');
+        $table->bigIncrements('id');
         // older migrations e.g. used MyISAM to build fulltext indexes
-        $table->engine = 'InnoDB';
         // see 4.2: https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29_to_store_UTC_times
         $table->timestampsTz(null);
         $table->softDeletesTz('deleted_at', null);
-        $table->charset = 'utf8mb4';
-        $table->collation = 'utf8mb4_unicode_ci';
     }
 
     public function up()
