@@ -89,8 +89,9 @@ class NetElementObserver
         // if netelementtype_id changes -> indices have to change there parameter id
         // otherwise they are not used anymore
         if ($netelement->isDirty('netelementtype_id')) {
-            $new_params = $netelement->netelementtype->parameters;
+            $netelement->base_type_id = $netelement->netelementtype->baseType->id;
 
+            $new_params = $netelement->netelementtype->parameters;
             foreach ($netelement->indices as $indices) {
                 // assign each indices of parameter to new parameter with same oid
                 if ($new_params->contains('oid_id', $indices->parameter->oid->id)) {
