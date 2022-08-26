@@ -1372,6 +1372,7 @@ class Contract extends \BaseModel
 
         // get last internet & voip tariff (take last added if multiple valid tariffs)
         // TODO?: get current inet tariff and all tariffs that start after - check if current tariffs pon is reached than take next if exist?
+        // TODO: get rid of DB query to improve performance when items are already loaded (during Settlementrun)
         $tariffs = $this->items()
             ->join('product as p', 'item.product_id', '=', 'p.id')
             ->select('item.*', 'p.type', 'p.bundled_with_voip', 'p.name')
