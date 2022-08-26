@@ -139,7 +139,7 @@ class ContractController extends \BaseController
             $days[0] = null;
 
             $c = [
-                ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'value' => '1', 'help' => trans('helper.has_telephony'), 'hidden' => 1],
+                ['form_type' => 'checkbox', 'name' => 'has_telephony', 'description' => 'Has telephony', 'help' => trans('helper.has_telephony'), 'hidden' => 1],
                 ['form_type' => 'checkbox', 'name' => 'create_invoice', 'description' => 'Create Invoice', 'checked' => 1],
                 ['form_type' => 'select', 'name' => 'value_date', 'description' => 'Date of value', 'value' => $days, 'help' => trans('helper.contract.valueDate')],
                 ['form_type' => 'select', 'name' => 'costcenter_id', 'description' => 'Cost Center', 'value' => selectList('costcenter', 'name', true)],
