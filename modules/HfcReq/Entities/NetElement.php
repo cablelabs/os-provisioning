@@ -122,8 +122,10 @@ class NetElement extends \BaseModel
             $ret[$tabName]['SubNetElement']['relation'] = $this->children;
         }
 
-        $ret[$tabName]['Link']['class'] = 'Link';
-        $ret[$tabName]['Link']['relation'] = $this->links;
+        if (Module::collections()->has('CoreMon')) {
+            $ret[$tabName]['Link']['class'] = 'Link';
+            $ret[$tabName]['Link']['relation'] = $this->links;
+        }
 
         $this->addViewHasManyTickets($ret, $tabName);
 
