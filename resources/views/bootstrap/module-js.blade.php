@@ -17,14 +17,17 @@
  */
 ?>
 @if (Module::collections()->has(['Ticketsystem']))
-<script src="{{ mix('js/ticketsystem.js') }}"></script>
+    <script src="{{ mix('js/ticketsystem.js') }}"></script>
 @endif
 @if (Module::collections()->has(['ProvBase']))
-<script src="{{ mix('js/prov-base.js') }}"></script>
+    <script src="{{ mix('js/prov-base.js') }}"></script>
 @endif
 @if (Module::collections()->has(['ProvMon']))
-<script src="{{ mix('js/prov-mon.js') }}"></script>
+    <script src="{{ mix('js/prov-mon.js') }}"></script>
 @endif
 @if (Module::collections()->has(['HfcBase']))
-<script src="{{ mix('js/hfc-base.js') }}"></script>
+    <script src="{{ mix('js/hfc-base.js') }}"></script>
+@endif
+@if (Module::collections()->has(['CoreMon']))
+    <script src="{{ mix('js/core-mon.js') }}"></script>
 @endif
