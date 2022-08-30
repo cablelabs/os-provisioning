@@ -385,6 +385,13 @@ return [
         'status' => 'CM Modem Status',
         'us_data_service_grp' => 'US Data Service Group',
     ],
+    'dpic' => [
+        'name' => 'Name',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Operational Status',
+        'in_bitrate' => 'In Bitrate',
+        'out_bitrate' => 'Out Bitrate',
+    ],
     'inventory' => [
         'name' => 'Name',
         'pid' => 'PID',

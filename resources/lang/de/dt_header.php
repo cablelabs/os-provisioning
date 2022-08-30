@@ -385,6 +385,13 @@ return [
         'status' => 'Status',
         'us_data_service_grp' => 'US Data Service Gruppe',
     ],
+    'dpic' => [
+        'name' => 'Name',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Betriebszustand',
+        'in_bitrate' => 'In Bitrate',
+        'out_bitrate' => 'Out Bitrate',
+    ],
     'inventory' => [
         'name' => 'Name',
         'pid' => 'PID',
