@@ -1460,7 +1460,7 @@ class NetElement extends \BaseModel
             ->ancestorsOf($this->id);
 
         foreach ($ancestors as $ancestor) {
-            $typeName = $ancestor->getOriginalTypeName($this->routenameModifiers);
+            $typeName = strtolower($ancestor->getOriginalTypeName($this->routenameModifiers));
 
             $breadcrumbs[] = [
                 'id' => $ancestor->id,
