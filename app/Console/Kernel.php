@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel
 
             // import data from Kafka every 15 minutes
             $schedule->call(function () {
-                \Queue::pushOn('low', new ImportKafkaArpDataJob());
+                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaArpDataJob());
             })->cron('5,20,35,50 * * * *');
         }
         // Parse News from repo server and save to local JSON file
