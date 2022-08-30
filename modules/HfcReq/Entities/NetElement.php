@@ -1443,6 +1443,43 @@ class NetElement extends \BaseModel
         return $community;
     }
 
+    /**
+     * Get breadcrumbs for CoreMon netelements
+     * Note: This should not be a CoreMonNetelement function as that does not have the nested set functionality
+     *
+     * @return array
+     */
+    public function coreBreadcrumbs()
+    {
+        $breadcrumbs = [];
+
+        $ancestors = self::join('netelementtype as nt', 'netelement.netelementtype_id', 'nt.id')
+            ->whereIn('nt.base_type_id', [1, 16, 17, 18, 19, 20, 21, 22, 23])
+            ->defaultOrder()
+            ->select('netelement.*')
+            ->ancestorsOf($this->id);
+
+        foreach ($ancestors as $ancestor) {
+            $typeName = $ancestor->getOriginalTypeName($this->routenameModifiers);
+
+            $breadcrumbs[] = [
+                'id' => $ancestor->id,
+                'url' => route("CoreMon.{$typeName}.overview", ['netelement' => $ancestor->id]),
+                'name'=> $ancestor->name, 'type'=> $ancestor->getOriginalTypeName(), 'active'=> false,
+            ];
+        }
+
+        $routename = strtolower($this->getOriginalTypeName($this->routenameModifiers));
+
+        $breadcrumbs[] = [
+            'id' => $this->id,
+            'url' => route("CoreMon.{$routename}.overview", ['netelement' => $this->id]),
+            'name' => $this->name, 'type' => $this->netelementType->name, 'active' => true,
+        ];
+
+        return $breadcrumbs;
+    }
+
     public function createLink()
     {
         if (! $this->parent_id) {
