@@ -18,7 +18,6 @@
 
 namespace Modules\HfcReq\Entities;
 
-use Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
@@ -26,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\SnmpAccessException;
+use Illuminate\Support\Facades\Storage;
 
 class NetElement extends \BaseModel
 {
@@ -1476,7 +1476,7 @@ class NetElement extends \BaseModel
         $deaultRoComm = HfcReq::first()->ro_community;
         snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
 
-        foreach ($this->scanranges()->get() as $range) {
+        foreach ($this->scanranges as $range) {
             Storage::put("$relPath/ranges.txt", $range->range);
             // we change directory to always use the same sudo command allowed in the sudoers file
             exec("cd \"$absPath\" && sudo /usr/bin/nmap -sU -p 161 -iL ranges.txt -oG - | grep 'Ports: 161/open/' | cut -d' ' -f2", $ips);
@@ -1505,12 +1505,8 @@ class NetElement extends \BaseModel
         }
     }
 
-    public function updateTopologyFromLLDP()
+    protected function updateTopologyFromLLDP()
     {
-        if (! Module::collections()->has('CoreMon')) {
-            return;
-        }
-
         $absPath = Storage::path(self::SCAN_FILE_STORAGE_REL_DIR.$this->id);
         exec("/opt/topologydetector-nmsprime/generate_topology.sh \"$absPath/hosts.yaml\" \"$absPath/\"");
         $topology = json_decode(file_get_contents("$absPath/topology.js"), true);
