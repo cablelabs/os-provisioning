@@ -258,14 +258,14 @@ class ModemController extends \BaseController
         ];
 
         $smartont = [];
+        $smartont[] = [
+            'form_type' => 'text',
+            'name' => 'ont_state',
+            'description' => 'ONT state',
+            'options' => ['readonly'],
+        ];
         if (Module::collections()->has('SmartOnt')) {
             if ('LFO' == config('smartont.flavor.active')) {
-                $smartont[] = [
-                    'form_type' => 'text',
-                    'name' => 'ont_state',
-                    'description' => 'ONT state',
-                    'options' => ['readonly'],
-                ];
                 $smartont[] = [
                     'form_type' => 'select',
                     'value' => [
@@ -321,14 +321,34 @@ class ModemController extends \BaseController
                 'name' => 'service_port_id',
                 'description' => 'Service port ID',
                 'options' => ['readonly'],
+                'space' => '1',
             ];
             if ('LFO' == config('smartont.flavor.active')) {
                 $smartont[] = [
                     'form_type' => 'text',
                     'name' => 'or_id',
                     'description' => 'OR ID',
+                    'space' => '1',
                 ];
             }
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'us_pwr',
+                'description' => 'rxPower',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'ds_pwr',
+                'description' => 'txPower',
+                'options' => ['readonly'],
+            ];
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'phy_updated_at',
+                'description' => 'Last seen online',
+                'options' => ['readonly'],
+            ];
         }
 
         return array_merge($a, $b, $c, $d, $smartont);
@@ -879,16 +899,16 @@ class ModemController extends \BaseController
                 $data['qos_id'] = $smartOnt->default_mgmt_qos_id;
             }
 
-            if ('LFO' == config('smartont.flavor.active')) {
-               if (! $data['ont_state']) {
-                    $data['ont_state'] = 'initial';
-               }
+            if (! $data['ont_state']) {
+                $data['ont_state'] = 'initial';
             }
 
-            // add time to given date
-            if (\DateTime::createFromFormat('Y-m-d', $data['ont_state_switchdate'])) {
-                // no time given – set to midnight
-                $data['ont_state_switchdate'] .= ' 00:00:00';
+            if ('LFO' == config('smartont.flavor.active')) {
+                // add time to given date
+                if (\DateTime::createFromFormat('Y-m-d', $data['ont_state_switchdate'])) {
+                    // no time given – set to midnight
+                    $data['ont_state_switchdate'] .= ' 00:00:00';
+                }
             }
         }
 

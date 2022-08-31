@@ -234,9 +234,9 @@ class Modem extends \BaseModel
             $this->table.'.port_id',
             $this->table.'.ont_id',
             $this->table.'.service_port_id',
+            $this->table.'.ont_state',
         ];
         if ('LFO' == config('smartont.flavor.active')) {
-            $ret[] = $this->table.'.ont_state';
             $ret[] = $this->table.'.next_ont_state';
             $ret[] = $this->table.'.ont_state_switchdate';
         }
@@ -1694,6 +1694,12 @@ class Modem extends \BaseModel
         Log::info(($factoryReset ? 'factoryReset' : 'restart').' modem '.$this->hostname);
 
         if (! $factoryReset && $this->successfulRadiusModemDisconnect()) {
+            return;
+        }
+
+        if ($this->isSmartOnt()) {
+            Session::push('tmp_error_above_form', 'RESTARTING NOT YET IMPLEMENTED');
+
             return;
         }
 

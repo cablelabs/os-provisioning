@@ -76,6 +76,13 @@ class QosController extends \BaseController
                 'name' => 'vlan_id',
                 'description' => 'VLAN ID',
             ];
+            if ('GESA' == config('smartont.flavor.active')) {
+                $ret[] = [
+                    'form_type' => 'text',
+                    'name' => 'ont_line_profile_id',
+                    'description' => 'ONT line profile ID',
+                ];
+            }
             $ret[] = [
                 'form_type' => 'text',
                 'name' => 'gem_port',
