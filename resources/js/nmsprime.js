@@ -422,6 +422,10 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 })
 
+window.excerptStr = function (str, length = 10) {
+  return str.length > length ? `${str.substring(0, length)}...` : str;
+}
+
 window.NMS = (function () {
   'use strict'
 
