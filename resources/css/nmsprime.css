@@ -627,6 +627,10 @@ li.expand div img {
     white-space: nowrap;
 }
 
+#sidebar .core-network-sidebar .select2-container {
+    max-width: 88%;
+}
+
 span.centerblock {
     display: block;
     text-align: center;

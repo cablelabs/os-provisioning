@@ -103,7 +103,7 @@
         <div class="relative z-10 transition-all duration-200"
             :class="{ '-translate-x-full': store.minified }">
             @if (Module::collections()->has('CoreMon'))
-            <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-zinc-900">
+            <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-zinc-900 core-network-sidebar">
                 <div class="w-full px-3 py-2 text-gray-400">
                     <div class="mb-4 text-base font-semibold text-gray-100">Filter</div>
                     <div class="flex flex-col space-y-4 text-sm">
