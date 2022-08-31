@@ -19,11 +19,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateDpicTable extends BaseMigration
+class CreateDpicInterfaceTable extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'dpic';
+    protected $tableName = 'dpic_interface';
 
     /**
      * Run the migrations.
@@ -38,10 +38,6 @@ class CreateDpicTable extends BaseMigration
             $table->ipAddress('ip')->nullable();
             $table->string('admin_status')->nullable();
             $table->string('operational_status')->nullable();
-            $table->string('in_bitrate')->nullable();
-            $table->string('out_bitrate')->nullable();
-            // needed to decide if data has been processed or if it is new
-            $table->string('timestamp')->nullable();
             $table->integer('netelement_id');
         });
     }
