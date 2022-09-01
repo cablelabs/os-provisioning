@@ -30,9 +30,7 @@
     @include('Layout.navbar')
     @include('Layout.sidebar')
 
-    @if (Illuminate\Support\Str::contains(request()->route()->getName(), ['index', 'association', 'alarms']) && request()->route()->getName() !== 'TicketReceiver.index')
-        @include('Layout.sidebar-right')
-    @endif
+    @yield('sidebar-right')
     <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in"
         :class="{ 'page-sidebar-minified': store.minified }" style="min-height:100%;">
 
