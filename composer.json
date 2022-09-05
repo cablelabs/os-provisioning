@@ -8,8 +8,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "laravel/framework": "6.*",
-        "soapbox/laravel-formatter": "2.x",
+        "laravel/framework": "7.*",
         "laravelcollective/html": "6.*",
         "digitick/sepa-xml": "1.*",
         "globalcitizen/php-iban": "4.*",
@@ -17,7 +16,7 @@
         "nmsprime/madzipper": "1.1.*",
         "yajra/laravel-datatables-oracle": "9.*",
         "markrogoyski/ipv4-subnet-calculator": "3.*",
-        "nwidart/laravel-modules": "^6.0",
+        "nwidart/laravel-modules": "^7.0",
         "doctrine/dbal": "^2.7",
         "silber/bouncer": "v1.0.0",
         "kingsquare/php-mt940": "^2.0",
@@ -27,14 +26,17 @@
         "kalnoy/nestedset": "^5.0",
         "beyondcode/laravel-websockets": "^1.13",
         "pusher/pusher-php-server": "~4.0",
-        "swen100/geophp": "^1.0"
+        "laravel/ui": "^2.0"
     },
     "require-dev": {
+        "swen100/geophp": "^1.0",
+        "fruitcake/laravel-cors": "^3.0",
+        "laravel/tinker": "^2.5",
+        "facade/ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^3.0",
-        "laravel/tinker": "^2.0",
-        "phpunit/phpunit": "^9.3.3"
+        "nunomaduro/collision": "^4.3",
+        "phpunit/phpunit": "^8.5.8|^9.3.3"
     },
     "autoload": {
         "classmap": [
