@@ -40,15 +40,12 @@
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {
-        "classmap": [
-            "database",
-            "database/migrations",
-            "database/seeds"
-        ],
         "psr-4": {
             "App\\": "app/",
             "Modules\\": "modules",
-            "Acme\\": "app/extensions/"
+            "Acme\\": "app/extensions/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
             "app/helpers.php"
