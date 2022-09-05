@@ -97,10 +97,10 @@ class ProvBaseObserver
         if (array_key_exists('domain_name', $changes)) {
             // adjust named config and restart it
             $sed = storage_path('app/tmp/update-domain.sed');
-            file_put_contents($sed, "s/zone \"{$model->getOriginal('domain_name')}\" IN/zone \"$model->domain_name\" IN/g");
+            file_put_contents($sed, "s/zone \"{$model->getRawOriginal('domain_name')}\" IN/zone \"$model->domain_name\" IN/g");
             exec("sudo sed -i -f $sed /etc/named-nmsprime.conf");
 
-            file_put_contents($sed, "s/{$model->getOriginal('domain_name')}/$model->domain_name/g");
+            file_put_contents($sed, "s/{$model->getRawOriginal('domain_name')}/$model->domain_name/g");
             exec("sudo sed -i -f $sed /etc/named-ddns.sh");
 
             exec('sudo rndc sync -clean');

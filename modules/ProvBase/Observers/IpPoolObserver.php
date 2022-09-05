@@ -58,7 +58,7 @@ class IpPoolObserver
 
         // make dhcp conf of old netgw if relation got changed
         if ($pool->isDirty('netgw_id')) {
-            NetGw::find($pool->getOriginal('netgw_id'))->makeDhcpConf();
+            NetGw::find($pool->getRawOriginal('netgw_id'))->makeDhcpConf();
         }
 
         self::rebuildDhcpGlobalConfig($pool);
@@ -87,7 +87,7 @@ class IpPoolObserver
      */
     private static function updateRadIpPool($pool)
     {
-        \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getOriginal(), $pool->wasRecentlyCreated));
+        \Queue::pushOn('medium', new \Modules\ProvBase\Jobs\RadIpPoolJob($pool, $pool->getDirty(), $pool->getRawOriginal(), $pool->wasRecentlyCreated));
     }
 
     /**

@@ -85,9 +85,9 @@ class EndpointObserver
         $endpoint->modem->radreply()->delete();
 
         // add / update unreserved ip address
-        if ($endpoint->getOriginal('ip')) {
+        if ($endpoint->getRawOriginal('ip')) {
             RadIpPool::updateOrCreate(
-                ['framedipaddress' => $endpoint->getOriginal('ip')],
+                ['framedipaddress' => $endpoint->getRawOriginal('ip')],
                 ['pool_name' => 'CPEPub', 'expiry_time' => null, 'username' => '']
             );
         }

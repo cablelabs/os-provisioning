@@ -296,13 +296,13 @@ class Endpoint extends \BaseModel
         $zone = ProvBase::first()->domain_name;
 
         if ($del) {
-            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
-                $rev = implode('.', array_reverse(explode('.', $this->getOriginal('ip'))));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN A\nsend\n";
+            if ($this->getRawOriginal('fixed_ip') && $this->getRawOriginal('ip')) {
+                $rev = implode('.', array_reverse(explode('.', $this->getRawOriginal('ip'))));
+                $cmd .= "update delete {$this->getRawOriginal('hostname')}.cpe.$zone. IN A\nsend\n";
                 $cmd .= "update delete $rev.in-addr.arpa.\nsend\n";
             } else {
-                $mangle = exec("echo '{$this->getOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone.\nsend\n";
+                $mangle = exec("echo '{$this->getRawOriginal('mac')}' | tr -cd '[:xdigit:]' | xxd -r -p | openssl dgst -sha256 -mac hmac -macopt hexkey:$(cat /etc/named-ddns-cpe.key) -binary | python -c 'import base64; import sys; print(base64.b32encode(sys.stdin.read())[:6].lower())'");
+                $cmd .= "update delete {$this->getRawOriginal('hostname')}.cpe.$zone.\nsend\n";
                 $cmd .= "update delete $mangle.cpe.$zone.\nsend\n";
             }
         } else {
@@ -338,9 +338,9 @@ class Endpoint extends \BaseModel
         // We currently don't add a CNAME record here because there's no automatically created mangle hostname to point to
 
         if ($del) {
-            if ($this->getOriginal('fixed_ip') && $this->getOriginal('ip')) {
-                $arpa = self::getV6Arpa($this->getOriginal('ip'));
-                $cmd .= "update delete {$this->getOriginal('hostname')}.cpe.$zone. IN AAAA\nsend\n";
+            if ($this->getRawOriginal('fixed_ip') && $this->getRawOriginal('ip')) {
+                $arpa = self::getV6Arpa($this->getRawOriginal('ip'));
+                $cmd .= "update delete {$this->getRawOriginal('hostname')}.cpe.$zone. IN AAAA\nsend\n";
                 $cmd .= "update delete $arpa.\nsend\n";
             }
         } else {

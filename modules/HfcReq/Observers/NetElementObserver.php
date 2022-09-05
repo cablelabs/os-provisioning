@@ -80,7 +80,7 @@ class NetElementObserver
 
             // Change link
             if (Module::collections()->has('CoreMon')) {
-                \Modules\CoreMon\Entities\Link::where('from', $netelement->getOriginal('parent_id'))
+                \Modules\CoreMon\Entities\Link::where('from', $netelement->getRawOriginal('parent_id'))
                     ->where('to', $netelement->id)->update(['from' => $netelement->parent_id]);
             }
         }
@@ -167,7 +167,7 @@ class NetElementObserver
     {
         // Create
         $clone = clone $netelement;
-        $origAttrs = $clone->getOriginal();
+        $origAttrs = $clone->getRawOriginal();
         $clone->base_type_id = $origAttrs['base_type_id'];
         $newClass = $clone->getConnectedClass();
         $newClass::create(['netelement_id' => $clone->id]);

@@ -80,7 +80,7 @@ class PhonenumberObserver
 
         // else we have to check if both MTAs belong to the same contract and if both modem's installation addresses are the same
         $new_mta = $phonenumber->mta;
-        $old_mta = MTA::findOrFail(intval($phonenumber->getOriginal()['mta_id']));
+        $old_mta = MTA::findOrFail(intval($phonenumber->getRawOriginal()['mta_id']));
 
         // if MTA has not changed: no problems
         if ($new_mta->id == $old_mta->id) {
@@ -129,7 +129,7 @@ class PhonenumberObserver
      */
     protected function _check_and_process_mta_change($phonenumber)
     {
-        $old_mta_id = intval($phonenumber->getOriginal('mta_id'));
+        $old_mta_id = intval($phonenumber->getRawOriginal('mta_id'));
         $new_mta_id = intval($phonenumber->mta_id);
 
         // if the MTA has not been changed we have nothing to do :-)

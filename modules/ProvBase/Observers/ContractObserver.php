@@ -47,8 +47,8 @@ class ContractObserver
 
     public function updating($contract)
     {
-        $original_number = $contract->getOriginal('number');
-        $original_costcenter_id = $contract->getOriginal('costcenter_id');
+        $original_number = $contract->getRawOriginal('number');
+        $original_costcenter_id = $contract->getRawOriginal('costcenter_id');
 
         if (! Module::collections()->has('BillingBase')) {
             $contract->sepa_iban = strtoupper($contract->sepa_iban);

@@ -123,7 +123,7 @@ class BaseObserver
                     continue;
                 }
 
-                $original = $model->getOriginal($key);
+                $original = $model->getRawOriginal($key);
                 if ($original != $value) {
                     if (in_array($key, $hide)) {
                         $arr[] = $key;

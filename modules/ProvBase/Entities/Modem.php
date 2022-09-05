@@ -705,7 +705,7 @@ class Modem extends \BaseModel
         Log::info('DHCPD Configfile Update for Modem: '.$this->id);
 
         $data = $this->generate_cm_dhcp_entry();
-        $original = $this->getOriginal();
+        $original = $this->getRawOriginal();
         $replace = $original ? $original['mac'] : $this->mac;
 
         if (! file_exists(self::CONF_FILE_PATH)) {
@@ -819,7 +819,7 @@ class Modem extends \BaseModel
         }
 
         // Remove (Unblock)
-        $mac = $macChanged ? $this->getOriginal('mac') : $this->mac;
+        $mac = $macChanged ? $this->getRawOriginal('mac') : $this->mac;
 
         exec('grep -vi '.$mac.' '.self::BLOCKED_CPE_FILE_PATH.' > '.self::BLOCKED_CPE_FILE_PATH.'.tmp');
         rename(self::BLOCKED_CPE_FILE_PATH.'.tmp', self::BLOCKED_CPE_FILE_PATH);
@@ -1580,7 +1580,7 @@ class Modem extends \BaseModel
             $fqdn = $this->hostname.'.'.$config->domain_name;
             $ip = gethostbyname($fqdn);
             $netgw = self::get_netgw($ip);
-            $mac = $mac_changed ? $this->getOriginal('mac') : $this->mac;
+            $mac = $mac_changed ? $this->getRawOriginal('mac') : $this->mac;
 
             if ($modem_reset) {
                 throw new \Exception('Reset Modem directly');
