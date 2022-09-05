@@ -594,10 +594,10 @@ return [
     'marketPopup' => [
         'ccapTotal' => 'Total CCAP',
         'rpdTotal' => 'Total RPD',
-        'cmTotal' => 'Total CM',
+        'cpeTotal' => 'Total CPE',
         'cinTotal' => 'Total CIN Elements',
         'rpdOfflinePct' => '% RPD Offline',
-        'cmOfflinePct' => '% CM Offline',
+        'cpeOfflinePct' => '% CPE Offline',
         'cinOfflinePct' => '% CIN Devices Offline',
     ],
     'markon' => 'Mark-On/Extra charge in %',
