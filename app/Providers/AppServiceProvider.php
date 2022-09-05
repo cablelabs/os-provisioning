@@ -32,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Blade::withoutComponentTags();
+
         Blade::directive('DivOpen', function ($expression) {
             return "<?php echo Form::openDivClass($expression); ?>";
         });
