@@ -44,7 +44,7 @@ $app = new Illuminate\Foundation\Application(
 // directory holding the NMS Prime .env files
 $env_dir = '/etc/nmsprime/env/';
 
-$repository = \Dotenv\Repository\RepositoryBuilder::create()->make();
+$repository = \Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()->make();
 
 // read environmental data from files ending with .env
 foreach (scandir($env_dir) as $file) {
