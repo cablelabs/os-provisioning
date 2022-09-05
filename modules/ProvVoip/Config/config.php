@@ -18,7 +18,7 @@
 
 namespace Modules\ProvVoip\Entities;
 
-$conf = [
+$configuration = [
     'link' => 'ProvVoip.index',
     'MenuItems' => [
         'MTA' => [
@@ -35,11 +35,11 @@ $conf = [
 ];
 
 if (\Module::collections()->has('BillingBase')) {
-    $conf['MenuItems']['PhoneTariff'] = [
+    $configuration['MenuItems']['PhoneTariff'] = [
         'link'	=> 'PhoneTariff.index',
         'icon'	=> 'fa-phone-square',
         'class' => PhoneTariff::class,
     ];
 }
 
-return $conf;
+return $configuration;

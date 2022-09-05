@@ -66,10 +66,10 @@ class HfcReqServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('hfcreq.php'),
-        ]);
+            module_path('HfcReq', 'Config/config.php') => config_path('hfcreq.php'),
+        ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'hfcreq'
+            module_path('HfcReq', 'Config/config.php'), 'hfcreq'
         );
     }
 

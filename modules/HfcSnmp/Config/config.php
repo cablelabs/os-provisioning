@@ -18,7 +18,7 @@
 
 namespace Modules\HfcSnmp\Entities;
 
-$config = [
+$configuration = [
     'link' => null,
     'parent' => 'HfcReq',
     'MenuItems' => [
@@ -31,8 +31,8 @@ $config = [
 ];
 
 if (\Module::collections()->has('HfcBase')) {
-    $config['link'] = 'HfcBase.index';
-    $config['parent'] = 'HfcBase';
+    $configuration['link'] = 'HfcBase.index';
+    $configuration['parent'] = 'HfcBase';
 }
 
-return $config;
+return $configuration;
