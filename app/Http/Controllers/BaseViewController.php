@@ -130,7 +130,7 @@ class BaseViewController extends Controller
      */
     public static function getAllLanguages()
     {
-        return collect(glob(base_path('resources/lang').'/*'))
+        return collect(glob(app()->langPath().'/*'))
             ->mapWithKeys(function ($path) {
                 $langShortcut = basename($path);
 
