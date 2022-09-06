@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::withoutComponentTags();
+
+        Validator::includeUnvalidatedArrayKeys();
 
         Blade::directive('DivOpen', function ($expression) {
             return "<?php echo Form::openDivClass($expression); ?>";
