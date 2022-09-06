@@ -20,7 +20,6 @@
         "doctrine/dbal": "^2.7",
         "silber/bouncer": "v1.0.0",
         "kingsquare/php-mt940": "^2.0",
-        "fideloper/proxy": "^4.4",
         "phpseclib/phpseclib": "~2.0",
         "intervention/validation": "^2.6",
         "kalnoy/nestedset": "^6.0",
