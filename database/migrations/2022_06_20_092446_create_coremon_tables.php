@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\Schema;
 use Modules\HfcReq\Entities\NetElement;
 use Illuminate\Database\Schema\Blueprint;

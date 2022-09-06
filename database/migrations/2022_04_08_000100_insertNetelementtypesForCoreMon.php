@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use Database\Migrations\BaseMigration;
 use Modules\HfcReq\Entities\NetElementType;
 
 class InsertNetelementtypesForCoreMon extends BaseMigration

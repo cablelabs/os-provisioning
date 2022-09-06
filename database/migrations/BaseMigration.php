@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+namespace Database\Migrations;
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -42,7 +44,7 @@ class BaseMigration extends Migration
         echo 'Migrating '.$this->callerClassname."\n";
 
         // get the filename of the caller class
-        $reflector = new ReflectionClass($this->callerClassname);
+        $reflector = new \ReflectionClass($this->callerClassname);
         $this->callerMigrationFile = basename($reflector->getFileName());
 
         // check if scope is set in newer migrations
@@ -66,7 +68,7 @@ class BaseMigration extends Migration
             $this->fim = null;	// no indexes build on newer migrations (using InnoDB)
         }
 
-        DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        \DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         Schema::defaultStringLength(191);
     }
 
@@ -124,7 +126,7 @@ class BaseMigration extends Migration
             return;
         }
 
-        DB::update('ALTER TABLE '.$this->tablename." AUTO_INCREMENT = $i;");
+        \DB::update('ALTER TABLE '.$this->tablename." AUTO_INCREMENT = $i;");
     }
 
     /**
@@ -166,7 +168,7 @@ class BaseMigration extends Migration
             // only warn if not rolling back – unfortunately we have to step through the stacktrace…
             $rollback = false;
             foreach (debug_backtrace() as $caller) {
-                if (Str::contains(Arr::get($caller, 'class', ''), 'RollbackCommand')) {
+                if (\Str::contains(Arr::get($caller, 'class', ''), 'RollbackCommand')) {
                     $rollback = true;
                     break;
                 }

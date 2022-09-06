@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 
 class updateNetElementTypeAddSidebarPos extends BaseMigration

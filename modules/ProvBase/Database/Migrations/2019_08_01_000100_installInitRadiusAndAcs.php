@@ -15,6 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+use Database\Migrations\BaseMigration;
+
 class InstallInitRadiusAndAcs extends BaseMigration
 {
     public $migrationScope = 'database';

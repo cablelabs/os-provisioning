@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+use Database\Migrations\BaseMigration;
 use Modules\ProvBase\Entities\RadAcct;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadPostAuth;

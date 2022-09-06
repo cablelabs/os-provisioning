@@ -45,7 +45,8 @@
             "Modules\\": "modules",
             "Acme\\": "app/extensions/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Database\\Migrations\\": "database/migrations/"
         },
         "files": [
             "app/helpers.php"

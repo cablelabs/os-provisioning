@@ -17,6 +17,7 @@
  */
 
 use Modules\ProvBase\Entities\Modem;
+use Database\Migrations\BaseMigration;
 use Modules\ProvBase\Entities\Configfile;
 
 class UpdateMonitoringPresets extends BaseMigration

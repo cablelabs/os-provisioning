@@ -3,6 +3,7 @@
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Database\Migrations\BaseMigration;
 
 class CreateWebhookUser extends BaseMigration
 {

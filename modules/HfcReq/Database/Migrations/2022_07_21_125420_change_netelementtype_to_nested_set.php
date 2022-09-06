@@ -1,5 +1,6 @@
 <?php
 
+use Database\Migrations\BaseMigration;
 use Modules\HfcReq\Entities\NetElementType;
 
 class ChangeNetelementtypeToNestedSet extends BaseMigration
