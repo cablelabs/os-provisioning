@@ -8,6 +8,7 @@ return [
         'clearFilter' => 'Suchfilter leeren',
     ],
     'city' => 'Stadt',
+    'checked at' => 'Geprüft am',
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',
     'deprecated' => 'Veraltet',
