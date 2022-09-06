@@ -154,7 +154,7 @@ return [
             'password' => env('DB_IMPORT_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -285,7 +285,7 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'nmsprime',
+            'search_path' => 'nmsprime',
             'sslmode' => 'prefer',
         ],
 
@@ -299,7 +299,7 @@ return [
             'unix_socket' => env('CCC_DB_SOCKET', env('DB_SOCKET', '')),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -315,7 +315,7 @@ return [
             // 'username'  => env('ICINGA2_DB_USERNAME', env('DB_USERNAME', 'icinga2user')),
             // 'password'  => env('ICINGA2_DB_PASSWORD', env('DB_PASSWORD', '')),
             'charset' => 'utf8',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -326,7 +326,7 @@ return [
             'username'  => env('KEA_DB_USERNAME', 'kea'),
             'password'  => env('KEA_DB_PASSWORD', ''),
             'charset' => 'utf8',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -338,7 +338,7 @@ return [
             'username'  => env('RADIUS_DB_USERNAME', 'radius'),
             'password'  => env('RADIUS_DB_PASSWORD', 'radpass'),
             'charset' => 'utf8',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -350,7 +350,7 @@ return [
             'password' => env('TIMESCALE_DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'monitoring',
+            'search_path' => 'monitoring',
             'sslmode' => 'prefer',
         ],
     ],
