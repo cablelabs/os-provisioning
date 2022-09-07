@@ -320,9 +320,15 @@ class Kernel extends ConsoleKernel
                 })->everyMinute();
            }
 
-            $schedule->call(function () {
-                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
-            })->everyFiveMinutes();
+           if ('GESA' == config('smartont.flavor.active')) {
+                $schedule->call(function () {
+                   Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RestartAutofindOntJob());
+                })->cron('7 */2 * * *');
+           }
+
+           $schedule->call(function () {
+               Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
+           })->everyFiveMinutes();
         }
     }
 

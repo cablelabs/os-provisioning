@@ -631,3 +631,35 @@ function dc250Mac($mac, $forceLower=True)
 
     return $mac;
 }
+
+/**
+ * Wait until files matching a given pattern start growing.
+ * Useful e.g. in getting data from SmartOnt OLT.
+ *
+ * @param str $pathPattern the path pattern to be used for glob()
+ * @param int $timeBetweenChecks the time to sleep before checking the size again
+ * @param bool $debugOutput Shows and logs debug information (indicating that the process is still running)
+ *
+ * @author Patrick Reichel
+ */
+function waitForLogFileToStopGrowing($pathPattern, $timeBetweenChecks, $debugOutput=False)
+{
+    $lastSize = -1;
+    while (True) {
+
+        // filesizes are cached – we first need to empty the cache
+        clearstatcache();
+        $curSize = array_sum(array_map('filesize', glob($pathPattern)));
+        if ($lastSize == $curSize) {
+            break;
+        }
+        $lastSize = $curSize;
+
+        if ($debugOutput) {
+            $msg = __METHOD__.'() waiting for “'.$pathPattern.'” to stop growing (current size: '.$curSize.' Byte)';
+            echo "$msg\n";
+            Log::debug($msg);
+        }
+        sleep($timeBetweenChecks);
+    }
+}

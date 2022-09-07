@@ -1698,7 +1698,8 @@ class Modem extends \BaseModel
         }
 
         if ($this->isSmartOnt()) {
-            Session::push('tmp_error_above_form', 'RESTARTING NOT YET IMPLEMENTED');
+            /* Session::push('tmp_error_above_form', 'RESTARTING NOT YET IMPLEMENTED'); */
+            // not an error :-)
 
             return;
         }
