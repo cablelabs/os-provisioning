@@ -26,7 +26,6 @@
         "beyondcode/laravel-websockets": "^1.13",
         "pusher/pusher-php-server": "^5.0",
         "laravel/ui": "^3.0",
-        "laravel/legacy-factories": "^1.3",
         "symfony/mailgun-mailer": "^6.0",
         "symfony/http-client": "^6.0",
         "symfony/postmark-mailer": "^6.0"
