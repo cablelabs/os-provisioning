@@ -304,9 +304,7 @@ class Modem extends \BaseModel
     public function select2Qos(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return Qos::select('id', 'name as text')
-            ->when($this->table == 'modem', function ($query) {
-                return $query->withCount(['modem as count']);
-            })
+            ->withCount('modem as count')
             ->when($search, function ($query, $search) {
                 foreach (['name'] as $field) {
                     $query = $query->orWhere($field, 'like', "%{$search}%");
