@@ -115,6 +115,7 @@ class ModemController extends \BaseController
         }
 
         $cfIds = $this->dynamicDisplayFormFields();
+        $qosIds = \Modules\ProvBase\Entities\Qos::pluck('id', 'id')->toArray();
 
         if (Module::collections()->has('HfcCustomer') && $model->exists) {
             $rect = [round($model->lng, 4) - 0.0001, round($model->lng, 4) + 0.0001, round($model->lat, 4) - 0.0001, round($model->lat, 4) + 0.0001];
@@ -172,7 +173,10 @@ class ModemController extends \BaseController
         }
 
         if (Module::collections()->has('BillingBase')) {
-            $b = [['form_type' => 'text', 'name' => 'qos_id', 'description' => 'QoS', 'hidden' => 1, 'space' => '1']];
+            $b = [[
+                'form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $this->setupSelect2Field($model, 'Qos'), 'help' => trans('helper.modem.qosCount'),
+                'options' => ['class' => 'select2-ajax', 'ajax-route' => route('Modem.select2', ['relation' => 'qos'])], 'select' => $qosIds,
+            ]];
             $c[] = ['form_type' => 'checkbox', 'name' => 'address_to_invoice', 'description' => trans('billingbase::view.modemAddressToInvoice'), 'space' => '1', 'help' => trans('billingbase::messages.modemAddressToInvoice')];
         } else {
             $b = [['form_type' => 'select', 'name' => 'qos_id', 'description' => 'QoS', 'value' => $model->html_list($model->qualities(), 'name'), 'space' => '1']];

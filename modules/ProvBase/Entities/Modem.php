@@ -277,7 +277,7 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Format Contracts for edit view select field and allow for seeaching.
+     * Format Contracts for edit view select field and allow for searching.
      *
      * @param  string|null  $search
      * @return \Illuminate\Database\Eloquent\Builder
@@ -288,6 +288,27 @@ class Modem extends \BaseModel
             ->selectRaw('CONCAT(number, \' - \', firstname, \' \', lastname) as text')
             ->when($search, function ($query, $search) {
                 foreach (['number', 'firstname', 'lastname'] as $field) {
+                    $query = $query->orWhere($field, 'like', "%{$search}%");
+                }
+
+                return $query;
+            });
+    }
+
+    /**
+     * Format Qos for edit view select field and allow for searching.
+     *
+     * @param  string|null  $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function select2Qos(?string $search): \Illuminate\Database\Eloquent\Builder
+    {
+        return Qos::select('id', 'name as text')
+            ->when($this->table == 'modem', function ($query) {
+                return $query->withCount(['modem as count']);
+            })
+            ->when($search, function ($query, $search) {
+                foreach (['name'] as $field) {
                     $query = $query->orWhere($field, 'like', "%{$search}%");
                 }
 

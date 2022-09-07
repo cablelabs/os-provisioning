@@ -380,6 +380,7 @@ return [
         'Phonenumber' => 'eine Telefonnummer',
         'provDevice' => 'ein entsprechendes Gerät aus dem Provisionierungsmodul',
         'Realty' => 'eine Liegenschaft',
+        'Qos' => 'ein QOS',
     ],
 
     // Index

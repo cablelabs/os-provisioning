@@ -139,6 +139,9 @@ return [
     //ModemController
     'modem' => [
         'internetAccess' => 'Internet Access for CPEs. (MTAs are not considered and will always go online when all other configurations are correct). Take care: With Billing-Module this checkbox will be overwritten by daily check if tariff changes. Can not be set anymore when contract was canceled.',
+        'qosCount' => 'The number in brackets indicates how often the respective QOS is already used.',
+        'configfileSelect' => 'It\'s not possible to change the device type of a modem via configfile (e.g. from \'cm\' to \'tr-69\'). Therefore please delete the modem and create a new one!',
+        'additional' => 'This field can be used to make notes.',
     ],
     'Modem_InstallationAddressChangeDate'   => 'In case of (physical) relocation of the modem: Add startdate for the new address here. If readonly there is a pending address change order at envia TEL.',
     'Modem_GeocodeOrigin'           => 'Where does geocode data come from? If set to “n/a” address could not be geocoded against any API. Will be set to your name on manually changed geodata.',
@@ -163,10 +166,6 @@ return [
     'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
     'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
     'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
-    'modem' => [
-        'configfileSelect' => 'It\'s not possible to change the device type of a modem via configfile (e.g. from \'cm\' to \'tr-69\'). Therefore please delete the modem and create a new one!',
-        'additional' => 'This field can be used to make notes.',
-    ],
 
     /*
      * MODULE: ProvVoip

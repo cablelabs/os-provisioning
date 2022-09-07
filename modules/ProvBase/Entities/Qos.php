@@ -84,6 +84,21 @@ class Qos extends \BaseModel
         ];
     }
 
+    public function label()
+    {
+        return "{$this->name} ({$this->modemCount})";
+    }
+
+    /**
+     * Quick access to modem count
+     *
+     * @return int
+     */
+    public function getModemCountAttribute()
+    {
+        return $this->modem()->count();
+    }
+
     public function get_bsclass()
     {
         $bsclass = 'success';

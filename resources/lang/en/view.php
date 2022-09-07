@@ -380,6 +380,7 @@ return [
         'Phonenumber' => 'a Phone Number',
         'provDevice' => 'a provisioning device',
         'Realty' => 'a realty',
+        'Qos' => 'a QOS',
     ],
 
     // Index
