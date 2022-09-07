@@ -1,0 +1,110 @@
+<?php
+/**
+ * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
+ * and others – powered by CableLabs. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace {{ namespace }};
+
+use Illuminate\Auth\Access\HandlesAuthorization;
+use {{ namespacedModel }};
+use {{ namespacedUserModel }};
+
+class {{ class }}
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function viewAny({{ user }} $user)
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function view({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function create({{ user }} $user)
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function update({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function delete({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function restore({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     *
+     * @param  \{{ namespacedUserModel }}  $user
+     * @param  \{{ namespacedModel }}  ${{ modelVariable }}
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function forceDelete({{ user }} $user, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+}
