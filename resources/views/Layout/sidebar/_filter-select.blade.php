@@ -4,7 +4,7 @@
         @php
             $$name = Modules\HfcReq\Entities\NetElement::where('netelementtype_id', $options['netTypeId'])->get();
         @endphp
-        <div class="flex items-center text-gray-900">
+        <div class="flex items-center text-gray-900 [&>span.select2]:!w-[92%]">
             @php
             $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
             @endphp
@@ -26,7 +26,7 @@
                     <option value="{{ $net->id }}" selected="selected">{{ $net->name }}</option>
                 @endif
             </sidebar-select2>
-            <a :href="route({{ $options['var'] }}, '{{ route($options['route'], ['netelement' => 'NETELEMENT_ID'])}}')">
+            <a :href="route({{ $options['var'] }}, '{{ route($options['route'], ['netelement' => 'NETELEMENT_ID'])}}')" class="w-[8%]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ml-1 text-gray-50 hover:cursor-pointer hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>

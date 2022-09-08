@@ -22,7 +22,7 @@
     :disabled="disabled"
     :required="required"
     ref="select"
-    class="nms-select2"
+    class="nms-select2 w-full"
   >
     <slot></slot>
   </select>

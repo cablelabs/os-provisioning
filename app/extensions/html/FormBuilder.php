@@ -177,7 +177,7 @@ class FormBuilder extends CollectiveFormBuilder
         array $optionsAttributes = [],
         array $optgroupsAttributes = []
     ) {
-        $optionsAttributes = $this->appendClassToOptions('form-control', $optionsAttributes);
+        $selectAttributes = $this->appendClassToOptions('form-control w-full', $selectAttributes);
 
         if (isset($optionsAttributes['translate'])) {
             foreach ($list as $key => $value) {

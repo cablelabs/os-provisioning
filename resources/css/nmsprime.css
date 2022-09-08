@@ -52,11 +52,6 @@ input[type="checkbox"].form-control:checked:after {
     pointer-events: none;
 }
 
-/* Selectv2 responsive */
-.select2-container {
-    width: 100% !important;
-  }
-
 /* jstree hide Checkbox on root*/
 .jstree li.nocheck > a.jstree-anchor > i.jstree-checkbox{
   display:none;
@@ -627,10 +622,6 @@ li.expand div img {
     white-space: nowrap;
 }
 
-#sidebar .core-network-sidebar .select2-container {
-    max-width: 88%;
-}
-
 span.centerblock {
     display: block;
     text-align: center;
@@ -1016,22 +1007,6 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     margin-right: 2rem;
     opacity: .5;
     line-height: 1;
-}
-
-textarea.select2-search__field {
-    height: 1.5rem !important;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    padding: 2px !important;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
-    padding-left: 20px !important;
-}
-
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    font-size: 1.1em !important;
 }
 
 .sidebar .sidebar-hover > li > a:hover,

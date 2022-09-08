@@ -22,6 +22,7 @@
     :disabled="disabled"
     :required="required"
     ref="select"
+    class="w-full"
   >
     <slot></slot>
   </select>
