@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
@@ -36,7 +37,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
  */
 class User extends BaseModel implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable;
+    use Authenticatable, Authorizable, HasRolesAndAbilities, Notifiable, HasFactory;
 
     /**
      * The table associated with the model.
