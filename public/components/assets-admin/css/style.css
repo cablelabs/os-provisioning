@@ -7515,3 +7515,7 @@ body .bootstrap-datetimepicker-widget table td {
 	border-width: 1px;
 	border-style: solid;
 }
+
+table.dataTable > tbody > tr.selected > * {
+    box-shadow: inset 0 0 0 9999px var(--bg-grey-lighter) !important;
+}
