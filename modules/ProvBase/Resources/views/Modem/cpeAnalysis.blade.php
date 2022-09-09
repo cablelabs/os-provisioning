@@ -144,7 +144,8 @@
                         type: 'column' {{-- auto resize the Table to fit the viewing device --}}
                     }
                 },
-                autoWidth: false,
+                fixedHeader: true,
+                autoWidth: true,
                 paging: false,
                 info: false,
                 searching: false,

@@ -30,6 +30,7 @@
 @section('javascript')
 <script>
     let table = $('table.datatable').DataTable({
+        fixedHeader: true,
         lengthMenu:  [ [10, 25, 100, 250, 500, -1], [10, 25, 100, 250, 500, "{{ trans('view.jQuery_All') }}" ] ], {{-- Filter to List # Datasets --}}
         @include('datatables.lang')
         @include('datatables.paginate')

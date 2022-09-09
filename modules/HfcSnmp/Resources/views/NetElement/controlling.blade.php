@@ -245,6 +245,7 @@
 
         $('.controllingtable').DataTable({
             dom: 'lBfrtip',
+            fixedHeader: true,
             @include('datatables.buttons')
             @include('datatables.lang')
         });

@@ -190,7 +190,8 @@ $(document).ready(function() {
         {{-- Show Pagination only when the results do not fit on one page --}}
         @include('datatables.paginate')
         scrollX: true,
-        autoWidth: false, {{-- Option to ajust Table to Width of container --}}
+        fixedHeader: true,
+        autoWidth: true, {{-- Option to ajust Table to Width of container --}}
         dom: 'lBfrtip', {{-- sets order and what to show  --}}
         stateSave: true, {{-- Save Search Filters and visible Columns --}}
         stateDuration: 0, // 60 * 60 * 24, {{-- Time the State is used - set to 24h --}}

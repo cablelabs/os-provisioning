@@ -155,10 +155,11 @@
         }, 500);
 
         $('table.radius-table').DataTable({
-            autoWidth: false,
+            autoWidth: true,
             paging: false,
             info: true,
             searching: false,
+            fixedHeader: true,
         });
     });
 @endif

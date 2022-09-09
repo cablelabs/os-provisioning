@@ -303,7 +303,7 @@ $( document ).ready(function() {
 
 $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
   $($.fn.dataTable.tables(true))
-    .DataTable()
+    .DataTable({ fixedHeader: true })
     .columns.adjust()
     .responsive.recalc()
 })
@@ -417,7 +417,8 @@ document.addEventListener('DOMContentLoaded', function () {
       columns: [
         { data: 'checkbox', orderable: false, searchable: false },
         { data: 'label', orderable: false, searchable: false }
-      ]
+      ],
+      fixedHeader: true
     })
   })
 })

@@ -43,6 +43,7 @@ import 'datatables.net-buttons/js/buttons.print.js'
 import 'datatables.net-select-bs4'
 import 'datatables.net-buttons-bs4'
 import 'datatables.net-responsive'
+import 'datatables.net-fixedheader'
 
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
