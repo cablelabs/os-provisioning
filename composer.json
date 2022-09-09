@@ -29,11 +29,11 @@
         "symfony/mailgun-mailer": "^6.0",
         "symfony/http-client": "^6.0",
         "symfony/postmark-mailer": "^6.0",
-        "guzzlehttp/guzzle": "^7.5"
+        "guzzlehttp/guzzle": "^7.5",
+        "swen100/geophp": "^1.0",
+        "fruitcake/laravel-cors": "^3.0"
     },
     "require-dev": {
-        "swen100/geophp": "^1.0",
-        "fruitcake/laravel-cors": "^3.0",
         "laravel/tinker": "^2.5",
         "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
