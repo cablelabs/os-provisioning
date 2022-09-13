@@ -1520,8 +1520,12 @@ class Modem extends \BaseModel
     public static function get_firmware_tree()
     {
         $ret = [];
+        $modems = self::whereNotNull('sw_rev')
+            ->groupBy('model')->groupBy('sw_rev')
+            ->select('model', 'sw_rev', DB::raw('COUNT(*) as count'))
+            ->get();
 
-        foreach (self::whereNotNull('sw_rev')->groupBy('sw_rev')->select(DB::raw('model, sw_rev, COUNT(*) as count'))->get() as $modem) {
+        foreach ($modems as $modem) {
             $model = explode(' ', $modem->model, 2);
             $ret[reset($model)][end($model)][$modem->sw_rev] = $modem->count;
         }
