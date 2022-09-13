@@ -388,11 +388,6 @@ class NetElement extends \BaseModel
         return $this->hasMany(\Modules\CoreMon\Entities\Link::class, 'from');
     }
 
-    public function rpds()
-    {
-        return $this->hasMany(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id');
-    }
-
     public function scanranges()
     {
         return $this->hasMany(\Modules\CoreMon\Entities\ScanRange::class, 'netelement_id');
