@@ -37,9 +37,8 @@ class NetElementObserver
             return;
         }
 
-        $class = $netelement->getConnectedClass();
-        if ($class) {
-            $class::create(['netelement_id' => $netelement->id]);
+        if ($netelement->base_type_id == 18) {
+            \Modules\CoreMon\Entities\Ccap::create(['netelement_id' => $netelement->id]);
         }
 
         $this->flushSidebarNetCache();
@@ -110,7 +109,9 @@ class NetElementObserver
 
     public function deleting($netelement)
     {
-        $netelement->connectedModel->delete();
+        if ($netelement->base_type_id == 18) {
+            $netelement->connectedModel->delete();
+        }
     }
 
     public function deleted($netelement)
