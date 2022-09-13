@@ -9,7 +9,7 @@ return [
     ],
     'ccap' => 'CCAP',
     'city' => 'Stadt',
-    'checked at' => 'Geprüft am',
+    'lastUpdatedAt' => 'Zuletzt geupdated',
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',
     'deprecated' => 'Veraltet',

@@ -9,7 +9,7 @@ return [
     ],
     'ccap' => 'CCAP',
     'city' => 'City',
-    'checkedAt' => 'Checked at',
+    'lastUpdatedAt' => 'Last updated at',
     'connected' => 'Connected',
     'connection_type' => 'Connection type',
     'deprecated' => 'Deprecated',
