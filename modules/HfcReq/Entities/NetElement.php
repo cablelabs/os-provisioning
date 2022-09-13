@@ -1435,7 +1435,9 @@ class NetElement extends \BaseModel
             $breadcrumbs[] = [
                 'id' => $ancestor->id,
                 'url' => route("CoreMon.{$typeName}.overview", ['netelement' => $ancestor->id]),
-                'name'=> $ancestor->name, 'type'=> $ancestor->getOriginalTypeName(), 'active'=> false,
+                'name'=> $ancestor->name,
+                'type'=> $ancestor->getOriginalTypeName(),
+                'active'=> false,
             ];
         }
 
@@ -1444,7 +1446,9 @@ class NetElement extends \BaseModel
         $breadcrumbs[] = [
             'id' => $this->id,
             'url' => route("CoreMon.{$routename}.overview", ['netelement' => $this->id]),
-            'name' => $this->name, 'type' => $this->netelementType->name, 'active' => true,
+            'name' => $this->name,
+            'type' => $this->netelementType->name,
+            'active' => true,
         ];
 
         return $breadcrumbs;
