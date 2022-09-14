@@ -113,8 +113,8 @@ return [
 
         'topology' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/coremon/topology'),
-            'url' => env('APP_URL').'/storage/coremon/topology',
+            'root' => storage_path('app/public/topology/diagram'),
+            'url' => env('APP_URL').'/storage/topology/diagram',
             'visibility' => 'public',
         ],
     ],
