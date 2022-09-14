@@ -110,6 +110,13 @@ return [
             'driver' => 'local',
             'root'   => public_path(),
         ],
+
+        'topology' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/topology/diagram'),
+            'url' => env('APP_URL').'/storage/topology/diagram',
+            'visibility' => 'public',
+        ],
     ],
 
 ];
