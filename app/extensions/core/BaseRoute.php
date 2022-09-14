@@ -77,17 +77,10 @@ class BaseRoute
         ]);
 
         // Create
-        Route::get("$name/create", [
+        Route::match(['get', 'post'], "$name/create", [
             'as' => $name.'.create',
             'uses' => $controller.'@create',
             'middleware' => ['web', 'auth', 'can:create,'.$models[$name]],
-            $options,
-        ]);
-
-        Route::post("$name/create", [
-            'as' => $name.'.create',
-            'uses' => $controller.'@create',
-            'middleware' => ['web', 'can:create,'.$models[$name]],
             $options,
         ]);
 
@@ -126,14 +119,7 @@ class BaseRoute
         ]);
 
         // update
-        Route::patch("$name/{{$name}}", [
-            'as' => $name.'.update',
-            'uses' => $controller.'@update',
-            'middleware' => ['web', 'can:update,'.$models[$name]],
-            $options,
-        ]);
-
-        Route::put("$name/{{$name}}", [
+        Route::match(['patch', 'put'], "$name/{{$name}}", [
             'as' => $name.'.update',
             'uses' => $controller.'@update',
             'middleware' => ['web', 'can:update,'.$models[$name]],
@@ -168,14 +154,7 @@ class BaseRoute
                 $options,
             ]);
 
-            Route::get("$name/create", [
-                'as' => $name.'.api_create',
-                'uses' => $controller.'@api_create',
-                'middleware' => ['api', 'can:create,'.$models[$name]],
-                $options,
-            ]);
-
-            Route::post("$name/create", [
+            Route::match(['get', 'post'], "$name/create", [
                 'as' => $name.'.api_create',
                 'uses' => $controller.'@api_create',
                 'middleware' => ['api', 'can:create,'.$models[$name]],
@@ -196,14 +175,7 @@ class BaseRoute
                 $options,
             ]);
 
-            Route::patch("$name/{{$name}}", [
-                'as' => $name.'.api_update',
-                'uses' => $controller.'@api_update',
-                'middleware' => ['api', 'can:update,'.$models[$name]],
-                $options,
-            ]);
-
-            Route::put("$name/{{$name}}", [
+            Route::match(['patch', 'put'], "$name/{{$name}}", [
                 'as' => $name.'.api_update',
                 'uses' => $controller.'@api_update',
                 'middleware' => ['api', 'can:update,'.$models[$name]],
