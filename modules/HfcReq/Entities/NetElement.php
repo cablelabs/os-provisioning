@@ -213,7 +213,7 @@ class NetElement extends \BaseModel
      */
     public function getLoggingRoute()
     {
-        return route(Str::ucfirst($this->getOriginalTypeName(['lower', 'kebab'])).'.guilog', ['netelement' => $this->id]);
+        return route(Str::ucfirst($this->getOriginalTypeName(['lower', 'kebab'])).'.netelement.guilog', ['netelement' => $this->id]);
     }
 
     public function mapColor()
