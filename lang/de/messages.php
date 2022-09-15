@@ -140,6 +140,9 @@ return [
     'MAC Address'               => 'MAC Adresse',
     'Main Menu'                 => 'Hauptmenü',
     'Maturity'                  => 'Laufzeit',
+    'modem' => [
+        'setProvisionError' => 'Fehler beim Setzen der Modem Config (Provision) im ACS Server',
+    ],
     'cdr'                   => 'Evn',
     'cdr_discarded_calls'   => "EVN: Vertragsnr oder -ID ':contractnr' in Datenbank nicht gefunden - :count Telefongespräche der Telefonnr :phonenr mit einem Preis von :price :currency können nicht zugeordnet werden.",
     'cdr_missing_phonenr'   => 'EVN: Einzelverbindungsnachweise mit Telefonnummer :phonenr gefunden, die nicht in der Datenbank existiert. :count Telefongespräche mit einem Preis von :price :currency können nicht zugeordnet werden.',

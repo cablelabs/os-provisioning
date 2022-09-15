@@ -140,6 +140,9 @@ return [
     'MAC Address'               => 'MAC Address',
     'Main Menu'                 => 'Main Menu',
     'Maturity'                  => 'Maturity',
+    'modem' => [
+        'setProvisionError' => 'Error on setting modem config in ACS server',
+    ],
     'cdr'                   => 'cdr',
     'cdr_discarded_calls'   => "CDR: Contract Nr or ID ':contractnr' not found in database - :count calls of phonenumber :phonenr with price of :price :currency are discarded.",
     'cdr_missing_phonenr'   => 'Parse CDR.csv: Detected call data records with phonenr :phonenr that is missing in database. Discard :count phonecalls with charge of :price :currency.',

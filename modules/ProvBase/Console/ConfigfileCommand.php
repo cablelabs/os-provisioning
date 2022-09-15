@@ -45,7 +45,7 @@ class ConfigfileCommand extends Command implements ShouldQueue
     /**
      * Filter (from argument) to only build cable modem or mta configfiles
      *
-     * @var string cm|mta
+     * @var string cm|mta|tr069
      */
     protected $filter = '';
 
