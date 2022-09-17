@@ -244,6 +244,8 @@ class Kernel extends ConsoleKernel
         }
 
         if (\Module::collections()->has('CoreMon')) {
+            $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
+
             // Clean Up of topology svg diagrams
             $schedule->call(function () {
                 \Storage::deleteDirectory(CoreMonController::$path_rel);
