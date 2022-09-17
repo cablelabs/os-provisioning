@@ -21,6 +21,7 @@ namespace App\Console;
 use Queue;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Modules\CoreMon\Http\Controllers\CoreMonController;
 
 class Kernel extends ConsoleKernel
 {
@@ -239,6 +240,15 @@ class Kernel extends ConsoleKernel
             // Clean Up of HFC Base
             $schedule->call(function () {
                 \Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeErdController::$path_rel);
+            })->hourly();
+        }
+
+        if (\Module::collections()->has('CoreMon')) {
+            $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
+
+            // Clean Up of topology svg diagrams
+            $schedule->call(function () {
+                \Storage::deleteDirectory(CoreMonController::$path_rel);
             })->hourly();
         }
 
