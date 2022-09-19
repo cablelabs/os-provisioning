@@ -388,12 +388,25 @@ return [
         'status' => 'CM Modem Status',
         'us_data_service_grp' => 'US Data Service Group',
     ],
-    'dpic' => [
+    'dpicInterface' => [
         'name' => 'Name',
         'admin_status' => 'Admin Status',
         'operational_status' => 'Operational Status',
         'in_bitrate' => 'In Bitrate',
         'out_bitrate' => 'Out Bitrate',
+    ],
+    'dpicCard' => [
+        'sys_name' => 'System Name',
+        'description' => 'Description',
+        'uptime' => 'Uptime',
+        'bandwidth' => 'Bandwidth',
+        'utilization' => 'Utilization',
+        'created_at' => 'Status Last Change',
+    ],
+    'fiberNode' => [
+        'cable_interface' => 'Cable Interface',
+        'name' => 'Fiber Node Name',
+        'updated_at' => 'Last Change',
     ],
     'inventory' => [
         'name' => 'Name',
