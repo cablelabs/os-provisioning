@@ -20,9 +20,9 @@
             <div class="mb-8">
                 <b>Details</b>
             </div>
-            <ul class="space-y-3">
-                <li v-for="(data, key) in store.panelRightData" class="flex justify-between">
-                    <div v-text="store.panelRightKeys[key] + ': '" class="font-semibold text-ellipsis" :title="store.panelRightKeys[key]"></div>
+            <ul v-for="(tableData, tableName) in store.panelRightData" class="space-y-3">
+                <li v-for="(data, key) in tableData" class="flex justify-between">
+                    <div v-text="store.panelRightKeys[tableName][key] + ': '" class="font-semibold text-ellipsis" :title="store.panelRightKeys[tableName][key]"></div>
                     <div v-text="data"></div>
                 </li>
             </ul>
