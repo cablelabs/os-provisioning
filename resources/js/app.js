@@ -49,6 +49,9 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import * as JSZip from 'jszip'
 
+import Panzoom from '@panzoom/panzoom'
+window.Panzoom = Panzoom
+
 // app
 window.main = createApp(app)
   .component('overlay', overlay)

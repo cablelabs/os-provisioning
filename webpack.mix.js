@@ -34,3 +34,5 @@ mix.js('resources/js/app.js', 'public/js')
     require('tailwindcss'),
   ])
   .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css')
+  .extract()
+  .extract(['@panzoom/panzoom'], 'js/panzoom-vendor.js')
