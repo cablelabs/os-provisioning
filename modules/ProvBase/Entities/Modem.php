@@ -936,7 +936,7 @@ class Modem extends \BaseModel
 
         // touch flagfile e.g. used in ProvHA
         Storage::makeDirectory('/data/provbase');
-        Storage::put('/data/provbase/configfiles_changed', null);
+        Storage::put('/data/provbase/configfiles_changed', '');
 
         return true;
     }
