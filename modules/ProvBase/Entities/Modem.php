@@ -846,7 +846,10 @@ class Modem extends \BaseModel
         Log::debug(__METHOD__.' started for '.$this->hostname);
 
         if ($this->isTR069()) {
-            $this->createGenieAcsPresets($this->configfile->text_make($this, 'tr069'));
+            \Queue::pushOn(
+                'low',
+                new \Modules\ProvBase\Jobs\CreateGenieAcsPresetJob($this, $this->configfile->text_make($this, 'tr069'))
+            );
 
             return;
         }
@@ -942,65 +945,6 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Create TR-069 configfile.
-     * GenieACS API: https://github.com/genieacs/genieacs/wiki/API-Reference
-     *
-     * @author Ole Ernst
-     */
-    public function createGenieAcsPresets($text = null)
-    {
-        $text = $text ?? $this->configfile->text;
-        if (! $text) {
-            return;
-        }
-
-        preg_match('/#SETTINGS:(.+)/', $this->configfile->text, $json);
-        $settings = json_decode($json[1] ?? null, true);
-
-        $events = [];
-        if (isset($settings['EVENT'])) {
-            foreach ($settings['EVENT'] as $value) {
-                if (! $value) {
-                    continue;
-                }
-
-                $events[$value] = true;
-            }
-        } else {
-            $events['0 BOOTSTRAP'] = true;
-        }
-
-        $this->createGenieAcsProvisions($text, $events);
-
-        $preset = [
-            'weight' => 0,
-            'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
-            'events' => $events,
-            'configurations' => [
-                [
-                    'type' => 'provision',
-                    'name' => "prov-$this->id",
-                    'args' => null,
-                ],
-            ],
-        ];
-
-        self::callGenieAcsApi("presets/prov-$this->id", 'PUT', json_encode($preset));
-
-        // generate monitoring presets...
-        $preset['configurations'][0]['name'] = "mon-{$this->configfile->id}";
-
-        foreach (explode(',', config('provbase.cwmpMonitoringEvents')) as $event) {
-            if (! isset(self::CWMP_EVENTS[$event])) {
-                continue;
-            }
-            unset($preset['events']);
-            $preset['events'][$event.' '.self::CWMP_EVENTS[$event]] = true;
-            self::callGenieAcsApi("presets/mon-{$this->id}-{$event}", 'PUT', json_encode($preset));
-        }
-    }
-
-    /**
      * Colorize Modem index table when ProvMon module is missing
      * only for first $count modems as this takes a huge amount of time
      * Use obvious code generated/fixed amount of ds_pwr
@@ -1032,99 +976,6 @@ class Modem extends \BaseModel
         $modemQuery->update(array_merge(array_combine($hf, [0, 0, 0, 0]), ['modem.updated_at' => now()]));
         self::whereIn('id', $onlineModems)->update(array_combine($hf, [40, 36, 0, 36]));
         DB::commit();
-    }
-
-    /**
-     * Create Provision from configfile.text.
-     *
-     * @author Roy Schneider
-     *
-     * @param  string  $text
-     * @param  array  $events
-     * @return bool
-     */
-    public function createGenieAcsProvisions($text, $events = [])
-    {
-        $prefix = '';
-
-        // during bootstrap always clear the info we have about the device
-        $prov = [];
-        if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
-            $prov = [
-                "clear('Device', Date.now());",
-                "clear('InternetGatewayDevice', Date.now());",
-            ];
-        }
-
-        foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {
-            $vals = str_getcsv(trim($line), ';');
-            if (! count($vals) || ! in_array($vals[0], ['acl', 'add', 'clr', 'commit', 'del', 'get', 'jmp', 'reboot', 'set', 'fw', 'raw'])) {
-                continue;
-            }
-
-            if (! isset($vals[1])) {
-                $vals[1] = '';
-            }
-
-            $path = trim("$prefix.$vals[1]", '.');
-
-            switch ($vals[0]) {
-                case 'acl':
-                    if (isset($vals[1])) {
-                        $acl = '';
-                        if (! empty($vals[2])) {
-                            $acl = "'$vals[2]'";
-                        }
-
-                        $prov[] = "declare('$vals[1]', {accessList: Date.now()}, {accessList: [$acl]});";
-                    }
-                    break;
-                case 'add':
-                    if (isset($vals[2])) {
-                        $prov[] = "declare('$path.[$vals[2]]', {value: Date.now()}, {path: 1});";
-                    }
-                    break;
-                case 'clr':
-                    $prov[] = "clear('$path', Date.now());";
-                    break;
-                case 'commit':
-                    $prov[] = 'commit();';
-                    break;
-                case 'del':
-                    $prov[] = "declare('$path.[]', null, {path: 0})";
-                    break;
-                case 'get':
-                    $prov[] = "declare('$path.*', {value: Date.now()});";
-                    break;
-                case 'jmp':
-                    $prefix = trim($vals[1], '.');
-                    break;
-                case 'reboot':
-                    if (! $vals[1]) {
-                        $vals[1] = 0;
-                    }
-                    $prov[] = "declare('Reboot', null, {value: Date.now() - ($vals[1] * 1000)});";
-                    break;
-                case 'set':
-                    if (isset($vals[2])) {
-                        $alias = (empty($vals[3]) || empty($vals[4])) ? '' : ".[$vals[3]].$vals[4]";
-                        $prov[] = "declare('$path$alias', {value: Date.now()} , {value: '$vals[2]'});";
-                    }
-                    break;
-                case 'fw':
-                    if (! empty($vals[1]) && ! empty($vals[2])) {
-                        $prov[] = "declare('Downloads.[FileType:$vals[1]]', {path: 1}, {path: 1});";
-                        $prov[] = "declare('Downloads.[FileType:$vals[1]].FileName', {value: 1}, {value: '$vals[2]'});";
-                        $prov[] = "declare('Downloads.[FileType:$vals[1]].Download', {value: 1}, {value: Date.now()});";
-                    }
-                    break;
-                case 'raw':
-                    $prov[] = "$vals[1]";
-                    break;
-            }
-        }
-
-        self::callGenieAcsApi("provisions/prov-$this->id", 'PUT', implode("\n", $prov));
     }
 
     /**
