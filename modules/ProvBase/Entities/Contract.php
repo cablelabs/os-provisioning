@@ -131,7 +131,7 @@ class Contract extends \BaseModel
     {
         $type = Request::get('type');
         if (in_array($type, ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])) {
-            $rules['sep_id'] = 'string|unique:contract,sep_id,'.$id.',id,deleted_at,NULL';
+            $rules['sep_id'] = 'string|unique:contract,sep_id,'.$this->id.',id,deleted_at,NULL';
         }
 
         if (in_array($type, ['OTO_OWN', 'OTO_STORAGE'])) {
