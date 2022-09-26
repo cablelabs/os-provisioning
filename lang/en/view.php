@@ -381,6 +381,7 @@ return [
         'provDevice' => 'a provisioning device',
         'Realty' => 'a realty',
         'Qos' => 'a QOS',
+        'fiberName' => 'a fibre name',
     ],
 
     // Index

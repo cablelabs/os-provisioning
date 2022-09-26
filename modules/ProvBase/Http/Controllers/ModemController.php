@@ -183,6 +183,14 @@ class ModemController extends \BaseController
             $c[12] = array_merge($c[12], ['space' => 1]);
         }
 
+        if (Module::collections()->has('Altiplano')) {
+            $altiplanoApi = new \Modules\Altiplano\Helpers\AltiplanoApi();
+            if ($altiplanoApi->token) {
+                $availableFiberNames = \Modules\Altiplano\Services\AltiplanoService::resolveAvailableFiberNames();
+                $b[] = ['form_type' => 'select', 'name' => 'fiber_name', 'description' => 'Fiber Name', 'value' => $availableFiberNames, 'space' => '1'];
+            }
+        }
+
         $d = [
             ['form_type' => 'html', 'name' => 'geopos', 'description' => $geopos, 'html' => BaseViewController::geoPosFields($model)],
             ['form_type' => 'text', 'name' => 'geocode_source', 'description' => 'Geocode origin', 'help' => trans('helper.Modem_GeocodeOrigin'), 'options' => ['readonly'], 'space' => 1],
@@ -192,6 +200,8 @@ class ModemController extends \BaseController
             ['form_type' => 'textarea', 'name' => 'description', 'description' => 'Description'],
             ['form_type' => 'text', 'name' => 'additional', 'description' => 'Additional info', 'help' => trans('helper.modem.additional'), 'autocomplete' => [], 'space' => 1],
         ];
+
+        // dd(Module::collections(), array_merge($a, $b, $c, $d), $a, $b, $c, $d);
 
         return array_merge($a, $b, $c, $d);
     }
