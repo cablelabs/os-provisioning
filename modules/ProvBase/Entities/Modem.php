@@ -118,6 +118,10 @@ class Modem extends \BaseModel
             $rules['internet_access'][] = 'In:null,0,false';
         }
 
+        if (Module::collections()->has('Altiplano')) {
+            $rules['fiber_name'] = 'nullable';
+        }
+
         return $rules;
     }
 
@@ -2081,6 +2085,19 @@ class Modem extends \BaseModel
     public function isTR069()
     {
         return $this->configfile->device === 'tr069';
+    }
+
+    /**
+     * Check if modem is an Altiplano modem
+     *
+     * @return true if fiber_name is set
+     *              false if fiber_name is not used
+     *
+     * @author Khairull Jamlus
+     */
+    public function isAltiplano()
+    {
+        return boolval($this->fiber_name);
     }
 
     /**
