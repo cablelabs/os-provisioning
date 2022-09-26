@@ -201,8 +201,6 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'additional', 'description' => 'Additional info', 'help' => trans('helper.modem.additional'), 'autocomplete' => [], 'space' => 1],
         ];
 
-        // dd(Module::collections(), array_merge($a, $b, $c, $d), $a, $b, $c, $d);
-
         return array_merge($a, $b, $c, $d);
     }
 
