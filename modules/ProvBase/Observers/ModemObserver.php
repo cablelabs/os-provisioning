@@ -54,6 +54,11 @@ class ModemObserver
         if (! $modem->internet_access) {
             $modem->blockCpeViaDhcp();
         }
+
+        if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
+            $service = \Modules\Altiplano\Services\AltiplanoService::registerNewModem($modem);
+            $service->createIntents($modem);
+        }
     }
 
     public function updating($modem)
