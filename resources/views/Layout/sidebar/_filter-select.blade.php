@@ -6,7 +6,7 @@
         @endphp
         <div class="flex items-center text-gray-900">
             @php
-            $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
+            $net = isset($overview['ids']) ? $overview['ids']->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
             @endphp
             <sidebar-select2 id="{{ $name }}"
                 class="select2-ajax"
