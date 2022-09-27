@@ -1153,3 +1153,7 @@ table.dataTable > tbody > tr.selected > * {
 .dtfh-floatingparent {
     top: 50px !important;
 }
+
+#topology svg g.edge {
+    cursor: pointer;
+}
