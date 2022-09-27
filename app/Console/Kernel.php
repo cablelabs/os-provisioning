@@ -20,7 +20,6 @@ namespace App\Console;
 
 use Queue;
 use Illuminate\Console\Scheduling\Schedule;
-use Modules\CoreMon\Http\Controllers\CoreMonController;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -246,7 +245,7 @@ class Kernel extends ConsoleKernel
         if (\Module::collections()->has('CoreMon')) {
             // Clean Up of topology svg diagrams
             $schedule->call(function () {
-                exec("rm -rf ".storage_path('app/'.Modules\CoreMon\Http\Controllers\CoreMonController::PATH_REL));
+                exec('rm -rf '.storage_path('app/'.Modules\CoreMon\Http\Controllers\CoreMonController::PATH_REL));
             })->hourly();
         }
 
