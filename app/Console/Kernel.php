@@ -246,7 +246,7 @@ class Kernel extends ConsoleKernel
         if (\Module::collections()->has('CoreMon')) {
             // Clean Up of topology svg diagrams
             $schedule->call(function () {
-                \Storage::deleteDirectory(CoreMonController::$path_rel);
+                exec("rm -rf ".storage_path('app/'.Modules\CoreMon\Http\Controllers\CoreMonController::PATH_REL));
             })->hourly();
         }
 
