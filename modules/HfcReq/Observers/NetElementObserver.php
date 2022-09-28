@@ -134,7 +134,8 @@ class NetElementObserver
     public function restored($netelement)
     {
         if (Module::collections()->has('CoreMon')) {
-            \Modules\CoreMon\Entities\Link::withTrashed()->where('from', $netelement->id)->update(['deleted_at' => null]);
+            \Modules\CoreMon\Entities\Link::withTrashed()->where('from', $netelement->id)
+                ->orWhere('to', $netelement->id)->update(['deleted_at' => null]);
         }
     }
 
