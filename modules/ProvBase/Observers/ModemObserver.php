@@ -57,7 +57,7 @@ class ModemObserver
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
             Log::info('Queuing create ONT intent');
-            \Queue::pushOn('high', new CreateOntIntentJob($modem));
+            \Queue::pushOn('high', new \Modules\Altiplano\Jobs\CreateOntIntentJob($modem));
         }
     }
 
