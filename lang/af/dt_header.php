@@ -322,23 +322,4 @@ return [
     'ticket.assigned_users' => 'Assigned Users',
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
-
-    // SmartOnt
-    'dfsubscription' => [
-        'contact_city' => 'City',
-        'contact_postal_code' => 'ZIP',
-        'contact_street' => 'Street',
-        'contact_street_no' => 'House number',
-        'id' => 'ID',
-        'status' => 'Status',
-        'subscription_end_point_id' => 'SEP ID',
-        'subscription_id' => 'external ID',
-        'switchdate' => 'Switchdate',
-        'wishdate' => 'Wishdate',
-    ],
-    'dfsubscriptionevent' => [
-        'id' => 'ID',
-        'status' => 'Status',
-        'timestamp' => 'Timestamp',
-    ],
 ];

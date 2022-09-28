@@ -65,8 +65,15 @@ return [
         'street' => 'Street',
         'zip' => 'ZIP',
         'ground_for_dismissal' => 'Ground for dismissal',
+        'sep_id' => 'SEP ID',
+        'oto_id' => 'OTO ID',
+        'oto_status' => 'OTO status',
+        'alex_status' => 'ALEX ID',
+        'omdf_id' => 'OMDF ID',
+        'boc_label' => 'BOC label',
+        'bof_label' => 'BOF label',
+        'type' => 'Type',
     ],
-    'contract_id' => 'Contract',
     // Auth
     'users' => [
         'login_name' => 'Login Name',
@@ -318,6 +325,15 @@ return [
     'modem.support_state' => 'Suport State',
     'modem.formatted_support_state' => 'Support State',
     'modem.last_inform' => 'Last Inform',
+    'modem.ont_id' => 'ONT ID',
+    'modem.netgw_id' => 'NetGW ID',
+    'modem.frame_id' => 'Frame ID',
+    'modem.slot_id' => 'Slot ID',
+    'modem.port_id' => 'Port ID',
+    'modem.service_port_id' => 'Service port ID',
+    'modem.ont_state' => 'ONT state',
+    'modem.next_ont_state' => 'Next ONT state',
+    'modem.ont_state_switchdate' => 'ONT state switchdate',
     'contract_valid' => 'Contract valid?',
     // Modem option
     'modem_option' => [
@@ -598,10 +614,23 @@ return [
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
     'total_fee' => 'Fee',
-    'vendor' => 'Vendor',
-    'internalId' => 'Internal Reference',
-    'dunning' => [
-        'contract_id' => 'Contract',
+
+    // SmartOnt
+    'dfsubscription' => [
+        'contact_city' => 'City',
+        'contact_postal_code' => 'ZIP',
+        'contact_street' => 'Street',
+        'contact_street_no' => 'House number',
+        'id' => 'ID',
+        'status' => 'Status',
+        'subscription_end_point_id' => 'SEP ID',
+        'subscription_id' => 'external ID',
+        'switchdate' => 'Switchdate',
+        'wishdate' => 'Wishdate',
     ],
-    'created_at' => 'Created at',
+    'dfsubscriptionevent' => [
+        'id' => 'ID',
+        'status' => 'Status',
+        'timestamp' => 'Timestamp',
+    ],
 ];
