@@ -20,6 +20,7 @@ namespace Modules\ProvBase\Observers;
 
 use Module;
 use Illuminate\Support\Facades\Log;
+use Modules\Altiplano\Jobs\CreateOntIntentJob;
 use Modules\ProvBase\Entities\Modem;
 
 /**
@@ -56,8 +57,8 @@ class ModemObserver
         }
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
-            $service = \Modules\Altiplano\Services\AltiplanoService::registerNewModem($modem);
-            $service->createIntents($modem);
+            Log::info('Queuing create ONT intent');
+            \Queue::pushOn('high', new CreateOntIntentJob($modem));
         }
     }
 
