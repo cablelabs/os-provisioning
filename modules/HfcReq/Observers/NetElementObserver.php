@@ -81,8 +81,14 @@ class NetElementObserver
 
             // Change link
             if (Module::collections()->has('CoreMon')) {
-                \Modules\CoreMon\Entities\Link::where('from', $netelement->getRawOriginal('parent_id'))
-                    ->where('to', $netelement->id)->update(['from' => $netelement->parent_id]);
+                $linkQuery = \Modules\CoreMon\Entities\Link::where('from', $netelement->getRawOriginal('parent_id'))
+                    ->where('to', $netelement->id);
+
+                if ($netelement->parent_id) {
+                    $linkQuery->update(['from' => $netelement->parent_id]);
+                } else {
+                    $linkQuery->delete();
+                }
             }
         }
 
