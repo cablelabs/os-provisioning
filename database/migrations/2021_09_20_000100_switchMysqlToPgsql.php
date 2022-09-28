@@ -73,12 +73,12 @@ class SwitchMysqltoPgsql extends BaseMigration
                 'nmsprime' => [
                     'user' => DB::getConfig('username'),
                     'password' => DB::getConfig('password'),
-                    'schema' => DB::getConfig('schema'),
+                    'schema' => DB::getConfig('schema') ?: DB::getConfig('search_path'),
                 ],
                 'nmsprime_ccc' => [
                     'user' => DB::connection('pgsql-ccc')->getConfig('username'),
                     'password' => DB::connection('pgsql-ccc')->getConfig('password'),
-                    'schema' => DB::connection('pgsql-ccc')->getConfig('schema'),
+                    'schema' => DB::connection('pgsql-ccc')->getConfig('schema') ?: DB::connection('pgsql-ccc')->getConfig('search_path'),
                 ],
             ];
         }
