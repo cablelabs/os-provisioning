@@ -43,7 +43,12 @@ class NetElementObserver
 
         $this->flushSidebarNetCache();
 
-        // if ($netelement->is_type_cluster())
+        if (Module::collections()->has('CoreMon')) {
+            $netelement->createLink();
+
+            return;
+        }
+
         // in created because otherwise netelement does not have an ID yet
         $netelement->net = $netelement->get_native_net();
         $netelement->cluster = $netelement->get_native_cluster();
@@ -51,10 +56,6 @@ class NetElementObserver
 
         $netelement->observer_enabled = false;  // don't execute functions in updating again
         $netelement->save();
-
-        if (Module::collections()->has('CoreMon')) {
-            $netelement->createLink();
-        }
     }
 
     public function updating($netelement)
