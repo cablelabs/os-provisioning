@@ -25,9 +25,6 @@
     <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
     <script src="{{ mix('js/manifest.js') }}"></script>
     <script src="{{ mix('js/vendor.js') }}"></script>
-    @if (in_array(request()->route()->getName(), ['CoreMon.topology']))
-        <script src="{{ mix('js/panzoom-vendor.js') }}"></script>
-    @endif
     <script src="{{ mix('js/app.js') }}"></script>
     @include('bootstrap.module-js')
 @endif
