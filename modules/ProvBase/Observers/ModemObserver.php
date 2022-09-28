@@ -181,5 +181,10 @@ class ModemObserver
         $modem->make_dhcp_cm(true);
         $modem->restart_modem();
         $modem->delete_configfile();
+
+        if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
+            Log::info('Queuing delete L2 intent');
+            \Queue::pushOn('high', new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem));
+        }
     }
 }
