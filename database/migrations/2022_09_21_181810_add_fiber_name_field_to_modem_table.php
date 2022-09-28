@@ -49,4 +49,4 @@ class AddFiberNameFieldToModemTable extends BaseMigration
             $table->dropColumn('fiber_name');
         });
     }
-};
+}
