@@ -8,12 +8,14 @@
 --regex-C=/$x/x/x/e/ comment by par: local excludes (e.g. --exclude=vendor/*) are sometimes ignored and let the tags file explode
 --regex-C=/$x/x/x/e/ so we use this unusual patterns
 
---exclude=*/nmsprime/.git
---exclude=*/nmsprime/vendor/*
---exclude=*/nmsprime/storage/*
---exclude=*/nmsprime/Documentation/*
---exclude=*/nmsprime/public/components/*
---exclude=*/nmsprime/public-ccc/components/*
---exclude=*/nmsprime/modules/*/Assets/*
 --exclude=*/nmsprime/.deprecated/*
-
+--exclude=*/nmsprime/.git
+--exclude=*/nmsprime/Documentation/*
+--exclude=*/nmsprime/modules/*/Assets/*
+--exclude=*/nmsprime/node_modules/*
+--exclude=*/nmsprime/public-ccc/components/*
+--exclude=*/nmsprime/public/components/*
+--exclude=*/nmsprime/public/css/*
+--exclude=*/nmsprime/public/vendor/*
+--exclude=*/nmsprime/storage/*
+--exclude=*/nmsprime/vendor/*

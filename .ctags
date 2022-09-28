@@ -1,8 +1,11 @@
---recurse=yes
 --exclude=.git
---exclude=vendor/*
---exclude=storage/*
 --exclude=Documenation/*
---exclude=public/components/*
---exclude=public-ccc/components/*
 --exclude=modules/*/Assets/*
+--exclude=node_modules/*
+--exclude=public-ccc/components/*
+--exclude=public/components/*
+--exclude=public/css/*
+--exclude=public/vendor/*
+--exclude=storage/*
+--exclude=vendor/*
+--recurse=yes

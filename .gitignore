@@ -17,14 +17,26 @@ storage/framework/
 storage/debugbar/
 storage/xdebug/
 
+################################################################################
 # vim (https://github.com/github/gitignore/blob/master/Global/Vim.gitignore)
-[._]*.s[a-w][a-z]
-[._]s[a-w][a-z]
-*.un~
+# Swap
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+# Session
 Session.vim
+Sessionx.vim
+# Temporary
 .netrwhist
 *~
-*.sql
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
+
 
 # sublime trash dir
 .Trash-1000/
@@ -32,8 +44,6 @@ Session.vim
 sql-reset.sh
 cp-script.sh
 
-# ignore ctags file
-tags
 /.idea
 /modules/HfcSnmp/Entities/._.DS_Store
 /modules/HfcSnmp/Http/Controllers/._.DS_Store
@@ -67,3 +77,5 @@ public/images
 public/mix-manifest.json
 
 _ide_helper.php
+
+npm-debug.log
