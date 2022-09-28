@@ -20,7 +20,6 @@ namespace Modules\ProvBase\Observers;
 
 use Module;
 use Illuminate\Support\Facades\Log;
-use Modules\Altiplano\Jobs\CreateOntIntentJob;
 use Modules\ProvBase\Entities\Modem;
 
 /**
