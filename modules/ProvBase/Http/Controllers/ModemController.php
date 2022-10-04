@@ -183,12 +183,11 @@ class ModemController extends \BaseController
             $c[12] = array_merge($c[12], ['space' => 1]);
         }
 
-        if (Module::collections()->has('Altiplano')) {
-            $altiplanoApi = new \Modules\Altiplano\Helpers\AltiplanoApi();
-            if ($altiplanoApi->token) {
-                $availableFiberNames = \Modules\Altiplano\Services\AltiplanoService::resolveAvailableFiberNames();
-                $b[] = ['form_type' => 'select', 'name' => 'fiber_name', 'description' => 'Fiber Name', 'value' => $availableFiberNames, 'space' => '1'];
-            }
+        if (Module::collections()->has('Altiplano')
+            && (new \Modules\Altiplano\Helpers\AltiplanoApi())->token
+        ) {
+            $availableFiberNames = \Modules\Altiplano\Services\AltiplanoService::resolveAvailableFiberNames();
+            $b[] = ['form_type' => 'select', 'name' => 'fiber_name', 'description' => 'Fiber Name', 'value' => $availableFiberNames, 'space' => '1'];
         }
 
         $d = [
