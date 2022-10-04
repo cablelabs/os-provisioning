@@ -164,6 +164,15 @@ class ModemObserver
         if (array_key_exists('apartment_id', $diff)) {
             $modem->updateAddressFromProperty();
         }
+
+        if ($modem->isAltiplano() && Module::collections()->has('Altiplano') && $modem->isDirty('qos_id')) {
+            Bus::chain([
+                new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem),
+                new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem),
+            ])->catch(function (Throwable $e) {
+                Log::info('There was an error updating the intent');
+            })->dispatch();
+        }
     }
 
     public function deleted($modem)
