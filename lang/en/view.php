@@ -712,6 +712,8 @@ return [
         'usCh' => 'US Channels',
         'util' => 'Utilization',
         'cpe' => 'CPE Details',
+        'optics' => 'Optics',
+        'lldp' => 'LLDP',
     ],
     'ticket' => [
         'comment' => [

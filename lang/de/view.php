@@ -712,6 +712,8 @@ return [
         'util' => 'Auslastung',
         'usCh' => 'US Kanäle',
         'cpe' => 'CPE Details',
+        'optics' => 'Optics',
+        'lldp' => 'LLDP',
     ],
     'ticket' => [
         'comment' => [
