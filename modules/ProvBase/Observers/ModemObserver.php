@@ -19,9 +19,8 @@
 namespace Modules\ProvBase\Observers;
 
 use Module;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Log;
 use Modules\ProvBase\Entities\Modem;
 
 /**
