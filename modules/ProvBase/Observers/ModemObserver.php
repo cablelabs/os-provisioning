@@ -20,6 +20,8 @@ namespace Modules\ProvBase\Observers;
 
 use Module;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Bus\Batch;
 use Modules\ProvBase\Entities\Modem;
 
 /**
@@ -56,8 +58,13 @@ class ModemObserver
         }
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
-            Log::info('Queuing create ONT intent');
-            \Queue::pushOn('high', new \Modules\Altiplano\Jobs\CreateOntIntentJob($modem));
+            Log::info('Queuing intent jobs');
+            Bus::chain([
+                new \Modules\Altiplano\Jobs\CreateOntIntentJob($modem),
+                new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem),
+            ])->catch(function (Throwable $e) {
+                Log::info('There was an error creating one or more intents');
+            })->dispatch();
         }
     }
 
