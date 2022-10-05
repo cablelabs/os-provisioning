@@ -428,6 +428,7 @@ return [
         'error_code' => 'Error Code',
     ],
     'market' => 'Market',
+    'hubsite' => 'HubSite',
     'rpd' => [
         'additional_cores' => 'Additional Associated Cores',
         'aux' => 'Aux',
@@ -450,7 +451,6 @@ return [
         'ds_data_depi' => 'DS Data DEPI',
         'ds_data_service_grp' => 'DS Data Service Group Information',
         'fiber_node' => 'Fiber Node Name',
-        'hubsite' => 'HubSite',
         'mac' => 'RPD Mac',
         'name' => 'RPD System Name',
         'nc_vid_cont_profile' => 'NC Video Controller Profile',
