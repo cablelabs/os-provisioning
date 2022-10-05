@@ -17,6 +17,7 @@
  */
 
 use Illuminate\Database\Schema\Blueprint;
+use Database\Migrations\BaseMigration;
 
 class UpdateModemAddOntFields extends BaseMigration
 {
@@ -36,10 +37,11 @@ class UpdateModemAddOntFields extends BaseMigration
             $table->unsignedSmallInteger('frame_id')->nullable();
             $table->unsignedSmallInteger('slot_id')->nullable();
             $table->unsignedSmallInteger('port_id')->nullable();
-            $table->unsignedSmallInteger('ont_id')->nullable()->change();
             $table->unsignedInteger('service_port_id')->nullable();
             $table->string('or_id')->nullable();
         });
+        // ->change() is not working with Postgres
+        DB::statement('ALTER TABLE '.$this->tableName.' ALTER COLUMN ont_id TYPE smallint USING (ont_id)::smallint');
     }
 
     /**

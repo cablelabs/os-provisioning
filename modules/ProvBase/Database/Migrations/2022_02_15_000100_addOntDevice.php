@@ -15,6 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+use Database\Migrations\BaseMigration;
+
 class AddOntDevice extends BaseMigration
 {
     public $migrationScope = 'database';
@@ -26,7 +28,8 @@ class AddOntDevice extends BaseMigration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069', 'ont') NOT NULL");
+        /* DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069', 'ont') NOT NULL"); */
+        DB::statement("ALTER TYPE nmsprime.configfile_device ADD VALUE 'ont'");
     }
 
     /**
@@ -36,6 +39,7 @@ class AddOntDevice extends BaseMigration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069')");
+        // revers statement does not exist in Postgres(?)
+        /* DB::statement("ALTER TYPE nmsprime.configfile_device AS ENUM ('cm', 'mta', 'tr069')"); */
     }
 }

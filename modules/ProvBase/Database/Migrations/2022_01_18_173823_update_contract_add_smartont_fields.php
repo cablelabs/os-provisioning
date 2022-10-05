@@ -18,6 +18,7 @@
 
 use Modules\ProvBase\Entities\Contract;
 use Illuminate\Database\Schema\Blueprint;
+use Database\Migrations\BaseMigration;
 
 class UpdateContractAddSmartOntFields extends BaseMigration
 {
@@ -55,7 +56,7 @@ class UpdateContractAddSmartOntFields extends BaseMigration
             'house_number' => 'n/a',
             'zip' => 'n/a',
             'city' => 'n/a',
-            'country_code' => 'n/a',
+            'country_code' => '',
             'description' => '“Storage” holding free ONT. Change parameters to your needs.',
             'type' => 'OTO_STORAGE',
         ]);

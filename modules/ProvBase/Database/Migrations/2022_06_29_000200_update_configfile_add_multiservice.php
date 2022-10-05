@@ -17,6 +17,7 @@
  */
 
 use Illuminate\Database\Schema\Blueprint;
+use Database\Migrations\BaseMigration;
 
 class UpdateConfigfileAddMultiservice extends BaseMigration
 {

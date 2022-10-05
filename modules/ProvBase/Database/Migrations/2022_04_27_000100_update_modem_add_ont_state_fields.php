@@ -17,6 +17,7 @@
  */
 
 use Illuminate\Database\Schema\Blueprint;
+use Database\Migrations\BaseMigration;
 
 class UpdateModemAddOntStateFields extends BaseMigration
 {
