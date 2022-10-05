@@ -1,0 +1,32 @@
+{
+    "device": "cm",
+    "rx_pwr": [-3, -1, 15, 20],
+    "ds_pwr": [-20, -10, 15, 20],
+    "us_pwr": [22, 27, 50, 56],
+    "snr_qpsk": [14, 17],
+    "snr_qam16": [20, 23],
+    "snr_qam32": [22, 25],
+    "snr_qam64": [26, 29],
+    "snr_qam256": [32, 35],
+    "snr_default_ds": [32, 35],
+    "snr_default_us": [26, 29],
+    "ds_us": [5, 12],
+    "microreflections": [20, 30]
+}
+
+{
+    "device": "lwl",
+    "ds_pwr": [-20, -10, 15, 20],
+    "us_pwr": [22, 27, 50, 56],
+    "snr_default_ds": [3, 6],
+    "snr_default_us": [3, 6],
+    "dampening": 
+}
+
+{
+    "device": "dsl",
+    "rx_pwr": [-15, -18],
+    "ds_pwr": [-15, -18],
+    "us_pwr": [-15, -18],
+}
+

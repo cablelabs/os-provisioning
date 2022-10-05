@@ -357,6 +357,7 @@ class ContractController extends \BaseController
             array_merge(['form_type' => 'text', 'name' => 'zip', 'description' => 'Postcode', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'city', 'description' => 'City', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
             array_merge(['form_type' => 'text', 'name' => 'district', 'description' => 'District', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
+            array_merge(['form_type' => 'text', 'name' => 'country_code', 'description' => 'Country code', 'create' => ['Modem'], 'autocomplete' => []], $selectPropertyMgmt),
         ];
 
         if (! Module::collections()->has('Ccc')) {

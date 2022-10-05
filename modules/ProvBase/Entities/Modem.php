@@ -199,7 +199,7 @@ class Modem extends \BaseModel
                 $this->table.'.mac',
                 $this->table.'.serial_num',
                 'configfile.name',
-                this->table.'.model',
+                $this->table.'.model',
                 $this->table.'.sw_rev',
                 $this->table.'.name',
                 $this->table.'.ppp_username',
