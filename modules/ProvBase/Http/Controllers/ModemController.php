@@ -1268,7 +1268,7 @@ class ModemController extends \BaseController
             return redirect($this->redirectUrl);
         }
 
-        $csv = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
+        list($filename, $csv) = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
         if (! is_array($csv)) {
             return redirect($this->redirectUrl);
         }
@@ -1417,7 +1417,7 @@ class ModemController extends \BaseController
             return redirect($this->redirectUrl);
         }
 
-        $csv = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
+        list($filename, $csv) = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
         if (! is_array($csv)) {
             return redirect($this->redirectUrl);
         }
@@ -1427,6 +1427,7 @@ class ModemController extends \BaseController
 
         $fieldMap = [
             'serial' => [
+                'gpon serialnumber',
                 's/n',
                 'serial',
                 'serialnumber',
@@ -1472,36 +1473,33 @@ class ModemController extends \BaseController
             }
 
             $modem = Modem::FirstOrNew(['serial_num' => $serial]);
-            $modem->mac = $macAddress;
-            $modem->model = $model;
 
-            $modem->contract_id = $modem->contract_id ?: $contractId;
+            $modem->mac = $modem->mac ?: $macAddress;
+            $modem->model = $modem->model ?: $model;
             $modem->qos_id = $modem->qos_id ?: $qosId;
             $modem->configfile_id = $modem->configfile_id ?: $configfileId;
-
-            $modem->company = $contract->company;
-            $modem->department = $contract->department;
-            $modem->salutation = $contract->salutation;
-            $modem->firstname = $contract->firstname;
-            $modem->lastname = $contract->lastname;
-            $modem->street = $contract->street;
-            $modem->house_number = $contract->house_number;
-            $modem->city = $contract->city;
-            $modem->zip = $contract->zip;
-            $modem->district = $contract->district;
-            $modem->country_code = $contract->country_code;
+            $modem->ont_state = $modem->ont_state ?: 'initial';
 
             $user = auth()->user();
-            if (! $modem->description) {
-                $modem->description = date('Y-m-d H:i:s').': Created from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
-            } else {
-                $modem->description .= "\n\n".date('Y-m-d H:i:s').': Updated from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
-
-            }
 
             if ($modem->exists) {
+                $modem->description .= "\n\n".date('Y-m-d H:i:s').': Updated from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
                 $modemsUpdated++;
             } else {
+                $modem->contract_id = $contractId;
+                $modem->company = $contract->company;
+                $modem->department = $contract->department;
+                $modem->salutation = $contract->salutation;
+                $modem->firstname = $contract->firstname;
+                $modem->lastname = $contract->lastname;
+                $modem->street = $contract->street;
+                $modem->house_number = $contract->house_number;
+                $modem->city = $contract->city;
+                $modem->zip = $contract->zip;
+                $modem->district = $contract->district;
+                $modem->country_code = $contract->country_code;
+
+                $modem->description = date('Y-m-d H:i:s').': Created from CSV file “'.$filename.'” by user “'.$user->first_name.' '.$user->last_name.'“';
                 $modemsCreated++;
             }
 

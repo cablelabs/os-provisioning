@@ -2121,7 +2121,7 @@ class BaseController extends Controller
     /**
      * Get content of uploaded csv file
      *
-     * @return array containing csv file content
+     * @return array containing the original filename and an array holding the csv file content
      * @author Patrick Reichel
      */
     public function getDataFromUploadedCsv($formField, $errorMessagePosition)
@@ -2140,6 +2140,6 @@ class BaseController extends Controller
             array_push($csv, $data);
         }
 
-        return $csv;
+        return [$filename, $csv];
     }
 }
