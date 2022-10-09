@@ -98,7 +98,7 @@ class HfcSnmpServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'hfcsnmp');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'hfcsnmp');
+            $this->loadTranslationsFrom(__DIR__.'/../lang', 'hfcsnmp');
         }
     }
 

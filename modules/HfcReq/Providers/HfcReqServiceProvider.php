@@ -105,7 +105,7 @@ class HfcReqServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'hfcreq');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'hfcreq');
+            $this->loadTranslationsFrom(__DIR__.'/../lang', 'hfcreq');
         }
     }
 

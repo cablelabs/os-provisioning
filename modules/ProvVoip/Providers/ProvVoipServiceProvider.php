@@ -108,7 +108,7 @@ class ProvVoipServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'provvoip');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'provvoip');
+            $this->loadTranslationsFrom(__DIR__.'/../lang', 'provvoip');
         }
     }
 

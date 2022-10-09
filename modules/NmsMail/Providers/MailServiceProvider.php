@@ -98,7 +98,7 @@ class MailServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'nmsmail');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'nmsmail');
+            $this->loadTranslationsFrom(__DIR__.'/../lang', 'nmsmail');
         }
     }
 

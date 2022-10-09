@@ -119,7 +119,7 @@ class ProvBaseServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'provbase');
         } else {
-            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'provbase');
+            $this->loadTranslationsFrom(__DIR__.'/../lang', 'provbase');
         }
     }
 
