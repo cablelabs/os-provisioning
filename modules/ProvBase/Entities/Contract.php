@@ -1334,7 +1334,7 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Get Contracts next possible cancelation dates - dependent of internet or voip item
+     * Get Contracts next possible cancelation dates - dependent of internet, voip or tv item with this order of priority
      *
      * @author Nino Ryschawy
      *
@@ -1386,7 +1386,7 @@ class Contract extends \BaseModel
         $tariff = $inet;
 
         // use voip tariff if no inet tariff exists or (inet is not bundled with voip and voip was created last)
-        if (! $inet || ! $inet->bundled_with_voip) {
+        if (! $inet || (! $inet && ! $inet->bundled_with_voip)) {
             // take last added (voip or inet)
             $voip = $tariffs->where('type', '=', 'Voip')->first();
 
