@@ -887,4 +887,5 @@ return [
         'avgUpstreamPower' => 'Durchschnittlicher Rückkanalpegel',
         'avgUpstreamSnr' => 'Durchschnittliches Rückkanal-SNR',
     ],
+    'devices' => 'Geräte',
 ];

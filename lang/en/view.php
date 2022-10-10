@@ -888,4 +888,5 @@ return [
         'avgUpstreamPower' => 'Avg. Upstream Power',
         'avgUpstreamSnr' => 'Avg. Upstream SNR',
     ],
+    'devices' => 'Devices',
 ];
