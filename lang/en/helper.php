@@ -128,6 +128,7 @@ return [
      * MODULE: ProvBase
      */
     'contract' => [
+        'lastAmendment' => 'Day when last change to contract regarding tariffs was done. This influences the contract confirmation. Only tariffs added after this date will appear on the PDF and will be considered to determine periods.',
         'valueDate' => 'Day of month for specific date of value. Overrides the requested collection date from global config for this contract in the SEPA XML.',
     ],
     'rate_coefficient'              => 'MaxRateSustained will be multiplied by this value to grant the user more (> 1.0) throughput than subscribed.',

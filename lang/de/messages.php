@@ -128,6 +128,7 @@ return [
     'Call Data Record'      => 'Einzelverbindungsnachweis',
     'IP address'                => 'IP Adresse',
     'Language'                  => 'Sprache',
+    'Last contract amendment' => 'Letzte Vertragsänderung',
     'Lastname'                  => 'Nachname',
     'Last IP'                   => 'Letzte IP',
     'ccc'                       => 'Kundenkontrollzentrum',

@@ -131,10 +131,12 @@ class ContractController extends \BaseController
         $b3 = [
             ['form_type' => 'date', 'name' => 'birthday', 'description' => 'Birthday', 'create' => ['Modem'], 'space' => '1'],
             ['form_type' => 'date', 'name' => 'contract_start', 'description' => 'Contract Start'],
-            ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End', 'space' => 1],
+            ['form_type' => 'date', 'name' => 'contract_end', 'description' => 'Contract End'],
         ];
 
         if (Module::collections()->has('BillingBase')) {
+            $b3[] = ['form_type' => 'date', 'name' => 'last_amendment', 'description' => 'Last contract amendment', 'space' => 1, 'help' => trans('helper.contract.lastAmendment')];
+
             $days = range(0, 28);
             $days[0] = null;
 
@@ -149,6 +151,8 @@ class ContractController extends \BaseController
 
             $c[] = ['form_type' => 'select', 'name' => 'salesman_id', 'description' => 'Salesman', 'value' => selectList('salesman', ['firstname', 'lastname'], true, ' - ')];
         } else {
+            $b3[2][] = ['space' => 1];
+
             $qoss = Qos::all();
 
             $c = [

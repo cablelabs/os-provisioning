@@ -128,6 +128,7 @@ return [
     'Call Data Record'      => 'Call Data Record',
     'IP address'                => 'IP address',
     'Language'                  => 'Language',
+    'Last contract amendment' => 'Last contract amendment',
     'Lastname'                  => 'Lastname',
     'Last IP'                   => 'Last IP',
     'ccc'                       => 'Customer Control Center',

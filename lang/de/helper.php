@@ -128,6 +128,7 @@ return [
      * MODULE: ProvBase
      */
     'contract' => [
+        'lastAmendment' => 'Tag an dem die letzte Vertragsänderung vorgenommen wurde. Dies hat Einfluss auf die Vertragsbestätigung. Nur Tarife/Posten, die nach diesem Datum hinzugefügt wurden, werden aufgeführt und bezüglich der Bestimmung Laufzeiten einbezogen.',
         'valueDate' => 'Tag im Monat des separaten Buchungsdatums. Überschreibt das Fälligkeitsdatum aus den globalen Konfigurationen für diesen Vertrag in der SEPA XML. Die Bank bucht den Betrag dann an diesem Tag ab.',
     ],
     'rate_coefficient'              => 'MaxRateSustained wird mit diesem Wert multipliziert, um den Nutzer eine höhere (> 1.0) Übertragungsrate als gebucht zu gewähren.',
