@@ -446,6 +446,19 @@ return [
         'Icinga' => 'Anwendung zur System-und Netzwerküberwachung.',
     ],
 
+    // NetElement
+    'netelement' => [
+        'network' => 'Network',
+        'market' => 'Market',
+        'hubsite' => 'Hubsite',
+        'ccap_cores' => 'CCAP Cores',
+        'dpa' => 'DPA',
+        'ncs' => 'NCS',
+        'rpa' => 'RPA',
+        'rpd' => 'RPD',
+        'cpe' => 'CPE',
+    ],
+
     // TroubleDashboard
     'troubleDashboard' => [
         'all' => 'Alle Elemente',

@@ -447,6 +447,19 @@ return [
         'Icinga' => 'Icinga is a monitoring system which checks the availability of your network resources, notifies users of outages, and generates performance data for reporting.',
     ],
 
+    // NetElement
+    'netelement' => [
+        'network' => 'Network',
+        'market' => 'Market',
+        'hubsite' => 'Hubsite',
+        'ccap_cores' => 'CCAP Cores',
+        'dpa' => 'DPA',
+        'ncs' => 'NCS',
+        'rpa' => 'RPA',
+        'rpd' => 'RPD',
+        'cpe' => 'CPE',
+    ],
+
     // TroubleDashboard
     'troubleDashboard' => [
         'all' => 'all',
