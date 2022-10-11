@@ -1386,7 +1386,7 @@ class Contract extends \BaseModel
         $tariff = $inet;
 
         // use voip tariff if no inet tariff exists or (inet is not bundled with voip and voip was created last)
-        if (! $inet || (! $inet && ! $inet->bundled_with_voip)) {
+        if (! $inet || ! $inet->bundled_with_voip) {
             // take last added (voip or inet)
             $voip = $tariffs->where('type', '=', 'Voip')->first();
 
