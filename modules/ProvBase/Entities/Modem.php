@@ -470,7 +470,7 @@ class Modem extends \BaseModel
         ];
 
         if (Module::collections()->has('ProvMon')) {
-            $tabs[array_key_last($tabs)]['route'] = 'ProvMon.index';
+            $tabs[array_key_last($tabs)]['route'] = 'ProvMon.analysis';
         }
 
         if ($this->configfile->device == 'cm') {
@@ -2792,7 +2792,7 @@ class Modem extends \BaseModel
             trans('messages.Signal Parameters') => [
                 'text' => "US Pwr: {$this->us_pwr} | US SNR: {$this->us_snr} ||DS Pwr: {$this->ds_pwr} | DS SNR: {$this->ds_snr}",
                 'action' => [
-                    'link' => route('ProvMon.index', [$this->id]),
+                    'link' => route('ProvMon.analysis', [$this->id]),
                     'icon' => 'fa-area-chart',
                     'title' => trans('view.analysis'),
                 ],

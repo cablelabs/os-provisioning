@@ -52,7 +52,7 @@
             $route = 'Modem';
         }
 
-        $route .= '.'.($classname == 'Modem' ? 'index' : 'netgw');
+        $route .= '.'.($classname == 'Modem' ? 'analysis' : 'netgw');
 
         $s .= "<li class='nav-tabs'>".HTML::linkRoute($route, trans('view.analysis'), $model->id).'</li>';
     } elseif ($type == 'CPE') {
