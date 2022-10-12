@@ -295,8 +295,7 @@ class Kernel extends ConsoleKernel
         exec('chown -R apache:apache '.storage_path('framework/cache'));
 
         if (\Module::collections()->has('SmartOnt')) {
-
-           if (config('smartont.flavor.hasDreamfiberSubscriptions')) {
+            if (config('smartont.flavor.hasDreamfiberSubscriptions')) {
 
                 // get updates for pending DfSubscriptions
                 $schedule->call(function () {
@@ -307,9 +306,9 @@ class Kernel extends ConsoleKernel
                 $schedule->call(function () {
                     Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OtoFromCsvUpdaterJob());
                 })->dailyAt('06:43');
-           }
+            }
 
-           if ('LFO' == config('smartont.flavor.active')) {
+            if ('LFO' == config('smartont.flavor.active')) {
                 // get updates for OTO from CSV file
                 $schedule->call(function () {
                     Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntFromCsvUpdaterJob());
@@ -318,17 +317,17 @@ class Kernel extends ConsoleKernel
                 $schedule->call(function () {
                     Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\OntStateChangerJob());
                 })->everyMinute();
-           }
+            }
 
-           if ('GESA' == config('smartont.flavor.active')) {
+            if ('GESA' == config('smartont.flavor.active')) {
                 $schedule->call(function () {
-                   Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RestartAutofindOntJob());
+                    Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RestartAutofindOntJob());
                 })->cron('7 */2 * * *');
-           }
+            }
 
-           $schedule->call(function () {
-               Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
-           })->everyFiveMinutes();
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
+            })->everyFiveMinutes();
         }
     }
 

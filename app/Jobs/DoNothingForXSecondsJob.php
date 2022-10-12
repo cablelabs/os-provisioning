@@ -37,7 +37,6 @@ class DoNothingForXSecondsJob implements ShouldQueue
         $this->pushTime = $pushTime;
     }
 
-
     /**
      * Execute the job.
      *
@@ -56,6 +55,5 @@ class DoNothingForXSecondsJob implements ShouldQueue
         echo "\n";
         echo "\n";
 
-        return;
     }
 }

@@ -153,7 +153,6 @@ class Contract extends \BaseModel
         return $rules;
     }
 
-
     // Name of View
     public static function view_headline()
     {
@@ -177,7 +176,6 @@ class Contract extends \BaseModel
 
         // special header set for SmartOnt installations
         if (Module::collections()->has('SmartOnt')) {
-
             if ('GESA' == config('smartont.flavor.active')) {
                 $ret[] = $this->table.'.sep_id';
                 $ret[] = $this->table.'.oto_id';

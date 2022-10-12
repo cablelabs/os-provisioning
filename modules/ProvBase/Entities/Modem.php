@@ -123,7 +123,7 @@ class Modem extends \BaseModel
 
                 foreach ($required as $field) {
                     if (! array_key_exists($field, $rules)) {
-                        $rules[$field] = ['required', ];
+                        $rules[$field] = ['required'];
                     }
                     if (! in_array('required', $rules[$field])) {
                         array_unshift($rules[$field], 'required');
@@ -138,6 +138,7 @@ class Modem extends \BaseModel
                     array_unshift($rules['mac'], 'required');
                     array_unshift($rules['ppp_username'], 'nullable');
                     array_unshift($rules['serial_num'], 'required');
+
                     return $rules;
                 }
                 $rules['mac'][] = 'nullable';
@@ -213,7 +214,7 @@ class Modem extends \BaseModel
                 $this->table.'.apartment_nr',
                 $this->table.'.geocode_source',
                 $this->table.'.inventar_num',
-                'contract_valid'
+                'contract_valid',
             ];
         }
 
@@ -293,6 +294,7 @@ class Modem extends \BaseModel
         if (is_null($this->us_pwr)) {
             return 'danger';
         }
+
         return 'success';
     }
 
@@ -2334,7 +2336,7 @@ class Modem extends \BaseModel
     public function isSmartOnt()
     {
         if (\Module::collections()->has('SmartOnt')) {
-            return ($this->isTR069() || $this->isOnt());
+            return $this->isTR069() || $this->isOnt();
         }
 
         return false;
@@ -3121,9 +3123,7 @@ class Modem extends \BaseModel
      */
     public function delete()
     {
-
         if (\Module::collections()->has('SmartOnt')) {
-
             if ('GESA' == config('smartont.flavor.active')) {
 
                 // deletion only allowed from storage OTO
@@ -3132,6 +3132,7 @@ class Modem extends \BaseModel
                     $msg .= ': ';
                     $msg .= trans('smartont::messages.ontNotDeletableFromOTO');
                     $this->addAboveMessage($msg, 'error');
+
                     return false;
                 }
 
@@ -3149,6 +3150,7 @@ class Modem extends \BaseModel
                         $msg .= ': ';
                         $msg .= trans('smartont::messages.ontNotDeletableWithoutDeprovisioning');
                         $this->addAboveMessage($msg, 'error');
+
                         return false;
                     }
                 }

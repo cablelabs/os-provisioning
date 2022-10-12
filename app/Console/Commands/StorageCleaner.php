@@ -157,7 +157,7 @@ class StorageCleaner extends Command
             'function' => 'monthlyFolders', // function to call
             'compress' => '6M', // age threshold for compressing the subdirs
             'delete' => '24M', // age threshold for deleting .tar.bz2 files
-            ];
+        ];
 
         if ('GESA' == config('smartont.flavor.active')) {
             $smartont_thresholds['path'] = storage_path().'/app/data/smartont/sep'; // the base path holding the date subdirs

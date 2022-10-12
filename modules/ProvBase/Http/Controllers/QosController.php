@@ -34,7 +34,7 @@ class QosController extends \BaseController
         $ret[] = [
             'form_type' => 'text',
             'name' => 'name',
-            'description' => 'Name'
+            'description' => 'Name',
         ];
 
         if ((! $model) || ('smartont' != $model->type)) {

@@ -893,7 +893,6 @@ class ModemController extends \BaseController
         }
 
         if (Module::collections()->has('SmartOnt')) {
-
             if ($this->configfile && $this->configfile->is_multiservice_ont) {
                 $smartOnt = \Modules\SmartOnt\Entities\Smartont::first();
                 $data['qos_id'] = $smartOnt->default_mgmt_qos_id;
@@ -1239,6 +1238,7 @@ class ModemController extends \BaseController
         }
 
         \Session::push('tmp_error_above_form', 'Unknown method: '.$method);
+
         return redirect($this->redirectUrl);
     }
 
@@ -1254,6 +1254,7 @@ class ModemController extends \BaseController
         }
 
         \Session::push('tmp_error_above_form', 'Not implemented for flavor '.config('smartont.flavor.active'));
+
         return redirect($this->redirectUrl);
     }
 
@@ -1268,7 +1269,7 @@ class ModemController extends \BaseController
             return redirect($this->redirectUrl);
         }
 
-        list($filename, $csv) = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
+        [$filename, $csv] = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
         if (! is_array($csv)) {
             return redirect($this->redirectUrl);
         }
@@ -1278,6 +1279,7 @@ class ModemController extends \BaseController
 
         if (1 == count(($header))) {
             \Session::push('tmp_error_above_index_list', 'Only one column found: “'.$header[0].'”. Hint: Use “;” as delimiter.');
+
             return redirect($this->redirectUrl);
         }
 
@@ -1298,10 +1300,10 @@ class ModemController extends \BaseController
                 'ont state switchdate',
                 'ont-status-änderungs-datum',
                 'switchdate',
-            ]
+            ],
         ];
 
-        # add translations (the are used for the export, too)
+        // add translations (the are used for the export, too)
         foreach ($fieldMap as $key => $values) {
             $fieldMap[$key][] = mb_strtolower(trans('dt_header.modem.'.$key));
         }
@@ -1323,6 +1325,7 @@ class ModemController extends \BaseController
 
         if ($missingCols) {
             \Session::push('tmp_error_above_index_list', 'Fields missing in CSV file: '.implode(',', $missingCols));
+
             return redirect($this->redirectUrl);
         }
 
@@ -1344,10 +1347,9 @@ class ModemController extends \BaseController
                 'inactive',
             ];
             if (! in_array($next_ont_state, $allowedStates)) {
-                \Session::push('tmp_error_above_index_list', 'Next state '.$next_ont_state.' in line '.($lineNumber + 1). ' invalide – ignoring line');
+                \Session::push('tmp_error_above_index_list', 'Next state '.$next_ont_state.' in line '.($lineNumber + 1).' invalide – ignoring line');
                 continue;
             }
-
 
             $ont_state_switchdate = $entry[$map['ont_state_switchdate']];
             if (! $ont_state_switchdate) {
@@ -1380,8 +1382,8 @@ class ModemController extends \BaseController
 
             $modem->save();
         }
-        return redirect($this->redirectUrl);
 
+        return redirect($this->redirectUrl);
     }
 
     /**
@@ -1396,6 +1398,7 @@ class ModemController extends \BaseController
         }
 
         \Session::push('tmp_error_above_form', 'Not implemented for flavor '.config('smartont.flavor.active'));
+
         return redirect($this->redirectUrl);
     }
 
@@ -1417,7 +1420,7 @@ class ModemController extends \BaseController
             return redirect($this->redirectUrl);
         }
 
-        list($filename, $csv) = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
+        [$filename, $csv] = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
         if (! is_array($csv)) {
             return redirect($this->redirectUrl);
         }
@@ -1440,14 +1443,14 @@ class ModemController extends \BaseController
                 'mac',
                 'mac-address',
                 'macaddress',
-            ]
+            ],
         ];
 
         $headerPos = [];
         foreach ($fieldMap as $field => $mappings) {
             foreach ($mappings as $mapping) {
                 $pos = array_search($mapping, $header);
-                if (FALSE !== $pos) {
+                if (false !== $pos) {
                     $headerPos[$field] = $pos;
                     break;
                 }
@@ -1469,7 +1472,7 @@ class ModemController extends \BaseController
                     $tmp = unifyMac(['mac' => $macAddress]);
                     $mac = $tmp['mac'];
                     $macAddress = $mac;
-                };
+                }
             }
 
             $modem = Modem::FirstOrNew(['serial_num' => $serial]);

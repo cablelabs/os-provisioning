@@ -2,8 +2,7 @@
 /**
  * Restarts named server after syntax check
  */
-
-require_once('/var/www/nmsprime/app/extensions/systemd/laralog.php');
+require_once '/var/www/nmsprime/app/extensions/systemd/laralog.php';
 
 $configfile = '/etc/named-nmsprime.conf';
 
@@ -28,4 +27,3 @@ if (! flock($fp, LOCK_EX)) {
 }
 
 fclose($fp);
-

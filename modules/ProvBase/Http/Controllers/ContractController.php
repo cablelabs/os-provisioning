@@ -324,7 +324,7 @@ class ContractController extends \BaseController
                 return $this->viewFormFieldsLfoOto($model);
             }
 
-            throw new Exception(__METHOD__.": Cannot create view form fields for flavor ".config('smartont.flavor.active'));
+            throw new Exception(__METHOD__.': Cannot create view form fields for flavor '.config('smartont.flavor.active'));
         }
 
         // Compose related phonenumbers as readonly info field

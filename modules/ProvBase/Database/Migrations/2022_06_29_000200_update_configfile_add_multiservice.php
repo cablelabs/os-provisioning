@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Database\Migrations\BaseMigration;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateConfigfileAddMultiservice extends BaseMigration
 {
@@ -33,7 +33,7 @@ class UpdateConfigfileAddMultiservice extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->boolean('is_multiservice_ont')->default(False);
+            $table->boolean('is_multiservice_ont')->default(false);
         });
     }
 

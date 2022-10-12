@@ -636,7 +636,8 @@ class Configfile extends \BaseModel
     public function isInUseOnModem()
     {
         $modemCount = Modem::where('configfile_id', '=', $this->id)->count();
-        return (0 == $modemCount) ? False : True;
+
+        return (0 == $modemCount) ? false : true;
     }
 
     /**

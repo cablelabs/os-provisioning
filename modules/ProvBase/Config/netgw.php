@@ -25,7 +25,7 @@ return [
         'MA5800-X7',
         'MA5800-X15',
         'MA5800-X17',
-        ],
+    ],
     'MikroTik'  => ['CCR1036', 'CCR2004'],
     'Motorola'  => ['BSR2000', 'BSR64000'],
     'NSN'       => ['hiX5608'],

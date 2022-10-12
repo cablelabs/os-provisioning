@@ -18,7 +18,6 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\RadGroupReply;
 
@@ -64,6 +63,7 @@ class QosObserver
                 'traffic_table_out',
             ];
             $qos->restoreUnchangeableFields($unchangables, 'QoS is in use');
+
             return;
         }
     }

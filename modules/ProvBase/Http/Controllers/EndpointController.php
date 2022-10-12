@@ -18,7 +18,6 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Modules\ProvBase\Entities\Qos;
 use Nwidart\Modules\Facades\Module;
 
 class EndpointController extends \BaseController
@@ -40,7 +39,7 @@ class EndpointController extends \BaseController
                 'form_type' => 'text',
                 'name' => 'hostname',
                 'description' => 'Hostname',
-                'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name
+                'help' => '.cpe.'.\Modules\ProvBase\Entities\ProvBase::first()->domain_name,
             ],
             [
                 'form_type' => 'text',

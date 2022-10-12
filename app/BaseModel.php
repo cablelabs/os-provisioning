@@ -962,12 +962,11 @@ class BaseModel extends Eloquent
      *
      * @param unchangables array of fields not allowed to change
      * @param reason optional reason to be shown/logged
-     *
      * @return number of restored fields
      *
      * @author Patrick Reichel
      */
-    public function restoreUnchangeableFields($unchangables, $reason='')
+    public function restoreUnchangeableFields($unchangables, $reason = '')
     {
         $restored = 0;
         foreach ($unchangables as $field) {
@@ -982,6 +981,7 @@ class BaseModel extends Eloquent
                 $this->{$field} = $this->getOriginal($field);
             }
         }
+
         return $restored;
     }
 }

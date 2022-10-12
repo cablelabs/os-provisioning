@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+use Database\Migrations\BaseMigration;
 use Modules\ProvBase\Entities\Contract;
 use Illuminate\Database\Schema\Blueprint;
-use Database\Migrations\BaseMigration;
 
 class UpdateContractAddSmartOntFields extends BaseMigration
 {

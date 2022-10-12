@@ -611,13 +611,13 @@ function valuesFromThresholdString($thresholds)
 /**
  * Return a MAC in DC250 format (xxxx-xxxx-xxxx)
  *
- * @param string $mac MAC address
- * @param boolean $forceLower if true return mac in lower case, else leave untouched
+ * @param  string  $mac  MAC address
+ * @param  bool  $forceLower  if true return mac in lower case, else leave untouched
  * @return string MAC in DC250 format
  *
  * @author Patrick Reichel
  */
-function dc250Mac($mac, $forceLower=True)
+function dc250Mac($mac, $forceLower = true)
 {
     if (! $mac) {
         return $mac;
@@ -636,16 +636,16 @@ function dc250Mac($mac, $forceLower=True)
  * Wait until files matching a given pattern start growing.
  * Useful e.g. in getting data from SmartOnt OLT.
  *
- * @param str $pathPattern the path pattern to be used for glob()
- * @param int $timeBetweenChecks the time to sleep before checking the size again
- * @param bool $debugOutput Shows and logs debug information (indicating that the process is still running)
+ * @param  string  $pathPattern  the path pattern to be used for glob()
+ * @param  int  $timeBetweenChecks  the time to sleep before checking the size again
+ * @param  bool  $debugOutput  Shows and logs debug information (indicating that the process is still running)
  *
  * @author Patrick Reichel
  */
-function waitForLogFileToStopGrowing($pathPattern, $timeBetweenChecks, $debugOutput=False)
+function waitForLogFileToStopGrowing($pathPattern, $timeBetweenChecks, $debugOutput = false)
 {
     $lastSize = -1;
-    while (True) {
+    while (true) {
 
         // filesizes are cached – we first need to empty the cache
         clearstatcache();

@@ -148,7 +148,8 @@ class Qos extends \BaseModel
     public function isInUseOnModem()
     {
         $modemCount = Modem::where('qos_id', '=', $this->id)->count();
-        return (0 == $modemCount) ? False : True;
+
+        return (0 == $modemCount) ? false : true;
     }
 
     /**
@@ -159,7 +160,8 @@ class Qos extends \BaseModel
     public function isInUseOnEndpoint()
     {
         $endpointCount = endpoint::where('qos_id', '=', $this->id)->count();
-        return (0 == $endpointCount) ? False : True;
+
+        return (0 == $endpointCount) ? false : true;
     }
 
     /**
@@ -169,9 +171,8 @@ class Qos extends \BaseModel
      */
     public function isInUse()
     {
-        return ($this->isInUseOnModem() || $this->isInUseOnEndpoint());
+        return $this->isInUseOnModem() || $this->isInUseOnEndpoint();
     }
-
 
     /**
      * BOOT: init quality observer

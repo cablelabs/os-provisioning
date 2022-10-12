@@ -2096,12 +2096,14 @@ class BaseController extends Controller
         // check if a file has been uploded
         if (! Request::hasFile($formField)) {
             \Session::push('tmp_error_above_'.$errorMessagePosition, 'No file given');
+
             return false;
         }
 
         // check if a valid file has been uploaded
         if (! Request::file($formField)->isValid()) {
             \Session::push('tmp_error_above_'.$errorMessagePosition, 'Uploaded file is invalid');
+
             return false;
         }
 
@@ -2112,6 +2114,7 @@ class BaseController extends Controller
             ['text/plain', 'text/csv']
         )) {
             \Session::push('tmp_error_above_'.$errorMessagePosition, 'File seems not to be a CSV file, mime type is: '.$mimeType);
+
             return false;
         }
 
@@ -2122,6 +2125,7 @@ class BaseController extends Controller
      * Get content of uploaded csv file
      *
      * @return array containing the original filename and an array holding the csv file content
+     *
      * @author Patrick Reichel
      */
     public function getDataFromUploadedCsv($formField, $errorMessagePosition)
@@ -2130,13 +2134,14 @@ class BaseController extends Controller
             $filehandle = fopen(Request::file($formField)->path(), 'r');
         } catch (\Exception $ex) {
             \Session::push('tmp_error_above_'.$errorMessagePosition, 'Exception thrown: '.$ex->getMessage());
+
             return null;
         }
 
         $filename = Request::file($formField)->getClientOriginalName();
 
         $csv = [];
-        while(($data = fgetcsv($filehandle, null, ";")) !== FALSE) {
+        while (($data = fgetcsv($filehandle, null, ';')) !== false) {
             array_push($csv, $data);
         }
 

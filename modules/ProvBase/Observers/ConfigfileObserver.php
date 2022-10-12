@@ -19,7 +19,6 @@
 namespace Modules\ProvBase\Observers;
 
 use Queue;
-use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
@@ -55,6 +54,7 @@ class ConfigfileObserver
                 'tr069_profile_id',
             ];
             $configfile->restoreUnchangeableFields($unchangables, 'Configfile is in use');
+
             return;
         }
     }

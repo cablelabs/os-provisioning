@@ -18,7 +18,6 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\RadIpPool;
@@ -40,6 +39,7 @@ class EndpointObserver
     {
         if (Module::collections()->has('SmartOnt')) {
             \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
+
             return;
         }
 
@@ -79,6 +79,7 @@ class EndpointObserver
                 'state',
             ];
             $endpoint->restoreUnchangeableFields($unchangables, 'Endpoint is active');
+
             return;
         }
 
@@ -110,7 +111,7 @@ class EndpointObserver
                 'ont_id' => $endpoint->modem->ont_id,
                 'vlan_id' => $endpoint->qos->vlan_id,
             ];
-            $desc = "###BEGIN_OF_RELATED_PROVISIONING_DATA###".serialize($data)."###END_OF_RELATED_PROVISIONING_DATA####\n\n";
+            $desc = '###BEGIN_OF_RELATED_PROVISIONING_DATA###'.serialize($data)."###END_OF_RELATED_PROVISIONING_DATA####\n\n";
             // place in front too not truncate the information on to long descriptions
             $endpoint->description = $desc.$endpoint->description;
         }
@@ -120,6 +121,7 @@ class EndpointObserver
     {
         if (Module::collections()->has('SmartOnt')) {
             \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\EndpointStateChangerJob($endpoint->id));
+
             return;
         }
 

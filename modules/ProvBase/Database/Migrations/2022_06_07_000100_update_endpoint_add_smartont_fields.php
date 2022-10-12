@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-use Illuminate\Database\Schema\Blueprint;
 use Database\Migrations\BaseMigration;
+use Illuminate\Database\Schema\Blueprint;
 
 class UpdateEndpointAddSmartOntFields extends BaseMigration
 {
