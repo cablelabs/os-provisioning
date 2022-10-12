@@ -22,6 +22,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class GlobalConfigController extends BaseController
@@ -42,9 +43,13 @@ class GlobalConfigController extends BaseController
      */
     public function view_form_fields($model = null)
     {
+        if (! Storage::exists(self::BG_IMAGES_PATH_REL)) {
+            Storage::makeDirectory(self::BG_IMAGES_PATH_REL);
+        }
+
         $pics = array_map(function ($file) {
             return $file->getRelativePathName();
-        }, \File::allfiles(storage_path(self::BG_IMAGES_PATH_REL)));
+        }, Storage::allfiles(self::BG_IMAGES_PATH_REL));
 
         $pictures[null] = null;
         $pictures += array_combine($pics, $pics);
