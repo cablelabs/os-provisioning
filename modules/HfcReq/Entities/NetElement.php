@@ -1076,11 +1076,12 @@ class NetElement extends \BaseModel
 
         $tabs = [];
         $i18nNetElement = trans_choice('view.Header_NetElement', 1);
-
-        if (\Route::getCurrentRoute()->getAction('as') != 'NetElement.edit') {
+        
+        $currentRoute = \Route::getCurrentRoute()->getAction('as');
+        if ($currentRoute != 'CoreMon.network.overview' && $currentRoute != 'NetElement.edit') {
             $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
         }
-
+        
         $enabledModules = Module::collections();
 
         if ($enabledModules->has('CoreMon') && in_array($this->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
