@@ -1,0 +1,9 @@
+This whole directory can be removed when all SmartOnt installations have been migrated to PostgreSQL
+
+
+What do do?
+
+* Dump the whole nmsprime* databases (Maria and Postgres)!
+* Get a clean, empty Postgres dump from the devel VM (from the same commit as on the SmartOnt machine)
+* Run the migrations in Maria – now the schemas should be compatible
+* execute the shell script to convert/move data
