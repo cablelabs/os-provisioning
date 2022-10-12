@@ -1456,12 +1456,11 @@ label {
 /* 3.9 Component - Nav Setting */
 
 .nav > li > a {
-    color: #6e7179;
+    color: black;
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
     color: var(--text-navbar-default);
-    background: #fafafa;
 }
 
 

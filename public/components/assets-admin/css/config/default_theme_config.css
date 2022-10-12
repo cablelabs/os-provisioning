@@ -2,7 +2,7 @@
 :root {
 
     /* body color variable */
-    --bg-body : var(--slate-300);
+    --bg-body : var(--gray-light-100);
     --text-body: var(--gray-900);
 
      /* heading color variable */
@@ -15,7 +15,7 @@
 
     /* navbar color variable */
     --text-navbar :  var(--gray-800);
-    --text-navbar-default : var(--gray-1000);
+    --text-navbar-default : var(--cyan-500);
     --text-navbar-nav-open : var(--gray-1000);
     --border-navbar-nav-dropdown : var(--silver-200);
     --bg-icon-navbar : var(--gray-1000);
