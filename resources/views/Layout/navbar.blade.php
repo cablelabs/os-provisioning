@@ -79,7 +79,7 @@
           @endif --}}
 
             {{-- count of user interaction needing EnviaOrders --}}
-            {{-- @if (Module::collections()->has('ProvVoipEnvia'))
+            @if (Module::collections()->has('ProvVoipEnvia'))
           <li  class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
             <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
               @if ($envia_interactioncount > 0)
@@ -94,7 +94,7 @@
               @endif
             </a>
           </li>
-        @endif --}}
+        @endif
 
             {{-- quickview pre-selected network  --}}
             @if (Module::collections()->has('CoreMon') && isset($quick_view_network))
