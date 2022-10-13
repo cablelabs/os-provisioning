@@ -20,10 +20,9 @@
                 type: 'column', {{-- auto resize the Table to fit the viewing device --}}
                 }
             },
-            fixedHeader: true,
             dom: "Btip",
             fnAdjustColumnSizing: true,
-            autoWidth: true,
+            autoWidth: false,
             aoColumnDefs: [ {
                 className: 'control',
                 orderable: false,
@@ -48,6 +47,6 @@
                         {data: 'model_id', name: 'model_id'},
             ],
         })
-    $( $.fn.dataTable.tables(true) ).DataTable({ fixedHeader: true }).responsive.recalc()
+    $( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc()
     })
 </script>

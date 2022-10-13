@@ -979,6 +979,12 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     line-height: 16px;
 }
 
+.dataTables_scroll .dataTables_scrollHead {
+    position: sticky !important;
+    top: 40px;
+    z-index: 1;
+}
+
 .nav-header .text-success i {
     float: right !important;
 }

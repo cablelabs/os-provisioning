@@ -303,7 +303,7 @@ $( document ).ready(function() {
 
 $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
   $($.fn.dataTable.tables(true))
-    .DataTable({ fixedHeader: true })
+    .DataTable()
     .columns.adjust()
     .responsive.recalc()
 })
@@ -418,9 +418,20 @@ document.addEventListener('DOMContentLoaded', function () {
         { data: 'checkbox', orderable: false, searchable: false },
         { data: 'label', orderable: false, searchable: false }
       ],
-      fixedHeader: true
     })
   })
+
+  // resize observer for resize_datatable
+  let timer_resize_datatable = null
+
+  const resize_datatable = new ResizeObserver(function(entries) {
+    clearTimeout(timer_resize_datatable);
+    timer_resize_datatable = setTimeout(() => {
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust()
+    }, 500)
+  });
+
+  resize_datatable.observe(document.querySelector(".datatable"))
 })
 
 window.excerptStr = function (str, length = 10) {

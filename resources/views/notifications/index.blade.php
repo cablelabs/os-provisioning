@@ -132,7 +132,7 @@
                     type: 'column', {{-- auto resize the Table to fit the viewing device --}}
                 }
             },
-            autoWidth: true, {{-- Option to ajust Table to Width of container --}}
+            autoWidth: false, {{-- Option to ajust Table to Width of container --}}
             dom: 'ltip', {{-- sets order and what to show  --}}
             lengthMenu:  [ [5, 10, 25, -1], [5, 10, 25, "{{ trans('view.jQuery_All') }}" ] ],
             {{-- Responsive Column --}}
