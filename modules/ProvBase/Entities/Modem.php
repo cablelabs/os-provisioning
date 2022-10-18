@@ -2565,8 +2565,9 @@ class Modem extends \BaseModel
             ['framedipaddress', 'IP', null],
         ];
         $sessions = $this->radacct()
+            ->where('acctstarttime', '>', \Carbon\Carbon::now()->subDays(10))
             ->latest('radacctid')
-            ->limit(10)
+            ->limit(50)
             ->get(array_map(function ($a) {
                 return $a[0];
             }, $sessionItems));
@@ -2600,8 +2601,9 @@ class Modem extends \BaseModel
             ['reply', 'Reply'],
         ];
         $auths = $this->radpostauth()
+            ->where('authdate', '>', \Carbon\Carbon::now()->subDays(10))
             ->latest('id')
-            ->limit(10)
+            ->limit(50)
             ->get(array_map(function ($a) {
                 return $a[0];
             }, $authItems));
