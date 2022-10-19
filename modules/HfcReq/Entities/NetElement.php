@@ -1591,4 +1591,32 @@ class NetElement extends \BaseModel
 
         \Modules\CoreMon\Entities\Link::insert($insert);
     }
+
+    public function getPortsOverutilized()
+    {
+        $descendantsNetElements = $this->descendants()->whereBetween('base_type_id', [18, 22])->with('links')->get();
+
+        $portsOverutilized = [
+            'totalNumber' => 0,
+            'overutilizedNumber' => 0,
+        ];
+
+        foreach ($descendantsNetElements as $ne) {
+            $portsOverutilizedLinks = $ne->links->filter(function ($item, $key) {
+                return (($item->utilization_from + $item->utilization_to) / 2) * 100 >= app('CoreMon::shared')->get('minPortsOverutilizedPercentage');
+            });
+
+            $portsOverutilized['totalNumber'] += count($ne->links);
+            $portsOverutilized['overutilizedNumber'] += count($portsOverutilizedLinks);
+        }
+
+        $portsOverutilizedPercentage = $portsOverutilized['overutilizedNumber'] > 0 ? round(($portsOverutilized['overutilizedNumber'] / $portsOverutilized['totalNumber']) * 100) : 0;
+        $portsOverutilizedColor = $portsOverutilizedPercentage >= app('CoreMon::shared')->get('minPortsOverutilizedCritical') ? 'critical' : ($portsOverutilizedPercentage >= app('CoreMon::shared')->get('minPortsOverutilizedwarning') ? 'warning' : 'success');
+
+        return [
+            'number' => $portsOverutilized['overutilizedNumber'],
+            'percentage' => $portsOverutilizedPercentage,
+            'color' => $portsOverutilizedColor,
+        ];
+    }
 }
