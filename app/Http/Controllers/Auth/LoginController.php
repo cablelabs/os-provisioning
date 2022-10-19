@@ -206,7 +206,7 @@ class LoginController extends Controller
             $activeModules->has('CoreMon') &&
             $netelement = \Modules\HfcReq\Entities\NetElement::where('netelementtype_id', 1)->orderBy('id')->first()
         ) {
-            return route('CoreMon.network.overview', [$netelement]);
+            return route('CoreMon.net.overview', [$netelement]);
         }
 
         if ($activeModules->has('Ticketsystem') && $this->isMobileDevice()) {

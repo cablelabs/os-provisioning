@@ -109,7 +109,7 @@
                     <div class="flex flex-col space-y-4 text-sm">
                         @foreach ([
                             'Network' => [
-                                'route' => 'CoreMon.network.overview',
+                                'route' => 'CoreMon.net.overview',
                                 'netTypeId' => 1,
                                 'var' => 'network',
                             ],

@@ -94,6 +94,7 @@ return [
     'Header_Overview'           => 'Panorama',
     'Header_Assigned'           => 'Designar',
     'Header_Create'             => 'Crear',
+    'Header_Net'                => 'Network',
     //Module specific
     //BillingBase
     //Product List

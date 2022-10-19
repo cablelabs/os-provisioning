@@ -33,7 +33,7 @@ class NetElementType extends \BaseModel
      * So don't change this order unless you definitly know what you are doing !!!
      */
     public static $undeletables = [
-        1 => 'Network',
+        1 => 'Net',
         2 => 'Cluster',
         3 => 'NetGw',
         4 => 'Amplifier',

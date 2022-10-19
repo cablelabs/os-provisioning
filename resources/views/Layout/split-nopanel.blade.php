@@ -46,7 +46,7 @@
         'CustomerModem.showModems',
         'CustomerTopo.show_prox',
         'VicinityGraph.show',
-        'CoreMon.network.overview',
+        'CoreMon.net.overview',
     ];
 
     if (in_array($routeName = request()->route()->getName(), $fullscreenRoutes)) {
