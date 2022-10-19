@@ -124,7 +124,7 @@
     --text-nav-tabs-inverse : var(--dark-gray);
     --text-nav-pills : var(--dark-gray);
     --bg-nav-pills-active : var(--dark-gray-darker);
-
+    --nav-link-text: var(--black);
     /* button color variable */
     --text-btn-default : var(--white);
     --bg-btn-default : var(--gray);

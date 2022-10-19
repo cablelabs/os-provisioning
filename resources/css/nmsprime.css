@@ -1107,7 +1107,7 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     color: white;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: bold;
     padding-bottom: 4px;
 }

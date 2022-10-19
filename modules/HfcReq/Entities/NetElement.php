@@ -1078,7 +1078,9 @@ class NetElement extends \BaseModel
         $i18nNetElement = trans_choice('view.Header_NetElement', 1);
 
         $currentRoute = \Route::getCurrentRoute()->getAction('as');
-        if ($currentRoute != 'CoreMon.network.overview' && $currentRoute != 'NetElement.edit') {
+        $netElementNotSetRoutes = ['CoreMon.network.overview', 'NetElement.edit'];
+        
+        if (!in_array($currentRoute, $netElementNotSetRoutes)) {
             $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
         }
 
