@@ -1456,7 +1456,7 @@ label {
 /* 3.9 Component - Nav Setting */
 
 .nav > li > a {
-    color: black;
+    color: var(--nav-link-text);
 }
 .nav > li > a:hover,
 .nav > li > a:focus {
