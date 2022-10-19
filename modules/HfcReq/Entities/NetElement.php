@@ -1522,6 +1522,10 @@ class NetElement extends \BaseModel
         exec("/opt/topologydetector-nmsprime/generate_topology.sh \"$absPath/hosts.yaml\" \"$absPath/\"");
         $topology = json_decode(file_get_contents("$absPath/topology.js"), true);
 
+        /* set all descendants of hubsite to offline first */
+        $descendants = $this->descendants->pluck('id');
+        self::whereIn('id', $descendants)->update(['online' => false]);
+
         $validNodes = array_filter($topology['nodes'], function ($node) {
             return filter_var($node['primaryIP'], FILTER_VALIDATE_IP);
         });
@@ -1542,6 +1546,7 @@ class NetElement extends \BaseModel
                 $new = self::create([
                     'ip' => $node['primaryIP'],
                     'name' => $node['name'],
+                    'online' => true,
                     // in case no parent is available attach it to the hubsite
                     'parent_id' => isset($lastId[$idx - 1]) ? $lastId[$idx - 1] : $this->id,
                     'netelementtype_id' => $idx,
