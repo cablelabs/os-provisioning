@@ -1619,7 +1619,7 @@ class Modem extends \BaseModel
             return false;
         }
 
-        $cur = $this->radacct()->latest('radacctid')->first();
+        $cur = $this->radacct()->latest('acctstarttime')->first();
 
         // no active PPP session or necessary fields aren't set
         if (! $cur || $cur->acctstoptime || ! $cur->nasipaddress || ! $cur->acctsessionid || ! $cur->username) {
@@ -2407,7 +2407,7 @@ class Modem extends \BaseModel
         $ip = ($ip == $hostname) ? null : $ip;
 
         if ($this->isPPP()) {
-            $cur = $this->radacct()->latest('radacctid')->first();
+            $cur = $this->radacct()->latest('acctstarttime')->first();
             if ($cur && ! $cur->acctstoptime) {
                 $ip = $hostname = $cur->framedipaddress;
             }
@@ -2539,7 +2539,7 @@ class Modem extends \BaseModel
         }
 
         // Current
-        $cur = $this->radacct()->latest('radacctid')->first();
+        $cur = $this->radacct()->latest('acctstarttime')->first();
         if ($cur && ! $cur->acctstoptime) {
             $ret['DT_Current Session']['Start'] = [$cur->acctstarttime];
             $ret['DT_Current Session']['Last Update'] = [$cur->acctupdatetime];
@@ -2566,7 +2566,7 @@ class Modem extends \BaseModel
         ];
         $sessions = $this->radacct()
             ->where('acctstarttime', '>', \Carbon\Carbon::now()->subDays(10))
-            ->latest('radacctid')
+            ->latest('acctstarttime')
             ->limit(50)
             ->get(array_map(function ($a) {
                 return $a[0];
