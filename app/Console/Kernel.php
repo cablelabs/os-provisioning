@@ -112,6 +112,10 @@ class Kernel extends ConsoleKernel
             $schedule->call(function () {
                 \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaDpicInterfaceDataJob());
             })->cron('5,20,35,50 * * * *');
+
+            $schedule->call(function () {
+                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaCcapInfoDataJob());
+            })->cron('5,20,35,50 * * * *');
         }
         // Parse News from repo server and save to local JSON file
         if (\Module::collections()->has('Dashboard')) {
