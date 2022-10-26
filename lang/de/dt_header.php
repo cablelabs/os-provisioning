@@ -16,6 +16,7 @@ return [
     'district' => 'Ortsteil',
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
+    'fiber_node' => 'Fiber node',
     'floor' => 'Etage',
     'group_contract' => 'Gruppen-vertrag',
     'house_nr' => 'Hausnr',
@@ -405,6 +406,7 @@ return [
     ],
     'fiberNode' => [
         'cable_interface' => 'Kabel Schnittstelle',
+        'mdd_status' => 'MDD Status',
         'name' => 'Name des Glasfaserknotens',
         'updated_at' => 'Letzte Aktualisierung',
     ],

@@ -16,6 +16,7 @@ return [
     'district' => 'District',
     'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
+    'fiber_node' => 'Fiber node',
     'floor' => 'Floor',
     'group_contract' => 'Group contract',
     'house_nr' => 'Housenr',
@@ -405,6 +406,7 @@ return [
     ],
     'fiberNode' => [
         'cable_interface' => 'Cable Interface',
+        'mdd_status' => 'MDD Status',
         'name' => 'Fiber Node Name',
         'updated_at' => 'Last Change',
     ],
