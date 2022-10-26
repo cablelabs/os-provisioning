@@ -34,10 +34,10 @@
 }
 
 @layer utilities {
-    .scrollbar-small::-webkit-scrollbar {
-        width: 3px;
+    .scrollbar-medium::-webkit-scrollbar {
+        width: 8px;
     }
-    .scrollbar-small::-webkit-scrollbar-thumb {
+    .scrollbar-medium::-webkit-scrollbar-thumb {
         background: var(--gray-dark);
         border-radius: 100vh;
     }
