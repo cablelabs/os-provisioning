@@ -47,6 +47,7 @@
         'CustomerTopo.show_prox',
         'VicinityGraph.show',
         'CoreMon.net.overview',
+        'CoreMon.topology'
     ];
 
     if (in_array($routeName = request()->route()->getName(), $fullscreenRoutes)) {

@@ -1140,10 +1140,7 @@ table.dataTable > tbody > tr.selected > * {
     top: 50px !important;
 }
 
-#topology svg g.edge, #topology svg [fill="#c8dae6"], #topology svg [text-anchor="start"]:last-of-type {
-    cursor: pointer;
-}
-
-.topology-container {
-    height: calc(100vh - 200px);
+#topology svg {
+    height: 95%;
+    width: 100%;
 }
