@@ -1523,28 +1523,35 @@ class NetElement extends \BaseModel
         $topology = json_decode(file_get_contents("$absPath/topology.js"), true);
 
         /* set all descendants of hubsite to offline first */
-        $descendants = $this->descendants->pluck('id');
-        self::whereIn('id', $descendants)->update(['online' => false]);
+        $descendantIds = $this->descendants->pluck('id');
+        self::whereIn('id', $descendantIds)->update(['online' => false]);
 
-        $validNodes = array_filter($topology['nodes'], function ($node) {
-            return filter_var($node['primaryIP'], FILTER_VALIDATE_IP);
+        /* mark detected netelements as online */
+        $detectedNetelements = collect($topology['nodes'])->keyBy('name');
+        self::whereIn('name', $detectedNetelements->pluck('name'))->update(['online' => true]);
+
+        // match topology.js ids to existing netelement ids
+        $netelementIdMap = [];
+        foreach ($this->descendants as $descendant) {
+            if ($detectedNetelements->has($descendant->name)) {
+                $netelementIdMap[$detectedNetelements[$descendant->name]['id']] = $descendant->id;
+            }
+        }
+
+        /* create missing netelements */
+        $descendantNames = $this->descendants->pluck('name');
+        $newNetelements = $detectedNetelements->filter(function ($node) use ($descendantNames) {
+            return ! $descendantNames->contains($node['name']);
         });
 
-        /* force delete old NetElements + Links */
-        $deleteNodeIds = self::whereIn('ip', collect($validNodes)->pluck('primaryIP'))->pluck('id');
-        self::whereIn('id', $deleteNodeIds)->forceDelete();
-        \Modules\CoreMon\Entities\Link::whereIn('from', $deleteNodeIds)->orWhereIn('to', $deleteNodeIds)->forceDelete();
-
-        /* recreate NetElements */
-        $netelementIdMap = [];
         foreach ([18 => 'RPCC', 19 => 'DPA', 20 => 'HUB', 21 => 'RPA'] as $idx => $nodeType) {
-            $nodes = array_filter($validNodes, function ($node) use ($nodeType) {
+            $nodes = $newNetelements->filter(function ($node) use ($nodeType) {
                 return str_contains($node['name'], $nodeType);
             });
 
             foreach ($nodes as $node) {
                 $new = self::create([
-                    'ip' => $node['primaryIP'],
+                    'ip' => $node['primaryIP'] != 'n/a' ?: null,
                     'name' => $node['name'],
                     'online' => true,
                     // in case no parent is available attach it to the hubsite
@@ -1556,8 +1563,11 @@ class NetElement extends \BaseModel
         }
         self::fixTree();
 
+        /* force delete all links of hubsite */
+        \Modules\CoreMon\Entities\Link::whereIn('from', $descendantIds)->orWhereIn('to', $descendantIds)->forceDelete();
+
         /* recreate Links */
-        $validNodeIds = collect($validNodes)->pluck('id')->toArray();
+        $validNodeIds = array_keys($netelementIdMap);
         $validLinks = array_filter($topology['links'], function ($link) use ($validNodeIds) {
             return in_array($link['source'], $validNodeIds) &&
                 in_array($link['target'], $validNodeIds) &&
