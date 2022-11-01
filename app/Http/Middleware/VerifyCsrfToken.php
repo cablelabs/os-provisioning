@@ -29,5 +29,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/api/v0/CoreMon/prometheus/webhook',
+        'telegraf/kafka/webhook',
     ];
 }
