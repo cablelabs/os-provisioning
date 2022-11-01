@@ -92,7 +92,7 @@ if (document.getElementById('auth-abilities')) {
   window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
 }
 
-const themeColor = $('body').data('theme_color')
+const themeColor = $('body').data('theme_color');
 
 // as per browser preference theme color
 if (themeColor === 'browser_preferences' && window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches) {
