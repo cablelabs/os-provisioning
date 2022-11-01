@@ -32,6 +32,7 @@
 							<a href="{{ $attr['link'] }}">
 								<img title="{{ trans('view.'.$attr['description']) }}" src="{{ asset('images/apps/'.$attr['icon']) }}" class="mx-2" style="height: 100px;">
 							</a>
+
 							<p class="text-black dark:text-slate-100" style="margin-top: 5px;">{{ $attr['name'] }}</p>
 						</div>
 					@endforeach
