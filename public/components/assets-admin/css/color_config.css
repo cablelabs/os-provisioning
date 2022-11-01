@@ -99,5 +99,9 @@
    --slate-400: #ccd0d4;
 
    --gray-light-100: #f3f4f6;
+   --gray-dark-100: #1a2229;
    --cyan-500: #06b6d4;
+
+   --primary-dark: #444648;
+   --primary-gray: #f1f1f1;
 }
