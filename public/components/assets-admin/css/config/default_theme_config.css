@@ -359,6 +359,9 @@
     --bg-card-inverse: transparent;
     --text-card-inverse: rgba(0, 0, 0, 0.65);
 
+    --bg-card-inverse: transparent;
+    --text-card-inverse: rgba(0, 0, 0, 0.65);
+
     /* li a hover focus */
 
     --li-a-hover-focus : var(--gray-800);
