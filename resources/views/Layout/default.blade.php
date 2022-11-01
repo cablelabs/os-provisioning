@@ -26,7 +26,7 @@
     @yield('head')
 </head>
 
-<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }}>
+<body {{ isset($body_onload) ? "onload=$body_onload()" : '' }} @if($user->theme_color === 'dark_theme_config.css') class="dark" @endif data-theme_color="{{$user->theme_color}}">
     @include('Layout.navbar')
     @include('Layout.sidebar')
 

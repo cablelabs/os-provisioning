@@ -83,7 +83,7 @@ class UserController extends BaseController
 
         $color_files = Storage::disk('public-folder')->allFiles('components/assets-admin/css/config');
 
-        $themes = [];
+        $themes = ['browser_preferences' => 'browser preferences'];
         foreach ($color_files as $key => $color_file_path) {
             $file_name_array = explode('/', $color_file_path);
             $file_name = end($file_name_array);
