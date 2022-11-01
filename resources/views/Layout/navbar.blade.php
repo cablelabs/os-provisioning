@@ -19,7 +19,7 @@
 {{-- begin Navbar --}}
 <nav v-pre id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
     {{-- only one row Navbar --}}
-    <div class="flex justify-between">
+    <div class="flex justify-between dark:text-primary-gray">
         {{-- begin mobile sidebar expand / collapse button --}}
         <button type="button" class="navbar-toggle m-l-20" data-click="sidebar-toggled">
             <span class="icon-bar"></span>

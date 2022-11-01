@@ -65,12 +65,12 @@
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
             <div class="flex flex-1 card card-inverse">
-                <ul class="flex p-2 pl-2 space-x-2 list-none divide-x-4 divide-amber-400">
+                <ul class="flex p-2 pl-2 space-x-2 list-none dark:bg-primary-dark dark:text-secondary-gray">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="px-2 bg-slate-300 border-b border-gray-300 m-b-15 d-print-none shadow-md" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs" style="width:100%;">
+                <div class="px-2 dark:bg-black-dark bg-slate-300 border-b border-gray-300 dark:border-black-dark d-print-none shadow-md" style="padding-top:0;display:flex;">
+                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs text-black dark:text-primary-gray" style="width:100%;">
                         @foreach ($tabs as $tab)
 
                             {{-- Logging tab --}}
@@ -114,7 +114,7 @@
                     </ul>
                 </div>
                 @endif
-                <div class="flex-wrap d-flex" style="display:flex;flex: 1;">
+                <div class="flex-wrap d-flex dark:bg-black-dark mt-3.5 dark:mt-0" style="display:flex;flex: 1;">
                     <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>

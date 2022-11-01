@@ -356,6 +356,9 @@
     --bg-card-danger : var(--red);
     --border-card-danger : var(--red);
 
+    --bg-card-inverse: transparent;
+    --text-card-inverse: rgba(0, 0, 0, 0.65);
+
     /* li a hover focus */
 
     --li-a-hover-focus : var(--gray-1100);
@@ -384,6 +387,8 @@
 
     /* dataTables color */
     --bg-dataTables-wrapper : var(--dark-gray-darker);
+    --bg-dataTables: var(--white);
+    --text-dataTables: var(--dark-gray);
 
     /* datepicker color */
     --bg-datepicker : var(--silver-200);
@@ -468,6 +473,7 @@
 
     /* jstree color */
     --text-jstree  : var(--dark-gray);
+    --text-jstree-hover: var(--primary-gray);
 
     /* profile-image color */
     --border-profile : var(--slate-200);
@@ -486,4 +492,7 @@
     /* dropzone color */
     --bg-dropzone : var(--red);
     --text-dropzone : var(--dark-gray-darker);
+
+    /* tab content */
+    --tab-content: var(--white);
 }

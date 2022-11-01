@@ -1550,7 +1550,7 @@ label {
 .tab-content {
     padding: 15px;
     margin-bottom: 20px;
-    background: #fff;
+    background: var(--tab-content);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -3038,6 +3038,24 @@ div.dataTables_scrollHead .table,
 .dataTables_wrapper .DTFC_LeftWrapper table.dataTable > tbody > tr > td  {
     border-bottom: none !important;
 }
+.dataTables_wrapper {
+    color: var(--text-page-header);
+}
+.dataTables_length label {
+    color: var(--text-page-header);
+}
+.dt-buttons label {
+    color: var(--text-page-header);
+}
+.dataTables_filter label{
+    color: var(--text-page-header);
+}
+.dataTables_scroll {
+    color: var(--text-body);
+}
+.dataTables_info {
+    color: var(--text-page-header);
+}
 .table > tbody + thead > tr > th,
 .table.fixedHeader-floating thead > tr > th {
     border-top: none;
@@ -3056,6 +3074,13 @@ table.dataTable td.focus {
     outline: 2px solid var(--bg-dataTables-wrapper) !important;
 }
 
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+  background: var(--bg-dataTables);
+  color: var(--text-dataTables);
+}
 
 /* 5.5 Plugins - Datepicker */
 
@@ -6170,6 +6195,12 @@ body.flat-black {
 
 /* 13.4 Plugins - Jstree Setting */
 
+.jstree-default {
+    color: var(--text-jstree); 
+}
+.jstree-checkbox {
+    color: var(--text-jstree); 
+}
 .jstree-default .jstree-clicked,
 .jstree-default .jstree-wholerow-clicked {
     background: #E4E9EC !important;
@@ -6181,6 +6212,10 @@ body.flat-black {
     background: #f0f3f4 !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+    /* color: var(--text-jstree) !important; */
+}
+.jstree-hovered, .jstree-wholerow-hovered {
+    color: var(--text-jstree-hover) !important;
 }
 .jstree-open > .jstree-anchor > .fa-folder:before {
     content: '\f07c';
@@ -6223,7 +6258,7 @@ body.flat-black {
     line-height: 16px;
     font-size: 12px;
     font-style: initial;
-    color: var(--text-jstree);
+    color: var(--text-jstree-hover);
 }
 
 

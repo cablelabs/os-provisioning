@@ -314,7 +314,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function openGroup($name, $label = null, $options = [], $color = false)
     {
-        $options = $this->appendClassToOptions('form-group row', $options);
+        $options = $this->appendClassToOptions('form-group row dark:bg-black-dark', $options);
 
         // Append the name of the group to the groupStack.
         $this->groupStack[] = $name;
@@ -360,10 +360,10 @@ class FormBuilder extends CollectiveFormBuilder
     public function openDivClass($col = 9, $color = false)
     {
         if ($color) {
-            return '<div class="col-md-'.$col.'" style="background-color:'.$color.'">';
+            return '<div class="dark:px-2 col-md-'.$col.'" style="background-color:'.$color.'">';
         }
 
-        return '<div class="col-md-'.$col.'">';
+        return '<div class="dark:px-2 col-md-'.$col.'">';
     }
 
     public function closeDivClass()

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 ?>
-        <div class="panel-heading d-flex flex-row justify-content-between">
+        <div class="panel-heading d-flex flex-row justify-content-between dark:py-1 dark:px-2">
             <h4 class="panel-title d-flex">
                 {!! $view_header !!}
             </h4>
