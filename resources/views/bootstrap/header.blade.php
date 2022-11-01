@@ -35,7 +35,7 @@
       <link href="{{asset('components/assets-admin/css/style.css')}}" rel="stylesheet" />
       @if(isset($user) && $user->theme_color !== 'browser_preferences')
       <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
-      @elseif(!isset($user))
+      @elseif(!isset($user) || (isset($user) && $user->theme_color !== 'browser_preferences'))
        <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
       @endif
       <link href="{{asset('components/assets-admin/css/style-bs4.css')}}" rel="stylesheet" />
