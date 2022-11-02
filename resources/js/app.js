@@ -92,10 +92,12 @@ if (document.getElementById('auth-abilities')) {
   window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
 }
 
+const themeColor = $('body').data('theme_color')
+
 // as per browser preference theme color
-if ($('body').data('theme_color') === 'browser_preferences' && window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches) {
+if (themeColor === 'browser_preferences' && window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches) {
   document.write('<link rel="stylesheet" type="text/css" href="/components/assets-admin/css/config/dark_theme_config.css" />');
   $('body').addClass('dark');
-} else if($('body').data('theme_color') === 'browser_preferences') {
+} else if(themeColor === 'browser_preferences') {
   document.write('<link rel="stylesheet" type="text/css" href="/components/assets-admin/css/config/default_theme_config.css" />');
 }
