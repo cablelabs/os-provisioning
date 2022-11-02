@@ -55,7 +55,7 @@ class AuthenticateNmsPrimeApi
      */
     public function handle($request, Closure $next)
     {
-        if ($request->route()->parameters()['ver'] == 0 && ! $this->auth->guard()->basic()) {
+        if (isset($request->route()->parameters()['ver']) && $request->route()->parameters()['ver'] == 0 && ! $this->auth->guard()->basic()) {
             if (Bouncer::cannot('use api')) {
                 return response()->v0ApiReply(['messages' => ['errors' => ['Unauthorized']]], false, null, 403);
             }
