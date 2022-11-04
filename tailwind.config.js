@@ -17,9 +17,15 @@ module.exports = {
         'secondary-dark' : '#38444d',
         'primary-gray' : '#f1f1f1',
         'secondary-gray' : '#ccc',
-        'gray-dark' : '#707478'
+        'gray-dark' : '#707478',
+        'whitesmoke' : '#f5f5f5',
+        'gainsboro' : '#dcdcdc',
       } 
     }
   },
-  plugins: []
+  plugins: [],
+  safelist: [
+    'bg-whitesmoke',
+    'bg-gainsboro'
+  ]
 }

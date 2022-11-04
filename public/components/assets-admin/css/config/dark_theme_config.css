@@ -61,7 +61,7 @@
 
     /* select color variable */
     --border-select : var(--slate-400);
-    
+
     /* legend color variable */
     --border-legend : var(--slate-200);
 
@@ -447,7 +447,9 @@
 
     /* select2 arrow color */
     --border-select2 : var(--slate-200);
-    --text-select2 : var(--dark-gray-darker);
+    --text-select2 : var(--primary-gray);
+    --bg-select-2 : var(--primary-dark);
+    --bg-select-2-selected : var(--dark-gray);
 
     /* List Group Item color */
     --list-group-item :  var(--dark-gray);

@@ -445,6 +445,8 @@
     /* select2 arrow color */
     --border-select2 : var(--slate-200);
     --text-select2 : var(--dark-gray-darker);
+    --bg-select-2 : var(--white);
+    --bg-select-2-selected : var(--silver-100);
 
     /* List Group Item color */
     --list-group-item :  var(--dark-gray);
