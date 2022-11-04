@@ -41,6 +41,14 @@ class NetElementObserver
             \Modules\CoreMon\Entities\Ccap::create(['netelement_id' => $netelement->id]);
         }
 
+        if ($netelement->base_type_id == 19) {
+            \Modules\CoreMon\Entities\Dpa::create(['netelement_id' => $netelement->id]);
+        }
+
+        if ($netelement->base_type_id == 21) {
+            \Modules\CoreMon\Entities\Rpa::create(['netelement_id' => $netelement->id]);
+        }
+
         $this->flushSidebarNetCache();
 
         if (Module::collections()->has('CoreMon')) {
