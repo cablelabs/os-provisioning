@@ -32,7 +32,7 @@
 							<a href="{{ $attr['link'] }}">
 								<img title="{{ trans('view.'.$attr['description']) }}" src="{{ asset('images/apps/'.$attr['icon']) }}" class="mx-2" style="height: 100px;">
 							</a>
-							<p class="text-black dark:text-primary-gray" style="margin-top: 5px;">{{ $attr['name'] }}</p>
+							<p class="text-black dark:text-dark-gray-light" style="margin-top: 5px;">{{ $attr['name'] }}</p>
 						</div>
 					@endforeach
 				</div>
@@ -48,7 +48,7 @@
 						<a href="{{ $externalApp['state'] == 'active' ? $externalApp['link'] : $externalApp['website'] }}" style="display: flex;">
 							<img title="{{ trans('view.'.$externalApp['description']) }}" src="{{ asset('images/'.$externalApp['icon']) }}" class="mx-2" style="height: 100px;">
 						</a>
-						<p class="text-black dark:text-primary-gray" style="margin-top: 5px;">{{ $name }}</p>
+						<p class="text-black dark:text-dark-gray-light" style="margin-top: 5px;">{{ $name }}</p>
 					</div>
 				</div>
 			</div>

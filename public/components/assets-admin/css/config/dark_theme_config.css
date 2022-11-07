@@ -35,7 +35,7 @@
     --text-sidebar-sub-menu : var(--gray-1000);
 
     /* page header color variable */
-    --text-page-header : var(--primary-gray);
+    --text-page-header : var(--dark-gray-light);
 
     /* breadcrumb color variable */
     --text-breadcrumb : var(--gray-1000);
@@ -97,7 +97,7 @@
     --text-note-warning : var(--orange-darker);
 
     /* badge & label color variable  */
-    --text-label : var(--primary-gray);
+    --text-label : var(--dark-gray-light);
     --bg-badge-label-default : var(--gray);
     --bg-badge-label-danger : var(--red);
     --bg-badge-label-warning : var(--warning);
@@ -179,7 +179,7 @@
     --border-btn-info-hover :  var(--aqua-darker);
 
     /* panel color variable */
-    --bg-panel-inverse-heading : var(--primary-dark);
+    --bg-panel-inverse-heading : var(--dark-black-light);
     --bg-panel-success-heading : var(--green-darker);
     --bg-panel-warning-heading : var(--orange-darker);
     --bg-panel-danger-heading : var(--red-darker);
@@ -189,7 +189,7 @@
     --text-panel-default : var(--gray-1000);
 
     /* text color variable */
-    --text-inverse : var(--primary-gray);
+    --text-inverse : var(--dark-gray-light);
     --text-inverse-a : var(--dark-gray-lighter);
 
     --text-success : var(--green);
@@ -358,8 +358,8 @@
     --bg-card-danger : var(--red);
     --border-card-danger : var(--red);
 
-    --bg-card-inverse: var(--primary-dark);
-    --text-card-inverse: var(--primary-gray);
+    --bg-card-inverse: var(--dark-black-light);
+    --text-card-inverse: var(--dark-gray-light);
     /* --text-card-inverse: rgba(0, 0, 0, 0.65); */
     
     /* li a hover focus */
@@ -390,8 +390,8 @@
 
     /* dataTables color */
     --bg-dataTables-wrapper : var(--dark-gray-darker);
-    --bg-dataTables: var(--primary-dark);
-    --text-dataTables: var(--primary-gray);
+    --bg-dataTables: var(--dark-black-light);
+    --text-dataTables: var(--dark-gray-light);
     
     /* datepicker color */
     --bg-datepicker : var(--silver-200);
@@ -447,8 +447,8 @@
 
     /* select2 arrow color */
     --border-select2 : var(--slate-200);
-    --text-select2 : var(--primary-gray);
-    --bg-select-2 : var(--primary-dark);
+    --text-select2 : var(--dark-gray-light);
+    --bg-select-2 : var(--dark-black-light);
     --bg-select-2-selected : var(--dark-gray);
 
     /* List Group Item color */
@@ -477,7 +477,7 @@
     --border-pace-activity : var(--green);
 
     /* jstree color */
-    --text-jstree  : var(--primary-gray);
+    --text-jstree  : var(--dark-gray-light);
     --text-jstree-hover: var(--dark-gray);
 
     /* profile-image color */
