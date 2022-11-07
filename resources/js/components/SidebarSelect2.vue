@@ -109,14 +109,14 @@ onMounted(() => {
     i18nAll.value = props.i18n.all
   }
 
-  select.value.on('select2:select', (e) => onSelect(e.params.data.id))
+  select.value.on('select2:select', (e) => onSelect(e.params.data.id, props.name))
   select.value.on('select2:unselect', (e) => onUnselect(e.params.data.id))
 })
 
-async function onSelect(value) {
-  store.overlay = true;
+async function onSelect(value, name) {
+  store.overlay = true
 
-  const res = await axios.get(`/admin/CoreMon/api/v1/Market/${value}`);
+  const res = await axios.get(`/admin/CoreMon/api/v1/Market/${value}/${name}`)
 
   res.data.result.forEach(async (el) => {
     if(!el.active){
