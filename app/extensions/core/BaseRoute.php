@@ -192,6 +192,37 @@ class BaseRoute
     }
 
     /**
+     * Add routes needed for a module config MVC
+     */
+    public static function globalConfResource(string $name, string $controller, array $options = [])
+    {
+        $models = BaseModel::get_models();
+
+        Route::match(['patch', 'put'], "$name/{{$name}}", [
+            'as' => $name.'.update',
+            'uses' => $controller.'@update',
+            'middleware' => ['web', 'can:update,'.$models[$name]],
+            $options,
+        ]);
+
+        Route::group(['prefix' => 'api/v{ver}'], function () use ($name, $controller, $options, $models) {
+            Route::get("$name/{{$name}}", [
+                'as' => $name.'.api_get',
+                'uses' => $controller.'@api_get',
+                'middleware' => ['api', 'can:view,'.$models[$name]],
+                $options,
+            ]);
+
+            Route::match(['patch', 'put'], "$name/{{$name}}", [
+                'as' => $name.'.api_update',
+                'uses' => $controller.'@api_update',
+                'middleware' => ['api', 'can:update,'.$models[$name]],
+                $options,
+            ]);
+        });
+    }
+
+    /**
      * Our own route group with shared attributes and some default settings
      * like prefix and as statement we MUST use.
      *
