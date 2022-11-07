@@ -587,6 +587,7 @@ return [
     'Ccc' => 'Kundenkontrollzentrum',
     'commandCenter' => 'Kommandozentrale',
     'company' => 'Firma',
+    'CoreMon' => 'Headend Monitoring',
     'Credit' => 'Gutschrift',
     'critical' => 'kritisch',
     'Debit' => 'Lastschrift',

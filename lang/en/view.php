@@ -589,6 +589,7 @@ return [
     ],
     'commandCenter' => 'Command Center',
     'company' => 'Company',
+    'CoreMon' => 'Headend Monitoring',
     'Credit' => 'Credit',
     'critical' => 'critical',
     'Debit' => 'Debit',
