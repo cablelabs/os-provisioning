@@ -25,6 +25,8 @@ initComplete: function () {
         input.classList.add('form-control');
         input.classList.add('input-sm');
         input.classList.add('select2');
+        input.classList.add('dark:bg-dark-black-light');
+        input.classList.add('dark:text-dark-gray-light');
 
         if ($(this.footer()).hasClass('searchable')){
             $(input).appendTo($(column.footer()).empty()).on('keyup', function (e) {
