@@ -3050,6 +3050,14 @@ div.dataTables_scrollHead .table,
 .dataTables_filter label{
     color: var(--text-page-header);
 }
+.dataTables_filter input{
+    color: var(--text-dataTables);
+    background-color: var(--bg-dataTables);
+}
+.dataTables_filter input:focus{
+    color: var(--text-dataTables);
+    background-color: var(--bg-dataTables);
+}
 .dataTables_scroll {
     color: var(--text-body);
 }
