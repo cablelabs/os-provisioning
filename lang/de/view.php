@@ -719,6 +719,7 @@ return [
         'rpd' => 'RPD Verschaltung',
         'rpdDetails' => 'RPD Details',
         'sensors' => 'Sensoren',
+        'stats' => 'Statistiken',
         'temperature' => 'Temperatur',
         'Topography' => 'Netztopographie',
         'topology' => 'Topology',
