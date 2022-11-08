@@ -37,20 +37,8 @@ class NetElementObserver
             return;
         }
 
-        if ($netelement->base_type_id == 18) {
-            \Modules\CoreMon\Entities\Ccap::create(['netelement_id' => $netelement->id]);
-        }
-
-        if ($netelement->base_type_id == 19) {
-            \Modules\CoreMon\Entities\Dpa::create(['netelement_id' => $netelement->id]);
-        }
-
-        if ($netelement->base_type_id == 20) {
-            \Modules\CoreMon\Entities\Ncs::create(['netelement_id' => $netelement->id]);
-        }
-
-        if ($netelement->base_type_id == 21) {
-            \Modules\CoreMon\Entities\Rpa::create(['netelement_id' => $netelement->id]);
+        if ($netelement->hasInventoryTab()) {
+            $netelement->getConnectedClass()::create(['netelement_id' => $netelement->id]);
         }
 
         $this->flushSidebarNetCache();

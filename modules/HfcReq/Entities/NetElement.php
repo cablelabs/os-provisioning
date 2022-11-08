@@ -1604,4 +1604,18 @@ class NetElement extends \BaseModel
 
         \Modules\CoreMon\Entities\Link::insert($insert);
     }
+
+    /**
+     * Returns whether the Netelement has an inventory tab
+     */
+    public function hasInventoryTab(): bool
+    {
+        $inventoryTabEnabled = [18, 19, 20, 21];
+
+        if (in_array(intval($this->base_type_id), $inventoryTabEnabled)) {
+            return true;
+        }
+
+        return false;
+    }
 }
