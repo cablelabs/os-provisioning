@@ -77,7 +77,7 @@
                             @if ($tab['name'] == "Logging")
                                 <li class="order-12 p-1 ml-auto" role="tab" style="float: right">
                                     <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
-                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'text-black'}} "><i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging</span>
+                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'text-gray-800'}} "><i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging</span>
                                     </a>
                                 </li>
                                 @continue
@@ -87,7 +87,7 @@
                             @if (isset($tab['route']))
                                 <li class="p-1 " role="tab">
                                     <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
-                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'text-black'}}">
+                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'text-gray-800'}}">
                                         {{-- @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
                                         @endif --}}
@@ -102,7 +102,7 @@
                             {{-- probably the <a> tag must be set to active according to docu --}}
                             <li class="p-1 " role="tab">
                                 <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }} p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
-                                    <span class="{{ $firstTab == $tab['name'] ? 'text-cyan-500' : 'text-black' }}">
+                                    <span class="{{ $firstTab == $tab['name'] ? 'text-cyan-500' : 'text-gray-800' }}">
                                     {{-- @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>
                                     @endif --}}
