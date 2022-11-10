@@ -1097,17 +1097,17 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
 .marketPlusSign {
     position: relative;
     display: flex;
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     z-index: 9;
-    bottom: 450%;
-    left: 150%;
+    bottom: 451%;
+    left: 151%;
     border-radius: 100%;
     background: black;
     color: white;
     justify-content: center;
     align-items: center;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     padding-bottom: 4px;
 }
