@@ -56,7 +56,9 @@ class EndpointController extends \BaseController
             $data['version'] = \Modules\ProvBase\Entities\IpPool::getIpVersion($data['ip']);
         }
 
-        return unifyMac($data);
+        $data['mac'] = unifyMac($data['mac']);
+
+        return $data;
     }
 
     protected function prepare_rules($rules, $data)

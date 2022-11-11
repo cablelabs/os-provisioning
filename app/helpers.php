@@ -54,17 +54,17 @@ function d()
  *
  * @author Ole Ernst
  */
-function unifyMac($data)
+function unifyMac($mac)
 {
     // return since we don't want to modify null into ''
-    if (! $data['mac']) {
-        return $data;
+    if (! $mac) {
+        return $mac;
     }
 
-    $data['mac'] = preg_replace('/[^a-f\d]/i', '', $data['mac']);
-    $data['mac'] = wordwrap($data['mac'], 2, ':', true);
+    $mac = preg_replace('/[^a-f\d]/i', '', strtolower($mac));
+    $mac = wordwrap($mac, 2, ':', true);
 
-    return $data;
+    return $mac;
 }
 
 /**

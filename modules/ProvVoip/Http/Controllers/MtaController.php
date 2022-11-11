@@ -73,8 +73,9 @@ class MtaController extends \BaseController
     protected function prepare_input($data)
     {
         $data = parent::prepare_input($data);
+        $data['mac'] = unifyMac($data['mac']);
 
-        return unifyMac($data);
+        return $data;
     }
 
     /**
