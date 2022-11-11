@@ -2,7 +2,7 @@
     data-favorites='@json($favorites ?? new stdClass())' class="fixed top-0 left-0 z-0 flex flex-col h-full">
     <div class="mt-16 md:mt-[3.25rem] flex flex-1 text-gray-200">
         @if (Module::collections()->has('CoreMon'))
-        <div class="z-20 flex flex-col justify-between w-16 bg-black-dark">
+        <div class="z-20 flex flex-col justify-between w-16 bg-stone-800">
             <div>
                 <div
                     class="flex flex-col items-center justify-center space-y-2 text-xs text-center border-b border-gray-200">

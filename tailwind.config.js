@@ -10,7 +10,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'black-dark': '#1a2229',
         'sidebar-light': '#2d353c',
         'lime-nmsprime': '#98d145',
         'dark-black-light' : '#444648',

@@ -69,7 +69,7 @@
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="px-2 dark:bg-black-dark bg-slate-300 border-b border-gray-300 dark:border-black-dark d-print-none shadow-md" style="padding-top:0;display:flex;">
+                <div class="px-2 dark:bg-stone-800 bg-slate-300 border-b border-gray-300 dark:border-stone-800 d-print-none shadow-md" style="padding-top:0;display:flex;">
                     <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs text-black dark:text-dark-gray-light" style="width:100%;">
                         @foreach ($tabs as $tab)
 
@@ -114,8 +114,8 @@
                     </ul>
                 </div>
                 @endif
-                <div class="flex-wrap d-flex dark:bg-black-dark mt-3.5 dark:mt-0" style="display:flex;flex: 1;">
-                    <div class="card card-inverse col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
+                <div class="flex-wrap d-flex dark:bg-stone-800 mt-3.5 dark:mt-0" style="display:flex;flex: 1;">
+                    <div class="card card-inverse pb-3 col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>
                     @yield('content_right')
