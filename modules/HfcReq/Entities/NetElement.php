@@ -1080,9 +1080,10 @@ class NetElement extends \BaseModel
         $currentRoute = \Route::getCurrentRoute()->getAction('as');
         $netElementNotSetRoutes = ['CoreMon.network.overview', 'NetElement.edit'];
 
-        if (! in_array($currentRoute, $netElementNotSetRoutes)) {
-            $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
-        }
+        // Disabling the Net Element tab https://devel.nmsprime.com/jira/browse/NPS-215
+        // if (! in_array($currentRoute, $netElementNotSetRoutes)) {
+        //     $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
+        // }
 
         $enabledModules = Module::collections();
 
