@@ -33,9 +33,9 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('netelement_id', 'ccap_id');
+            $table->renameColumn('netelement_id', 'netelement_ccap_id');
             $table->dropColumn('ccap_core');
-            $table->integer('rpd_id');
+            $table->integer('netelement_rpd_id')->nullable();
         });
     }
 
@@ -47,9 +47,9 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('ccap_id', 'netelement_id');
+            $table->renameColumn('netelement_ccap_id', 'netelement_id');
             $table->string('ccap_core')->nullable();
-            $table->dropIfExists('rpd_id');
+            $table->dropColumn('netelement_rpd_id');
         });
     }
 };
