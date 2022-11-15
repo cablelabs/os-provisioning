@@ -702,7 +702,7 @@ class ModemController extends \BaseController
             $data['ppp_password'] = null;
         }
 
-        $data['mac'] = unifyMac($data['mac']);
+        $data['mac'] = unifyMac($data['mac'] ?? null);
 
         return $data;
     }
