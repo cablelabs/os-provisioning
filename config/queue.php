@@ -104,7 +104,7 @@ return [
     */
 
     'failed' => [
-        'database' => env('QUEUE_DRIVER_DATABASE_CONNECTION', 'mysql'),
+        'database' => env('QUEUE_DRIVER_DATABASE_CONNECTION', 'pgsql'),
         'table' => 'failed_jobs',
     ],
 
