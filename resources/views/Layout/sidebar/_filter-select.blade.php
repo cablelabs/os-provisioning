@@ -6,7 +6,7 @@
         @endphp
         <div class="flex items-center text-gray-900 [&>span.select2]:!w-[92%]">
             @php
-                $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
+            $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
             @endphp
             <sidebar-select2 id="{{ $name }}"
                 class="select2-ajax"
@@ -19,16 +19,11 @@
                 :ajax-route="ajaxRoute('{{ route('Sidebar.select2', ['nettype' => $options['netTypeId']] ) }}')"
                 @if ($net)
                     :initial="{{ $net->id ?? 0 }}"
-                    data-net="{{ $net->id }}"
-                @elseif (isset($cpe) && $name == 'CPE')
-                    :initial="{{ $cpe->id }}"
+                    data-net="{{$net->id}}"
                 @endif
             >
                 @if ($net)
                     <option value="{{ $net->id }}" selected="selected">{{ $net->name }}</option>
-                @endif
-                @if (isset($cpe) && $name == 'CPE')
-                    <option value="{{ $cpe->id }}" selected="selected">{{ $cpe->mac }}</option>
                 @endif
             </sidebar-select2>
             <a :href="route({{ $options['var'] }}, '{{ route($options['route'], ['netelement' => 'NETELEMENT_ID'])}}')" class="w-[8%]">
