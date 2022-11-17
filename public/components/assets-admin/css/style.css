@@ -6448,6 +6448,7 @@ body.flat-black {
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background: #348fe2 !important;
+    color: #ffffff !important;
 }
 .select2-container .select2-selection--single,
 .select2-container--default .select2-selection--multiple {
@@ -6509,6 +6510,16 @@ body.flat-black {
 	padding: 2px 6px !important;
 }
 .select2-container--default .select2-results__option--selected {
+    background-color: var(--bg-select-2-selected) !important;
+    color: var(--text-select2) !important;
+}
+
+.select2-selection--multiple {
+    background-color: var(--bg-select-2) !important;
+    color: var(--text-select2) !important;
+}
+
+.select2-selection__choice {
     background-color: var(--bg-select-2-selected) !important;
     color: var(--text-select2) !important;
 }
