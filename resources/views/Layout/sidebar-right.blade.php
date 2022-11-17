@@ -16,7 +16,7 @@
                 </svg>
             </div>
         </div>
-        <div v-cloak class="p-2 pr-3 overflow-scroll">
+        <div v-cloak class="p-2 pr-3 overflow-hidden">
             <div class="mb-8">
                 <b>Details</b>
             </div>
