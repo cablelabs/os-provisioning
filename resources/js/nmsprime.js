@@ -401,6 +401,11 @@ function linkTag() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  const datatable_selector = document.querySelector(".datatable")
+  if (! datatable_selector) {
+    return
+  }
+
   document.querySelectorAll('[data-table]').forEach(function (el) {
     let id = el.getAttribute('id')
     $(`#${id}`).DataTable({
@@ -431,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 500)
   });
 
-  resize_datatable.observe(document.querySelector(".datatable"))
+  resize_datatable.observe(datatable_selector)
 })
 
 window.excerptStr = function (str, length = 10) {
