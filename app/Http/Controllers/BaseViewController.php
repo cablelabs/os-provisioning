@@ -374,7 +374,7 @@ class BaseViewController extends Controller
             if (! isset($options['class'])) {
                 $options['class'] = '';
             }
-            $options['class'] .= $options['style'] == 'simple' ? '' : " bg-$color dark:bg-dark-black-light dark:text-dark-gray-light";
+            $options['class'] .= $options['style'] == 'simple' ? '' : " bg-$color dark:bg-stone-700 dark:text-slate-100";
 
             // Help: add help msg to form fields - mouse on hover
             if (isset($field['help'])) {
@@ -736,10 +736,9 @@ class BaseViewController extends Controller
             }
 
             if ($i == 0) {
-                $breadcrumb_path = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-primary-gray'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path."</div></div>";
+                $breadcrumb_path = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</div></div>';
             } else {
-                $breadcrumb_path = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-primary-gray'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</div></div>'.$breadcrumb_path;
-
+                $breadcrumb_path = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</div></div>'.$breadcrumb_path;
             }
 
             return $breadcrumb_path;
@@ -831,10 +830,9 @@ class BaseViewController extends Controller
         // else if (Route::has($route_name.'.index'))
         //  $s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
         if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
-            $breadcrumb_path_base = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-primary-gray'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header'))."</div></div>";
+            $breadcrumb_path_base = "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-slate-100'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</div></div>';
         } else {
-            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-primary-gray'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40)).'</div></div>' : '';
-
+            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='px-2 flex'><div class='rounded-full bg-amber-400 w-2'></div><div class='flex items-center px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40)).'</div></div>' : '';
         }
 
         if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array

@@ -65,12 +65,12 @@
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
             <div class="flex flex-1 card card-inverse">
-                <ul class="flex p-2 pl-2 space-x-2 list-none dark:bg-dark-black-light dark:text-dark-gray-lighter">
+                <ul class="flex p-2 pl-2 space-x-2 list-none dark:bg-stone-700 dark:text-slate-100">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
                 <div class="px-2 dark:bg-stone-800 bg-slate-300 border-b border-gray-300 dark:border-stone-800 d-print-none shadow-md" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs text-black dark:text-dark-gray-light" style="width:100%;">
+                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs text-black dark:text-slate-100" style="width:100%;">
                         @foreach ($tabs as $tab)
 
                             {{-- Logging tab --}}

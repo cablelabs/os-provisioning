@@ -475,7 +475,7 @@
 
     /* jstree color */
     --text-jstree  : var(--dark-gray);
-    --text-jstree-hover: var(--dark-gray-light);
+    --text-jstree-hover: var(--slate-100);
 
     /* profile-image color */
     --border-profile : var(--slate-200);

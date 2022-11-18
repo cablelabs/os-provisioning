@@ -45,7 +45,7 @@
     {{-- Headline: means icon followed by headline --}}
     <div class="mb-6">
         <div class="flex justify-between items-center">
-            <h3 class="text-2xl flex-1 dark:text-dark-gray-light">
+            <h3 class="text-2xl flex-1 dark:text-slate-100">
                 {!! $model->view_icon().' '.$headline !!}
             </h3>
         {{-- Create Form --}}
