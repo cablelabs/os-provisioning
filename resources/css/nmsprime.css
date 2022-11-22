@@ -290,8 +290,8 @@ table .index_check {
 .table > thead > tr.green > th,
 .table > tbody > tr.green > th,
 .table > tfoot > tr.green > th {
-    background:var(--green-100);
-    border-color:var(--green-300);
+    background:var(--lime-200);
+    border-color:var(--lime-400);
 }
 
 .table > thead > tr > td.info,
@@ -306,8 +306,8 @@ table .index_check {
 .table > thead > tr.info > th,
 .table > tbody > tr.info > th,
 .table > tfoot > tr.info > th {
-    background: var(--blue-300);
-    border-color: var(--blue-200);
+    background: var(--blue-100);
+    border-color: var(--sky-200);
 }
 .table > thead > tr > td.success,
 .table > tbody > tr > td.success,
@@ -322,7 +322,7 @@ table .index_check {
 .table > tbody > tr.success > th,
 .table > tfoot > tr.success > th {
     background: var(--green-200);
-    border-color: var(--cyan-100);
+    border-color: var(--teal-200);
 }
 .table > thead > tr > td.danger,
 .table > tbody > tr > td.danger,
@@ -336,8 +336,8 @@ table .index_check {
 .table > thead > tr.danger > th,
 .table > tbody > tr.danger > th,
 .table > tfoot > tr.danger > th {
-    background: var(--red-100);
-    border-color: var(--red-200);
+    background: var(--red-200);
+    border-color: var(--red-300);
 }
 .table > thead > tr > td.warning,
 .table > tbody > tr > td.warning,
@@ -352,7 +352,7 @@ table .index_check {
 .table > tbody > tr.warning > th,
 .table > tfoot > tr.warning > th {
     background: var(--yellow-100);
-    border-color: var(--orange-100);
+    border-color: var(--orange-200);
 }
 .table > thead > tr > td.active,
 .table > tbody > tr > td.active,
@@ -430,8 +430,8 @@ table .index_check {
 }
 
 #loader {
-    border: 16px solid var(--gray-100); /* Light grey */
-    border-top: 16px solid var(--blue-100); /* Blue */
+    border: 16px solid var(--neutral-100); /* Light grey */
+    border-top: 16px solid var(--sky-600); /* Blue */
     border-radius: 50%;
     width: 120px;
     height: 120px;
