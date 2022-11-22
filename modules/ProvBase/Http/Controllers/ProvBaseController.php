@@ -60,7 +60,6 @@ class ProvBaseController extends BaseController
 
             ['form_type' => 'text', 'name' => 'domain_name', 'description' => 'Domain Name for Modems'],
             ['form_type' => 'text', 'name' => 'dns_password', 'description' => 'DNS update password', 'help' => 'MD5 HMAC; create using: ddns-confgen -a hmac-md5 -r /dev/urandom | grep secret', 'hidden' => \Module::collections()->has('ProvHA')],
-            ['form_type' => 'text', 'name' => 'notif_mail', 'description' => 'Notification Email Address'],
             ['form_type' => 'text', 'name' => 'dhcp_def_lease_time', 'description' => 'DHCP Default Lease Time'],
             ['form_type' => 'text', 'name' => 'dhcp_max_lease_time', 'description' => 'DHCP Max Lease Time'],
             ['form_type' => 'text', 'name' => 'ppp_session_timeout', 'description' => 'PPP Session-Timeout', 'help' => trans('helper.ppp_session_timeout')],

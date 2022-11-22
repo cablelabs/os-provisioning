@@ -2708,7 +2708,6 @@ CREATE TABLE nmsprime.provbase (
     provisioning_server character varying(191),
     ro_community character varying(191),
     rw_community character varying(191),
-    notif_mail character varying(191),
     domain_name character varying(191),
     dns_password character varying(191),
     dhcp_def_lease_time bigint,

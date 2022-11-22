@@ -78,9 +78,6 @@ class ProvBase extends \BaseModel
         }
     }
 
-    // Don't forget to fill this array
-    // protected $fillable = ['provisioning_server', 'ro_community', 'rw_community', 'domain_name', 'notif_mail', 'dhcp_def_lease_time', 'dhcp_max_lease_time', 'startid_contract', 'startid_modem', 'startid_endpoint'];
-
     // Add your validation rules here
     public function rules()
     {
