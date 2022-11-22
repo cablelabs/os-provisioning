@@ -134,17 +134,21 @@ class ModemObserver
 
                     // use special format; later used as “description” in provisioning process
                     // modules/SmartOnt/Console/SnmpTrapHandlerCommand.php
-                    $name = [
-                        $modem->serial_num,
-                        $modem->zip,
-                        $modem->city,
-                        $modem->street,
-                        $modem->house_number,
+                    // Attention: length of description field on Huawei OLT is limited to 64
+                    $name_parts = [
+                        'serial' => $modem->serial_num,
+                        'zip' => $modem->zip,
+                        'street' => $modem->street,
+                        'house_number' => $modem->house_number,
                     ];
-                    $name = implode('  ', $name);
-                    $name = \Str::ascii($name);
-                    $name = preg_replace('/[^\.a-zA-Z0-9_-]/', '_', $name);
-                    $name = \Str::limit($name, 128, '');
+
+                    do {
+                        $name = implode('  ', $name_parts);
+                        $name = \Str::ascii($name);
+                        $name = preg_replace('/[^\.a-zA-Z0-9_-]/', '_', $name);
+                        $name_parts['street'] = substr($name_parts['street'], 0, -1);
+                    } while (strlen($name) > 64);
+
                     $modem->name = $name;
                 }
             }
