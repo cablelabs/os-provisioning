@@ -78,8 +78,7 @@ class Kernel extends ConsoleKernel
      */
     protected function scheduleMain(Schedule $schedule)
     {
-        /* $schedule->command('inspire') */
-        /* 		 ->hourly(); */
+        $modules = \Module::collections();
 
         // comment the following in to see the time shifting behaviour of the scheduler;
         // watch App\Console\Commands\TimeDeltaChecker for more informations
@@ -100,7 +99,7 @@ class Kernel extends ConsoleKernel
         // Remove all Log Entries older than 4 years
         $schedule->call('\App\GuiLog@cleanup')->weekly();
 
-        if (\Module::collections()->has('CoreMon')) {
+        if ($modules->has('CoreMon')) {
             // Remove all alarms older than 2 years
             $schedule->call('\Modules\CoreMon\Entities\Alarm@cleanup')->weekly();
 
@@ -118,7 +117,7 @@ class Kernel extends ConsoleKernel
             })->cron('5,20,35,50 * * * *');
         }
         // Parse News from repo server and save to local JSON file
-        if (\Module::collections()->has('Dashboard')) {
+        if ($modules->has('Dashboard')) {
             $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
         }
 
@@ -131,7 +130,7 @@ class Kernel extends ConsoleKernel
         // Command to remove obsolete data in storage
         $schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
-        if (\Module::collections()->has('ProvVoip')) {
+        if ($modules->has('ProvVoip')) {
 
             // Update database table carriercode with csv data if necessary
             $schedule->command('provvoip:update_carrier_code_database')
@@ -146,7 +145,7 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('04:33');
         }
 
-        if (\Module::collections()->has('ProvVoipEnvia')) {
+        if ($modules->has('ProvVoipEnvia')) {
 
             // Update status of envia orders
             // Do this at the very beginning of a day
@@ -189,7 +188,7 @@ class Kernel extends ConsoleKernel
         }
 
         // ProvBase Schedules
-        if (\Module::collections()->has('ProvBase')) {
+        if ($modules->has('ProvBase')) {
             // Rebuid all Configfiles
             // $schedule->command('nms:configfile')->dailyAt('00:50')->withoutOverlapping();
 
@@ -228,7 +227,7 @@ class Kernel extends ConsoleKernel
             // $schedule->command('nms:hardware-support')->twiceDaily(10, 14);
         }
 
-        if (\Module::collections()->has('HfcReq')) {
+        if ($modules->has('HfcReq')) {
             // Automatic Power Control based on measured SNR
             $schedule->command('nms:agc')->everyMinute();
             // Automatic topology discovery via SNMP and LLDP
@@ -237,7 +236,7 @@ class Kernel extends ConsoleKernel
             })->everyTwoHours();
         }
 
-        if (\Module::collections()->has('HfcBase')) {
+        if ($modules->has('HfcBase')) {
             $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
 
             // Clean Up of HFC Base
@@ -246,14 +245,14 @@ class Kernel extends ConsoleKernel
             })->hourly();
         }
 
-        if (\Module::collections()->has('CoreMon')) {
+        if ($modules->has('CoreMon')) {
             // Clean Up of topology svg diagrams
             $schedule->call(function () {
                 exec('rm -rf '.storage_path('app/'.\Modules\CoreMon\Http\Controllers\TopologyController::PATH_REL));
             })->hourly();
         }
 
-        if (\Module::collections()->has('ProvMon')) {
+        if ($modules->has('ProvMon')) {
             $schedule->command('nms:cacti')->daily();
         } else {
             $schedule->call(function () {
@@ -267,7 +266,7 @@ class Kernel extends ConsoleKernel
         })->dailyAt('00:01');
 
         // Create monthly Billing Files and reset flags
-        if (\Module::collections()->has('BillingBase')) {
+        if ($modules->has('BillingBase')) {
             // Remove all old CDRs & Invoices
 
             $schedule->call('\Modules\BillingBase\Helpers\BillingAnalysis@saveIncomeToJson')->dailyAt('00:07');
@@ -280,11 +279,11 @@ class Kernel extends ConsoleKernel
             })->cron('10 0 1 2 *');
         }
 
-        if (\Module::collections()->has('ProvVoip')) {
+        if ($modules->has('ProvVoip')) {
             $schedule->command('provvoip:phonenumber')->daily()->at('00:13');
         }
 
-        if (\Module::collections()->has('VoipMon')) {
+        if ($modules->has('VoipMon')) {
             $schedule->command('voipmon:match_records')->everyFiveMinutes();
             $schedule->command('voipmon:delete_old_records')->daily();
         }
