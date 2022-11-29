@@ -28,7 +28,9 @@ class NetElementObserver
 {
     public function creating($netelement)
     {
-        $netelement->base_type_id = $netelement->netelementtype->baseType->id;
+        if (! $netelement->base_type_id) {
+            $netelement->base_type_id = $netelement->netelementtype->baseType->id;
+        }
     }
 
     public function created($netelement)
