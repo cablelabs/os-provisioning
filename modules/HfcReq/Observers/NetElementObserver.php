@@ -39,7 +39,7 @@ class NetElementObserver
             return;
         }
 
-        if ($netelement->hasInventoryTab()) {
+        if ($netelement->hasInventoryTab() || $netelement->base_type_id == 22) {
             $netelement->getConnectedClass()::create(['netelement_id' => $netelement->id]);
         }
 

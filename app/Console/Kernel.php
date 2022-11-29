@@ -103,6 +103,10 @@ class Kernel extends ConsoleKernel
             // Remove all alarms older than 2 years
             $schedule->call('\Modules\CoreMon\Entities\Alarm@cleanup')->weekly();
 
+            $schedule->call(function () {
+                Queue::pushOn('medium', new \Modules\CoreMon\Jobs\GetRpdsJob());
+            })->cron('57 1-23/2 * * *');
+
             // import data from Kafka every 15 minutes
             $schedule->call(function () {
                 \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaArpDataJob());
@@ -116,6 +120,7 @@ class Kernel extends ConsoleKernel
                 \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaCcapInfoDataJob());
             })->cron('5,20,35,50 * * * *');
         }
+
         // Parse News from repo server and save to local JSON file
         if ($modules->has('Dashboard')) {
             $schedule->call('\Modules\Dashboard\Http\Controllers\DashboardController@newsLoadToFile')->hourly();
