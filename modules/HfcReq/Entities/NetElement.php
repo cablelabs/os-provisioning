@@ -419,6 +419,11 @@ class NetElement extends \BaseModel
         return $this->hasOne(\Modules\CoreMon\Entities\Ccap::class, 'netelement_id');
     }
 
+    public function dpa()
+    {
+        return $this->hasOne(\Modules\CoreMon\Entities\Dpa::class, 'netelement_id');
+    }
+
     /**
      * Relation to CoreMon model - 1:1
      *
