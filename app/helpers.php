@@ -607,3 +607,17 @@ function valuesFromThresholdString($thresholds)
 
     return $ret;
 }
+
+/**
+ * Convert sysUpTime (in hundredths of a second) into human readable string.
+ *
+ * @author Ole Ernst
+ */
+function sysUpTimeForHumans(array $hundredthSecond): array
+{
+    return array_map(function ($hundredthSecond) {
+        return \Carbon\CarbonInterval::seconds($hundredthSecond / 100)
+            ->cascade()
+            ->forHumans();
+    }, $hundredthSecond);
+}
