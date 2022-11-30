@@ -17,6 +17,10 @@ class RemoveNotifMailFromProvBase extends BaseMigration
      */
     public function up()
     {
+        if (! Schema::hasColumn($this->tableName, 'notif_mail')) {
+            return;
+        }
+
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn('notif_mail');
         });
