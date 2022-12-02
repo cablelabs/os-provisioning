@@ -9,7 +9,7 @@ return [
     ],
     'ccap' => 'CCAP',
     'city' => 'City',
-    'lastUpdatedAt' => 'Last updated at',
+    'lastUpdatedAt' => 'Last Change',
     'connected' => 'Connected',
     'connection_type' => 'Connection type',
     'deprecated' => 'Deprecated',
@@ -389,7 +389,7 @@ return [
         'status' => 'CM Modem Status',
         'us_data_service_grp' => 'US Data Service Group',
     ],
-    'dpicInterface' => [
+    'interface' => [
         'name' => 'Name',
         'admin_status' => 'Admin Status',
         'operational_status' => 'Operational Status',
@@ -408,7 +408,6 @@ return [
         'cable_interface' => 'Cable Interface',
         'mdd_status' => 'MDD Status',
         'name' => 'Fiber Node Name',
-        'updated_at' => 'Last Change',
     ],
     'inventory' => [
         'name' => 'Name',

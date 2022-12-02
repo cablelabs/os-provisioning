@@ -9,7 +9,7 @@ return [
     ],
     'ccap' => 'CCAP',
     'city' => 'Stadt',
-    'lastUpdatedAt' => 'Zuletzt geupdated',
+    'lastUpdatedAt' => 'Zuletzt Aktualisiert',
     'connected' => 'Angeschlossen',
     'connection_type' => 'Anschlusstyp',
     'deprecated' => 'Veraltet',
@@ -389,7 +389,7 @@ return [
         'status' => 'Status',
         'us_data_service_grp' => 'US Data Service Gruppe',
     ],
-    'dpicInterface' => [
+    'interface' => [
         'name' => 'Name',
         'admin_status' => 'Admin Status',
         'operational_status' => 'Betriebszustand',
@@ -408,7 +408,6 @@ return [
         'cable_interface' => 'Kabel Schnittstelle',
         'mdd_status' => 'MDD Status',
         'name' => 'Name des Glasfaserknotens',
-        'updated_at' => 'Letzte Aktualisierung',
     ],
     'inventory' => [
         'name' => 'Name',
