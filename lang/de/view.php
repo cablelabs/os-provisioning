@@ -574,6 +574,9 @@ return [
         'model' => 'Modell',
         'configCompliance' => 'Konfigurationsübereinstimmung',
     ],
+    'dpa' => [
+        'lastConfChange' => 'Last Configuration Change',
+    ],
     'cpe' => [
         'cableInterface' => 'Kabelschnittstelle',
         'deviceClass' => 'Geräteklasse',

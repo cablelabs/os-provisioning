@@ -577,6 +577,9 @@ return [
         'model' => 'Model',
         'configCompliance' => 'Configuration Compliance',
     ],
+    'dpa' => [
+        'lastConfChange' => 'Last Configuration Change',
+    ],
     'cpe' => [
         'cableInterface' => 'Cable Interface',
         'deviceClass' => 'Device Class',
