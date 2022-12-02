@@ -110,7 +110,7 @@ class Kernel extends ConsoleKernel
             })->cron('5,20,35,50 * * * *');
 
             $schedule->call(function () {
-                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaDpicInterfaceDataJob());
+                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaInterfaceDataJob());
             })->cron('5,20,35,50 * * * *');
 
             $schedule->call(function () {
