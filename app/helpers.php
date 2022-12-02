@@ -621,3 +621,17 @@ function sysUpTimeForHumans(array $hundredthSecond): array
             ->forHumans();
     }, $hundredthSecond);
 }
+
+function snmpDateAndTimeToCarbon($snmpDateAndTime)
+{
+    $unpack = unpack(
+        'nyear/Cmonth/Cday/Chour/Cminute/Csecond/CdeciSecond/Ctz/CoffsetHour/CoffsetMinute',
+        $snmpDateAndTime
+    );
+
+    $unpack['second'] += $unpack['deciSecond'] / 10;
+    unset($unpack['deciSecond']);
+    $unpack['tz'] = chr($unpack['tz'])."{$unpack['offsetHour']}:{$unpack['offsetMinute']}";
+
+    return \Carbon\Carbon::create(...array_slice($unpack, 0, 7));
+}
