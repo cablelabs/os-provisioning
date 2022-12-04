@@ -12,7 +12,6 @@ module.exports = {
       colors: {
         'sidebar-light': '#2d353c',
         'lime-nmsprime': '#98d145',
-        'gray-dark' : '#707478',
         'whitesmoke' : '#f5f5f5',
         'gainsboro' : '#dcdcdc',
       } 

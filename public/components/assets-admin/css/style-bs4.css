@@ -8,7 +8,7 @@ Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
 body {
 	line-height: 1.42857143;
 	font-weight: normal;
-	color: #707478;
+	color: var(--text-body);
 }
 .fade.in {
 	opacity: 1;
@@ -42,7 +42,7 @@ body {
 	z-index: 1030;
 }
 .navbar-form .btn-search {
-	color: #707478;
+	color: var(--text-body);
 }
 @media (min-width: 768px) {
 	.navbar-fixed-bottom, .navbar-fixed-top {

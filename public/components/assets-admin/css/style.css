@@ -3073,7 +3073,7 @@ table.dataTable tbody > tr.selected,
 table.dataTable tbody > tr.selected td,
 table.dataTable tbody > tr > .selected {
     background: #ffc !important;
-    color: #707478;
+    color: var(--text-body);
 }
 table.dataTable th.focus,
 table.dataTable td.focus {
@@ -3662,7 +3662,7 @@ body .fc button:active {
     font-size: 11px !important;
 }
 .tickLabel {
-    color: #707478 !important;
+    color: var(--text-body) !important;
 }
 .flot-tooltip {
     position: absolute;
@@ -4120,7 +4120,7 @@ body .fc button:active {
     top: 50%;
 }
 .login label {
-    color: #707478;
+    color: var(--text-body);
 }
 .login .login-header {
     position: absolute;
@@ -4150,7 +4150,7 @@ body .fc button:active {
 .login .login-header .brand small {
     font-size: 14px;
     display: block;
-    color: #707478;
+    color: var(--text-body);
 }
 .login .login-header .icon {
     position: absolute;
@@ -5108,10 +5108,10 @@ body .fc button:active {
     color: #a9acae;
 }
 .bootstrap-calendar .calendar .visualmonthyear {
-    color: #707478;
+    color: var(--text-body);
 }
 .bootstrap-calendar .calendar .table.header td {
-    color: #707478;
+    color: var(--text-body);
     vertical-align: middle;
 }
 .bootstrap-calendar .calendar .table.header td.year {
@@ -5224,7 +5224,7 @@ body .fc button:active {
 .registered-users-list > li .username small {
     display: block;
     font-size: 11px;
-    color: #707478;
+    color: var(--text-body);
     margin-top: 3px;
 }
 
@@ -5522,7 +5522,7 @@ body .fc button:active {
     -webkit-transition: all .2s linear;
 }
 .list-email .email-checkbox label.active {
-    color: #707478;
+    color: var(--text-body);
 }
 .list-email .email-checkbox label.active .fa:before {
     content: '\f046';
@@ -5543,7 +5543,7 @@ body .fc button:active {
     width: 180px;
     float: left;
     background: var(--bg-attached-document);
-    color: #707478;
+    color: var(--text-body);
     position: relative;
     margin-right: 15px;
     margin-bottom: 15px;
@@ -6393,7 +6393,7 @@ body.flat-black {
     font-size: 32px;
 }
 .register.register-with-news-feed .register-header small {
-    color: #707478;
+    color: var(--text-body);
     display: block;
     font-size: 14px;
     margin-top: 10px;
@@ -6403,7 +6403,7 @@ body.flat-black {
     color: var(--gray-700);
 }
 .login.login-with-news-feed .login-header .brand small {
-    color: #707478;
+    color: var(--text-body);
 }
 .login.login-with-news-feed .login-header .icon {
     top: 98px;
@@ -7080,7 +7080,7 @@ body .bootstrap-datetimepicker-widget table td {
     font-weight: 300 !important;
     display: block !important;
     margin-top: 5px !important;
-    color: #707478 !important;
+    color: var(--text-body) !important;
 }
 .dropzone .dz-preview .dz-image {
     -webkit-border-radius: 3px !important;

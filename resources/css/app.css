@@ -38,7 +38,7 @@
         width: 8px;
     }
     .scrollbar-medium::-webkit-scrollbar-thumb {
-        background: var(--gray-dark);
+        background: var(--gray-500);
         border-radius: 100vh;
     }
 }

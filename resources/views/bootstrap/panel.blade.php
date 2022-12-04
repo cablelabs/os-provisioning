@@ -34,7 +34,7 @@
 @endif
     <div class="panel panel-inverse card-2 dark:shadow-none dark:border-none dark:p-2 dark:bg-stone-700" data-sort{{$attrExt}}-id="{{ $dataSortId }}">
         @include ('bootstrap.panel-header', ['view_header' => $view_header])
-        <div class="panel-body fader text-gray-dark dark:bg-stone-800 dark:mx-2" style="overflow-x: hidden; overflow-y:{{ $overflow_y }}; {{ $style }}; {{ $display }}">
+        <div class="panel-body fader text-gray-500 dark:bg-stone-800 dark:mx-2" style="overflow-x: hidden; overflow-y:{{ $overflow_y }}; {{ $style }}; {{ $display }}">
             @yield($content)
         </div>
     </div>

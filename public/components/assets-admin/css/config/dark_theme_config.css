@@ -3,7 +3,7 @@
 
     /* body color variable */
     /* dark */
-    --bg-body : var(--gray-800);
+    --bg-body : var(--stone-800);
     --text-body: var(--gray-500);
 
      /* heading color variable */
@@ -22,7 +22,7 @@
     --bg-icon-navbar : var(--neutral-700);
     --bg-navbar-divider : var(--slate-200);
      /* dark */
-    --bg-navbar-default : var(--gray-800);
+    --bg-navbar-default : var(--stone-800);
     --bg-navbar-inverse : var(--gray-700);
 
     /* sidebar color variable */
