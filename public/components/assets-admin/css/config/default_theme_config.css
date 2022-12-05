@@ -496,5 +496,5 @@
     --text-dropzone : var(--gray-800);
 
     /* tab content */
-    --tab-content: var(--white);
+    --tab-content: var(--neutral-100);
 }
