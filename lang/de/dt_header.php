@@ -473,6 +473,7 @@ return [
         'util_us_ofdm' => 'DOCSIS US OFDM',
         'util_us_qam' => 'DOCSIS US QAM',
     ],
+    'updated_at' => 'Geupdated um',
     'utilization' => [
         'ccap_name' => 'CCAP Core Name',
         'fn_name' => 'FN Name',
