@@ -360,10 +360,10 @@ class FormBuilder extends CollectiveFormBuilder
     public function openDivClass($col = 9, $color = false)
     {
         if ($color) {
-            return '<div class="dark:px-2 col-md-'.$col.'" style="background-color:'.$color.'">';
+            return '<div class="px-0 col-md-'.$col.'" style="background-color:'.$color.'">';
         }
 
-        return '<div class="dark:px-2 col-md-'.$col.'">';
+        return '<div class="px-0 col-md-'.$col.'">';
     }
 
     public function closeDivClass()
