@@ -40,6 +40,8 @@ return new class extends BaseMigration
             $table->string('remote_system_description')->nullable();
             $table->integer('if_index')->nullable();
             $table->integer('netelement_id');
+            $table->string('lldp_index');
+            $table->unique(['netelement_id', 'lldp_index']);
         });
     }
 
