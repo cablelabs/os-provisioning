@@ -45,7 +45,7 @@ return new class extends BaseMigration
      */
     public function down()
     {
-        Schema::table($this->tableName, function (Blueprint $table) {
+        Schema::table('netelement_interface', function (Blueprint $table) {
             $table->rename($this->tableName);
         });
     }
