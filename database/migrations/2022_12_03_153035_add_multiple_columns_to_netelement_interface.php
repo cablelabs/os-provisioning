@@ -43,9 +43,9 @@ return new class extends BaseMigration
             $table->float('total_util')->nullable();
             $table->float('input_util')->nullable();
             $table->float('output_util')->nullable();
-            $table->float('total_error_rate')->nullable();
-            $table->float('input_error_rate')->nullable();
-            $table->float('output_error_rate')->nullable();
+            $table->float('total_error_ratio')->nullable();
+            $table->float('input_error_ratio')->nullable();
+            $table->float('output_error_ratio')->nullable();
             $table->bigInteger('prev_input_error_counter')->nullable();
             $table->bigInteger('prev_output_error_counter')->nullable();
         });
@@ -59,20 +59,22 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn('mac');
-            $table->dropColumn('total_bw');
-            $table->dropColumn('input_rate');
-            $table->dropColumn('output_rate');
-            $table->dropColumn('prev_input_counter');
-            $table->dropColumn('prev_output_counter');
-            $table->dropColumn('total_util');
-            $table->dropColumn('input_util');
-            $table->dropColumn('output_util');
-            $table->dropColumn('total_error_rate');
-            $table->dropColumn('input_error_rate');
-            $table->dropColumn('output_error_rate');
-            $table->dropColumn('prev_input_error_counter');
-            $table->dropColumn('prev_output_error_counter');
+            $table->dropColumn([
+                'mac',
+                'total_bw',
+                'input_rate',
+                'output_rate',
+                'prev_input_counter',
+                'prev_output_counter',
+                'total_util',
+                'input_util',
+                'output_util',
+                'total_error_rate',
+                'input_error_rate',
+                'output_error_rate',
+                'prev_input_error_counter',
+                'prev_output_error_counter',
+            ]);
         });
     }
 };
