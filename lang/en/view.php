@@ -580,6 +580,9 @@ return [
     'dpa' => [
         'lastConfChange' => 'Last Configuration Change',
     ],
+    'rpa' => [
+        'lastConfChange' => 'Last Configuration Change',
+    ],
     'cpe' => [
         'cableInterface' => 'Cable Interface',
         'deviceClass' => 'Device Class',

@@ -577,6 +577,9 @@ return [
     'dpa' => [
         'lastConfChange' => 'Letzte Konfigurationsänderung',
     ],
+    'rpa' => [
+        'lastConfChange' => 'Letzte Konfigurationsänderung',
+    ],
     'cpe' => [
         'cableInterface' => 'Kabelschnittstelle',
         'deviceClass' => 'Geräteklasse',
