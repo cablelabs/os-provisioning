@@ -31,8 +31,7 @@
         "symfony/postmark-mailer": "^6.0",
         "guzzlehttp/guzzle": "^7.5",
         "swen100/geophp": "^1.0",
-        "fruitcake/laravel-cors": "^3.0",
-        "mavinoo/laravel-batch": "^2.3"
+        "fruitcake/laravel-cors": "^3.0"
     },
     "require-dev": {
         "laravel/tinker": "^2.5",
