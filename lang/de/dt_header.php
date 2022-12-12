@@ -408,6 +408,7 @@ return [
         'cable_interface' => 'Kabel Schnittstelle',
         'mdd_status' => 'MDD Status',
         'name' => 'Name des Glasfaserknotens',
+        'rpds' => '# RPDs',
     ],
     'inventory' => [
         'name' => 'Name',

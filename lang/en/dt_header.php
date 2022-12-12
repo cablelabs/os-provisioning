@@ -408,6 +408,7 @@ return [
         'cable_interface' => 'Cable Interface',
         'mdd_status' => 'MDD Status',
         'name' => 'Fiber Node Name',
+        'rpds' => '# RPDs',
     ],
     'inventory' => [
         'name' => 'Name',
