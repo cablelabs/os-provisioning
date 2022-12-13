@@ -406,6 +406,8 @@ return [
     ],
     'fiberNode' => [
         'cable_interface' => 'Kabel Schnittstelle',
+        'cpes' => '# CPEs',
+        'cpesOffline' => '% CPEs offline',
         'mdd_status' => 'MDD Status',
         'name' => 'Name des Glasfaserknotens',
         'rpds' => '# RPDs',

@@ -406,6 +406,8 @@ return [
     ],
     'fiberNode' => [
         'cable_interface' => 'Cable Interface',
+        'cpes' => '# CPEs',
+        'cpesOffline' => '% CPEs offline',
         'mdd_status' => 'MDD Status',
         'name' => 'Fiber Node Name',
         'rpds' => '# RPDs',
