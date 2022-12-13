@@ -23,7 +23,7 @@ use Illuminate\Database\Schema\Blueprint;
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
-    public $tableName = 'lldp_interface';
+    public $tableName = 'lldp';
 
     /**
      * Run the migrations.
