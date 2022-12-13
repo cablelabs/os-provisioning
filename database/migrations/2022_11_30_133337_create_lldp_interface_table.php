@@ -42,7 +42,7 @@ return new class extends BaseMigration
             $table->integer('netelement_id');
             $table->string('lldp_suffix');
             $table->integer('remote_netelement_id');
-            $table->unique(['netelement_id', 'lldp_index']);
+            $table->unique(['netelement_id', 'lldp_suffix']);
         });
     }
 
