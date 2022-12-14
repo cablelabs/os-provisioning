@@ -911,7 +911,9 @@ class ModemController extends \BaseController
             }
         }
 
-        return unifyMac($data);
+        $data['mac'] = unifyMac($data['mac'] ?? null);
+
+        return $data;
     }
 
     /**
