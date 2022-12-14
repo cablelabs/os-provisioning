@@ -434,6 +434,11 @@ class NetElement extends \BaseModel
         return $this->hasOne(\Modules\CoreMon\Entities\Rpa::class, 'netelement_id');
     }
 
+    public function rpd()
+    {
+        return $this->hasOne(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id');
+    }
+
     /**
      * Relation to CoreMon model - 1:1
      *
