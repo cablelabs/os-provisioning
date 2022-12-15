@@ -33,3 +33,8 @@ chmod 640 "$env"/*.env
 # only allow root to read/write mysql root credentials
 chown root:root "$env/root.env"
 chmod 600 "$env/root.env"
+
+sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
+    GRANT SELECT ON ALL TABLES IN SCHEMA nmsprime TO grafana;
+    GRANT USAGE ON SCHEMA nmsprime TO grafana;
+"

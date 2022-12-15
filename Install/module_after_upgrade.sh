@@ -62,3 +62,8 @@ rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 systemd-tmpfiles --create
+
+sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
+    GRANT SELECT ON ALL TABLES IN SCHEMA nmsprime TO grafana;
+    GRANT USAGE ON SCHEMA nmsprime TO grafana;
+"

@@ -34,12 +34,13 @@ return new class extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->bigInteger('netelement_ccap_id')->nullable();
-            $table->string('cable_if')->nullable();
             $table->string('state_changed_at')->nullable();         // stateChangeTimestamp in Smartphy response
             $table->unique(['mac', 'netelement_id']);
-        });
 
-        system('sudo -u postgres /usr/bin/psql nmsprime -c "grant select on ALL tables in schema nmsprime to grafana"');
+            if (! Schema::hasColumn($this->tableName, 'cable_if')) {
+                $table->string('cable_if')->nullable();
+            }
+        });
     }
 
     /**
