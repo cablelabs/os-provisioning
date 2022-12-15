@@ -380,13 +380,10 @@ return [
         'fiber_node_sys_name' => 'Fiber Node System Name',
         'last_mac_state' => 'Mac Status',
         'last_reg_time' => 'Last Reg Time',
-        'mac' => 'Mac',
         'manufacturer_name' => 'Hersteller',
-        'ip' => 'IPv4 Adresse',
         'prim_sid' => 'Primäre SID',
         'reg_priv' => 'Registrierungsprivileg',
         'reg_ver' => 'Registrierungsversion',
-        'status' => 'Status',
         'us_data_service_grp' => 'US Data Service Gruppe',
     ],
     'interface' => [
@@ -424,6 +421,7 @@ return [
         'inserted' => 'Eingesetzt In',
         'description' => 'Beschreibung',
     ],
+    'ip' => 'IP',
     'l2tp' => [
         'tunnel_id' => 'Tunnel ID',
         'remote_tunnel_id' => 'Remote Tunnel ID',
@@ -493,6 +491,7 @@ return [
         'nasname' => 'Name',
     ],
     'state' => 'Status',
+    'status' => 'Status',
     'ticket' => [
         'id' => 'ID',
         'name' => 'Titel',
