@@ -69,9 +69,9 @@ return new class extends BaseMigration
                 'total_util',
                 'input_util',
                 'output_util',
-                'total_error_rate',
-                'input_error_rate',
-                'output_error_rate',
+                'total_error_ratio',
+                'input_error_ratio',
+                'output_error_ratio',
                 'prev_input_error_counter',
                 'prev_output_error_counter',
             ]);
