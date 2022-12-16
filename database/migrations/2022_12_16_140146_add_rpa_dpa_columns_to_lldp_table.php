@@ -49,7 +49,7 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn('if_index');
+            $table->dropColumn('mac_address');
         });
     }
 };
