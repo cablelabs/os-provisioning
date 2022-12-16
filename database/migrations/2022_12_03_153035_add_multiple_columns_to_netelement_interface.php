@@ -48,6 +48,7 @@ return new class extends BaseMigration
             $table->float('output_error_ratio')->nullable();
             $table->bigInteger('prev_input_error_counter')->nullable();
             $table->bigInteger('prev_output_error_counter')->nullable();
+            $table->unique(['netelement_id', 'name']);
         });
     }
 
