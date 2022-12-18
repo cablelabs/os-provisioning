@@ -575,7 +575,7 @@ return [
         'configCompliance' => 'Konfigurationsübereinstimmung',
     ],
     'dpa' => [
-        'lastConfChange' => 'Last Configuration Change',
+        'lastConfChange' => 'Letzte Konfigurationsänderung',
     ],
     'cpe' => [
         'cableInterface' => 'Kabelschnittstelle',
