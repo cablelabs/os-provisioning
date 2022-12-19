@@ -14,6 +14,7 @@ return [
     'connection_type' => 'Connection type',
     'deprecated' => 'Deprecated',
     'district' => 'District',
+    'docsisVer' => 'DOCSIS version',
     'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
     'fiber_node' => 'Fiber node',
@@ -432,6 +433,7 @@ return [
     ],
     'market' => 'Market',
     'hubsite' => 'HubSite',
+    'online' => 'Online',
     'rpd' => [
         'additional_cores' => 'Additional Associated Cores',
         'aux' => 'Aux',
