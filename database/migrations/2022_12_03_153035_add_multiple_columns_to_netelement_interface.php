@@ -36,18 +36,18 @@ return new class extends BaseMigration
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->macAddress('mac')->nullable();
             $table->bigInteger('total_bw')->nullable();
-            $table->float('input_rate')->nullable();
-            $table->float('output_rate')->nullable();
-            $table->bigInteger('prev_input_counter')->nullable();
-            $table->bigInteger('prev_output_counter')->nullable();
+            $table->float('inbound_rate')->nullable();
+            $table->float('outbound_rate')->nullable();
+            $table->bigInteger('prev_inbound_counter')->nullable();
+            $table->bigInteger('prev_outbound_counter')->nullable();
             $table->float('total_util')->nullable();
-            $table->float('input_util')->nullable();
-            $table->float('output_util')->nullable();
+            $table->float('inbound_util')->nullable();
+            $table->float('outbound_util')->nullable();
             $table->float('total_error_ratio')->nullable();
-            $table->float('input_error_ratio')->nullable();
-            $table->float('output_error_ratio')->nullable();
-            $table->bigInteger('prev_input_error_counter')->nullable();
-            $table->bigInteger('prev_output_error_counter')->nullable();
+            $table->float('inbound_error_ratio')->nullable();
+            $table->float('outbound_error_ratio')->nullable();
+            $table->bigInteger('prev_inbound_error_counter')->nullable();
+            $table->bigInteger('prev_outbound_error_counter')->nullable();
             $table->unique(['netelement_id', 'name']);
         });
     }
@@ -63,18 +63,18 @@ return new class extends BaseMigration
             $table->dropColumn([
                 'mac',
                 'total_bw',
-                'input_rate',
-                'output_rate',
-                'prev_input_counter',
-                'prev_output_counter',
+                'inbound_rate',
+                'outbound_rate',
+                'prev_inbound_counter',
+                'prev_outbound_counter',
                 'total_util',
-                'input_util',
-                'output_util',
+                'inbound_util',
+                'outbound_util',
                 'total_error_ratio',
-                'input_error_ratio',
-                'output_error_ratio',
-                'prev_input_error_counter',
-                'prev_output_error_counter',
+                'inbound_error_ratio',
+                'outbound_error_ratio',
+                'prev_inbound_error_counter',
+                'prev_outbound_error_counter',
             ]);
         });
     }
