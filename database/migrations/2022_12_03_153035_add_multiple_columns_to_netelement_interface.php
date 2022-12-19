@@ -38,8 +38,6 @@ return new class extends BaseMigration
             $table->bigInteger('total_bw')->nullable();
             $table->float('inbound_rate')->nullable();
             $table->float('outbound_rate')->nullable();
-            $table->bigInteger('prev_inbound_counter')->nullable();
-            $table->bigInteger('prev_outbound_counter')->nullable();
             $table->float('total_util')->nullable();
             $table->float('inbound_util')->nullable();
             $table->float('outbound_util')->nullable();
@@ -65,8 +63,6 @@ return new class extends BaseMigration
                 'total_bw',
                 'inbound_rate',
                 'outbound_rate',
-                'prev_inbound_counter',
-                'prev_outbound_counter',
                 'total_util',
                 'inbound_util',
                 'outbound_util',
