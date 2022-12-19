@@ -439,6 +439,11 @@ class NetElement extends \BaseModel
         return $this->hasOne(\Modules\CoreMon\Entities\Rpd::class, 'netelement_id');
     }
 
+    public function ncs()
+    {
+        return $this->hasOne(\Modules\CoreMon\Entities\Ncs::class, 'netelement_id');
+    }
+
     /**
      * Relation to CoreMon model - 1:1
      *
