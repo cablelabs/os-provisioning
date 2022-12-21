@@ -54,6 +54,5 @@ class DoNothingForXSecondsJob implements ShouldQueue
         echo date('c').' –            PID '.getmypid().' (pushed '.$this->pushTime.'): Now awake and exiting';
         echo "\n";
         echo "\n";
-
     }
 }
