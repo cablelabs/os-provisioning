@@ -62,6 +62,14 @@ class NetGwObserver
         $netgw->makeDhcpConf();
 
         File::put(self::NETGW_TFTP_PATH."/$netgw->id.cfg", $netgw->get_raw_netgw_config());
+
+        // looks like laravel job for getting OLT online/offline information had
+        // cached the (wrong) passwort for an OLT and even after updating the model did not use
+        // the correct one
+        // to prevent this: restart the queue
+        if ('olt' == $netgw->type) {
+            \Artisan::call('queue:restart');
+        }
     }
 
     public function deleted($netgw)
