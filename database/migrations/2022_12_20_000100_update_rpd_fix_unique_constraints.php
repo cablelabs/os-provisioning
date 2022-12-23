@@ -32,15 +32,21 @@ return new class extends BaseMigration
      */
     public function up()
     {
+        $indexes = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes('rpd');
+
+        if (array_key_exists('rpd_mac_netelement_id_unique', $indexes)) {
+            Schema::table($this->tableName, function (Blueprint $table) {
+                $table->dropUnique('rpd_mac_netelement_id_unique');
+            });
+        }
+
+        if (array_key_exists('rpd_mac_unique', $indexes)) {
+            return;
+        }
+
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->bigInteger('netelement_ccap_id')->nullable();
-            $table->string('state_changed_at')->nullable();         // stateChangeTimestamp in Smartphy response
             $table->unique('mac');
             $table->unique('netelement_id');
-
-            if (! Schema::hasColumn($this->tableName, 'cable_if')) {
-                $table->string('cable_if')->nullable();
-            }
         });
     }
 
@@ -52,7 +58,8 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumns(['netelement_ccap_id', 'cable_if', 'state_changed_at']);
+            $table->dropUnique('rpd_mac_unique');
+            $table->dropUnique('rpd_netelement_id_unique');
         });
     }
 };
