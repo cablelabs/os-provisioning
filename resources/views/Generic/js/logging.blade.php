@@ -37,7 +37,7 @@
             processing: true,
             serverSide: true,
             deferRender: true,
-            ajax: '{!! isset($netelement) ? $netelement->getLoggingRoute() : Route( App\Http\Controllers\NamespaceController::get_route_name(). ".guilog", $view_var) !!}',
+            ajax: '{!! isset($netelement) ? $netelement->getLoggingRoute() : (isset($view_var) ? Route( App\Http\Controllers\NamespaceController::get_route_name(). ".guilog", $view_var) : "") !!}',
             columns:[
                         {data: 'responsive', orderable: false, searchable: false},
                         {data: 'created_at', name: 'created_at'},
