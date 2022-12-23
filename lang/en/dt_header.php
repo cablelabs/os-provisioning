@@ -15,6 +15,7 @@ return [
     'deprecated' => 'Deprecated',
     'district' => 'District',
     'docsisVer' => 'DOCSIS version',
+    'dpa' => 'DPA',
     'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
     'fiber_node' => 'Fiber node',
@@ -265,6 +266,7 @@ return [
         'key' => 'Option',
         'value' => 'Value',
     ],
+    'ncs' => 'NCS',
     // Node
     'node' => [
         'name' => 'Name',
@@ -434,6 +436,7 @@ return [
     'market' => 'Market',
     'hubsite' => 'HubSite',
     'online' => 'Online',
+    'rpa' => 'RPA',
     'rpd' => [
         'additional_cores' => 'Additional Associated Cores',
         'aux' => 'Aux',

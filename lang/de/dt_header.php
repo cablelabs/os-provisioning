@@ -15,6 +15,7 @@ return [
     'deprecated' => 'Veraltet',
     'district' => 'Ortsteil',
     'docsisVer' => 'DOCSIS Version',
+    'dpa' => 'DPA',
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
     'fiber_node' => 'Fiber node',
@@ -265,6 +266,7 @@ return [
         'key' => 'Option',
         'value' => 'Wert',
     ],
+    'ncs' => 'NCS',
     // Node
     'node' => [
         'name' => 'Name',
@@ -434,6 +436,7 @@ return [
     'market' => 'Markt',
     'hubsite' => 'HubSite',
     'online' => 'Online',
+    'rpa' => 'RPA',
     'rpd' => [
         'additional_cores' => 'Zusätzliche Cores',
         'aux' => 'Aux',
@@ -450,7 +453,6 @@ return [
         'cm_no' => 'Anzahl CPEs',
         'cm_no_service_group' => 'Anzahl Pro Service Group',
         'cm_off_no' => 'Anzahl Offline CPEs',
-        'dpa' => 'DPA',
         'ds_data_cont_profile' => 'DS Daten Controller Profile',
         'ds_data_cont' => 'DS Daten Controller',
         'ds_data_depi' => 'DS Daten DEPI',
