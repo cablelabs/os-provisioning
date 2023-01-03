@@ -453,7 +453,6 @@ return [
         'cm_no' => 'CPE Count Per RPD',
         'cm_no_service_group' => 'CPE Count Per Service Group',
         'cm_off_no' => 'Number CPE Offline',
-        'dpa' => 'DPA',
         'ds_data_cont_profile' => 'DS Data Controller Profile',
         'ds_data_cont' => 'DS Data Controller',
         'ds_data_depi' => 'DS Data DEPI',
