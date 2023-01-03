@@ -1184,7 +1184,7 @@ legend {
 
 .dropdown-item {
     color: var(--text-dropdown-item);
-    border-bottom: 1px solid var(--sky-50);
+    border-bottom: 1px solid var(--border-bottom-dropdown-item);
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
@@ -2214,7 +2214,9 @@ label {
 .table > tfoot > tr > td {
     border-color: var(--border-table);
     padding: 10px 15px;
-    background: #fff;
+    /* background: #fff; */
+    background-color: var(--bg-table-td);
+    color: var(--text-table-td);
 }
 .table-condensed > thead > tr > th,
 .table-condensed > tbody > tr > th,
@@ -2226,7 +2228,8 @@ label {
 }
 .table-hover > tbody > tr:hover > td,
 .table-hover > tbody > tr:hover > th {
-    background: #e8ecf1 !important;
+    background: var(--bg-table-hover) !important;
+    color: var(--text-body);
 }
 .table-striped > tbody > tr:nth-child(odd) > td,
 .table-striped > tbody > tr:nth-child(odd) > th {
@@ -7581,4 +7584,9 @@ body .bootstrap-datetimepicker-widget table td {
 .card[class*="card-outline-"] {
 	border-width: 1px;
 	border-style: solid;
+}
+.input-group-text {
+    color: var(--text-input-group); /* #495057 */
+    background-color: var(--bg-input-group);/* #e9ecef */
+    border: 1px solid var(--border-input-group); /* #ced4da */
 }

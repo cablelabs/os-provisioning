@@ -884,7 +884,8 @@ select.form-control.input-xs:not([size]):not([multiple]) {
     font-size: 14px;
     text-align: left;
     list-style: none;
-    background-color: #fff;
+    color: var(--text-dropdown-menu);
+    background-color: var(--bg-dropdown-menu);
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
     border: 1px solid #ccc;

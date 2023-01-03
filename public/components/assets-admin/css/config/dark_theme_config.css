@@ -65,12 +65,13 @@
     --border-legend : var(--slate-200);
 
     /* dropdown item color variable */
-    --text-dropdown-item : var(--gray-700);
-    --bg-dropdown-item : var(--gray-50);
+    --text-dropdown-item : var(--slate-100);
+    --bg-dropdown-item : var(--gray-700);
     --bg-dropdown-item-active : var(--sky-300);
     --border-dropdown-divider : var(--neutral-100);
     --border-dropdown-media : var(--neutral-100);
     --border-dropdown-item-active : var(--cyan-500);
+    --border-bottom-dropdown-item : var(--gray-700);
 
     /* alert color variable */
     --bg-alert-success : var(--green-300);
@@ -379,7 +380,10 @@
 
     /* table color */
     --border-table : var(--slate-200);
-   
+    --bg-table-td : var(--stone-700);
+    --text-table-td : var(--slate-100);
+    --bg-table-hover : var(--stone-200);
+
     /* underline color  */
     --underline : var(--slate-200);
 
@@ -499,4 +503,13 @@
 
     /* tab content */
     --tab-content: transparent;
+
+    /* dropdown menu */
+    --text-dropdown-menu: var(--slate-100);
+    --bg-dropdown-menu: var(--stone-700);
+
+    /* input group */
+    --text-input-group: var(--slate-100);
+    --bg-input-group: var(--stone-700);
+    --border-input-group: var(--slate-100);
 }

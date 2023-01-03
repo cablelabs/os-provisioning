@@ -70,6 +70,7 @@
     --border-dropdown-divider : var(--neutral-100);
     --border-dropdown-media : var(--neutral-100);
     --border-dropdown-item-active : var(--cyan-500);
+    --border-bottom-dropdown-item : var(--sky-50);
 
     /* alert color variable */
     --bg-alert-success : var(--green-300);
@@ -377,7 +378,10 @@
 
     /* table color */
     --border-table : var(--slate-200);
-   
+    --bg-table-td : var(--white);
+    --text-table-td : var(--gray-500);
+    --bg-table-hover : var(--stone-200);
+    
     /* underline color  */
     --underline : var(--slate-200);
 
@@ -497,4 +501,13 @@
 
     /* tab content */
     --tab-content: var(--neutral-100);
+
+    /* dropdown menu */
+    --text-dropdown-menu: var(--gray-500);
+    --bg-dropdown-menu: var(--white);
+
+    /* input group */
+    --text-input-group: var(--gray-500);
+    --bg-input-group: var(--gray-100);
+    --border-input-group: var(--slate-300);
 }
