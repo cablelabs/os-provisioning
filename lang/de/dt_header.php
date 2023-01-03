@@ -167,6 +167,21 @@ return [
         'options' => 'Optionen',
         'kml_file' => 'KML Datei',
     ],
+    'netelement_interface' => [
+        'name' => 'Name der Schnittstelle',
+        'mac' => 'Schnittstellen MAC',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Betriebszustand',
+        'total_bw' => 'Gesamtbandbreite',
+        'inbound_rate' => 'Eingehende Datenrate',
+        'outbound_rate' => 'Ausgehende Datenrate',
+        'inbound_util' => 'Eingehende Kanalnutzung',
+        'outbound_util' => 'Ausgehende Kanalnutzung',
+        'total_util' => 'Gesamte Kanalnutzung',
+        'inbound_error_ratio' => 'Eingehender Fehleranteil',
+        'outbound_error_ratio' => 'Ausgehender Fehleranteil',
+        'total_error_ratio' => 'Gesamter Fehleranteil',
+    ],
     // NetElementType
     'netelementtype.name' => 'Netzelementtyp',
     //HfcSnmp

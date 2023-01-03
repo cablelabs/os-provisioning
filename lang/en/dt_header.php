@@ -167,6 +167,21 @@ return [
         'options' => 'Options',
         'kml_file' => 'KML File',
     ],
+    'netelement_interface' => [
+        'name' => 'Interface Name',
+        'mac' => 'Interface MAC',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Operational Status',
+        'total_bw' => 'Total Bandwidth',
+        'inbound_rate' => 'Inbound Rate',
+        'outbound_rate' => 'Outbound Rate',
+        'inbound_util' => 'Inbound Utilization',
+        'outbound_util' => 'Outbound Utilization',
+        'total_util' => 'Total Utilization',
+        'inbound_error_ratio' => 'Inbound Error Ratio',
+        'outbound_error_ratio' => 'Outbound Error Ratio',
+        'total_error_ratio' => 'Total Error Ratio',
+    ],
     // NetElementType
     'netelementtype.name' => 'Netelementtype',
     //HfcSnmp
