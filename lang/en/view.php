@@ -720,6 +720,7 @@ return [
         'Back to last selected NetElement' => 'Back to last selected NetElement',
         'Back to Provisioning Dashboard' => 'Back to Provisioning Dashboard',
         'cm' => 'CM',
+        'cpesByVendor' => 'CPE vendors',
         'Controlling' => 'Controlling',
         'Customers' => 'Modem Topology',
         'Diagrams' => 'Diagrams',

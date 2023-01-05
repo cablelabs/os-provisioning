@@ -403,6 +403,12 @@ return [
         'reg_priv' => 'Registrierungsprivileg',
         'reg_ver' => 'Registrierungsversion',
         'us_data_service_grp' => 'US Data Service Gruppe',
+        'vendor' => [
+            'cpes' => '# CPEs',
+            'cpesOnline' => '# CPEs online',
+            'cpesOffline' => '# CPEs offline',
+            'cpesOfflinePct' => '% CPE offline',
+        ],
     ],
     'interface' => [
         'name' => 'Name',
@@ -526,4 +532,5 @@ return [
     'assigned_users' => 'Bearbeiter',
     'tickettypes.name' => 'Typ',
     'total_fee' => 'Gebühren',
+    'vendor' => 'Hersteller',
 ];

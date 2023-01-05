@@ -718,6 +718,7 @@ return [
         'Back to last selected NetElement' => 'Zurück zum zuletzt ausgewählten Netzelement',
         'Back to Provisioning Dashboard' => 'Zurück zum Provisioning Dashboard',
         'cm' => 'CM',
+        'cpesByVendor' => 'CPE Hersteller',
         'Controlling' => 'Steuerung',
         'Customers' => 'Modemkarte',
         'Diagrams' => 'Diagramme',
