@@ -198,6 +198,7 @@ return [
     'Postcode'                  => 'Postcode',
     'Prefix Number'             => 'Prefix Number',
     'Price'                     => 'Price',
+    'prometheusStopped' => 'Prometheus is not running. Could not retrieve all the latest values',
     'Public CPE'                => 'Public CPE',
     'Publish address'           => 'Publish address',
     'QoS next month'            => 'QoS next month',

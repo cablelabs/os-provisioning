@@ -198,6 +198,7 @@ return [
     'Postcode'                  => 'Postleitzahl',
     'Prefix Number'             => 'Vorwahl',
     'Price'                     => 'Preis',
+    'prometheusStopped' => 'Prometheus läuft nicht. Es konnten nicht alle aktuellen Werte geholt werden.',
     'Public CPE'                => 'Öffentliches CPE',
     'Publish address'           => 'Veröffentlichungs-Kennzeichen-Adresse',
     'QoS next month'            => 'QoS nächsten Monat',
