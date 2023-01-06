@@ -1,6 +1,6 @@
 <div id="accordion2" class="mt-12 panel-group" v-if="capabilities">
     <div class="mb-0 bg-white border panel-inverse">
-        <div class="flex flex-row items-center px-3 py-2 text-white bg-zinc-900 rounded-top">
+        <div class="flex flex-row items-center px-3 py-2 text-white bg-gray-900 rounded-top">
             <h3 class="flex-1 panel-title">
                 <a class="accordion-toggle accordion-toggle-styled collapsed hover:text-gray-300" data-toggle="collapse"
                     data-parent="#accordion" href="#customCapabilities" aria-expanded="false">

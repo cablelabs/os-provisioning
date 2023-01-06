@@ -54,7 +54,7 @@
 @section('content_right')
     @if(isset($relations) && !empty($relations))
         <div class="col-lg-{{isset($edit_right_md_size) ? $edit_right_md_size : 4}}">
-            <div class="tab-content bg-gray-100 dark:bg-stone-800">
+            <div class="tab-content bg-gray-100 dark:bg-slate-900">
                 @foreach ($tabs as $tab)
                     @if (isset($relations[$tab['name']]))
                         <div class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}" id="{{ $tab['name'] }}">

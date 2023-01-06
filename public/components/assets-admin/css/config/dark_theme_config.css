@@ -3,7 +3,7 @@
 
     /* body color variable */
     /* dark */
-    --bg-body : var(--stone-800);
+    --bg-body : var(--slate-900);
     --text-body: var(--gray-500);
 
      /* heading color variable */
@@ -17,12 +17,12 @@
     /* navbar color variable */
     --text-navbar :  var(--gray-400);
     --text-navbar-default : var(--cyan-500);
-    --text-navbar-nav-open : var(--neutral-700);
-    --border-navbar-nav-dropdown : var(--neutral-100);
-    --bg-icon-navbar : var(--neutral-700);
+    --text-navbar-nav-open : var(--gray-700);
+    --border-navbar-nav-dropdown : var(--slate-100);
+    --bg-icon-navbar : var(--gray-700);
     --bg-navbar-divider : var(--slate-200);
      /* dark */
-    --bg-navbar-default : var(--stone-800);
+    --bg-navbar-default : var(--slate-900);
     --bg-navbar-inverse : var(--gray-700);
 
     /* sidebar color variable */
@@ -32,19 +32,19 @@
     --bg-sidebar-nav-li-label-success : var(--lime-600);
     --text-sidebar : var(--white);
     --text-sidebar-active : var(--lime-500);
-    --text-sidebar-sub-menu : var(--neutral-700);
+    --text-sidebar-sub-menu : var(--gray-700);
 
     /* page header color variable */
     --text-page-header : var(--slate-100);
 
     /* breadcrumb color variable */
-    --text-breadcrumb : var(--neutral-700);
+    --text-breadcrumb : var(--gray-700);
 
     /* form control color variable */
     --border-form-control : var(--slate-400);
 
     /* form group */
-    --border-form-horizontal : var(--neutral-100);
+    --border-form-horizontal : var(--slate-100);
 
     /* has color variable */
     --text-has-success : var(--lime-500);
@@ -68,8 +68,8 @@
     --text-dropdown-item : var(--slate-100);
     --bg-dropdown-item : var(--gray-700);
     --bg-dropdown-item-active : var(--sky-300);
-    --border-dropdown-divider : var(--neutral-100);
-    --border-dropdown-media : var(--neutral-100);
+    --border-dropdown-divider : var(--slate-100);
+    --border-dropdown-media : var(--slate-100);
     --border-dropdown-item-active : var(--cyan-500);
     --border-bottom-dropdown-item : var(--gray-700);
 
@@ -134,13 +134,13 @@
     --bg-btn-default-hover : var(--gray-400);
     --border-btn-default-hover : var(--gray-400);
 
-    --text-btn-white : var(--neutral-700);
+    --text-btn-white : var(--gray-700);
     --bg-btn-white : var(--white);
     --bg-btn-white : var(--slate-200);
     --bg-btn-white-hover :var(--slate-200);
-    --border-btn-white-hover : var(--zinc-300);
-    --btn-white-without-border-hover : var(--neutral-100);
-    --btn-white-without-border-active : var(--neutral-50);
+    --border-btn-white-hover : var(--gray-300);
+    --btn-white-without-border-hover : var(--slate-100);
+    --btn-white-without-border-active : var(--slate-50);
 
     --text-btn-inverse :  var(--white);
     --bg-btn-inverse :  var(--gray-700);
@@ -179,14 +179,14 @@
     --border-btn-info-hover :  var(--cyan-600);
 
     /* panel color variable */
-    --bg-panel-inverse-heading : var(--stone-700);
+    --bg-panel-inverse-heading : var(--slate-800);
     --bg-panel-success-heading : var(--lime-600);
     --bg-panel-warning-heading : var(--amber-600);
     --bg-panel-danger-heading : var(--red-600);
     --bg-panel-primary-heading : var(--blue-500);
     --bg-panel-info-heading : var(--cyan-600);
-    --border-panel-heading : var(--neutral-100);
-    --text-panel-default : var(--neutral-700);
+    --border-panel-heading : var(--slate-100);
+    --text-panel-default : var(--gray-700);
 
     /* text color variable */
     --text-inverse : var(--slate-100);
@@ -358,7 +358,7 @@
     --bg-card-danger : var(--red-500);
     --border-card-danger : var(--red-500);
 
-    --bg-card-inverse: var(--stone-700);
+    --bg-card-inverse: var(--slate-800);
     --text-card-inverse: var(--slate-100);
     /* --text-card-inverse: rgba(0, 0, 0, 0.65); */
     
@@ -380,57 +380,57 @@
 
     /* table color */
     --border-table : var(--slate-200);
-    --bg-table-td : var(--stone-700);
+    --bg-table-td : var(--slate-800);
     --text-table-td : var(--slate-100);
-    --bg-table-hover : var(--stone-200);
+    --bg-table-hover : var(--slate-200);
 
     /* underline color  */
     --underline : var(--slate-200);
 
     /* gritter text color */
-    --text-gritter : var(--neutral-700); 
+    --text-gritter : var(--gray-700); 
     --bg-gritter : var(--red-500);
 
     /* dataTables color */
     --bg-dataTables-wrapper : var(--gray-800);
-    --bg-dataTables: var(--stone-700);
+    --bg-dataTables: var(--slate-800);
     --text-dataTables: var(--slate-100);
     
     /* datepicker color */
-    --bg-datepicker : var(--neutral-100);
+    --bg-datepicker : var(--slate-100);
     --text-daterangepicker : var(--gray-800);
 
     /* combobox color */
     --border-combobox-container : var(--slate-400);
 
     /* parsley color */
-    --text-parsley : var(--neutral-700);
+    --text-parsley : var(--gray-700);
     --border-parsley-error : var(--red-500);
     --border-parsley-success : var(--lime-500);
 
     /* bwizard steps color */
-    --text-bwizard : var(--neutral-700);
+    --text-bwizard : var(--gray-700);
 
     /* fc event list color */
     --text-fc-event-list : var(--gray-700);
     --border-bg-fc-event : var(--slate-200);
 
     /* jqstooltip color */
-    --bg-jqstooltip : var(--neutral-700);
+    --bg-jqstooltip : var(--gray-700);
 
     /* result-list color */
     --bg-result-list : var(--gray-700);
-    --text-result-list : var(--neutral-700);
+    --text-result-list : var(--gray-700);
 
     /* todolist color */
-    --text-todolist : var(--neutral-700);
+    --text-todolist : var(--gray-700);
     --text-todolist-active : var(--lime-500);
     
     /* invoice-price color */
     --bg-nvoice-price : var(--gray-700);
 
     /* table-email color */
-    --text-table-email : var(--neutral-700);
+    --text-table-email : var(--gray-700);
 
     /* error-code color */
     --border-code : var(--slate-400);
@@ -442,16 +442,16 @@
 
     /* coming-soon color */
     --text-coming-soon : var(--lime-500);
-    --text-coming-soon-content : var(--neutral-700);
+    --text-coming-soon-content : var(--gray-700);
 
     /* theme-panel color */
-    --text-theme-panel : var(--neutral-700);
+    --text-theme-panel : var(--gray-700);
     --border-theme-panel : var(--slate-200);
 
     /* select2 arrow color */
     --border-select2 : var(--slate-200);
     --text-select2 : var(--slate-100);
-    --bg-select-2 : var(--stone-700);
+    --bg-select-2 : var(--slate-800);
     --bg-select-2-selected : var(--gray-700);
 
     /* List Group Item color */
@@ -463,10 +463,10 @@
     --text-bootstrap-calendar : var(--gray-700);
 
     /* registered users list color */
-    --text-registered-users-list : var(--neutral-700);
+    --text-registered-users-list : var(--gray-700);
 
     /* chats color */
-    --text-chats : var(--neutral-700);
+    --text-chats : var(--gray-700);
     --border-chats : var(--slate-400);
 
     /* superbox show color */
@@ -481,7 +481,8 @@
 
     /* jstree color */
     --text-jstree  : var(--slate-100);
-    --text-jstree-hover: var(--gray-700);
+    --text-jstree-hover: var(--slate-100);
+    --bg-jstree-hover : var(--slate-600);
 
     /* profile-image color */
     --border-profile : var(--slate-200);
@@ -506,10 +507,10 @@
 
     /* dropdown menu */
     --text-dropdown-menu: var(--slate-100);
-    --bg-dropdown-menu: var(--stone-700);
+    --bg-dropdown-menu: var(--slate-800);
 
     /* input group */
     --text-input-group: var(--slate-100);
-    --bg-input-group: var(--stone-700);
+    --bg-input-group: var(--slate-800);
     --border-input-group: var(--slate-100);
 }

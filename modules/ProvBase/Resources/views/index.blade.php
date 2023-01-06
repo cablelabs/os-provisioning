@@ -126,11 +126,11 @@
                             </div>
                             <div class="input-group-prepend" style="margin-top: 20px; margin-bottom: 20px;">
                                 <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="lowerValue">{{ trans('messages.minimum') }}</label>
-                                <input type="number" value="50" class="form-control dark:bg-stone-700 dark:text-slate-100" id="lowerValue">
+                                <input type="number" value="50" class="form-control dark:bg-slate-800 dark:text-slate-100" id="lowerValue">
                             </div>
                             <div class="input-group-prepend">
                                 <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="upperValue">{{ trans('messages.maximum') }}</label>
-                                <input type="number" value="75" class="form-control dark:bg-stone-700 dark:text-slate-100" id="upperValue">
+                                <input type="number" value="75" class="form-control dark:bg-slate-800 dark:text-slate-100" id="upperValue">
                             </div>
                         </div>
                         <button class="btn btn-primary" onclick="filterImpairedModems()" type="button">{{ trans('view.Button_Search') }}</button>

@@ -2,12 +2,12 @@
     data-favorites='@json($favorites ?? new stdClass())' class="fixed top-0 left-0 z-0 flex flex-col h-full">
     <div class="mt-16 md:mt-[3.25rem] flex flex-1 text-gray-200">
         @if (Module::collections()->has('CoreMon'))
-        <div class="z-20 flex flex-col justify-between w-16 bg-stone-800">
+        <div class="z-20 flex flex-col justify-between w-16 bg-slate-900">
             <div>
                 <div
                     class="flex flex-col items-center justify-center space-y-2 text-xs text-center border-b border-gray-200">
-                    <div class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in"
-                        :class="{ 'bg-zinc-900': menu == 'Core Network' }" v-on:click="openSidebar('Core Network');">
+                    <div class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-gray-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in"
+                        :class="{ 'bg-gray-900': menu == 'Core Network' }" v-on:click="openSidebar('Core Network');">
                         <svg version="1.1" viewBox="0 0 96 96" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <path
@@ -17,8 +17,8 @@
                         </svg>
                         <div class="pt-2">Core Network</div>
                     </div>
-                    <div class="flex flex-col items-center w-full p-1 transition duration-150 ease-out hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in"
-                        :class="{ 'bg-zinc-900': menu == 'Access Network' }"
+                    <div class="flex flex-col items-center w-full p-1 transition duration-150 ease-out hover:bg-gray-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in"
+                        :class="{ 'bg-gray-900': menu == 'Access Network' }"
                         v-on:click="openSidebar('Access Network');">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 367 341" class="w-6 h-6"
                             fill="CurrentColor">
@@ -28,7 +28,7 @@
                         <div class="pt-2">Access Network</div>
                     </div>
                     <a href="{{ route('GuiLog.index') }}"
-                        class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in">
+                        class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-gray-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in">
                         <svg version="1.1" viewBox="0 0 96 96" class="w-12 h-12" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect x="20" y="43.79" rx="2" ry="2" width="10" height="10" stroke="none" stroke-width="1"
@@ -41,7 +41,7 @@
                         <div>Activity</div>
                     </a>
                     <a href="{{ route('Apps.active') }}"
-                        class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-zinc-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in">
+                        class="flex flex-col items-center w-full p-2 transition duration-150 ease-out hover:bg-gray-900 hover:text-lime-nmsprime hover:cursor-pointer hover:ease-in">
                         <svg version="1.1" viewBox="0 0 96 96" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect x="0" y="0" rx="8" ry="8" width="46" height="46" stroke="none" stroke-width="1"
@@ -103,7 +103,7 @@
         <div class="relative z-10 transition-all duration-200"
             :class="{ '-translate-x-full': store.minified }">
             @if (Module::collections()->has('CoreMon'))
-            <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-zinc-900 core-network-sidebar">
+            <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-gray-900 core-network-sidebar">
                 <div class="w-full px-3 py-2 text-gray-400">
                     <div class="mb-4 text-base font-semibold text-gray-100">Filter</div>
                     <div class="flex flex-col space-y-4 text-sm">

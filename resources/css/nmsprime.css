@@ -436,7 +436,7 @@ table .index_check {
 }
 
 #loader {
-    border: 16px solid var(--neutral-100); /* Light grey */
+    border: 16px solid var(--slate-100); /* Light grey */
     border-top: 16px solid var(--sky-600); /* Blue */
     border-radius: 50%;
     width: 120px;

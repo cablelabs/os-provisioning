@@ -2708,10 +2708,10 @@ code {
     border-radius: 50% !important;
 }
 .no-border { border: 0 !important; }
-.border-top-1 { border-top: 1px solid var(--neutral-100) !important; }
-.border-right-1 { border-right: 1px solid var(--neutral-100) !important; }
-.border-bottom-1 { border-bottom: 1px solid var(--neutral-100) !important; }
-.border-left-1 { border-left: 1px solid var(--neutral-100) !important; }
+.border-top-1 { border-top: 1px solid var(--slate-100) !important; }
+.border-right-1 { border-right: 1px solid var(--slate-100) !important; }
+.border-bottom-1 { border-bottom: 1px solid var(--slate-100) !important; }
+.border-left-1 { border-left: 1px solid var(--slate-100) !important; }
 .no-box-shadow {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
@@ -6214,19 +6214,22 @@ body.flat-black {
 }
 .jstree-default .jstree-clicked,
 .jstree-default .jstree-wholerow-clicked {
-    background: #E4E9EC !important;
+    /* background: #E4E9EC !important; */
+    background: var(--bg-jstree-hover) !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
 }
 .jstree-default .jstree-hovered,
 .jstree-default .jstree-wholerow-hovered {
-    background: #f0f3f4 !important;
+    /* background: #f0f3f4 !important; */
+    background: var(--bg-jstree-hover) !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     color: var(--text-jstree-hover) !important;
 }
 .jstree-hovered, .jstree-wholerow-hovered {
     color: var(--text-jstree-hover) !important;
+    background: var(--bg-jstree-hover)/*#f0f3f4*/ !important;
 }
 .jstree-open > .jstree-anchor > .fa-folder:before {
     content: '\f07c';

@@ -25,7 +25,7 @@ initComplete: function () {
         input.classList.add('form-control');
         input.classList.add('input-sm');
         input.classList.add('select2');
-        input.classList.add('dark:bg-stone-700');
+        input.classList.add('dark:bg-slate-800');
         input.classList.add('dark:text-slate-100');
 
         if ($(this.footer()).hasClass('searchable')){
