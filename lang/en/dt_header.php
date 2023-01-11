@@ -440,7 +440,7 @@ return [
         'uptime' => 'Uptime',
         'bandwidth' => 'Bandwidth',
         'utilization' => 'Utilization',
-        'created_at' => 'Status Last Change',
+        'laststatechange' => 'Status Last Change',
     ],
     'netElementInterface' => [
         'name' => 'Interface Name',
