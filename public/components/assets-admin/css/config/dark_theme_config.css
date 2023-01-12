@@ -395,7 +395,8 @@
     --bg-dataTables-wrapper : var(--gray-800);
     --bg-dataTables: var(--slate-800);
     --text-dataTables: var(--slate-100);
-    
+    --border-dataTables-filter : var(--slate-800);
+
     /* datepicker color */
     --bg-datepicker : var(--slate-100);
     --text-daterangepicker : var(--gray-800);

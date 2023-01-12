@@ -3054,12 +3054,14 @@ div.dataTables_scrollHead .table,
     color: var(--text-page-header);
 }
 .dataTables_filter input{
-    color: var(--text-dataTables);
-    background-color: var(--bg-dataTables);
+    color: var(--text-dataTables) !important;
+    background-color: var(--bg-dataTables) !important;
+    border: 1px solid var(--border-dataTables-filter) !important;
 }
 .dataTables_filter input:focus{
-    color: var(--text-dataTables);
-    background-color: var(--bg-dataTables);
+    color: var(--text-dataTables) !important;
+    background-color: var(--bg-dataTables) !important;
+    border: 1px solid var(--border-dataTables-filter) !important;
 }
 .dataTables_scroll {
     color: var(--text-body);
