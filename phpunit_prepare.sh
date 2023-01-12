@@ -5,20 +5,22 @@
 # if that doesn't help try deleting bootstrap/cache/*
 
 export COMPOSER_MEMORY_LIMIT=-1
+export COMPOSER_ALLOW_SUPERUSER=1
 
 declare -a CMDS=(
-	"php artisan module:publish"
-	"git submodule update --init --recursive"
 	"mkdir -p /var/www/nmsprime/storage/framework/cache"
 	"mkdir -p /var/www/nmsprime/storage/framework/sessions"
 	"mkdir -p /var/www/nmsprime/storage/framework/views"
-	"chown -R apache /var/www/nmsprime/storage/framework"
 	"composer dump-autoload"
 	"composer update"
-	"php artisan optimize:clear"
 	"php artisan migrate"
 	"php artisan module:migrate"
-	"php artisan queue:restart"
+	"php artisan module:publish"
+	"php artisan optimize:clear"
+	"php artisan optimize"
+	"npm install && npm run dev"
+	"chown -R apache /var/www/nmsprime/storage/framework"
+	"systemctl restart supervisord httpd"
 	)
 
 clear
