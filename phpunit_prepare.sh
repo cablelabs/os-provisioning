@@ -11,7 +11,6 @@ declare -a CMDS=(
 	"mkdir -p /var/www/nmsprime/storage/framework/cache"
 	"mkdir -p /var/www/nmsprime/storage/framework/sessions"
 	"mkdir -p /var/www/nmsprime/storage/framework/views"
-	"composer dump-autoload"
 	"composer update"
 	"php artisan migrate"
 	"php artisan module:migrate"
