@@ -18,6 +18,7 @@ declare -a CMDS=(
 	"php artisan module:publish"
 	"php artisan optimize:clear"
 	"php artisan optimize"
+	"php artisan nms:coremon-publish"
 	"npm install && npm run dev"
 	"chown -R apache /var/www/nmsprime/storage/framework"
 	"systemctl restart supervisord httpd"
