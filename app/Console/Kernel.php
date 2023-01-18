@@ -107,11 +107,6 @@ class Kernel extends ConsoleKernel
                 Queue::pushOn('medium', new \Modules\CoreMon\Jobs\GetRpdsJob());
             })->cron('57 1-23/2 * * *');
 
-            // import data from Kafka every 15 minutes
-            $schedule->call(function () {
-                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaArpDataJob());
-            })->cron('5,20,35,50 * * * *');
-
             $schedule->call(function () {
                 \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaInterfaceDataJob());
             })->cron('5,20,35,50 * * * *');
