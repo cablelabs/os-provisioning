@@ -2500,11 +2500,9 @@ class Modem extends \BaseModel
      */
     public static function validateLease($lease, $type = null, $onlineTr069 = false)
     {
-        if ($lease['text'] && $lease['text'][0]) {
-            // calculate endtime
-            preg_match('/ends [0-6] (.*?);/', $lease['text'][0], $endtime);
-            $et = explode(',', str_replace([':', '/', ' '], ',', $endtime[1]));
-            $endtime = \Carbon\Carbon::create($et[0], $et[1], $et[2], $et[3], $et[4], $et[5], 'UTC');
+        $leaseTexts = (array) $lease['text'];
+        if (preg_match('/ends [0-6] (.*?);/', end($leaseTexts), $endtime)) {
+            $endtime = \Carbon\Carbon::parse($endtime[1].'+0');
 
             // lease calculation
             // take care changing the state - it's used under cpe analysis
