@@ -621,3 +621,14 @@ function snmpDateAndTimeToCarbon($snmpDateAndTime)
 
     return \Carbon\Carbon::create(...array_slice($unpack, 0, 7));
 }
+
+function snmpIpAddrToInet($suffix)
+{
+    $str = '';
+
+    foreach(explode('.', $suffix) as $i) {
+        $str .= str_pad(dechex($i), 2, '0', STR_PAD_LEFT);
+    }
+
+    return inet_ntop(hex2bin($str));
+}
