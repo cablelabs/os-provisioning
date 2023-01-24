@@ -626,7 +626,7 @@ function snmpIpAddrToInet($suffix)
 {
     $str = '';
 
-    foreach(explode('.', $suffix) as $i) {
+    foreach (explode('.', $suffix) as $i) {
         $str .= str_pad(dechex($i), 2, '0', STR_PAD_LEFT);
     }
 
