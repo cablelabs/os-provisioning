@@ -49,7 +49,7 @@ return new class extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->renameColumn('netelement_ccap_id', 'netelement_id');
-            $table->dropColumn('internal_id');
+            $table->dropColumn(['last_state_change_ms', 'internal_id']);
         });
     }
 };
