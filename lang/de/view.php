@@ -747,6 +747,7 @@ return [
         'optics' => 'Optics',
         'lldp' => 'LLDP',
         'details' => 'Details',
+        'sessions' =>  'Sitzungen',
     ],
     'ticket' => [
         'comment' => [
