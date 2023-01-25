@@ -425,6 +425,18 @@ return [
         'utilization' => 'Utilization',
         'created_at' => 'Status Last Change',
     ],
+    'netElementInterface' => [
+        'name' => 'Interface Name',
+        'ip' => 'IP Address',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Operational Status',
+    ],
+    'lldp' => [
+        'local_interface_description' => 'Local Interface Description',
+        'remote_interface_description' => 'Remote Interface Description',
+        'remote_system_name' => 'Remote System Nanme',
+        'remote_system_description' => 'Remote System Description',
+    ],
     'fiberNode' => [
         'cable_interface' => 'Cable Interface',
         'cpes' => '# CPEs',
