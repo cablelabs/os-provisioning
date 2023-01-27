@@ -17,7 +17,7 @@
  */
 ?>
 {{-- begin Navbar --}}
-<nav v-pre id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none">
+<nav v-pre id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none dark:shadow-slate-100 dark:shadow">
     {{-- only one row Navbar --}}
     <div class="flex justify-between dark:text-slate-100">
         {{-- begin mobile sidebar expand / collapse button --}}

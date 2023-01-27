@@ -509,6 +509,7 @@
     /* dropdown menu */
     --text-dropdown-menu: var(--slate-100);
     --bg-dropdown-menu: var(--slate-800);
+    --border-dropdown-menu : var(--slate-100);
 
     /* input group */
     --text-input-group: var(--slate-100);

@@ -1136,8 +1136,11 @@ legend {
 }
 .dropdown-menu.media-list .dropdown-header {
     padding: 10px 20px !important;
-    background: #fafafa;
+    background: var(--bg-dropdown-item);
+    color: var(--text-dropdown-item);
     font-size: 12px;
+    border-radius: 5px 5px 0px 0px;
+    border-bottom: 1px solid var(--border-dropdown-media);
 }
 .dropdown-menu.media-list .dropdown-header + .media {
     margin-top: -10px;
@@ -1180,6 +1183,10 @@ legend {
 .dropdown-menu > li.dropdown-footer > a:focus {
     background: none !important;
     text-decoration: underline !important;
+}
+
+.dropdown-menu.show {
+   border: 1px solid var(--border-dropdown-menu) !important;
 }
 
 .dropdown-item {
@@ -6291,7 +6298,6 @@ body.flat-black {
 .dropdown-header {
     font-size: 14px;
     font-weight: bold;
-    color: var(--text-dropdown-item);
     padding: 0;
     margin: 0 0 10px;
 }

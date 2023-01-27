@@ -70,7 +70,7 @@
     --border-dropdown-divider : var(--slate-100);
     --border-dropdown-media : var(--slate-100);
     --border-dropdown-item-active : var(--cyan-500);
-    --border-bottom-dropdown-item : var(--sky-50);
+    --border-bottom-dropdown-item : transparent;
 
     /* alert color variable */
     --bg-alert-success : var(--green-300);
@@ -507,6 +507,7 @@
     /* dropdown menu */
     --text-dropdown-menu: var(--gray-500);
     --bg-dropdown-menu: var(--white);
+    --border-dropdown-menu : var(--white);
 
     /* input group */
     --text-input-group: var(--gray-500);
