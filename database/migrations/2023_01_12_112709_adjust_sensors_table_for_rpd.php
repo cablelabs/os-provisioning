@@ -35,9 +35,13 @@ return new class extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn('temperature_id');
+            $table->string('name')->nullable()->change();
+            $table->string('status')->nullable()->change();
+            $table->decimal('value')->nullable()->change();
             $table->string('scale', 10)->after('unit')->nullable();
             $table->integer('precision')->after('scale')->nullable();
             $table->integer('internal_id')->after('core_element_id')->nullable();
+            $table->unique(['internal_id', 'core_element_id', 'core_element_type'], 'sensor_internal_id_unique_idx');
         });
     }
 
@@ -50,11 +54,15 @@ return new class extends BaseMigration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->integer('temperature_id')->after('unit')->nullable();
+            $table->string('name')->change();
+            $table->string('status')->change();
+            $table->float('value')->change();
             $table->dropColumn([
                 'scale',
                 'precision',
                 'internal_id',
             ]);
+            $table->dropIndex('sensor_internal_id_unique_idx');
         });
     }
 };
