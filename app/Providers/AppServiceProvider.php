@@ -62,8 +62,6 @@ class AppServiceProvider extends ServiceProvider
 
             return Response::json($data, $statusCode);
         });
-
-        \DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('macaddr', 'string');
     }
 
     /**

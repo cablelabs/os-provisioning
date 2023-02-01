@@ -169,6 +169,7 @@ return [
     ],
     'netelement_interface' => [
         'name' => 'Interface Name',
+        'if_index' => 'Index',
         'mac' => 'Interface MAC',
         'admin_status' => 'Admin Status',
         'operational_status' => 'Operational Status',

@@ -169,6 +169,7 @@ return [
     ],
     'netelement_interface' => [
         'name' => 'Name der Schnittstelle',
+        'if_index' => 'Index',
         'mac' => 'Schnittstellen MAC',
         'admin_status' => 'Admin Status',
         'operational_status' => 'Betriebszustand',

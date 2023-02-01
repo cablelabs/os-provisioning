@@ -50,8 +50,6 @@ return new class extends BaseMigration
             $table->bigInteger('inbound_discard_rate')->nullable();
             $table->bigInteger('outbound_discard_rate')->nullable();
 
-            $table->string('if_index')->nullable()->change();
-
             $table->bigInteger('prev_inbound_frame_counter')->nullable();
             $table->bigInteger('prev_outbound_frame_counter')->nullable();
             $table->bigInteger('prev_inbound_unicast_counter')->nullable();
@@ -68,7 +66,7 @@ return new class extends BaseMigration
             $table->bigInteger('prev_outbound_broadcast_frame_counter')->nullable();
             $table->bigInteger('prev_inbound_discard_counter')->nullable();
             $table->bigInteger('prev_outbound_discard_counter')->nullable();
-            $table->unique(['netelement_id', 'if_index']);
+            $table->unique(['netelement_id', 'mac']);
         });
     }
 
@@ -115,10 +113,7 @@ return new class extends BaseMigration
                 'prev_outbound_discard_counter',
             ]);
 
-            // specify an explicit cast since there is no automatic cast from varchar to integer
-            DB::statement("ALTER TABLE $this->tableName ALTER COLUMN if_index TYPE integer USING (trim(if_index))::integer");
-
-            $table->dropUnique('netelement_interface_netelement_id_if_index_unique');
+            $table->dropUnique('netelement_interface_netelement_id_mac_unique');
         });
     }
 };
