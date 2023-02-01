@@ -458,6 +458,7 @@ return [
         'description' => 'Beschreibung',
     ],
     'ip' => 'IP',
+    'ip_address' => 'IP Address',
     'l2tp' => [
         'tunnel_id' => 'Tunnel ID',
         'remote_tunnel_id' => 'Remote Tunnel ID',
@@ -515,7 +516,6 @@ return [
         'session_id' => 'Session ID',
         'address_type' => 'Addresstyp',
         'local_id' => 'Lokale ID',
-        'ip' => 'IP Adresse',
     ],
     'stateChangedAt' => 'Letzte Statusänderung',
     'updatedAt' => 'Letzte Aktualisierung',
