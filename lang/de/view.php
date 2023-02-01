@@ -746,6 +746,7 @@ return [
         'cpe' => 'CPE Details',
         'optics' => 'Optics',
         'lldp' => 'LLDP',
+        'details' => 'Details',
     ],
     'ticket' => [
         'comment' => [
