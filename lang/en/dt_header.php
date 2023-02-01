@@ -434,7 +434,7 @@ return [
     'lldp' => [
         'local_interface_description' => 'Local Interface Description',
         'remote_interface_description' => 'Remote Interface Description',
-        'remote_system_name' => 'Remote System Nanme',
+        'remote_system_name' => 'Remote System Name',
         'remote_system_description' => 'Remote System Description',
     ],
     'fiberNode' => [

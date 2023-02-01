@@ -425,6 +425,18 @@ return [
         'utilization' => 'Auslastung',
         'created_at' => 'Letzte Statusänderung',
     ],
+    'netElementInterface' => [
+        'name' => 'Interfacename',
+        'ip' => 'IP Adresse',
+        'admin_status' => 'Admin Status',
+        'operational_status' => 'Operational Status',
+    ],
+    'lldp' => [
+        'local_interface_description' => 'Lokale Interfacebeschreibung',
+        'remote_interface_description' => 'Entfernte Interfacebeschreibung',
+        'remote_system_name' => 'Entfernter Systemname',
+        'remote_system_description' => 'Entfernte Systembeschreibung',
+    ],
     'fiberNode' => [
         'cable_interface' => 'Kabel Schnittstelle',
         'cpes' => '# CPEs',
