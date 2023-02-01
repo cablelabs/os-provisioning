@@ -490,7 +490,7 @@ return [
         'rpa1' => 'RPA1',
         'rpa2' => 'RPA2',
         'status' => 'Status',
-        'service_template' => 'Service template',
+        'service_template' => 'Service Template',
         'us_data_cont_profile' => 'US Data Controller Profile',
         'us_data_cont' => 'US Data Controller',
         'us_data_depi' => 'US data DEPI',

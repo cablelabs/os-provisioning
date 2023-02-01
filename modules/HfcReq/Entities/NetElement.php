@@ -444,6 +444,11 @@ class NetElement extends \BaseModel
         return $this->hasOne(\Modules\CoreMon\Entities\Ncs::class, 'netelement_id');
     }
 
+    public function cpe()
+    {
+        return $this->hasOne(\Modules\CoreMon\Entities\Cpe::class, 'netelement_id');
+    }
+
     public function interfaces()
     {
         return $this->hasMany(\Modules\CoreMon\Entities\NetElementInterface::class, 'netelement_id');
