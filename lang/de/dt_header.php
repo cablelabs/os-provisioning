@@ -458,7 +458,7 @@ return [
         'description' => 'Beschreibung',
     ],
     'ip' => 'IP',
-    'ip_address' => 'IP Address',
+    'ip_address' => 'IP Adresse',
     'l2tp' => [
         'tunnel_id' => 'Tunnel ID',
         'remote_tunnel_id' => 'Remote Tunnel ID',
