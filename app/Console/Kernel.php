@@ -231,9 +231,9 @@ class Kernel extends ConsoleKernel
             // Automatic Power Control based on measured SNR
             $schedule->command('nms:agc')->everyMinute();
             // Automatic topology discovery via SNMP and LLDP
-            $schedule->call(function () {
-                Queue::pushOn('low', new \Modules\HfcReq\Jobs\ScanAllRangesJob());
-            })->everyTwoHours();
+            // $schedule->call(function () {
+            //     Queue::pushOn('low', new \Modules\HfcReq\Jobs\ScanAllRangesJob());
+            // })->everyTwoHours();
         }
 
         if ($modules->has('HfcBase')) {
