@@ -37,8 +37,8 @@ return new class extends BaseMigration
             $table->dropColumn('temperature_id');
             $table->string('name')->nullable()->change();
             $table->string('status')->nullable()->change();
-            $table->decimal('value')->nullable()->change();
-            $table->string('scale', 10)->after('unit')->nullable();
+            $table->decimal('value', 12, 2)->nullable()->change();
+            $table->string('scale', 25)->after('unit')->nullable();
             $table->integer('precision')->after('scale')->nullable();
             $table->integer('internal_id')->after('core_element_id')->nullable();
             $table->unique(['internal_id', 'core_element_id', 'core_element_type'], 'sensor_internal_id_unique_idx');
