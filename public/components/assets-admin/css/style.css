@@ -3019,6 +3019,9 @@ div.dataTables_info {
 table.DTFC_Cloned tr.even {
     background: none !important;
 }
+.dataTables_scroll .table {
+    width: 100% !important;
+}
 div.dataTables_scrollHead .table,
 .DTFC_LeftWrapper div.DTFC_LeftHeadWrapper table,
 .DTFC_RightWrapper div.DTFC_RightHeadWrapper table {
