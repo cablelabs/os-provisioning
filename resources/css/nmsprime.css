@@ -1151,7 +1151,3 @@ table.dataTable > tbody > tr.selected > * {
     height: 95%;
     width: 100%;
 }
-
-#topology svg g.edge {
-    cursor: pointer;
-}
