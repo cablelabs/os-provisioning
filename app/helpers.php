@@ -632,3 +632,17 @@ function snmpIpAddrToInet($suffix)
 
     return inet_ntop(hex2bin($str));
 }
+
+/**
+ * Convert sysUpTime (in hundredths of a second) into human readable string.
+ *
+ * @author Ole Ernst
+ */
+function sysUpTimeForHumans(array $hundredthSecond): array
+{
+    return array_map(function ($hundredthSecond) {
+        return \Carbon\CarbonInterval::seconds($hundredthSecond / 100)
+            ->cascade()
+            ->forHumans();
+    }, $hundredthSecond);
+}
