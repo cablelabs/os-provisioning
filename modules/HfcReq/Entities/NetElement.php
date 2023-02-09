@@ -1493,6 +1493,11 @@ class NetElement extends \BaseModel
         return $breadcrumbs;
     }
 
+    public function getIds()
+    {
+        return NetElement::whereAncestorOrSelf($this->id)->get(['id', 'name', 'netelementtype_id']);
+    }
+
     public function createLink()
     {
         if (! $this->parent_id) {
