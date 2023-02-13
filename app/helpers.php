@@ -646,3 +646,23 @@ function sysUpTimeForHumans(array $hundredthSecond): array
             ->forHumans();
     }, $hundredthSecond);
 }
+
+/**
+ * Convert datarate in human readable format
+ *
+ * See https://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
+ */
+function bitsForHumans($rate): string
+{
+    if (! $rate) {
+        return '';
+    }
+
+    $units = ['Bit', 'KBit', 'MBit', 'GBit', 'TBit', 'PBit'];
+
+    $pow = floor(($rate ? log($rate) : 0) / log(1000));
+    $pow = min($pow, count($units) - 1);
+    $rate /= pow(1000, $pow);
+
+    return round($rate, 2).' '.$units[$pow];
+}
