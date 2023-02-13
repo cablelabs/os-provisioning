@@ -964,7 +964,12 @@ class ModemController extends \BaseController
      */
     public static function realtimePing($ip)
     {
-        return ProvBaseController::serverSentEvents('ping -c 5 '.escapeshellarg($ip));
+        $cmd = 'ping -c 5 ';
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            $cmd .= '-6 ';
+        }
+
+        return ProvBaseController::serverSentEvents($cmd.escapeshellarg($ip));
     }
 
     private function _fake_lease($modem, $ep)
