@@ -80,7 +80,7 @@ class LoginController extends Controller
         $loginPage = 'admin';
         $logo = asset('images/nmsprime-logo-white.png');
 
-        $bgImageRoute = asset('images/main-pic-1.jpeg');
+        $bgImageRoute = \Module::isEnabled('CoreMon') ? asset('images/main-pic-1.jpeg') : asset('images/main-pic-1.jpg');
         if ($globalConfig->login_img && is_file(storage_path(GlobalConfigController::BG_IMAGES_PATH_REL.$globalConfig->login_img))) {
             $bgImageRoute = '/storage/base/bg-images/'.$globalConfig->login_img;
         }
