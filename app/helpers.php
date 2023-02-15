@@ -647,17 +647,50 @@ function sysUpTimeForHumans(array $hundredthSecond): array
     }, $hundredthSecond);
 }
 
+/**
+ * Convert datarate in human readable format
+ *
+ * See https://stackoverflow.com/questions/2510434/format-bytes-to-kilobytes-megabytes-gigabytes
+ */
+function bitsForHumans($rate): string
+{
+    if (! $rate) {
+        return '';
+    }
+
+    $units = ['Bit', 'KBit', 'MBit', 'GBit', 'TBit', 'PBit'];
+
+    $pow = floor(($rate ? log($rate) : 0) / log(1000));
+    $pow = min($pow, count($units) - 1);
+    $rate /= pow(1000, $pow);
+
+    return round($rate, 2).' '.$units[$pow];
+}
+
+/**
+ * Parse and decipher system location (sysLocation) of devices and return them as an array.
+ *
+ * @author Farshid Ghiasimanesh
+ */
 function parseLocation($location)
 {
     $result = [
         'city' => '',
+        'hub' => '',
+        'market' => '',
         'site' => '',
+        'state' => '',
+        'street' => '',
     ];
 
     if ($location) {
         $explodedAddress = explode(';', $location);
         if (count($explodedAddress) >= 8) {
+            $result['street'] = $explodedAddress[3];
             $result['city'] = $explodedAddress[4];
+            $result['state'] = $explodedAddress[5];
+            $result['hub'] = $explodedAddress[6];
+            $result['market'] = $explodedAddress[7];
             $result['site'] = $explodedAddress[8];
         }
     }
