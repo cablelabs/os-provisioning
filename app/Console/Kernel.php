@@ -106,10 +106,6 @@ class Kernel extends ConsoleKernel
             $schedule->call(function () {
                 Queue::pushOn('medium', new \Modules\CoreMon\Jobs\GetRpdsJob());
             })->cron('57 1-23/2 * * *');
-
-            $schedule->call(function () {
-                \Queue::pushOn('low', new \Modules\CoreMon\Jobs\ImportKafkaInterfaceDataJob());
-            })->cron('5,20,35,50 * * * *');
         }
 
         // Parse News from repo server and save to local JSON file
