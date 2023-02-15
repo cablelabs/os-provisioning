@@ -22,6 +22,7 @@ declare -a CMDS=(
     "npm run dev"
     "chown -R apache /var/www/nmsprime/storage/framework"
     "systemctl restart supervisord httpd"
+    "systemctl restart telegraf"
     )
 
 clear
