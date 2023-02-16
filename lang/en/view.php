@@ -745,7 +745,7 @@ return [
         'topology' => 'Topology',
         'usCh' => 'US Channels',
         'util' => 'Utilization',
-        'cpe' => 'CPE Details',
+        'cpe' => 'CPEs',
         'optics' => 'Optics',
         'lldp' => 'LLDP',
         'details' => 'Details',

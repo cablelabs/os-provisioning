@@ -743,7 +743,7 @@ return [
         'topology' => 'Topology',
         'util' => 'Auslastung',
         'usCh' => 'US Kanäle',
-        'cpe' => 'CPE Details',
+        'cpe' => 'CPEs',
         'optics' => 'Optics',
         'lldp' => 'LLDP',
         'details' => 'Details',
