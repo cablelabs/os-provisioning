@@ -19,6 +19,7 @@
 namespace App;
 
 use DB;
+use Log;
 use Str;
 use Module;
 use Schema;
@@ -787,21 +788,14 @@ class BaseModel extends Eloquent
             try {
                 $prev_route_name = app('router')->getRoutes()->match(app('request')->create(\URL::previous()))->getName();
             } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
-                // Exception is thrown if no mathing route found (e.g. if coming from outside).
-                \Log::warning('Could not determine previous route');
-                \Log::debug($exception);
+                Log::debug('Could not determine previous route after '.$msg);
 
                 return false;
             }
-            if (Str::endsWith($prev_route_name, '.edit')) {
-                $place = 'form';
-            } else {
-                $place = 'index_list';
-            }
-        } else {
-            if (! in_array($place, self::ABOVE_MESSAGES_ALLOWED_PLACES)) {
-                throw new \UnexpectedValueException('$place has to be in ['.implode('|', self::ABOVE_MESSAGES_ALLOWED_PLACES).'], “'.$place.'” given.');
-            }
+
+            $place = Str::endsWith($prev_route_name, '.edit') ? 'form' : 'index_list';
+        } elseif (! in_array($place, self::ABOVE_MESSAGES_ALLOWED_PLACES)) {
+            throw new \UnexpectedValueException('$place has to be in ['.implode('|', self::ABOVE_MESSAGES_ALLOWED_PLACES).'], “'.$place.'” given.');
         }
 
         // build the message target
