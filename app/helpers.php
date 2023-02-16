@@ -674,26 +674,21 @@ function bitsForHumans($rate): string
  */
 function parseLocation($location)
 {
-    $result = [
-        'city' => '',
-        'hub' => '',
-        'market' => '',
-        'site' => '',
-        'state' => '',
-        'street' => '',
-    ];
-
-    if ($location) {
-        $explodedAddress = explode(';', $location);
-        if (count($explodedAddress) >= 8) {
-            $result['street'] = $explodedAddress[3];
-            $result['city'] = $explodedAddress[4];
-            $result['state'] = $explodedAddress[5];
-            $result['hub'] = $explodedAddress[6];
-            $result['market'] = $explodedAddress[7];
-            $result['site'] = $explodedAddress[8];
-        }
+    if (! $location) {
+        return null;
     }
 
-    return $result;
+    $explodedAddress = explode(';', $location);
+    if (count($explodedAddress) < 8) {
+        return null;
+    }
+
+    return [
+        'city' => $explodedAddress[4],
+        'hub' => $explodedAddress[6],
+        'market' => $explodedAddress[7],
+        'site' => $explodedAddress[8],
+        'state' => $explodedAddress[5],
+        'street' => $explodedAddress[3],
+    ];
 }
