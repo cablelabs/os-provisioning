@@ -535,6 +535,7 @@ return [
         'session_id' => 'Session ID',
         'address_type' => 'Addresstyp',
         'local_id' => 'Lokale ID',
+        'ip' => 'IP',
     ],
     'stateChangedAt' => 'Letzte Statusänderung',
     'updatedAt' => 'Letzte Aktualisierung',
