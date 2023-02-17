@@ -423,6 +423,10 @@ return [
             'cpesOnline' => '# CPEs online',
             'cpesOffline' => '# CPEs offline',
             'cpesOfflinePct' => '% CPE offline',
+            'mtas' => '# MTAs online',
+            'mtasOfflinePct' => '% MTAs offline',
+            'stbs' => '# STBs online',
+            'stbsOfflinePct' => '% STBs offline',
         ],
     ],
     'interface' => [
