@@ -104,7 +104,7 @@ class Kernel extends ConsoleKernel
             $schedule->call('\Modules\CoreMon\Entities\Alarm@cleanup')->weekly();
 
             $schedule->call(function () {
-                Queue::pushOn('medium', new \Modules\CoreMon\Jobs\GetRpdsJob());
+                Queue::pushOn('medium', new \Modules\CoreMon\Jobs\ImportRpdsJob());
             })->cron('57 1-23/2 * * *');
         }
 
