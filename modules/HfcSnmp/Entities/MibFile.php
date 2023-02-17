@@ -219,7 +219,7 @@ class MibFile extends \BaseModel
             $type = OID::get_oid_type(strtolower($syntax));
             $value_set = OID::get_value_set($syntax);
 
-            $x = is_string($value_set) ? strpos($syntax, '{') : strpos($syntax, '(');
+            $x = is_array($value_set) ? strpos($syntax, '(') : strpos($syntax, '{');
             if ($x !== false) {
                 $syntax = substr($syntax, 0, $x);
             }
@@ -233,10 +233,10 @@ class MibFile extends \BaseModel
                 'syntax' 		=> $syntax,
                 'type' 			=> $type,
                 'oid_table' 	=> ($tab = preg_match('/[a-z][a-zA-Z0-9]*Table$/', $name)) ? $tab : 0,
-                'html_type' 	=> is_string($value_set) ? 'select' : 'text',
-                'value_set'		=> is_string($value_set) ? $value_set : null,
-                'startvalue' 	=> is_string($value_set) ? null : $value_set[0],
-                'endvalue' 		=> is_string($value_set) ? null : $value_set[1],
+                'html_type' 	=> is_array($value_set) ? 'text' : 'select',
+                'value_set'		=> is_array($value_set) ? null : $value_set,
+                'startvalue' 	=> is_array($value_set) ? $value_set[0] : null,
+                'endvalue' 		=> is_array($value_set) ? $value_set[1] : null,
                 'description' 	=> $description,
             ]);
         }
