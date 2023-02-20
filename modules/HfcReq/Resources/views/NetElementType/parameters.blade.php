@@ -62,5 +62,5 @@
     'count' => 0, // set count to zero to not load Parameters by ajax again
     'relation' => $list,
     'method' => 'edit',
-    'tab' => ['name' => 'Parameters'],
+    'tab' => ['name' => 'Edit'],
 ])
