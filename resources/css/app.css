@@ -24,7 +24,6 @@
 @import 'datatables.net-responsive-bs4/css/responsive.bootstrap4';
 @import 'datatables.net-bs4/css/dataTables.bootstrap4';
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
