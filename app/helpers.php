@@ -654,8 +654,12 @@ function sysUpTimeForHumans(array $hundredthSecond): array
  */
 function bitsForHumans($rate): string
 {
-    if (! $rate) {
+    if ($rate === null) {
         return '';
+    }
+
+    if ($rate === 0) {
+        return '0 Bit';
     }
 
     $units = ['Bit', 'KBit', 'MBit', 'GBit', 'TBit', 'PBit'];
