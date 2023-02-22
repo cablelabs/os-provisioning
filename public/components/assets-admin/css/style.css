@@ -6217,10 +6217,10 @@ body.flat-black {
 /* 13.4 Plugins - Jstree Setting */
 
 .jstree-default {
-    color: var(--text-jstree); 
+    color: var(--text-jstree);
 }
 .jstree-checkbox {
-    color: var(--text-jstree); 
+    color: var(--text-jstree);
 }
 .jstree-default .jstree-clicked,
 .jstree-default .jstree-wholerow-clicked {

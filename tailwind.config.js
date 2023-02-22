@@ -16,7 +16,7 @@ module.exports = {
         'lime-nmsprime': '#98d145',
         'whitesmoke' : '#f5f5f5',
         'gainsboro' : '#dcdcdc',
-      } 
+      }
     }
   },
   plugins: [],
