@@ -37,6 +37,7 @@ class ProvBaseServiceProvider extends ServiceProvider
         'Modules\ProvBase\Console\ContractCommand',
         'Modules\ProvBase\Console\CpeHostnameCommand',
         'Modules\ProvBase\Console\DhcpCommand',
+        'Modules\ProvBase\Console\ExportCsvCommand',
         'Modules\ProvBase\Console\GeocodeCommand',
         'Modules\ProvBase\Console\HardwareSupportCommand',
         'Modules\ProvBase\Console\ImportCommand',
