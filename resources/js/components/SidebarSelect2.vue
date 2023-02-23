@@ -121,6 +121,7 @@ async function onSelect(value, name) {
   res.data.result.forEach(async (el) => {
     if(!el.active){
       el.type = el.type === 'Net' ? 'Network' : el.type
+      el.type = el.type === 'CCAP' ? 'CCAPCore' : el.type
 
       const prevSelect = $(`[id='${el.type}']`)
 

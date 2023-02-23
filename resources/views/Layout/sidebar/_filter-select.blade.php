@@ -8,7 +8,7 @@
             @php
                 $net = isset($ids) ? $ids->where('netelementtype.base_type_id', $options['netTypeId'])->first() : null;
             @endphp
-            <sidebar-select2 id="{{ $name }}"
+            <sidebar-select2 id="{{ str_replace(' ', '', $name) }}"
                 class="select2-ajax"
                 name="{{ $name }}"
                 v-model="{{ $options['var'] }}"
