@@ -41,12 +41,17 @@ class RadIpPoolJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(IpPool $pool, array $dirty, array $original, bool $wasRecentlyCreated)
+    public function __construct(IpPool $pool, array $dirty, array $original, bool $wasRecentlyCreated, array $fixedEndpointIps = null)
     {
         $this->pool = $pool;
         $this->dirty = $dirty;
         $this->original = $original;
         $this->wasRecentlyCreated = $wasRecentlyCreated;
+        if (is_null($fixedEndpointIps)) {
+            $this->fixedEndpointIps = array_map('ip2long', \DB::table('endpoint')->whereNull('deleted_at')->pluck('ip')->toArray());
+        } else {
+            $this->fixedEndpointIps = $fixedEndpointIps;
+        }
     }
 
     /**
@@ -137,6 +142,10 @@ class RadIpPoolJob implements ShouldQueue
 
         $insert = [];
         for ($i = $ipPoolBorder2; $i < $ipPoolBorder1; $i++) {
+            // do not add IPs taken by endpoints
+            if (in_array($i, $this->fixedEndpointIps)) {
+                continue;
+            }
             $insert[] = [
                 'pool_name' => $this->pool->type,
                 'framedipaddress' => long2ip($i),

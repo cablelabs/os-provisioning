@@ -53,13 +53,15 @@ class RadIpPool extends \BaseModel
             // resulting in ippool->type == 'bras' (because of how join() is working)
             ->select('ippool.*');
 
+        $fixedEndpointIps = array_map('ip2long', \DB::table('endpoint')->whereNull('deleted_at')->pluck('ip')->toArray());
+
         $count = $ippoolQuery->count();
         $i = 0;
 
         RadIpPool::truncate();
 
         foreach ($ippoolQuery->get() as $pool) {
-            $job = new RadIpPoolJob($pool, [], [], true);
+            $job = new RadIpPoolJob($pool, [], [], true, $fixedEndpointIps);
             $job->handle();
 
             echo($i++).'/'.$count."\r";
