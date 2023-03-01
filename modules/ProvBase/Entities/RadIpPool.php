@@ -79,6 +79,6 @@ class RadIpPool extends \BaseModel
         }
 
         echo "Starting radiusd…\n";
-        system('/usr/bin/systemctl start radiusd');
+        passthru('/usr/bin/systemctl start radiusd');
     }
 }
