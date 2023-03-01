@@ -60,6 +60,9 @@ class RadIpPool extends \BaseModel
 
         RadIpPool::truncate();
 
+        echo "Stopping radiusd…\n";
+        passthru('/usr/bin/systemctl stop radiusd');
+
         foreach ($ippoolQuery->get() as $pool) {
             $job = new RadIpPoolJob($pool, [], [], true, $fixedEndpointIps);
             $job->handle();
@@ -74,5 +77,8 @@ class RadIpPool extends \BaseModel
                 'username' => $radip->username,
             ]);
         }
+
+        echo "Starting radiusd…\n";
+        system('/usr/bin/systemctl start radiusd');
     }
 }
