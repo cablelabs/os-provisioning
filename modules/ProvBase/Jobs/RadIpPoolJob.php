@@ -109,12 +109,16 @@ class RadIpPoolJob implements ShouldQueue
      * Insert and delete rows in radippool table if the start or end of an
      * ippool has changed. This function can also be used to delete a whole pool
      *
+     * Note:
+     *      if ($ipPoolBorder1 < $ipPoolBorder2) => delete
+     *      if ($ipPoolBorder1 > $ipPoolBorder2) => insert
+     *
      * @author Ole Ernst
      */
-    private function handleNewLimit(int $lower, int $upper, bool $deleteOnly): void
+    private function handleNewLimit(int $ipPoolBorder1, int $ipPoolBorder2, bool $deleteOnly): void
     {
         $delete = [];
-        for ($i = $lower; $i < $upper; $i++) {
+        for ($i = $ipPoolBorder1; $i < $ipPoolBorder2; $i++) {
             $delete[] = long2ip($i);
 
             // staggered delete
@@ -126,13 +130,13 @@ class RadIpPoolJob implements ShouldQueue
         RadIpPool::whereIn('framedipaddress', $delete)->delete();
 
         if ($deleteOnly) {
-            RadIpPool::where('framedipaddress', $upper)->delete();
+            RadIpPool::where('framedipaddress', $ipPoolBorder2)->delete();
 
             return;
         }
 
         $insert = [];
-        for ($i = $upper; $i < $lower; $i++) {
+        for ($i = $ipPoolBorder2; $i < $ipPoolBorder1; $i++) {
             $insert[] = [
                 'pool_name' => $this->pool->type,
                 'framedipaddress' => long2ip($i),
