@@ -589,4 +589,5 @@ return [
     'tickettypes.name' => 'Type',
     'total_fee' => 'Fee',
     'vendor' => 'Vendor',
+    'internalId' => 'Internal Reference',
 ];
