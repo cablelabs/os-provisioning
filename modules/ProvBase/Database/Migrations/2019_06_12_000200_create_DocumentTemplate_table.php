@@ -1,5 +1,6 @@
 <?php
 
+use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDocumentTemplateTable extends BaseMigration
