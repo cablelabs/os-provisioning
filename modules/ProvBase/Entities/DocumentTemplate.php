@@ -12,7 +12,7 @@ class DocumentTemplate extends \BaseModel
     public $regex_iso_date = '/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/';
 
     // Add your validation rules here
-    public static function rules($id = null)
+    public function rules()
     {
         return [
             'documenttype_id' => 'required|exists:documenttype,id,deleted_at,NULL',
@@ -40,8 +40,8 @@ class DocumentTemplate extends \BaseModel
 
         // build additional where clause to show only documenttemplates that are related to enable modules
         $enabled_modules = [];
-        foreach (\Module::collections() as $module) {
-            array_push($enabled_modules, "'".$module->name."'");
+        foreach (\Module::collections() as $moduleName => $module) {
+            array_push($enabled_modules, "'".$moduleName."'");
         }
         $where_clause_enabled_modules = 'documenttype_id in (SELECT id FROM documenttype where module IN ('.implode(', ', $enabled_modules).'))';
 
@@ -660,69 +660,8 @@ class DocumentTemplate extends \BaseModel
      */
     public static function boot()
     {
-        self::observe(new DocumentTemplateObserver);
         parent::boot();
-    }
-}
-
-class DocumentTemplateObserver
-{
-    /**
-     * Try to get template format from filename suffix
-     *
-     * @author Patrick Reichel
-     */
-    protected function get_format($filename)
-    {
-        $formats = [
-            'LaTeX' => ['tex', 'latex'],
-        ];
-        $suffix = explode('.', $filename);
-        $suffix = array_pop($suffix);
-        $suffix = strtolower($suffix);
-        foreach ($formats as $format => $suffixes)  {
-            if (in_array($suffix, $suffixes)) {
-                return $format;
-            }
-        }
-
-        return 'n/a';
-    }
-
-    /**
-     * @author Patrick Reichel
-     */
-    public function creating($documenttemplate)
-    {
-        $documenttemplate->filename_pattern = $documenttemplate->filename_pattern ?: $documenttemplate->documenttype->get_translated_default_filename_pattern();
-        $documenttemplate->format = $this->get_format($documenttemplate->file);
-        if ($documenttemplate->sepaaccount_id) {
-            $documenttemplate->company_id = $documenttemplate->sepaaccount->company->id;
-        }
-    }
-
-    /**
-     * @author Patrick Reichel
-     */
-    public function updating($documenttemplate)
-    {
-        $documenttemplate->filename_pattern = $documenttemplate->filename_pattern ?: $documenttemplate->documenttype->get_translated_default_filename_pattern();
-        $documenttemplate->format = $this->get_format($documenttemplate->file);
-        if ($documenttemplate->sepaaccount_id) {
-            $documenttemplate->company_id = $documenttemplate->sepaaccount->company->id;
-        }
-    }
-
-    /**
-     * @author Patrick Reichel
-     */
-    public function deleting($documenttemplate)
-    {
-        // check if a base template shall be deleted (which is prohibited)
-        if ((0 == $documenttemplate->company_id) && (0 == $documenttemplate->sepaaccount_id)) {
-            \Session::push('tmp_error_above_index_list', trans('provbase::messages.documentTemplate.cannotDeleteBaseTemplate'));
-            return false;
-        }
+        self::observe(new \Modules\ProvBase\Observers\DocumentTemplateObserver);
     }
 }
 

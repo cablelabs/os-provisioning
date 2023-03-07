@@ -1,5 +1,6 @@
 <?php
 
+use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDocumentTypeTable extends BaseMigration
@@ -93,7 +94,7 @@ class CreateDocumentTypeTable extends BaseMigration
             $this->up_table_generic($table);
 
             $table->string('type');
-            $table->string('type_view');                                            // document type as shown in view; can be set through artisan command (needed for searchable datatable entries)
+            $table->string('type_view')->nullable()->default(null);                 // document type as shown in view; can be set through artisan command (needed for searchable datatable entries)
             $table->string('module')->nullable()->default(null);                    // a model this type belongs to (used to show/hide certain types depending on active modules)
             $table->string('model')->nullable()->default(null);                     // the model a document of this type can be created at
             $table->string('default_filename_pattern')->nullable()->default(null);  // used to generate filename; overwritten in templates; strings in [] will be replaced by value in type_view
