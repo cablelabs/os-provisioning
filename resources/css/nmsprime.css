@@ -1151,3 +1151,9 @@ table.dataTable > tbody > tr.selected > * {
     height: 95%;
     width: 100%;
 }
+
+.no-sort::before, .no-sort::after {
+    display: none !important;
+    cursor: default;
+    padding-right: 1px;
+}
