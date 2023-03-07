@@ -108,7 +108,7 @@ class Kernel extends ConsoleKernel
             })->cron('57 1-23/2 * * *');
 
             $schedule->call(function () {
-                Queue::pushOn('medium', new \Modules\CoreMon\Jobs\KafkaImportCcapDpicCardsJob([
+                Queue::pushOn('medium', new \Modules\CoreMon\Jobs\ImportCcapDpicCardsJob([
                     'data' => [],
                     'responseError' => [],
                     'type' => 'DPIC_CARD_UTIL',
