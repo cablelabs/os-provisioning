@@ -6568,6 +6568,7 @@ Clowns
 Clownshows
 Clowntheater
 CNC-Bearbeitung
+CNC-Blechbearbeitung
 CNC-Drehen
 CNC-Dreherei
 CNC-Einweiser
@@ -7416,6 +7417,7 @@ Dienstleistungen für die Lebensmittelindustrie
 Dienstleistungen für die Pharmaindustrie
 Dienstleistungen für Exportverpackungen
 Dienstleistungen für Fahrertätigkeiten
+Dienstleistungen für Film
 Dienstleistungen für Heimwerker
 Dienstleistungen für Immobilien
 Dienstleistungen für Innenausbau
@@ -7733,6 +7735,7 @@ Dozent für Arabisch
 Dozent für Bautechnik
 Dozent für Business Englisch
 Dozent für Englisch
+Dozent für Fischerei
 Dozent für Gesang
 Dozent für Hebräisch
 Dozent für italienische Sprache
@@ -11151,6 +11154,7 @@ Fertigteilhausbau
 Fertigteilmontage
 Fertigteilmontagebetrieb
 Fertigung elektrotechnischer Spezialartikel
+Fertigung Rasierapparate
 Fertigung von Bordnetzen
 Fertigung von Drehteilen
 Fertigung von Elektronikteilen
@@ -12752,6 +12756,7 @@ Fußmattenherstellung
 Fußorthopäde
 Fußorthopädische Werkstatt
 Fußpflege
+Fußpflege-Podologie
 Fußpflegepraxis
 Fußpfleger
 Fußpfleger für Diabetiker
@@ -12818,6 +12823,7 @@ Gabelstaplervermietung
 Gabelstaplervertretung
 Gabelstaplervertrieb
 Gabelstaplerwerk
+Galerie
 Galerie für antike Kunst
 Galerie für Comiczeichnungen
 Galerie für Design
@@ -13090,6 +13096,7 @@ Gas- und Wasserinstallateurmeister
 Gas- und Wasserinstallation
 Gas- und Wassermeister
 Gasanbieter
+Gasanlagenmechaniker
 Gasdienst
 Gasetechnik
 Gasflaschenbetrieb
@@ -15322,6 +15329,7 @@ Hausinstandsetzung
 Hauskrankenpflege
 Hauskrankenpflegedienst
 Hauskundendienst
+Häusliche Betreuung
 Häusliche Dienstleistungen
 Häusliche Gesundheitspflege
 Häusliche Krankenpflege
@@ -15712,6 +15720,7 @@ Heizservice
 Heizsystemtechnik
 Heiztechnik
 Heizthermendienst
+Heizung- u. Sanitärberatung
 Heizung- und Lüftungsbau
 Heizung- und Lüftungsbaumeister
 Heizung- und Sanitärbedarf
@@ -16965,6 +16974,7 @@ Industriereiniger
 Industriereinigung
 Industrierohrbau
 Industrierohrleitungsbau
+Industrieschaltanlagenbau
 Industrieschleiferei
 Industrieschreinerei
 Industrieschrottzerkleinerung
@@ -23114,6 +23124,7 @@ Maschinenbautechnikerin
 Maschinenbetrieb
 Maschineneinsteller
 Maschinenentwicklung
+Maschinenfabrik
 Maschinenführer
 Maschinengroßhandel
 Maschinenhandel
@@ -23974,6 +23985,7 @@ Mikrotechnologe
 Mikrotechnologin
 Mikrowellenservicetechniker
 Milchbar
+Milchbauernhof
 Milchbetrieb
 Milcherzeugerberatung
 Milcherzeugungsbetrieb
@@ -27974,6 +27986,7 @@ Praxis für Integrative Musiktherapie
 Praxis für Integrative Osteopathie
 Praxis für integrative Tanztherapie
 Praxis für integrative Zahnmedizin
+Praxis für Intergrale Lebensweise
 Praxis für japanische Akupunktur
 Praxis für Jugendpsychiatrie
 Praxis für Kampo-Krebstherapie
@@ -31553,6 +31566,7 @@ Schleifmaschinenbau
 Schleifmaschinenherstellung
 Schleifmaschinenverleih
 Schleifmaschinenvertrieb
+Schleifmittelanbieter
 Schleifmittelberater
 Schleifmittelvertrieb
 Schleifmittelwerk
@@ -34017,6 +34031,7 @@ Stahlbaumeister
 Stahlbaumontage
 Stahlbauplanung
 Stahlbauprojektamt
+Stahlbauschlosser
 Stahlbauschlosserei
 Stahlbausysteme
 Stahlbautechnik
@@ -34947,6 +34962,7 @@ Synergietechnik
 Synodalrechnerin
 Syntheselabor
 Syrische Spezialitäten
+Systemadministrator
 Systemanalyse für Zeitwirtschaftssysteme
 Systemanalytik
 Systemanalytiker
@@ -37828,6 +37844,7 @@ Verkauf von Kashmirschals
 Verkauf von Keramikbedarf
 Verkauf von KFZ-Nutzfahrzeugen
 Verkauf von KFZ-Pflegemittel
+Verkauf von Kfz-Zubehör
 Verkauf von Kindermarkenbekleidung
 Verkauf von Kirchengestühl
 Verkauf von Konditoreibedarf
@@ -37852,6 +37869,7 @@ Verkauf von medizinischen Kompressionsstrümpfen
 Verkauf von Meereskosmetik
 Verkauf von Miniaturmodellen
 Verkauf von Modeaccessoires
+Verkauf von Motorbooten
 Verkauf von Nahrungsergänzungsmitteln
 Verkauf von Naturkosmetik
 Verkauf von Naturspezialitäten
