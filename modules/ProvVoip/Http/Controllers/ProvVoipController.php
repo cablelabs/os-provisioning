@@ -37,10 +37,10 @@ class ProvVoipController extends BaseController
     {
         // label has to be the same like column in sql table
         return [
-            ['form_type' => 'text', 'name' => 'startid_mta', 'description' => 'Start ID MTA´s'],
-            ['form_type' => 'text', 'name' => 'mta_domain', 'description' => 'MTA Domain', 'help' => 'Specify a Domain name here if MTA\'s need a separate Domain for Provisioning'],
-            ['form_type' => 'text', 'name' => 'default_sip_registrar', 'description' => 'Default SIP Registrar'],
-            ['form_type' => 'text', 'name' => 'default_country_code', 'description' => 'Default Country Code'],
+            ['form_type' => 'text', 'name' => 'startid_mta', 'description' => trans('messages.Start ID MTA´s')],
+            ['form_type' => 'text', 'name' => 'mta_domain', 'description' => trans('messages.mtaDomain'), 'help' => trans('helper.mtaDomainNameForProv')],
+            ['form_type' => 'text', 'name' => 'default_sip_registrar', 'description' => trans('messages.Default SIP Registrar')],
+            ['form_type' => 'text', 'name' => 'default_country_code', 'description' => trans('messages.Default Country Code')],
         ];
     }
 }

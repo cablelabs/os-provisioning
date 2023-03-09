@@ -201,6 +201,8 @@ return [
     'a_d50' => 'Number of packets experiencing a packet delay variation (i.e. jitter) between 50ms and 70ms',
     'a_d300' => 'Number of packets experiencing a packet delay variation (i.e. jitter) greater than 300ms',
     'called' => 'Call direction from Callee to Caller',
+    'mtaDomainNameForProv' => 'Specify a Domain name here, if MTA\'s need a separate Domain for Provisioning.',
+    'delete_record_interval' => 'Specify how many days the call monitoring records should be stored.',
     /*
      * Module Ticketsystem
      */

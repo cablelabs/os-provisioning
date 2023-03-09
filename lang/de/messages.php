@@ -821,4 +821,6 @@ return [
     'Upload image'              => 'Bild hochladen',
     'STB'                       => 'STB',
     'dhcpValidationError'       => 'Ungültige DHCP Konfiguration: Der DHCP Server wird nicht neu gestartet, bitte prüfen Sie die Konfiguration via: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
+    'mtaDomain'                 => 'MTA Domain',
+    'deleteRecordInterval'      => 'Alte Anrufaufzeichnungen löschen nach',
 ];

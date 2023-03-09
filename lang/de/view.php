@@ -223,7 +223,8 @@ return [
     'Header_NetElementType'     => 'Netzelementtyp|Netzelementtypen',
     'Header_TreeErd'            => 'Netz|Netze',
     'mapsRouteLink'             => 'Routenberechnung',
-    //VOIP
+    //VoipMon
+    'VoipMon'                   => 'VoipMon',
     //MTA
     'Header_Mta'                => 'MTA|MTAs',
     'Header_EditMta'            => 'MTA bearbeiten',

@@ -224,7 +224,8 @@ return [
     'Header_NetElementType'     => 'Net Element Type|Net Element Types',
     'Header_TreeErd'            => 'Net|Nets',
     'mapsRouteLink'             => 'Show route',
-    //VOIP
+    //VoipMon
+    'VoipMon'                   => 'VoipMon',
     //MTA
     'Header_Mta'                => 'MTA|MTAs',
     'Header_EditMta'            => 'Edit MTA',

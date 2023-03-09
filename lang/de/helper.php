@@ -201,6 +201,8 @@ return [
     'a_d50' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) zwischen 50ms and 70ms aufweisen',
     'a_d300' => 'Anzahl der Pakete, welche eine Paketverzögerung (Packet Delay Variation - z.B. Jitter) von über 300ms aufweisen',
     'called' => 'Betrachtung der Anrufrichtung von Angerufenem zum Anrufer',
+    'mtaDomainNameForProv' => 'Hier können Sie einen separaten Domain Namen für MTA\'s angeben, falls dieser für die Provisionierung benötigt wird.',
+    'delete_record_interval' => 'Anzahl der Tage, nachdem die VoipMon Anrufaufzeichnungen gelöscht werden.',
     /*
      * Module Ticketsystem
      */
