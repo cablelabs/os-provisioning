@@ -216,13 +216,10 @@ return [
     'Header_Ticket'             => 'Ticket|Tickets',
     'Header_EditTicket'         => 'Edit Ticket',
     'Header_TicketType'         => 'Ticket Types',
-<<<<<<< HEAD:lang/en/view.php
     'Header_TicketReceiver'     => 'Ticket Receiver',
-=======
     // Documents
     'Header_DocumentTemplate'   => 'Document template|Document templates',
     'Header_DocumentTemplateDerived' => 'derived document template|derived document templates',
->>>>>>> Add translations.:resources/lang/en/view.php
     //HFC
     'Header_Link'               => 'Link',
     //Topography
