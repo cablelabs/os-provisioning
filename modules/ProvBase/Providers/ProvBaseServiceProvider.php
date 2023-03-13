@@ -45,7 +45,6 @@ class ProvBaseServiceProvider extends ServiceProvider
         'Modules\ProvBase\Console\RepopulateRadGroupReplyCommand',
         \Modules\ProvBase\Console\AddModemsToPassiveElementCommand::class,
         \Modules\ProvBase\Console\SetProvDeviceIds::class,
-        'Modules\ProvBase\Console\TranslateDatabaseCommand',
     ];
 
     /**
