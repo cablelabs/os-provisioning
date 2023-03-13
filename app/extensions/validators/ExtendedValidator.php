@@ -693,7 +693,7 @@ class ExtendedValidator
             return false;
         }
 
-        $templateQuery = \Modules\ProvBase\Entities\DocumentTemplate::where($attribute, $value)
+        $templateQuery = \Modules\DocumentManagement\Entities\DocumentTemplate::where($attribute, $value)
             ->where('id', '!=', $parameters[1]);
 
         $lookup = [
