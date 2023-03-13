@@ -590,4 +590,12 @@ return [
     'total_fee' => 'Fee',
     'vendor' => 'Vendor',
     'internalId' => 'Internal Reference',
+    // DocumentManagement
+    'documenttemplate' => [
+        'file' => 'Template file',
+        'format' => 'Template format',
+    ],
+    'documenttype' => [
+        'type_view' => 'Document type',
+    ],
 ];
