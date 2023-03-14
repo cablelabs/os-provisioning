@@ -928,9 +928,6 @@ class NetElement extends \BaseModel
      */
     public static function getSidebarNets()
     {
-
-// SQLSTATE[42703]: Undefined column: 7 ERROR: column "base_type_id" does not exist LINE 1: select "netelement"."id", "name", "base_type_id", "favorite_... ^        
-return collect([]);
         return Cache::remember(Auth::user()->login_name.'-Nets', now()->addMinutes(5), function () {
             $nets = Auth::user()
                 ->favNetelements()
