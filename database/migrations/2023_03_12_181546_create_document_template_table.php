@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use Illuminate\Support\Facades\DB;
 use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
