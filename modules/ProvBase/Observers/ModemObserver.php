@@ -177,7 +177,7 @@ class ModemObserver
                 return;
             }
 
-            if ($modem->isDirty('internet_access')) {
+            if ((bool) $modem->getOriginal('internet_access') !== (bool) $modem->internet_access) {
                 if ($modem->internet_access) {
                     Log::info('internet_access activated. Try and create L2User.');
                     \Queue::pushOn('high', new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem));
