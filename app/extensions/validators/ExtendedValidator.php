@@ -677,12 +677,12 @@ class ExtendedValidator
     /**
      * Checks if a document template is unique for a given company/sepaaccount combination
      *
-     * @param string $attribute
-     * @param mixed $value
-     * @param array $parameters Has to be set in prepare_rules
-     * @param Validator $validator see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
-     *      when laravel calls the validation function (validate) they luckily pass "$this"
-     *      that is the Validator instance as 4th argument - so we can get it here
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  array  $parameters  Has to be set in prepare_rules
+     * @param  Validator  $validator  see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
+     *                                when laravel calls the validation function (validate) they luckily pass "$this"
+     *                                that is the Validator instance as 4th argument - so we can get it here
      * @return void
      *
      * @author Patrick Reichel

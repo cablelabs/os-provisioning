@@ -505,7 +505,7 @@ class Contract extends \BaseModel
      */
     public function get_documenttemplate_by_type($documenttype_id)
     {
-        if (!\Module::collections()->has('BillingBase')) {
+        if (! \Module::collections()->has('BillingBase')) {
             // there should – because of validation in documenttemplates – be only one of the given type
             return DocumentTemplate::where('documenttype_id', '=', $documenttype_id)->get();
         }

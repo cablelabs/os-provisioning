@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
+use Illuminate\Support\Facades\DB;
 use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 
 return new class extends BaseMigration
 {
@@ -56,7 +56,7 @@ return new class extends BaseMigration
             $table->integer('company_id')->unsigned()->nullable()->default(null);       // if null: use template from global config
             $table->integer('sepaaccount_id')->unsigned()->nullable()->default(null);   // if null: use template from company
             $table->string('filename_pattern')->nullable()->default(null);              // used to generate filename (overwrites DocumentType if given)
-          });
+        });
 
         foreach ($this->doctypes as $id => $doctype) {
             $entry['created_at'] = $entry['updated_at'] = date('Y-m-d H:i:s');
@@ -68,7 +68,6 @@ return new class extends BaseMigration
             $entry['filename_pattern'] = null;
             DB::table($this->tablename)->insert($entry);
         }
-
     }
 
     /**

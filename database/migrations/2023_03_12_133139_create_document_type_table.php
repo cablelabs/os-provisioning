@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 
+use Illuminate\Support\Facades\DB;
 use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
 
 return new class extends BaseMigration
 {
@@ -97,7 +97,7 @@ return new class extends BaseMigration
             'model' => 'Invoice',
             'module' => 'BillingBase',
             'default_filename_pattern' => '[cdr]__{invoice.year}_{invoice.month}.pdf',
-            'usable' => 0   // deeply embedded in Invoice – will be used later,
+            'usable' => 0,   // deeply embedded in Invoice – will be used later,
         ],
     ];
 
