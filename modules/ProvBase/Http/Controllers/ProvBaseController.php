@@ -18,10 +18,10 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use View;
-use Nwidart\Modules\Facades\Module;
-use Modules\ProvBase\Entities\Contract;
 use App\Http\Controllers\BaseController;
+use Modules\ProvBase\Entities\Contract;
+use Nwidart\Modules\Facades\Module;
+use View;
 
 class ProvBaseController extends BaseController
 {

@@ -66,7 +66,6 @@ class PhonebookEntry extends \BaseModel
     public static function read_config()
     {
         if (is_null(static::$config)) {
-
             // we have to use the raw scanner because of the special characters like “(”…
             if (\Module::collections()->has('ProvVoipEnvia')) {
                 // to use the envia TEL API there seems to be some special cases – use own config file
@@ -121,7 +120,6 @@ class PhonebookEntry extends \BaseModel
                     array_walk($config[$section], $to_int);
 
                     foreach (array_keys($config[$section]) as $var) {
-
                         // replace valid groups by valid characters
                         if ($var == 'valid') {
                             $config[$section][$var] = $process_valid($config[$section][$var], $config['char_lists']);
@@ -247,7 +245,6 @@ class PhonebookEntry extends \BaseModel
     public function view_has_many()
     {
         if (\Module::collections()->has('ProvVoipEnvia')) {
-
             // TODO: auth - loading controller from model could be a security issue ?
             $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
             $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonebookEntryController::_get_envia_management_jobs($this);

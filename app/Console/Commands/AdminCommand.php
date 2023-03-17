@@ -18,9 +18,9 @@
 
 namespace App\Console\Commands;
 
-use Bouncer;
 use App\Role;
 use App\User;
+use Bouncer;
 use Illuminate\Console\Command;
 
 class AdminCommand extends Command

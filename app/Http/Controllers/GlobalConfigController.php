@@ -19,10 +19,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Facades\Module;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Storage;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class GlobalConfigController extends BaseController
@@ -85,7 +85,6 @@ class GlobalConfigController extends BaseController
      */
     public function prepare_input($data)
     {
-
         // ISO 3166 country codes are uppercase
         $data['default_country_code'] = Str::upper($data['default_country_code']);
 

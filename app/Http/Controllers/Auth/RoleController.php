@@ -18,10 +18,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Bouncer;
+use App\Http\Controllers\BaseController;
 use App\Role;
 use App\User;
-use App\Http\Controllers\BaseController;
+use Bouncer;
 
 class RoleController extends BaseController
 {

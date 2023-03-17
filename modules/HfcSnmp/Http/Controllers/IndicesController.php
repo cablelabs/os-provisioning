@@ -18,8 +18,8 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseController;
+use Modules\HfcReq\Entities\NetElement;
 
 class IndicesController extends BaseController
 {

@@ -18,9 +18,9 @@
 
 namespace Modules\ProvVoip\Database\Seeders;
 
-use Modules\ProvVoip\Entities\Mta;
-use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvVoip\Entities\Mta;
 
 class MtaTableSeeder extends \BaseSeeder
 {

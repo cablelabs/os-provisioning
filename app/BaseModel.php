@@ -18,15 +18,15 @@
 
 namespace App;
 
+use App\Observers\BaseObserver;
 use DB;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
-use Str;
 use Module;
 use Schema;
 use Session;
-use App\Observers\BaseObserver;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Str;
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models
@@ -645,7 +645,6 @@ class BaseModel extends Eloquent
 
             // deletion of 1:n related children is straight forward
             foreach ($children['1:n'] as $child) {
-
                 // if one direct or indirect child cannot be deleted:
                 // do not delete anything
                 if (! $child->delete()) {
@@ -825,7 +824,7 @@ class BaseModel extends Eloquent
             if ('slave' == config('provha.hostinfo.ownState')) {
                 $msg = trans('provha::messages.db_change_forbidden_not_master', ['state' => config('provha.hostinfo.ownState')]);
                 $this->addAboveMessage($msg, 'error');
-                \Log::error('Slave tried to write do database in '.(get_class($this)).'::'.(debug_backtrace()[1]['function']).'()');
+                \Log::error('Slave tried to write do database in '.get_class($this).'::'.debug_backtrace()[1]['function'].'()');
 
                 return false;
             }

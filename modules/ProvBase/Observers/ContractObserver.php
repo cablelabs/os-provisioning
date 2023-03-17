@@ -101,7 +101,7 @@ class ContractObserver
                     $query = $query->where('payed_month', '!=', 0);
                 } elseif (date('m') == '01' && $contract->contract_end != date('Y-12-31', strtotime('last year')) &&
                     date('Y', strtotime($contract->contract_end)) == (date('Y') - 1)
-                    ) {
+                ) {
                     // e.g. in january of current year the user enters belatedly a cancelation date of last year in dec
                 } else {
                     return;

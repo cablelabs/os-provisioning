@@ -66,7 +66,7 @@ class NetGwController extends \BaseController
             $company = 'Cisco';
         }
 
-        $types = array_map('strtoupper', (array_combine(NetGw::TYPES, NetGw::TYPES)));
+        $types = array_map('strtoupper', array_combine(NetGw::TYPES, NetGw::TYPES));
 
         // TODO: series should be jquery based select depending on the company
         // TODO: (For BRAS) Make company and series field nullable and add empty field to company_array

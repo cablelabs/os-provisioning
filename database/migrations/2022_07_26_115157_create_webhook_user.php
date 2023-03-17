@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Str;
+use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Database\Migrations\BaseMigration;
+use Illuminate\Support\Str;
 
 class CreateWebhookUser extends BaseMigration
 {

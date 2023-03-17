@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-use Modules\ProvBase\Entities\Modem;
 use Database\Migrations\BaseMigration;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Modem;
 
 class UpdateMonitoringPresets extends BaseMigration
 {

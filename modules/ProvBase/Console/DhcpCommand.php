@@ -19,9 +19,9 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
+use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\NetGw;
-use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\ProvBase;
 
 class DhcpCommand extends Command

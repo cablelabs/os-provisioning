@@ -18,10 +18,10 @@
 
 namespace Modules\ProvBase\Entities;
 
-use DB;
-use Module;
 use App\Observers\BaseObserver;
+use DB;
 use Illuminate\Support\Facades\Log;
+use Module;
 
 class Contract extends \BaseModel
 {
@@ -505,7 +505,7 @@ class Contract extends \BaseModel
      */
     public function customer_number()
     {
-        if (boolval($this->number3) && (\Str::lower($this->number3 != 'n/a'))) {
+        if (boolval($this->number3) && \Str::lower($this->number3 != 'n/a')) {
             $customer_number = $this->number3;
         } else {
             $customer_number = $this->number;
@@ -526,7 +526,7 @@ class Contract extends \BaseModel
      */
     public function customer_number_legacy()
     {
-        if (boolval($this->number4) && (\Str::lower($this->number4 != 'n/a'))) {
+        if (boolval($this->number4) && \Str::lower($this->number4 != 'n/a')) {
             $customer_number_lecacy = $this->number4;
         } else {
             $customer_number_lecacy = $this->number2;
@@ -542,7 +542,6 @@ class Contract extends \BaseModel
      */
     public function related_phonenumbers()
     {
-
         // if voip module is not active: there can be no phonenumbers
         if (! Module::collections()->has('ProvVoip')) {
             return [];
@@ -635,7 +634,6 @@ class Contract extends \BaseModel
         if (! Module::collections()->has('BillingBase')) {
             $this->updateInternetAccess();
         } else {
-
             // Get items by only 1 db query & set them as contract relations to work with them in next functions
             // with that there are no more refresh database queries necessary (items do not have to be reloaded again)
             $items = $this->items()
@@ -1080,7 +1078,6 @@ class Contract extends \BaseModel
                     ($item->valid_to >= date('Y-m-d'))
                 )
             ) {
-
                 // check if there is more than one active item for given type ⇒ this is an error
                 // this can happen if one fixes thè start date of one and forgets to fix the end date
                 // of an other item
@@ -1143,7 +1140,6 @@ class Contract extends \BaseModel
         $contract_changed = false;
 
         if ($item->product->type == 'Voip') {
-
             // check if there are changes in state for voip_id and purchase_tariff
             if ($this->voip_id != $item->product->voip_sales_tariff_id) {
                 $this->voip_id = $item->product->voip_sales_tariff_id;
@@ -1180,7 +1176,6 @@ class Contract extends \BaseModel
         $contract_changed = false;
 
         if ($item->product->type == 'Voip') {
-
             // check if there are changes in state for voip_id and purchase_tariff
             if ($this->next_voip_id != $item->product->voip_sales_tariff_id) {
                 $this->next_voip_id = $item->product->voip_sales_tariff_id;
@@ -1244,7 +1239,6 @@ class Contract extends \BaseModel
      */
     public function get_column_description($col_name)
     {
-
         // later use global config to get mapping
         $mappings = [
             'number' => 'Contract number',

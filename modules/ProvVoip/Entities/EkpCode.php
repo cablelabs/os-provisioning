@@ -54,7 +54,6 @@ class EkpCode extends \BaseModel
      */
     public static function ekp_list_for_form_select()
     {
-
         // ekp codes of the ekps to be on top of the list
         // the given sorting will be the sorting of the <select>
         // TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?

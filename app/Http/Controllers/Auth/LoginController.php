@@ -20,16 +20,16 @@ namespace App\Http\Controllers\Auth;
 
 use App;
 use App\BaseModel;
-use Carbon\Carbon;
 use App\GlobalConfig;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\GlobalConfigController;
+use Carbon\Carbon;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Nwidart\Modules\Facades\Module;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Silber\Bouncer\BouncerFacade as Bouncer;
-use App\Http\Controllers\GlobalConfigController;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {

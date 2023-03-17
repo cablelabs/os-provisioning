@@ -18,8 +18,8 @@
 
 namespace App\Observers;
 
-use Auth;
 use App\GuiLog;
+use Auth;
 
 /**
  * Base Observer Class - Logging of all User Interaction
@@ -104,7 +104,6 @@ class BaseObserver
 
         // if really updated (and not updated by model->save() in observer->created() like in contract)
         if (($action == 'updated') && (! $model->wasRecentlyCreated)) {
-
             // skip following attributes - TODO:
             $ignore = [
                 'updated_at',

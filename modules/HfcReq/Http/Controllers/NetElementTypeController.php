@@ -18,10 +18,10 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
-use Request;
-use Redirect;
-use Nwidart\Modules\Facades\Module;
 use Modules\HfcReq\Entities\NetElementType;
+use Nwidart\Modules\Facades\Module;
+use Redirect;
+use Request;
 
 class NetElementTypeController extends HfcReqController
 {

@@ -18,9 +18,9 @@
 
 namespace Modules\ProvVoip\Console;
 
-use Log;
 use App\GuiLog;
 use Illuminate\Console\Command;
+use Log;
 use Modules\ProvVoip\Entities\EkpCode;
 
 /**
@@ -156,7 +156,6 @@ class EkpCodeDatabaseUpdaterCommand extends Command
      */
     protected function _have_to_update()
     {
-
         // if there is no csv file, we can't update the db…
         if (! \Storage::has($this->csv_file)) {
             Log::warning($this->name.': CSV file with ekp codes does not exist ('.storage_path().'/'.$this->csv_file.')');
@@ -223,7 +222,6 @@ class EkpCodeDatabaseUpdaterCommand extends Command
             // alter entry if exists, else create new one
             $ec = EkpCode::withTrashed()->firstOrNew(['ekp_code' => $code]);
             if ($ec->deleted_at || ($ec->company != $company)) {
-
                 // disable observer to stop logging of each change
                 $ec->observer_enabled = false;
 

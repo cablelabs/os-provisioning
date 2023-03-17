@@ -19,8 +19,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AuthorizeOwns

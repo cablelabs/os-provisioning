@@ -18,21 +18,21 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use View;
-use App\Sla;
-use Bouncer;
-use Request;
 use App\GlobalConfig;
-use App\V1\Repository;
-use Nwidart\Modules\Facades\Module;
-use Modules\ProvBase\Entities\Modem;
-use Illuminate\Support\Facades\Session;
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Entities\Configfile;
-use Modules\ProvBase\Entities\ModemOption;
-use Modules\ProvBase\Services\ModemService;
 use App\Http\Controllers\BaseViewController;
+use App\Sla;
+use App\V1\Repository;
+use Bouncer;
+use Illuminate\Support\Facades\Session;
+use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\ModemOption;
+use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Services\ModemService;
+use Nwidart\Modules\Facades\Module;
+use Request;
+use View;
 
 class ModemController extends \BaseController
 {
@@ -95,7 +95,7 @@ class ModemController extends \BaseController
 
         $installation_address_change_date_options = ['placeholder' => 'YYYY-MM-DD'];
         // check if installation_address_change_date is readonly (address change has been sent to envia TEL API)
-        if (($model['installation_address_change_date']) && (Module::collections()->has('ProvVoipEnvia'))) {
+        if ($model['installation_address_change_date'] && Module::collections()->has('ProvVoipEnvia')) {
             $orders = \Modules\ProvVoipEnvia\Entities\EnviaOrder::where('modem_id', $model->id)
                 ->where('method', 'contract/relocate')
                 ->where('orderdate', '>=', $model['installation_address_change_date'])
@@ -242,7 +242,9 @@ class ModemController extends \BaseController
      * See: BaseController native function for more information
      *
      * @param Modules\ProvBase\Entities\Modem
+     *
      * @return: array, e.g. [['name' => '..', 'route' => '', 'link' => [$view_var->id]], .. ]
+     *
      * @author: Torsten Schmidt
      */
     public function editTabs($model)

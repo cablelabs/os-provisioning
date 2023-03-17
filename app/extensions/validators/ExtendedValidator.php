@@ -18,8 +18,8 @@
 
 namespace App\extensions\validators;
 
-use Log;
 use File;
+use Log;
 use PHP_IBAN\IBAN;
 
 /*
@@ -129,8 +129,8 @@ class ExtendedValidator
     {
         $cidr = explode('/', $prefix);
 
-        $range['first'] = long2ip((ip2long($cidr[0])) & ((-1 << (32 - (int) $cidr[1]))));
-        $range['last'] = long2ip((ip2long($range['first'])) + pow(2, (32 - (int) $cidr[1])) - 1);
+        $range['first'] = long2ip(ip2long($cidr[0]) & (-1 << (32 - (int) $cidr[1])));
+        $range['last'] = long2ip(ip2long($range['first']) + pow(2, 32 - (int) $cidr[1]) - 1);
 
         return $range;
     }
@@ -175,7 +175,7 @@ class ExtendedValidator
             $origval_last = hexdec($orig_last);
 
             // First address: calculate the subnet mask. min() prevents the comparison from being negative
-            $mask = 0xF << (min(4, $flexbits));
+            $mask = 0xF << min(4, $flexbits);
 
             // AND the original against its mask
             $new_val_first = $origval_first & $mask;
@@ -469,7 +469,6 @@ class ExtendedValidator
      */
     public function validatePhonebookPredefinedString($attribute, $value, $parameters)
     {
-
         // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
         $validator = \func_get_arg(3);
@@ -494,7 +493,6 @@ class ExtendedValidator
      */
     public function validatePhonebookOneCharacterOption($attribute, $value, $parameters)
     {
-
         // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
         $validator = \func_get_arg(3);
@@ -521,7 +519,6 @@ class ExtendedValidator
      */
     public function validatePhonebookEntryTypeDependend($attribute, $value, $parameters)
     {
-
         // see: https://laracasts.com/discuss/channels/general-discussion/extending-validation-with-custom-message-attribute?page=1
         // when laravel calls the validation function (validate) they luckily pass "$this" that is the Validator instance as 4th argument - so we can get it here
         $validator = \func_get_arg(3);

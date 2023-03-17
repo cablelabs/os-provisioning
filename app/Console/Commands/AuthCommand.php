@@ -18,9 +18,9 @@
 
 namespace App\Console\Commands;
 
-use Bouncer;
-use App\User;
 use App\Ability;
+use App\User;
+use Bouncer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Nwidart\Modules\Facades\Module;

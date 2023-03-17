@@ -19,15 +19,15 @@
 namespace App;
 
 use App;
-use Nwidart\Modules\Facades\Module;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Notifications\Notifiable;
-use Silber\Bouncer\Database\HasRolesAndAbilities;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
+use Nwidart\Modules\Facades\Module;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 /**
  * This is the Model, holding the User data for authentication.

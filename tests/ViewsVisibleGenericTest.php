@@ -18,8 +18,8 @@
 
 namespace Tests;
 
-use Route;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Route;
 
 /**
  * Tester for visibility of views.
@@ -81,7 +81,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     protected function _get_routes_blacklist()
     {
-
         // add all routes that cannot be visited (e.g. missing index views, …)
         // you can specify:
         //		single routes (like Item.index)
@@ -123,7 +122,6 @@ class ViewsVisibleGenericTest extends TestCase
     {
         $routes_to_test = [];
         foreach (Route::getRoutes() as $route) {
-
             // handle explicite excluded routes
             if (in_array($route->getName(), $this->routes_to_ignore)) {
                 $msg = 'Route '.$route->getName().' is not tested within '.__CLASS__;
@@ -194,7 +192,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     protected function _get_user()
     {
-
         // TODO: do not hard code any user class, instead fetch a user dynamically
         //       or add it only for testing (see Laravel factory stuff)
         $this->user = App\User::findOrFail(1);
@@ -231,7 +228,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     public function testGenericMvc()
     {
-
         /* dd("TODO: Implement single index/edit tester instead of this method as next step!"); */
 
         // TODO: there must be a namespace problem in Testing Context!
@@ -251,11 +247,11 @@ class ViewsVisibleGenericTest extends TestCase
             echo "\nVisit ".$route->getName();
 
             // Filter only '*.index' routes and ignore $ignores array
-            if ((\Str::endswith($route->getName(), '.index'))) {
+            if (\Str::endswith($route->getName(), '.index')) {
                 $this->_testGenericMVCIndexView($route);
-            } elseif ((\Str::endswith($route->getName(), '.create'))) {
+            } elseif (\Str::endswith($route->getName(), '.create')) {
                 $this->_testGenericMVCCreateView($route);
-            } elseif ((\Str::endswith($route->getName(), '.edit'))) {
+            } elseif (\Str::endswith($route->getName(), '.edit')) {
                 $this->_testGenericMVCEditView($route);
             }
             /* elseif ((\Str::endswith($route->getName(), '.destroy'))) { */
@@ -278,7 +274,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     protected function _testGenericMVCIndexView($route)
     {
-
         /* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
         // Index Page
         $this->actingAs($this->user)
@@ -294,7 +289,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     protected function _testGenericMVCCreateView($route)
     {
-
         /* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
         // Create Page
@@ -357,7 +351,6 @@ class ViewsVisibleGenericTest extends TestCase
      */
     protected function _testGenericMVCDestroyView($route)
     {
-
         /* $controller = $this->app->make(explode('@', $route->getAction()['controller'])[0]); */
 
         // Index Page

@@ -18,11 +18,11 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Nwidart\Modules\Facades\Module;
-use Modules\HfcReq\Entities\NetElement;
 use App\Http\Controllers\BaseController;
+use Illuminate\Http\Request;
+use Modules\HfcReq\Entities\NetElement;
 use Modules\HfcReq\Entities\NetElementType;
+use Nwidart\Modules\Facades\Module;
 
 class NetElementController extends BaseController
 {

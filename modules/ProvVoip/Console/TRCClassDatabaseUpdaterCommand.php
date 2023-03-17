@@ -18,8 +18,8 @@
 
 namespace Modules\ProvVoip\Console;
 
-use Log;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Class for updating database with TRC class

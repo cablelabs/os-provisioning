@@ -18,26 +18,26 @@
 
 namespace App\Http\Controllers;
 
-use Log;
-use Str;
-use Auth;
-use View;
-use Cache;
-use Bouncer;
-use Request;
-use Session;
-use Redirect;
-use BaseModel;
-use Validator;
-use App\V1\Service;
-use App\V1\V1Trait;
-use Monolog\Logger;
 use App\GlobalConfig;
 use App\V1\Repository;
-use Yajra\DataTables\DataTables;
-use Nwidart\Modules\Facades\Module;
+use App\V1\Service;
+use App\V1\V1Trait;
+use Auth;
+use BaseModel;
+use Bouncer;
+use Cache;
 use Illuminate\Support\Facades\File;
+use Log;
 use Modules\CoreMon\Helpers\AlertmanagerApi;
+use Monolog\Logger;
+use Nwidart\Modules\Facades\Module;
+use Redirect;
+use Request;
+use Session;
+use Str;
+use Validator;
+use View;
+use Yajra\DataTables\DataTables;
 
 /*
  * BaseController: The Basic Controller in our MVC design.
@@ -123,7 +123,9 @@ class BaseController extends Controller
      * Use models view_has_many() to add/structure panels inside separate tabs
      *
      * @param model: the model object to be displayed
+     *
      * @return: array of tab descriptions - e.g. [['name' => '..', 'route' => '', 'link' => [$model->id]], .. ]
+     *
      * @author: Torsten Schmidt, Nino Ryschawy
      */
     protected function editTabs($model)
@@ -259,7 +261,7 @@ class BaseController extends Controller
             // the value in $_POST seems to be browser dependend – extend the array if needed
             if (
                 ($field['form_type'] == 'checkbox') &&
-                (in_array(Str::lower($data[$field['name']]), ['on', 'checked']))
+                in_array(Str::lower($data[$field['name']]), ['on', 'checked'])
             ) {
                 $data['active'] = '1';
             }
@@ -536,7 +538,7 @@ class BaseController extends Controller
             $a['html_title'] = 'NMS Prime - '.BaseViewController::translate_view(NamespaceController::module_get_pure_model_name(), 'Header');
         }
 
-        if ((Module::collections()->has('ProvVoipEnvia')) && (! isset($a['envia_interactioncount']))) {
+        if (Module::collections()->has('ProvVoipEnvia') && (! isset($a['envia_interactioncount']))) {
             $a['envia_interactioncount'] = \Modules\ProvVoipEnvia\Entities\EnviaOrder::get_user_interaction_needing_enviaorder_count();
         }
 
@@ -912,6 +914,7 @@ class BaseController extends Controller
      * Generic store function - stores an object of the calling model
      *
      * @param redirect: if set to false returns id of the new created object (default: true)
+     *
      * @return: html redirection to edit page (or if param $redirect is false the new added object id)
      */
     public function store($redirect = true)
@@ -1088,7 +1091,7 @@ class BaseController extends Controller
 
         // create messages depending on error state created while observer execution
         // TODO: check if giving msg/color to route is still wanted or obsolete by the new tmp_*_above_* messages format
-        if (($updated) && (! Session::has('error'))) {
+        if ($updated && (! Session::has('error'))) {
             $msg = 'Updated!';
             $obj->addAboveMessage($msg, 'success', 'form');
         } else {
@@ -1985,7 +1988,6 @@ class BaseController extends Controller
      */
     public function alarmsNetElement($netelement, $withThumbnail = false)
     {
-
         // Alarm::where('status', 'active')->whereDescendantsOf([user favorited MarketNetElement])->get()
         // count warning, critical etc.
         $result = [

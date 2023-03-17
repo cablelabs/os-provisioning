@@ -19,11 +19,11 @@
 namespace Modules\ProvBase\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Modules\ProvBase\Entities\IpPool;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Modules\ProvBase\Entities\RadIpPool;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Modules\ProvBase\Entities\IpPool;
+use Modules\ProvBase\Entities\RadIpPool;
 
 class RadIpPoolJob implements ShouldQueue
 {

@@ -18,9 +18,9 @@
 
 namespace App\Console;
 
-use Queue;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Queue;
 
 class Kernel extends ConsoleKernel
 {
@@ -131,7 +131,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('main:storage_cleaner')->dailyAt('04:18');
 
         if ($modules->has('ProvVoip')) {
-
             // Update database table carriercode with csv data if necessary
             $schedule->command('provvoip:update_carrier_code_database')
                 ->dailyAt('04:23');
@@ -146,7 +145,6 @@ class Kernel extends ConsoleKernel
         }
 
         if ($modules->has('ProvVoipEnvia')) {
-
             // Update status of envia orders
             // Do this at the very beginning of a day
             $schedule->command('provvoipenvia:update_envia_orders')

@@ -20,8 +20,8 @@ namespace Modules\NmsMail\Database\Seeders;
 
 use Faker\Factory as Faker;
 use Modules\NmsMail\Entities\Email;
-use Modules\ProvBase\Entities\Domain;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Domain;
 
 class EmailTableSeeder extends \BaseSeeder
 {

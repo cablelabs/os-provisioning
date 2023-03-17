@@ -18,20 +18,20 @@
 
 namespace Modules\ProvBase\Console;
 
-use Log;
 use Illuminate\Console\Command;
+use Log;
+use Modules\BillingBase\Entities\Item;
+use Modules\BillingBase\Entities\Product;
+use Modules\BillingBase\Entities\SepaMandate;
+use Modules\NmsMail\Entities\Email;
+use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvVoip\Entities\Mta;
-use Modules\NmsMail\Entities\Email;
-use Modules\ProvBase\Entities\Modem;
-use Modules\BillingBase\Entities\Item;
-use Modules\ProvBase\Entities\Contract;
-use Modules\BillingBase\Entities\Product;
-use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvVoip\Entities\Phonenumber;
-use Modules\BillingBase\Entities\SepaMandate;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class ImportCommand extends Command
 {
@@ -459,6 +459,7 @@ class ImportCommand extends Command
      * Return ID of Cluster/Net for new System from old systems cluster/net ID
      *
      * @param 	cluster_id 		Integer
+     *
      * @parma 	$net 			0/1 		Switch: 0 - return cluster id, 1 - return net id
      *
      * @return int
@@ -884,8 +885,10 @@ class ImportCommand extends Command
         $carrier = $carrier ? $carrier->carrier : null;
 
         switch ($carrier) {
-            case 'PURTel': $registrar = 'deu3.purtel.com'; break;
-            case 'EnviaTel': $registrar = 'sip.enviatel.net'; break;
+            case 'PURTel': $registrar = 'deu3.purtel.com';
+            break;
+            case 'EnviaTel': $registrar = 'sip.enviatel.net';
+            break;
             default: $registrar = null;
                 \Log::warning("Missing Registrar for Phonenumber $old_phonenumber->vorwahl/$old_phonenumber->rufnummer");
                 break;

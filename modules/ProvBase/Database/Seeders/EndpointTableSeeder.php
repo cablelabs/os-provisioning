@@ -18,8 +18,8 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Endpoint;
+use Modules\ProvBase\Entities\Modem;
 
 class EndpointTableSeeder extends \BaseSeeder
 {

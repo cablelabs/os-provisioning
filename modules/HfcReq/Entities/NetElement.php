@@ -18,14 +18,14 @@
 
 namespace Modules\HfcReq\Entities;
 
+use App\Exceptions\SnmpAccessException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Nwidart\Modules\Facades\Module;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
-use App\Exceptions\SnmpAccessException;
-use Illuminate\Support\Facades\Storage;
 
 class NetElement extends \BaseModel
 {
@@ -825,6 +825,7 @@ class NetElement extends \BaseModel
      * Format Parent (NetElements) for Select 2 field and allow for searching.
      *
      * @param  string|null  $search
+     *
      * @request param model The id of the model or null if in create context
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -853,6 +854,7 @@ class NetElement extends \BaseModel
      * searching. Depending on NetElemetType id the relation differs.
      *
      * @param  string|null  $search
+     *
      * @request param netelementtype_id The NetElemetType id in create context
      *
      * @return \Illuminate\Database\Eloquent\Builder

@@ -152,7 +152,7 @@ class ProvBase extends \BaseModel
         // option vivso <enterprise number> <length of the vivso TLV contents> <option type> <option length> <option value>
         $ret = [
             '00:00:11:8b',                          // dotted hex for 4491 (= CableLabs)
-            sprintf('%02x', (4 * count($ips) + 2)), // bytes per IP + one byte for type + one byte for length
+            sprintf('%02x', 4 * count($ips) + 2), // bytes per IP + one byte for type + one byte for length
             '02',                                   // hex for option type 2
             sprintf('%02x', 4 * count($ips)),       // 4 bytes for each IP address
             implode(':', $hex_ips),

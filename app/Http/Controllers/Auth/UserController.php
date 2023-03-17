@@ -18,16 +18,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Auth;
-use Bouncer;
-use Session;
+use App\Http\Controllers\BaseController;
+use App\Http\Controllers\BaseViewController;
 use App\Role;
 use App\User;
+use Auth;
+use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\BaseController;
-use App\Http\Controllers\BaseViewController;
+use Session;
 
 class UserController extends BaseController
 {

@@ -18,12 +18,12 @@
 
 namespace Modules\ProvVoip\Entities;
 
-use Log;
 use File;
-use Session;
+use Log;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Traits\HasConfigfile;
+use Session;
 
 class Mta extends \BaseModel
 {
@@ -301,7 +301,7 @@ class Mta extends \BaseModel
                 Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
 
                 // only ignore error with this error message (catch exception with this string)
-                if (((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false))) {
+                if ((strpos($e->getMessage(), 'php_network_getaddresses: getaddrinfo failed: Name or service not known') !== false) || (strpos($e->getMessage(), 'snmp2_set(): No response from') !== false)) {
                     Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
                 } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
                     Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');

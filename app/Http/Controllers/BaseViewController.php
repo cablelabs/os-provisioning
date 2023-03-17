@@ -19,15 +19,15 @@
 namespace App\Http\Controllers;
 
 use App;
-use Str;
 use Auth;
-use Form;
-use Route;
-use Module;
-use Bouncer;
-use Request;
-use Session;
 use BaseModel;
+use Bouncer;
+use Form;
+use Module;
+use Request;
+use Route;
+use Session;
+use Str;
 
 /*
  * BaseViewController: Is a special Controller which will be a kind of middleware/sub-layer/helper
@@ -190,6 +190,7 @@ class BaseViewController extends Controller
      *
      * @param fields: the view_form_fields array()
      * @param model: the model to view. Note: could be get_model_obj()->find($id) or get_model_obj()
+     *
      * @return: the modifeyed view_form_fields array()
      *
      * @author: Torsten Schmidt
@@ -224,7 +225,7 @@ class BaseViewController extends Controller
             //          Hiding in create context will only work with hard coded 'hidden' => 1 entry in view_form_fields()
             if (
                 // does a view relation exists?
-                (is_object($view_belongs_to)) &&
+                is_object($view_belongs_to) &&
                 // not a n:m relation (in which case we have an pivot table)
                 (! ($view_belongs_to instanceof \Illuminate\Support\Collection)) &&
                 // view table name (*_id) == field name ?
@@ -326,6 +327,7 @@ class BaseViewController extends Controller
      *
      * @param fields: the prepared view_form_fields array(), each array element represents on (HTML) field
      * @param context: edit|create - context from which this function is called
+     *
      * @return: array() of fields with added ['html'] element containing the preformed html content
      *
      * @author: Torsten Schmidt
@@ -585,6 +587,7 @@ class BaseViewController extends Controller
      * NOTE: this function takes care of installed modules and Permissions!
      *
      * @return array
+     *
      * @author: Christian Schramm
      */
     public static function view_main_menus(): array
@@ -647,6 +650,7 @@ class BaseViewController extends Controller
      * This is a local helper to be able to show HTML code (like images) in breadcrumb
      *
      * @author: Torsten Schmidt
+     *
      * @todo: move to a generic helper class
      */
     private static function __link_route_html($name, $title = null, $parameters = [], $attributes = [])
@@ -659,6 +663,7 @@ class BaseViewController extends Controller
      *
      * @param $class_or_obj: the class or object to look for the icon
      * @return the HTML icon (with HTML tags)
+     *
      * @author: Torsten Schmidt
      */
     public static function __get_view_icon($class_or_obj)
@@ -745,7 +750,6 @@ class BaseViewController extends Controller
         };
 
         if ($view_var != null) {
-
             // Recursively parse all relations from view_var
             $parent = $view_var;
             $i = 0;
@@ -794,11 +798,9 @@ class BaseViewController extends Controller
 
                         // collect all parent breadcrumbs
                         if (! $multicrumbs) {
-
                             // the first one is simple :-)
                             $multicrumbs = $breadcrumb;
                         } else {
-
                             // insert the current breadcrumb into the existing <li> element
 
                             // therefore we extract all text from the first opening to the last closing <a> tag
@@ -897,6 +899,7 @@ class BaseViewController extends Controller
      * @param val: the value to be evaluated
      * @param limits: array of size 2 or 4, containing the limits
      * @param invert the results (good <--> bad)
+     *
      * @return: evaluation results - good(0), average(1) or bad(2)
      *
      * @author: Ole Ernst
@@ -931,6 +934,7 @@ class BaseViewController extends Controller
      * @param entity: the entity to check (power, modulation, ureflections, etc.)
      * @param value: array containing all values (can be used for several us/ds channels)
      * @param toString: return human readable interpretation of color value (bootstrap class)
+     *
      * @return: evaluation result
      *
      * @author: Ole Ernst
@@ -951,55 +955,55 @@ class BaseViewController extends Controller
         }
 
         switch ($entity) {
-        case 'Rx Power dBmV':
-            $ret = self::colorize($val, [-3, -1, 15, 20], false);
-            break;
-        case 'pwr':
-        case 'Power dBmV':
-            if ($dir == 'ds') {
-                $ret = self::colorize($val, [-20, -10, 15, 20], false);
-            }
-            if ($dir == 'us') {
-                $ret = self::colorize($val, [22, 27, 50, 56]);
-            }
+            case 'Rx Power dBmV':
+                $ret = self::colorize($val, [-3, -1, 15, 20], false);
                 break;
-        case 'Microreflection -dBc':
-            if ($val == 0) {
+            case 'pwr':
+            case 'Power dBmV':
+                if ($dir == 'ds') {
+                    $ret = self::colorize($val, [-20, -10, 15, 20], false);
+                }
+                if ($dir == 'us') {
+                    $ret = self::colorize($val, [22, 27, 50, 56]);
+                }
                 break;
-            }
-            $ret = self::colorize($val, [20, 30]);
-            break;
-        case 'Avg Utilization %':
-            $ret = self::colorize($val, [0, 0, 70, 90], false);
-            break;
-        case 'snr':
-        case 'SNR dB':
-        case 'MER dB':
-            if ($mod == 'QPSK') {
-                $ret = self::colorize($val, [14, 17]);
-            }
-            if ($mod == 'QAM16') {
-                $ret = self::colorize($val, [20, 23]);
-            }
-            if ($mod == 'QAM32') {
-                $ret = self::colorize($val, [22, 25]);
-            }
-            // $mod == '0': no docsIfCmtsModulationTable entry
-            // $dir == 'us': snr_us modem property in CustomerTopoController
-            if ($mod == 'QAM64' || $mod == '0' || $dir == 'us') {
-                $ret = self::colorize($val, [26, 29]);
-            }
-            // $dir = 'ds': snr_ds modem property in CustomerTopoController
-            if ($mod == 'QAM256' || $dir == 'ds') {
-                $ret = self::colorize($val, [32, 35]);
-            }
-            break;
-        // ds_us modem property in CustomerTopoController
-        case 'us':
-            if ($dir == 'ds') {
-                $ret = self::colorize($val, [-12, -5, 5, 12], false);
-            }
-            break;
+            case 'Microreflection -dBc':
+                if ($val == 0) {
+                    break;
+                }
+                $ret = self::colorize($val, [20, 30]);
+                break;
+            case 'Avg Utilization %':
+                $ret = self::colorize($val, [0, 0, 70, 90], false);
+                break;
+            case 'snr':
+            case 'SNR dB':
+            case 'MER dB':
+                if ($mod == 'QPSK') {
+                    $ret = self::colorize($val, [14, 17]);
+                }
+                if ($mod == 'QAM16') {
+                    $ret = self::colorize($val, [20, 23]);
+                }
+                if ($mod == 'QAM32') {
+                    $ret = self::colorize($val, [22, 25]);
+                }
+                // $mod == '0': no docsIfCmtsModulationTable entry
+                // $dir == 'us': snr_us modem property in CustomerTopoController
+                if ($mod == 'QAM64' || $mod == '0' || $dir == 'us') {
+                    $ret = self::colorize($val, [26, 29]);
+                }
+                // $dir = 'ds': snr_ds modem property in CustomerTopoController
+                if ($mod == 'QAM256' || $dir == 'ds') {
+                    $ret = self::colorize($val, [32, 35]);
+                }
+                break;
+                // ds_us modem property in CustomerTopoController
+            case 'us':
+                if ($dir == 'ds') {
+                    $ret = self::colorize($val, [-12, -5, 5, 12], false);
+                }
+                break;
         }
 
         return $toString ? $colors[$ret] : $ret;

@@ -18,9 +18,9 @@
 
 namespace Acme\html;
 
-use Str;
-use Session;
 use Collective\Html\FormBuilder as CollectiveFormBuilder;
+use Session;
+use Str;
 
 class FormBuilder extends CollectiveFormBuilder
 {
@@ -58,6 +58,7 @@ class FormBuilder extends CollectiveFormBuilder
      * @param $options: options array
      *        NOTE: use '!class' to avoid adding $class variable from FormBuilder functions,
      *              instead set only this proposed classes
+     *
      * @return: options array with (manipulated) class key
      */
     private function appendClassToOptions($class, $options = [])

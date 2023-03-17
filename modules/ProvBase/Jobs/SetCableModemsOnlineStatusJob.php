@@ -19,10 +19,10 @@
 namespace Modules\ProvBase\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Modules\ProvBase\Entities\Modem;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Modules\ProvBase\Entities\Modem;
 
 class SetCableModemsOnlineStatusJob implements ShouldQueue
 {

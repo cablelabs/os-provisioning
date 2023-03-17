@@ -19,10 +19,10 @@
 namespace App\Http\Middleware;
 
 use App;
-use Closure;
-use Session;
-use Modules\Ccc\Entities\Ccc;
 use App\Http\Controllers\BaseViewController;
+use Closure;
+use Modules\Ccc\Entities\Ccc;
+use Session;
 
 class SetLanguage
 {

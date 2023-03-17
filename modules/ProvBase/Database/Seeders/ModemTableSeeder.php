@@ -18,10 +18,10 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-use Modules\ProvBase\Entities\Qos;
-use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Qos;
 
 class ModemTableSeeder extends \BaseSeeder
 {

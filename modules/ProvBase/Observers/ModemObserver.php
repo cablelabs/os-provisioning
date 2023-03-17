@@ -18,9 +18,9 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Module;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use Module;
 use Modules\ProvBase\Entities\Modem;
 
 /**
@@ -76,7 +76,7 @@ class ModemObserver
         // watch Ticket LAR-106
         if (Module::collections()->has('ProvVoipEnvia')) {
             // updating is also called on create – so we have to check this
-            if ((! $modem->wasRecentlyCreated) && ($modem->isDirty('contract_id'))) {
+            if ((! $modem->wasRecentlyCreated) && $modem->isDirty('contract_id')) {
                 // returning false should cancel the updating: verify this! There has been some problems with deleting modems – we had to put the logic in Modem::delete() probably caused by our Base* classes…
                 // see: http://laravel-tricks.com/tricks/cancelling-a-model-save-update-delete-through-events
                 return false;

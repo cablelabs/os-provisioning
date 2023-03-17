@@ -18,8 +18,8 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use View;
 use App\Http\Controllers\BaseController;
+use View;
 
 class ProvVoipController extends BaseController
 {

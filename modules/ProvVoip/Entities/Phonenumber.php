@@ -361,7 +361,7 @@ class Phonenumber extends \BaseModel
             'enviaorder_phonenumber',
             'phonenumber_id',
             'enviaorder_id'
-            )
+        )
             ->whereRaw($whereStatement)
             ->withTimestamps();
 
@@ -385,7 +385,6 @@ class Phonenumber extends \BaseModel
      */
     public function envia_contract_created()
     {
-
         // no envia module ⇒ no envia contracts
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             return;
@@ -419,7 +418,6 @@ class Phonenumber extends \BaseModel
      */
     public function envia_contract_terminated()
     {
-
         // no envia module ⇒ no envia contracts
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             return;
@@ -480,7 +478,6 @@ class Phonenumber extends \BaseModel
         $management = $this->phonenumbermanagement;
 
         if (is_null($management)) {
-
             // if there is still no management: deactivate the number
             // TODO: decide if a phonenumbermanagement is required in each case or not
             // until then: don't change the state on missing management
@@ -490,20 +487,17 @@ class Phonenumber extends \BaseModel
             /* } */
             \Log::info('No PhonenumberManagement for phonenumber '.$this->prefix_number.'/'.$this->number.' (ID '.$this->id.') – will not change the active state.');
         } else {
-
             // get the dates for this number
             $act = $management->activation_date;
             $deact = $management->deactivation_date;
 
             if (! boolval($act)) {
-
                 // Activation date not yet reached: deactivate
                 if ($this->active) {
                     $this->active = false;
                     $changed = true;
                 }
             } elseif ($act > date('c')) {
-
                 // Activation date not yet reached: deactivate
                 if ($this->active) {
                     $this->active = false;
@@ -511,7 +505,6 @@ class Phonenumber extends \BaseModel
                 }
             } else {
                 if (! boolval($deact)) {
-
                     // activation date today or in the past, no deactivation date: activate
                     if (! $this->active) {
                         $this->active = true;
@@ -519,14 +512,12 @@ class Phonenumber extends \BaseModel
                     }
                 } else {
                     if ($deact > date('c')) {
-
                         // activation date today or in the past, deactivation date in the future: activate
                         if (! $this->active) {
                             $this->active = true;
                             $changed = true;
                         }
                     } else {
-
                         // deactivation date today or in the past: deactivate
                         if ($this->active) {
                             $this->active = false;

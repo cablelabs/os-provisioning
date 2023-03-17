@@ -19,8 +19,8 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\NetGw;
 use Modules\HfcReq\Entities\NetElement;
+use Modules\ProvBase\Entities\NetGw;
 
 class SetProvDeviceIds extends Command
 {

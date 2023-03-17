@@ -18,9 +18,9 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Queue;
-use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Queue;
 
 /**
  * Configfile Observer Class

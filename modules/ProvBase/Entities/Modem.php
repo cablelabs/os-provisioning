@@ -18,18 +18,18 @@
 
 namespace Modules\ProvBase\Entities;
 
-use DB;
-use Str;
-use File;
-use Module;
+use Acme\php\ArrayHelper;
 use App\Sla;
+use DB;
+use File;
+use Illuminate\Support\Facades\Log;
+use Module;
+use Modules\ProvBase\Http\Controllers\ModemController;
+use Modules\ProvBase\Traits\HasConfigfile;
 use Request;
 use Session;
 use Storage;
-use Acme\php\ArrayHelper;
-use Illuminate\Support\Facades\Log;
-use Modules\ProvBase\Traits\HasConfigfile;
-use Modules\ProvBase\Http\Controllers\ModemController;
+use Str;
 
 class Modem extends \BaseModel
 {
@@ -174,12 +174,17 @@ class Modem extends \BaseModel
         $bsclass = 'success';
 
         switch ($this->get_state('int')) {
-            case 0: $bsclass = 'success'; break; // online
-            case 1: $bsclass = 'warning'; break; // warning
-            case 2: $bsclass = 'warning'; break; // critical
-            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info'; break; // offline
+            case 0: $bsclass = 'success';
+            break; // online
+            case 1: $bsclass = 'warning';
+            break; // warning
+            case 2: $bsclass = 'warning';
+            break; // critical
+            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info';
+            break; // offline
 
-            default: $bsclass = 'danger'; break;
+            default: $bsclass = 'danger';
+            break;
         }
 
         return $bsclass;
@@ -203,10 +208,18 @@ class Modem extends \BaseModel
     public function getFaSmileClass()
     {
         switch ($this->support_state) {
-            case 'full-support':      $faClass = 'fa-smile-o'; $bsClass = 'success'; break;
-            case 'verifying':         $faClass = 'fa-meh-o'; $bsClass = 'warning'; break;
-            case 'not-supported':     $faClass = 'fa-frown-o'; $bsClass = 'danger'; break;
-            default: $faClass = 'fa-smile'; $bsClass = 'success'; break;
+            case 'full-support':      $faClass = 'fa-smile-o';
+            $bsClass = 'success';
+            break;
+            case 'verifying':         $faClass = 'fa-meh-o';
+            $bsClass = 'warning';
+            break;
+            case 'not-supported':     $faClass = 'fa-frown-o';
+            $bsClass = 'danger';
+            break;
+            default: $faClass = 'fa-smile';
+            $bsClass = 'success';
+            break;
         }
 
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
@@ -458,7 +471,7 @@ class Modem extends \BaseModel
         if (
             $this->provNetelement &&
             $this->provNetelement->base_type_id !== array_search('NetGw', \Modules\HfcReq\Entities\NetElementType::$undeletables)
-         ) {
+        ) {
             return $this->provNetelement->tabs();
         }
 
@@ -618,7 +631,6 @@ class Modem extends \BaseModel
      */
     public static function create_ignore_cpe_dhcp_file()
     {
-
         // only add content if multiple dhcp servers exist
         if (! ProvBase::first()->multiple_provisioning_systems) {
             $content = "# Ignoring no devices – multiple_provisioning_systems not set in ProvBase\n";
@@ -873,7 +885,7 @@ class Modem extends \BaseModel
         $max_cpe = $cpe_cnt ?: 2; 		// default 2
         $internet_access = 1;
 
-        if (Module::collections()->has('ProvVoip') && (count($this->mtas))) {
+        if (Module::collections()->has('ProvVoip') && count($this->mtas)) {
             if ($this->internet_access || $this->contract->has_telephony || $this->contract->internet_access) {
                 if (! $this->internet_access) {
                     $max_cpe = 0;
@@ -1671,6 +1683,7 @@ class Modem extends \BaseModel
      * Get eventlog of a modem via snmp
      *
      * @return: Array of rows of the eventlog table
+     *
      * @author: Ole Ernst
      */
     public function get_eventlog()
@@ -1741,6 +1754,7 @@ class Modem extends \BaseModel
      * Get Pre-equalization data of a modem via cacti
      *
      * @return: Array
+     *
      * @author: John Adebayo
      */
     public function get_preq_data()
@@ -1819,7 +1833,6 @@ class Modem extends \BaseModel
      */
     public function has_phonenumbers_attached()
     {
-
         // if there is no voip module ⇒ there can be no numbers
         if (! Module::collections()->has('ProvVoip')) {
             return false;
@@ -1842,7 +1855,6 @@ class Modem extends \BaseModel
      */
     public function related_phonenumbers()
     {
-
         // if voip module is not active: there can be no phonenumbers
         if (! Module::collections()->has('ProvVoip')) {
             return [];
@@ -1889,7 +1901,6 @@ class Modem extends \BaseModel
      */
     public function remove_envia_related_data()
     {
-
         // first: check if envia module is enabled
         // if not: do nothing – this database fields could be in use by another voip provider module!
         if (! Module::collections()->has('ProvVoipEnvia')) {
@@ -2000,7 +2011,7 @@ class Modem extends \BaseModel
             ->select('contract.id', 'apartment.id as apartmentId'
                 // , 'contract.number', 'contract.firstname', 'contract.lastname', 'contract.contract_start', 'contract.contract_end',
                 // 'modem.mac', 'contract.created_at',
-                );
+            );
 
         /* All apartments that either
             (1) do not have a modem assigned
@@ -2021,7 +2032,7 @@ class Modem extends \BaseModel
                 'modem.id as modemId', 'contract.id as cId'
                 // , 'realty.zip', 'realty.district', 'realty.number as rnum',
                 // 'contract.number as cnum', 'contract.firstname', 'contract.lastname', 'contract.contract_start', 'contract.contract_end',
-                );
+            );
 
         // All the apartments (that have no contract or a/many canceled contract(s)) from the subquery are left joined
         // with the possible new contracts to filter (dont show) apartments that indeed have a canceled contract but have
@@ -2033,7 +2044,7 @@ class Modem extends \BaseModel
                 'apartments.anum as number', 'floor'
                 // 'apartments.cnum', 'apartments.firstname', 'apartments.lastname', 'apartments.contract_start', 'apartments.contract_end',
                 // 'newContract.number as newContractNr'
-                )
+            )
             ->leftJoin(DB::raw("({$contractSubQuery->toSql()}) as newContract"), 'newContract.apartmentId', '=', 'apartments.apartmentId')
             ->mergeBindings($contractSubQuery->getQuery())
             ->where(function ($query) {

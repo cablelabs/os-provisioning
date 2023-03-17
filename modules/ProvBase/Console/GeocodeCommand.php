@@ -116,7 +116,6 @@ class GeocodeCommand extends Command
      */
     protected function getParams()
     {
-
         // get number of modems to geocode
         $modem_count = $this->argument('modem_count');
 

@@ -18,8 +18,8 @@
 
 namespace Modules\ProvBase\Database\Seeders;
 
-use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\IpPool;
+use Modules\ProvBase\Entities\NetGw;
 
 class IpPoolTableSeeder extends \BaseSeeder
 {

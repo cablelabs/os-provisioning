@@ -238,7 +238,7 @@ trait Geocoding
 
             $tmp_params = [];
             foreach ($params as $key => $value) {
-                array_push($tmp_params, (urlencode($key).'='.urlencode($value)));
+                array_push($tmp_params, urlencode($key).'='.urlencode($value));
             }
             $url .= implode('&', $tmp_params);
 
@@ -258,7 +258,6 @@ trait Geocoding
 
                 // check if returned entry is of certain type (e.g. “highway” indicates fuzzy match)
                 if ((in_array($class, $matches) || in_array($type, $matches)) && $lat && $lon) {
-
                     // as both variants can appear in resulting address: check for all of them
                     foreach ($housenumber_variants as $variant) {
                         if (\Str::contains(strtolower($display_name), $variant)) {  // don't check for startswith; sometimes a company name is added before the house number
@@ -334,7 +333,7 @@ trait Geocoding
         if (
             ! $result['scoring']['queryScore'] == 1.0 ||
             ! in_array($result['resultType'], ['houseNumber', 'place', 'locality'])
-         ) {
+        ) {
             $this->geocode_state = 'DATA_VERIFICATION_FAILED';
             Log::warning("HERE geocoding for {$className} {$this->id} failed: {$this->geocode_state}");
 

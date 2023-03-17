@@ -20,10 +20,10 @@ namespace Modules\ProvBase\Jobs;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Modules\ProvBase\Entities\Modem;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Modules\ProvBase\Entities\Modem;
 
 class DeleteStaleGenieAcsTasksJob implements ShouldQueue
 {

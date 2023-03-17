@@ -18,9 +18,9 @@
 
 namespace Modules\ProvVoip\Console;
 
-use Log;
 use App\GuiLog;
 use Illuminate\Console\Command;
+use Log;
 use Modules\ProvVoip\Entities\CarrierCode;
 
 /**
@@ -157,7 +157,6 @@ class CarrierCodeDatabaseUpdaterCommand extends Command
      */
     protected function _have_to_update()
     {
-
         // if there is no csv file, we can't update the db…
         if (! \Storage::has($this->csv_file)) {
             Log::warning($this->name.': CSV file with carrier codes does not exist ('.storage_path().'/'.$this->csv_file.')');
@@ -224,7 +223,6 @@ class CarrierCodeDatabaseUpdaterCommand extends Command
             // alter entry if exists, else create new one
             $cc = CarrierCode::withTrashed()->firstOrNew(['carrier_code' => $code]);
             if ($cc->deleted_at || ($cc->company != $company)) {
-
                 // disable observer to stop logging of each change
                 $cc->observer_enabled = false;
 

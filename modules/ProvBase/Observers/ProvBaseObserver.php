@@ -18,11 +18,11 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Queue;
-use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\RadGroupReply;
+use Queue;
 
 /**
  * ProvBase Observer Class

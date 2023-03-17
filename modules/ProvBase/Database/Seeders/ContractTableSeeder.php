@@ -19,8 +19,8 @@
 namespace Modules\ProvBase\Database\Seeders;
 
 use Faker\Provider\de_DE\Payment;
-use Modules\ProvBase\Entities\Qos;
-use Modules\ProvBase\Entities\Contract;			// SEPA: should not be required in Laravel 5 (L5), see ***
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Qos;			// SEPA: should not be required in Laravel 5 (L5), see ***
 
 class ContractTableSeeder extends \BaseSeeder
 {
@@ -82,7 +82,7 @@ class ContractTableSeeder extends \BaseSeeder
 
         $ret['number'] = 'contr_'.($count + 1);
         $ret['number2'] = 'legacy_contr_'.($count + 13157);
-        $ret['number3'] = 'Cu/2015/Q4/'.($count);
+        $ret['number3'] = 'Cu/2015/Q4/'.$count;
         $ret['number4'] = 'legacy_cust_'.($count + 180558);
 
         if (\Module::collections()->has('BillingBase')) {

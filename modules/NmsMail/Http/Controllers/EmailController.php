@@ -18,8 +18,8 @@
 
 namespace Modules\NmsMail\Http\Controllers;
 
-use Modules\ProvBase\Entities\Domain;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Domain;
 
 class EmailController extends \BaseController
 {

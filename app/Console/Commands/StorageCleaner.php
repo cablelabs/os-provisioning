@@ -18,9 +18,9 @@
 
 namespace App\Console\Commands;
 
-use Log;
 use File;
 use Illuminate\Console\Command;
+use Log;
 use Nwidart\Modules\Facades\Module;
 
 /**
@@ -256,7 +256,6 @@ class StorageCleaner extends Command
 
         // get the base directories content
         foreach (new \DirectoryIterator($path) as $element) {
-
             // if element doesn't match one of the regexes: ignore
             if (
                 (preg_match($dir_regex, $element) == 0) &&
@@ -275,7 +274,6 @@ class StorageCleaner extends Command
         // compress the folders
         if (! is_null($compress)) {
             foreach ($dirs as $dir) {
-
                 // if above the threshold: ignore
                 if ($dir >= $compress) {
                     continue;
@@ -311,7 +309,6 @@ class StorageCleaner extends Command
 
         if (! is_null($delete)) {
             foreach ($elements as $element) {
-
                 // if above the threshold: ignore
                 if ($element >= $delete) {
                     continue;

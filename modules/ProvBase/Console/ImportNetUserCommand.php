@@ -18,16 +18,16 @@
 
 namespace Modules\ProvBase\Console;
 
-use Log;
 use Illuminate\Console\Command;
+use Log;
+use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvVoip\Entities\Mta;
-use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvVoip\Entities\Phonenumber;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class ImportNetUserCommand extends Command
 {
@@ -435,7 +435,7 @@ class ImportNetUserCommand extends Command
 
         // Logging & Output
         if ($modem->configfile_id == 0) {
-            $msg = 'No Configfile could be assigned to Modem '.($modem->id)." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id";
+            $msg = 'No Configfile could be assigned to Modem '.$modem->id." Old ModemID: $old_modem->Lfd, konfig_id: $old_modem->konfig_id";
             $this->errors[] = $msg;
             \Log::error($msg);
         }

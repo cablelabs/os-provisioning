@@ -19,9 +19,9 @@
 namespace App\Observers;
 
 use App;
+use App\User;
 use Bouncer;
 use Session;
-use App\User;
 
 class UserObserver
 {

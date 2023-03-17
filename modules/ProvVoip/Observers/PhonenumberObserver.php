@@ -50,7 +50,6 @@ class PhonenumberObserver
 
     public function creating($phonenumber)
     {
-
         // TODO: ATM we don't force the creation of phonenumbermanagements – if we change our mind we can activate this line again
         // on creating there can not be a phonenumbermanagement – so we can set active state to false in each case
         // $phonenumber->active = 0;
@@ -72,7 +71,6 @@ class PhonenumberObserver
      */
     protected function _updating_allowed($phonenumber)
     {
-
         // no envia TEL => no problems
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             return true;
@@ -157,7 +155,6 @@ class PhonenumberObserver
      */
     protected function _check_and_process_mta_change_for_envia($phonenumber, $old_mta, $new_mta)
     {
-
         // check if module is enabled
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             return;
@@ -172,7 +169,7 @@ class PhonenumberObserver
         // if the phonenumber does not exist at envia TEL (no management or no external creation date):
         // nothing to cange in modems
         if (
-            (! $phonenumber->contract_external_id)
+            ! $phonenumber->contract_external_id
         ) {
             $msg = trans('provvoipenvia::messages.phonenumberNotCreatedAtEnviaNoModemChange');
             $phonenumber->addAboveMessage($msg, 'info', 'form');
@@ -270,7 +267,6 @@ class PhonenumberObserver
      */
     protected function _check_and_process_sip_data_change_for_envia($phonenumber)
     {
-
         // check if module is enabled
         if (! \Module::collections()->has('ProvVoipEnvia')) {
             return;

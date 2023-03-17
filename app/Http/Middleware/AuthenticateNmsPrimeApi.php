@@ -19,8 +19,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Silber\Bouncer\BouncerFacade as Bouncer;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class AuthenticateNmsPrimeApi
 {

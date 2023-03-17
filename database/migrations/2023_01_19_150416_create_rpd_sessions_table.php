@@ -1,8 +1,8 @@
 <?php
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRpdSessionsTable extends BaseMigration
 {

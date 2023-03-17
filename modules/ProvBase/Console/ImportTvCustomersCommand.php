@@ -22,10 +22,10 @@ use App\ImportTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Modules\BillingBase\Entities\Item;
-use Modules\ProvBase\Entities\Contract;
 use Modules\BillingBase\Entities\SepaMandate;
-use Symfony\Component\Console\Input\InputOption;
+use Modules\ProvBase\Entities\Contract;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class ImportTvCustomersCommand extends Command
 {
@@ -298,8 +298,10 @@ class ImportTvCustomersCommand extends Command
 
         switch ($amount) {
             case  0: return;
-            case self::TV_CHARGE2: $product_id = self::PRODUCT_ID2; break;
-            case self::TV_CHARGE1: $product_id = self::PRODUCT_ID1; break;
+            case self::TV_CHARGE2: $product_id = self::PRODUCT_ID2;
+            break;
+            case self::TV_CHARGE1: $product_id = self::PRODUCT_ID1;
+            break;
             default:
                 $msg = "Contract $contract->number is charged with $amount EUR. Please add Tariff manually!";
                 $this->importantTodos[] = $msg;
@@ -402,7 +404,7 @@ class ImportTvCustomersCommand extends Command
             $mandates = $contract->sepamandates->where('iban', $line[self::S_IBAN]);
 
             foreach ($mandates as $sm) {
-                if ((! $sm->valid_to || ($sm->valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date))) {
+                if (! $sm->valid_to || ($sm->valid_to > date('Y-m-d')) || ($sm->signature_date > $signature_date)) {
                     Log::notice("Contract $contract->number already has SEPA-mandate with IBAN ".$line[self::S_IBAN]);
 
                     return;

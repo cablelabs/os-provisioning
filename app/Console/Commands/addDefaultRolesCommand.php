@@ -18,11 +18,11 @@
 
 namespace App\Console\Commands;
 
-use Log;
-use Bouncer;
-use App\Role;
 use App\BaseModel;
+use App\Role;
+use Bouncer;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Add default roles

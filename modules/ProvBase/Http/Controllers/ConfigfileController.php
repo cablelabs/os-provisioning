@@ -18,13 +18,13 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Storage;
-use Illuminate\Support\Str;
-use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\File;
-use Modules\ProvBase\Entities\Modem;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Nwidart\Modules\Facades\Module;
+use Storage;
 
 class ConfigfileController extends \BaseController
 {
@@ -136,7 +136,7 @@ class ConfigfileController extends \BaseController
         $model = Configfile::find($id);
 
         $parametersArray = [];
-        $storagefile = self::GACSCACHE.($model->id).'.json';
+        $storagefile = self::GACSCACHE.$model->id.'.json';
         //take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
@@ -205,7 +205,7 @@ class ConfigfileController extends \BaseController
             $modem = Modem::callGenieAcsApi("devices?query={\"_deviceId._SerialNumber\":\"{$modemSerial}\"}", 'GET');
             $parametersArray = $this->buildElementList($this->getFromDevices($modem));
 
-            $storagefile = self::GACSCACHE.($model->id).'.json';
+            $storagefile = self::GACSCACHE.$model->id.'.json';
             Storage::put($storagefile, json_encode($parametersArray));
         }
 
@@ -275,7 +275,7 @@ class ConfigfileController extends \BaseController
         }
 
         $parametersArray = [];
-        $storagefile = self::GACSCACHE.($model->id).'.json';
+        $storagefile = self::GACSCACHE.$model->id.'.json';
         // take from storage
         if (Storage::exists($storagefile)) {
             $parametersArray = json_decode(Storage::get($storagefile), true);
@@ -423,14 +423,14 @@ class ConfigfileController extends \BaseController
      */
     protected function replaceDuplicateId(string &$content, array &$importedIds, array &$importedIdStrings, int $start, int $tempImportId): void
     {
-        $content = str_replace('id":'.($start).',', 'id":'.($tempImportId).',', $content);
+        $content = str_replace('id":'.$start.',', 'id":'.$tempImportId.',', $content);
 
         $importedIds = array_map(function ($id) use ($start, $tempImportId) {
             return $id == $start ? $tempImportId : intval($id);
         }, $importedIds);
 
         $importedIdStrings = array_map(function ($idString) use ($start, $tempImportId) {
-            return $idString === 'id":'.($start).',' ? 'id":'.($tempImportId).',' : $idString;
+            return $idString === 'id":'.$start.',' ? 'id":'.$tempImportId.',' : $idString;
         }, $importedIdStrings);
     }
 

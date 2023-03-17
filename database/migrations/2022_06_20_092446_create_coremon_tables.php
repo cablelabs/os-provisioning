@@ -17,9 +17,9 @@
  */
 
 use Database\Migrations\BaseMigration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Modules\HfcReq\Entities\NetElement;
-use Illuminate\Database\Schema\Blueprint;
 
 class CreateCoremonTables extends BaseMigration
 {

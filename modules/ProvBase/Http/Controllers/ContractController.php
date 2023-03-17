@@ -18,12 +18,12 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
+use Bouncer;
 use DB;
 use Module;
-use Bouncer;
-use Session;
-use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Qos;
+use Session;
 
 class ContractController extends \BaseController
 {

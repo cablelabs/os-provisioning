@@ -156,7 +156,6 @@ class BaseLifecycleTest extends TestCase
      */
     public function createApplication()
     {
-
         // making $app global (and reusing it in every lifecycle test) prevents memory exhaustion
         // (laravel seems not to clean up $app properly – read https://stackoverflow.com/questions/39096658/laravel-testing-increasing-memory-use for details)
         // attention: can have ugly side effects if you change $app in your tests (no code isolation)
@@ -183,7 +182,6 @@ class BaseLifecycleTest extends TestCase
      */
     protected function _get_user()
     {
-
         // TODO: do not hard code any user class, instead fetch a user dynamically
         //       or add it only for testing (see Laravel factory stuff)
         $this->user = \App\User::findOrFail(1);
@@ -201,7 +199,6 @@ class BaseLifecycleTest extends TestCase
      */
     protected function _get_form_structure($model = null)
     {
-
         // check if data exists – nothing to do
         if (array_key_exists($this->class_name, self::$edit_field_structure)) {
             return;
@@ -215,7 +212,6 @@ class BaseLifecycleTest extends TestCase
         $structure = [];
 
         foreach ($form_raw as $form_raw_field) {
-
             // hint: the operator “@” forces PHP to ignore error messages
             // check if field is hidden – in which case we don't want to fill it
             if (@$form_raw_field['hidden']) {
@@ -260,7 +256,6 @@ class BaseLifecycleTest extends TestCase
      */
     protected function _get_fake_data($related_to, $model_id = -1)
     {
-
         // get the rules defined in model and extract unique fields
         $rules = call_user_func([$this->module_path.'\\Entities\\'.$this->model_name, 'rules']);
         $unique_fields = [];
@@ -287,7 +282,6 @@ class BaseLifecycleTest extends TestCase
 
             // check if data that has to be unique already exists in our database
             foreach ($unique_fields as $unique_field) {
-
                 // if seeder returns null: skip unique test – we assume that NULL can be used multiple times
                 if (is_null($data[$unique_field])) {
                     continue;
@@ -343,7 +337,6 @@ class BaseLifecycleTest extends TestCase
         }
 
         foreach (self::$edit_field_structure[$this->class_name] as $field_name => $structure) {
-
             // on update: only update defined fields
             if ($method == 'update') {
                 if (! in_array($field_name, $this->update_fields)) {
@@ -363,42 +356,40 @@ class BaseLifecycleTest extends TestCase
             }
             // fill depending on field type
             switch ($structure['type']) {
-
-            case 'select':
-            case 'radio':
-                // use faker data only if available as option; choose random value out of available randomly
-                if (! in_array($faked_data, $structure['values'])) {
-                    $faked_data = $structure['values'][array_rand($structure['values'])];
-                }
-
-                if ($this->debug) {
-                    echo 'Selecting “'.$faked_data."” in $field_name\n";
-                }
-                $this->select($faked_data, $field_name);
-                break;
-
-            case 'checkbox':
-                if (boolval($faked_data)) {
-                    if ($this->debug) {
-                        echo "Checking $field_name\n";
+                case 'select':
+                case 'radio':
+                    // use faker data only if available as option; choose random value out of available randomly
+                    if (! in_array($faked_data, $structure['values'])) {
+                        $faked_data = $structure['values'][array_rand($structure['values'])];
                     }
-                    $this->check($field_name);
-                } else {
+
                     if ($this->debug) {
-                        echo "Unchecking $field_name\n";
+                        echo 'Selecting “'.$faked_data."” in $field_name\n";
                     }
-                    $this->uncheck($field_name);
-                }
-                break;
+                    $this->select($faked_data, $field_name);
+                    break;
 
-            default:
-                // simply put faked data into the field (should be text or textarea)
-                if ($this->debug) {
-                    echo 'Typing “'.$faked_data."” in $field_name\n";
-                }
-                $this->type($faked_data, $field_name);
-                break;
+                case 'checkbox':
+                    if (boolval($faked_data)) {
+                        if ($this->debug) {
+                            echo "Checking $field_name\n";
+                        }
+                        $this->check($field_name);
+                    } else {
+                        if ($this->debug) {
+                            echo "Unchecking $field_name\n";
+                        }
+                        $this->uncheck($field_name);
+                    }
+                    break;
 
+                default:
+                    // simply put faked data into the field (should be text or textarea)
+                    if ($this->debug) {
+                        echo 'Typing “'.$faked_data."” in $field_name\n";
+                    }
+                    $this->type($faked_data, $field_name);
+                    break;
             }
         }
     }
@@ -444,7 +435,7 @@ class BaseLifecycleTest extends TestCase
     {
         $_ = explode('/', $uri);
         // if we end up in edit view: generated successfully (otherwise we keep staying in create view)
-        if ((array_pop($_) == 'edit')) {
+        if (array_pop($_) == 'edit') {
             $id = array_pop($_);
             if (is_numeric($id) && ($id != '0')) {
                 array_push(self::$created_entity_ids, $id);
@@ -501,7 +492,6 @@ class BaseLifecycleTest extends TestCase
             ->see($msg_expected);
 
         if (! $this->creating_empty_should_fail) {
-
             // add to created ids array (check if there is a created entity is performed in helper method)
             $id = $this->_addToCreatedEntityIdsArray($this->currentUri);
 
@@ -718,7 +708,6 @@ class BaseLifecycleTest extends TestCase
         self::$created_entity_ids = [];
 
         foreach ($ids_to_delete as $ids) {
-
             // first: visit index view to get CSRF token
             $this->actingAs($this->user);
             $this->visit(route("$this->model_name.index"));

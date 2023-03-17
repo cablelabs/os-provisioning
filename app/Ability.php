@@ -18,8 +18,8 @@
 
 namespace App;
 
-use Silber\Bouncer\Database\Concerns\IsAbility;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Silber\Bouncer\Database\Concerns\IsAbility;
 
 class Ability extends Eloquent
 {

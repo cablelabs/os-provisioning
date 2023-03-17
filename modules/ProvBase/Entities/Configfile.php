@@ -19,8 +19,8 @@
 namespace Modules\ProvBase\Entities;
 
 use Illuminate\Support\Facades\Log;
-use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\Schema;
+use Nwidart\Modules\Facades\Module;
 
 class Configfile extends \BaseModel
 {
@@ -182,6 +182,7 @@ class Configfile extends \BaseModel
      * Format Configfile parents for select 2 field and allow for seeaching.
      *
      * @param  string|null  $search
+     *
      * @request param model - the id of the model to edit or null if in create context
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -244,7 +245,6 @@ class Configfile extends \BaseModel
 
         // using the given type we decide what to do
         switch ($type) {
-
             // this is for modem's config files
             case 'modem':
                 $modem = [$device];
@@ -291,7 +291,7 @@ class Configfile extends \BaseModel
 
                 break;
 
-            // this is for mtas
+                // this is for mtas
             case 'mta':
                 if (! Module::collections()->has('ProvVoip')) {
                     break;
@@ -325,7 +325,7 @@ class Configfile extends \BaseModel
 
                 break;
 
-            // for Base
+                // for Base
             case 'generic':
                 break;
 
@@ -354,10 +354,9 @@ class Configfile extends \BaseModel
                 }
                 break;
 
-            // this is for unknown types – atm we do nothing
+                // this is for unknown types – atm we do nothing
             default:
                 return false;
-
         } // switch
 
         // lo all schemata; they can exist multiple times per table

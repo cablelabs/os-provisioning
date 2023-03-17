@@ -18,10 +18,10 @@
 
 namespace Modules\HfcReq\Http\Controllers;
 
-use Module;
-use Request;
 use App\Http\Controllers\BaseViewController;
 use App\Http\Controllers\NamespaceController;
+use Module;
+use Request;
 
 class HfcReqController extends \BaseController
 {
@@ -114,6 +114,7 @@ class HfcReqController extends \BaseController
      * A Newline-separated List of OIDs that have to exist in Database (from already uploaded MibFile)
      *
      * @param  $id  integer 	netelementtype id or parameter id
+     *
      * @input 	oid_id			array 		IDs of the OIDs we want to attach (transfered via HTTP POST)
      * @input 	mibfile_id 		integer 	ID of MIB-File
      * @input 	oid_list 		Text 		Newline-separated List of OIDs

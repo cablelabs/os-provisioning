@@ -19,8 +19,8 @@
 namespace Modules\ProvBase\Observers;
 
 use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\RadReply;
 use Modules\ProvBase\Entities\RadIpPool;
+use Modules\ProvBase\Entities\RadReply;
 
 class EndpointObserver
 {

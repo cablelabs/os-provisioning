@@ -18,8 +18,8 @@
 
 namespace Modules\ProvBase\Entities;
 
-use File;
 use App\Sla;
+use File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
@@ -114,11 +114,21 @@ class NetGw extends \BaseModel
     public function getFaSmileClass()
     {
         switch ($this->support_state) {
-            case 'full-support':      $faClass = 'fa-smile-o'; $bsClass = 'success'; break;
-            case 'verifying':         $faClass = 'fa-meh-o'; $bsClass = 'warning'; break;
-            case 'restricted':         $faClass = 'fa-meh-o'; $bsClass = 'success'; break;
-            case 'not-supported':     $faClass = 'fa-frown-o'; $bsClass = 'danger'; break;
-            default: $faClass = 'fa-smile'; $bsClass = 'success'; break;
+            case 'full-support':      $faClass = 'fa-smile-o';
+            $bsClass = 'success';
+            break;
+            case 'verifying':         $faClass = 'fa-meh-o';
+            $bsClass = 'warning';
+            break;
+            case 'restricted':         $faClass = 'fa-meh-o';
+            $bsClass = 'success';
+            break;
+            case 'not-supported':     $faClass = 'fa-frown-o';
+            $bsClass = 'danger';
+            break;
+            default: $faClass = 'fa-smile';
+            $bsClass = 'success';
+            break;
         }
 
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];

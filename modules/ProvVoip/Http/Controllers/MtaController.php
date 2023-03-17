@@ -18,9 +18,9 @@
 
 namespace Modules\ProvVoip\Http\Controllers;
 
-use Request;
-use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvBase\Entities\Modem;
+use Modules\ProvVoip\Entities\Mta;
+use Request;
 
 class MtaController extends \BaseController
 {

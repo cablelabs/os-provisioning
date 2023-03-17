@@ -19,11 +19,11 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\Modem;
-use Modules\HfcReq\Entities\NetElement;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Modules\HfcCustomer\Http\Controllers\CustomerTopoController;
+use Modules\HfcReq\Entities\NetElement;
+use Modules\ProvBase\Entities\Modem;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class AddModemsToPassiveElementCommand extends Command
 {

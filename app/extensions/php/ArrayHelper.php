@@ -27,8 +27,11 @@ class ArrayHelper
      * Search if $value is in $array field $index
      *
      * @param: array: array to search
+     *
      * @param: array: the array[].index field to search in
+     *
      * @param: array: search pattern
+     *
      * @return: the found element, otherwise null
      *
      * @author: Torsten Schmidt
@@ -47,6 +50,7 @@ class ArrayHelper
      *
      * @param $array: The Array to split
      * @param $div: device by $div
+     *
      * @return: The devided array
      *
      * @author: Torsten Schmidt
@@ -67,6 +71,7 @@ class ArrayHelper
      * Example: [1,2,3,4] -> [4,1,2,3]
      *
      * @param $a: The Array to rotate
+     *
      * @return: The rotated/shifted array
      *
      * @author: Torsten Schmidt
@@ -80,6 +85,7 @@ class ArrayHelper
      * return nested array depth
      *
      * @param $a: The Array to check
+     *
      * @return: the nested array depth as int
      *
      * @author: Torsten Schmidt
@@ -110,6 +116,7 @@ class ArrayHelper
      * @param $array: the given array
      * @param $old_key: old key value to change
      * @param $new_key: the new key value
+     *
      * @return: the key changed $array,
      *
      * @author: Torsten Schmidt
@@ -160,7 +167,9 @@ class ArrayHelper
      * The key of the inner array is the last index.
      *
      * @param walk: the output of an snmpwalk
+     *
      * @return: the folded output
+     *
      * @author: Ole Ernst
      */
     public static function snmpwalk_fold($walk)

@@ -54,7 +54,6 @@ class CarrierCode extends \BaseModel
      */
     public static function carrier_list_for_form_select($with_empty = true)
     {
-
         // carrier codes of the carriers to be on top of the list
         // the given sorting will be the sorting of the <select>
         // TODO: maybe this list should not be hardcoded – can come from configuration dialog or out of .env?

@@ -53,7 +53,6 @@ class FulltextIndexMaker
      */
     public function make_index()
     {
-
         // if there alreadỳ is the fulltext index: drop it
         $col_count = DB::affectingStatement('SHOW INDEX FROM '.$this->tablename." WHERE KEY_NAME='".$this->tablename."_fulltext_all'");
         if ($col_count > 0) {
@@ -72,7 +71,6 @@ class FulltextIndexMaker
      */
     public function rebuild_index()
     {
-
         // add fulltext index for all given fields
         if (isset($this->index) && (count($this->index) > 0)) {
             DB::statement('ALTER TABLE '.$this->tablename.' DROP INDEX '.$this->tablename.'_fulltext_all, ADD FULLTEXT '.$this->tablename.'_fulltext_all ('.implode(', ', $this->index).')');

@@ -165,7 +165,6 @@ class GuiLogWriter
      */
     protected static function _have_to_log($data)
     {
-
         // work on a copy for easier use (e.g. array_pop)
         $changes_logged = static::$changes_logged;
 
@@ -204,7 +203,6 @@ class GuiLogWriter
      */
     public static function log_changes($data)
     {
-
         // if we have already logged this event: do nothing
         if (! self::_have_to_log($data)) {
             return;

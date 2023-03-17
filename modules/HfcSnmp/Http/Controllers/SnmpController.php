@@ -18,17 +18,17 @@
 
 namespace Modules\HfcSnmp\Http\Controllers;
 
-use File;
-use Cache;
-use Session;
+use App\Http\Controllers\BaseViewController;
 use App\User;
+use Cache;
 use Exception;
-use Modules\HfcSnmp\Entities\OID;
+use File;
 use Illuminate\Support\Facades\Log;
 use Modules\HfcReq\Entities\NetElement;
+use Modules\HfcSnmp\Entities\OID;
 use Modules\HfcSnmp\Entities\Parameter;
 use Modules\HfcSnmp\Events\NewSnmpValues;
-use App\Http\Controllers\BaseViewController;
+use Session;
 
 class SnmpController extends \BaseController
 {

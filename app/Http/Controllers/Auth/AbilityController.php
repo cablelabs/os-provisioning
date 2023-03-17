@@ -18,14 +18,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Str;
-use Bouncer;
-use App\Role;
 use App\Ability;
 use App\BaseModel;
+use App\Http\Controllers\Controller;
+use App\Role;
+use Bouncer;
 use Illuminate\Http\Request;
 use Nwidart\Modules\Facades\Module;
-use App\Http\Controllers\Controller;
+use Str;
 
 class AbilityController extends Controller
 {

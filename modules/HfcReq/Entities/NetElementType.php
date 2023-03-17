@@ -176,6 +176,7 @@ class NetElementType extends \BaseModel
      * Format Parent (NetElementTypes) for Select 2 field and allow searching.
      *
      * @param  string|null  $search
+     *
      * @request param model The id of the model or null if in create context
      *
      * @return \Illuminate\Database\Eloquent\Builder

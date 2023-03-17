@@ -18,8 +18,8 @@
 
 namespace App\Http\Controllers;
 
-use App\GuiLog;
 use App\BaseModel;
+use App\GuiLog;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 

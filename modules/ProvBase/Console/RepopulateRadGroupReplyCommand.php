@@ -19,12 +19,12 @@
 namespace Modules\ProvBase\Console;
 
 use Illuminate\Console\Command;
-use Modules\ProvBase\Entities\Nas;
 use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\Nas;
 use Modules\ProvBase\Entities\RadCheck;
+use Modules\ProvBase\Entities\RadGroupReply;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadUserGroup;
-use Modules\ProvBase\Entities\RadGroupReply;
 
 class RepopulateRadGroupReplyCommand extends Command
 {

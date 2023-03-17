@@ -138,7 +138,6 @@ class PhonebookEntryController extends \BaseController
      */
     public function prepare_rules($rules, $data)
     {
-
         // lambda to replace strings after a colon
         $replace_after_colon = function (&$subject, $key, $replacement_data = ['search'=>'', 'replace'=>'']) {
             $search = $replacement_data['search'];
@@ -181,7 +180,6 @@ class PhonebookEntryController extends \BaseController
 
             // we need to go through complete data => e.g. we need to replace lastname AND entry_type in valitation of lastname
             foreach ($data as $varname => $value) {
-
                 // replace varnames after colons by there value
                 $replacement_data = ['search' => $varname, 'replace' => $value];
                 array_walk($form_name_rules, $replace_after_colon, $replacement_data);

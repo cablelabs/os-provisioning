@@ -51,6 +51,7 @@ class agcCommand extends Command
      * Execute the console command. Automatically adjust power level of all CMTS
      *
      * @return true
+     *
      * @author: Ole Ernst
      */
     public function handle()
