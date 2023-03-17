@@ -31,3 +31,6 @@
 @if (Module::collections()->has(['CoreMon']))
     <script src="{{ mix('js/core-mon.js') }}"></script>
 @endif
+@if (Module::isEnabled('Statistics'))
+    <script src="{{ mix('js/statistics.js') }}"></script>
+@endif
