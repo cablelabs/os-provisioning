@@ -2259,7 +2259,7 @@ class Modem extends \BaseModel
                 $genieCmds = $this->createGenieCommands();
             }
 
-            foreach (json_decode($this->getGenieAcsTasks(), true) as $task) {
+            foreach (json_decode($this->getGenieAcsTasks(), true) ?? [] as $task) {
                 $genieCmds[trans('messages.delete_task')." {$task['name']} {$task['device']}"] = "tasks/{$task['_id']}";
             }
 
