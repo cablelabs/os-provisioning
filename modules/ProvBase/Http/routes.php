@@ -63,12 +63,6 @@ BaseRoute::group([], function () {
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
 
-    BaseRoute::post('provmon/{id}/refreshRealtime', [
-        'as' => 'ProvMon.refreshRealtimeTr069',
-        'uses' => 'Modules\ProvMon\Http\Controllers\ProvMonController@refreshRealtimeTr069',
-        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
-    ]);
-
     BaseRoute::post('provmon/{id}/deletePollerFile', [
         'as' => 'ProvMon.deletePollerFile',
         'uses' => 'Modules\ProvMon\Http\Controllers\ProvMonController@deletePollerFile',

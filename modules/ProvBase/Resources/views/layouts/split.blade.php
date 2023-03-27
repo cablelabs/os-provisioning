@@ -41,7 +41,6 @@
     data-csrf-token="{{ csrf_token() }}"
     data-modem-id="{{ $modem->id }}"
     data-route-modem-refresh-genie-object="{{ route('Modem.refreshGenieObject', $modem->id) }}"
-    data-route-refresh-realtime-tr069="{{ route('ProvMon.refreshRealtimeTr069', $modem->id) }}"
     data-route-delete-poller-file="{{ route('ProvMon.deletePollerFile', $modem->id) }}"
     data-route-modem-genie-task="{{ route('Modem.genieTask', $modem->id) }}"
     data-messages-analysis-ping-in-progress="{{ trans('provmon::messages.analysis.pingInProgress') }}"
@@ -52,6 +51,7 @@
     data-messages-no-spectrum="{{ trans('messages.noSpectrum') }}"
     data-i18ndt='{@include('datatables.lang', ['withoutTrailingComma' => true])}'
     data-channel="{{ \Modules\ProvMon\Events\NewRealtimeValues::getChannelName($modem->id) }}"
+    data-realtime-update-interval="{{ $interval }}"
     data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
 >
 
