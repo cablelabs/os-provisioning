@@ -69,6 +69,12 @@ BaseRoute::group([], function () {
         'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
     ]);
 
+    BaseRoute::post('provmon/{id}/deletePollerFile', [
+        'as' => 'ProvMon.deletePollerFile',
+        'uses' => 'Modules\ProvMon\Http\Controllers\ProvMonController@deletePollerFile',
+        'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
+    ]);
+
     BaseRoute::get('Configfile/{id}/searchdeviceparams', [
         'as' => 'Configfile.searchDeviceParams',
         'uses' => 'Modules\ProvBase\Http\Controllers\ConfigfileController@searchDeviceParams',
