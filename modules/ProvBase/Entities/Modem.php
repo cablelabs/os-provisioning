@@ -1128,7 +1128,7 @@ class Modem extends \BaseModel
         curl_close($ch);
 
         if ($status != 200) {
-            Log::error(__FUNCTION__." returns code $status - '$result' for route $route");
+            Log::debug(__FUNCTION__." returns code $status - '$result' for route $route");
         }
 
         return $result;
