@@ -51,7 +51,7 @@
     data-messages-no-spectrum="{{ trans('messages.noSpectrum') }}"
     data-i18ndt='{@include('datatables.lang', ['withoutTrailingComma' => true])}'
     data-channel="{{ \Modules\ProvMon\Events\NewRealtimeValues::getChannelName($modem->id) }}"
-    data-realtime-update-interval="{{ $interval }}"
+    data-realtime-update-interval="{{ \Modules\ProvMon\Entities\ProvMon::first()->realtime_update_interval }}"
     data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
 >
 
