@@ -88,7 +88,7 @@ class EndpointObserver
         if ($endpoint->getRawOriginal('ip')) {
             RadIpPool::updateOrCreate(
                 ['framedipaddress' => $endpoint->getRawOriginal('ip')],
-                ['pool_name' => 'CPEPub', 'expiry_time' => null, 'username' => '']
+                ['pool_name' => 'CPEPub', 'username' => '']
             );
         }
 

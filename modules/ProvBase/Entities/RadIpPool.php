@@ -41,7 +41,7 @@ class RadIpPool extends \BaseModel
     {
         echo "Build ippool related radippool table ...\n";
 
-        $allocatedIps = RadIpPool::whereNotNull('expiry_time')->where('expiry_time', '>', now())->get();
+        $allocatedIps = RadIpPool::where('expiry_time', '>', now())->get();
 
         $ippoolQuery = IpPool::join('netgw', 'netgw.id', 'ippool.netgw_id')
             ->where('netgw.type', 'bras')
