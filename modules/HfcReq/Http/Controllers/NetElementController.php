@@ -88,6 +88,7 @@ class NetElementController extends BaseController
             // net is automatically detected in Observer
             // array('form_type' => 'select', 'name' => 'net', 'description' => 'Net', 'value' => $nets),
             ['form_type' => 'ip', 'name' => 'ip', 'description' => 'IP address', 'hidden' => $hidden4TapPort || $hidden4Tap],
+            ['form_type' => 'text', 'name' => 'port', 'description' => 'Port', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'select', 'name' => 'prov_device_id', 'description' => 'Provisioning Device', 'value' => $this->setupSelect2Field($netelement, 'provDevice', 'prov_device_id', 'provDevice'), 'hidden' => $prov_device_hidden, 'options' => ['class' => 'select2-ajax', 'data-allow-clear' => 'true', 'ajax-route' => route('NetElement.select2', ['base_type_id' => $type, 'relation' => 'provDevice'])]],
             ['form_type' => 'text', 'name' => 'community_ro', 'description' => 'Community RO', 'hidden' => $hidden4TapPort || $hidden4Tap],
             ['form_type' => 'text', 'name' => 'community_rw', 'description' => 'Community RW', 'hidden' => $hidden4TapPort || $hidden4Tap],

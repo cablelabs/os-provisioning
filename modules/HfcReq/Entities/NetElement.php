@@ -70,6 +70,7 @@ class NetElement extends \BaseModel
             'name' => 'required|string',
             'lat' => 'nullable|numeric|between:-90,90',
             'lng' => 'nullable|numeric|between:-180,180',
+            'port' => 'nullable|integer|between:1,65536',
             'community_ro' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'community_rw' => 'nullable|regex:/(^[A-Za-z0-9_]+$)+/',
             'netelementtype_id' => 'required|exists:netelementtype,id,deleted_at,NULL|min:1',
