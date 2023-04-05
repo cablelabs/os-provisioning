@@ -28,6 +28,8 @@ class Contract extends \BaseModel
     // get functions for some address select options
     use \App\AddressFunctionsTrait;
 
+    use \App\extensions\geocoding\GeoReferencable;
+
     // The associated SQL table for this Model
     public $table = 'contract';
 
@@ -1706,7 +1708,7 @@ class Contract extends \BaseModel
     {
         return [
             'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
-            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'lng', 'lat',
         ];
     }
 }

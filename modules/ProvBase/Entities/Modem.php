@@ -35,7 +35,7 @@ class Modem extends \BaseModel
 {
     use HasConfigfile;
     use \App\AddressFunctionsTrait; // get functions for some address select options
-    use \App\extensions\geocoding\Geocoding;
+    use \App\extensions\geocoding\GeoReferencable;
 
     public const TYPES = ['cm', 'tr069'];
     public const CWMP_EVENTS = [
@@ -1870,14 +1870,6 @@ class Modem extends \BaseModel
         }
 
         return $phonenumbers_on_modem;
-    }
-
-    /*
-     * Return Last Geocoding State / ERROR
-     */
-    public function geocode_last_status()
-    {
-        return $this->geocode_state;
     }
 
     /*

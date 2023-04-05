@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Observers;
 
 use Module;
+use Modules\ProvBase\Entities\Contract;
 use Session;
 
 /**
@@ -30,11 +31,16 @@ use Session;
  */
 class ContractObserver
 {
-    public function creating($contract)
+    public function creating(Contract $contract)
     {
         if (! Module::collections()->has('BillingBase')) {
             $contract->sepa_iban = strtoupper($contract->sepa_iban);
             $contract->sepa_bic = strtoupper($contract->sepa_bic);
+        }
+
+        // set geocode
+        if (! ($contract->lng && $contract->lat)) {
+            $contract->setGeocodes();
         }
     }
 
@@ -50,13 +56,18 @@ class ContractObserver
         $original_number = $contract->getRawOriginal('number');
         $original_costcenter_id = $contract->getRawOriginal('costcenter_id');
 
+        // set geocode
+        if (! ($contract->wasRecentlyCreated && $contract->lng && $contract->lat && $contract->geocode_source)) {
+            $contract->setGeocodes();
+        }
+
         if (! Module::collections()->has('BillingBase')) {
             $contract->sepa_iban = strtoupper($contract->sepa_iban);
             $contract->sepa_bic = strtoupper($contract->sepa_bic);
         }
     }
 
-    public function updated($contract)
+    public function updated(Contract $contract)
     {
         if (! $contract->observer_enabled) {
             return;
