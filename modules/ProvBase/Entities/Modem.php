@@ -174,17 +174,22 @@ class Modem extends \BaseModel
         $bsclass = 'success';
 
         switch ($this->get_state('int')) {
-            case 0: $bsclass = 'success';
-            break; // online
-            case 1: $bsclass = 'warning';
-            break; // warning
-            case 2: $bsclass = 'warning';
-            break; // critical
-            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info';
-            break; // offline
+            case 0:
+                $bsclass = 'success';
+                break; // online
+            case 1:
+                $bsclass = 'warning';
+                break; // warning
+            case 2:
+                $bsclass = 'warning';
+                break; // critical
+            case 3:
+                $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info';
+                break; // offline
 
-            default: $bsclass = 'danger';
-            break;
+            default:
+                $bsclass = 'danger';
+                break;
         }
 
         return $bsclass;
@@ -208,18 +213,22 @@ class Modem extends \BaseModel
     public function getFaSmileClass()
     {
         switch ($this->support_state) {
-            case 'full-support':      $faClass = 'fa-smile-o';
-            $bsClass = 'success';
-            break;
-            case 'verifying':         $faClass = 'fa-meh-o';
-            $bsClass = 'warning';
-            break;
-            case 'not-supported':     $faClass = 'fa-frown-o';
-            $bsClass = 'danger';
-            break;
-            default: $faClass = 'fa-smile';
-            $bsClass = 'success';
-            break;
+            case 'full-support':
+                $faClass = 'fa-smile-o';
+                $bsClass = 'success';
+                break;
+            case 'verifying':
+                $faClass = 'fa-meh-o';
+                $bsClass = 'warning';
+                break;
+            case 'not-supported':
+                $faClass = 'fa-frown-o';
+                $bsClass = 'danger';
+                break;
+            default:
+                $faClass = 'fa-smile';
+                $bsClass = 'success';
+                break;
         }
 
         return ['fa-class'=> $faClass, 'bs-class'=> $bsClass];
