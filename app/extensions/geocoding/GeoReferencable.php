@@ -173,7 +173,7 @@ trait GeoReferencable
         }
 
         if ($save) {
-            $this->save();
+            $this->saveQuietly();
         }
     }
 
@@ -191,7 +191,7 @@ trait GeoReferencable
         $this->geocode_state = 'OK';
 
         if ($save) {
-            $this->save();
+            $this->saveQuietly();
         }
 
         Log::info('Geocoding successful, result: '.$this->lat.','.$this->lng.' (source: '.$geodata['source'].')');
