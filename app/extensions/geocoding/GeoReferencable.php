@@ -22,6 +22,7 @@ use App\GlobalConfig;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Modules\ProvBase\Entities\Address;
 
 /**
  * Geocoding API
@@ -31,10 +32,10 @@ use Illuminate\Support\Facades\Session;
  *
  * @author: Torsten Schmidt, Patrick Reichel, Nino Ryschawy
  */
-trait Geocoding
+trait GeoReferencable
 {
     // private variable to hold the last Geocoding response state
-    // use geocode_last_status()
+    // use geocodeLastStatus()
     private $geocode_state = null;
 
     /**
@@ -44,8 +45,25 @@ trait Geocoding
      * @param  bool  $save
      * @return void|array
      */
-    public function geocode($save = true): ?array
+    public function geocode($save = true, $addr = null): ?array
     {
+        $address = $addr ?? Address::where('district', $this->district)
+            ->where('zip', $this->zip)
+            ->where('city', $this->city)
+            ->where('street', $this->street)
+            ->where('house_number', $this->house_number)
+            ->first();
+
+        if ($address) {
+            $geodata = [
+                'latitude' => $address->lat,
+                'longitude' => $address->lng,
+                'source' => $address->source,
+            ];
+
+            return $this->updateGeoPosition($geodata, $save);
+        }
+
         // don't ask API in testing mode (=faked data)
         if (config('app.env') == 'testing') {
             Log::debug('Testing mode – will not ask Geo-APIs with faked data');
@@ -67,16 +85,23 @@ trait Geocoding
         }
 
         if (! $geodata) {
-            return $this->noGeoPositionFound($save);
+            $this->noGeoPositionFound($save);
+
+            return [];
         }
 
-        $this->updateGeoPosition($geodata);
+        Address::create([
+            'zip' => $this->zip,
+            'city' => $this->city,
+            'street' => $this->street,
+            'house_number' => $this->house_number,
+            'district' => $this->district,
+            'lat' => $geodata['latitude'],
+            'lng' => $geodata['longitude'],
+            'source' => $geodata['source'],
+        ]);
 
-        if ($save) {
-            $this->save();
-        }
-
-        return $geodata;
+        return $this->updateGeoPosition($geodata, $save);
     }
 
     /**
@@ -158,14 +183,20 @@ trait Geocoding
      * @param  array  $geodata
      * @return void
      */
-    protected function updateGeoPosition(array $geodata): void
+    protected function updateGeoPosition(array $geodata, bool $save): array
     {
         $this->lat = $geodata['latitude'];
         $this->lng = $geodata['longitude'];
         $this->geocode_source = $geodata['source'];
         $this->geocode_state = 'OK';
 
+        if ($save) {
+            $this->save();
+        }
+
         Log::info('Geocoding successful, result: '.$this->lat.','.$this->lng.' (source: '.$geodata['source'].')');
+
+        return $geodata;
     }
 
     /**
@@ -434,10 +465,23 @@ trait Geocoding
     {
         $changes = $this->getDirty();
 
+        // if testing: do not try to geocode or position model (faked data; slows down the process)
+        if (\App::runningUnitTests()) {
+            return;
+        }
+
         if ((is_null($this->lng) && is_null($this->lat)) || ($this->exists && multi_array_key_exists(['street', 'house_nr', 'zip', 'city'], $changes))) {
             $this->geocode(false);
         } elseif (multi_array_key_exists(['lng', 'lat'], $changes)) {
             $this->geocode_source = \App\BaseModel::getUser();
         }
+    }
+
+    /*
+     * Return Last Geocoding State / ERROR
+     */
+    public function geocodeLastStatus()
+    {
+        return $this->geocode_state;
     }
 }
