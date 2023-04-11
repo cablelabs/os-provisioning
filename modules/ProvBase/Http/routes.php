@@ -159,4 +159,10 @@ BaseRoute::group([], function () {
         'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@import',
         'middleware' => ['can:update,Modules\ProvBase\Entities\Modem'],
     ]);
+
+    BaseRoute::post('modem/{modem}/arrisModem', [
+        'as' => 'Modem.arrisModem',
+        'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@arrisModem',
+        'middleware' => ['can:view_analysis_pages_of,Modules\ProvBase\Entities\Modem'],
+    ]);
 });

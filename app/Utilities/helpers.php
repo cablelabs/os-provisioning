@@ -899,3 +899,25 @@ if (! function_exists('serverSentEventResponse')) {
         ]);
     }
 }
+
+function setSnmpValue(string $hostname, string $community, string $oid, string $type, string|int $value): bool
+{
+    $command = "snmpset -v2c -$community $hostname $oid $type $value";
+
+    $result = [];
+    $returnStatus = null;
+    exec($command, $result, $returnStatus);
+
+    return $returnStatus == 0 ? true : false;
+}
+
+function walkSnmp(string $hostname, string $community, string $oid)
+{
+    $command = "snmpwalk -v2c -$community $hostname $oid";
+
+    $result = [];
+    $returnStatus = null;
+    exec($command, $result, $returnStatus);
+
+    return $returnStatus == 0 ? ['success' => true, 'value' => $result] : ['success' => false];
+}
