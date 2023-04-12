@@ -1602,18 +1602,19 @@ class ModemController extends \BaseController
     public function arrisModem(Modem $modem)
     {
         // setup args
+        $cacheSeconds = 86400;
         $args = [
-            'community' => env('ARRIS_MODEM_COMMUNITY'), // "cprivate"
-            'community_walk' => env('ARRIS_MODEM_COMMUNITY_WALK'), // "cpublic"
-            'downstream' => env('ARRIS_MODEM_DOWNSTREAM'), // "1"
-            'downstream_stop' => env('ARRIS_MODEM_DOWNSTREAM'), // "2"
-            'hostname' => $modem->hostname.'.'.env('ARRIS_MODEM_HOSTNAME'), // "cm-47923.cable.tks-net.com"
-            'ip' => env('ARRIS_MODEM_IP'),
-            'oids' => json_decode(env('ARRIS_MODEM_OIDS'), true), // ARRIS_MODEM_OIDS='{"ip":".1.3.6.1.2.1.1.1.3.0", "proptocol":".1.3.6.1.2.1.1.1.6.0", "port":".1.3.6.1.2.1.1.1.7.0", "time":".1.3.6.1.2.1.1.1.12.0"}, "upstream":".1.3.6.1.4.1.4115.1.20.1.1.24.1.0", "upstreammetrics":".1.3.6.1.2.1.1.1.9", "downstream":".1.3.6.1.4.1.4115.1.20.1.1.24.4.0", "downstreammetrics":".1.3.6.1.4.1.4115.1.20.1.1.24.10"'
-            'protocol' => env('ARRIS_MODEM_PROTOCOL'), // "tcp"
-            'port' => env('ARRIS_MODEM_PORT'), // "5001"
-            'time' => env('ARRIS_MODEM_TIME'), // "10"
-            'upstream' => env('ARRIS_MODEM_UPSTREAM'), // "1"
+            'community' => cache()->remember('arrisModem_community', $cacheSeconds, fn () => 'cprivate'),
+            'community_walk' => cache()->remember('arrisModem_community_walk', $cacheSeconds, fn () => 'cpublic'),
+            'downstream' => cache()->remember('arrisModem_downstream', $cacheSeconds, fn () => '1'),
+            'downstream_stop' => cache()->remember('arrisModem_downstream_stop', $cacheSeconds, fn () => '2'),
+            'hostname' => $modem->hostname.'.'.cache()->remember('arrisModem_hostname', $cacheSeconds, fn () => env('ARRIS_MODEM_HOSTNAME')), // "cm-47923.cable.tks-net.com"
+            'ip' => cache()->remember('arrisModem_ip', $cacheSeconds, fn () => env('ARRIS_MODEM_IP')), // ip
+            'oids' => cache()->remember('arrisModem_oids', $cacheSeconds, fn () => json_decode(env('ARRIS_MODEM_OIDS'), true)), // ARRIS_MODEM_OIDS='{"ip":".1.3.6.1.2.1.1.1.3.0", "proptocol":".1.3.6.1.2.1.1.1.6.0", "port":".1.3.6.1.2.1.1.1.7.0", "time":".1.3.6.1.2.1.1.1.12.0"}, "upstream":".1.3.6.1.4.1.4115.1.20.1.1.24.1.0", "upstreammetrics":".1.3.6.1.2.1.1.1.9", "downstream":".1.3.6.1.4.1.4115.1.20.1.1.24.4.0", "downstreammetrics":".1.3.6.1.4.1.4115.1.20.1.1.24.10"'
+            'protocol' => cache()->remember('arrisModem_protocol', $cacheSeconds, fn () => 'tcp'),
+            'port' => cache()->remember('arrisModem_port', $cacheSeconds, fn () => '5001'),
+            'time' => cache()->remember('arrisModem_time', $cacheSeconds, fn () => '10'),
+            'upstream' => cache()->remember('arrisModem_upstream', $cacheSeconds, fn () => '1'),
         ];
 
         // init setup
@@ -1641,34 +1642,29 @@ class ModemController extends \BaseController
 
     private function arrisModemInitialSetup(array $args): bool
     {
-        return setSnmpValue($args['hostname'], $args['community'], $args['oids']['ip'], 's', $args['ip']) &&
-            setSnmpValue($args['hostname'], $args['community'], $args['oids']['protocol'], 's', $args['protocol']) &&
-            setSnmpValue($args['hostname'], $args['community'], $args['oids']['port'], 'u', $args['port']) &&
-            setSnmpValue($args['hostname'], $args['community'], $args['oids']['time'], 'u', $args['time']) ? true : false;
+        $resultIp = snmp2_set($args['ip'], $args['community'], $args['oids']['ip'], 's', $args['ip'], 2);
+        $resultProtocol = snmp2_set($args['protocol'], $args['community'], $args['oids']['protocol'], 's', $args['protocol'], 2);
+        $resultPort = snmp2_set($args['port'], $args['community'], $args['oids']['port'], 'u', $args['port'], 2);
+        $resultTime = snmp2_set($args['time'], $args['community'], $args['oids']['time'], 'u', $args['time'], 2);
+
+        return ! in_array(false, [$resultIp, $resultProtocol, $resultPort, $resultTime], true);
     }
 
     private function arrisModemUpstreamMeasurement(array $args)
     {
-        // start iperf2 server on server
-        $iperfOutput = [];
-        $iperfStatus = null;
-        exec('iperf -s', $iperfOutput, $iperfStatus);
-        if ($iperfStatus != 0) {
-            return ['success' => false];
-        }
-
         // initiate upstream measurement
-        if (! setSnmpValue($args['hostname'], $args['community'], $args['oids']['upstream'], 'i', $args['upstream'])) {
+        $resultUS = snmp2_set($args['hostname'], $args['community'], $args['oids']['upstream'], 'i', $args['upstream'], 2);
+        if ($resultUS === false) {
             return ['success' => false];
         }
 
         // get upstream measurement metrics from cablemodem
-        $result = walkSnmp($args['hostname'], $args['community_walk'], $args['oids']['upstreammetrics']);
-        if (! $result['success']) {
+        $result = snmp2_walk($args['hostname'], $args['community_walk'], $args['oids']['upstreammetrics'], 2);
+        if ($result === false) {
             return ['success' => false];
         }
 
-        return ['success' => true, 'value' => $result['value']];
+        return ['success' => true, 'value' => $result];
     }
 
     private function arrisModemDownstreamMeasurement(array $args)
@@ -1676,7 +1672,8 @@ class ModemController extends \BaseController
         $hostname = $args['hostname'];
 
         // start iperf2 server on cablemodem
-        if (! setSnmpValue($hostname, $args['community'], $args['oids']['downstream'], 'i', $args['downstream'])) {
+        $resultDS = snmp2_set($hostname, $args['community'], $args['oids']['downstream'], 'i', $args['downstream'], 2);
+        if ($resultDS === false) {
             return ['success' => false];
         }
 
@@ -1689,16 +1686,17 @@ class ModemController extends \BaseController
         }
 
         // get downstream measurement metrics from cablemodem
-        $result = walkSnmp($hostname, $args['community_walk'], $args['oids']['downstreammetrics']);
-        if (! $result['success']) {
+        $result = snmp2_walk($hostname, $args['community_walk'], $args['oids']['downstreammetrics'], 2);
+        if ($result === false) {
             return ['success' => false];
         }
 
         // stop iperf2 server on cablemodem
-        if (! setSnmpValue($hostname, $args['community'], $args['oids']['downstream'], 'i', $args['downstream_stop'])) {
+        $resultDSStop = snmp2_set($hostname, $args['community'], $args['oids']['downstream'], 'i', $args['downstream_stop'], 2);
+        if ($resultDSStop === false) {
             return ['success' => false];
         }
 
-        return ['success' => true, 'value' => $result['value']];
+        return ['success' => true, 'value' => $result];
     }
 }
