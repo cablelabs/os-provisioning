@@ -149,7 +149,6 @@ class RadIpPoolJob implements ShouldQueue
             $insert[] = [
                 'pool_name' => $this->pool->type,
                 'framedipaddress' => long2ip($i),
-                'expiry_time' => '1900-01-01 00:00:00',
             ];
 
             // staggered insert
