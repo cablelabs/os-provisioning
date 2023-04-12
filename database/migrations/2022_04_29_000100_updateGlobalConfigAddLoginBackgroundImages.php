@@ -48,7 +48,7 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
         if (is_dir(storage_path('app/config/ccc/logos/'))) {
             rename(storage_path('app/config/ccc/logos/'), storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
         } elseif (! is_dir(storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL))) {
-            mkdir(storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL));
+            mkdir(storage_path(\Modules\Ccc\Http\Controllers\CccController::IMG_PATH_REL), 0755, true);
         }
 
         system('chown -R apache:apache '.storage_path('app/config/ccc/'));
