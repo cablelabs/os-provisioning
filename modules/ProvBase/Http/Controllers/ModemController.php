@@ -1602,19 +1602,18 @@ class ModemController extends \BaseController
     public function arrisModem(Modem $modem)
     {
         // setup args
-        $cacheSeconds = 86400;
         $args = [
-            'community' => cache()->remember('arrisModem_community', $cacheSeconds, fn () => 'cprivate'),
-            'community_walk' => cache()->remember('arrisModem_community_walk', $cacheSeconds, fn () => 'cpublic'),
-            'downstream' => cache()->remember('arrisModem_downstream', $cacheSeconds, fn () => '1'),
-            'downstream_stop' => cache()->remember('arrisModem_downstream_stop', $cacheSeconds, fn () => '2'),
-            'hostname' => $modem->hostname.'.'.cache()->remember('arrisModem_hostname', $cacheSeconds, fn () => env('ARRIS_MODEM_HOSTNAME')), // "cm-47923.cable.tks-net.com"
-            'ip' => cache()->remember('arrisModem_ip', $cacheSeconds, fn () => env('ARRIS_MODEM_IP')), // ip
-            'oids' => cache()->remember('arrisModem_oids', $cacheSeconds, fn () => json_decode(env('ARRIS_MODEM_OIDS'), true)), // ARRIS_MODEM_OIDS='{"ip":".1.3.6.1.2.1.1.1.3.0", "proptocol":".1.3.6.1.2.1.1.1.6.0", "port":".1.3.6.1.2.1.1.1.7.0", "time":".1.3.6.1.2.1.1.1.12.0"}, "upstream":".1.3.6.1.4.1.4115.1.20.1.1.24.1.0", "upstreammetrics":".1.3.6.1.2.1.1.1.9", "downstream":".1.3.6.1.4.1.4115.1.20.1.1.24.4.0", "downstreammetrics":".1.3.6.1.4.1.4115.1.20.1.1.24.10"'
-            'protocol' => cache()->remember('arrisModem_protocol', $cacheSeconds, fn () => 'tcp'),
-            'port' => cache()->remember('arrisModem_port', $cacheSeconds, fn () => '5001'),
-            'time' => cache()->remember('arrisModem_time', $cacheSeconds, fn () => '10'),
-            'upstream' => cache()->remember('arrisModem_upstream', $cacheSeconds, fn () => '1'),
+            'community' => config('provbase.arrisModem.community'),
+            'community_walk' => config('provbase.arrisModem.community_walk'),
+            'downstream' => config('provbase.arrisModem.downstream'),
+            'downstream_stop' => config('provbase.arrisModem.downstream_stop'),
+            'hostname' => $modem->hostname.'.'.config('provbase.arrisModem.hostname'),
+            'ip' => config('provbase.arrisModem.ip'),
+            'oids' => config('provbase.arrisModem.oids'),
+            'protocol' => config('provbase.arrisModem.protocol'),
+            'port' => config('provbase.arrisModem.port'),
+            'time' => config('provbase.arrisModem.time'),
+            'upstream' => config('provbase.arrisModem.upstream'),
         ];
 
         // init setup
@@ -1642,10 +1641,10 @@ class ModemController extends \BaseController
 
     private function arrisModemInitialSetup(array $args): bool
     {
-        $resultIp = snmp2_set($args['ip'], $args['community'], $args['oids']['ip'], 's', $args['ip'], 2);
-        $resultProtocol = snmp2_set($args['protocol'], $args['community'], $args['oids']['protocol'], 's', $args['protocol'], 2);
-        $resultPort = snmp2_set($args['port'], $args['community'], $args['oids']['port'], 'u', $args['port'], 2);
-        $resultTime = snmp2_set($args['time'], $args['community'], $args['oids']['time'], 'u', $args['time'], 2);
+        $resultIp = snmp2_set($args['hostname'], $args['community'], $args['oids']['ip'], 's', $args['ip'], 2);
+        $resultProtocol = snmp2_set($args['hostname'], $args['community'], $args['oids']['protocol'], 's', $args['protocol'], 2);
+        $resultPort = snmp2_set($args['hostname'], $args['community'], $args['oids']['port'], 'u', $args['port'], 2);
+        $resultTime = snmp2_set($args['hostname'], $args['community'], $args['oids']['time'], 'u', $args['time'], 2);
 
         return ! in_array(false, [$resultIp, $resultProtocol, $resultPort, $resultTime], true);
     }
@@ -1659,7 +1658,7 @@ class ModemController extends \BaseController
         }
 
         // get upstream measurement metrics from cablemodem
-        $result = snmp2_walk($args['hostname'], $args['community_walk'], $args['oids']['upstreammetrics'], 2);
+        $result = snmp2_walk($args['hostname'], $args['community_walk'], $args['oids']['upstreamMetrics'], 2);
         if ($result === false) {
             return ['success' => false];
         }
@@ -1686,7 +1685,7 @@ class ModemController extends \BaseController
         }
 
         // get downstream measurement metrics from cablemodem
-        $result = snmp2_walk($hostname, $args['community_walk'], $args['oids']['downstreammetrics'], 2);
+        $result = snmp2_walk($hostname, $args['community_walk'], $args['oids']['downstreamMetrics'], 2);
         if ($result === false) {
             return ['success' => false];
         }
