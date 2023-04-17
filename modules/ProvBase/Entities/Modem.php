@@ -174,6 +174,7 @@ class Modem extends \BaseModel
         $bsclass = 'success';
 
         switch ($this->get_state('int')) {
+<<<<<<< HEAD
             case 0:
                 $bsclass = 'success';
                 break; // online
@@ -189,6 +190,18 @@ class Modem extends \BaseModel
 
             default:
                 $bsclass = 'danger';
+=======
+            case 0: $bsclass = 'success';
+                break; // online
+            case 1: $bsclass = 'warning';
+                break; // warning
+            case 2: $bsclass = 'warning';
+                break; // critical
+            case 3: $bsclass = $this->internet_access && $this->contract->isValid('Now') ? 'danger' : 'info';
+                break; // offline
+
+            default: $bsclass = 'danger';
+>>>>>>> Refactor code and add job to display stats from opentsdb
                 break;
         }
 
@@ -213,6 +226,7 @@ class Modem extends \BaseModel
     public function getFaSmileClass()
     {
         switch ($this->support_state) {
+<<<<<<< HEAD
             case 'full-support':
                 $faClass = 'fa-smile-o';
                 $bsClass = 'success';
@@ -227,6 +241,18 @@ class Modem extends \BaseModel
                 break;
             default:
                 $faClass = 'fa-smile';
+=======
+            case 'full-support':      $faClass = 'fa-smile-o';
+                $bsClass = 'success';
+                break;
+            case 'verifying':         $faClass = 'fa-meh-o';
+                $bsClass = 'warning';
+                break;
+            case 'not-supported':     $faClass = 'fa-frown-o';
+                $bsClass = 'danger';
+                break;
+            default: $faClass = 'fa-smile';
+>>>>>>> Refactor code and add job to display stats from opentsdb
                 $bsClass = 'success';
                 break;
         }
