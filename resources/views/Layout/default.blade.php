@@ -24,6 +24,7 @@
     <title>{{ $html_title }}</title>
     @include('bootstrap.header')
     @yield('head')
+    @livewireStyles()
 </head>
 
 <body {{ isset($body_onload) ? "onload=$body_onload()" : '' }} @if($user->theme_color === 'dark_theme_config.css') class="dark" @endif data-theme_color="{{$user->theme_color}}">
@@ -76,7 +77,7 @@
         <overlay/>
     </div>
 
-
+    @livewireScripts()
     @include('bootstrap.footer')
     @yield ('form-javascript')
     @yield ('javascript')
