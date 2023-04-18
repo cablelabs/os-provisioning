@@ -594,8 +594,16 @@ return [
     'documenttemplate' => [
         'file' => 'Template file',
         'format' => 'Template format',
+        'name' => 'Name',
+        'type_view' => 'Type',
     ],
-    'documenttype' => [
-        'type_view' => 'Document type',
+    'serial_letters' => [
+        'name' => 'Name',
+        'file' => 'File',
     ],
+    'document' => [
+        'id' => 'ID',
+        'file' => 'File',
+    ],
+    'download' => 'Download',
 ];

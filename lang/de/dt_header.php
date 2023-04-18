@@ -590,4 +590,20 @@ return [
     'total_fee' => 'Gebühren',
     'vendor' => 'Hersteller',
     'internalId' => 'Interne Referenz',
+    // DocumentManagement
+    'documenttemplate' => [
+        'file' => 'Template Datei',
+        'format' => 'Template Format',
+        'name' => 'Name',
+        'type_view' => 'Typ',
+    ],
+    'serial_letters' => [
+        'name' => 'Name',
+        'file' => 'Datei',
+    ],
+    'document' => [
+        'id' => 'ID',
+        'file' => 'File',
+    ],
+    'download' => 'Herunterladen',
 ];

@@ -75,7 +75,9 @@ return [
     'Menu_OverdueDebts'         => 'Offene Posten',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Gebäudeverwaltung',
-    'Menu_DocumentTemplates'    => 'Dokument-Vorlagen',
+    'Menu_DocumentManagement'   => 'Dokument Management',
+    'Menu_DocumentTemplates'    => 'Template',
+    'Menu_SerialLetter'         => 'Serienbriefe',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Telefonnummern',
     'Menu_PhoneTariff'          => 'Telefontarife',
@@ -217,7 +219,11 @@ return [
     'Header_TicketType'         => 'Tickettyp|Tickettypen',
     'Header_TicketReceiver'     => 'Ticketzentrale',
     // Documents
+    'Header_Document'           => 'Dokument|Dokumente',
     'Header_DocumentTemplate'   => 'Dokument-Vorlage|Dokument-Vorlagen',
+    'Header_SerialLetter'       => 'Serienbrief|Serienbriefe',
+    'Header_UploadDocument'     => 'Dokument hochladen',
+    'Header_GenerateDocument'   => 'Dokument generieren',
     'Header_DocumentTemplateDerived' => 'geerbte Dokument-Vorlage|geerbte Dokument-Vorlagen',
     //HFC
     'Header_Link'               => 'Link',

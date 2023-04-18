@@ -75,7 +75,9 @@ return [
     'Menu_OverdueDebts'         => 'Overdue debts',
     'Menu_ProvVoip'             => 'VoIP',
     'Menu_PropertyManagement'   => 'Property Management',
-    'Menu_DocumentTemplates'    => 'Dokument-Templates',
+    'Menu_DocumentManagement'    => 'Document Management',
+    'Menu_DocumentTemplates'    => 'Templates',
+    'Menu_SerialLetter'         => 'Serial Letters',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Phonenumbers',
     'Menu_PhoneTariff'          => 'PhoneTariffs',
@@ -218,7 +220,11 @@ return [
     'Header_TicketType'         => 'Ticket Types',
     'Header_TicketReceiver'     => 'Ticket Receiver',
     // Documents
+    'Header_Document'           => 'Document|Documents',
     'Header_DocumentTemplate'   => 'Document template|Document templates',
+    'Header_SerialLetter'       => 'Serial Letter|Serial Letters',
+    'Header_UploadDocument'     => 'Upload Document',
+    'Header_GenerateDocument'   => 'Generate Document',
     'Header_DocumentTemplateDerived' => 'derived document template|derived document templates',
     //HFC
     'Header_Link'               => 'Link',
