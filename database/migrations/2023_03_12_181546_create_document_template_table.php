@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-use Illuminate\Support\Facades\DB;
 use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +34,6 @@ return new class extends BaseMigration
         ['name' => 'Serial letter 3', 'file' => 'default_serial_letter-3.tex'],
         ['name' => 'Serial letter 4', 'file' => 'default_serial_letter-4.tex'],
     ];
-
     /**
      * Run the migrations.
      *
