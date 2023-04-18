@@ -965,3 +965,26 @@ table.dataTable > tbody > tr.selected > * {
 .bg-info {
     background-color: var(--cyan-500);
 }
+
+@keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+}
+
+.button-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.75s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+.button-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}

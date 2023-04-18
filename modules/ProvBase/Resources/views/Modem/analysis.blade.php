@@ -83,6 +83,8 @@
                 </table>
             </div>
         </div>
+
+        @yield('arris_modem')
     </div>
 @stop
 
