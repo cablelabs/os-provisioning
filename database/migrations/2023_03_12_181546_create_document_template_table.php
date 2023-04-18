@@ -20,26 +20,20 @@ use Illuminate\Support\Facades\DB;
 use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Modules\DocumentManagement\DocumentTypes\DocumentType;
+use Modules\DocumentManagement\DocumentTypes\InformationalLetterDocumentType;
 
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
     protected $tablename = 'documenttemplate';
 
-    // have to correlate with order in document type migration
-    protected $doctypes = [
-        // 1 is special type upload ⇒ no document template needed/used
-        2 => 'letterhead',
-        3 => 'contract_start',
-        4 => 'contract_change',
-        5 => 'contract_end',
-        6 => 'connection_info',
-        7 => 'phonenumber_activation',
-        8 => 'phonenumber_deactivation',
-        9 => 'invoice',
-        10 => 'cdr',
+    protected $defaultSerialLetters = [
+        ['name' => 'Serial letter 1', 'file' => 'default_serial_letter-1.tex'],
+        ['name' => 'Serial letter 2', 'file' => 'default_serial_letter-2.tex'],
+        ['name' => 'Serial letter 3', 'file' => 'default_serial_letter-3.tex'],
+        ['name' => 'Serial letter 4', 'file' => 'default_serial_letter-4.tex'],
     ];
-
     /**
      * Run the migrations.
      *
@@ -49,24 +43,41 @@ return new class extends BaseMigration
     {
         Schema::create($this->tablename, function (Blueprint $table) {
             $this->up_table_generic($table);
-
-            $table->integer('documenttype_id')->unsigned();                             // 1 is letterhead
+            $table->string('name')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->string('document_type');
+            $table->string('type_view');
             $table->string('file');                                                     // the path the template file can be found at
             $table->string('format')->nullable()->default(null);                        // e.g. LaTeX
-            $table->integer('company_id')->unsigned()->nullable()->default(null);       // if null: use template from global config
-            $table->integer('sepaaccount_id')->unsigned()->nullable()->default(null);   // if null: use template from company
             $table->string('filename_pattern')->nullable()->default(null);              // used to generate filename (overwrites DocumentType if given)
+            $table->boolean('is_default')->default(false);
         });
 
-        foreach ($this->doctypes as $id => $doctype) {
-            $entry['created_at'] = $entry['updated_at'] = date('Y-m-d H:i:s');
-            $entry['documenttype_id'] = $id;
+        $timestamps = date('Y-m-d H:i:s');
+        foreach (DocumentType::getTypes() as $typeClass => $name) {
+            $entry['created_at'] = $entry['updated_at'] = $timestamps;
+            $entry['document_type'] = $typeClass;
+            $entry['type_view'] = $name;
+            $entry['name'] = $name;
             $entry['format'] = 'LaTeX';
-            $entry['file'] = 'default_'.$doctype.'.tex';
-            $entry['sepaaccount_id'] = null;
-            $entry['company_id'] = null;
-            $entry['filename_pattern'] = null;
+            $entry['file'] = $typeClass::getDefaultTemplatePath();
+            $entry['filename_pattern'] = $typeClass::getDefaultFilenamePattern();
+            $entry['is_default'] = true;
             DB::table($this->tablename)->insert($entry);
+        }
+
+        foreach ($this->defaultSerialLetters as $serialLetter) {
+            DB::table($this->tablename)->insert([
+                'name' => $serialLetter['name'],
+                'file' => $serialLetter['file'],
+                'is_default' => true,
+                'format' => 'LaTeX',
+                'document_type' => InformationalLetterDocumentType::class,
+                'type_view' => InformationalLetterDocumentType::getTranslatedName(),
+                'filename_pattern' => InformationalLetterDocumentType::getDefaultFilenamePattern(),
+                'created_at' => $timestamps,
+                'updated_at' => $timestamps,
+            ]);
         }
     }
 
