@@ -62,7 +62,7 @@ class QosObserver
                 'traffic_table_in',
                 'traffic_table_out',
             ];
-            $qos->restoreUnchangeableFields($unchangables, 'QoS is in use');
+            $qos->restoreUnchangeableFields($unchangables, trans('messages.qosIsInUse'));
 
             return;
         }

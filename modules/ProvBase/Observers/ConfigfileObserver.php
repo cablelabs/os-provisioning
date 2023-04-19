@@ -53,7 +53,7 @@ class ConfigfileObserver
                 'ont_line_profile_id',
                 'tr069_profile_id',
             ];
-            $configfile->restoreUnchangeableFields($unchangables, 'Configfile is in use');
+            $configfile->restoreUnchangeableFields($unchangables, trans('messages.configfileIsInUse'));
 
             return;
         }

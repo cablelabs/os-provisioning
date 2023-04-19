@@ -825,6 +825,12 @@ return [
     'Upload image'              => 'Upload image',
     'STB'                       => 'STB',
     'dhcpValidationError'       => 'Invalid DHCP config: DHCP server will not be restarted, please check the output of: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
+    'fieldChangeNotAllowed'     => 'Change of :field is not allowed – restoring original value!',
+    'reason'                    => 'Reason',
+    'configfileIsInUse'         => 'Configfile is in use.',
+    'endpointIsActive'          => 'Endpoint is active.',
+    'ontIsActive'               => 'ONT is active.',
+    'qosIsInUse'                => 'QoS is in use.',
 
     // SmartOnt
     'alau_order_ref'            => 'Own order reference',

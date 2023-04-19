@@ -970,16 +970,19 @@ class BaseModel extends Eloquent
     {
         $restored = 0;
         foreach ($unchangables as $field) {
-            if ($this->isDirty($field)) {
-                $restored++;
-                $msg = "Change of $field is not allowed – restoring original value!";
-                if ($reason) {
-                    $msg .= " Reason: $reason";
-                }
-                $this->addAboveMessage($msg, 'warning');
-                Log::warning($msg);
-                $this->{$field} = $this->getOriginal($field);
+            if (! $this->isDirty($field)) {
+                continue;
             }
+
+            $msg = trans('messages.fieldChangeNotAllowed', ['field' => $field]);
+            if ($reason) {
+                $msg .= ' '.trans('Reason').': '.$reason;
+            }
+            $this->addAboveMessage($msg, 'warning');
+            Log::warning($msg);
+            $this->{$field} = $this->getOriginal($field);
+            $restored++;
+
         }
 
         return $restored;

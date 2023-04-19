@@ -824,6 +824,13 @@ return [
     'Upload image'              => 'Bild hochladen',
     'STB'                       => 'STB',
     'dhcpValidationError'       => 'Ungültige DHCP Konfiguration: Der DHCP Server wird nicht neu gestartet, bitte prüfen Sie die Konfiguration via: dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf',
+    'fieldChangeNotAllowed'     => 'Änderung des Feldes :field ist nicht gestattet – stelle originalen Wert wieder her!',
+    'reason'                    => 'Grund',
+    'configfileIsInUse'         => 'Configfile wird verwendet.',
+    'endpointIsActive'          => 'Endpunkt ist aktiv.',
+    'ontIsActive'               => 'ONT ist aktiv.',
+    'qosIsInUse'                => 'QoS wird benutzt.',
+
 
     // SmartOnt
     'alau_order_ref'            => 'Eigene Aufragskennung',

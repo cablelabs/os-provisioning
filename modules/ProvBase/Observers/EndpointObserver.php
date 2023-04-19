@@ -78,7 +78,7 @@ class EndpointObserver
                 'rule_id',
                 'state',
             ];
-            $endpoint->restoreUnchangeableFields($unchangables, 'Endpoint is active');
+            $endpoint->restoreUnchangeableFields($unchangables, trans('messages.endpointIsActive'));
 
             return;
         }

@@ -105,7 +105,7 @@ class ModemObserver
                         'mac',
                         'serial_num',
                     ];
-                    $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
+                    $modem->restoreUnchangeableFields($unchangables, trans('messages.ontIsActive'));
                 } elseif ('smartont' == $modem->qos->type) {
                     if ($modem->service_port_id) {
                         $unchangables = [
@@ -114,7 +114,7 @@ class ModemObserver
                             'qos_id',
                             'serial_num',
                         ];
-                        $modem->restoreUnchangeableFields($unchangables, 'ONT is active');
+                        $modem->restoreUnchangeableFields($unchangables, trans('messages.ontIsActive'));
                     }
                 }
             }
