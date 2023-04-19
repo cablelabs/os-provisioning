@@ -280,13 +280,12 @@ class Contract extends \BaseModel
         }
 
         if (Module::collections()->has('DocumentManagement')) {
-
             data_set($ret, 'Documents.UploadDocument.view', [
                 'view' => 'documentmanagement::Document.upload',
                 'vars' => [
                     'model_id' => $this->getKey(),
                     'model_type' => $this::class,
-                ]
+                ],
             ]);
 
             data_set(
@@ -303,7 +302,7 @@ class Contract extends \BaseModel
                 'relation' => $this->documents,
                 'options' => [
                     'hide_create_button' => true,
-                ]
+                ],
             ]);
         }
 
@@ -489,12 +488,11 @@ class Contract extends \BaseModel
     public function documents()
     {
         if (\Module::collections()->has('DocumentManagement')) {
-            return $this->morphMany(\Modules\DocumentManagement\Entities\Document::class,'model');
+            return $this->morphMany(\Modules\DocumentManagement\Entities\Document::class, 'model');
         }
 
         return null;
     }
-
 
     /**
      * Emulate a belongsTo contract->realty relation consisting actually of chain contract->modem->apartment->realty
@@ -532,7 +530,6 @@ class Contract extends \BaseModel
     {
         return $this->ground_for_dismissal ? trans('view.contract.groundsForDismissal.'.$this->ground_for_dismissal) : '';
     }
-
 
     /**
      * Generate use a new user login password

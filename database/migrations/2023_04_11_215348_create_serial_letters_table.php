@@ -17,13 +17,14 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
     protected $tablename = 'document';
+
     /**
      * Run the migrations.
      *
