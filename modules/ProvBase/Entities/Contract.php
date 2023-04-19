@@ -279,6 +279,34 @@ class Contract extends \BaseModel
             $ret['Email']['Email'] = $this->emails;
         }
 
+        if (Module::collections()->has('DocumentManagement')) {
+
+            data_set($ret, 'Documents.UploadDocument.view', [
+                'view' => 'documentmanagement::Document.upload',
+                'vars' => [
+                    'model_id' => $this->getKey(),
+                    'model_type' => $this::class,
+                ]
+            ]);
+
+            data_set(
+                $ret,
+                'Documents.GenerateDocument.html',
+                \Livewire\Livewire::mount(
+                    'documentmanagement::generate-document',
+                    ['contract' => $this->withoutRelations()]
+                )->html()
+            );
+
+            data_set($ret, 'Documents.Documents', [
+                'class' => 'Document',
+                'relation' => $this->documents,
+                'options' => [
+                    'hide_create_button' => true,
+                ]
+            ]);
+        }
+
         return $ret;
     }
 
@@ -458,6 +486,16 @@ class Contract extends \BaseModel
         return $this->belongsTo(\Modules\PropertyManagement\Entities\Apartment::class);
     }
 
+    public function documents()
+    {
+        if (\Module::collections()->has('DocumentManagement')) {
+            return $this->morphMany(\Modules\DocumentManagement\Entities\Document::class,'model');
+        }
+
+        return null;
+    }
+
+
     /**
      * Emulate a belongsTo contract->realty relation consisting actually of chain contract->modem->apartment->realty
      * Note: A direct contract->realty relation can not exist
@@ -495,23 +533,6 @@ class Contract extends \BaseModel
         return $this->ground_for_dismissal ? trans('view.contract.groundsForDismissal.'.$this->ground_for_dismissal) : '';
     }
 
-    /**
-     * Get related documenttemplate of given documenttype.
-     *
-     * @param [type] $documenttype_id
-     * @return void
-     *
-     * @author Patrick Reichel
-     */
-    public function get_documenttemplate_by_type($documenttype_id)
-    {
-        if (! \Module::collections()->has('BillingBase')) {
-            // there should – because of validation in documenttemplates – be only one of the given type
-            return DocumentTemplate::where('documenttype_id', '=', $documenttype_id)->get();
-        }
-
-        return $this->costcenter->sepaaccount->get_documenttemplate_by_type($documenttype_id);
-    }
 
     /**
      * Generate use a new user login password
