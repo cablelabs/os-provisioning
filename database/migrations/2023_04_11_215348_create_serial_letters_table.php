@@ -24,6 +24,7 @@ return new class extends BaseMigration
 {
     public $migrationScope = 'database';
     protected $tablename = 'document';
+
     /**
      * Run the migrations.
      *
