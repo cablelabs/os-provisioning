@@ -532,15 +532,6 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Generate use a new user login password
-     * This does not save the involved model
-     */
-    public function generate_password($length = 10)
-    {
-        $this->password = \Acme\php\Password::generate_password($length);
-    }
-
-    /**
      * Get related documenttemplate of given documenttype.
      *
      * @param [type] $documenttype_id
