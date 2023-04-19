@@ -34,13 +34,9 @@ return new class extends BaseMigration
     {
         Schema::create($this->tablename, function (Blueprint $table) {
             $this->up_table_generic($table);
-
-            $table->string('model')->nullable()->default(null);
-            $table->integer('model_id')->unsigned()->nullable()->default(null);
-            $table->integer('contract_id')->unsigned();
-            $table->integer('documenttype_id')->unsigned();
+            $table->nullableMorphs('model');
             $table->string('file');
-            $table->boolean('ccc_visible');
+            $table->boolean('ccc_visible')->default(false);
         });
     }
 
