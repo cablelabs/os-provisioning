@@ -109,40 +109,16 @@ class StorageCleaner extends Command
      */
     protected function prepareEnviaMetadata()
     {
-        // defaults
-        $envia_api_xml_thresholds = [
-            'path' =>storage_path().'/app/data/provvoipenvia/XML', // the base path holding the date subdirs
-            'function' => 'monthlyFolders', // function to call
-            'compress' => '6M', // age threshold for compressing the subdirs
-            'delete' => '24M', // age threshold for deleting .tar.bz2 files
-        ];
+        $enviaApiXmlThresholds = config('provvoipenvia.StorageCleaner');
 
-        // if compression behavior is also set in .env: overwrite
-        // don't use $_ENV directly as this will not be populated in scheduled commands
-        $tmp_compress = getenv('PROVVOIPENVIA__STORE_XML_COMPRESS_AGE');
-        if ($tmp_compress !== false) {  // not in .env ⇒ use defaults
-            if (boolval($tmp_compress)) {   // not set to 0
-                $envia_api_xml_thresholds['compress'] = $tmp_compress;
-            } else {    // set to 0 ⇒ no compression
-                if (array_key_exists('compress', $envia_api_xml_thresholds)) {
-                    unset($envia_api_xml_thresholds['compress']);
-                }
-            }
+        if (! boolval($enviaApiXmlThresholds['compress'])) {
+            unset($enviaApiXmlThresholds['compress']); // no compression
+        }
+        if (! boolval($enviaApiXmlThresholds['delete'])) {
+            unset($enviaApiXmlThresholds['delete']); // no deletion
         }
 
-        // if deletion behavior is also set in .env: overwrite
-        $tmp_delete = getenv('PROVVOIPENVIA__STORE_XML_DELETE_AGE');
-        if ($tmp_delete !== false) {    // not in .env ⇒ use defaults
-            if (boolval($tmp_delete)) { // not set to 0
-                $envia_api_xml_thresholds['delete'] = $tmp_delete;
-            } else {    // set to 0 ⇒ no deletion
-                if (array_key_exists('delete', $envia_api_xml_thresholds)) {
-                    unset($envia_api_xml_thresholds['delete']);
-                }
-            }
-        }
-
-        array_push($this->thresholds, $envia_api_xml_thresholds);
+        array_push($this->thresholds, $enviaApiXmlThresholds);
     }
 
     /**
@@ -152,46 +128,20 @@ class StorageCleaner extends Command
      */
     protected function prepareSmartOntMetadata()
     {
-        // defaults
-        $smartont_thresholds = [
-            'function' => 'monthlyFolders', // function to call
-            'compress' => '6M', // age threshold for compressing the subdirs
-            'delete' => '24M', // age threshold for deleting .tar.bz2 files
-        ];
+        $smartOntThresholds = config('smartont.StorageCleaner');
 
-        if ('GESA' == config('smartont.flavor.active')) {
-            $smartont_thresholds['path'] = storage_path().'/app/data/smartont/sep'; // the base path holding the date subdirs
-        } elseif ('LFO' == config('smartont.flavor.active')) {
-            $smartont_thresholds['path'] = storage_path().'/app/data/smartont/ont'; // the base path holding the date subdirs
-        } else {
-            $msg = 'Unknown SmartOnt flavor '.config('smartont.flavor.active');
-            Log::error(__METHOD__.': '.$msg);
-            $this->error($msg);
-            exit(1);
+        if (is_null($smartOntThresholds)) {
+            return;
         }
 
-        // if compression behavior is also set in .env: overwrite
-        // don't use $_ENV directly as this will not be populated in scheduled commands
-        $tmp_compress = config('smartont.store_csv_compress_age');
-        if (boolval($tmp_compress)) {   // not set to 0
-            $smartont_thresholds['compress'] = $tmp_compress;
-        } else {    // set to 0 ⇒ no compression
-            if (array_key_exists('compress', $smartont_thresholds)) {
-                unset($smartont_thresholds['compress']);
-            }
+        if (! boolval($smartOntThresholds['compress'])) {
+            unset($smartOntThresholds['compress']); // no compression
+        }
+        if (! boolval($smartOntThresholds['delete'])) {
+            unset($smartOntThresholds['delete']); // no deletion
         }
 
-        // if deletion behavior is also set in .env: overwrite
-        $tmp_delete = config('smartont.store_csv_delete_age');
-        if (boolval($tmp_delete)) { // not set to 0
-            $smartont_thresholds['delete'] = $tmp_delete;
-        } else {    // set to 0 ⇒ no deletion
-            if (array_key_exists('delete', $smartont_thresholds)) {
-                unset($smartont_thresholds['delete']);
-            }
-        }
-
-        array_push($this->thresholds, $smartont_thresholds);
+        array_push($this->thresholds, $smartOntThresholds);
     }
 
     /**
