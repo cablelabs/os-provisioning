@@ -603,4 +603,8 @@ return [
     'total_fee' => 'Gebühren',
     'vendor' => 'Hersteller',
     'internalId' => 'Interne Referenz',
+    'dunning' => [
+        'created_at' => 'Zeit',
+        'contract_id' => 'Vertragskennung',
+    ],
 ];

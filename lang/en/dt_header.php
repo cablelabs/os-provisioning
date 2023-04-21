@@ -603,4 +603,8 @@ return [
     'total_fee' => 'Fee',
     'vendor' => 'Vendor',
     'internalId' => 'Internal Reference',
+    'dunning' => [
+        'created_at' => 'Time',
+        'contract_id' => 'Contract ID',
+    ],
 ];
