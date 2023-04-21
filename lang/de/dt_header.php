@@ -603,7 +603,7 @@ return [
     ],
     'document' => [
         'id' => 'ID',
-        'file' => 'File',
+        'file' => 'Datei',
     ],
     'download' => 'Herunterladen',
 ];
