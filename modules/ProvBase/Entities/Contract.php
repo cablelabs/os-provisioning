@@ -487,11 +487,7 @@ class Contract extends \BaseModel
 
     public function documents()
     {
-        if (\Module::collections()->has('DocumentManagement')) {
-            return $this->morphMany(\Modules\DocumentManagement\Entities\Document::class, 'model');
-        }
-
-        return null;
+        return $this->morphMany(\Modules\DocumentManagement\Entities\Document::class, 'model');
     }
 
     /**
