@@ -21,19 +21,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\DocumentManagement\DocumentTypes\DocumentType;
-use Modules\DocumentManagement\DocumentTypes\InformationalLetterDocumentType;
 
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
     protected $tablename = 'documenttemplate';
-
-    protected $defaultSerialLetters = [
-        ['name' => 'Serial letter 1', 'file' => 'default_serial_letter-1.tex'],
-        ['name' => 'Serial letter 2', 'file' => 'default_serial_letter-2.tex'],
-        ['name' => 'Serial letter 3', 'file' => 'default_serial_letter-3.tex'],
-        ['name' => 'Serial letter 4', 'file' => 'default_serial_letter-4.tex'],
-    ];
 
     /**
      * Run the migrations.
@@ -65,20 +57,6 @@ return new class extends BaseMigration
             $entry['filename_pattern'] = $typeClass::getDefaultFilenamePattern();
             $entry['is_default'] = true;
             DB::table($this->tablename)->insert($entry);
-        }
-
-        foreach ($this->defaultSerialLetters as $serialLetter) {
-            DB::table($this->tablename)->insert([
-                'name' => $serialLetter['name'],
-                'file' => $serialLetter['file'],
-                'is_default' => true,
-                'format' => 'LaTeX',
-                'document_type' => InformationalLetterDocumentType::class,
-                'type_view' => InformationalLetterDocumentType::getTranslatedName(),
-                'filename_pattern' => InformationalLetterDocumentType::getDefaultFilenamePattern(),
-                'created_at' => $timestamps,
-                'updated_at' => $timestamps,
-            ]);
         }
     }
 
