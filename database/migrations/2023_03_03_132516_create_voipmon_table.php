@@ -37,9 +37,6 @@ return new class extends BaseMigration
             $this->upTableGeneric($table);
             $table->integer('delete_record_interval')->default(14);
         });
-
-        $provvoip = new \Modules\VoipMon\Entities\VoipMon;
-        $provvoip->save();
     }
 
     /**
