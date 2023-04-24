@@ -47,6 +47,7 @@ class Endpoint extends \BaseModel
             'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
                 'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
             'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
+            'prefix' => ['nullable', 'unique:endpoint,prefix,'.$id.',id,deleted_at,NULL'],
         ];
 
         if ($modem) {
