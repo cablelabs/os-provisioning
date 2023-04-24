@@ -17,11 +17,10 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Database\Schema\Blueprint;
 
-class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
+return new class extends BaseMigration
 {
-    public $migrationScope = 'database';
+    public $migrationScope = 'system';
 
     /**
      * Run the migrations.
@@ -30,14 +29,11 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
      */
     public function up()
     {
-        // Note: columns can't be named equally as select fields appear on same site and with our generic and overloading js it wouldn't work
-        Schema::table('global_config', function (Blueprint $table) {
-            $table->string('login_img')->nullable();
-        });
+        if (! is_dir(storage_path('app/public/base/bg-images/'))) {
+            mkdir(storage_path('app/public/base/bg-images/'), 0755, true);
+        }
 
-        Schema::table('ccc', function (Blueprint $table) {
-            $table->string('bgimg')->nullable();
-        });
+        system('chown -R apache:apache '.storage_path('app/public/'));
     }
 
     /**
@@ -47,12 +43,6 @@ class updateGlobalConfigAddLoginBackgroundImages extends BaseMigration
      */
     public function down()
     {
-        Schema::table('global_config', function (Blueprint $table) {
-            $table->dropColumn('login_img');
-        });
-
-        Schema::table('ccc', function (Blueprint $table) {
-            $table->dropColumn('bgimg');
-        });
+        system('rm -rf '.storage_path('app/public/base/'));
     }
-}
+};
