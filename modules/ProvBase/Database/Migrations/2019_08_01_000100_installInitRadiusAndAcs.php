@@ -30,7 +30,6 @@ class InstallInitRadiusAndAcs extends BaseMigration
     public function up()
     {
         DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
-        \Artisan::call('nms:radgroupreply-repopulate');
 
         $config = DB::connection('pgsql-radius')->getConfig();
 
@@ -69,6 +68,8 @@ class InstallInitRadiusAndAcs extends BaseMigration
         // Add sqlippool table
         DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
 
+        \Artisan::call('nms:raddb-repopulate');
+
         // Adjust radiusd sqlippool IP lease duration
         $leaseTime = Modules\ProvBase\Entities\ProvBase::first()->dhcp_def_lease_time;
         $queryPath = storage_path('app/config/provbase/radius/queries.conf');
@@ -101,7 +102,7 @@ class InstallInitRadiusAndAcs extends BaseMigration
         $radiusTables = ['radacct', 'radcheck', 'radgroupcheck', 'radgroupreply', 'radreply', 'radusergroup', 'radpostauth', 'nas'];
 
         foreach ($radiusTables as $table) {
-            Schema::drop($table);
+            Schema::dropIfExists($table);
         }
     }
 }
