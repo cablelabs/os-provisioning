@@ -21,9 +21,12 @@ namespace Modules\ProvBase\Observers;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadReply;
+use Modules\ProvBase\Traits\AdaptsDhcpConf;
 
 class EndpointObserver
 {
+    use AdaptsDhcpConf;
+
     public function creating($endpoint)
     {
         if (! $endpoint->fixed_ip) {
@@ -38,6 +41,7 @@ class EndpointObserver
 
         $endpoint->makeDhcp();
         $endpoint->makeNetGwConf();
+        self::validateDhcpConfig($endpoint->version);
         $endpoint->nsupdate();
 
         $endpoint->modem->restart_modem();
@@ -57,6 +61,7 @@ class EndpointObserver
 
         $endpoint->makeDhcp();
         $endpoint->makeNetGwConf();
+        self::validateDhcpConfig($endpoint->version);
         $endpoint->nsupdate();
 
         $endpoint->modem->restart_modem();
@@ -68,6 +73,7 @@ class EndpointObserver
 
         $endpoint->makeDhcp();
         $endpoint->makeNetGwConf();
+        self::validateDhcpConfig($endpoint->version);
         $endpoint->nsupdate(true);
 
         $endpoint->modem->restart_modem();

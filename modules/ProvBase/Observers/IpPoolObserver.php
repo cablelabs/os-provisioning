@@ -20,6 +20,7 @@ namespace Modules\ProvBase\Observers;
 
 use Modules\ProvBase\Entities\NetGW;
 use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Traits\AdaptsDhcpConf;
 
 /**
  * IP-Pool Observer Class
@@ -31,6 +32,8 @@ use Modules\ProvBase\Entities\ProvBase;
  */
 class IpPoolObserver
 {
+    use AdaptsDhcpConf;
+
     public function created($pool)
     {
         self::updateRadIpPool($pool);
@@ -43,7 +46,7 @@ class IpPoolObserver
         $pool->netgw->makeDhcpConf();
 
         self::rebuildDhcpGlobalConfig($pool);
-        self::validateDhcpConfig();
+        self::validateDhcpConfig($pool->version);
     }
 
     public function updated($pool)
@@ -62,7 +65,7 @@ class IpPoolObserver
         }
 
         self::rebuildDhcpGlobalConfig($pool);
-        self::validateDhcpConfig();
+        self::validateDhcpConfig($pool->version);
     }
 
     public function deleted($pool)
@@ -76,7 +79,7 @@ class IpPoolObserver
         $pool->netgw->makeDhcpConf();
 
         self::rebuildDhcpGlobalConfig($pool);
-        self::validateDhcpConfig();
+        self::validateDhcpConfig($pool->version);
     }
 
     /**
@@ -100,21 +103,6 @@ class IpPoolObserver
     {
         if (($pool->deleted_at && $pool->type == 'STB') || multi_array_key_exists(['type', 'vendor_class_identifier'], $pool->getDirty())) {
             ProvBase::first()->make_dhcp_glob_conf();
-        }
-    }
-
-    /**
-     * Validate DHCPd config
-     * This is called on created/updated/deleted in IpPool observer
-     *
-     * @author Ole Ernst
-     */
-    private static function validateDhcpConfig()
-    {
-        exec('/usr/sbin/dhcpd -t -cf /etc/dhcp-nmsprime/dhcpd.conf &>/dev/null', $out, $ret);
-
-        if ($ret) {
-            \Session::push('tmp_error_above_form', trans('messages.dhcpValidationError'));
         }
     }
 }

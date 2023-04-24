@@ -88,6 +88,7 @@ return [
     'Device Type List'          => 'Device Type List',
     'Devices'                   => 'Devices',
     'DeviceTypes'               => 'DeviceTypes',
+    'dhcp6ValidationError'       => 'Invalid DHCP config: Kea DHCP server will not be restarted, please check the output of: kea-dhcp6 -t /etc/kea/dhcp6-nmsprime.conf',
     'Directory assistance'      => 'Directory assistance',
     'District'                  => 'District',
     'OverdueDebts'              => 'Overdue debts',

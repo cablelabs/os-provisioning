@@ -88,6 +88,7 @@ return [
     'Device Type List'          => 'Gerätetypenliste',
     'Devices'                   => 'Geräte',
     'DeviceTypes'               => 'Gerätetypen',
+    'dhcp6ValidationError' => 'Ungültige DHCP Konfiguration: Der Kea DHCP Server wird nicht neu gestartet, bitte prüfen Sie die Konfiguration via: kea-dhcp6 -t /etc/kea/dhcp6-nmsprime.conf',
     'Directory assistance'      => 'Nutzung Auskunft',
     'District'                  => 'Ortsteil',
     'OverdueDebts'              => 'Offene Posten',
