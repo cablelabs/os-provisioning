@@ -5528,8 +5528,8 @@ COPY nmsprime.product (id, created_at, updated_at, deleted_at, name, type, qos_i
 -- Data for Name: provbase; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
-COPY nmsprime.provbase (id, created_at, updated_at, deleted_at, provisioning_server, ro_community, rw_community, notif_mail, domain_name, dns_password, dhcp_def_lease_time, dhcp_max_lease_time, startid_contract, startid_modem, startid_endpoint, max_cpe, ds_rate_coefficient, us_rate_coefficient, multiple_provisioning_systems, additional_modem_reset, modem_edit_page_new_tab, random_ip_allocation, ppp_session_timeout, auto_factory_reset, acct_interim_interval) FROM stdin;
-1	\N	2022-02-18 08:43:53+01	\N	172.20.0.1	public	private	\N	nmsprime.test	3KHc51lgxGSOUvpUxlFv7A==	86400	172800	0	0	0	2	1	1	f	f	f	f	86400	f	300
+COPY nmsprime.provbase (id, created_at, updated_at, deleted_at, provisioning_server, ro_community, rw_community, domain_name, dns_password, dhcp_def_lease_time, dhcp_max_lease_time, startid_contract, startid_modem, startid_endpoint, max_cpe, ds_rate_coefficient, us_rate_coefficient, multiple_provisioning_systems, additional_modem_reset, modem_edit_page_new_tab, random_ip_allocation, ppp_session_timeout, auto_factory_reset, acct_interim_interval) FROM stdin;
+1	\N	2022-02-18 08:43:53+01	\N	172.20.0.1	public	private	nmsprime.test	3KHc51lgxGSOUvpUxlFv7A==	86400	172800	0	0	0	2	1	1	f	f	f	f	86400	f	300
 \.
 
 
