@@ -13,6 +13,7 @@ return [
     'connected' => 'Connected',
     'connection_type' => 'Connection type',
     'deprecated' => 'Deprecated',
+    'description' => 'Description',
     'district' => 'District',
     'docsisVer' => 'DOCSIS version',
     'download' => 'Download',
@@ -272,10 +273,12 @@ return [
     'domain.type' => 'Type',
     'domain.alias' => 'Alias',
     // Endpoint
-    'endpoint.ip' => 'IP',
-    'endpoint.hostname' => 'Hostname',
-    'endpoint.mac' => 'MAC',
-    'endpoint.description' => 'Description',
+    'endpoint' => [
+        'ip' => 'IP',
+        'hostname' => 'Hostname',
+        'mac' => 'MAC',
+        'prefix' => 'Prefix',
+    ],
     // IpPool
     'ippool.id' => 'ID',
     'ippool.type' => 'Type',
