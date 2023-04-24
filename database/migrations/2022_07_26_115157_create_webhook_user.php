@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class CreateWebhookUser extends BaseMigration
+return new class extends BaseMigration
 {
     public $migrationScope = 'database';
 
@@ -34,4 +34,4 @@ class CreateWebhookUser extends BaseMigration
     {
         DB::table('users')->where('email', 'someone@example.com')->delete();
     }
-}
+};
