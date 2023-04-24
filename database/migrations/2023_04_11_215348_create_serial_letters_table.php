@@ -33,7 +33,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::create($this->tablename, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
             $table->foreignId('template_id');
             $table->string('name');
             $table->string('file')->nullable();

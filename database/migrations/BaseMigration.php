@@ -78,7 +78,7 @@ class BaseMigration extends Migration
         Schema::defaultStringLength(191);
     }
 
-    public function up_table_generic(&$table)
+    public function upTableGeneric(&$table)
     {
         $table->bigIncrements('id');
         $table->timestampsTz(null);
@@ -169,7 +169,7 @@ class BaseMigration extends Migration
                 }
             }
             if (! $rollback) {
-                $this->warn("WARNING: up_table_generic() not called from {$this->callerClassname}. Falling back to database defaults.");
+                $this->warn("WARNING: upTableGeneric() not called from {$this->callerClassname}. Falling back to database defaults.");
             }
         }
     }

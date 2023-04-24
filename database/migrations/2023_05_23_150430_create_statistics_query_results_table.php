@@ -34,7 +34,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
             $table->bigInteger('statistics_query_id');
             $table->integer('customers')->default(0);
             $table->integer('new_customers')->default(0);

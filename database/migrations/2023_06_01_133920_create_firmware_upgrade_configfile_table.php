@@ -36,7 +36,7 @@ return new class extends BaseMigration
         Schema::disableForeignKeyConstraints();
 
         Schema::create($this->tableName, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
             $table->unsignedBigInteger('firmware_upgrade_id');
             $table->unsignedBigInteger('configfile_id');
         });

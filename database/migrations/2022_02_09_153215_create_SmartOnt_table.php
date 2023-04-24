@@ -18,7 +18,7 @@ class CreateSmartOntTable extends BaseMigration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
 
             $table->string('default_service_name')->nullable();
             $table->string('default_service_id')->nullable();

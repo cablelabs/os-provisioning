@@ -18,7 +18,7 @@ class CreateDfsubscriptionTable extends BaseMigration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
 
             $table->string('service_name')->nullable();
             $table->string('service_id')->nullable();

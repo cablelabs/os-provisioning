@@ -34,7 +34,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
             $table->decimal('lat', 9, 6);
             $table->decimal('lng', 9, 6);
             $table->string('source')->nullable();

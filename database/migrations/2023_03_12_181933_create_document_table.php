@@ -33,7 +33,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::create($this->tablename, function (Blueprint $table) {
-            $this->up_table_generic($table);
+            $this->upTableGeneric($table);
             $table->nullableMorphs('model');
             $table->string('file');
             $table->boolean('ccc_visible')->default(false);
