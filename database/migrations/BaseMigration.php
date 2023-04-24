@@ -21,132 +21,78 @@ namespace Database\Migrations;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class BaseMigration extends Migration
 {
+    use \Illuminate\Console\Concerns\InteractsWithIO;
+
     protected $callerClassname = '';
     protected $callerMigrationFile = '';
     protected $calledUpTableGeneric = false;
 
     /**
-     * Define the migration's scope:
-     *   - “database”: Migration changes database
-     *   - “system”: Changes in configfiles, calling of systemd commands, …
-     * Beginning in 2021 a migration is not allowed ot change database AND system stuff
-     * Write two migrations if needed!
+     * Defines the migration's scope. Beginning in 2021 a migration is not
+     * allowed ot change database AND system stuff. Write two migrations
+     * if needed!
+     *
+     * @var string Available options:
+     *             “database”: Migration changes database
+     *             “system”: Changing configfiles, calling of systemd commands…
      */
-    public $migrationScope = '';
+    public $migrationScope;
+
+    /**
+     * Set the table name to migrate. This has proven to reduce copy and paste
+     * errors as the table name is written in only one place-
+     *
+     * @var string
+     */
+    protected $tableName;
+
+    /**
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
+     */
+    protected $output;
 
     public function __construct()
     {
-        $this->callerClassname = get_class($this);
-        echo 'Migrating '.$this->callerClassname."\n";
+        $this->output = new ConsoleOutput();
 
-        // get the filename of the caller class
+        $this->callerClassname = get_class($this);
         $reflector = new \ReflectionClass($this->callerClassname);
         $this->callerMigrationFile = basename($reflector->getFileName());
+        $this->info("Migrating {$this->callerClassname}.", 'v');
 
-        // check if scope is set in newer migrations
-        if ($this->callerMigrationFile >= '2021_') {
-            if (! in_array($this->migrationScope, ['database', 'system'])) {
-                // this is meant as a hint for developing and should never be reached in production
-                exit("\nERROR in $this->callerMigrationFile: ".$this->callerClassname."->migrationScope has to be “database” or “system”. Exiting…\n\n");
-            }
-        }
+        $this->checkMigrationScope();
+        $this->checkForHighAvailabilitySetup();
 
-        // check if migration shall be executed
-        if (! $this->migrationShallRun()) {
-            exit(0);
-        }
+        DB::getDoctrineSchemaManager()
+            ->getDatabasePlatform()
+            ->registerDoctrineTypeMapping('enum', 'string');
 
-        if ($this->callerMigrationFile < '2018_08_07') {
-            // get and instanciate of index maker
-            require_once base_path().'/app/extensions/database/FulltextIndexMaker.php';
-            $this->fim = new FulltextIndexMaker($this->tablename);
-        } else {
-            $this->fim = null;	// no indexes build on newer migrations (using InnoDB)
-        }
-
-        \DB::getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         Schema::defaultStringLength(191);
-    }
-
-    /**
-     * Check if the migration shall be executed.
-     *
-     * @return bool
-     *
-     * @author Patrick Reichel
-     */
-    public function migrationShallRun()
-    {
-        if (\Module::collections()->has('ProvHA')) {
-            // check if called from slave migration command – then force execution
-            $filetrace = [];
-            foreach (debug_backtrace() as $trace) {
-                $filetrace[] = $trace['file'] ?? 'nofile';
-            }
-
-            // run migration if called from wrapper command
-            if (in_array('/var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php', $filetrace)) {
-                return true;
-            }
-
-            // do not execute migrations directly on HA slave machines
-            if (config('provha.hostinfo.ownState') == 'slave') {
-                echo '! Ignoring migration '.$this->callerClassname." – this is a slave machine.\n";
-
-                return false;
-            }
-        }
-
-        // default – run the migration
-        return true;
     }
 
     public function up_table_generic(&$table)
     {
-        $this->calledUpTableGeneric = true;
-
         $table->bigIncrements('id');
-        // older migrations e.g. used MyISAM to build fulltext indexes
-        // see 4.2: https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_timestamp_.28without_time_zone.29_to_store_UTC_times
         $table->timestampsTz(null);
         $table->softDeletesTz('deleted_at', null);
-    }
 
-    public function up()
-    {
-    }
-
-    protected function set_auto_increment($i)
-    {
-        if (! $this->tablename) {
-            return;
-        }
-
-        \DB::update('ALTER TABLE '.$this->tablename." AUTO_INCREMENT = $i;");
+        $this->calledUpTableGeneric = true;
     }
 
     /**
-     * All columnes to be fulltext indexed.
-     * Attention on updating an existing index: The index will be dropped and re-created – therefore you have to give ALL columns (again)!!
+     * Helper method to quickly add an index to a table
+     *
+     * @param  string  $column  name of the column
+     * @return void
      */
-    protected function set_fim_fields($fields)
-    {
-        if (is_null($this->fim)) {
-            throw new \ErrorException('No FulltextIndexMaker in '.$this->callerClassname.'! – Maybe you want to index an InnoDB table?');
-        }
-
-        foreach ($fields as $field) {
-            $this->fim->add($field);
-        }
-
-        // create FULLTEXT index including the given
-        $this->fim->make_index();
-    }
-
     public function addIndex(string $column)
     {
         Schema::table($this->tableName, function (Blueprint $table) use ($column) {
@@ -158,6 +104,55 @@ class BaseMigration extends Migration
                 $table->index($column);
             }
         });
+    }
+
+    /**
+     * This is meant as a hint for developing and should never be reached in
+     * production.
+     *
+     * @return void
+     */
+    private function checkMigrationScope(): void
+    {
+        if ($this->callerMigrationFile >= '2021_' && ! in_array($this->migrationScope, ['database', 'system'])) {
+            $this->error(
+                "ERROR in {$this->callerMigrationFile}: {$this->callerClassname}->migrationScope ".
+                'has to be "database" or "system". Exiting…'
+            );
+            exit(1);
+        }
+    }
+
+    /**
+     * Check if the migration shall be executed.
+     *
+     * @return bool
+     *
+     * @author Patrick Reichel
+     */
+    private function checkForHighAvailabilitySetup(): void
+    {
+        if (! \Module::collections()->has('ProvHA')) {
+            return;
+        }
+
+        // check if called from slave migration command – then force execution
+        $filetrace = [];
+        foreach (debug_backtrace() as $trace) {
+            $filetrace[] = $trace['file'] ?? 'nofile';
+        }
+
+        // run migration if called from wrapper command
+        if (in_array('/var/www/nmsprime/modules/ProvHA/Console/MigrateSlaveCommand.php', $filetrace)) {
+            return;
+        }
+
+        // do not execute migrations directly on HA slave machines
+        if (config('provha.hostinfo.ownState') == 'slave') {
+            $this->warn("! Ignoring migration {$this->callerClassname} – this is a slave machine.");
+
+            exit(0);
+        }
     }
 
     public function __destruct()
@@ -174,7 +169,7 @@ class BaseMigration extends Migration
                 }
             }
             if (! $rollback) {
-                echo "\tWARNING: up_table_generic() not called from {$this->callerClassname}. Falling back to database defaults.\n";
+                $this->warn("WARNING: up_table_generic() not called from {$this->callerClassname}. Falling back to database defaults.");
             }
         }
     }
