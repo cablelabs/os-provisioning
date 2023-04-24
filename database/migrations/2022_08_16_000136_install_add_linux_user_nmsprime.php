@@ -36,7 +36,6 @@ class InstallAddLinuxUserNmsprime extends BaseMigration
         system('useradd nmsprime');
         system('chgrp nmsprime /etc/nmsprime/env/ /etc/nmsprime/env/global.env');
         system('usermod -a -G nmsprime apache');
-        system('usermod -a -G nmsprime telegraf');
     }
 
     /**
