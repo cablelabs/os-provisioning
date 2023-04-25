@@ -604,7 +604,7 @@ return [
     'vendor' => 'Vendor',
     'internalId' => 'Internal Reference',
     'dunning' => [
-        'created_at' => 'Time',
-        'contract_id' => 'Contract ID',
+        'contract_id' => 'Contract',
     ],
+    'created_at' => 'Created at',
 ];

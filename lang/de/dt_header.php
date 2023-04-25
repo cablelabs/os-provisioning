@@ -604,7 +604,7 @@ return [
     'vendor' => 'Hersteller',
     'internalId' => 'Interne Referenz',
     'dunning' => [
-        'created_at' => 'Zeit',
-        'contract_id' => 'Vertragskennung',
+        'contract_id' => 'Vertrag',
     ],
+    'created_at' => 'Erstellt am',
 ];
