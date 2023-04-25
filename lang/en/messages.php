@@ -825,4 +825,7 @@ return [
     'mtaDomain'                 => 'MTA Domain',
     'deleteRecordInterval'      => 'Old Record Deletion Interval',
     'realtime_update_interval'  => 'Update interval of realtime values in seconds',
+    'syncProvision'             => 'Synchronize modem',
+    'resetModem'                => 'Reset modem',
+    'syncProvisionButtonTitle'  => 'Synchronize the modem with the corresponding config file after the next established connection between CPE and ACS.',
 ];

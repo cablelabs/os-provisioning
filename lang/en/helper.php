@@ -36,7 +36,8 @@ return [
 
     // GlobalConfig
     'ISO_3166_ALPHA-2'              => 'ISO 3166 ALPHA-2 (two characters, e.g. “US”). Used in address forms to specify the country.',
-    'PasswordReset'           => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
+    'PasswordReset'                 => 'This property defines the timespan in days in which the users of the administration panel should change their passwords. If you want to disable the password reset message, set the value to 0.',
+    'syncProvision'                 => 'TR-069 only: This property specifies if there is another button on the modem edit page, that synchronizes the modem with it\'s correlated configfile. This allows to update the modem (e.g. after adding a new phonenumber) without resetting it.',
 
     //CompanyController
     'Company_Management'            => 'Comma separated list of names',

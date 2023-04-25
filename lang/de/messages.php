@@ -824,4 +824,7 @@ return [
     'mtaDomain'                 => 'MTA Domain',
     'deleteRecordInterval'      => 'Alte Anrufaufzeichnungen löschen nach',
     'realtime_update_interval'  => 'Aktualisierungsintervall für Echtzeitwerte (in Sekunden)',
+    'syncProvision'             => 'Modem synchronisieren',
+    'resetModem'                => 'Modem zurücksetzen',
+    'syncProvisionButtonTitle'  => 'Synchronisiert das Modem mit der Konfigurationsdatei nach dem nächsten Verbindungsaufbau zwischen CPE und ACS.',
 ];
