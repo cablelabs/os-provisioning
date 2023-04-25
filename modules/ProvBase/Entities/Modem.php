@@ -1237,6 +1237,31 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Create sync preset.
+     * The sync preset is used only once. After creation, at the next event, this preset will call the prov provision to update
+     * objects like new phone numbers. In the end, this preset will be removed with a extension script /usr/share/genieacs/ext/sync-provision.js
+     *
+     * @author Roy Schneider
+     */
+    public function createSyncPreset()
+    {
+        $preset = [
+            'weight' => 0,
+            'precondition' => "DeviceID.SerialNumber = \"{$this->serial_num}\"",
+            'events' => null,
+            'configurations' => [
+                [
+                    'type' => 'provision',
+                    'name' => "prov-{$this->id}",
+                    'args' => null,
+                ],
+            ],
+        ];
+
+        self::callGenieAcsApi("presets/sync-{$this->id}", 'PUT', json_encode($preset));
+    }
+
+    /**
      * Delete GenieACS presets.
      *
      * @author Roy Schneider

@@ -54,10 +54,18 @@ class ModemController extends \BaseController
 
     public function edit($id)
     {
-        if (ProvBase::first()->additional_modem_reset) {
+        $provbase = ProvBase::first();
+
+        if ($provbase->additional_modem_reset) {
             $this->edit_view_third_button = true;
-            $this->third_button_name = 'Reset Modem';
+            $this->third_button_name = trans('messages.resetModem');
             $this->third_button_title_key = 'modem_reset_button_title';
+        }
+
+        if ($provbase->sync_provision) {
+            $this->edit_view_fourth_button = true;
+            $this->fourth_button_name = trans('messages.syncProvision');
+            $this->fourth_button_title_key = 'syncProvisionButtonTitle';
         }
 
         return parent::edit($id);
@@ -715,11 +723,25 @@ class ModemController extends \BaseController
      */
     public function update($id)
     {
-        if (! Request::filled('_2nd_action') && ! Request::filled('_3rd_action')) {
+        if (! Request::filled('_2nd_action') && ! Request::filled('_3rd_action') && ! Request::filled('_4th_action')) {
             return parent::update($id);
         }
 
         $modem = Modem::find($id);
+
+        if (Request::filled('_4th_action')) {
+            $syncProvision = '/usr/share/genieacs/ext/sync-provision.js';
+            if (! file_exists($syncProvision)) {
+                exec("cp modules/ProvBase/Install/files/sync-provision.js $syncProvision");
+
+                return \Redirect::back();
+            }
+
+            $modem->createSyncPreset();
+
+            return \Redirect::back();
+        }
+
         $modem->restart_modem(false, Request::filled('_3rd_action'));
 
         return \Redirect::back();
