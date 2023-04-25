@@ -1,7 +1,12 @@
 <template>
 <div>
   <label class="relative inline-flex items-center cursor-pointer">
-  <input :checked="value" type="checkbox" class="sr-only peer">
+  <input
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+    type="checkbox"
+    class="sr-only peer"
+  >
   <div :class="[widthClass, heightClass, afterTopClass, afterLeftClass, afterHClass, afterWClass]" class="bg-gray-200 rounded-full peer peer-focus:ring-4 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:bg-white after:border-gray-300 after:border after:rounded-full after:transition-all peer-checked:bg-green-600"></div>
   <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300" v-if="text">{{ text }}</span>
 </label>
@@ -11,9 +16,12 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 
+// emits
+const emit = defineEmits(['update:modelValue'])
+
 // props
 const props = defineProps({
-  value: { type: Boolean, default: false },
+  modelValue: { type: Boolean, default: false },
   size: { type: String, default: 'medium' },
   text: { type: String, default: '' },
 })
@@ -54,7 +62,7 @@ switch(props.size) {
 }
 </script>
 
-<style scopped>
+<style scoped>
 input:focus {
   outline: none;
 }

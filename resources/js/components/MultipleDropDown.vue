@@ -18,9 +18,9 @@
         <input v-model="selectAll" @click="handleSelectAll" :id="`checkbox-selectAll-${randomValue}`" type="checkbox" class="mt-0 w-4 h-4 text-green-600 rounded accent-green-500 hover:cursor-pointer">
         <label :for="`checkbox-selectAll-${randomValue}`" class="mb-0 pl-2 text-gray-900 min-w-fit hover:text-green-500 hover:cursor-pointer">Alle auswählen</label>
       </div>
-      <div class="flex items-center mb-1 checkboxes" v-for="option in filteredOptions" :key="option.id">
-        <input v-model="selected" :id="`checkbox-${randomValue}-${option.id}`" type="checkbox" :value="option" class="mt-0 w-4 h-4 text-green-600 rounded accent-green-500 hover:cursor-pointer">
-        <label :for="`checkbox-${randomValue}-${option.id}`" class="mb-0 pl-2 text-gray-900 min-w-fit hover:text-green-500 hover:cursor-pointer">{{ option.name }}</label>
+      <div class="flex items-center mb-1 checkboxes" v-for="(option, i) in filteredOptions" :key="i">
+        <input v-model="selected" :id="`checkbox-${randomValue}-${i}`" type="checkbox" :value="option" class="mt-0 w-4 h-4 text-green-600 rounded accent-green-500 hover:cursor-pointer">
+        <label :for="`checkbox-${randomValue}-${i}`" class="mb-0 pl-2 text-gray-900 min-w-fit hover:text-green-500 hover:cursor-pointer">{{ typeof option === 'object' ? option.name : option }}</label>
       </div>
     </div>
   </div>
@@ -31,10 +31,11 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import IconChevron from '@/components/icons/IconChevron.vue'
 
 // emits
-const emit = defineEmits(['select'])
+const emit = defineEmits(['update:modelValue'])
 
 // props
 const props = defineProps({
+  modelValue: { type: Array, default: [] },
   options: { type: Array, default: [] },
   disableSearch: { type: Boolean, default: false },
   enableClickOutside: { type: Boolean, default: false },
@@ -53,7 +54,11 @@ const selectAll = ref(false)
 
 // computed
 const filteredOptions = computed(() => {
-  return props.disableSearch ? props.options : (search.value ? props.options.filter(el => el.name.toLowerCase().includes(search.value.toLowerCase()) || selected.value.find(se => se.id == el.id)) : props.options)
+  return props.disableSearch ? props.options : (search.value ? props.options.filter(function (el) {
+    const target = typeof el === 'object' ? el.name : el
+
+    return target.toLowerCase().includes(search.value.toLowerCase())
+  }) : props.options)
 })
 
 // mounted
@@ -77,7 +82,8 @@ watch(open, (newValueOpen) => {
 });
 
 watch(selected, (newValueSelected, oldValueSelected) => {
-  emit('select', newValueSelected)
+  emit('update:modelValue', newValueSelected)
+
   if (oldValueSelected.length > newValueSelected.length) {
     selectAll.value = false
   }
