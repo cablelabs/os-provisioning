@@ -48,62 +48,62 @@
 
 @if(Bouncer::can($action, $model_name) || Bouncer::can($action, $view_var))
     <div class="row d-flex justify-content-center d-print-none">
-    @if ($edit_view_save_button)
+        @if ($edit_view_save_button)
+            @if ($edit_view_second_button)
+                <div class='col-3'>
+            @endif
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1" title="{{ $button_title }}">
+                    <i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
+                    {{ \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}
+                </button>
+            </div>
+            @if ($edit_view_second_button)
+                </div>
+            @endif
+        @endif
         @if ($edit_view_second_button)
-        <div class='col-4'>
+            @if ($edit_view_save_button)
+                <div class='col-3'>
+            @endif
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_2nd_action" value="1" title="{{ $second_button_title }}">
+                    <i class="fa fa-{{ $second_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
+                    {{ \App\Http\Controllers\BaseViewController::translate_view($second_button_name , 'Button') }}
+                </button>
+            </div>
+            @if ($edit_view_save_button)
+                </div>
+            @endif
         @endif
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1" title="{{ $button_title }}">
-                <i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
-                {{ \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}
-            </button>
-        </div>
-        @if ($edit_view_second_button)
-        </div>
+        @if ($edit_view_third_button)
+            @if ($edit_view_save_button)
+                <div class='col-3'>
+            @endif
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_3rd_action" value="1" title="{{ $third_button_title }}">
+                    <i class="fa fa-{{ $third_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
+                    {{ \App\Http\Controllers\BaseViewController::translate_view($third_button_name , 'Button') }}
+                </button>
+            </div>
+            @if ($edit_view_save_button)
+                </div>
+            @endif
         @endif
-    @endif
-    @if ($edit_view_second_button)
-        @if ($edit_view_save_button)
-        <div class='col-4'>
+        @if ($printButton)
+            @if ($edit_view_save_button)
+                <div class='col-4'>
+            @endif
+            <div class="text-center">
+                <a href="javascript: window.print();" class="btn btn-primary m-r-5 m-t-15 text-white" title="Print this Page">
+                    <i class="fa fa-print fa-lg m-r-10" aria-hidden="true"></i>
+                    {{ trans('view.jQuery_Print') }}
+                </a>
+            </div>
+            @if ($edit_view_save_button)
+                </div>
+            @endif
         @endif
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_2nd_action" value="1" title="{{ $second_button_title }}">
-                <i class="fa fa-{{ $second_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
-                {{ \App\Http\Controllers\BaseViewController::translate_view($second_button_name , 'Button') }}
-            </button>
-        </div>
-        @if ($edit_view_save_button)
-        </div>
-        @endif
-    @endif
-    @if ($edit_view_third_button)
-        @if ($edit_view_save_button)
-        <div class='col-4'>
-        @endif
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_3rd_action" value="1" title="{{ $third_button_title }}">
-                <i class="fa fa-{{ $third_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
-                {{ \App\Http\Controllers\BaseViewController::translate_view($third_button_name , 'Button') }}
-            </button>
-        </div>
-        @if ($edit_view_save_button)
-        </div>
-        @endif
-    @endif
-    @if ($printButton)
-        @if ($edit_view_save_button)
-        <div class='col-4'>
-        @endif
-        <div class="text-center">
-            <a href="javascript: window.print();" class="btn btn-primary m-r-5 m-t-15 text-white" title="Print this Page">
-                <i class="fa fa-print fa-lg m-r-10" aria-hidden="true"></i>
-                {{ trans('view.jQuery_Print') }}
-            </a>
-        </div>
-        @if ($edit_view_save_button)
-        </div>
-        @endif
-    @endif
     </div>
 @endif
 {{-- javascript--}}
