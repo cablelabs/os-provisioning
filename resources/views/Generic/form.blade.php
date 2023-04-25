@@ -30,6 +30,8 @@
     $second_button_icon = $second_button_icon ?? 'refresh';
     $third_button_title = $third_button_title_key ? trans('messages.'.$third_button_title_key) : '';
     $third_button_icon = $third_button_icon ?? 'refresh';
+    $fourth_button_title = $fourth_button_title_key ? trans('messages.'.$fourth_button_title_key) : '';
+    $fourth_button_icon = $fourth_button_icon ?? 'refresh';
 ?>
 
 {{-- Error Message --}}
@@ -84,6 +86,20 @@
                 <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_3rd_action" value="1" title="{{ $third_button_title }}">
                     <i class="fa fa-{{ $third_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
                     {{ \App\Http\Controllers\BaseViewController::translate_view($third_button_name , 'Button') }}
+                </button>
+            </div>
+            @if ($edit_view_save_button)
+                </div>
+            @endif
+        @endif
+        @if ($edit_view_fourth_button)
+            @if ($edit_view_save_button)
+                <div class='col-3'>
+            @endif
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_4th_action" value="1" title="{{ $fourth_button_title }}">
+                    <i class="fa fa-{{ $fourth_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
+                    {{ \App\Http\Controllers\BaseViewController::translate_view($fourth_button_name , 'Button') }}
                 </button>
             </div>
             @if ($edit_view_save_button)

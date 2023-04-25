@@ -64,6 +64,11 @@ class BaseController extends Controller
     protected $third_button_title_key = null;
     protected $third_button_icon = null;
 
+    protected $edit_view_fourth_button = false;
+    protected $fourth_button_name = 'Missing action name';
+    protected $fourth_button_title_key = null;
+    protected $fourth_button_icon = null;
+
     protected $printButton = false;
 
     protected $relation_create_button = 'Create';
@@ -564,6 +569,10 @@ class BaseController extends Controller
         $a['third_button_icon'] = $this->third_button_icon;
         $a['edit_view_third_button'] = $this->edit_view_third_button;
         $a['third_button_title_key'] = $this->third_button_title_key;
+        $a['fourth_button_name'] = $this->fourth_button_name;
+        $a['fourth_button_icon'] = $this->fourth_button_icon;
+        $a['edit_view_fourth_button'] = $this->edit_view_fourth_button;
+        $a['fourth_button_title_key'] = $this->fourth_button_title_key;
         $a['save_button_title_key'] = $this->save_button_title_key;
         $a['printButton'] = $this->printButton;
         $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
