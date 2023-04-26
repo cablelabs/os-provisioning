@@ -1770,4 +1770,31 @@ class Contract extends \BaseModel
             'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'lng', 'lat',
         ];
     }
+
+    /**
+     * Get related Phonenumbers of all modems as comma separated string
+     */
+    public function relatedPns(): string
+    {
+        if (! Module::collections()->has('ProvVoip')) {
+            return '';
+        }
+
+        // Get some necessary relations by one DB query as first step to reduce further queries when accessing related models
+        $modems = $this->modems()->with([
+            'mtas:id,modem_id',
+            'mtas.phonenumbers:id,mta_id,country_code,prefix_number,number',
+        ])->get();
+
+        $this->setRelation('modems', $modems);
+        $pns = [];
+
+        foreach ($modems as $modem) {
+            foreach ($modem->related_phonenumbers() as $pn) {
+                $pns[] = $pn->asString();
+            }
+        }
+
+        return implode(', ', $pns);
+    }
 }

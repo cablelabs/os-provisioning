@@ -19,7 +19,6 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use Bouncer;
-use DB;
 use Module;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Qos;
@@ -44,24 +43,7 @@ class ContractController extends \BaseController
         }
 
         // Compose related phonenumbers as readonly info field
-        if (Module::collections()->has('ProvVoip')) {
-            // Get some necessary relations by one DB query as first step to reduce further queries when accessing related models
-            $modems = $model->modems()->with([
-                'mtas:id,modem_id',
-                'mtas.phonenumbers:id,mta_id,country_code,prefix_number,number',
-            ])->get();
-
-            $model->setRelation('modems', $modems);
-            $pns = [];
-
-            foreach ($modems as $modem) {
-                foreach ($modem->related_phonenumbers() as $pn) {
-                    $pns[] = $pn->asString();
-                }
-            }
-
-            $model->related_phonenrs = implode(', ', $pns);
-        }
+        $model->related_phonenrs = $model->relatedPns();
 
         $r = $a = $b = $c1 = $c2 = $d = [];
 
