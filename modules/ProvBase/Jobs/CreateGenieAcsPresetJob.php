@@ -119,6 +119,7 @@ class CreateGenieAcsPresetJob implements ShouldQueue
             $prov = [
                 "clear('Device', Date.now());",
                 "clear('InternetGatewayDevice', Date.now());",
+                "ext('sync-provision', 'ret', '{$this->modem->id}');",
             ];
         }
 
