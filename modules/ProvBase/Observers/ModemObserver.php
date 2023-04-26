@@ -18,9 +18,9 @@
 
 namespace Modules\ProvBase\Observers;
 
+use Module;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
-use Module;
 use Modules\ProvBase\Entities\Modem;
 
 /**
@@ -50,20 +50,22 @@ class ModemObserver
 
         $modem->updateRadius();
 
-        $modem->save();  // forces to call the updating() and updated() method of the observer !
+        if (! $modem->isAltiplano()) {
+            $modem->save();  // forces to call the updating() and updated() method of the observer !
+        }
 
         if (! $modem->internet_access) {
             $modem->blockCpeViaDhcp();
         }
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
-            Log::info('Queuing intent jobs');
-            Bus::chain([
-                new \Modules\Altiplano\Jobs\CreateOntIntentJob($modem),
-                new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem),
-            ])->catch(function (Throwable $e) {
-                Log::info('There was an error creating one or more intents');
-            })->dispatch();
+            $createOntJob = new \Modules\Altiplano\Jobs\CreateOntIntentJob($modem);
+            $createL2Job = new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem);
+            $createOntJob
+                ->withChain([$createL2Job])
+                ->catch(function () use ($modem) {
+                    Log::info('There was an error creating one or more intents', [$modem]);
+                })->dispatch($modem);
         }
     }
 
@@ -148,14 +150,14 @@ class ModemObserver
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
             if ($modem->isDirty('qos_id')) {
-                Bus::chain([
-                    new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem),
-                    new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem),
-                ])->catch(function (Throwable $e) {
-                    Log::info('There was an error updating the intent');
-                })->dispatch();
+                $deleteL2UserJob = new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem);
+                $createL2Job = new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem);
+                $deleteL2UserJob
+                    ->withChain([$createL2Job])
+                    ->catch(function () use ($modem) {
+                        Log::info('There was an error creating one or more intents', [$modem]);
+                    })->dispatch($modem);
 
-                // Returning here so that it doesn't trigger the next check and accidentally create a duplicate L2User
                 return;
             }
 
@@ -195,12 +197,13 @@ class ModemObserver
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
             Log::info('Queuing delete ONT & L2User intents');
-            Bus::chain([
-                new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem),
-                new \Modules\Altiplano\Jobs\DeleteOntIntentJob($modem),
-            ])->catch(function (Throwable $e) {
-                Log::info('There was an error deleting the intents');
-            })->dispatch();
+            $deleteL2UserJob = new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem);
+            $deleteOntJob = new \Modules\Altiplano\Jobs\DeleteOntIntentJob($modem);
+            $deleteL2UserJob
+                ->withChain([$deleteOntJob])
+                ->catch(function () use ($modem) {
+                    Log::info('There was an error deleting the intent', [$modem]);
+                })->dispatch($modem);
         }
     }
 }

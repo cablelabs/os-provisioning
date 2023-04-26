@@ -393,6 +393,7 @@ return [
         'provDevice' => 'ein entsprechendes Gerät aus dem Provisionierungsmodul',
         'Realty' => 'eine Liegenschaft',
         'Qos' => 'ein QOS',
+        'fiberName' => 'einen Glasfasernamen',
     ],
 
     // Index
