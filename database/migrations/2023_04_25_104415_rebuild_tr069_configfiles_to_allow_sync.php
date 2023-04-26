@@ -17,7 +17,6 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Modules\ProvBase\Entities\Configfile;
 
 return new class extends BaseMigration
 {
@@ -30,8 +29,6 @@ return new class extends BaseMigration
      */
     public function up()
     {
-        foreach (Configfile::where('device', 'tr069')->get() as $cf) {
-            Queue::pushOn('high', new \Modules\ProvBase\Jobs\ConfigfileJob(null, $cf->id));
-        }
+        \Queue::pushOn('high', new \Modules\ProvBase\Jobs\ConfigfileJob('tr069'));
     }
 };

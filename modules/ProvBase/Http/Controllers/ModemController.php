@@ -730,13 +730,6 @@ class ModemController extends \BaseController
         $modem = Modem::find($id);
 
         if (Request::filled('_4th_action')) {
-            $syncProvision = '/usr/share/genieacs/ext/sync-provision.js';
-            if (! file_exists($syncProvision)) {
-                exec("cp modules/ProvBase/Install/files/sync-provision.js $syncProvision");
-
-                return \Redirect::back();
-            }
-
             $modem->createSyncPreset();
 
             return \Redirect::back();
