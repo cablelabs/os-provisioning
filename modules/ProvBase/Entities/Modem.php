@@ -2850,4 +2850,15 @@ class Modem extends \BaseModel
             ds_snr', 'lng', 'lat',
         ];
     }
+
+    public static function resolveModemsWithFiberNames()
+    {
+        $distinctFiberNames = self::select('fiber_name')
+            ->whereNotNull('fiber_name')
+            ->distinct()
+            ->get();
+
+        return self::whereIn('fiber_name', $distinctFiberNames->pluck('fiber_name'))
+             ->get();
+    }
 }

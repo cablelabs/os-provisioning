@@ -286,6 +286,11 @@ class Kernel extends ConsoleKernel
             $schedule->command('voipmon:delete_old_records')->daily();
         }
 
+        if ($modules->has('Altiplano')) {
+            $schedule->command('nms:update-altiplano-modem-status')->everyFiveMinutes();
+            $schedule->command('nms:refresh-bearer-token')->everyThirtyMinutes();
+        }
+
         // TODO: run Kernel.php and supervisor queue workers as user 'apache'
         exec('chown -R apache:apache '.storage_path('framework/cache'));
     }
