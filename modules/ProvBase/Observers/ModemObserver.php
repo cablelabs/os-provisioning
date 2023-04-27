@@ -63,7 +63,7 @@ class ModemObserver
             $createOntJob
                 ->withChain([$createL2Job])
                 ->catch(function () use ($modem) {
-                    Log::info('There was an error creating one or more intents', [$modem]);
+                    Log::error('There was an error creating one or more intents', [$modem]);
                 })->dispatch($modem);
         }
     }
@@ -154,7 +154,7 @@ class ModemObserver
                 $deleteL2UserJob
                     ->withChain([$createL2Job])
                     ->catch(function () use ($modem) {
-                        Log::info('There was an error creating one or more intents', [$modem]);
+                        Log::error('There was an error creating one or more intents', [$modem]);
                     })->dispatch($modem);
 
                 return;
@@ -162,10 +162,10 @@ class ModemObserver
 
             if ((bool) $modem->getOriginal('internet_access') !== (bool) $modem->internet_access) {
                 if ($modem->internet_access) {
-                    Log::info('internet_access activated. Try and create L2User.');
+                    Log::error('internet_access activated. Try and create L2User.');
                     \Queue::pushOn('high', new \Modules\Altiplano\Jobs\CreateL2UserIntentJob($modem));
                 } else {
-                    Log::info('internet_access deactivated. Try and delete L2User.');
+                    Log::error('internet_access deactivated. Try and delete L2User.');
                     \Queue::pushOn('high', new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem));
                 }
             }
@@ -195,13 +195,13 @@ class ModemObserver
         $modem->delete_configfile();
 
         if ($modem->isAltiplano() && Module::collections()->has('Altiplano')) {
-            Log::info('Queuing delete ONT & L2User intents');
+            Log::debug('Queuing delete ONT & L2User intents');
             $deleteL2UserJob = new \Modules\Altiplano\Jobs\DeleteL2UserIntentJob($modem);
             $deleteOntJob = new \Modules\Altiplano\Jobs\DeleteOntIntentJob($modem);
             $deleteL2UserJob
                 ->withChain([$deleteOntJob])
                 ->catch(function () use ($modem) {
-                    Log::info('There was an error deleting the intent', [$modem]);
+                    Log::error('There was an error deleting the intent', [$modem]);
                 })->dispatch($modem);
         }
     }
