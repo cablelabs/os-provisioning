@@ -1688,12 +1688,23 @@ class BaseController extends Controller
         $model = static::get_model_obj();
         $dt_config = $model->view_index_label();
         $header_fields = $dt_config['index_header'];
+        $joins = $dt_config['join'] ?? [];
         $edit_column_data = $dt_config['edit'] ?? [];
         $filter_column_data = $dt_config['filter'] ?? [];
+        $extra_columns = $dt_config['extra'] ?? [];
         $eager_loading_tables = $dt_config['eager_loading'] ?? [];
         $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
+        $selectQuery = [$dt_config['table'].'.*'];
 
-        $query = $model::select($dt_config['table'].'.*');
+        if ($joins) {
+            $selectQuery = array_merge($selectQuery, array_map(fn ($join) => $join['select'], $joins)[0]);
+        }
+
+        $query = $model::select($selectQuery);
+
+        foreach ($joins as $join) {
+            $query->join($join['table'], $join['local_foreign_key'], '=', $join['foreign_key']);
+        }
 
         if ($eager_loading_tables) {
             $query->with($eager_loading_tables);
@@ -1777,6 +1788,12 @@ class BaseController extends Controller
                     return $model->$functionname();
                 });
             }
+        }
+
+        foreach ($extra_columns as $column => $functionname) {
+            $DT->addColumn($column, function ($model) use ($functionname) {
+                return $model->$functionname();
+            });
         }
 
         $DT->setRowClass(function ($model) {

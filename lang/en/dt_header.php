@@ -40,6 +40,8 @@ return [
         'number' => 'Number',
         'connected' => 'Connected',
         'occupied' => 'Occupied',
+        'code' => 'Code',
+        'to_disconnect' => 'To disconnect',
     ],
     'contact' => [
         'administration' => 'Administration',
@@ -63,16 +65,7 @@ return [
         'zip' => 'ZIP',
         'ground_for_dismissal' => 'Ground for dismissal',
     ],
-    'document' => [
-        'id' => 'ID',
-        'file' => 'File',
-    ],
-    'documenttemplate' => [
-        'file' => 'Template file',
-        'format' => 'Template format',
-        'name' => 'Name',
-        'type_view' => 'Type',
-    ],
+    'contract_id' => 'Contract',
     // Auth
     'users' => [
         'login_name' => 'Login Name',
@@ -113,6 +106,7 @@ return [
         'number' => 'debt number',
         'voucher_nr' => 'Voucher nr',
     ],
+    'debts' => 'Debts',
     //Invoices
     'invoice.type' => 'Type',
     'invoice.year' => 'Year',
@@ -415,6 +409,7 @@ return [
         'name' => 'Name',
         'street' => 'Street',
         'zip' => 'ZIP',
+        'link' => 'Realty',
     ],
     'alarm' => [
         'action' => 'Action',

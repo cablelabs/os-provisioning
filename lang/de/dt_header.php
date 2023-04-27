@@ -40,6 +40,8 @@ return [
         'number' => 'Nummer',
         'connected' => 'Angeschlossen',
         'occupied' => 'Bewohnt',
+        'code' => 'Code',
+        'to_disconnect' => 'Zum Trennen der Verbindung',
     ],
     'contact' => [
         'administration' => 'Hausverwaltung',
@@ -63,6 +65,7 @@ return [
         'zip' => 'PLZ',
         'ground_for_dismissal' => 'Kündigungsgrund',
     ],
+    'contract_id' => 'Vertrag',
     // Auth
     'users' => [
         'login_name' => 'Loginname',
@@ -103,16 +106,7 @@ return [
         'number' => 'OP-Nummer',
         'voucher_nr' => 'Belegnr',
     ],
-    'document' => [
-        'id' => 'ID',
-        'file' => 'Datei',
-    ],
-    'documenttemplate' => [
-        'file' => 'Template Datei',
-        'format' => 'Template Format',
-        'name' => 'Name',
-        'type_view' => 'Typ',
-    ],
+    'debts' => 'Schulden',
     //Invoices
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',
@@ -419,6 +413,7 @@ return [
         'name' => 'Name',
         'street' => 'Straße',
         'zip' => 'PLZ',
+        'link' => 'Grundbesitz',
     ],
     'alarm' => [
         'action' => 'Aktion',
