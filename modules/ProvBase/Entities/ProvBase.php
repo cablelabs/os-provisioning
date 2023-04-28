@@ -38,6 +38,9 @@ class ProvBase extends \BaseModel
     protected const DEFAULT_NETWORK_FILE_PATH = '/etc/dhcp-nmsprime/default-network.conf';
     public const NSUPDATE_LOGFILE = '/var/log/nmsprime/nsupdate.log';
 
+    public const READ_ONLY_COMMUNITY = 'public';
+    public const READ_WRITE_COMMUNITY = 'private';
+
     /**
      * Constructor.
      *

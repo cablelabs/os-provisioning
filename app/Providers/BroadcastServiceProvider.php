@@ -33,7 +33,7 @@ class BroadcastServiceProvider extends ServiceProvider
             return ['id' => $user->id, 'name' => $user->login_name];
         });
 
-        Broadcast::channel('arrismodemprogress.{modemId}', function ($user) {
+        Broadcast::channel('arrisiperf.{modemId}', function ($user) {
             return ['id' => $user->id, 'name' => $user->login_name];
         });
     }

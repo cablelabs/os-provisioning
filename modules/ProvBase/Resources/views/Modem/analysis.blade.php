@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        @yield('arris_modem')
+        @yield('arris_iperf')
     </div>
 @stop
 

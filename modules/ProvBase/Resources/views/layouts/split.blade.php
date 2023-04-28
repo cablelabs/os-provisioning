@@ -84,7 +84,7 @@
             '<ul class="nav nav-pills" id="ping-tab">
                 <li role="presentation"><a href="#ping-test" data-toggle="pill">Default Ping</a></li>
                 <li role="presentation"><a href="#flood-ping" data-toggle="pill">Flood-Ping</a></li>
-                <li role="presentation"><a href="#arris-modem" data-toggle="pill">Arris-Modem-Ping</a></li>
+                <li role="presentation"><a href="#arris-iperf" data-toggle="pill">Arris-Iperf-Ping</a></li>
             </ul>', 'i' => 4))
         @php
             $panelHeader = '<ul class="nav nav-pills" id="loglease">';
