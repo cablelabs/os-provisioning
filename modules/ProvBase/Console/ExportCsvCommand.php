@@ -75,6 +75,30 @@ class ExportCsvCommand extends Command
      */
     public function handle()
     {
+        $this->checkConfigfile();
+        $this->readConfig();
+
+        // export the database tables one by one
+        foreach ($this->config['dbtables'] as $table => $options) {
+            $filenameBase = $options['filename_base'] ?? $table;
+            $filenameBase = preg_replace('/[^a-z0-9_-]+/', '-', strtolower($filenameBase));
+            $columns = array_keys($options['columns']);
+            $header = array_values($options['columns']);
+            $data = $this->getDbData($table, $columns);
+            $csvData = $this->prepareData($header, $data);
+
+            $this->storeCsv($filenameBase, $csvData);
+        }
+    }
+
+    /**
+     * Checks if the configfile exists.
+     * Otherwise tries to create one from the example file added during installation
+     *
+     * @author Patrick Reichel
+     */
+    protected function checkConfigfile()
+    {
         $this->configFile = $this->configDir.'/'.$this->configFileName;
         if (! Storage::has($this->configDir)) {
             Storage::makeDirectory($this->configDir);
@@ -93,7 +117,14 @@ class ExportCsvCommand extends Command
             Log::info($msg);
             $this->info($msg);
         }
-
+    }
+    /**
+     * Reads the config from the ini file
+     *
+     * @author Patrick Reichel
+     */
+    protected function readConfig()
+    {
         $configFileAbs = storage_path().'/app/'.$this->configFile;
         $this->info('Reading config from '.$configFileAbs);
         $config_raw = parse_ini_file($configFileAbs, true, INI_SCANNER_NORMAL);
@@ -106,20 +137,13 @@ class ExportCsvCommand extends Command
         }
 
         $this->config = $config_raw['csv_exporter_conf'];
-
+        $this->config['dbtables'] = [];
         foreach ($config_raw as $table => $options) {
             if ('csv_exporter_conf' == $table) {
                 // this is the general config, not the table specific one
                 continue;
             }
-            $filenameBase = $options['filename_base'] ?? $table;
-            $filenameBase = preg_replace('/[^a-z0-9_-]+/', '-', strtolower($filenameBase));
-            $columns = array_keys($options['columns']);
-            $header = array_values($options['columns']);
-            $data = $this->getDbData($table, $columns);
-            $csvData = $this->prepareData($header, $data);
-
-            $this->storeCsv($filenameBase, $csvData);
+            $this->config['dbtables'][$table] = $options;
         }
     }
 
