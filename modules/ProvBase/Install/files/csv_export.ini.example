@@ -1,21 +1,30 @@
-# This is the initial config file for the database to CSV file export
-# Adapt to your needs…
+; This is the initial config file for the database to CSV file export
+; Adapt to your needs…
 
-# this section holds the general config
+; this section holds the general config
 [csv_exporter_conf]
 
-# the csv files will be stored in this directory
+; the csv files will be stored in this directory
 export_dir = "/tmp/nmsprime_csv_export"
 
-# add the current timestamp to the csv filenames; either true or false
-add_timestamp_to_filename = false
+; add the current timestamp to the csv filenames; either true or false
+add_timestamp_to_filename = true
 
-# store the csv files in subdirs like 2023/2023-02/2023-02-13; either true or false
+; timestamp format string as accepted by PHP's date() function
+; (see https://www.php.net/manual/de/datetime.format.php)
+; hint: for complete ISO timestamp (e.g. 2023-05-03T16:47:00+02:00) set to "c"
+; will be added to the base filename (e.g. modem)
+; examples:
+;	"__c" ⇒ modem__2023-05-03T16:47:00+02:00.csv
+'	"__Y-m-d" => modem__2023-05-03.csv
+timestamp_format = "__c"
+
+; store the csv files in subdirs like 2023/2023-02/2023-02-13; either true or false
 create_date_subdirs = false
 
-# make one section for every database table you want to export
-# the array in the section defines the database fields and their CSV counterparts
-# if filename_base is not given the name of the database table will be used
+; make one section for every database table you want to export
+; the array in the section defines the database fields and their CSV counterparts
+; if filename_base is not given the name of the database table will be used
 [netgw]
 filename_base = "gateways"
 columns[id] = "ID"

@@ -57,6 +57,11 @@ class ExportCsvCommand extends Command
     protected $config = [];
 
     /**
+     * The timestamp format to use if none is given
+     */
+    protected $defaultTimestampFormat = "__c";
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -81,7 +86,6 @@ class ExportCsvCommand extends Command
         // export the database tables one by one
         foreach ($this->config['dbtables'] as $table => $options) {
             $filenameBase = $options['filename_base'] ?? $table;
-            $filenameBase = preg_replace('/[^a-z0-9_-]+/', '-', strtolower($filenameBase));
             $columns = array_keys($options['columns']);
             $header = array_values($options['columns']);
             $data = $this->getDbData($table, $columns);
@@ -206,8 +210,12 @@ class ExportCsvCommand extends Command
         }
 
         $addTimestamp = boolval($this->config['add_timestamp_to_filename'] ?? false);
-        $suffix = $addTimestamp ? date('c').'.csv' : 'csv';
-        $exportFile = $exportDir.'/'.$filenameBase.'.'.$suffix;
+        $timestampFormat = $this->config['timestamp_format'] ?? $this->defaultTimestampFormat;
+        $suffix = $addTimestamp ? date($timestampFormat).'.csv' : '.csv';
+        $filename = $filenameBase.$suffix;
+        $filename = str_replace(' ', '_', $filename);
+        $filename = preg_replace('/[^.+:a-zA-Z0-9_-]+/', '-', $filename);
+        $exportFile = $exportDir.'/'.$filename;
 
         $this->info("Writing $exportFile");
         try {
