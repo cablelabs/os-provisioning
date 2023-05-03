@@ -1686,15 +1686,15 @@ class BaseController extends Controller
     public function index_datatables_ajax()
     {
         $model = static::get_model_obj();
-        $dt_config = $model->view_index_label();
-        $header_fields = $dt_config['index_header'];
-        $joins = $dt_config['join'] ?? [];
-        $edit_column_data = $dt_config['edit'] ?? [];
-        $filter_column_data = $dt_config['filter'] ?? [];
-        $extra_columns = $dt_config['extra'] ?? [];
-        $eager_loading_tables = $dt_config['eager_loading'] ?? [];
-        $raw_columns = $dt_config['raw_columns'] ?? []; // not run through htmlentities()
-        $selectQuery = [$dt_config['table'].'.*'];
+        $dtConfig = $model->view_index_label();
+        $headerFields = $dtConfig['index_header'];
+        $joins = $dtConfig['join'] ?? [];
+        $editColumnData = $dtConfig['edit'] ?? [];
+        $filterColumnData = $dtConfig['filter'] ?? [];
+        $extraColumns = $dtConfig['extra'] ?? [];
+        $eagerLoadingTables = $dtConfig['eager_loading'] ?? [];
+        $rawColumns = $dtConfig['raw_columns'] ?? []; // not run through htmlentities()
+        $selectQuery = [$dtConfig['table'].'.*'];
 
         if ($joins) {
             $selectQuery = array_merge($selectQuery, array_map(fn ($join) => $join['select'], $joins)[0]);
@@ -1706,12 +1706,12 @@ class BaseController extends Controller
             $query->join($join['table'], $join['local_foreign_key'], '=', $join['foreign_key']);
         }
 
-        if ($eager_loading_tables) {
-            $query->with($eager_loading_tables);
+        if ($eagerLoadingTables) {
+            $query->with($eagerLoadingTables);
         }
 
-        if (isset($dt_config['scope'])) {
-            $scope = $dt_config['scope'];
+        if (isset($dtConfig['scope'])) {
+            $scope = $dtConfig['scope'];
             $query->$scope();
         }
 
@@ -1732,26 +1732,26 @@ class BaseController extends Controller
         }
 
         // TODO: Just set this in where clause in query?
-        foreach ($filter_column_data as $column => $custom_query) {
+        foreach ($filterColumnData as $column => $customQuery) {
             // backward compatibility – accept strings as input, too
-            if (is_string($custom_query)) {
-                $custom_query = ['query' => $custom_query, 'eagers' => [], 'exact' => false];
-            } elseif (! is_array($custom_query)) {
-                throw new \Exception('$custom_query has to be string or array');
+            if (is_string($customQuery)) {
+                $customQuery = ['query' => $customQuery, 'eagers' => [], 'exact' => false];
+            } elseif (! is_array($customQuery)) {
+                throw new \Exception('$customQuery has to be string or array');
             }
 
-            $DT->filterColumn($column, function ($query, $keyword) use ($custom_query) {
-                if (isset($custom_query['exact']) && ! $custom_query['exact']) {
+            $DT->filterColumn($column, function ($query, $keyword) use ($customQuery) {
+                if (isset($customQuery['exact']) && ! $customQuery['exact']) {
                     $keyword = "%{$keyword}%";
                 }
 
-                $query->with($custom_query['eagers'])->whereRaw($custom_query['query'], [$keyword]);
+                $query->with($customQuery['eagers'])->whereRaw($customQuery['query'], [$keyword]);
             });
         }
 
-        $first_column = head($header_fields);
-        if (Str::startsWith(head($header_fields), $dt_config['table'])) {
-            $first_column = substr($first_column, strlen($dt_config['table']) + 1);
+        $firstColumn = head($headerFields);
+        if (Str::startsWith(head($headerFields), $dtConfig['table'])) {
+            $firstColumn = substr($firstColumn, strlen($dtConfig['table']) + 1);
         }
 
         $DT->editColumn('checkbox', function ($model) {
@@ -1761,11 +1761,11 @@ class BaseController extends Controller
 
             return "<input style='simple' align='center' class='' name='ids[".$model->id."]' type='checkbox' value='1' ".
                 ($model->index_delete_disabled ? 'disabled' : '').'>';
-        })->editColumn($first_column, function ($model) use ($first_column) {
-            $content = $model[$first_column];
+        })->editColumn($firstColumn, function ($model) use ($firstColumn) {
+            $content = $model[$firstColumn];
             // Get cell content when data is eager loaded on first column
-            if (strpos($first_column, '.') !== false) {
-                $chain = explode('.', $first_column);
+            if (strpos($firstColumn, '.') !== false) {
+                $chain = explode('.', $firstColumn);
 
                 $content = $model;
                 foreach ($chain as $value) {
@@ -1777,8 +1777,8 @@ class BaseController extends Controller
                 $model->view_icon().$content.'</strong></a>';
         });
 
-        foreach ($edit_column_data as $column => $functionname) {
-            if ($column == $first_column) {
+        foreach ($editColumnData as $column => $functionname) {
+            if ($column == $firstColumn) {
                 $DT->editColumn($column, function ($model) use ($functionname) {
                     return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).
                         '"><strong>'.$model->view_icon().$model->$functionname().'</strong></a>';
@@ -1790,7 +1790,7 @@ class BaseController extends Controller
             }
         }
 
-        foreach ($extra_columns as $column => $functionname) {
+        foreach ($extraColumns as $column => $functionname) {
             $DT->addColumn($column, function ($model) use ($functionname) {
                 return $model->$functionname();
             });
@@ -1804,9 +1804,9 @@ class BaseController extends Controller
             return $model->view_index_label()['bsclass'] ?? 'info';
         });
 
-        array_unshift($raw_columns, 'checkbox', $first_column); // add everywhere used raw columns
+        array_unshift($rawColumns, 'checkbox', $firstColumn); // add everywhere used raw columns
 
-        return $DT->rawColumns($raw_columns)->make();
+        return $DT->rawColumns($rawColumns)->make();
     }
 
     /**

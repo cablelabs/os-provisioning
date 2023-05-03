@@ -36,12 +36,12 @@ return [
     'type' => 'Type',
     'zip' => 'ZIP',
     'version' => 'Version',
+    'to_disconnect' => 'To disconnect',
     'apartment' => [
         'number' => 'Number',
         'connected' => 'Connected',
         'occupied' => 'Occupied',
         'code' => 'Code',
-        'to_disconnect' => 'To disconnect',
     ],
     'contact' => [
         'administration' => 'Administration',

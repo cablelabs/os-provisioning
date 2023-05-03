@@ -36,12 +36,12 @@ return [
     'type' => 'Typ',
     'zip' => 'PLZ',
     'version' => 'Version',
+    'to_disconnect' => 'Zum Trennen der Verbindung',
     'apartment' => [
         'number' => 'Nummer',
         'connected' => 'Angeschlossen',
         'occupied' => 'Bewohnt',
         'code' => 'Code',
-        'to_disconnect' => 'Zum Trennen der Verbindung',
     ],
     'contact' => [
         'administration' => 'Hausverwaltung',
