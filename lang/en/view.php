@@ -284,8 +284,8 @@ return [
     // 'Edit'                       => 'Ändere ',
 
     // Dunning
-    'Header_DunningLetter'      => 'Dunning Letter',
-    'Header_DunningRun'         => 'Dunning Run',
+    'DunningLetter'      => 'Dunning Letter',
+    'DunningRun'         => 'Dunning Run',
 
     //BUTTON
     'Sign me in'                => 'Login',

@@ -283,8 +283,8 @@ return [
     // 'Edit'                       => 'Ändere ',
 
     // Dunning
-    'Header_DunningLetter'      => 'Mahnschreiben',
-    'Header_DunningRun'         => 'Mahnlauf',
+    'DunningLetter'      => 'Mahnschreiben',
+    'DunningRun'         => 'Mahnlauf',
 
     //BUTTON
     'Sign me in'                => 'Einloggen',
