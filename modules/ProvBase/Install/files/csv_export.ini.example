@@ -15,7 +15,9 @@ create_date_subdirs = false
 
 # make one section for every database table you want to export
 # the array in the section defines the database fields and their CSV counterparts
+# if filename_base is not given the name of the database table will be used
 [netgw]
+filename_base = "gateways"
 columns[id] = "ID"
 columns[hostname] = "Hostname"
 columns[ip] = "IP address"

@@ -112,12 +112,14 @@ class ExportCsvCommand extends Command
                 // this is the general config, not the table specific one
                 continue;
             }
+            $filenameBase = $options['filename_base'] ?? $table;
+            $filenameBase = preg_replace('/[^a-z0-9_-]+/', '-', strtolower($filenameBase));
             $columns = array_keys($options['columns']);
             $header = array_values($options['columns']);
             $data = $this->getDbData($table, $columns);
             $csvData = $this->prepareData($header, $data);
 
-            $this->storeCsv($table, $csvData);
+            $this->storeCsv($filenameBase, $csvData);
         }
     }
 
@@ -162,12 +164,12 @@ class ExportCsvCommand extends Command
     /**
      * Writes data to CSV file
      *
-     * @param  string  $table  The database table
+     * @param  string  $filenameBase  The base filename
      * @param  array  $data  The data to be written
      *
      * @author Patrick Reichel
      */
-    protected function storeCsv($table, $data)
+    protected function storeCsv($filenameBase, $data)
     {
         $exportDir = $this->config['export_dir'];
 
@@ -181,7 +183,7 @@ class ExportCsvCommand extends Command
 
         $addTimestamp = boolval($this->config['add_timestamp_to_filename'] ?? false);
         $suffix = $addTimestamp ? date('c').'.csv' : 'csv';
-        $exportFile = $exportDir.'/'.$table.'.'.$suffix;
+        $exportFile = $exportDir.'/'.$filenameBase.'.'.$suffix;
 
         $this->info("Writing $exportFile");
         try {
