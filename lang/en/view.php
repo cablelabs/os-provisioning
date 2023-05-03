@@ -283,6 +283,10 @@ return [
     // 'Create'                 => 'Erstelle ',
     // 'Edit'                       => 'Ändere ',
 
+    // Dunning
+    'Header_DunningLetter'      => 'Dunning Letter',
+    'Header_DunningRun'         => 'Dunning Run',
+
     //BUTTON
     'Sign me in'                => 'Login',
     'Button_Create'             => 'Create',

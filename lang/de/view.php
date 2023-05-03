@@ -282,6 +282,10 @@ return [
     // 'Create'                 => 'Erstelle ',
     // 'Edit'                       => 'Ändere ',
 
+    // Dunning
+    'Header_DunningLetter'      => 'Mahnschreiben',
+    'Header_DunningRun'         => 'Mahnlauf',
+
     //BUTTON
     'Sign me in'                => 'Einloggen',
     'Button_Create'             => 'Erstelle',
