@@ -29,6 +29,7 @@ return [
             'missingProvVoip' => ':provider CDRs can not be assigned to customers without ProvVoip module.',
             'missingProvVoipEnvia' => 'Without ProvVoip module several checks according to the correct assignment of EnviaTel CDRs to the customer can not be made.',
             'noVoip' => 'Missing voip tariff for contract :contract. Price is calculated with basic tariff and no extra charge is added!',
+            'ropaCallsDiscarded' => 'CDR: Phonenumber :phonenr not found in database. Discarded :count calls with price of :price €',
         ],
     ],
     'Birthday'                  => 'Birthday',
