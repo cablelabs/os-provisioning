@@ -346,6 +346,7 @@ return [
     'Contract Nr'               => 'Vertragsnr',
     'Contract number legacy'    => 'Historische Vertragsnummer',
     'Cost Center'               => 'Kostenstelle',
+    'Cost Center Name' => 'Kostenstellenname',
     'Create Invoice'            => 'Rechnung erstellen',
     'Customer number'           => 'Kundennummer',
     'Customer number legacy'    => 'Historische Kundennummer',

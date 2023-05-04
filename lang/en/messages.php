@@ -347,6 +347,7 @@ return [
     'Contract Nr'               => 'Contract Nr',
     'Contract number legacy'    => 'Contract number legacy',
     'Cost Center'               => 'Cost Center',
+    'Cost Center Name' => 'Cost Center Name',
     'Create Invoice'            => 'Create Invoice',
     'Customer number'           => 'Customer number',
     'Customer number legacy'    => 'Customer number legacy',
