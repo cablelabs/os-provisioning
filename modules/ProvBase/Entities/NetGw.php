@@ -469,7 +469,7 @@ class NetGw extends \BaseModel
             foreach ($snrs as $snrOid => $snr) {
                 [$snrIpIdx, $snrFreqIdx] = explode('.', $snrOid);
 
-                if ($snrIpIdx != $ipIdx) {
+                if ($snrIpIdx != $ipIdx || ! array_key_exists($snrFreqIdx, $freqs)) {
                     continue;
                 }
 
