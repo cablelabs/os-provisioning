@@ -1691,19 +1691,26 @@ class BaseController extends Controller
         $joins = $dtConfig['join'] ?? [];
         $editColumnData = $dtConfig['edit'] ?? [];
         $filterColumnData = $dtConfig['filter'] ?? [];
-        $extraColumns = $dtConfig['extra'] ?? [];
         $eagerLoadingTables = $dtConfig['eager_loading'] ?? [];
         $rawColumns = $dtConfig['raw_columns'] ?? []; // not run through htmlentities()
         $selectQuery = [$dtConfig['table'].'.*'];
 
-        if ($joins) {
-            $selectQuery = array_merge($selectQuery, array_map(fn ($join) => $join['select'], $joins)[0]);
-        }
-
-        $query = $model::select($selectQuery);
+        $query = $model::selectRaw(implode(',', $joins ? array_merge($selectQuery, array_merge(...array_map(fn ($join) => $join['select'], $joins))) : $selectQuery));
 
         foreach ($joins as $join) {
-            $query->join($join['table'], $join['local_foreign_key'], '=', $join['foreign_key']);
+            $joinTable = $join['table'];
+            $joinLocalForeignKey = $join['local_foreign_key'];
+            $joinForeignKey = $join['foreign_key'];
+            $joinType = $join['type'] ?? 'inner';
+
+            switch ($joinType) {
+                case 'left':
+                    $query->leftJoin($joinTable, $joinLocalForeignKey, '=', $joinForeignKey);
+                    break;
+                default:
+                    $query->join($joinTable, $joinLocalForeignKey, '=', $joinForeignKey);
+                    break;
+            }
         }
 
         if ($eagerLoadingTables) {
@@ -1788,12 +1795,6 @@ class BaseController extends Controller
                     return $model->$functionname();
                 });
             }
-        }
-
-        foreach ($extraColumns as $column => $functionname) {
-            $DT->addColumn($column, function ($model) use ($functionname) {
-                return $model->$functionname();
-            });
         }
 
         $DT->setRowClass(function ($model) {
