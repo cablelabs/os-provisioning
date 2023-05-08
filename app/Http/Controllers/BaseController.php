@@ -1699,16 +1699,16 @@ class BaseController extends Controller
 
         foreach ($joins as $join) {
             $joinTable = $join['table'];
-            $joinLocalForeignKey = $join['local_foreign_key'];
-            $joinForeignKey = $join['foreign_key'];
+            $localKey = $join['local_key'];
+            $foreignKey = $join['foreign_key'];
             $joinType = $join['type'] ?? 'inner';
 
             switch ($joinType) {
                 case 'left':
-                    $query->leftJoin($joinTable, $joinLocalForeignKey, '=', $joinForeignKey);
+                    $query->leftJoin($joinTable, $localKey, '=', $foreignKey);
                     break;
                 default:
-                    $query->join($joinTable, $joinLocalForeignKey, '=', $joinForeignKey);
+                    $query->join($joinTable, $localKey, '=', $foreignKey);
                     break;
             }
         }
