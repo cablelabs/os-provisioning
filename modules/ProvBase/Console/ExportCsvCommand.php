@@ -153,6 +153,7 @@ class ExportCsvCommand extends Command
 
     /**
      * Get data for given database table and columns
+     * Process joins as well
      *
      * @param  string  $table  The database table
      * @param  array  $columns  The columns to get data for
@@ -162,7 +163,37 @@ class ExportCsvCommand extends Command
      */
     protected function getDbData($table, $columns)
     {
-        return DB::table($table)->select($columns)->whereNull('deleted_at')->get();
+        $joins = [];
+        $query = DB::table($table);
+        foreach ($columns as $column) {
+
+            // data form original table
+            if (! \Str::contains($column, '::')) {
+                $selects[] = $table.'.'.$column.' as '.$column;
+                continue;
+            }
+
+            // malformed column definition
+            if (2 != substr_count($column, '::')) {
+                $msg = __METHOD__.'(): Malformed column “'.$column.'”';
+                Log::error($msg);
+                $this->error($msg);
+                exit(1);
+            }
+
+            // data from joined table
+            $parts = explode("::", $column);
+            $selects[] = $parts[1].'.'.$parts[2].' as '.$column;
+            if (! in_array($parts[1], $joins)) {
+                $joins[] = $parts[1];
+                $query->rightJoin($parts[1], $table.'.'.$parts[0], '=', $parts[1].'.id');
+            }
+        }
+
+        $query->select($selects);
+        $query->whereNull($table.'.deleted_at');
+
+        return $query->get();
     }
 
     /**

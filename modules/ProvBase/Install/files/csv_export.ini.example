@@ -34,6 +34,9 @@ columns[company] = "Manufacturer"
 columns[series] = "Series"
 columns[type] = "Type"
 
-[qos]
+; to use joined data use the following syntax
+[modem]
 columns[id] = "ID"
-columns[name] = "Name"
+; syntax: ColumnWithForeignId::JoinedTable::ColumnNameInJoinedTable
+columns[qos_id::qos::name] = "QoS ID"
+columns[qos_id::qos::ds_rate_max] = "QoS rate"
