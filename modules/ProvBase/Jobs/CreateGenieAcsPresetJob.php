@@ -117,8 +117,14 @@ class CreateGenieAcsPresetJob implements ShouldQueue
         $prov = [];
         if (count($events) == 1 && array_key_exists('0 BOOTSTRAP', $events)) {
             $prov = [
+                'const events = [];',
+                "for (const e of declare('Events.*', {value: 1})) {",
+                'if (e.value[0] >= Date.now()) events.push(e.path.slice(7));',
+                '}',
+                "if (events.includes('0_BOOTSTRAP')) {",
                 "clear('Device', Date.now());",
                 "clear('InternetGatewayDevice', Date.now());",
+                '}',
                 "ext('sync-provision', 'ret', '{$this->modem->id}');",
             ];
         }
