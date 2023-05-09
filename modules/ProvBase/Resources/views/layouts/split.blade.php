@@ -80,12 +80,18 @@
     </div>
 
     <div class="col-md-5 ui-sortable">
-        @include ('bootstrap.panel', array ('content' => 'content_ping', 'view_header' =>
-            '<ul class="nav nav-pills" id="ping-tab">
+        @php
+        $panelHeaderPing = '<ul class="nav nav-pills" id="ping-tab">
                 <li role="presentation"><a href="#ping-test" data-toggle="pill">Default Ping</a></li>
-                <li role="presentation"><a href="#flood-ping" data-toggle="pill">Flood-Ping</a></li>
-                <li role="presentation"><a href="#arris-iperf" data-toggle="pill">Arris-Iperf-Ping</a></li>
-            </ul>', 'i' => 4))
+                <li role="presentation"><a href="#flood-ping" data-toggle="pill">Flood-Ping</a></li>';
+        if (env('ARRIS_IPERF_ENABLE')) {
+            $panelHeaderPing .= '<li role="presentation"><a href="#arris-iperf" data-toggle="pill">Arris-Iperf-Ping</a></li>';
+        }
+        $panelHeaderPing .= '</ul>';
+        @endphp
+
+        @include ('bootstrap.panel', array ('content' => 'content_ping', 'view_header' => $panelHeaderPing, 'i' => 4))
+
         @php
             $panelHeader = '<ul class="nav nav-pills" id="loglease">';
             foreach ($pills as $pill) {
