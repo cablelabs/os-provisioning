@@ -26,6 +26,9 @@ import 'jquery-ui/ui/widgets/sortable'
 import 'jquery-ui/ui/widgets/draggable'
 import 'jquery-ui/ui/widgets/autocomplete'
 
+import Chart from 'chart.js/auto'
+window.Chart = Chart
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the

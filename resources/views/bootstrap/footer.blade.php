@@ -34,7 +34,6 @@
 <script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 
 <script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/chart/Chart.min.js')}}"></script>
 
 <!-- ================== END BASE JS ================== -->
 
