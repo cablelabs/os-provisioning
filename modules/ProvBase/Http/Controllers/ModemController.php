@@ -271,7 +271,7 @@ class ModemController extends \BaseController
                     'value' => [
                         null => 'n/a',
                         'active' => 'active',
-                        'inactive' => 'inactive',
+                        'disabled' => 'disabled',
                     ],
                     'name' => 'next_ont_state',
                     'description' => 'Next ONT state',
@@ -1346,7 +1346,7 @@ class ModemController extends \BaseController
 
             $allowedStates = [
                 'active',
-                'inactive',
+                'disabled',
             ];
             if (! in_array($next_ont_state, $allowedStates)) {
                 \Session::push('tmp_error_above_index_list', 'Next state '.$next_ont_state.' in line '.($lineNumber + 1).' invalide – ignoring line');
