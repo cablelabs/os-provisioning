@@ -2443,6 +2443,15 @@ class Modem extends \BaseModel
         $ip = gethostbyname($hostname);
         $ip = ($ip == $hostname) ? null : $ip;
 
+        if ($this->isAltiplano()) {
+            $connectionRequestURL = $this->getGenieAcsModel('InternetGatewayDevice.ManagementServer.ConnectionRequestURL')->_value;
+            $deviceIp = parse_url($connectionRequestURL, PHP_URL_HOST);
+
+            exec('sudo ping -c1 -i0 -w1 '.$deviceIp, $ping, $ret);
+
+            return ['ip' => $deviceIp, 'online' => $ret ? false : true];
+        }
+
         if ($this->isPPP()) {
             $cur = $this->radacct()->latest('acctstarttime')->first();
             if ($cur && ! $cur->acctstoptime) {
