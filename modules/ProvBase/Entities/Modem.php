@@ -1152,7 +1152,7 @@ class Modem extends \BaseModel
         $model = json_decode(self::callGenieAcsApi($route, 'GET'));
 
         if (! $model) {
-            return false;
+            return null;
         }
 
         $model = reset($model);
@@ -1164,7 +1164,7 @@ class Modem extends \BaseModel
 
         foreach (explode('.', $projection) as $idx) {
             if (! isset($model->{$idx})) {
-                return false;
+                return null;
             }
             $model = $model->{$idx};
         }
