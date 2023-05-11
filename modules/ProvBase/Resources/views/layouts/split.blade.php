@@ -84,7 +84,7 @@
         $panelHeaderPing = '<ul class="nav nav-pills" id="ping-tab">
                 <li role="presentation"><a href="#ping-test" data-toggle="pill">Default Ping</a></li>
                 <li role="presentation"><a href="#flood-ping" data-toggle="pill">Flood-Ping</a></li>';
-        if (env('ARRIS_IPERF_ENABLE')) {
+        if (config('provmon.arrisIperf')['enable']) {
             $panelHeaderPing .= '<li role="presentation"><a href="#arris-iperf" data-toggle="pill">Arris-Iperf-Ping</a></li>';
         }
         $panelHeaderPing .= '</ul>';
