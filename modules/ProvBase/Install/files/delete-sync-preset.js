@@ -2,7 +2,7 @@
 
 const http = require("http");
 
-function syncProvision(args, callback) {
+function deleteSyncPreset(args, callback) {
 
     const options = {
         port: 7557,
@@ -39,4 +39,4 @@ function syncProvision(args, callback) {
     req.end();
 }
 
-exports.ret = syncProvision;
+exports.ret = deleteSyncPreset;
