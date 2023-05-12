@@ -1152,7 +1152,7 @@ class Modem extends \BaseModel
         $model = json_decode(self::callGenieAcsApi($route, 'GET'));
 
         if (! $model) {
-            return null;
+            return;
         }
 
         $model = reset($model);
@@ -1164,7 +1164,7 @@ class Modem extends \BaseModel
 
         foreach (explode('.', $projection) as $idx) {
             if (! isset($model->{$idx})) {
-                return null;
+                return;
             }
             $model = $model->{$idx};
         }
@@ -2444,12 +2444,12 @@ class Modem extends \BaseModel
         $ip = ($ip == $hostname) ? null : $ip;
 
         if ($this->isAltiplano()) {
-            $connectionRequestURL = $this->getGenieAcsModel('InternetGatewayDevice.ManagementServer.ConnectionRequestURL')->_value;
+            $connectionRequestURL = $this->getGenieAcsModel('InternetGatewayDevice.ManagementServer.ConnectionRequestURL')?->_value;
             $deviceIp = parse_url($connectionRequestURL, PHP_URL_HOST);
 
             exec('sudo ping -c1 -i0 -w1 '.$deviceIp, $ping, $ret);
 
-            return ['ip' => $deviceIp, 'online' => $ret ? false : true];
+            return ['ip' => $deviceIp, 'online' => ! $ret];
         }
 
         if ($this->isPPP()) {
