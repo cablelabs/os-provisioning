@@ -51,7 +51,7 @@ class BaseModel extends Eloquent
      */
     public $observer_enabled = true;
 
-    protected $connection = 'pgsql';
+    protected $connection = null;
     protected $dateFormat = 'Y-m-d H:i:sO';
 
     /**
@@ -82,6 +82,19 @@ class BaseModel extends Eloquent
      * @var array
      */
     public const AVAILABLE_FILTERS = [];
+
+    /**
+     * Constructor
+     *
+     * @author Patrick Reichel
+     */
+    public function __construct(array $attributes = [])
+    {
+        // not sure if even needed?
+        // switched from hardcoded to using config
+        $this->connection = config('database.default');
+        parent::__construct($attributes);
+    }
 
     /**
      * Helper to get the model name.
