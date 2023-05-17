@@ -15,8 +15,11 @@
  * limitations under the License.
  */
 
-window._ = require('lodash')
-window.$ = window.jQuery = require('jquery')
+import _ from 'lodash';
+window._ = _;
+
+import $ from 'jquery'
+window.$ = window.jQuery = $
 
 import 'jquery-ui/ui/core'
 import 'jquery-ui/ui/widgets/sortable'
@@ -29,7 +32,8 @@ import 'jquery-ui/ui/widgets/autocomplete'
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios')
+import axios from 'axios';
+window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 let token = document.head.querySelector('meta[name="csrf-token"]')
 

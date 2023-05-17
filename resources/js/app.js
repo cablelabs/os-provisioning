@@ -20,8 +20,8 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-require('./bootstrap')
-require('./nmsprime')
+import './bootstrap'
+import './nmsprime'
 
 import { createApp } from 'vue'
 import snotify from 'vue3-snotify'
