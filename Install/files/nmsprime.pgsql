@@ -832,7 +832,8 @@ CREATE TABLE nmsprime.contract (
     contact bigint,
     value_date smallint,
     apartment_id bigint,
-    contact_id bigint
+    contact_id bigint,
+    last_amendment date
 );
 
 
@@ -4526,8 +4527,8 @@ COPY nmsprime.contact (id, created_at, updated_at, deleted_at, firstname1, lastn
 -- Data for Name: contract; Type: TABLE DATA; Schema: nmsprime; Owner: nmsprime
 --
 
-COPY nmsprime.contract (id, created_at, updated_at, deleted_at, number, number2, number3, number4, customer_external_id, company, department, salutation, academic_degree, firstname, lastname, street, house_number, zip, city, district, country_id, country_code, phone, fax, email, birthday, contract_start, contract_end, internet_access, purchase_tariff, next_purchase_tariff, qos_id, next_qos_id, voip_id, next_voip_id, sepa_iban, sepa_bic, sepa_holder, sepa_institute, create_invoice, login, password, net, cluster, description, costcenter_id, salesman_id, has_telephony, apartment_nr, additional, ground_for_dismissal, group_contract, contact, value_date, apartment_id, contact_id) FROM stdin;
-500000	2022-02-18 11:08:19+01	2022-02-19 00:03:04+01	\N	10000	\N	\N	\N	\N	\N	\N	Herr	\N	Max	MuMann	MuStreet	125d	01234	MuCity	\N	\N	\N	\N	\N	\N	1990-02-06	2022-02-18	\N	t	\N	\N	\N	\N	\N	\N			\N	\N	t	\N	\N	\N	\N	\N	1	\N	t	\N	\N	\N	f	0	\N	\N	\N
+COPY nmsprime.contract (id, created_at, updated_at, deleted_at, number, number2, number3, number4, customer_external_id, company, department, salutation, academic_degree, firstname, lastname, street, house_number, zip, city, district, country_id, country_code, phone, fax, email, birthday, contract_start, contract_end, internet_access, purchase_tariff, next_purchase_tariff, qos_id, next_qos_id, voip_id, next_voip_id, sepa_iban, sepa_bic, sepa_holder, sepa_institute, create_invoice, login, password, net, cluster, description, costcenter_id, salesman_id, has_telephony, apartment_nr, additional, ground_for_dismissal, group_contract, contact, value_date, apartment_id, contact_id, last_amendment) FROM stdin;
+500000	2022-02-18 11:08:19+01	2022-02-19 00:03:04+01	\N	10000	\N	\N	\N	\N	\N	\N	Herr	\N	Max	MuMann	MuStreet	125d	01234	MuCity	\N	\N	\N	\N	\N	\N	1990-02-06	2022-02-18	\N	t	\N	\N	\N	\N	\N	\N			\N	\N	t	\N	\N	\N	\N	\N	1	\N	t	\N	\N	\N	f	0	\N	\N	\N	\N
 \.
 
 
