@@ -1,7 +1,3 @@
-const mix = require('laravel-mix');
-const path = require('path')
-require('laravel-mix-compress');
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -13,6 +9,10 @@ require('laravel-mix-compress');
  |
  */
 
+const mix = require('laravel-mix')
+const path = require('path')
+const fs = require("fs")
+
 /* Allow multiple Laravel Mix applications */
 require('laravel-mix-merge-manifest');
 mix.mergeManifest();
@@ -20,22 +20,40 @@ mix.mergeManifest();
 /* Make alias for main resource/js directory */
 mix.alias({
   '~': path.join(__dirname, 'resources'),
-  '@': path.join(__dirname, 'resources/js'),
+  '@': path.join(__dirname, 'resources/js')
 });
 
 mix.js('resources/js/app.js', 'public/js')
-  .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
-  .js('modules/HfcBase/Resources/assets/js/hfc-base.js', 'public/js')
-  .js('modules/ProvBase/Resources/assets/js/prov-base.js', 'public/js')
-  .js('modules/ProvMon/Resources/assets/js/prov-mon.js', 'public/js')
-  .js('modules/Ticketsystem/Resources/js/ticketsystem.js', 'public/js')
-  .js('modules/Ccc/Resources/assets/js/ccc.js', 'public/js')
-  .vue()
-  .version()
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
-  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
+
+/* read out the available modules */
+let modules = JSON.parse(fs.readFileSync("modules_statuses.json").toString());
+
+for (let module in modules) {
+  if (! modules[module]) {
+    continue
+  }
+
+  let moduleLower = module.toLowerCase();
+
+  for (let extension of ['js', 'css']) {
+    if (! fs.existsSync(`modules/${module}/Resources/${extension}/${moduleLower}.${extension}`)) {
+      if (! fs.existsSync(`modules/${module}/Resources/${extension}`)) {
+        fs.mkdirSync(`modules/${module}/Resources/${extension}`)
+      }
+
+      fs.writeFileSync(`modules/${module}/Resources/${extension}/${moduleLower}.${extension}`, '')
+    }
+
+    if (extension === 'js') {
+      mix.js(`modules/${module}/Resources/${extension}/${moduleLower}.${extension}`, `public/${extension}`)
+    } else {
+      mix.postCss(`modules/${module}/Resources/${extension}/${moduleLower}.${extension}`, `public/${extension}`)
+    }
+  }
+}
 
 if (mix.inProduction()) {
   mix.postCss('resources/css/vendor.css', 'public/css', [
@@ -60,7 +78,7 @@ if (mix.inProduction()) {
 mix.js('resources/js/assets/nmsprime-canvas.js', 'public/js');
 
   // copy from node_modules do public
-  mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
+mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
   .copy('node_modules/pdfmake/build/pdfmake.min.js', 'public/js/pdfmake.min.js')
   .copy('node_modules/pdfmake/build/vfs_fonts.js', 'public/js/vfs_fonts.js')
   .copy([
@@ -79,11 +97,14 @@ mix.js('resources/js/assets/nmsprime-canvas.js', 'public/js');
     'node_modules/leaflet-draw/dist/images',
   ], 'public/css/leaflet/images');
 
-  // compress
-  mix.compress({
-    productionOnly: true,
-  });
+/* Enable gzip and brotli compression for bundled files*/
+require('laravel-mix-compress')
+mix.compress({
+  productionOnly: true,
+});
 
-  // extract
-  mix.extract(['pace-js'], '/js/pace.js');
-  mix.extract();
+// extract
+mix.extract(['pace-js'], '/js/pace.js');
+mix.extract();
+
+mix.vue()
