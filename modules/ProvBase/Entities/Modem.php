@@ -3078,64 +3078,64 @@ class Modem extends \BaseModel
 
     public function selectOTO()
     {
-        if (Module::collections()->has('SmartOnt') && $this->exists) {
-
-            /* // not attached to an OTO contract – not an ONT */
-            /* if (! in_array($model->contract->type, ['OTO', 'OTO_STORAGE'])) { */
-            /*     // default – use version of BaseController */
-            /*     return parent::setupSelect2Field($model, $class, $field, $fn); */
-            /* }; */
-
-            // can move every ONT to every storage
-            $contractsStorage = Contract::where('type', '=', 'OTO_STORAGE')->where('id', '<>', $this->contract->id)->get();
-
-            $contractsOwn = collect();
-            $contractsFtthFr = collect();
-            if ('OTO_STORAGE' == $this->contract->type) {
-                $contractsOwn = \DB::table('contract')
-                    ->where('type', '=', 'OTO_OWN')
-                    ->get();
-                $contractsFtthFr = \DB::table('contract')
-                    ->where('type', '=', 'OTO_FTTH_FR')
-                    ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
-                    ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
-                    // hint: there may be more than one ONT at an OTO (for different services)
-                    // at least at GESA (leave clause here if needed for othere flavors)
-                    /* ->whereNotIn('id', function ($q) { */
-                    /*     $q->select('contract_id')->from('modem'); */
-                    /* }) */
-                    ->get();
-            }
-
-            $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOwn)->concat($contractsFtthFr);
-            $ret = [];
-            foreach ($contracts as $contract) {
-                if ('OTO_FTTH_FR' == $contract->type) {
-                    $ret[$contract->id] = $contract->zip;
-                    $ret[$contract->id] .= ' '.$contract->city;
-                    $ret[$contract->id] .= ', '.$contract->street;
-                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-                    /* $ret[$contract->id] .= ' – SEP-ID: '.$contract->sep_id; */
-                    $ret[$contract->id] .= ', OTO-ID: '.$contract->oto_id;
-                    $ret[$contract->id] .= ' – '.$contract->oto_status;
-                    $ret[$contract->id] .= ' – '.$contract->alex_status;
-                } elseif ('OTO_OWN' == $contract->type) {
-                    $ret[$contract->id] = $contract->zip;
-                    $ret[$contract->id] .= ' '.$contract->city;
-                    $ret[$contract->id] .= ', '.$contract->street;
-                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-                } else {
-                    $ret[$contract->id] = 'STORAGE: ';
-                    $ret[$contract->id] .= $contract->zip;
-                    $ret[$contract->id] .= ' '.$contract->city;
-                    $ret[$contract->id] .= ', '.$contract->street;
-                    $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-                }
-            }
-            asort($ret);
-
-            return $ret;
+        if ((! Module::collections()->has('SmartOnt')) || (! $this->exists)) {
+            return [];
         }
+
+        // can move every ONT to every storage
+        $contractsStorage = \DB::table('contract')
+            ->whereNull('deleted_at')
+            ->where('type', '=', 'OTO_STORAGE')
+            ->where('id', '<>', $this->contract->id)
+            ->get();
+
+        $contractsOwn = collect();
+        $contractsFtthFr = collect();
+        if ('OTO_STORAGE' == $this->contract->type) {
+            $contractsOwn = \DB::table('contract')
+                ->whereNull('deleted_at')
+                ->where('type', '=', 'OTO_OWN')
+                ->get();
+            $contractsFtthFr = \DB::table('contract')
+                ->whereNull('deleted_at')
+                ->where('type', '=', 'OTO_FTTH_FR')
+                ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
+                ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
+                // hint: there may be more than one ONT at an OTO (for different services)
+                // at least at GESA (leave clause here if needed for othere flavors)
+                /* ->whereNotIn('id', function ($q) { */
+                /*     $q->select('contract_id')->from('modem'); */
+                /* }) */
+                ->get();
+        }
+
+        $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOwn)->concat($contractsFtthFr);
+        $ret = [];
+        foreach ($contracts as $contract) {
+            if ('OTO_FTTH_FR' == $contract->type) {
+                $ret[$contract->id] = $contract->zip;
+                $ret[$contract->id] .= ' '.$contract->city;
+                $ret[$contract->id] .= ', '.$contract->street;
+                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
+                $ret[$contract->id] .= ', OTO-ID: '.$contract->oto_id;
+                $ret[$contract->id] .= ' – '.$contract->oto_status;
+                $ret[$contract->id] .= ' – '.$contract->alex_status;
+            } elseif ('OTO_OWN' == $contract->type) {
+                $ret[$contract->id] = $contract->zip;
+                $ret[$contract->id] .= ' '.$contract->city;
+                $ret[$contract->id] .= ', '.$contract->street;
+                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
+            } else {
+                $ret[$contract->id] = 'STORAGE: ';
+                $ret[$contract->id] .= $contract->zip;
+                $ret[$contract->id] .= ' '.$contract->city;
+                $ret[$contract->id] .= ', '.$contract->street;
+                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
+            }
+        }
+        asort($ret);
+
+        return $ret;
     }
 
     /**
@@ -3143,41 +3143,52 @@ class Modem extends \BaseModel
      * We implement some strict rules related to deletion.
      *
      * @author Patrick Reichel
+     *
+     */
+    protected function deleteGESAOnt()
+    {
+        // deletion only allowed from storage OTO
+        if (in_array($this->contract->type, ['OTO_FTTH_FR', 'OTO_OWN'])) {
+            $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
+            $msg .= ': ';
+            $msg .= trans('smartont::messages.ontNotDeletableFromOTO');
+            $this->addAboveMessage($msg, 'error');
+
+            return false;
+        }
+
+        // check if deprovisioning was successful
+        if ('OTO_STORAGE' == $this->contract->type) {
+            if (
+                (! is_null($this->ont_id)) ||
+                (! is_null($this->netgw_id)) ||
+                (! is_null($this->frame_id)) ||
+                (! is_null($this->slot_id)) ||
+                (! is_null($this->port_id)) ||
+                (! is_null($this->service_port_id))
+            ) {
+                $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
+                $msg .= ': ';
+                $msg .= trans('smartont::messages.ontNotDeletableWithoutDeprovisioning');
+                $this->addAboveMessage($msg, 'error');
+
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Need special handling of GESA SmartOnt
+     *
+     * @author Patrick Reichel
      */
     public function delete()
     {
-        if (\Module::collections()->has('SmartOnt')) {
-            if ('GESA' == config('smartont.flavor.active')) {
-
-                // deletion only allowed from storage OTO
-                if (in_array($this->contract->type, ['OTO_FTTH_FR', 'OTO_OWN'])) {
-                    $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
-                    $msg .= ': ';
-                    $msg .= trans('smartont::messages.ontNotDeletableFromOTO');
-                    $this->addAboveMessage($msg, 'error');
-
-                    return false;
-                }
-
-                // check if deprovisioning was successful
-                if ('OTO_STORAGE' == $this->contract->type) {
-                    if (
-                        (! is_null($this->ont_id)) ||
-                        (! is_null($this->netgw_id)) ||
-                        (! is_null($this->frame_id)) ||
-                        (! is_null($this->slot_id)) ||
-                        (! is_null($this->port_id)) ||
-                        (! is_null($this->service_port_id))
-                    ) {
-                        $msg = trans('smartont::messages.ontNotDeletable', [$this->id]);
-                        $msg .= ': ';
-                        $msg .= trans('smartont::messages.ontNotDeletableWithoutDeprovisioning');
-                        $this->addAboveMessage($msg, 'error');
-
-                        return false;
-                    }
-                }
-            }
+        if (
+            (\Module::collections()->has('SmartOnt')) &&
+            ('GESA' == config('smartont.flavor.active'))
+        ){
+            return $this->deleteGESAOnt();
         }
 
         // when arriving here: start the standard deletion procedure

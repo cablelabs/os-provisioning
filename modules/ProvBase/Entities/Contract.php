@@ -525,9 +525,9 @@ class Contract extends \BaseModel
     {
         if (! Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
             throw new \LogicException(__METHOD__.' only callable if module SmartOnt is active and flavor has DfSubscriptions');
-        } else {
-            return $this->hasMany(\Modules\SmartOnt\Entities\DfSubscription::class);
         }
+
+        return $this->hasMany(\Modules\SmartOnt\Entities\DfSubscription::class);
     }
 
     /**
