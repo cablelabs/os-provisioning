@@ -21,6 +21,7 @@ return [
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
     'fiber_node' => 'Fiber node',
+    'file' => 'Datei',
     'floor' => 'Etage',
     'group_contract' => 'Gruppen-vertrag',
     'house_nr' => 'Hausnr',
@@ -141,10 +142,6 @@ return [
     'salesman.firstname' => 'Vorname',
     'salesman_commission' => 'Provision',
     'sepaaccount_id' 	=> 'SEPA-Konto',
-    'serial_letters' => [
-        'name' => 'Name',
-        'file' => 'Datei',
-    ],
     'sepaaccount' => [
         'iban' => 'IBAN',
         'institute' => 'Bank',

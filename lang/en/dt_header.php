@@ -21,6 +21,7 @@ return [
     'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
     'fiber_node' => 'Fiber node',
+    'file' => 'File',
     'floor' => 'Floor',
     'group_contract' => 'Group contract',
     'house_nr' => 'Housenr',
@@ -564,10 +565,6 @@ return [
         'address_type' => 'Address Type',
         'local_id' => 'Local ID',
         'ip' => 'IP',
-    ],
-    'serial_letters' => [
-        'name' => 'Name',
-        'file' => 'File',
     ],
     'stateChangedAt' => 'Last state change',
     'updatedAt' => 'Updated at',
