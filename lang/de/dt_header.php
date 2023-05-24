@@ -15,6 +15,7 @@ return [
     'deprecated' => 'Veraltet',
     'district' => 'Ortsteil',
     'docsisVer' => 'DOCSIS Version',
+    'download' => 'Herunterladen',
     'dpa' => 'DPA',
     'email' => 'Email',
     'expansion_degree' => 'Ausbaugrad',
@@ -101,6 +102,16 @@ return [
         'number' => 'OP-Nummer',
         'voucher_nr' => 'Belegnr',
     ],
+    'document' => [
+        'id' => 'ID',
+        'file' => 'Datei',
+    ],
+    'documenttemplate' => [
+        'file' => 'Template Datei',
+        'format' => 'Template Format',
+        'name' => 'Name',
+        'type_view' => 'Typ',
+    ],
     //Invoices
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',
@@ -135,6 +146,10 @@ return [
     'salesman.firstname' => 'Vorname',
     'salesman_commission' => 'Provision',
     'sepaaccount_id' 	=> 'SEPA-Konto',
+    'serial_letters' => [
+        'name' => 'Name',
+        'file' => 'Datei',
+    ],
     'sepaaccount' => [
         'iban' => 'IBAN',
         'institute' => 'Bank',
@@ -590,20 +605,4 @@ return [
     'total_fee' => 'Gebühren',
     'vendor' => 'Hersteller',
     'internalId' => 'Interne Referenz',
-    // DocumentManagement
-    'documenttemplate' => [
-        'file' => 'Template Datei',
-        'format' => 'Template Format',
-        'name' => 'Name',
-        'type_view' => 'Typ',
-    ],
-    'serial_letters' => [
-        'name' => 'Name',
-        'file' => 'Datei',
-    ],
-    'document' => [
-        'id' => 'ID',
-        'file' => 'Datei',
-    ],
-    'download' => 'Herunterladen',
 ];

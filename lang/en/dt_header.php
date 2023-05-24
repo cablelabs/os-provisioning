@@ -15,6 +15,7 @@ return [
     'deprecated' => 'Deprecated',
     'district' => 'District',
     'docsisVer' => 'DOCSIS version',
+    'download' => 'Download',
     'dpa' => 'DPA',
     'email' => 'Email',
     'expansion_degree' => 'Expansion degree',
@@ -60,6 +61,16 @@ return [
         'street' => 'Street',
         'zip' => 'ZIP',
         'ground_for_dismissal' => 'Ground for dismissal',
+    ],
+    'document' => [
+        'id' => 'ID',
+        'file' => 'File',
+    ],
+    'documenttemplate' => [
+        'file' => 'Template file',
+        'format' => 'Template format',
+        'name' => 'Name',
+        'type_view' => 'Type',
     ],
     // Auth
     'users' => [
@@ -556,6 +567,10 @@ return [
         'local_id' => 'Local ID',
         'ip' => 'IP',
     ],
+    'serial_letters' => [
+        'name' => 'Name',
+        'file' => 'File',
+    ],
     'stateChangedAt' => 'Last state change',
     'updatedAt' => 'Updated at',
     'utilization' => [
@@ -590,20 +605,4 @@ return [
     'total_fee' => 'Fee',
     'vendor' => 'Vendor',
     'internalId' => 'Internal Reference',
-    // DocumentManagement
-    'documenttemplate' => [
-        'file' => 'Template file',
-        'format' => 'Template format',
-        'name' => 'Name',
-        'type_view' => 'Type',
-    ],
-    'serial_letters' => [
-        'name' => 'Name',
-        'file' => 'File',
-    ],
-    'document' => [
-        'id' => 'ID',
-        'file' => 'File',
-    ],
-    'download' => 'Download',
 ];
