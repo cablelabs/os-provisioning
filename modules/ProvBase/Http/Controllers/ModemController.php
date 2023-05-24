@@ -18,22 +18,23 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use View;
-use App\Sla;
-use Bouncer;
-use Request;
 use App\GlobalConfig;
-use App\V1\Repository;
-use Modules\ProvBase\Entities\Qos;
-use Nwidart\Modules\Facades\Module;
-use Modules\ProvBase\Entities\Modem;
-use Illuminate\Support\Facades\Session;
-use Modules\ProvBase\Entities\Contract;
-use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Entities\Configfile;
-use Modules\ProvBase\Entities\ModemOption;
-use Modules\ProvBase\Services\ModemService;
 use App\Http\Controllers\BaseViewController;
+use App\Sla;
+use App\V1\Repository;
+use Bouncer;
+use Illuminate\Support\Facades\Session;
+use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Modem;
+use Modules\ProvBase\Entities\ModemOption;
+use Modules\ProvBase\Entities\ProvBase;
+use Modules\ProvBase\Entities\Qos;
+use Modules\ProvBase\Services\ModemService;
+use Nwidart\Modules\Facades\Module;
+use Request;
+use Validator;
+use View;
 
 class ModemController extends \BaseController
 {
@@ -1218,8 +1219,25 @@ class ModemController extends \BaseController
      */
     public function import()
     {
+        $obj = static::get_model_obj();
         $this->redirectUrl = Request::get('redirect_url');
         $method = Request::get('method');
+
+        // validate upload
+        $rules = [
+            'modem_csv_upload' => ['required', 'file', 'mimes:txt,csv'],
+        ];
+        $validator = Validator::make(Request::all(), $rules);
+
+        if ($validator->fails()) {
+            \Log::info('Validation Rule Error: '.$validator->errors());
+
+            $msg = trans('validation.invalid_input');
+            $obj->addAboveMessage($msg, 'error', 'index_list');
+            $obj->addAboveMessage($validator->errors()->first(), 'error', 'index_list');
+
+            return \Redirect::back()->withErrors($validator);
+        }
 
         if ('importOntFromCsv' == $method) {
             return $this->importOntFromCsv();
@@ -1257,10 +1275,6 @@ class ModemController extends \BaseController
      */
     public function updateLfoOntNextStateFromCsv()
     {
-        if (! $this->validCsvFileUploaded('modem_csv_upload', 'index_list')) {
-            return redirect($this->redirectUrl);
-        }
-
         [$filename, $csv] = $this->getDataFromUploadedCsv('modem_csv_upload', 'index_list');
         if (! is_array($csv)) {
             return redirect($this->redirectUrl);
@@ -1407,10 +1421,6 @@ class ModemController extends \BaseController
 
         $qosId = $smartOnt->default_qos_id;
         $configfileId = $smartOnt->default_configfile_id;
-
-        if (! $this->validCsvFileUploaded('modem_csv_upload', 'form')) {
-            return redirect($this->redirectUrl);
-        }
 
         [$filename, $csv] = $this->getDataFromUploadedCsv('modem_csv_upload', 'form');
         if (! is_array($csv)) {
