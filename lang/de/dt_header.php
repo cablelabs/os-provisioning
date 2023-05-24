@@ -445,8 +445,8 @@ return [
     'arp' => [
         'interface' => 'Interface',
         'ip' => 'IP',
-        'name' => 'Name',
         'mac' => 'MAC',
+        'name' => 'Name',
         'type' => 'Typ',
     ],
     'cpe' => [
