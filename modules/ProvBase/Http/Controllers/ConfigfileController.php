@@ -127,7 +127,7 @@ class ConfigfileController extends \BaseController
         $rules['text'] .= ':'.$data['device'];
 
         if ($data['device'] != 'mta' && Module::collections()->has('ProvMon')) {
-            /* $rules['dashboard'] = 'required'; */
+            $rules['dashboard'] = 'required';
         }
 
         return $rules;
