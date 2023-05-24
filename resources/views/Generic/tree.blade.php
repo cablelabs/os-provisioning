@@ -75,8 +75,6 @@
 @stop
 
 @section('javascript')
-<script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
-
 <script>
 
     /**

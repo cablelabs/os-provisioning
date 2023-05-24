@@ -23,6 +23,29 @@
 import './bootstrap'
 import './nmsprime'
 
+// dataTables
+import 'datatables.net-buttons/js/buttons.colVis.js'
+import 'datatables.net-buttons/js/buttons.html5.js'
+import 'datatables.net-buttons/js/buttons.print.js'
+import 'datatables.net-select-bs4'
+import 'datatables.net-buttons-bs4'
+import 'datatables.net-responsive'
+
+// pdfMaker
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+
+// jsZip
+import * as JSZip from 'jszip'
+
+// Panzoom
+import Panzoom from '@panzoom/panzoom'
+window.Panzoom = Panzoom
+
+// jQuery SlimScroll
+import 'jquery-slimscroll/jquery.slimscroll.min.js';
+
+// Main App
 import { createApp } from 'vue'
 import snotify from 'vue3-snotify'
 
@@ -35,21 +58,6 @@ import skeletonComponent from './components/Skeleton.vue'
 import overlay from './components/Overlay.vue'
 import AuthAbilities from './components/AuthAbilities.vue'
 import NavbarQuickviewNetwork from './components/navbar/QuickviewNetwork.vue'
-
-// dataTables
-import 'datatables.net-buttons/js/buttons.colVis.js'
-import 'datatables.net-buttons/js/buttons.html5.js'
-import 'datatables.net-buttons/js/buttons.print.js'
-import 'datatables.net-select-bs4'
-import 'datatables.net-buttons-bs4'
-import 'datatables.net-responsive'
-
-import pdfMake from 'pdfmake/build/pdfmake'
-import pdfFonts from 'pdfmake/build/vfs_fonts'
-import * as JSZip from 'jszip'
-
-import Panzoom from '@panzoom/panzoom'
-window.Panzoom = Panzoom
 
 // app
 window.main = createApp(app)

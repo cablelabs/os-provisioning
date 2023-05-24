@@ -28,20 +28,7 @@
     <script src="{{ mix('js/app.js') }}"></script>
     @include('bootstrap.module-js')
 @endif
-
-<script src="{{asset('components/assets-admin/plugins/bootstrap4/js/bootstrap.bundle.min.js')}}"></script>
-
-<script src="{{asset('components/assets-admin/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
-
-<script src="{{asset('components/assets-admin/plugins/jstree/dist/jstree.min.js')}}"></script>
-
 <!-- ================== END BASE JS ================== -->
-
-<!-- ================== BEGIN PAGE LEVEL JS ================== -->
-<script src="{{asset('components/assets-admin/plugins/ionRangeSlider/js/ion.rangeSlider.js')}}"></script>
-
-<!-- ================== END PAGE LEVEL JS ================== -->
-
 @if (request()->is('admin*'))
 <script language="javascript">
 /*

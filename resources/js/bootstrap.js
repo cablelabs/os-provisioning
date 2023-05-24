@@ -21,11 +21,22 @@ window._ = _;
 import $ from 'jquery'
 window.$ = window.jQuery = $
 
+// jquery ui
 import 'jquery-ui/ui/core'
 import 'jquery-ui/ui/widgets/sortable'
 import 'jquery-ui/ui/widgets/draggable'
 import 'jquery-ui/ui/widgets/autocomplete'
 
+// bootstrap
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+// jstree
+import 'jstree';
+
+// ion-rangeslider
+import 'ion-rangeslider';
+
+// chartjs
 import Chart from 'chart.js/auto'
 window.Chart = Chart
 
