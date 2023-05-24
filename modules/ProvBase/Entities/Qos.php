@@ -46,7 +46,7 @@ class Qos extends \BaseModel
         return $this->hasMany(Modem::class);
     }
 
-    public function endpoint()
+    public function endpoints()
     {
         return $this->hasMany(Endpoint::class);
     }
@@ -147,9 +147,9 @@ class Qos extends \BaseModel
      */
     public function isInUseOnModem()
     {
-        $modemCount = Modem::where('qos_id', '=', $this->id)->count();
-
-        return (0 == $modemCount) ? false : true;
+        // attention: method name is modem (not modems)
+        // will not change to not brake things (ATM there are no automated tests)
+        return boolval($this->modem()->count());
     }
 
     /**
@@ -159,9 +159,7 @@ class Qos extends \BaseModel
      */
     public function isInUseOnEndpoint()
     {
-        $endpointCount = endpoint::where('qos_id', '=', $this->id)->count();
-
-        return (0 == $endpointCount) ? false : true;
+        return boolval($this->endpoints()->count());
     }
 
     /**

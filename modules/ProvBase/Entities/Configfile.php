@@ -631,13 +631,15 @@ class Configfile extends \BaseModel
     /**
      * Checks if a configfile is used at a modem
      *
+     * @return bool True if attached to at least on modem, else False
+     *
      * @author Patrick Reichel
      */
     public function isInUseOnModem()
     {
-        $modemCount = Modem::where('configfile_id', '=', $this->id)->count();
-
-        return (0 == $modemCount) ? false : true;
+        // attention: method name is modem (not modems)
+        // will not change to not brake things (ATM there are no automated tests)
+        return boolval($this->modem()->count());
     }
 
     /**
