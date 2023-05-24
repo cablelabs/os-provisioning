@@ -187,38 +187,52 @@ class Modem extends \BaseModel
     }
 
     /**
-     * Get the header for index table depending on activated modules.
+     * Get the header for the default case.
      *
      * @author Patrick Reichel
      */
-    protected function getIndexHeader()
+    protected function getIndexHeaderDefault()
     {
-        // default case
-        if (! Module::collections()->has('SmartOnt')) {
-            return [
-                $this->table.'.id',
-                $this->table.'.mac',
-                $this->table.'.serial_num',
-                'configfile.name',
-                $this->table.'.model',
-                $this->table.'.sw_rev',
-                $this->table.'.name',
-                $this->table.'.ppp_username',
-                'qos.name',
-                $this->table.'.firstname',
-                $this->table.'.lastname',
-                $this->table.'.city',
-                $this->table.'.district',
-                $this->table.'.street',
-                $this->table.'.house_number',
-                $this->table.'.apartment_nr',
-                $this->table.'.geocode_source',
-                $this->table.'.inventar_num',
-                'contract_valid',
+        $ret = [
+            $this->table.'.id',
+            $this->table.'.mac',
+            $this->table.'.serial_num',
+            'configfile.name',
+            $this->table.'.model',
+            $this->table.'.sw_rev',
+            $this->table.'.name',
+            $this->table.'.ppp_username',
+            'qos.name',
+            $this->table.'.firstname',
+            $this->table.'.lastname',
+            $this->table.'.city',
+            $this->table.'.district',
+            $this->table.'.street',
+            $this->table.'.house_number',
+            $this->table.'.apartment_nr',
+            $this->table.'.geocode_source',
+            $this->table.'.inventar_num',
+            'contract_valid',
             ];
+
+        if (Module::collections()->has('ProvMon')) {
+            $ret[] = $this->table.'.us_pwr';
+            $ret[] = $this->table.'.us_snr';
+            $ret[] = $this->table.'.ds_pwr';
+            $ret[] = $this->table.'.ds_snr';
+            $ret[] = $this->table.'.phy_updated_at';
         }
 
-        // SmartOnt needs another set of fields
+        return $ret;
+    }
+
+    /**
+     * Get the header for index table for SmartOnt
+     *
+     * @author Patrick Reichel
+     */
+    protected function getIndexHeaderSmartOnt()
+    {
         $ret = [
             $this->table.'.id',
             $this->table.'.mac',
@@ -246,7 +260,26 @@ class Modem extends \BaseModel
         }
         $ret[] = $this->table.'.geocode_source';
 
+        $ret[] = $this->table.'.us_pwr';
+        $ret[] = $this->table.'.ds_pwr';
+        $ret[] = $this->table.'.phy_updated_at';
+
         return $ret;
+    }
+
+    /**
+     * Get the header for index table depending on activated modules.
+     *
+     * @author Patrick Reichel
+     */
+    protected function getIndexHeader()
+    {
+        if (Module::collections()->has('SmartOnt')) {
+            // SmartOnt needs another set of fields
+            return $this->getIndexHeaderSmartOnt();
+        }
+
+        return $this->getIndexHeaderDefault();
     }
 
     // AJAX Index list function
@@ -265,18 +298,8 @@ class Modem extends \BaseModel
         $ret['help'] = [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'];
         $ret['globalFilter'] = ['sw_rev' => e(session('filter_data', ''))];
 
-        if ((Module::collections()->has('ProvMon')) && (! Module::collections()->has('SmartOnt'))) {
-            $hfParameters = [$this->table.'.us_pwr', $this->table.'.us_snr', $this->table.'.ds_pwr', $this->table.'.ds_snr', $this->table.'.phy_updated_at'];
-
-            $ret['index_header'] = array_merge($ret['index_header'], $hfParameters);
-        }
-
-        if (Module::collections()->has('SmartOnt')) {
-            $ret['index_header'][] = $this->table.'.us_pwr';
-            $ret['index_header'][] = $this->table.'.ds_pwr';
-            $ret['index_header'][] = $this->table.'.phy_updated_at';
-        }
-
+        // the following statement is false in every case
+        // disabled by @olebowle in 6085002641eb22310aa4a756de62bf4f98616a96
         if (false && Sla::firstCached()->valid()) {
             $ret['index_header'][] = $this->table.'.support_state';
             $ret['edit']['support_state'] = 'getSupportState';
