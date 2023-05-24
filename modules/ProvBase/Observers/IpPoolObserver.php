@@ -18,7 +18,7 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Modules\ProvBase\Entities\NetGW;
+use Modules\ProvBase\Entities\NetGw;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Traits\AdaptsDhcpConf;
 

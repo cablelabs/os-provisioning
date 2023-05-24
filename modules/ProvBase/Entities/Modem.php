@@ -442,7 +442,7 @@ class Modem extends \BaseModel
 
     public function netgw()
     {
-        return $this->belongsTo(NetGW::class, 'netgw_id');
+        return $this->belongsTo(NetGw::class, 'netgw_id');
     }
 
     /**

@@ -23,7 +23,7 @@ use Modules\ProvBase\Entities\Nas;
 use Modules\ProvBase\Entities\NetGw;
 
 /**
- * NetGW Observer Class
+ * NetGw Observer Class
  * Handles changes on CMTS Gateways
  *
  * can handle   'creating', 'created', 'updating', 'updated',
