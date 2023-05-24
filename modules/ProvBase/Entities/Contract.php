@@ -354,8 +354,6 @@ class Contract extends \BaseModel
             ];
         }
 
-        /* $ret[$i18nContract]['Modem']['view']['vars']['apiActions'] = $this->viewApiActions(); */
-
         $ret[$i18nContract]['icon'] = 'pencil';
         $ret[$i18nContract]['Modem']['class'] = 'Modem';
         $ret[$i18nContract]['Modem']['count'] = $this->modems_count;
@@ -461,27 +459,6 @@ class Contract extends \BaseModel
             $ret[$i18nContract]['DfSubscription']['class'] = 'DfSubscription';
             $ret[$i18nContract]['DfSubscription']['relation'] = $this->dfsubscriptions;
         }
-
-        return $ret;
-    }
-
-    /**
-     * Provide a view usable array of possible API jobs
-     *
-     * @return array for use in view
-     *
-     * @author Patrick Reichel
-     */
-    public function viewApiActions()
-    {
-        $ret = [];
-        $action = 'boo';
-        $url = \URL::route('Dreamfiber.action', ['type' => $action, 'subscription_id' => $this->id]);
-        $data = [
-            'url' => $url,
-            'linktext' => trans($action),
-        ];
-        $ret[] = $data;
 
         return $ret;
     }
