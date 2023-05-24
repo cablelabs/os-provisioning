@@ -50,6 +50,7 @@ cp-script.sh
 
 Documentation/doxyfile.bak
 Documentation/doxywarn.log
+code_analysis.txt
 
 # ignore queue process pid's
 *queue.pid
