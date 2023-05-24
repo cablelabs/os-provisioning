@@ -16,7 +16,6 @@ declare -a CMDS=(
     "php artisan module:migrate"
     "php artisan module:publish"
     "php artisan optimize:clear"
-    "php artisan optimize"
     "php artisan nms:coremon-publish"
     "npm install"
     "npm run dev"
