@@ -53,16 +53,6 @@ class ModemController extends \BaseController
      */
     private $configfile;
 
-    /**
-     * Display a listing of all objects of the calling model
-     *
-     * @return View
-     */
-    public function index()
-    {
-        return parent::index();
-    }
-
     public function edit($id)
     {
         $provbase = ProvBase::first();
