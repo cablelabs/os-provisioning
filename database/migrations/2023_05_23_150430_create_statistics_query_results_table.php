@@ -24,7 +24,7 @@ return new class extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'statistics_query';
+    protected $tableName = 'statistics_query_result';
 
     /**
      * Run the migrations.
@@ -35,23 +35,13 @@ return new class extends BaseMigration
     {
         Schema::create($this->tableName, function (Blueprint $table) {
             $this->up_table_generic($table);
-            $table->string('name');
-            $table->string('customer_type')->nullable();
-            $table->string('product_group')->nullable();
-            $table->string('tariffs')->nullable();
-            $table->string('status')->nullable();
-            $table->string('group_filter')->nullable();
-            $table->string('zip_code_filter')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('age_groups')->nullable();
-            $table->boolean('split_combination_packages')->nullable();
-            $table->boolean('consider_tariff_change');
-            $table->boolean('revenue');
-            $table->boolean('diagram');
-            $table->boolean('upsell');
-            $table->date('from');
-            $table->date('to');
-            $table->string('auto')->nullable(); // will contain the cron string to automatically retrieve statistic repetitive
+            $table->bigInteger('statistics_query_id');
+            $table->integer('customers');
+            $table->integer('new_customers');
+            $table->integer('items');
+            $table->integer('new_items');
+            $table->decimal('revenue_from');
+            $table->decimal('revenue_to');
         });
     }
 

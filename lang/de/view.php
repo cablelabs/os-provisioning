@@ -278,6 +278,8 @@ return [
 
     'Header_Ccap'               => 'CCAP',
 
+    'Header_StatisticsResult'  => 'Ergebnisse',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index
@@ -289,6 +291,14 @@ return [
     'Header_SmartOnt' => 'Smart ONT',
     'Header_DfSubscription'     => 'Dreamfiber-Abonnement',
     'Header_DfSubscriptionEvent' => 'Dreamfiber-Abonnement-Ereignis',
+
+    // Dunning
+    'DunningLetter'      => 'Mahnschreiben',
+    'DunningRun'         => 'Mahnlauf',
+
+    // Statistics
+    'StatisticsQuery'           => 'Statistik Abfrage',
+    'StatisticsQueryResult'     => 'Ergebnis der Statistikabfrage',
 
     //BUTTON
     'Sign me in'                => 'Einloggen',
@@ -735,6 +745,49 @@ return [
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'SettlementRun' => 'Abrechnungslauf',
     'SipDevices' => 'SIP Geräte',
+
+    // Option
+    'Option_StatisticsQuery' => [
+        'customerType' => [
+            'b2b' => 'B2B',
+            'b2c' => 'B2C',
+        ],
+        'productGroup' => [
+            'internet' => 'Internet',
+            'tv' => 'TV',
+            'telephone' => 'Telefon',
+            'combinationPackages' => 'Kombipakete',
+        ],
+        'tariffs' => [
+            'intTariff_1' => 'Int: Tarif 1',
+            'intTariff_2' => 'Int: Tarif 2',
+            'telTariff_1' => 'Tel: Tarif 1',
+            'telTariff_2' => 'Tel: Tarif 2',
+        ],
+        'status' => [
+            'active' => 'aktiv',
+            'inTermination' => 'In Kündigung',
+            'activeInTheFuture' => 'Zukünftig aktiv',
+        ],
+        'groupFilter' => [
+            'noGroup' => 'Keine Gruppe',
+            'municipalityXY' => 'Kommune XY',
+            'antennaCommunities' => 'Antennengemeinschaften',
+            'clusterXY' => 'Cluster XY',
+        ],
+        'zipCodeFilter' => [],
+        'gender' => [
+            'male' => 'Männlich',
+            'female' => 'Weiblich',
+            'diverse' => 'Divers',
+        ],
+        'ageGroups' => [
+            '18-25' => '18-25',
+            '26-35' => '26-35',
+            '35+' => '35+',
+        ],
+    ],
+
     'belongsToNet' => 'Dieses Element gehört zu einem Netz',
     'viewWholeNet' => 'Gesamtes Netz anzeigen',
     'belongsToCluster' => 'Dieses Element ist einem Cluster zugeordnet',

@@ -279,6 +279,8 @@ return [
 
     'Header_Ccap'               => 'CCAP',
 
+    'Header_StatisticsResult'  => 'Results',
+
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
     //Header Controler index
@@ -290,6 +292,14 @@ return [
     'Header_SmartOnt' => 'Smart ONT',
     'Header_DfSubscription'     => 'Dreamfiber subscription',
     'Header_DfSubscriptionEvent' => 'Dreamfiber subscription event',
+
+    // Dunning
+    'DunningLetter'      => 'Dunning Letter',
+    'DunningRun'         => 'Dunning Run',
+
+    // Statistics
+    'StatisticsQuery'           => 'Statistics Query',
+    'StatisticsQueryResult'     => 'Statistics Query Result',
 
     //BUTTON
     'Sign me in'                => 'Login',
@@ -736,6 +746,49 @@ return [
     'showChanges' => 'Show the change|Show :num changes',
     'SettlementRun' => 'SettlementRun',
     'SipDevices' => 'SIP Devices',
+
+    // Option
+    'Option_StatisticsQuery' => [
+        'customerType' => [
+            'b2b' => 'B2B',
+            'b2c' => 'B2C',
+        ],
+        'productGroup' => [
+            'internet' => 'Internet',
+            'tv' => 'TV',
+            'telephone' => 'Telephone',
+            'combinationPackages' => 'Combination packages',
+        ],
+        'tariffs' => [
+            'intTariff_1' => 'Int: Tariff 1',
+            'intTariff_2' => 'Int: Tariff 2',
+            'telTariff_1' => 'Tel: Tariff 1',
+            'telTariff_2' => 'Tel: Tariff 2',
+        ],
+        'status' => [
+            'active' => 'Active',
+            'inTermination' => 'In termination',
+            'activeInTheFuture' => 'Active in the future',
+        ],
+        'groupFilter' => [
+            'noGroup' => 'No group',
+            'municipalityXY' => 'Municipality XY',
+            'antennaCommunities' => 'Antenna communities',
+            'clusterXY' => 'Cluster XY',
+        ],
+        'zipCodeFilter' => [],
+        'gender' => [
+            'male' => 'Male',
+            'female' => 'Female',
+            'diverse' => 'Diverse',
+        ],
+        'ageGroups' => [
+            '18-25' => '18-25',
+            '26-35' => '26-35',
+            '35+' => '35+',
+        ],
+    ],
+
     'belongsToNet' => 'This element belongs to a Net',
     'viewWholeNet' => 'Display whole net',
     'belongsToCluster' => 'This element belongs to a Cluster',
