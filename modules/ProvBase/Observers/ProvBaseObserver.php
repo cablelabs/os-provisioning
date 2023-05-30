@@ -113,6 +113,10 @@ class ProvBaseObserver
         if (array_key_exists('dns_password', $changes)) {
             $model->makeDdnsConf();
         }
+
+        if (array_key_exists('factory_reset_discovered_cpes', $changes)) {
+            Queue::pushOn('medium', new \Modules\ProvBase\Jobs\ConfigfileJob('tr069'));
+        }
     }
 
     /**

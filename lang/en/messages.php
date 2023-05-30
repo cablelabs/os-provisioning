@@ -310,6 +310,7 @@ return [
     'Upstream rate coefficient' => 'Upstream rate coefficient',
     'Additional modem reset button' => 'Additional modem reset button',
     'Automatic factory reset' => 'Automatic factory reset',
+    'Factory reset discovered CPEs' => 'Factory reset discovered CPEs',
     'Allocate PPPoE IPs randomly' => 'Allocate PPPoE IPs randomly',
     'Last update of geoposition' => 'Last update of geoposition',
     'modemAnalysis' => [

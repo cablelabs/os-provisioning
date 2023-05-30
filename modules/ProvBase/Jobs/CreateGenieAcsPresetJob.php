@@ -23,6 +23,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Modules\ProvBase\Entities\ProvBase;
 
 class CreateGenieAcsPresetJob implements ShouldQueue
 {
@@ -112,6 +113,7 @@ class CreateGenieAcsPresetJob implements ShouldQueue
     protected function createGenieAcsProvisions($text, $events = [])
     {
         $prefix = '';
+        $provbase = ProvBase::first();
 
         // during bootstrap always clear the info we have about the device
         $prov = [];
@@ -124,9 +126,16 @@ class CreateGenieAcsPresetJob implements ShouldQueue
                 "if (events.includes('0_BOOTSTRAP')) {",
                 "clear('Device', Date.now());",
                 "clear('InternetGatewayDevice', Date.now());",
-                '}',
-                "ext('sync-provision', 'ret', '{$this->modem->id}');",
             ];
+
+            if ($provbase->factory_reset_discovered_cpes) {
+                $prov[] = "if (declare('FactoryReset', {value: Date.now()}).value === undefined) {";
+                $prov[] = "declare('FactoryReset', null, {value: Date.now()});";
+                $prov[] = '}';
+            }
+
+            $prov[] = '}';
+            $prov[] = "ext('sync-provision', 'ret', '{$this->modem->id}');";
         }
 
         foreach (preg_split('/\r\n|\r|\n/', $text) as $line) {

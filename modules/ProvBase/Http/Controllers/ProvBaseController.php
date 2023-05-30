@@ -79,6 +79,7 @@ class ProvBaseController extends BaseController
             ['form_type' => 'checkbox', 'name' => 'additional_modem_reset', 'description' => 'Additional modem reset button', 'help' => trans('helper.additional_modem_reset')],
             ['form_type' => 'checkbox', 'name' => 'random_ip_allocation', 'description' => 'Allocate PPPoE IPs randomly'],
             ['form_type' => 'checkbox', 'name' => 'auto_factory_reset', 'description' => 'Automatic factory reset', 'help' => trans('helper.auto_factory_reset')],
+            ['form_type' => 'checkbox', 'name' => 'factory_reset_discovered_cpes', 'description' => 'Factory reset discovered CPEs', 'help' => trans('helper.factory_reset_discovered_cpes')],
         ];
     }
 
