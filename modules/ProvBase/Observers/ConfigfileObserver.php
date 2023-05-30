@@ -41,22 +41,24 @@ class ConfigfileObserver
 
     public function updating($configfile)
     {
-        // SmartOnt: To not confuse the provsioning logic
-        // changes of certain fields are not allowed
-        if (Module::collections()->has('SmartOnt')) {
-            if (! $configfile->isInUse()) {
-                return;
-            }
-            $unchangables = [
-                'device',
-                'service_profile_id',
-                'ont_line_profile_id',
-                'tr069_profile_id',
-            ];
-            $configfile->restoreUnchangeableFields($unchangables, trans('messages.configfileIsInUse'));
-
+        if (! Module::collections()->has('SmartOnt')) {
             return;
         }
+
+        // SmartOnt: To not confuse the provsioning logic
+        // changes of certain fields are not allowed
+        if (! $configfile->isInUse()) {
+            return;
+        }
+        $unchangables = [
+            'device',
+            'service_profile_id',
+            'ont_line_profile_id',
+            'tr069_profile_id',
+        ];
+        $configfile->restoreUnchangeableFields($unchangables, trans('messages.configfileIsInUse'));
+
+        return;
     }
 
     public function updated($configfile)

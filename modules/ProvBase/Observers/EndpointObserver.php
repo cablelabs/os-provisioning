@@ -100,21 +100,23 @@ class EndpointObserver
 
     public function deleting($endpoint)
     {
-        if (Module::collections()->has('SmartOnt')) {
-            // store physical connection information in case the deprovisioning fails
-            // but the modem gets deleted
-            $data = [
-                'netgw_id' => $endpoint->modem->netgw_id,
-                'frame_id' => $endpoint->modem->frame_id,
-                'slot_id' => $endpoint->modem->slot_id,
-                'port_id' => $endpoint->modem->port_id,
-                'ont_id' => $endpoint->modem->ont_id,
-                'vlan_id' => $endpoint->qos->vlan_id,
-            ];
-            $desc = '###BEGIN_OF_RELATED_PROVISIONING_DATA###'.serialize($data)."###END_OF_RELATED_PROVISIONING_DATA####\n\n";
-            // place in front too not truncate the information on to long descriptions
-            $endpoint->description = $desc.$endpoint->description;
+        if (! Module::collections()->has('SmartOnt')) {
+            return;
         }
+
+        // store physical connection information in case the deprovisioning fails
+        // but the modem gets deleted
+        $data = [
+            'netgw_id' => $endpoint->modem->netgw_id,
+            'frame_id' => $endpoint->modem->frame_id,
+            'slot_id' => $endpoint->modem->slot_id,
+            'port_id' => $endpoint->modem->port_id,
+            'ont_id' => $endpoint->modem->ont_id,
+            'vlan_id' => $endpoint->qos->vlan_id,
+            ];
+        $desc = '###BEGIN_OF_RELATED_PROVISIONING_DATA###'.serialize($data)."###END_OF_RELATED_PROVISIONING_DATA####\n\n";
+        // place in front too not truncate the information on to long descriptions
+        $endpoint->description = $desc.$endpoint->description;
     }
 
     public function deleted($endpoint)

@@ -134,7 +134,6 @@ class ModemObserver
 
                     // use special format; later used as “description” in provisioning process
                     // modules/SmartOnt/Console/SnmpTrapHandlerCommand.php
-                    // Attention: length of description field on Huawei OLT is limited to 64
                     $name_parts = [
                         'serial' => $modem->serial_num,
                         'zip' => $modem->zip,
@@ -142,6 +141,9 @@ class ModemObserver
                         'house_number' => $modem->house_number,
                     ];
 
+                    // Attention: length of description field on Huawei OLT is limited to 64
+                    // if the resulting name is to long we shorten the street and
+                    // not the whole string (in which case we would lose the housenumber)
                     do {
                         $name = implode('  ', $name_parts);
                         $name = \Str::ascii($name);
@@ -240,7 +242,7 @@ class ModemObserver
         if (\Module::collections()->has('SmartOnt')) {
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
                 if (array_key_exists('contract_id', $diff)) {
-                    Log::debug('Pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id) to queue');
+                    Log::debug(__METHOD__.' pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob('.$modem->id.') to queue');
                     \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
                 }
             }
@@ -255,6 +257,7 @@ class ModemObserver
         if (\Module::collections()->has('SmartOnt')) {
             if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
                 if (! is_null($modem->netgw_id)) {
+                    Log::debug(__METHOD__.' pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob('.$modem->id.') to queue');
                     \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
                 }
 
