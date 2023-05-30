@@ -38,6 +38,7 @@
         "datatables.net-responsive-bs4": "^2.3.0",
         "datatables.net-select": "^1.4.0",
         "datatables.net-select-bs4": "^1.4.0",
+        "es6-promise": "^4.2.8",
         "ion-rangeslider": "^2.3.1",
         "jquery": "^3.6.0",
         "jquery-migrate": "^1.4.1",

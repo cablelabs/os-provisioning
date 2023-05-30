@@ -36,6 +36,9 @@ import 'jstree';
 // ion-rangeslider
 import 'ion-rangeslider';
 
+// es6-promise
+import 'es6-promise/auto';
+
 // chartjs
 import Chart from 'chart.js/auto'
 window.Chart = Chart
