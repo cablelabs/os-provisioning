@@ -50,7 +50,6 @@
 @section('javascript_extra')
 @if (multi_array_key_exists(['lists'], $additional_data))
 <script src="{{asset('components/assets-admin/plugins/sortable/Sortable.min.js')}}"></script>
-<script src="{{asset('components/assets-admin/plugins/vuedraggable/dist/vuedraggable.umd.min.js')}}"></script>
 <script>
 
 // hide coloring related inputs if checkbox not checked
