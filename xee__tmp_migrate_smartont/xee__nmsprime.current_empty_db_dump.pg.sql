@@ -3749,7 +3749,8 @@ CREATE TABLE nmsprime.provbase (
     random_ip_allocation boolean DEFAULT false,
     ppp_session_timeout bigint DEFAULT '86400'::bigint,
     auto_factory_reset boolean DEFAULT false,
-    acct_interim_interval bigint DEFAULT '300'::bigint
+    acct_interim_interval bigint DEFAULT '300'::bigint,
+    sync_provision boolean DEFAULT false
 );
 
 
@@ -3787,7 +3788,8 @@ CREATE TABLE nmsprime.provmon (
     deleted_at timestamp with time zone,
     start_frequency bigint,
     stop_frequency bigint,
-    span bigint
+    span bigint,
+    realtime_update_interval integer DEFAULT 0
 );
 
 

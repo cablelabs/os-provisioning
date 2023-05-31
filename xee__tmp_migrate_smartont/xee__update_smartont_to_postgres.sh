@@ -18,6 +18,9 @@ if [ $? -gt 0 ]; then
     exit 1
 fi
 
+cd /var/www/nmsprime
+# $PHP /var/www/nmsprime/artisan optimize:clear
+
 PGLOADER="/usr/bin/pgloader"
 PHP="/opt/remi/php80/root/usr/bin/php"
 PSQL="/usr/pgsql-13/bin/psql"
@@ -97,6 +100,10 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
     INSERT INTO migrations (migration, batch) VALUES ('2022_08_04_000100_change_ip_pool_type_convert_enum_add_vendor_class_identifier', 22);
     ALTER TABLE ippool ADD COLUMN vendor_class_identifier VARCHAR(191) DEFAULT NULL;
     INSERT INTO migrations (migration, batch) VALUES ('2022_11_12_095943_add_cpe_device_count_to_ccap', 22);
+    INSERT INTO migrations (migration, batch) VALUES ('2023_02_01_150608_change_ip_type_to_inet_netelement_table', 22);
+    INSERT INTO migrations (migration, batch) VALUES ('2023_02_13_112000_change_unique_key_of_netelement_interfaces', 22);
+    INSERT INTO migrations (migration, batch) VALUES ('2023_02_17_112535_add_ip_to_rpd_session_table', 22);
+    INSERT INTO migrations (migration, batch) VALUES ('2023_04_25_104415_rebuild_tr069_configfiles_to_allow_sync', 22);
 
     /* # the following is coming from database/migrations/2021_09_20_000100_switchMysqlToPgsql.php */
     DELETE FROM ippool WHERE netmask='' OR ip_pool_start='' OR ip_pool_end='' OR router_ip='';
@@ -113,10 +120,15 @@ mysql -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" --exec="
 # run the working migrations
 echo ">>> Executing missing migrations in mariadb…"
 sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" /etc/nmsprime/env/global.env
-$PHP /var/www/nmsprime/artisan optimize:clear
 cd /var/www/nmsprime
-php artisan migrate
-php artisan module:migrate
+echo ">>> php artisan migrate…"
+echo "config('database.default');" | $PHP artisan tinker
+$PHP artisan migrate
+echo ">>> php artisan module:migrate…"
+echo "config('database.default');" | $PHP artisan tinker
+$PHP artisan module:migrate
+
+echo "config('database.default');" | $PHP artisan tinker
 
 # create user in maria that is allowed to read for conversion
 echo ">>> Reading mariadb credentials for user root…"
@@ -153,7 +165,8 @@ echo "LOAD DATABASE
     ;" > /tmp/nmsprime.load
 echo ">>> Executing pgloader…"
 sudo -u postgres $PGLOADER -q /tmp/nmsprime.load
-exit
+
+echo ">>> Setting access stuff in PostgreSQL…"
 sudo -u postgres $PSQL -d nmsprime -c "
     GRANT USAGE, CREATE ON SCHEMA ${auths[0]} TO ${auths[2]};
     GRANT ALL PRIVILEGES ON ALL Tables in schema ${auths[0]} TO ${auths[2]};
@@ -174,10 +187,18 @@ sudo -u postgres $PSQL -d nmsprime -c "
 # sed -i "s/ apartment_id bigint$/ apartment_id bigint,\\n    id_name character varying GENERATED ALWAYS AS (\\nCASE\\n    WHEN (name IS NULL) THEN ((id)::character varying)::text\\n    WHEN (id IS NULL) THEN (name)::text\\n    ELSE (((id)::character varying)::text || '_'::text) || ((name)::text)\\nEND) STORED/g" $SCHEMA_DUMP_FILE
 # sed -i 's///g' $SCHEMA_DUMP_FILE
 
-sed -i 's/^#RADIUS_DB/RADIUS_DB/' /etc/nmsprime/env/provbase.env
-sed -i "s/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$(pwgen 12 1)/" /etc/nmsprime/env/provbase.env
-
+echo ">>> Fixing env files…"
+# sed -i 's/^#RADIUS_DB/RADIUS_DB/' /etc/nmsprime/env/provbase.env
+# sed -i "s/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$(pwgen 12 1)/" /etc/nmsprime/env/provbase.env
 sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=pgsql/" /etc/nmsprime/env/global.env
-$PHP /var/www/nmsprime/artisan optimize:clear
 
-$PHP /var/www/nmsprime/artisan config:clear
+echo "config('database.default');" | $PHP artisan tinker
+
+echo ">>> Calling phpunit_prepare.sh…"
+/var/www/nmsprime/phpunit_prepare.sh
+
+systemctl restart php80-php-fpm.service
+
+# we had to skip the migration /var/www/nmsprime/database/migrations/2023_04_25_104415_rebuild_tr069_configfiles_to_allow_sync.php
+# therefore adding the job here
+echo '\Queue::pushOn("high", new \Modules\ProvBase\Jobs\ConfigfileJob("tr069"));' | $PHP /var/www/nmsprime/artisan tinker
