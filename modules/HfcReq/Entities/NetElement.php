@@ -50,13 +50,6 @@ class NetElement extends \BaseModel
 
     public $guarded = ['infrastructure_file_upload'];
 
-    /**
-     * The connection name for the model.
-     *
-     * @var string
-     */
-    protected $connection = 'pgsql';
-
     private $max_parents = 50;
 
     public $snmpvalues = ['attributes' => [], 'original' => []];
