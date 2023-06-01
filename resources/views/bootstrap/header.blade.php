@@ -43,7 +43,7 @@
       <link href="{{asset('components/assets-admin/css/theme/default.css')}}" rel="stylesheet" id="theme" />
 
       <!-- Plugins -->
-      <link href="{{asset('components/assets-admin/plugins/jstree/dist/themes/default/style.min.css')}}" rel="stylesheet" />
+      <link href="{{asset('css/jstree/style.min.css')}}" rel="stylesheet" />
 
       <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
 
