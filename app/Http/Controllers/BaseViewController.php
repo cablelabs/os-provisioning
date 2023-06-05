@@ -465,6 +465,20 @@ class BaseViewController extends Controller
                     $s .= Form::date($field['name'], $field['field_value'], $options);
                     break;
 
+                case 'time':
+                    $options['onchange'] = "$('#{$field['name']}')[0].defaultValue = event.target.value;$('#{$field['name']}')[0].value = event.target.value;";
+                    $options['autocomplete'] = 'off';
+
+                    // If there's a valid field value, format it as time; otherwise, leave it empty to show the placeholder
+                    if (! empty($field['field_value']) && strtotime($field['field_value'])) {
+                        $field['field_value'] = date('H:i', strtotime($field['field_value']));
+                    } else {
+                        $field['field_value'] = null;
+                    }
+
+                    $s .= Form::input('time', $field['name'], $field['field_value'], $options);
+                    break;
+
                 default:
                     $form = $field['form_type'];
                     $s .= Form::$form($field['name'], $field['field_value'], $options);

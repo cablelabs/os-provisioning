@@ -186,6 +186,8 @@ return [
     'Header_EditContract'       => 'Edit Contract',
     'Header_GroupContracts'      => 'Group Contracts',
     'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
+    //FirmwareUpgrades
+    'Header_FirmwareUpgrades'    => 'Firmware Upgrade|Firmware Upgrades',
     //Modems
     'Header_Modems'             => 'Modem'.(Module::collections()->has('SmartOnt') ? '/ONT' : '').'|Modems'.(Module::collections()->has('SmartOnt') ? '/ONTs' : ''), //workaround
     'Header_ModemOption'        => 'Modem Option|Modem Options',

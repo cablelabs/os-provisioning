@@ -116,6 +116,15 @@ return [
         'voucher_nr' => 'Belegnr',
     ],
     'debts' => 'Schulden',
+    //FirmwareUpgrades
+    'firmware_upgrades' => [
+        'start_date' => 'Start date',
+        'start_time' => 'Start time',
+        'end_date' => 'End date',
+        'end_time' => 'End time',
+        'cron_string' => 'Cron string',
+        'batch_size' => 'Batch size',
+    ],
     //Invoices
     'invoice.type' => 'Typ',
     'invoice.year' => 'Jahr',

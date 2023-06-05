@@ -1908,6 +1908,20 @@ class BaseController extends Controller
         return [null => $placeholder];
     }
 
+    protected function setupSelect2FieldForPivotTable($model, string $relationship, string $class, string $placeholder = null): array
+    {
+        $placeholder = $placeholder ?? trans('view.select.base', ['model' => trans("view.select.{$class}")]);
+
+        $models = $model->$relationship;
+        $options = [null => $placeholder];
+
+        foreach ($models as $relatedModel) {
+            $options[$relatedModel->id] = $relatedModel->label();
+        }
+
+        return $options;
+    }
+
     /**
      * Set the Select 2 Key/Value via Request (GET) Parameter
      *

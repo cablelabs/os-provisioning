@@ -26,6 +26,7 @@ BaseRoute::group([], function () {
     BaseRoute::resource('Domain', 'Modules\ProvBase\Http\Controllers\DomainController');
     BaseRoute::resource('ProvBase', 'Modules\ProvBase\Http\Controllers\ProvBaseController');
     BaseRoute::resource('ModemOption', 'Modules\ProvBase\Http\Controllers\ModemOptionController');
+    BaseRoute::resource('FirmwareUpgrades', 'Modules\ProvBase\Http\Controllers\FirmwareUpgradesController');
 
     BaseRoute::get('modem/firmware', [
         'as' => 'Modem.firmware',
