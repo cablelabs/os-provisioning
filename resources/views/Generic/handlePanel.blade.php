@@ -86,6 +86,7 @@ var loadPanelPositionFromStorage = function() {
                     var targetId = $('[data-sort-id="'+ data +'"]').not('[data-init="true"]')
 
                     if ($(targetId).length !== 0) {
+                        prepareLivewireData($(targetId)[0])
                         var targetHtml = $(targetId).clone()
                         $(targetId).remove()
                         $('[id ="' + targetColumn + '"]').append(targetHtml)
@@ -95,9 +96,26 @@ var loadPanelPositionFromStorage = function() {
             }
         })).done(function() {
             window.dispatchEvent(new CustomEvent('localstorage-position-loaded'))
+            window.livewire?.rescan()
         });
     }
 };
+var prepareLivewireData = function (node){
+    node.querySelectorAll('[wire\\:id]').forEach(function(el) {
+        const component = el.__livewire;
+        if(component){
+            const dataObject = {
+                fingerprint: component.fingerprint,
+                serverMemo: component.serverMemo,
+                effects: component.effects,
+            };
+            el.setAttribute('wire:initial-data', JSON.stringify(dataObject));
+            component.tearDown()
+            delete livewire.components.componentsById[component.id];
+        }
+
+    });
+}
 
 $(document).ready(function() {
     handlePanel()
