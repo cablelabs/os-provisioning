@@ -745,7 +745,7 @@ return [
         'Controlling' => 'Controlling',
         'Customers' => 'Modem Topology',
         'Diagrams' => 'Diagrams',
-        'Documents' => 'Dokuments',
+        'Documents' => 'Documents',
         'dpicCards' => 'DPIC Cards',
         'dpicInterfaces' => 'DPIC Interfaces',
         'dpic' => 'DPIC',

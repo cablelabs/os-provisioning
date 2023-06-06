@@ -39,6 +39,16 @@ return [
     'digits_between' => 'The :attribute must be between :min and :max digits.',
     'dimensions' => 'The :attribute has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
+    'documentTemplate' => [
+        'letterhead_missing_tag' => 'Letterhead must contain :tag tag'
+    ],
+    'document_type' => [
+        'missing_contract_end_date' => 'Missing contract end date',
+        'missing_uncleared_debts' => 'No uncleared debts found',
+        'missing_uncleared_invoice' => 'No overdue invoice found',
+        'missing_user_creds' => 'Missing user login credentials',
+        'something_went_wrong' => 'Something went wrong',
+    ],
     'email' => 'The :attribute must be a valid email address.',
     'ends_with' => 'The :attribute must end with one of the following: :values.',
     'exists' => 'The selected :attribute is invalid.',

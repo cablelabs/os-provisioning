@@ -39,6 +39,16 @@ return [
     'digits_between'       => ':attribute muss zwischen :min und :max Stellen haben.',
     'dimensions'           => ':attribute hat ein ungültiges Seitenverhältnis.',
     'distinct'             => 'Das :attribute Feld hat einen doppelten Wert.',
+    'documentTemplate' => [
+        'letterhead_missing_tag' => 'Der Briefkopf muss :tag tag enthalten'
+    ],
+    'document_type' => [
+        'missing_contract_end_date' => 'Fehlendes Vertragsenddatum',
+        'missing_uncleared_debts' => 'Keine nicht getilgten Schulden gefunden',
+        'missing_uncleared_invoice' => 'Keine überfällige Rechnung gefunden',
+        'missing_user_creds' => 'Fehlende Benutzeranmeldedaten',
+        'something_went_wrong' => 'Etwas ist schief gelaufen',
+    ],
     'email'                => ':attribute Format ist ungültig.',
     'ends_with'      => ':attribute muss eine der folgenden Endungen aufweisen: :values',
     'exists'               => 'Der gewählte Wert für :attribute ist ungültig.',
