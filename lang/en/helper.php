@@ -223,4 +223,12 @@ return [
      * Start alphabetical order
      */
     'endpointMac' => 'Can be left empty for all PPPoE provisioned modems (PPP username is used instead of MAC). With DHCP it can be left empty for IPv4. Then all devices behind the modem will get the specified IP, but only the last one that requested the IP will have a working IP connectivity. This is not yet implemented for IPv6 - please always specify the CPE MAC that shall get the public or fixed IP.',
+
+    /*
+     * MODULE: Statistics
+     */
+    'statisticsQuery' => [
+        'upsell' => 'Include product upsell: Includes existing customers who have purchased another product/tariff change',
+        'auto' => 'The cron string to automatically retrieve statistic repetetive. refer to: www.crontab.guru',
+    ],
 ];

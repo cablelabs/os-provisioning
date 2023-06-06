@@ -642,7 +642,7 @@ return [
         'tariffs' => 'Tariffs',
         'status' => 'Status',
         'consider_tariff_change' => 'Consider Tariff Change',
-        'group_filter' => 'Group Filter',
+        'antenna_communities' => 'Antenna Communities',
         'zip_code_filter' => 'Zip Code Filter',
         'gender' => 'Gender',
         'age_groups' => 'Age Groups',

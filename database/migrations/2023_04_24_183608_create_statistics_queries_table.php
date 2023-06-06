@@ -38,10 +38,10 @@ return new class extends BaseMigration
             $table->string('name');
             $table->string('customer_type')->nullable();
             $table->string('product_group')->nullable();
-            $table->string('tariffs')->nullable();
+            $table->json('tariffs')->nullable();
             $table->string('status')->nullable();
-            $table->string('group_filter')->nullable();
-            $table->string('zip_code_filter')->nullable();
+            $table->string('antenna_communities')->nullable();
+            $table->json('zip_code_filter')->nullable();
             $table->string('gender')->nullable();
             $table->string('age_groups')->nullable();
             $table->boolean('split_combination_packages')->nullable();

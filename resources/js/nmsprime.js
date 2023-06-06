@@ -165,6 +165,33 @@ window.initDefaultSelect2 = function (item, lang = null) {
   .on('select2:open', function (e) {
     setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
   })
+  .on('select2:select', function (e) {
+    filterSelect2({e, item, lang})
+  })
+  .on('select2:unselect', function (e) {
+    filterSelect2({e, item, lang})
+  }).trigger('select2:select');
+}
+
+function filterSelect2(payload) {
+  const {e, item, lang} = payload
+  const selectedValue = e.target.value
+
+  for(let i=0; i< item.length; i++) {
+    if ($(item[i]).data('parent-id') == e.target.id) {
+      $(item[i]).find('option').each(function() {
+        const optionAttr = $(this).data('parent');
+
+        if (selectedValue === optionAttr || selectedValue === '') {
+          $(this).attr('disabled', false);
+        } else {
+          $(this).attr('disabled', true);
+        }
+      });
+
+      $(item[i]).select2({ language: lang })
+    }
+  }
 }
 
 window.initAjaxSelect2 = function (item, lang = null) {

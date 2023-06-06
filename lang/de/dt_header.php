@@ -643,7 +643,7 @@ return [
         'tariffs' => 'Tarife',
         'status' => 'Status',
         'consider_tariff_change' => 'Tarifwechsel berücksichtigen',
-        'group_filter' => 'Gruppenfilter',
+        'antenna_communities' => 'Antennengemeinschaften',
         'zip_code_filter' => 'PLZ Filter',
         'gender' => 'Geschlecht',
         'age_groups' => 'Altersgruppen',

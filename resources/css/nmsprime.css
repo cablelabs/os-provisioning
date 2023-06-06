@@ -1157,3 +1157,7 @@ table.dataTable > tbody > tr.selected > * {
     cursor: default;
     padding-right: 1px;
 }
+
+.select2-results .select2-disabled,  .select2-results__option[aria-disabled=true] {
+    display: none;
+}

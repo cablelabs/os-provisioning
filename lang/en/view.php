@@ -756,31 +756,16 @@ return [
         'productGroup' => [
             'internet' => 'Internet',
             'tv' => 'TV',
-            'telephone' => 'Telephone',
-            'combinationPackages' => 'Combination packages',
-        ],
-        'tariffs' => [
-            'intTariff_1' => 'Int: Tariff 1',
-            'intTariff_2' => 'Int: Tariff 2',
-            'telTariff_1' => 'Tel: Tariff 1',
-            'telTariff_2' => 'Tel: Tariff 2',
+            'voip' => 'Voip',
         ],
         'status' => [
             'active' => 'Active',
             'inTermination' => 'In termination',
             'activeInTheFuture' => 'Active in the future',
         ],
-        'groupFilter' => [
-            'noGroup' => 'No group',
-            'municipalityXY' => 'Municipality XY',
-            'antennaCommunities' => 'Antenna communities',
-            'clusterXY' => 'Cluster XY',
-        ],
-        'zipCodeFilter' => [],
         'gender' => [
             'male' => 'Male',
             'female' => 'Female',
-            'diverse' => 'Diverse',
         ],
         'ageGroups' => [
             '18-25' => '18-25',
