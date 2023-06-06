@@ -1,0 +1,26 @@
+<p x-remove="table[contract-info], [greetings]">
+    Mit diesem Schreiben erhalten Sie eine kurze Übersicht über ihre
+    persönlichen Zugangsdaten.
+</p>
+<table>
+    <tbody>
+        <tr>
+            <th>Kundennummer</th>
+            <td>{{cccuser.login_name}}</td>
+        </tr>
+        <tr>
+            <th>Passwort</th>
+            <td style="font-family: monospace;">{{cccuser.login_password}}</td>
+        </tr>
+        <tr>
+            <th>URL</th>
+            <td><a :href="company.web">{{company.web}} → Login</a></td>
+        </tr>
+    </tbody>
+</table>
+<p>Jeder Kunde erhält mit Abschluss eines Vertrages ein persönliches Passwort mit dem er sich an verschiedenen Stellen
+    anmelden kann. Dieses Kennwort muss, im Sinne des Kunden, unbedingt geheim gehalten werden, da alle Aktivitäten
+    unter dem entsprechenden Loginnamen registriert sind. Zwangsläufig wird der Nutzername dem entsprechenden Kunden
+    zugeordnet. Das heißt, für jeglichen Missbrauch durch Dritte kann der Kunde haftbar gemacht werden.</p>
+<br />
+<p>Wir wünschen Ihnen viel Freude mit dem schnellen Internetzugang über das Highspeed TV-Kabelnetz.</p>

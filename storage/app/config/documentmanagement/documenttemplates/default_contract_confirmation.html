@@ -1,0 +1,120 @@
+<div x-component:greetings></div>
+<p>wir bestätigen Ihnen den beauftragten Anschlussvertrag mit folgenden Daten:</p>
+<table x-remove="[contract-info],[salutation]">
+    <tbody class="[&>tr>*:first-child]:pl-0 [&>tr>*:first-child]:font-medium">
+        <tr>
+            <td>Vertragsnummer:</td>
+            <td>
+                <span>{{contract.number}}</span>
+                <span class="opacity-80">(Bei Zahlungen und Schriftverkehr bitte angeben)</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Vertragsbeginn:</td>
+            <td>{{dayjs(contract.contract_start ?? undefined).format('D.M.YYYY')}}</td>
+        </tr>
+        <tr>
+            <td>Kündigungsfrist:</td>
+            <td>{{meta.period_of_notice}}</td>
+        </tr>
+        <tr>
+            <td>Entgelt monatlich (einschl. MwSt):</td>
+            <td>
+                <span x-show="meta?.monthly_fee">
+                    <span class="opacity-60 pr-px">{{meta?.currency}}</span>{{meta?.monthly_fee}}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>Zahlweise:</td>
+            <td>{{sepamandate ? 'SEPA-Lastschriftverfahren': 'Überweisung'}}</td>
+        </tr>
+        <tr x-show="sepamandate?.valid_from">
+            <td>Einzugsermächtigung erteilt:</td>
+            <td>{{sepamandate?.valid_from ? dayjs(sepamandate?.valid_from).format('D.M.YYYY'):''}}</td>
+        </tr>
+        <tr x-show="sepamandate">
+            <td class="inline-flex items-start">Bankverbindung:</td>
+            <td>
+                <table class="my-0">
+                    <tbody>
+                        <tr>
+                            <td class="pl-0">IBAN:</td>
+                            <td>{{sepamandate?.iban}}</td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">BIC:</td>
+                            <td>{{sepamandate?.bic}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr x-show="sepamandate">
+            <td>Mandat für SEPA-Lasteinzug:</td>
+            <td>{{sepamandate?.reference}}</td>
+        </tr>
+        <tr x-show="sepamandate?.valid_to">
+            <td>Gültig ab:</td>
+            <td>{{sepamandate?.valid_from ? dayjs(sepamandate?.valid_from).format('D.M.YYYY'):''}}</td>
+        </tr>
+        <tr>
+            <td>Gläubiger-Identifikationsnummer:</td>
+            <td>{{sepaaccount?.creditorid}}</td>
+        </tr>
+    </tbody>
+</table>
+<template x-if="contract?.computed?.tariffs">
+    <table class="max-w-full">
+        <thead>
+            <tr>
+                <th>Tariff</th>
+                <th align="right">Price (VAT Inc.)</th>
+                <th>Period</th>
+            </tr>
+        </thead>
+        <tbody class="text-sm">
+            <template x-for="tariff in contract.computed.tariffs" :key="tariff.id">
+                <tr>
+                    <td>{{tariff.accounting_text ?? tariff.product?.name}}</td>
+                    <td align="right">
+                        <small class="opacity-60">{{meta?.currency}}</small>{{tariff.computed.price}}
+                    </td>
+                    <td>
+                        <template x-if="tariff.product.type.toLowerCase() != 'once'">
+                            <div>
+                                <span>
+                                    {{dayjs(tariff.valid_from).format('D.M.YYYY')}}
+                                </span>
+                                <span>
+                                    - {{tariff.valid_to ? dayjs(tariff.valid_to).format('D.M.YYYY') :'Open'}}
+                                </span>
+                            </div>
+                        </template>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</template>
+<!-- If Sepamandate is set -->
+<div x-show="sepamandate">
+    <p>
+        Die fälligen Beträge zuzüglich einmalig 39,95 € Bereitstellungsgebühr werden wir mit einer SEPA-
+        Lastschrift unter Ihrer Mandats-Referenznummer und unserer Gläubiger-ID
+        <strong>{{sepaaccount?.creditorid}}</strong>
+        am
+        {{meta.tariff_product_types?.length == meta.tariff_product_types?.filter(type => type == 'tv') ? ' 1. Werktag des Folgemonats':' 15. des Folgemonats'}}
+        einziehen.
+    </p>
+    <p>
+        Die Lastschrift erfolgt entsprechen der gewählten Zahlweise und wird vertragsgemäß im Voraus
+        erhoben.
+    </p>
+</div>
+<p x-show="!sepamandate">
+    Die Rechnungslegung erfolgt vertragsgemäß im Voraus. Ihre Rechnungen können Sie in unserem Onlineportal einsehen,
+    die Anschlussinformationen zum Onlineportal erhalten Sie separat.
+</p>
+<p>Bitte prüfen Sie Ihre angegebenen Daten. Abweichungen sind unverzüglich mitzuteilen.</p>
+<p>Bei Rückfragen stehen wir Ihnen selbstverständlich gern zur Verfügung.</p>

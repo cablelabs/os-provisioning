@@ -1,0 +1,76 @@
+<row>zu Ihrem Umzug bestätigen wir Ihnen folgende Änderung:</row>
+<table>
+    <tbody>
+        <tr>
+            <td>Umzug</td>
+            <td>von</td>
+            <td>[PREV_ADDR]</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>nach</td>
+            <td>
+                <div class="inline-flex gap-1 [&>span:empty]:hidden [&>span:empty]:whitespace-nowrap">
+                    <span>{{ contract.company ?? '' }}</span>
+                    <span>{{ contract.department ?? '' }}</span>
+                    <span>{{contract.district ?? ''}}</span>
+                    <span>{{contract.zip ?? ''}} {{contract.city ?? ''}}</span>
+                    <span>{{contract.street ?? ''}} {{contract.housenumber ?? ''}}</span>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<row><strong>Folgende Aufrechnung haben wir vorgenommen:</strong></row>
+<table class="max-w-full">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th align="right">Price (VAT Inc.)</th>
+            <th>Period</th>
+        </tr>
+    </thead>
+    <tbody class="text-sm">
+        <template x-for="item in contract.computed?.items ?? []" :key="item.id">
+            <tr>
+                <td>{{item.accounting_text ?? item.product?.name}}</td>
+                <td align="right">
+                    <small class="opacity-60">{{meta?.currency}}</small>{{item.computed.price}}
+                </td>
+                <td>
+                    <template x-if="item.product.type.toLowerCase() != 'once'">
+                        <div>
+                            <span>
+                                {{dayjs(item.valid_from).format('D.M.YYYY')}}
+                            </span>
+                            <span >
+                                - {{ item.valid_to ? dayjs(item.valid_to).format('D.M.YYYY'):'Open'}}
+                            </span>
+                        </div>
+                    </template>
+                </td>
+            </tr>
+        </template>
+        <tr>
+            <td>Umzugsgebühr</td>
+            <td align="right"><small class="opacity-60">{{meta?.currency}}</small>29.95</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td align="right"><small class="opacity-60">{{meta?.currency}}</small>{{parseFloat(29.95 + parseFloat(meta.total_fee)).toFixed(2)}}</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Wir erlauben uns, den Gesamtbetrag in Höhe von <strong>{{parseFloat(29.95 + parseFloat(meta.total_fee)).toFixed(2)}}€</strong> zum [DATE] on dem uns bekannten
+    Konto abzubuchen.
+</p>
+<br/>
+<p>
+    Sollten sich bzgl. Ihres Umzugs weitere Änderungen ergeben, setzen wir uns mit Ihnen in
+    Verbindung.
+</p>
+<br/>
+<p>Bei weiteren Fragen stehen wir Ihnen gern zur Verfügung.</p>

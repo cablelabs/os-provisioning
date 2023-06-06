@@ -1,0 +1,26 @@
+<p>
+    durch die von Ihrer Bank veranlassten Rückbuchung in Höhe von {{debt?.amount}} € vom {{dayjs(debt?.created_at ?? undefined).format('DD.MM.YYYY')}} valutiert auf
+    Ihrem o.g. Konto ein Gesamtrückstand von:
+</p>
+<row class="justify-center">{{debt?.total_arrears}} €</row>
+<row class="justify-start gap-1"><span>Darin enthalten sind {{debt?.missing_amount}} €</span><strong>Stornogebühren</strong></row>
+<p>
+    Die entstandenen Zahlungsrückstände gleichen Sie bitte durch eine Einzahlung bzw.
+    Überweisung auf unser Konto aus.
+</p>
+<table class="mx-auto">
+    <tbody>
+        <tr>
+            <th>IBAN</th>
+            <td>{{sepaaccount.iban}}</th>
+        </tr>
+        <tr>
+            <th>BIC</th>
+            <td>{{sepaaccount.bic}}</th>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Wir bitten Sie, zukünftig dafür Sorge zu tragen, dass die fälligen Zahlungen wie vertraglich
+    vereinbart erfolgen.
+</p>
