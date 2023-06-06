@@ -7,13 +7,18 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "prod:pdf": "mix --production --mix-config=modules/DocumentManagement/webpack.mix.js",
+        "watch:pdf": "mix watch --mix-config=modules/DocumentManagement/webpack.mix.js"
     },
     "devDependencies": {
+        "alpinejs": "^3.12.1",
         "autoprefixer": "^10.4.7",
+        "dayjs": "^1.11.7",
         "laravel-mix": "^6.0.49",
         "laravel-mix-merge-manifest": "^2.0.0",
         "lodash": "^4.17.19",
+        "pagedjs": "^0.4.1",
         "path": "^0.12.7",
         "postcss": "^8.4.14",
         "tailwindcss": "^3.1.4",
@@ -40,6 +45,7 @@
         "laravel-echo": "^1.12.0",
         "pdfmake": "^0.2.5",
         "popper.js": "^1.12",
+        "puppeteer": "^13.7.0",
         "pusher-js": "^7.1.0-beta",
         "select2": "^4.1.0-rc.0",
         "vue": "3.2.44",
