@@ -443,7 +443,7 @@ class BaseViewController extends Controller
                         $field['field_value'] = array_map('intval', $field['field_value']);
                     }
 
-                    $s .= Form::select($field['name'], $value, $field['field_value'], $options);
+                    $s .= Form::select($field['name'], $value, $field['field_value'], $options, $field['optionsAttributes'] ?? []);
                     break;
 
                 case 'password':
