@@ -40,7 +40,7 @@ return [
     'dimensions'           => ':attribute hat ein ungültiges Seitenverhältnis.',
     'distinct'             => 'Das :attribute Feld hat einen doppelten Wert.',
     'documentTemplate' => [
-        'letterhead_missing_tag' => 'Der Briefkopf muss :tag tag enthalten'
+        'letterhead_missing_tag' => 'Der Briefkopf muss :tag tag enthalten',
     ],
     'document_type' => [
         'missing_contract_end_date' => 'Fehlendes Vertragsenddatum',

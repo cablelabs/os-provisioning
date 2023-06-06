@@ -714,9 +714,9 @@ function parseLocation($location)
  *
  * @author Wali Razzaq
  */
-function sanitizeHtml(string $content,array $tags = ['script'],array $attributes=['x-data','x-init'])
+function sanitizeHtml(string $content, array $tags = ['script'], array $attributes = ['x-data', 'x-init'])
 {
-    return new class($content,$tags,$attributes) implements Stringable
+    return new class($content, $tags, $attributes) implements Stringable
     {
         public function __construct(
             private string $content,
@@ -725,33 +725,37 @@ function sanitizeHtml(string $content,array $tags = ['script'],array $attributes
         ) {
         }
 
-        public function tags(...$tags):self
+        public function tags(...$tags): self
         {
             $this->tags = $tags;
+
             return $this;
         }
 
-        public function attributes(...$attributes):self
+        public function attributes(...$attributes): self
         {
             $this->attributes = $attributes;
+
             return $this;
         }
 
-        protected function cleanup():self
+        protected function cleanup(): self
         {
             foreach ($this->tags as $tag) {
                 $this->content = preg_replace('/<'.preg_quote($tag).'\b[^<]*(?:(?!<\/'.preg_quote($tag).'>)<[^<]*)*<\/'.preg_quote($tag).'>/', '', $this->content);
             }
 
             foreach ($this->attributes as $attribute) {
-                $this->content = preg_replace('/'.preg_quote($attribute).'\s*=\s*([\x22\x27])([\s\S]*?)\1/','',$this->content);
+                $this->content = preg_replace('/'.preg_quote($attribute).'\s*=\s*([\x22\x27])([\s\S]*?)\1/', '', $this->content);
             }
 
             return $this;
         }
+
         public function __toString(): string
         {
             $this->cleanup();
+
             return $this->content;
         }
 
@@ -759,6 +763,5 @@ function sanitizeHtml(string $content,array $tags = ['script'],array $attributes
         {
             return $this->__toString();
         }
-
     };
 }

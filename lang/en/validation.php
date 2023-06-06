@@ -40,7 +40,7 @@ return [
     'dimensions' => 'The :attribute has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
     'documentTemplate' => [
-        'letterhead_missing_tag' => 'Letterhead must contain :tag tag'
+        'letterhead_missing_tag' => 'Letterhead must contain :tag tag',
     ],
     'document_type' => [
         'missing_contract_end_date' => 'Missing contract end date',
