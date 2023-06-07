@@ -18,12 +18,11 @@
 
 namespace Modules\ProvBase\Console;
 
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use DB;
-use File;
-use Illuminate\Console\Command;
 use Log;
+use File;
 use Storage;
+use Illuminate\Console\Command;
 
 class ExportCsvCommand extends Command
 {
@@ -221,17 +220,6 @@ class ExportCsvCommand extends Command
         return $ret;
     }
 
-    protected function storeXlsx($filename, $data)
-    {
-        $writer = WriterEntityFactory::createWriterFromFile('path/to/file.ext');
-        $writer->setTempFolder($customTempFolderPath)
-               ->setShouldUseInlineStrings(true)
-               ->openToFile($filePath)
-               ->addRow($headerRow)
-               ->addRows($dataRows)
-               ->close();
-    }
-
     /**
      * Writes data to CSV file
      *
@@ -269,16 +257,5 @@ class ExportCsvCommand extends Command
         } catch (Exception $ex) {
             $msg = __METHOD__."(): Error writing $exportFile (".$ex->getMessage().')';
         }
-
-
-        $writer = WriterEntityFactory::createXLSXWriter();
-        /* $writer->setTempFolder($customTempFolderPath) */
-        /* $writer->setShouldUseInlineStrings(true) */
-        $writer->openToFile($exportFile.".xlsx");
-        foreach ($data as $row) {
-            $row = WriterEntityFactory::createRowFromArray($row);
-            $writer->addRow($row);
-        }
-        $writer->close();
     }
 }
