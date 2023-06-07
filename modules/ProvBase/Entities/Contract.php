@@ -1966,4 +1966,56 @@ class Contract extends \BaseModel
 
         return [];
     }
+
+    /**
+     * Get related Phonenumbers of all modems as comma separated string
+     */
+    public function relatedPns(): string
+    {
+        if (! Module::collections()->has('ProvVoip')) {
+            return '';
+        }
+
+        // Get some necessary relations by one DB query as first step to reduce further queries when accessing related models
+        $modems = $this->modems()->with([
+            'mtas:id,modem_id',
+            'mtas.phonenumbers:id,mta_id,country_code,prefix_number,number',
+        ])->get();
+
+        $this->setRelation('modems', $modems);
+        $pns = [];
+
+        foreach ($modems as $modem) {
+            foreach ($modem->related_phonenumbers() as $pn) {
+                $pns[] = $pn->asString();
+            }
+        }
+
+        return implode(', ', $pns);
+    }
+
+    /*
+     * Creates a string to be used in modem edit contract form field.
+     * Used there to move SmartONT ONTs from on contract to another
+     *
+     * @author Christian Schramm, Patrick Reichel
+     */
+    public function composeSmartOntOltDescription($contract)
+    {
+        $description = str($contract->house_number)
+            ->padLeft(5, ' ') // padLeft is important to get correct housenumber order
+            ->prepend("{$contract->zip} {$contract->city}, {$contract->street}");
+
+        if ($contract->type == 'OTO_FTTH_FR') {
+            return $description->append(", OTO-ID: {$contract->oto_id}")
+                               ->append(" – {$contract->oto_status} – ")
+                               ->append($contract->alex_status);
+        }
+
+        if ($contract->type == 'OTO_OWN') {
+            return $description;
+        }
+
+        return $description->prepend('STORAGE: ');
+    }
 }

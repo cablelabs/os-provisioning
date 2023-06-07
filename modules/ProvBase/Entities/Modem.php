@@ -3083,22 +3083,15 @@ class Modem extends \BaseModel
         }
 
         // can move every ONT to every storage
-        $contractsStorage = \DB::table('contract')
-            ->whereNull('deleted_at')
-            ->where('type', '=', 'OTO_STORAGE')
+        $contractsStorage = Contract::where('type', '=', 'OTO_STORAGE')
             ->where('id', '<>', $this->contract->id)
             ->get();
 
         $contractsOwn = collect();
         $contractsFtthFr = collect();
         if ('OTO_STORAGE' == $this->contract->type) {
-            $contractsOwn = \DB::table('contract')
-                ->whereNull('deleted_at')
-                ->where('type', '=', 'OTO_OWN')
-                ->get();
-            $contractsFtthFr = \DB::table('contract')
-                ->whereNull('deleted_at')
-                ->where('type', '=', 'OTO_FTTH_FR')
+            $contractsOwn = Contract::where('type', '=', 'OTO_OWN')->get();
+            $contractsFtthFr = Contract::where('type', '=', 'OTO_FTTH_FR')
                 ->whereIn('oto_status', ['Assigned', 'Built', 'Ordered'])
                 ->whereIn('alex_status', ['BEPREADY', 'PLUGFREE', 'PLUGINUSE'])
                 // hint: there may be more than one ONT at an OTO (for different services)
@@ -3109,33 +3102,15 @@ class Modem extends \BaseModel
                 ->get();
         }
 
-        $contracts = collect([$this->contract])->concat($contractsStorage)->concat($contractsOwn)->concat($contractsFtthFr);
-        $ret = [];
-        foreach ($contracts as $contract) {
-            if ('OTO_FTTH_FR' == $contract->type) {
-                $ret[$contract->id] = $contract->zip;
-                $ret[$contract->id] .= ' '.$contract->city;
-                $ret[$contract->id] .= ', '.$contract->street;
-                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-                $ret[$contract->id] .= ', OTO-ID: '.$contract->oto_id;
-                $ret[$contract->id] .= ' – '.$contract->oto_status;
-                $ret[$contract->id] .= ' – '.$contract->alex_status;
-            } elseif ('OTO_OWN' == $contract->type) {
-                $ret[$contract->id] = $contract->zip;
-                $ret[$contract->id] .= ' '.$contract->city;
-                $ret[$contract->id] .= ', '.$contract->street;
-                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-            } else {
-                $ret[$contract->id] = 'STORAGE: ';
-                $ret[$contract->id] .= $contract->zip;
-                $ret[$contract->id] .= ' '.$contract->city;
-                $ret[$contract->id] .= ', '.$contract->street;
-                $ret[$contract->id] .= ' '.str_pad($contract->house_number, 5, ' ', STR_PAD_LEFT);
-            }
-        }
-        asort($ret);
-
-        return $ret;
+        return collect([$this->contract])
+                ->concat($contractsStorage)
+                ->concat($contractsOwn)
+                ->concat($contractsFtthFr)
+                ->keyBy('id') //unfortunately mapWithKeys does not exist as higherOrderProxy
+                ->map(function ($contract) {
+                    return $contract->composeSmartOntOltDescription($contract);
+                })
+                ->sort();
     }
 
     /**
