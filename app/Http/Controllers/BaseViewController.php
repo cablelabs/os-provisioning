@@ -440,7 +440,7 @@ class BaseViewController extends Controller
                         $escaped_field_name = Str::substr($field['name'], 0, Str::length($field['name']) - 2);
                         $field['field_value'] = Request::old($escaped_field_name, array_keys($field['selected']));
                         // values MUST be int, because of strict type checking in Form module
-                        $field['field_value'] = array_map('intval', $field['field_value']);
+                        // $field['field_value'] = array_map('intval', $field['field_value']);
                     }
 
                     $s .= Form::select($field['name'], $value, $field['field_value'], $options, $field['optionsAttributes'] ?? []);
