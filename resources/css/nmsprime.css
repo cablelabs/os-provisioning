@@ -1016,6 +1016,16 @@ table.dataTable.dtr-column > tbody > tr > td.dtr-control::before, table.dataTabl
     line-height: 1;
 }
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    height: 100%;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    border: solid 1px #aaa !important;
+    margin-right: 8px !important;
+    padding: 2px 2px 2px 18px !important;
+}
+
 .sidebar .sidebar-hover > li > a:hover,
 .sidebar .sidebar-hover > li > a:focus,
 .sidebar .sidebar-hover > li.active > a,
