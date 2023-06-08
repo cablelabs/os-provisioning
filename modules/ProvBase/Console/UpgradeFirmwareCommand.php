@@ -24,7 +24,7 @@ use Modules\ProvBase\Services\FirmwareUpgradeService;
 
 class UpgradeFirmwareCommand extends Command
 {
-    protected $name = 'firmware:icingadata';
+    protected $name = 'firmware:upgrade';
 
     protected $signature = 'firmware:upgrade';
 
