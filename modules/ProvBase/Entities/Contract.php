@@ -2002,14 +2002,13 @@ class Contract extends \BaseModel
      */
     public function composeSmartOntOltDescription($contract)
     {
-        $description = str($contract->house_number)
-            ->padLeft(5, ' ') // padLeft is important to get correct housenumber order
-            ->prepend("{$contract->zip} {$contract->city}, {$contract->street}");
+        $description = str("{$contract->zip} {$contract->city}, {$contract->street}")
+            // padLeft is important to get correct housenumber order
+            ->append(str($contract->house_number)->padLeft(5, ' '));
 
         if ($contract->type == 'OTO_FTTH_FR') {
-            return $description->append(", OTO-ID: {$contract->oto_id}")
-                               ->append(" – {$contract->oto_status} – ")
-                               ->append($contract->alex_status);
+            return $description
+                ->append(", OTO-ID: {$contract->oto_id} – {$contract->oto_status} – $contract->alex_status");
         }
 
         if ($contract->type == 'OTO_OWN') {
