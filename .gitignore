@@ -80,3 +80,7 @@ public/mix-manifest.json
 _ide_helper.php
 
 npm-debug.log
+
+# sql files
+*.sql
+
