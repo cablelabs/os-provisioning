@@ -57,7 +57,6 @@ class ConfigfileObserver
             'tr069_profile_id',
         ];
         $configfile->restoreUnchangeableFields($unchangables, trans('messages.configfileIsInUse'));
-
     }
 
     public function updated($configfile)
