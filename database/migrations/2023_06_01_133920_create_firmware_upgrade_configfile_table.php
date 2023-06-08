@@ -37,8 +37,8 @@ return new class extends BaseMigration
 
         Schema::create($this->tableName, function (Blueprint $table) {
             $this->up_table_generic($table);
-            $table->foreignId('firmware_upgrade_id')->constrained('configfile');
-            $table->foreignId('configfile_id')->constrained('configfile');
+            $table->unsignedBigInteger('firmware_upgrade_id');
+            $table->unsignedBigInteger('configfile_id');
         });
 
         Schema::enableForeignKeyConstraints();

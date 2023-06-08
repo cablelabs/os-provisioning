@@ -41,7 +41,7 @@ return new class extends BaseMigration
             $table->time('end_time')->nullable();
             $table->string('cron_string')->nullable();
             $table->integer('batch_size')->nullable();
-            $table->foreignId('to_configfile_id')->constrained('configfile');
+            $table->unsignedBigInteger('to_configfile_id');
         });
     }
 
