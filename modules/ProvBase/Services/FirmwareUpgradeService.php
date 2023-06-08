@@ -13,11 +13,24 @@ class FirmwareUpgradeService
     public function getActiveFirmwareUpgrades(): \Illuminate\Support\Collection
     {
         // Get all Firmware upgrades within active period
-        return FirmwareUpgrades::where('start_date', '<=', Carbon::now())
-            ->where(function ($query) {
-                $query->where('end_date', '>=', Carbon::now())
-                      ->orWhereNull('end_date');
-            })->get();
+        $now = Carbon::now();
+        $nowDate = $now->toDateString();
+        $nowTime = $now->format('H:i');
+
+        return FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
+            $query->where('start_date', '<', $nowDate)
+                ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                    $query->where('start_date', $nowDate)
+                        ->where('start_time', '<=', $nowTime);
+                });
+        })->where(function ($query) use ($nowDate, $nowTime) {
+            $query->where('end_date', '>', $nowDate)
+                ->orWhere(function ($query) use ($nowDate, $nowTime) {
+                    $query->where('end_date', $nowDate)
+                        ->where('end_time', '>=', $nowTime);
+                })
+                ->orWhereNull('end_date');
+        })->get();
     }
 
     public function upgradeFirmware()
