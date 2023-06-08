@@ -296,7 +296,6 @@ class Kernel extends ConsoleKernel
 
         if (\Module::collections()->has('SmartOnt')) {
             if (config('smartont.flavor.hasDreamfiberSubscriptions')) {
-
                 // get updates for pending DfSubscriptions
                 $schedule->call(function () {
                     Queue::pushOn('low', new \Modules\SmartOnt\Jobs\DfSubscriptionGetterJob('pending'));

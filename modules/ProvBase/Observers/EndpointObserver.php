@@ -18,11 +18,11 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadReply;
 use Modules\ProvBase\Traits\AdaptsDhcpConf;
+use Nwidart\Modules\Facades\Module;
 
 class EndpointObserver
 {
@@ -113,7 +113,7 @@ class EndpointObserver
             'port_id' => $endpoint->modem->port_id,
             'ont_id' => $endpoint->modem->ont_id,
             'vlan_id' => $endpoint->qos->vlan_id,
-            ];
+        ];
         $desc = '###BEGIN_OF_RELATED_PROVISIONING_DATA###'.serialize($data)."###END_OF_RELATED_PROVISIONING_DATA####\n\n";
         // place in front too not truncate the information on to long descriptions
         $endpoint->description = $desc.$endpoint->description;

@@ -17,8 +17,8 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Modules\ProvBase\Entities\Contract;
 use Illuminate\Database\Schema\Blueprint;
+use Modules\ProvBase\Entities\Contract;
 
 class UpdateContractAddSmartOntFields extends BaseMigration
 {

@@ -338,7 +338,7 @@ class Contract extends \BaseModel
         $i18nContract = trans_choice('view.Header_Contract', 1);
 
         if (
-            (Module::collections()->has('SmartOnt')) &&
+            Module::collections()->has('SmartOnt') &&
             ('GESA' == config('smartont.flavor.active')) &&
             ('OTO_STORAGE' == $this->type)
         ) {

@@ -646,7 +646,6 @@ function waitForLogFileToStopGrowing($pathPattern, $timeBetweenChecks, $debugOut
 {
     $lastSize = -1;
     while (true) {
-
         // filesizes are cached – we first need to empty the cache
         clearstatcache();
         $curSize = array_sum(array_map('filesize', glob($pathPattern)));

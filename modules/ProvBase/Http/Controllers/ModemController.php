@@ -362,7 +362,7 @@ class ModemController extends \BaseController
             Module::collections()->has('SmartOnt') &&
             (! $model->exists) &&
             ('Configfile' == $class) &&
-            (in_array(Request::get('type'), ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE']))
+            in_array(Request::get('type'), ['OTO_FTTH_FR', 'OTO_OWN', 'OTO_STORAGE'])
         ) {
             $cf = Configfile::where('device', '=', 'ont')->select('id', 'name')->first();
 
@@ -1283,7 +1283,7 @@ class ModemController extends \BaseController
         $header = array_shift($csv);
         $header = array_map('mb_strtolower', $header);
 
-        if (1 == count(($header))) {
+        if (1 == count($header)) {
             \Session::push('tmp_error_above_index_list', 'Only one column found: “'.$header[0].'”. Hint: Use “;” as delimiter.');
 
             return redirect($this->redirectUrl);

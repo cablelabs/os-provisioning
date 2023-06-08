@@ -986,7 +986,6 @@ class BaseModel extends Eloquent
             Log::warning($msg);
             $this->{$field} = $this->getOriginal($field);
             $restored++;
-
         }
 
         return $restored;

@@ -832,7 +832,6 @@ return [
     'ontIsActive'               => 'ONT ist aktiv.',
     'qosIsInUse'                => 'QoS wird benutzt.',
 
-
     // SmartOnt
     'alau_order_ref'            => 'Eigene Aufragskennung',
     'contact_city'              => 'Kontakt-Stadt',

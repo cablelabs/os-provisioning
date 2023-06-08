@@ -19,10 +19,10 @@
 namespace Modules\ProvBase\Console;
 
 use DB;
-use Log;
 use File;
-use Storage;
 use Illuminate\Console\Command;
+use Log;
+use Storage;
 
 class ExportCsvCommand extends Command
 {
@@ -59,7 +59,7 @@ class ExportCsvCommand extends Command
     /**
      * The timestamp format to use if none is given
      */
-    protected $defaultTimestampFormat = "__c";
+    protected $defaultTimestampFormat = '__c';
 
     /**
      * Create a new command instance.
@@ -122,6 +122,7 @@ class ExportCsvCommand extends Command
             $this->info($msg);
         }
     }
+
     /**
      * Reads the config from the ini file
      *
@@ -166,7 +167,6 @@ class ExportCsvCommand extends Command
         $joins = [];
         $query = DB::table($table);
         foreach ($columns as $column) {
-
             // data form original table
             if (! \Str::contains($column, '::')) {
                 $selects[] = $table.'.'.$column.' as '.$column;
@@ -182,7 +182,7 @@ class ExportCsvCommand extends Command
             }
 
             // data from joined table
-            $parts = explode("::", $column);
+            $parts = explode('::', $column);
             $selects[] = $parts[1].'.'.$parts[2].' as '.$column;
             if (! in_array($parts[1], $joins)) {
                 $joins[] = $parts[1];

@@ -18,8 +18,8 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\RadGroupReply;
+use Nwidart\Modules\Facades\Module;
 
 /**
  * Qos Observer Class

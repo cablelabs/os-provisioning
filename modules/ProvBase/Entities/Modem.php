@@ -213,7 +213,7 @@ class Modem extends \BaseModel
             $this->table.'.geocode_source',
             $this->table.'.inventar_num',
             'contract_valid',
-            ];
+        ];
 
         if (Module::collections()->has('ProvMon')) {
             $ret[] = $this->table.'.us_pwr';
@@ -890,7 +890,6 @@ class Modem extends \BaseModel
         Log::debug(__METHOD__.' started');
 
         if ($this->isSmartOnt()) {
-
             // ATM no DHCP config needed
             return;
         }
@@ -1054,7 +1053,6 @@ class Modem extends \BaseModel
         }
 
         if ($this->isSmartOnt()) {
-
             // ATM no configfile needed (service_port_id taken directly later on)
             return;
         }
@@ -3118,7 +3116,6 @@ class Modem extends \BaseModel
      * We implement some strict rules related to deletion.
      *
      * @author Patrick Reichel
-     *
      */
     protected function deleteGESAOnt()
     {
@@ -3160,9 +3157,9 @@ class Modem extends \BaseModel
     public function delete()
     {
         if (
-            (\Module::collections()->has('SmartOnt')) &&
+            \Module::collections()->has('SmartOnt') &&
             ('GESA' == config('smartont.flavor.active'))
-        ){
+        ) {
             return $this->deleteGESAOnt();
         }
 

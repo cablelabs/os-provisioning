@@ -58,7 +58,6 @@ class ConfigfileObserver
         ];
         $configfile->restoreUnchangeableFields($unchangables, trans('messages.configfileIsInUse'));
 
-        return;
     }
 
     public function updated($configfile)

@@ -17,7 +17,6 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Database\Schema\Blueprint;
 
 class ChangeStateFromInactiveToDisabled extends BaseMigration
 {

@@ -18,8 +18,8 @@
 
 namespace Modules\ProvBase\Http\Controllers;
 
-use Nwidart\Modules\Facades\Module;
 use Modules\ProvBase\Entities\ProvBase;
+use Nwidart\Modules\Facades\Module;
 
 class QosController extends \BaseController
 {

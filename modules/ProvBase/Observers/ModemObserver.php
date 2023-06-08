@@ -118,7 +118,7 @@ class ModemObserver
                     }
                 }
             }
-            if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
+            if ($modem->configfile->is_multiservice_ont || ('smartont' == $modem->qos->type)) {
                 if (array_key_exists('contract_id', $diff)) {
                     $modem->salutation = $modem->contract->salutation;
                     $modem->company = $modem->contract->company;
@@ -240,7 +240,7 @@ class ModemObserver
 
         // special handling for SmartONT devices
         if (\Module::collections()->has('SmartOnt')) {
-            if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
+            if ($modem->configfile->is_multiservice_ont || ('smartont' == $modem->qos->type)) {
                 if (array_key_exists('contract_id', $diff)) {
                     Log::debug(__METHOD__.' pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob('.$modem->id.') to queue');
                     \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
@@ -255,7 +255,7 @@ class ModemObserver
 
         // special handling for SmartONT devices
         if (\Module::collections()->has('SmartOnt')) {
-            if (($modem->configfile->is_multiservice_ont) || ('smartont' == $modem->qos->type)) {
+            if ($modem->configfile->is_multiservice_ont || ('smartont' == $modem->qos->type)) {
                 if (! is_null($modem->netgw_id)) {
                     Log::debug(__METHOD__.' pushing \Modules\SmartOnt\Jobs\RemoveOntFromOltJob('.$modem->id.') to queue');
                     \Queue::pushOn('serial', new \Modules\SmartOnt\Jobs\RemoveOntFromOltJob($modem->id));
