@@ -1,1 +1,0 @@
-/root/xee-helpers-nmsprime/enable-devel-stuff.sh
