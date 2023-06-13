@@ -28,7 +28,7 @@ class AddOntDevice extends BaseMigration
      */
     public function up()
     {
-        /* DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069', 'ont') NOT NULL"); */
+        /* DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069', 'ont') NOT NULL"); // MariaDB version*/
         DB::statement("ALTER TYPE nmsprime.configfile_device ADD VALUE 'ont'");
     }
 
@@ -39,7 +39,7 @@ class AddOntDevice extends BaseMigration
      */
     public function down()
     {
-        // revers statement does not exist in Postgres(?)
+        // reverse statement does not exist in Postgres(?)
         /* DB::statement("ALTER TYPE nmsprime.configfile_device AS ENUM ('cm', 'mta', 'tr069')"); */
     }
 }

@@ -18,7 +18,6 @@
 
 use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
-use Modules\ProvBase\Entities\Contract;
 
 class UpdateContractAddSmartOntFields extends BaseMigration
 {
@@ -46,21 +45,6 @@ class UpdateContractAddSmartOntFields extends BaseMigration
             $table->string('bof_label', 32)->nullable();
             $table->string('type', 32)->nullable()->default('nmsprime');
         });
-
-        $contract = Contract::create([
-            'company' => 'n/a',
-            'department' => 'n/a',
-            'firstname' => 'n/a',
-            'lastname' => 'n/a',
-            'street' => 'n/a',
-            'house_number' => 'n/a',
-            'zip' => 'n/a',
-            'city' => 'n/a',
-            'country_code' => '',
-            'description' => '“Storage” holding free ONT. Change parameters to your needs.',
-            'type' => 'OTO_STORAGE',
-        ]);
-        $contract->save();
     }
 
     /**
