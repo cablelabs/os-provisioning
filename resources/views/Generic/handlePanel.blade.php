@@ -100,7 +100,23 @@ var loadPanelPositionFromStorage = function() {
         });
     }
 };
+
 var prepareLivewireData = function (node){
+    /**
+    * On first load, livewire has it's components in initial state where all
+    * data necessary to initialize a livewire component lives on an
+    * attribute wire:initial-data as JSON.
+    * On page load, JS part of livewire parses all the components and
+    * Initialize them.
+    * Before we re-arrange the panels, livewire has already run initialized the components.
+    * All the necessary payload lives on the element (as object) after initialization.
+    *
+    * We need to bring the livewire components inside the target panel
+    * to its initial state. We are selecting all the elements
+    * having attribute wire:id because all livewire
+    * components would have that set by Livewire, and setting
+    * the wire:initial-data
+    */
     node.querySelectorAll('[wire\\:id]').forEach(function(el) {
         const component = el.__livewire;
         if(component){
@@ -110,7 +126,26 @@ var prepareLivewireData = function (node){
                 effects: component.effects,
             };
             el.setAttribute('wire:initial-data', JSON.stringify(dataObject));
+
+            /**
+            * tearDown function on the component added by Livewire
+            * will un-register all the event handlers
+            */
             component.tearDown()
+
+            /**
+            * Brining the livewire component to initial state won't make Livewire to re-initialize
+            * it again. Livewire stores all the components' references (by ID from wire:id)
+            * inside an internal Store (object). By default, we don't have
+            * any helper/function from Livewire to delete that.
+            * So, we are doing it manually using JS `delete` operator.
+            * `livewire.components` property gives us that Store instance
+            * on which `componentsById` stores all the references.
+            *
+            * Now, running `livewire.rescan()` after we are done with
+            * panels arrangments, will re-initialize the desired
+            * components
+            */
             delete livewire.components.componentsById[component.id];
         }
 
