@@ -1908,6 +1908,16 @@ class BaseController extends Controller
         return [null => $placeholder];
     }
 
+    /**
+     * Prepare the preselected model options for the select2 field in a pivot table context.
+     * This method allows for multiple select.
+     *
+     * @param  BaseModel  $model  The pivot table model instance
+     * @param  string  $relationship  The name of the relationship to retrieve related models
+     * @param  string  $class  The unqualified name of the related model class
+     * @param  string|null  $placeholder  The placeholder text for the select field (optional)
+     * @return array  An array of options for the select2 field (multiple)
+     */
     protected function setupSelect2FieldForPivotTable($model, string $relationship, string $class, string $placeholder = null): array
     {
         $placeholder = $placeholder ?? trans('view.select.base', ['model' => trans("view.select.{$class}")]);
