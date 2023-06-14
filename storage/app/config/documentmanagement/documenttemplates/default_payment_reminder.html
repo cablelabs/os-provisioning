@@ -1,5 +1,5 @@
 <p>
-    am ({{dayjs(invoice?.created_at ?? undefined).format('DD.MM.YYYY')}}) wurde Ihnen unsere Rechnung für das Kabelentgelt zugestellt. Dazu konnten wir bis
+    am {{ dayjs(invoice?.created_at ?? undefined).format('DD.MM.YYYY') }} wurde Ihnen unsere Rechnung für das Kabelentgelt zugestellt. Dazu konnten wir bis
     zum heutigen Tag keinen Zahlungseingang vermerken.
 </p>
 <table>
