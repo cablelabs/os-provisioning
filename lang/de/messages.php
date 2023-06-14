@@ -56,7 +56,7 @@ return [
     'Contract'                  => 'Vertrag',
     'Contract List'             => 'Vertragsliste',
     'contractConfirm' => [
-        'missingTariff' => 'Dem Vertrag ist kein Tarif zugewiesen.',
+        'noTariff' => 'Dem Vertrag ist kein Tarif zugewiesen.',
         'missingTemplate' => 'Vertragsbestätigungstemplate \'contractConfirm.tex\' (und \'contractConfirm-default.tex\') fehlt in /var/www/nmsprime/storage/app/config/ccc/template/',
         'taxIncl' => 'inkl. Mwst.',
     ],

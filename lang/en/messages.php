@@ -56,7 +56,7 @@ return [
     'Contract'                  => 'Contract',
     'Contract List'             => 'Contract List',
     'contractConfirm' => [
-        'missingTariff' => 'The tariff for this contract is missing.',
+        'noTariff' => 'There\'s no tariff for this contract.',
         'missingTemplate' => 'Contract confirmation template \'contractConfirm.tex\' (and \'contractConfirm-default.tex\') is missing in /var/www/nmsprime/storage/app/config/ccc/template/',
         'taxIncl' => 'tax included',
     ],
