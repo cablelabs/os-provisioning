@@ -299,9 +299,9 @@ class ImportTvCustomersCommand extends Command
         switch ($amount) {
             case  0: return;
             case self::TV_CHARGE2: $product_id = self::PRODUCT_ID2;
-            break;
+                break;
             case self::TV_CHARGE1: $product_id = self::PRODUCT_ID1;
-            break;
+                break;
             default:
                 $msg = "Contract $contract->number is charged with $amount EUR. Please add Tariff manually!";
                 $this->importantTodos[] = $msg;

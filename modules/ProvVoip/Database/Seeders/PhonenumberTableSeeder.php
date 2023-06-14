@@ -34,8 +34,8 @@ class PhonenumberTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked phonenumber data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
-     * @param $mta mta to create the phonenumber at; used in testing
+     * @param  $topic  Context the method is used in (seed|test)
+     * @param  $mta  mta to create the phonenumber at; used in testing
      *
      * @author Patrick Reichel
      */

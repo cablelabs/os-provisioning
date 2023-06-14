@@ -35,8 +35,8 @@ class ModemTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked modem data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
-     * @param $contract contract to create the modem at; used in testing
+     * @param  $topic  Context the method is used in (seed|test)
+     * @param  $contract  contract to create the modem at; used in testing
      *
      * @author Patrick Reichel
      */

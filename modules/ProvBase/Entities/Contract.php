@@ -962,7 +962,7 @@ class Contract extends \BaseModel
                 $this->internet_access = 1;
                 $this->changes_on_daily_conversion = true;
                 Log::info('daily: contract: enabling internet_access based on active internet/voip items for contract '.$this->id);
-            // no valid internet tariff
+                // no valid internet tariff
             } elseif (! $active_count_internet && $this->internet_access) {
                 $this->internet_access = 0;
                 $this->changes_on_daily_conversion = true;
@@ -1182,7 +1182,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel
      *
-     * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
+     * @param  $type  product type as string (e.g. 'Internet', 'Voip', etc.)
      * @return object item
      */
     public function get_valid_tariff($type)
@@ -1197,7 +1197,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel
      *
-     * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
+     * @param  $type  product type as string (e.g. 'Internet', 'Voip', etc.)
      * @return number of active items for given type and this contract
      */
     public function get_valid_tariff_count($type)
@@ -1210,7 +1210,7 @@ class Contract extends \BaseModel
      *
      * @author Nino Ryschawy, Patrick Reichel
      *
-     * @param $type product type as string (e.g. 'Internet', 'Voip', etc.)
+     * @param  $type  product type as string (e.g. 'Internet', 'Voip', etc.)
      * @return array containing two values:
      *               'item' => the last startet tariff (item object)
      *               'count' => integer
@@ -1283,7 +1283,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel
      *
-     * @param $items iterable (array, Collection) containing items
+     * @param  $items  iterable (array, Collection) containing items
      * @return null
      */
     public function update_product_related_data()
@@ -1365,7 +1365,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel
      *
-     * @param $item to be analyzed
+     * @param  $item  to be analyzed
      * @return null
      *              Sets global var $changes_on_daily_conversion when contract data has changed
      */
@@ -1401,7 +1401,7 @@ class Contract extends \BaseModel
      *
      * @author Patrick Reichel, Nino Ryschawy
      *
-     * @param $item to be analyzed
+     * @param  $item  to be analyzed
      * @return null
      *              Sets global var $changes_on_daily_conversion when contract data has changed
      */
@@ -1440,7 +1440,7 @@ class Contract extends \BaseModel
      *
      * Note: This allows only 1 tariff qos_id for all modems
      *
-     * @param $hasTelephonyChanged Flag to trigger config rebuild
+     * @param  $hasTelephonyChanged  Flag to trigger config rebuild
      *
      * @author: Torsten Schmidt, Nino Ryschawy, Patrick Reichel
      */

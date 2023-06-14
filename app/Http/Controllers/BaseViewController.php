@@ -657,7 +657,7 @@ class BaseViewController extends Controller
     /**
      * Get the ICON of the class or object or from actual context
      *
-     * @param $class_or_obj: the class or object to look for the icon
+     * @param  $class_or_obj:  the class or object to look for the icon
      * @return the HTML icon (with HTML tags)
      *
      * @author: Torsten Schmidt
@@ -683,10 +683,10 @@ class BaseViewController extends Controller
      * Generate Top Header Link (like e.g. Contract > Modem > Mta > ..)
      * Shows the html links of the related objects recursively
      *
-     * @param $route_name: route name of actual controller
-     * @param $view_header: the view header name
-     * @param $view_var: the object to generate the link from
-     * @param $html: the HTML GET array. See note bellow!
+     * @param  $route_name:  route name of actual controller
+     * @param  $view_header:  the view header name
+     * @param  $view_var:  the object to generate the link from
+     * @param  $html:  the HTML GET array. See note bellow!
      * @return the HTML link line to be directly included in blade
      *
      * @author Torsten Schmidt, Patrick Reichel

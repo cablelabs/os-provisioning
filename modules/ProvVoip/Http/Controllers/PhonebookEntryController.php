@@ -213,7 +213,7 @@ class PhonebookEntryController extends \BaseController
      *
      * @author Patrick Reichel
      *
-     * @param $phonebookentry current phonebookentry object
+     * @param  $phonebookentry  current phonebookentry object
      * @return array containing linktexts and URLs to perform actions against REST API
      */
     public static function _get_envia_management_jobs($phonebookentry)

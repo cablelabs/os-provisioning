@@ -54,10 +54,10 @@ class FormBuilder extends CollectiveFormBuilder
     /**
      * Append the given class to the given options array.
      *
-     * @param $class: string to add to html class
-     * @param $options: options array
-     *        NOTE: use '!class' to avoid adding $class variable from FormBuilder functions,
-     *              instead set only this proposed classes
+     * @param  $class:  string to add to html class
+     * @param  $options:  options array
+     *                    NOTE: use '!class' to avoid adding $class variable from FormBuilder functions,
+     *                    instead set only this proposed classes
      *
      * @return: options array with (manipulated) class key
      */

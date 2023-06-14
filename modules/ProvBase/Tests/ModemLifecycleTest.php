@@ -18,8 +18,6 @@
 
 namespace Modules\ProvBase\Tests;
 
-use Modules\ProvBase\Entities\Modem;
-
 class ModemLifecycleTest extends \Tests\BaseLifecycleTest
 {
     // modem can only be created from Contract.edit

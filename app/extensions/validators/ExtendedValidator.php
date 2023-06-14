@@ -512,8 +512,8 @@ class ExtendedValidator
     /**
      * Check values that are entry_type dependend
      *
-     * @param $parameters first entry needs to be the entry_type value (add “entry_type” to \Modules\ProvVoip\Entities\PhonebookEntry::rules(); will
-     *          then be set in PhonebookEntryController::prepare_rules
+     * @param  $parameters  first entry needs to be the entry_type value (add “entry_type” to \Modules\ProvVoip\Entities\PhonebookEntry::rules(); will
+     *                      then be set in PhonebookEntryController::prepare_rules
      *
      * @author Patrick Reichel
      */

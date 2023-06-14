@@ -35,7 +35,7 @@ trait DatabaseUpdaterTrait
      *
      * @author Patrick Reichel
      *
-     * @param $url URL to be accessed by cURL
+     * @param  $url  URL to be accessed by cURL
      */
     protected function _perform_curl_request($url)
     {

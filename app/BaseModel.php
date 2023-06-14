@@ -275,7 +275,7 @@ class BaseModel extends Eloquent
      * Get the names of all fulltext indexed database columns.
      * They have to be passed as a param to a MATCH-AGAINST query
      *
-     * @param $table database to get index columns from
+     * @param  $table  database to get index columns from
      * @return comma separated string of columns
      *
      * @author Patrick Reichel
@@ -907,11 +907,11 @@ class BaseModel extends Eloquent
     /**
      * Helper to log and output messages
      *
-     * @param $level The log level
-     * @param $msg The message to be logged and printed
-     * @param $transArgs Array to be given to the trans() helper
-     * @param $type color Bootsrap color for GUI (one of self::ABOVE_MESSAGES_ALLOWED_TYPES)
-     * @param $place Where to put the message in GUI (one of self::ABOVE_MESSAGES_ALLOWED_PLACES)
+     * @param  $level  The log level
+     * @param  $msg  The message to be logged and printed
+     * @param  $transArgs  Array to be given to the trans() helper
+     * @param  $type  color Bootsrap color for GUI (one of self::ABOVE_MESSAGES_ALLOWED_TYPES)
+     * @param  $place  Where to put the message in GUI (one of self::ABOVE_MESSAGES_ALLOWED_PLACES)
      *
      * @author Patrick Reichel
      */

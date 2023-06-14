@@ -225,7 +225,7 @@ class BaseController extends Controller
      *
      * @author Patrick Reichel
      *
-     * @param $nullable_fields array containing fields to check
+     * @param  $nullable_fields  array containing fields to check
      */
     protected function _nullify_fields($data, $nullable_fields = [])
     {
@@ -284,7 +284,7 @@ class BaseController extends Controller
     /**
      * Normalizes numeric values to minimize problems for e.g. German users (using a comma instead a dot in float).
      *
-     * @param $value the numeric string to normalize
+     * @param  $value  the numeric string to normalize
      *
      * @author Patrick Reichel
      */
@@ -658,7 +658,7 @@ class BaseController extends Controller
     /**
      * Remove tag (like 'ip:') from query and return both.
      *
-     * @param $query String
+     * @param  $query  String
      * @return array|null
      *
      * @author Roy Schneider
@@ -675,8 +675,8 @@ class BaseController extends Controller
     /**
      * Get all models where a specific column exists.
      *
-     * @param $attribute String
-     * @param $name String
+     * @param  $attribute  String
+     * @param  $name  String
      * @return stdClass
      *
      * @author Roy Schneider
@@ -700,8 +700,8 @@ class BaseController extends Controller
     /**
      * Search for $query in all models.
      *
-     * @param $query String query to search for
-     * @param $models Illuminate\Support\Collection with models to search in
+     * @param  $query  String query to search for
+     * @param  $models  Illuminate\Support\Collection with models to search in
      * @return $result array of collections of models with $query in any column
      *
      * @author Roy Schneider
@@ -761,8 +761,8 @@ class BaseController extends Controller
      *
      * @author Patrick Reichel
      *
-     * @param $options the options array generated from database
-     * @param $first_value value to be set at $options[0] – defaults to empty string
+     * @param  $options  the options array generated from database
+     * @param  $first_value  value to be set at $options[0] – defaults to empty string
      * @return $options array with 0 element on first position
      */
     protected function _add_empty_first_element_to_options($options, $first_value = '')
@@ -1549,7 +1549,7 @@ class BaseController extends Controller
 
                 // $data .= '<ul role="group" class="jstree-children" style>';
                 $data .= self::_create_index_view_data($object);
-            // $data .= '</ul>';
+                // $data .= '</ul>';
             } else {
                 // $data .= self::_print_label_elem($object, isset($ordered_tree[$key+1]));
                 $data .= self::_print_label_elem($object);
@@ -1569,7 +1569,7 @@ class BaseController extends Controller
     /**
      * Returns the HTML string for one label Element for Tree Index View
      *
-     * @param $object 	Model Object
+     * @param  $object  Model Object
      *
      * @author Nino Ryschawy
      *

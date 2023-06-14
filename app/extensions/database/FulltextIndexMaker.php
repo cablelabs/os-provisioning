@@ -29,7 +29,7 @@ class FulltextIndexMaker
     /**
      * Constructor.
      *
-     * @param $tablename database table to build the index in
+     * @param  $tablename  database table to build the index in
      */
     public function __construct($tablename)
     {
@@ -41,7 +41,7 @@ class FulltextIndexMaker
      * Call this for every column you want to be FULLTEXT indexed.
      * Attention: if updating an existing index: every column to be indexed have to be given (again)!!
      *
-     * @param $col column to be indexed
+     * @param  $col  column to be indexed
      */
     public function add($col)
     {

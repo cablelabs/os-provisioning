@@ -34,7 +34,7 @@ class ContractTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked contract data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
+     * @param  $topic  Context the method is used in (seed|test)
      *
      * @author Patrick Reichel
      */

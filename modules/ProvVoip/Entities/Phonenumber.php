@@ -343,9 +343,9 @@ class Phonenumber extends \BaseModel
     /**
      * Phonenumbers can be related to EnviaOrders – if this module is active.
      *
-     * @param	$withTrashed boolean; if true return also soft deleted orders; default is false
-     * @param	$whereStatement raw SQL query; default is returning of all orders
-     *				Attention: Syntax of given string has to meet SQL syntax!
+     * @param  $withTrashed  boolean; if true return also soft deleted orders; default is false
+     * @param  $whereStatement  raw SQL query; default is returning of all orders
+     *                          Attention: Syntax of given string has to meet SQL syntax!
      * @return EnviaOrders if module ProvVoipEnvia is enabled, else “null”
      *
      * @author Patrick Reichel

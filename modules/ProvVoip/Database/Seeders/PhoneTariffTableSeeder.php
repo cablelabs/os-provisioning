@@ -33,8 +33,8 @@ class PhoneTariffTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked phonetariff data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
-     * @param $mta mta to create the phonetariff at; used in testing
+     * @param  $topic  Context the method is used in (seed|test)
+     * @param  $mta  mta to create the phonetariff at; used in testing
      *
      * @author Patrick Reichel
      */

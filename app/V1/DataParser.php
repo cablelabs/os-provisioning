@@ -144,9 +144,9 @@ class DataParser
     }
 
     /**
-     * @param $objectOrArray
-     * @param $property
-     * @param $value
+     * @param  $objectOrArray
+     * @param  $property
+     * @param  $value
      */
     public static function setProperty(&$objectOrArray, $property, $value)
     {

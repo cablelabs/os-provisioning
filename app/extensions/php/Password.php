@@ -28,9 +28,9 @@ class Password
      *
      * @author Torsten Schmidt, Patrick Reichel
      *
-     * @param $length length of the password
-     * @param $target used for example to use different character sets. (implemented is envia).
-     * @param $except characters to exclude for default target
+     * @param  $length  length of the password
+     * @param  $target  used for example to use different character sets. (implemented is envia).
+     * @param  $except  characters to exclude for default target
      */
     public static function generatePassword(int $length = 10, string $target = '', string $except = 'IOlo01'): string
     {

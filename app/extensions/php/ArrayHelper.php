@@ -48,8 +48,8 @@ class ArrayHelper
     /**
      * Devide all entrys of an Array by $div
      *
-     * @param $array: The Array to split
-     * @param $div: device by $div
+     * @param  $array:  The Array to split
+     * @param  $div:  device by $div
      *
      * @return: The devided array
      *
@@ -70,7 +70,7 @@ class ArrayHelper
      * return the rotated array ($a)
      * Example: [1,2,3,4] -> [4,1,2,3]
      *
-     * @param $a: The Array to rotate
+     * @param  $a:  The Array to rotate
      *
      * @return: The rotated/shifted array
      *
@@ -84,7 +84,7 @@ class ArrayHelper
     /**
      * return nested array depth
      *
-     * @param $a: The Array to check
+     * @param  $a:  The Array to check
      *
      * @return: the nested array depth as int
      *
@@ -113,9 +113,9 @@ class ArrayHelper
      * NOTE: This function holds the same order than in $array
      * SEE: http://stackoverflow.com/questions/240660/in-php-how-do-you-change-the-key-of-an-array-element
      *
-     * @param $array: the given array
-     * @param $old_key: old key value to change
-     * @param $new_key: the new key value
+     * @param  $array:  the given array
+     * @param  $old_key:  old key value to change
+     * @param  $new_key:  the new key value
      *
      * @return: the key changed $array,
      *

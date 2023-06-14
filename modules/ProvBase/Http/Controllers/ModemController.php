@@ -29,7 +29,6 @@ use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ModemOption;
 use Modules\ProvBase\Entities\ProvBase;
-use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Services\ModemService;
 use Nwidart\Modules\Facades\Module;
 use Request;
@@ -400,7 +399,7 @@ class ModemController extends \BaseController
      *
      * @author Patrick Reichel
      *
-     * @param $modem current modem object
+     * @param  $modem  current modem object
      * @return array containing linktexts and URLs to perform actions against REST API
      */
     public static function _get_envia_management_jobs($modem)

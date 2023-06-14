@@ -37,7 +37,7 @@ class ContractController extends \BaseController
      * SmartOnt OTO uses a very different form set than the rest.
      * This is defined here for flavor GESA.
      *
-     * @param $model A contract
+     * @param  $model  A contract
      * @return array
      *
      * @author Patrick Reichel
@@ -205,7 +205,7 @@ class ContractController extends \BaseController
      * SmartOnt OTO uses a very different form set than the rest.
      * This is defined here for flavor LFO.
      *
-     * @param $model A contract
+     * @param  $model  A contract
      * @return array
      *
      * @author Patrick Reichel
@@ -473,7 +473,7 @@ class ContractController extends \BaseController
      *
      * @author Patrick Reichel
      *
-     * @param $contract current contract object
+     * @param  $contract  current contract object
      * @return array containing linktexts and URLs to perform actions against REST API
      */
     public static function _get_envia_management_jobs($contract)

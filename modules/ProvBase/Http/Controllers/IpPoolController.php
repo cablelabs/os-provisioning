@@ -70,33 +70,33 @@ class IpPoolController extends \BaseController
             } else {
                 switch ($type) { // if not: add default net, depending on type
                     case 'CM':      $next_net = env('IP_CM_DEFAULT_NET', '10.0.0.0');
-                    break;
+                        break;
                     case 'CPEPriv': $next_net = env('IP_CPE_PRIV_DEFAULT_NET', '100.64.0.0');
-                    $init_values['dns1_ip'] = '8.8.8.8';
-                    break;
+                        $init_values['dns1_ip'] = '8.8.8.8';
+                        break;
                     case 'CPEPub':  $next_net = env('IP_CPE_PUB_DEFAULT_NET', '192.168.100.0');
-                    $init_values['dns1_ip'] = '8.8.8.8';
-                    break;
+                        $init_values['dns1_ip'] = '8.8.8.8';
+                        break;
                     case 'MTA':     $next_net = env('IP_MTA_DEFAULT_NET', '100.96.0.0');
-                    $init_values['dns1_ip'] = \Modules\ProvBase\Entities\ProvBase::first()->provisioning_server;
-                    break;
+                        $init_values['dns1_ip'] = \Modules\ProvBase\Entities\ProvBase::first()->provisioning_server;
+                        break;
                     default: $next_net = '192.168.200.0';
-                    break;
+                        break;
                 }
             }
 
             // Get default IP net size, like 255.255.255.0 = /24
             switch ($type) {
                 case 'CM':      $size = env('IP_CM_DEFAULT_SIZE', 19);
-                break; // /19
+                    break; // /19
                 case 'CPEPriv': $size = env('IP_CPE_PRIV_DEFAULT_SIZE', 22);
-                break; // /22
+                    break; // /22
                 case 'CPEPub':  $size = env('IP_CPE_PUB_DEFAULT_SIZE', 27);
-                break; // /27
+                    break; // /27
                 case 'MTA':     $size = env('IP_MTA_DEFAULT_SIZE', 24);
-                break; // /24
+                    break; // /24
                 default: $size = 24;
-                break;
+                    break;
             }
 
             // calc the ip next net

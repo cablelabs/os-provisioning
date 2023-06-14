@@ -272,8 +272,8 @@ trait QueryBuilderTrait
     }
 
     /**
-     * @param $type
-     * @param $key
+     * @param  $type
+     * @param  $key
      * @return bool|string
      */
     private function hasCustomMethod($type, $key)
@@ -288,7 +288,7 @@ trait QueryBuilderTrait
 
     /**
      * @param  Builder  $queryBuilder
-     * @param $key
+     * @param  $key
      */
     private function joinRelatedModelIfExists(Builder $queryBuilder, $key)
     {

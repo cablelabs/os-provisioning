@@ -33,7 +33,7 @@ class EndpointTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked endpoint data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
+     * @param  $topic  Context the method is used in (seed|test)
      *
      * @author Patrick Reichel
      */

@@ -34,8 +34,8 @@ class MtaTableSeeder extends \BaseSeeder
     /**
      * Returns an array with faked mta data; used e.g. in seeding and testing
      *
-     * @param $topic Context the method is used in (seed|test)
-     * @param $modem modem to create the mta at; used in testing
+     * @param  $topic  Context the method is used in (seed|test)
+     * @param  $modem  modem to create the mta at; used in testing
      *
      * @author Patrick Reichel
      */

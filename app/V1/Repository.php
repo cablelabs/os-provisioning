@@ -191,7 +191,7 @@ class Repository
     }
 
     /**
-     * @param $column
+     * @param  $column
      * @param  array  $values
      * @param  array  $options
      * @return Builder[]|Collection

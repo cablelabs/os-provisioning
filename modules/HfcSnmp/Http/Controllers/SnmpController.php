@@ -19,7 +19,6 @@
 namespace Modules\HfcSnmp\Http\Controllers;
 
 use App\Http\Controllers\BaseViewController;
-use App\User;
 use Cache;
 use Exception;
 use File;

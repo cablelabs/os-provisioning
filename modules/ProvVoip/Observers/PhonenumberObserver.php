@@ -367,7 +367,7 @@ class PhonenumberObserver
     /**
      * Rebuild the current configfile/provision and restart/factoryReset the device
      *
-     * @param $phonenumber \Modules\ProvVoip\Entities\Phonenumber
+     * @param  $phonenumber  \Modules\ProvVoip\Entities\Phonenumber
      *
      * @author Ole Ernst
      */

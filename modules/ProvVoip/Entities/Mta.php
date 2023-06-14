@@ -305,7 +305,7 @@ class Mta extends \BaseModel
                     Session::push('tmp_error_above_form', 'Could not restart MTA! (offline?)');
                 } elseif (strpos($e->getMessage(), 'noSuchName') !== false) {
                     Session::push('tmp_error_above_form', 'Could not restart MTA – noSuchName');
-                // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
+                    // this is not necessarily an error, e.g. the modem was deleted (i.e. Cisco) and user clicked on restart again
                 } else {
                     Session::push('tmp_error_above_form', 'Unexpected exception: '.$e->getMessage());
                 }
