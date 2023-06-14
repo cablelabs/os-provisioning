@@ -69,6 +69,7 @@ return [
     'Menu_Endpoint'             => 'Endpoints',
     'Menu_Number Range'         => 'Number Range',
     'Menu_Configfile'           => 'Configfiles',
+    'Menu_FirmwareUpgrades'     => 'Firmware Upgrades',
     'Menu_Qos'                  => 'QoS'.(Module::collections()->has('SmartOnt') ? '/Service types' : ''),
     'Menu_NetGws'               => 'NetGws'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Menu_Ip-Pools'             => 'IP-Pools',
@@ -206,6 +207,7 @@ return [
     //Configfiles
     'Header_Configfile'         => 'Configfile|Configfiles',
     'Header_EditConfigfile'     => 'Edit Configfile',
+    'Header_FirmwareUpgrades'   => 'Firmware Upgrades',
     //QoS
     'Header_Qos'                => 'QoS-Rule|QoS-Rules',
     'Header_Device Type'        => 'Device Type|Device Types',
