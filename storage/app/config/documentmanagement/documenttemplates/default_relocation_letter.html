@@ -11,11 +11,9 @@
             <td>nach</td>
             <td>
                 <div class="inline-flex gap-1 [&>span:empty]:hidden [&>span:empty]:whitespace-nowrap">
-                    <span>{{ contract.company ?? '' }}</span>
-                    <span>{{ contract.department ?? '' }}</span>
-                    <span>{{contract.district ?? ''}}</span>
+                    <span>{{contract.street ?? ''}} {{contract.house_number ?? ''}},</span>
                     <span>{{contract.zip ?? ''}} {{contract.city ?? ''}}</span>
-                    <span>{{contract.street ?? ''}} {{contract.housenumber ?? ''}}</span>
+                    <span>{{contract.district ? ', OT '.contract.district : ''}}</span>
                 </div>
             </td>
         </tr>
