@@ -74,6 +74,8 @@ class FirmwareUpgradesController extends BaseController
                 'form_type' => 'text',
                 'name' => 'cron_string',
                 'description' => 'Cron String',
+                'options' => ['placeholder' => '* * * * *'],
+                'help' => trans('helper.cron_string'),
             ],
             [
                 'form_type' => 'text',
