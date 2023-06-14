@@ -45,6 +45,7 @@ return [
     'Menu_Contact'              => 'Contacts',
     'Menu_CutoffList'           => 'Cut off list',
     'Menu_Debt'                 => 'Debt list',
+    'Menu_Documents'            => 'Documents',
     'Menu_Dunning'              => 'Dunning',
     'Menu_MainMenu'             => 'Main Menu',
     'Menu_Node'                 => 'Nodes',
