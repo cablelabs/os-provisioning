@@ -114,10 +114,9 @@ class QosController extends \BaseController
     {
         $data = parent::prepare_input($data);
 
-        if (is_null($data['vlan_id'])) {
-            $data['vlan_id'] = 0;
-        }
-        if ('smartont' == $data['type']) {
+        $data['vlan_id'] = $data['vlan_id'] ?? 0;
+
+        if (Module::collections()->has('SmartOnt') && ('smartont' == $data['type'])) {
             $data['ds_rate_max'] = $data['ds_rate_max'] ?? 0;
             $data['us_rate_max'] = $data['us_rate_max'] ?? 0;
         }

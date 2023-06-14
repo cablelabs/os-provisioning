@@ -248,13 +248,13 @@ class ModemController extends \BaseController
         ];
 
         $smartont = [];
-        $smartont[] = [
-            'form_type' => 'text',
-            'name' => 'ont_state',
-            'description' => 'ONT state',
-            'options' => ['readonly'],
-        ];
         if (Module::collections()->has('SmartOnt')) {
+            $smartont[] = [
+                'form_type' => 'text',
+                'name' => 'ont_state',
+                'description' => 'ONT state',
+                'options' => ['readonly'],
+            ];
             if ('LFO' == config('smartont.flavor.active')) {
                 $smartont[] = [
                     'form_type' => 'select',
