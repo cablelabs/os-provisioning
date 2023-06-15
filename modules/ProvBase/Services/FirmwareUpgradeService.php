@@ -17,20 +17,21 @@ class FirmwareUpgradeService
         $nowDate = $now->toDateString();
         $nowTime = $now->format('H:i');
 
-        return FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
+        $firmwareUpgrades = FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
             $query->where('start_date', '<', $nowDate)
                 ->orWhere(function ($query) use ($nowDate, $nowTime) {
                     $query->where('start_date', $nowDate)
                         ->where('start_time', '<=', $nowTime);
                 });
-        })->where(function ($query) use ($nowDate, $nowTime) {
-            $query->where('end_date', '>', $nowDate)
-                ->orWhere(function ($query) use ($nowDate, $nowTime) {
-                    $query->where('end_date', $nowDate)
-                        ->where('end_time', '>=', $nowTime);
-                })
-                ->orWhereNull('end_date');
-        })->get();
+        })->whereNotNull('finished_date');
+
+        $results = $firmwareUpgrades->get();
+
+        if ($results->isEmpty()) {
+            $firmwareUpgrades->update(['finished_date' => Carbon::now()]);
+        }
+
+        return $results;
     }
 
     public function upgradeFirmware()
@@ -50,19 +51,16 @@ class FirmwareUpgradeService
             $modems = $modems->get();
             $count = 0;
             DB::beginTransaction();
-            try {
-                // Update the Modems to use to_configfile_id
-                foreach ($modems as $modem) {
-                    $modem->configfile_id = $firmwareUpgrade->to_configfile_id;
-                    $modem->save();
-                    $modem->restart_modem();
-                    $count++;
-                }
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollback();
-                throw $e;
+
+            // Update the Modems to use to_configfile_id
+            foreach ($modems as $modem) {
+                $modem->configfile_id = $firmwareUpgrade->to_configfile_id;
+                $modem->save();
+                $modem->restart_modem();
+                $count++;
             }
+
+            DB::commit();
 
             if ($count > 0) {
                 Log::info('Firmware upgrade process has been done successfully for '.$count.' modems.');
