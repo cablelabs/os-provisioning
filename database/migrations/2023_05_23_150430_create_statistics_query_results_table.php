@@ -36,12 +36,13 @@ return new class extends BaseMigration
         Schema::create($this->tableName, function (Blueprint $table) {
             $this->up_table_generic($table);
             $table->bigInteger('statistics_query_id');
-            $table->integer('customers');
-            $table->integer('new_customers');
-            $table->integer('items');
-            $table->integer('new_items');
-            $table->decimal('revenue_from');
-            $table->decimal('revenue_to');
+            $table->integer('customers')->default(0);
+            $table->integer('new_customers')->default(0);
+            $table->integer('items')->default(0);
+            $table->integer('new_items')->default(0);
+            $table->decimal('revenue_from')->default(0);
+            $table->decimal('revenue_to')->default(0);
+            $table->boolean('ready')->default(false);
         });
     }
 
