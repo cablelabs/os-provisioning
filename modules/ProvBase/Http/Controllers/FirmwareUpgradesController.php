@@ -19,6 +19,7 @@
 namespace Modules\ProvBase\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use Illuminate\Validation\Rule;
 use Modules\ProvBase\Entities\FirmwareUpgrades;
 
 class FirmwareUpgradesController extends BaseController
@@ -110,5 +111,26 @@ class FirmwareUpgradesController extends BaseController
         ];
 
         return $form;
+    }
+
+    public function prepare_rules($rules, $data)
+    {
+        $rules['start_date'] = 'required|date_format:Y-m-d';
+        $rules['start_time'] = 'required|date_format:H:i';
+        $rules['batch_size'] = ['nullable', 'integer', 'min:1'];
+
+        // Check if 'batch_size' is set in the input data
+        if (isset($data['batch_size'])) {
+            // If 'batch_size' is not empty, then 'cron_string' must be a valid cron expression
+            $rules['cron_string'] = 'required|cron';
+        } else {
+            // If 'batch_size' is empty, then 'cron_string' can be empty or a valid cron expression
+            $rules['cron_string'] = 'nullable|cron';
+        }
+
+        $rules['fromconfigfile_ids'] = 'required|array';
+        $rules['to_configfile_id'] = ['required', 'integer', 'min:1', Rule::notIn($data['fromconfigfile_ids'] ?? [])];
+
+        return parent::prepare_rules($rules, $data);
     }
 }
