@@ -43,8 +43,8 @@ return [
         'letterhead_missing_tag' => 'Der Briefkopf muss :tag tag enthalten',
     ],
     'document_type' => [
-        'missing_contract_end_date' => 'Fehlendes Vertragsenddatum',
-        'missing_uncleared_debts' => 'Keine nicht getilgten Schulden gefunden',
+        'missing_contract_end_date' => 'Vertragsende fehlt',
+        'missing_uncleared_debts' => 'Keine offenen Posten gefunden',
         'missing_uncleared_invoice' => 'Keine überfällige Rechnung gefunden',
         'missing_user_creds' => 'Fehlende Benutzeranmeldedaten',
         'something_went_wrong' => 'Etwas ist schief gelaufen',
