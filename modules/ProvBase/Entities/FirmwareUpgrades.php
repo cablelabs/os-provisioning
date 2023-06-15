@@ -36,8 +36,7 @@ class FirmwareUpgrades extends \BaseModel
     protected $fillable = [
         'start_date',
         'start_time',
-        'end_date',
-        'end_time',
+        'finished_date',
         'cron_string',
         'batch_size',
         'to_configfile_id',
@@ -56,8 +55,7 @@ class FirmwareUpgrades extends \BaseModel
             'index_header' => [
                 $this->table.'.start_date',
                 $this->table.'.start_time',
-                $this->table.'.end_date',
-                $this->table.'.end_time',
+                $this->table.'.finished_date',
                 $this->table.'.cron_string',
                 $this->table.'.batch_size',
             ],

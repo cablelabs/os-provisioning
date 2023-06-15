@@ -170,7 +170,7 @@ return [
     'has_telephony'                 => 'Muss aktiv sein, wenn der Kunde Telefonie haben soll, aber kein Internet hat. Das Flag kann aktuell nicht genutzt werden, um die Telefonie bei Verträgen mit Internet zu deaktivieren. Dazu muss das MTA gelöscht oder die Telefonnummer deaktiviert werden. Info: Die Einstellung hat Einfluss auf NetworkAccess und MaxCPE im Modem Configfile - siehe Modem-Analyse im Tab \'Configfile\'',
     'ssh_auto_prov'                 => 'Periodisches Ausführen eines auf das OLT angepasstes Skript um ONTs automatisch online zu bringen.',
     'cron_string' => 'Geben Sie einen gültigen Cron-Ausdruck im Cron-Syntax ein. Ein Cron-Ausdruck besteht aus fünf Feldern, die Minute, Stunde, Tag des Monats, Monat und Wochentag repräsentieren und durch Leerzeichen getrennt sind. Verwenden Sie die https://crontab.guru/ Website für Hilfe, Beispiele und um Ihre Cron-Ausdrücke zu validieren.',
-
+    'finished_time' => 'Dieses Feld zeigt das Datum und die Uhrzeit an, wenn das System erkannt hat, dass keine weiteren Modems ein Firmware-Upgrade benötigen. Es wird automatisch eingestellt.',
     /*
      * MODULE: ProvVoip
      */

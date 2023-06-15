@@ -119,8 +119,7 @@ return [
     'firmware_upgrades' => [
         'start_date' => 'Start date',
         'start_time' => 'Start time',
-        'end_date' => 'End date',
-        'end_time' => 'End time',
+        'finished_date' => 'Finished Date',
         'cron_string' => 'Cron string',
         'batch_size' => 'Batch size',
     ],

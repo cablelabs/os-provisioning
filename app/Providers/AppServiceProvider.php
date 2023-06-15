@@ -18,6 +18,7 @@
 
 namespace App\Providers;
 
+use Cron\CronExpression;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -61,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return Response::json($data, $statusCode);
+        });
+
+        Validator::extend('cron', function ($attribute, $value, $parameters, $validator) {
+            return $value !== null && CronExpression::isValidExpression($value);
         });
     }
 

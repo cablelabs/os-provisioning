@@ -170,7 +170,7 @@ return [
     'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
     'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
     'cron_string' => 'Enter a valid cron string using the cron syntax. A cron string consists of five fields representing minute, hour, day of month, month, and day of week, separated by spaces. Refer to the https://crontab.guru/ website for help, examples, and to validate your cron expressions.',
-
+    'finished_time' => 'This field shows the date and time when the system detected that no further modems require a firmware upgrade. It is set automatically.',
     /*
      * MODULE: ProvVoip
      */

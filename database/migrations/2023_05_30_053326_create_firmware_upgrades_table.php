@@ -37,8 +37,7 @@ return new class extends BaseMigration
             $this->up_table_generic($table);
             $table->date('start_date');
             $table->time('start_time');
-            $table->date('end_date')->nullable();
-            $table->time('end_time')->nullable();
+            $table->dateTime('finished_date')->nullable();
             $table->string('cron_string')->nullable();
             $table->integer('batch_size')->nullable();
             $table->unsignedBigInteger('to_configfile_id');

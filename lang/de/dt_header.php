@@ -120,8 +120,7 @@ return [
     'firmware_upgrades' => [
         'start_date' => 'Startdatum',
         'start_time' => 'Startzeit',
-        'end_date' => 'Enddatum',
-        'end_time' => 'Endzeit',
+        'finished_date' => 'Abschlussdatum',
         'cron_string' => 'Cron-Ausdruck',
         'batch_size' => 'Anzahl Modems pro Ausführung',
     ],

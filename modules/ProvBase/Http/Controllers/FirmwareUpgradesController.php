@@ -58,20 +58,6 @@ class FirmwareUpgradesController extends BaseController
                 'help' => trans('helper.Item_validTo'),
             ],
             [
-                'form_type' => 'date',
-                'name' => 'end_date',
-                'description' => 'End Date',
-                'options' => ['placeholder' => 'YYYY-MM-DD'],
-                'help' => trans('helper.Item_validTo'),
-            ],
-            [
-                'form_type' => 'time',
-                'name' => 'end_time',
-                'description' => 'End Time',
-                'options' => ['placeholder' => 'HH:MM'],
-                'help' => trans('helper.Item_validTo'),
-            ],
-            [
                 'form_type' => 'text',
                 'name' => 'cron_string',
                 'description' => 'Cron String',
@@ -107,6 +93,13 @@ class FirmwareUpgradesController extends BaseController
                     'ajax-route' => route('FirmwareUpgrades.select2', ['relation' => 'configfiles']),
                 ],
                 'selected' => $toConfigfiles,
+            ],
+            [
+                'form_type' => 'text',
+                'name' => 'finished_date',
+                'description' => 'Finished Date',
+                'options' => ['readonly' => 'readonly'],
+                'help' => trans('helper.finished_time'),
             ],
         ];
 
