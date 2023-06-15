@@ -17,21 +17,15 @@ class FirmwareUpgradeService
         $nowDate = $now->toDateString();
         $nowTime = $now->format('H:i');
 
-        $firmwareUpgrades = FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
+        return FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
             $query->where('start_date', '<', $nowDate)
                 ->orWhere(function ($query) use ($nowDate, $nowTime) {
                     $query->where('start_date', $nowDate)
                         ->where('start_time', '<=', $nowTime);
                 });
-        })->whereNotNull('finished_date');
-
-        $results = $firmwareUpgrades->get();
-
-        if ($results->isEmpty()) {
-            $firmwareUpgrades->update(['finished_date' => Carbon::now()]);
-        }
-
-        return $results;
+            })
+            ->whereNull('finished_date')
+            ->get();
     }
 
     public function upgradeFirmware()
@@ -50,6 +44,14 @@ class FirmwareUpgradeService
 
             $modems = $modems->get();
             $count = 0;
+
+            // If no modems to update, set finished_date and continue to next upgrade
+            if ($modems->isEmpty()) {
+                Log::info('Firmware upgrade process has finished for upgrade id: '.$firmwareUpgrade->id);
+                $firmwareUpgrade->update(['finished_date' => Carbon::now()]);
+                continue;
+            }
+
             DB::beginTransaction();
 
             // Update the Modems to use to_configfile_id
