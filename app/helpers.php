@@ -741,12 +741,45 @@ function sanitizeHtml(string $content, array $tags = ['script'], array $attribut
 
         protected function cleanup(): self
         {
+            $tagPattern = function(string $tag){
+                $tag = preg_quote($tag);
+                $pattern = [
+                    '/',                    // Start regex
+                    '<',                    // Match the opening angle bracket
+                    '\s*',                  // Match zero or more whitespace characters
+                    $tag,                   // Regex safe Tag name
+                    '\b',                   // Start word boundry (to match the exact tag)
+                    '[^<]*',                // Match any characters that are not the opening angle bracket
+                    '(?:',                  // Start of a non-capturing group for nested tags
+                    '(?!<\/'.$tag.'>)',     // Negative lookahead to exclude the closing tag (for nested tags)
+                    '<[^<]*',               // Match any characters that are not the opening angle bracket
+                    ')*',                   // Match the non-capturing group zero or more times
+                    '<\/'.$tag.'>',         // Match the closing tag
+                    '/i',                   // End regex (i for case-insensitive)
+                ];
+                return implode("",$pattern);
+            };
+
             foreach ($this->tags as $tag) {
-                $this->content = preg_replace('/<'.preg_quote($tag).'\b[^<]*(?:(?!<\/'.preg_quote($tag).'>)<[^<]*)*<\/'.preg_quote($tag).'>/', '', $this->content);
+                $this->content = preg_replace($tagPattern($tag), '', $this->content);
             }
 
+            $attributePattern = function(string $attribute){
+                $pattern = [
+                    '/',                      // Start regex
+                    preg_quote($attribute),   // Regex safe attribute name
+                    '\s*=\s*',                // Match optional whitespace characters before and after the equals sign
+                    '([\x22\x27])',           // Ref(1) capture group to match a double quote (\x22) or single quote (\x27)
+                    '([\s\S]*?)',             // Ref(2) capture group to match any characters (including newlines)
+                    '\1',                     // Backreference to the value captured in the first capturing group
+                    '/i'                      // End regex
+                ];
+
+                return implode('', $pattern);
+
+            };
             foreach ($this->attributes as $attribute) {
-                $this->content = preg_replace('/'.preg_quote($attribute).'\s*=\s*([\x22\x27])([\s\S]*?)\1/', '', $this->content);
+                $this->content = preg_replace($attributePattern($attribute), '', $this->content);
             }
 
             return $this;
