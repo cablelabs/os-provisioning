@@ -169,6 +169,9 @@ return [
     'configfile_count'              => 'The number in brackets indicates how often the respective configurationfile is already used.',
     'has_telephony'                 => 'Activate if customer shall have telephony but has no internet. This flag can actually not be used to disable telephony on contracts with internet. Please delete the MTA or disable the phonenumber for that. Info: The setting influences the modems configfile parameters NetworkAcess and MaxCPE - see modems analyses page tab \'Configfile\'',
     'ssh_auto_prov'                 => 'Periodically run a script tailored to the OLT in order to automatically bring ONTs online.',
+    'start_time' => 'Enter a valid value in HH:MM format. This will be the time of day when the system will start to check for modems requiring a firmware upgrade.',
+    'start_date' => 'Enter a valid date in dd/mm/yyyy format. This will be the date when the system will start to check for modems requiring a firmware upgrade.',
+    'batch_size' => 'Enter a valid number. This will be the number of modems that will be processed for firmware upgrades at a time.',
     'cron_string' => 'Enter a valid cron string using the cron syntax. A cron string consists of five fields representing minute, hour, day of month, month, and day of week, separated by spaces. Refer to the https://crontab.guru/ website for help, examples, and to validate your cron expressions.',
     'finished_time' => 'This field shows the date and time when the system detected that no further modems require a firmware upgrade. It is set automatically.',
     /*

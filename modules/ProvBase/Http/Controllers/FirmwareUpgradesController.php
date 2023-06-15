@@ -48,14 +48,14 @@ class FirmwareUpgradesController extends BaseController
                 'name' => 'start_date',
                 'description' => 'Start Date',
                 'options' => ['placeholder' => 'YYYY-MM-DD'],
-                'help' => trans('helper.Item_validTo'),
+                'help' => trans('helper.start_date'),
             ],
             [
                 'form_type' => 'time',
                 'name' => 'start_time',
                 'description' => 'Start Time',
                 'options' => ['placeholder' => 'HH:MM'],
-                'help' => trans('helper.Item_validTo'),
+                'help' => trans('helper.start_time'),
             ],
             [
                 'form_type' => 'text',
@@ -68,6 +68,7 @@ class FirmwareUpgradesController extends BaseController
                 'form_type' => 'text',
                 'name' => 'batch_size',
                 'description' => 'Batch Size',
+                'help' => trans('helper.batch_size'),
             ],
             [
                 'form_type' => 'select',
