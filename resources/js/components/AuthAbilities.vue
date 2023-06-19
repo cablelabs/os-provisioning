@@ -249,9 +249,7 @@ export default {
     }
 
     function saveButton(module) {
-      if (_.isEqual(modelAbilities.value[module], originalModelAbilities.value[module])) return false
-
-      return true
+      return ! _.isEqual(modelAbilities.value[module], originalModelAbilities.value[module])
     }
 
     function shortcutButtonClick(event) {
@@ -310,7 +308,7 @@ export default {
       })
         .then(function (response) {
           originalModelAbilities.value = response.data
-          modelAbilities.value[module] = _.clone(response.data[module])
+          modelAbilities.value[module] = _clone(response.data[module])
           loadingSpinner[module] = false
         })
         .catch(function (error) {

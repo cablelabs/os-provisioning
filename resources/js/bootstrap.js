@@ -15,9 +15,30 @@
  * limitations under the License.
  */
 
-import _ from 'lodash';
-window._ = _;
+// lodash
+import startsWith from 'lodash/startsWith'
+import find from 'lodash/find'
+import chain from 'lodash/chain'
+import isEmpty from 'lodash/isEmpty'
+import isEqual from 'lodash/isEqual'
+import round from 'lodash/round'
+import filter from 'lodash/filter'
+import clone from 'lodash/clone'
+import map from 'lodash/map'
+import omit from 'lodash/omit'
 
+window._startsWith = startsWith;
+window._find = find;
+window._chain = chain;
+window._isEmpty = isEmpty;
+window._isEqual = isEqual;
+window._round = round;
+window._filter = filter;
+window._clone = clone;
+window._map = map;
+window._omit = omit;
+
+// jquery
 import $ from 'jquery'
 window.$ = window.jQuery = $
 
