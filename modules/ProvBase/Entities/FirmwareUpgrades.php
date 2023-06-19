@@ -61,7 +61,7 @@ class FirmwareUpgrades extends \BaseModel
                 $this->table.'.cron_string',
                 $this->table.'.batch_size',
             ],
-            // 'bsclass' => $bsclass,
+            'bsclass' => $this->get_bsclass(),
             'header' => $this->label(),
             'edit' => [],
             'eager_loading' => ['configfile'],
@@ -106,5 +106,16 @@ class FirmwareUpgrades extends \BaseModel
 
                 return $query;
             });
+    }
+
+    public function get_bsclass()
+    {
+        $bsclass = 'info';
+
+        if ($this->finished_date) {
+            $bsclass = 'success';
+        }
+
+        return $bsclass;
     }
 }
