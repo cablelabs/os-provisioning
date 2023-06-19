@@ -40,7 +40,9 @@ return new class extends BaseMigration
             $table->dateTime('finished_date')->nullable();
             $table->string('cron_string')->nullable();
             $table->integer('batch_size')->nullable();
-            $table->unsignedBigInteger('to_configfile_id');
+            $table->unsignedBigInteger('to_configfile_id')->nullable();
+            $table->boolean('restart_only')->default(false);
+            $table->text('firmware_match_string')->nullable();
         });
     }
 

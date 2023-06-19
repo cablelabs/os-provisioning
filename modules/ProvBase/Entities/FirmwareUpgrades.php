@@ -40,6 +40,8 @@ class FirmwareUpgrades extends \BaseModel
         'cron_string',
         'batch_size',
         'to_configfile_id',
+        'restart_only',
+        'firmware_match_string',
     ];
 
     // Name of View

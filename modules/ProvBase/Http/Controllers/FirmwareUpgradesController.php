@@ -58,6 +58,13 @@ class FirmwareUpgradesController extends BaseController
                 'help' => trans('helper.start_time'),
             ],
             [
+                'form_type' => 'checkbox',
+                'name' => 'restart_only',
+                'description' => 'Only Restart Required',
+                'options' => [],
+                'help' => trans('helper.restart_only'),
+            ],
+            [
                 'form_type' => 'text',
                 'name' => 'cron_string',
                 'description' => 'Cron String',
@@ -96,6 +103,13 @@ class FirmwareUpgradesController extends BaseController
                 'selected' => $toConfigfiles,
             ],
             [
+                'form_type' => 'textarea',
+                'name' => 'firmware_match_string',
+                'description' => 'Enter regex string to match firmware version.',
+                'options' => ['rows' => '5'],
+                'help' => trans('helper.firmware_match_string'),
+            ],
+            [
                 'form_type' => 'text',
                 'name' => 'finished_date',
                 'description' => 'Finished Date',
@@ -112,6 +126,7 @@ class FirmwareUpgradesController extends BaseController
         $rules['start_date'] = 'required|date_format:Y-m-d';
         $rules['start_time'] = 'required|date_format:H:i';
         $rules['batch_size'] = ['nullable', 'integer', 'min:1'];
+        $rules['restart_only'] = 'boolean';
 
         // Check if 'batch_size' is set in the input data
         if (isset($data['batch_size'])) {
@@ -123,7 +138,24 @@ class FirmwareUpgradesController extends BaseController
         }
 
         $rules['fromconfigfile_ids'] = 'required|array';
-        $rules['to_configfile_id'] = ['required', 'integer', 'min:1', Rule::notIn($data['fromconfigfile_ids'] ?? [])];
+
+        $rules['to_configfile_id'] = [
+            isset($data['restart_only']) && $data['restart_only'] ? 'nullable' : 'required',
+            'integer',
+            'min:1',
+            Rule::notIn($data['fromconfigfile_ids'] ?? [])
+        ];
+
+        $rules['firmware_match_string'] = ['nullable', function($attribute, $value, $fail) {
+            $lines = preg_split('/\r\n|\r|\n/', $value);
+
+            // Validate each line as a valid string
+            foreach ($lines as $line) {
+                if (!is_string($line) || mb_strlen($line) > 255) {
+                    $fail($attribute . ' contains a line that is not a valid string or is too long.');
+                }
+            }
+        }];
 
         return parent::prepare_rules($rules, $data);
     }

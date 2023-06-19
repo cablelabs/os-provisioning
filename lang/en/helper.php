@@ -174,6 +174,7 @@ return [
     'batch_size' => 'Enter a valid number. This will be the number of modems that will be processed for firmware upgrades at a time.',
     'cron_string' => 'Enter a valid cron string using the cron syntax. A cron string consists of five fields representing minute, hour, day of month, month, and day of week, separated by spaces. Refer to the https://crontab.guru/ website for help, examples, and to validate your cron expressions.',
     'finished_time' => 'This field shows the date and time when the system detected that no further modems require a firmware upgrade. It is set automatically.',
+    'firmware_match_string' => 'Each line of the textarea will be treated as a separate regex string.',
     /*
      * MODULE: ProvVoip
      */
