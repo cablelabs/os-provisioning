@@ -1916,7 +1916,7 @@ class BaseController extends Controller
      * @param  string  $relationship  The name of the relationship to retrieve related models
      * @param  string  $class  The unqualified name of the related model class
      * @param  string|null  $placeholder  The placeholder text for the select field (optional)
-     * @return array  An array of options for the select2 field (multiple)
+     * @return array An array of options for the select2 field (multiple)
      */
     protected function setupSelect2FieldForPivotTable($model, string $relationship, string $class, string $placeholder = null): array
     {

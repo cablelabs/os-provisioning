@@ -71,7 +71,19 @@ class FirmwareUpgrades extends \BaseModel
 
     public function label()
     {
-        return $this->id;
+        $fromConfigfilesCount = $this->fromConfigfile()->count();
+        $restartOnlyText = $this->restart_only ? ' (restart only)' : '';
+        $toConfigfileName = $this->configfile ? $this->configfile->name : '';
+
+        $fromText = $fromConfigfilesCount == 1
+            ? "From {$this->fromConfigfile()->first()->name}"
+            : "For {$fromConfigfilesCount} configfiles";
+
+        if ($this->restart_only || $toConfigfileName === null) {
+            return "{$fromText}{$restartOnlyText}";
+        }
+
+        return "{$fromText} to {$toConfigfileName}";
     }
 
     /**

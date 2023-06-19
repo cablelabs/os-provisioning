@@ -23,7 +23,7 @@ class FirmwareUpgradeService
                     $query->where('start_date', $nowDate)
                         ->where('start_time', '<=', $nowTime);
                 });
-            })
+        })
             ->whereNull('finished_date')
             ->get();
     }
@@ -53,7 +53,7 @@ class FirmwareUpgradeService
             }
 
             // If restart_only is false, update the Modems to use to_configfile_id
-            if (!$firmwareUpgrade->restart_only) {
+            if (! $firmwareUpgrade->restart_only) {
                 $this->updateModemConfigfile($modems, $firmwareUpgrade->to_configfile_id);
                 // Return early since modems restart automatically after being updated
                 return;
@@ -69,8 +69,8 @@ class FirmwareUpgradeService
     /**
      * Updates the configfile_id for a collection of Modems.
      *
-     * @param  Collection $modems The modems to update.
-     * @param  int $configfileId The ID of the new configfile.
+     * @param  Collection  $modems  The modems to update.
+     * @param  int  $configfileId  The ID of the new configfile.
      * @return void
      */
     protected function updateModemConfigfile(Collection $modems, int $configfileId)
@@ -85,7 +85,7 @@ class FirmwareUpgradeService
         DB::commit();
 
         // Log the number of updated modems
-        Log::info(count($modems) . ' modems have been updated with configfile id: ' . $configfileId);
+        Log::info(count($modems).' modems have been updated with configfile id: '.$configfileId);
     }
 
     /**
@@ -98,8 +98,7 @@ class FirmwareUpgradeService
      * If a `batch_size` is specified in the firmware upgrade, the method will limit the number of modems returned to
      * that batch size.
      *
-     * @param FirmwareUpgrade $firmwareUpgrade The firmware upgrade which specifies the criteria for matching modems.
-     *
+     * @param  FirmwareUpgrade  $firmwareUpgrade  The firmware upgrade which specifies the criteria for matching modems.
      * @return \Illuminate\Database\Eloquent\Collection Collection of Modem models that match the criteria.
      */
     protected function getMatchingModems($firmwareUpgrade)

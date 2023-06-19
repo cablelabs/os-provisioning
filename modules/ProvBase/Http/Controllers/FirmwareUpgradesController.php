@@ -143,16 +143,16 @@ class FirmwareUpgradesController extends BaseController
             isset($data['restart_only']) && $data['restart_only'] ? 'nullable' : 'required',
             'integer',
             'min:1',
-            Rule::notIn($data['fromconfigfile_ids'] ?? [])
+            Rule::notIn($data['fromconfigfile_ids'] ?? []),
         ];
 
-        $rules['firmware_match_string'] = ['nullable', function($attribute, $value, $fail) {
+        $rules['firmware_match_string'] = ['nullable', function ($attribute, $value, $fail) {
             $lines = preg_split('/\r\n|\r|\n/', $value);
 
             // Validate each line as a valid string
             foreach ($lines as $line) {
-                if (!is_string($line) || mb_strlen($line) > 255) {
-                    $fail($attribute . ' contains a line that is not a valid string or is too long.');
+                if (! is_string($line) || mb_strlen($line) > 255) {
+                    $fail($attribute.' contains a line that is not a valid string or is too long.');
                 }
             }
         }];
