@@ -1,5 +1,6 @@
 <p>
-    am {{ dayjs(invoice?.created_at ?? undefined).format('DD.MM.YYYY') }} wurde Ihnen unsere Rechnung für das Kabelentgelt zugestellt. Dazu konnten wir bis
+    am {{ dayjs(invoice?.created_at ?? undefined).format('DD.MM.YYYY') }} wurde Ihnen unsere Rechnung für das
+    Kabelentgelt zugestellt. Dazu konnten wir bis
     zum heutigen Tag keinen Zahlungseingang vermerken.
 </p>
 <table>
@@ -10,17 +11,18 @@
         </tr>
     </tbody>
 </table>
-<p><strong>Bitte begleichen Sie den o.g. Gesamtbetrag bis zum [Date]</strong></p>
-<br/>
+<p><strong>Bitte begleichen Sie den o.g. Gesamtbetrag bis zum {{dayjs(meta.date ?? undefined).add(12,'day').format('DD.MM.YYYY')}}</strong>
+</p>
+<br />
 <p>
     Geht der Betrag nicht oder nicht in voller Höhe ein, müssen Sie mit der Abschaltung des
     Anschlusses rechnen. Der damit verbundene Aufwand wird entsprechend der geltenden
     Preistafel erhoben.
 </p>
-<br/>
+<br />
 <p>
     Sollten Sie zwischenzeitlich die Zahlung geleistet haben, betrachten Sie dieses Schreiben
     bitte als gegenstandslos.
 </p>
-<br/>
+<br />
 <p>Für eventuelle Fragen stehen wir Ihnen gern zur Verfügung.</p>
