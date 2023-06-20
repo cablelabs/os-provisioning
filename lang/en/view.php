@@ -279,7 +279,7 @@ return [
     'Header_Workforce'          => 'Workforce Command Center',
 
     // Responsive Navbar Button
-    'Header_Dependencies'     => 'Dependencies',
+    'Header_Dependencies'       => 'Dependencies',
     'Header_Functions'          => 'Functions',
 
     'Header_Ccap'               => 'CCAP',
@@ -309,7 +309,7 @@ return [
     // BUTTON
     'Sign me in'                => 'Login',
     'Button_Create'             => 'Create',
-    'Button_Create'             => 'Export',
+    'Button_Export'             => 'Export',
     'Button_Delete'             => 'Delete marked Elements',
     'Button_Force Restart'      => 'Force Restart',
     'Button_Save'               => 'Save',
@@ -341,10 +341,10 @@ return [
     'sr_dl_logs'                    => 'Download whole logfile',
     // Numberrange
     'Button_Create NumberRange'     => 'Create Numberrange',
-    // HFC
-    'Button_Create NetElementType' => 'Create NetElement Type',
-    'Button_Create NetElement'     => 'Create NetElement',
-    'Button_Create MibFile'     => 'Create Mib-File',
+    //HFC
+    'Button_Create NetElementType'  => 'Create NetElement Type',
+    'Button_Create NetElement'      => 'Create NetElement',
+    'Button_Create MibFile'         => 'Create Mib-File',
     'Button_Create OID'             => 'Create OID',
     // SNMP Module
     // Device
@@ -410,6 +410,7 @@ return [
         'Configfile' => 'a Configfile',
         'Contact' => 'a contact',
         'Contract' => 'a Contract',
+        'fiberName' => 'a fibre name',
         'Mta' => 'a MTA',
         'NetElement' => 'a NetElement',
         'NetElementType' => 'a NetElement Type',
@@ -419,7 +420,6 @@ return [
         'provDevice' => 'a provisioning device',
         'Realty' => 'a realty',
         'Qos' => 'a QOS',
-        'fiberName' => 'a fibre name',
     ],
 
     // Index
@@ -608,7 +608,6 @@ return [
     'analysis' => 'Analysis',
     'Assign' => 'Assign :model',
     'BillingBase' => 'Billing',
-    'Ccc' => 'Customer Control Center',
     'ccap' => [
         'serial_num' => 'Serial number',
         'model' => 'Model',
@@ -630,6 +629,7 @@ return [
         'lastPoll' => 'Last Successfull Poll',
         'primarySid' => 'Primary SID',
     ],
+    'Ccc' => 'Customer Control Center',
     'commandCenter' => 'Command Center',
     'company' => 'Company',
     'CoreMon' => 'Headend Monitoring',
