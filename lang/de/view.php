@@ -275,6 +275,8 @@ return [
     'Header_SubNetElement'      => 'Untergeordnete Netzelemente',
     'Header_tap'                => 'Steuerbarer Abzweiger-Port',
 
+    'Header_SummaryStatistic'   => 'Summary',
+
     // Workforce
     'Header_Workforce'          => 'Workforce Kommandozentrale',
 
@@ -507,7 +509,6 @@ return [
         'mutedHidden' => 'Stummgeschaltete verstecken',
         'systemSummary' => 'Systemzustand',
         'troubleDashboard' => 'Störungsübersicht',
-        'summary' => 'Zusammenfassung',
         'services' => 'Dienste',
         'goodSignal' => ':entities mit gutem Signal',
         'onlineState' => ':entities sind online',
@@ -595,6 +596,7 @@ return [
         'Save All'          => 'Alle Speichern',
         'Save Changes'      => 'Änderungen Speichern',
         'See income chart'  => 'Einkommensdiagramm ansehen',
+        'Statistics'        => 'Statistiken',
         'Technical Capabilities' => 'Technische Fähigkeiten',
         'Ticketsystem'      => 'Ticketsystem',
         'Update'            => 'Ändern',
@@ -720,6 +722,33 @@ return [
         '#' => 'Index',
     ],
     'name' => 'Name',
+    'option' => [
+        'statisticsQuery' => [
+            'customerType' => [
+                'b2b' => 'B2B',
+                'b2c' => 'B2C',
+            ],
+            'productGroup' => [
+                'internet' => 'Internet',
+                'tv' => 'TV',
+                'voip' => 'Voip',
+            ],
+            'status' => [
+                'active' => 'aktiv',
+                'inTermination' => 'In Kündigung',
+                'activeInTheFuture' => 'Zukünftig aktiv',
+            ],
+            'gender' => [
+                'male' => 'Männlich',
+                'female' => 'Weiblich',
+            ],
+            'ageGroups' => [
+                '18-25' => '18-25',
+                '26-35' => '26-35',
+                '35+' => '35+',
+            ],
+        ],
+    ],
     'OverdueDebts' => 'Offene Posten',
     'overview' => 'Übersicht',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',
@@ -761,38 +790,18 @@ return [
     'ProvVoip' => 'VoIP',
     'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
-    'SettlementRun' => 'Abrechnungslauf',
-    'SipDevices' => 'SIP Geräte',
-
-    // Option
-    'option' => [
-        'statisticsQuery' => [
-            'customerType' => [
-                'b2b' => 'B2B',
-                'b2c' => 'B2C',
-            ],
-            'productGroup' => [
-                'internet' => 'Internet',
-                'tv' => 'TV',
-                'voip' => 'Voip',
-            ],
-            'status' => [
-                'active' => 'aktiv',
-                'inTermination' => 'In Kündigung',
-                'activeInTheFuture' => 'Zukünftig aktiv',
-            ],
-            'gender' => [
-                'male' => 'Männlich',
-                'female' => 'Weiblich',
-            ],
-            'ageGroups' => [
-                '18-25' => '18-25',
-                '26-35' => '26-35',
-                '35+' => '35+',
-            ],
+    'statsSummary' => [
+        'headlines' => [
+            'activeCustomers' => 'Aktive Kunden',
+            'activeItems' => 'Aktive Posten',
+            'newCustomers' => 'Neukunden',
+            'perProductGroup' => 'pro Produktgruppe',
+            'revenue' => 'Umsatz aktiver Kunden',
         ],
     ],
-
+    'SettlementRun' => 'Abrechnungslauf',
+    'SipDevices' => 'SIP Geräte',
+    'summary' => 'Zusammenfassung',
     'belongsToNet' => 'Dieses Element gehört zu einem Netz',
     'viewWholeNet' => 'Gesamtes Netz anzeigen',
     'belongsToCluster' => 'Dieses Element ist einem Cluster zugeordnet',

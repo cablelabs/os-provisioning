@@ -31,7 +31,6 @@
         "@panzoom/panzoom": "^4.5.1",
         "axios": "^0.25",
         "bootstrap": "^4.0.0",
-        "chart.js": "^4.3.0",
         "chartjs-plugin-datalabels": "^2.2.0",
         "datatables.net": "^1.12.1",
         "datatables.net-bs4": "^1.12.1",
@@ -67,6 +66,7 @@
         "svg-pan-zoom": "^3.6.1",
         "switchery": "0.0.2",
         "vue": "^3.3.2",
+        "vue-chartjs": "^5.2.0",
         "vue3-snotify": "0.0.6",
         "vue3-touch-events": "^4.1.0",
         "vuedraggable": "^4.1.0"
