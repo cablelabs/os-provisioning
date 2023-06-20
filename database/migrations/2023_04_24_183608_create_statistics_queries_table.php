@@ -37,11 +37,11 @@ return new class extends BaseMigration
             $this->up_table_generic($table);
             $table->string('name');
             $table->string('customer_type')->nullable();
-            $table->string('product_group')->nullable();
+            $table->string('product_type')->nullable();
             $table->json('tariffs')->nullable();
             $table->string('status')->nullable();
             $table->string('antenna_communities')->nullable();
-            $table->json('zip_code_filter')->nullable();
+            $table->json('zip')->nullable();
             $table->string('gender')->nullable();
             $table->string('age_groups')->nullable();
             $table->boolean('split_combination_packages')->nullable();

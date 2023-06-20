@@ -748,29 +748,31 @@ return [
     'SipDevices' => 'SIP Devices',
 
     // Option
-    'Option_StatisticsQuery' => [
-        'customerType' => [
-            'b2b' => 'B2B',
-            'b2c' => 'B2C',
-        ],
-        'productGroup' => [
-            'internet' => 'Internet',
-            'tv' => 'TV',
-            'voip' => 'Voip',
-        ],
-        'status' => [
-            'active' => 'Active',
-            'inTermination' => 'In termination',
-            'activeInTheFuture' => 'Active in the future',
-        ],
-        'gender' => [
-            'male' => 'Male',
-            'female' => 'Female',
-        ],
-        'ageGroups' => [
-            '18-25' => '18-25',
-            '26-35' => '26-35',
-            '35+' => '35+',
+    'option' => [
+        'statisticsQuery' => [
+            'customerType' => [
+                'b2b' => 'B2B',
+                'b2c' => 'B2C',
+            ],
+            'productGroup' => [
+                'internet' => 'Internet',
+                'tv' => 'TV',
+                'voip' => 'Voip',
+            ],
+            'status' => [
+                'active' => 'Active',
+                'inTermination' => 'In termination',
+                'activeInTheFuture' => 'Active in the future',
+            ],
+            'gender' => [
+                'male' => 'Male',
+                'female' => 'Female',
+            ],
+            'ageGroups' => [
+                '18-25' => '18-25',
+                '26-35' => '26-35',
+                '35+' => '35+',
+            ],
         ],
     ],
 
