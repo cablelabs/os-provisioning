@@ -22,7 +22,8 @@
  */
 
 import { ref, reactive, onMounted } from 'vue'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
+import clone from 'lodash/clone'
 
 export default {
   setup() {
@@ -249,7 +250,7 @@ export default {
     }
 
     function saveButton(module) {
-      return ! _.isEqual(modelAbilities.value[module], originalModelAbilities.value[module])
+      return ! isEqual(modelAbilities.value[module], originalModelAbilities.value[module])
     }
 
     function shortcutButtonClick(event) {
@@ -308,7 +309,7 @@ export default {
       })
         .then(function (response) {
           originalModelAbilities.value = response.data
-          modelAbilities.value[module] = _clone(response.data[module])
+          modelAbilities.value[module] = clone(response.data[module])
           loadingSpinner[module] = false
         })
         .catch(function (error) {
