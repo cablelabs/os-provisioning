@@ -56,7 +56,14 @@ buttons: [
                 extend: 'excelHtml5',
                 text: "<i class='fa fa-file-excel-o'></i> .XLSX",
                 action: function (e, dt, button, config) {
-                    $.fn.dataTableExt.buttons.excelHtml5.action.call(this, e, dt, button, config)
+                    $.ajax({
+                          url: '{{ asset('js/jszip.min.js') }}',
+                          dataType: "script",
+                          cache: true,
+                          success: () => {
+                            $.fn.dataTableExt.buttons.excelHtml5.action.call(this, e, dt, button, config)
+                          }
+                        })
                 },
                 exportOptions: {!! $exportAll !!},
             },
@@ -64,7 +71,22 @@ buttons: [
                 extend: 'pdfHtml5',
                 text: "<i class='fa fa-file-pdf-o'></i> .PDF",
                 action: function ( e, dt, node, config ) {
-                    $.fn.dataTableExt.buttons.pdfHtml5.action.call(this, e, dt, node, config)
+                    delete window.pdfMake
+                    $.ajax({
+                      url: '{{ asset('js/pdfmake.min.js') }}',
+                      dataType: "script",
+                      cache: true,
+                      success: () => {
+                        $.ajax({
+                            url: '{{ asset('js/vfs_fonts.js') }}',
+                            dataType: "script",
+                            cache: true,
+                            success: () => {
+                                $.fn.dataTableExt.buttons.pdfHtml5.action.call(this, e, dt, node, config )
+                            }
+                        })
+                      }
+                    })
                 },
                 exportOptions: {!! $exportAll !!},
                 customize: function(doc, config) {
