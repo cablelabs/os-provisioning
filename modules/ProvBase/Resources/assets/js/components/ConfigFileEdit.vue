@@ -188,6 +188,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios'
+import draggable from 'vuedraggable'
 
 // prepare default vaules
 let propData = document.querySelector('#provbase-config-file-edit').dataset
