@@ -50,14 +50,8 @@ class ImportNmsCommand extends Command
     protected $signature = 'import:nms
         {systemName : Name of the Database Connection}
         {costcenter : Costcenter ID for all contracts}
-        {--M|modems : Import modems with configfiles, mtas}
-        {--N|phonenumbers : Import phonenumbers and phonenumbermanagements}
-        {--P|products : Import items + products}
-        {--Q|qos : Import QoS\'}
-        {--S|sepas : Import sepamandates}
-        {--T|tickets : Import tickets with ticket types}
         {--ag= : Contact of contract}
-        {--invoices= : Import invoices with settlementruns starting from YYYY-MM-DD}
+        {--invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
         {--configfileMap= : Path to file containing an array of ID mapping between old and new configfiles}
         {--qosMap= : Path to file containing an array of ID mapping between old and new QoS\'}
         {--productMap= : Path to file containing an array of ID mapping between old and new products}
@@ -175,7 +169,6 @@ class ImportNmsCommand extends Command
     public function handle()
     {
         $this->createMappingFor(
-            'qos',
             'qosMap',
             Qos::on($this->argument('systemName'))
                 ->where('deleted_at', null)
@@ -186,7 +179,6 @@ class ImportNmsCommand extends Command
         );
 
         $this->createMappingFor(
-            'products',
             'productMap',
             Product::on($this->argument('systemName'))
                 ->where('deleted_at', null)
@@ -199,7 +191,6 @@ class ImportNmsCommand extends Command
         );
 
         $this->createMappingFor(
-            'tickets',
             'ticketTypeMap',
             TicketType::on($this->argument('systemName'))
                 ->where('deleted_at', null)
@@ -211,7 +202,6 @@ class ImportNmsCommand extends Command
 
         if ($this->option('configfileMap')) {
             $this->createMappingFor(
-                'modems',
                 'configfileMap',
                 Configfile::on($this->argument('systemName'))
                     ->where('deleted_at', null)
@@ -330,6 +320,7 @@ class ImportNmsCommand extends Command
 
         $newSettlementRuns = SettlementRun::on($this->argument('systemName'))
             ->whereNull('deleted_at')
+            // TODO: check for settlementrun instead of invoice creation
             ->where('executed_at', '>=', $this->option('invoices'))
             ->get();
         $settlementrunBar = $this->createProgressBar(
@@ -344,7 +335,7 @@ class ImportNmsCommand extends Command
             'Invoices'
         );
 
-        if ($this->option('invoices') && $newSettlementRuns) {
+        if ($newSettlementRuns) {
             $this->addSettlementRuns($newSettlementRuns, $settlementrunBar);
         }
 
@@ -356,19 +347,19 @@ class ImportNmsCommand extends Command
                 continue;
             }
 
-            if ($this->option('invoices') && ! $contractToImport->invoices->isEmpty()) {
+            if (! $contractToImport->invoices->isEmpty()) {
                 $progress = $this->addInvoices($contractToImport, $contract);
                 $contract = $progress[0];
                 $invoiceBar->advance($progress[1]);
             }
 
-            if ($this->option('products') && ! $contractToImport->items->isEmpty()) {
+            if (! $contractToImport->items->isEmpty()) {
                 $progress = $this->addItems($contractToImport, $contract);
                 $contract = $progress[0];
                 $itemBar->advance($progress[1]);
             }
 
-            if ($this->option('modems') && ! $contractToImport->modems->isEmpty()) {
+            if (! $contractToImport->modems->isEmpty()) {
                 $progress = $this->addModems($contractToImport, $contract);
                 $contract = $progress[0];
                 $modemBar->advance($progress[1]);
@@ -376,7 +367,7 @@ class ImportNmsCommand extends Command
                 $phonenumberBar->advance($progress[3]);
             }
 
-            if ($this->option('sepas') && ! $contractToImport->sepamandates->isEmpty()) {
+            if (! $contractToImport->sepamandates->isEmpty()) {
                 $progress = $this->addSepas($contractToImport, $contract);
                 $contract = $progress[0];
                 $sepaBar->advance($progress[1]);
@@ -385,10 +376,8 @@ class ImportNmsCommand extends Command
             $contract->push();
         }
 
-        if ($this->option('tickets')) {
-            $this->addTicketTypes($numbers);
-            $this->addActiveTickets($numbers);
-        }
+        $this->addTicketTypes();
+        $this->addActiveTickets($numbers);
 
         $this->callObservers();
     }
@@ -398,27 +387,27 @@ class ImportNmsCommand extends Command
         return Arr::except($model->getAttributes(), ['id']);
     }
 
-    private function createMappingFor($name, $map, $newEntries, $existingEntries, ...$comparables)
+    private function createMappingFor($map, $newEntries, $existingEntries, ...$comparables)
     {
-        if ($this->option($name)) {
-            if ($this->option($map)) {
-                if (! file_exists($this->option($map))) {
-                    $this->error("{$this->option($map)} does not exist!");
-                }
-                $this->$map = $this->$map + require $this->option($map);
-            } else {
-                foreach ($newEntries as $new) {
-                    $existingEntries->filter(function ($entry) use ($comparables, $new, $map) {
-                        foreach ($comparables as $comp) {
-                            if ($entry->$comp != $new->$comp) {
-                                return;
-                            }
-                        }
-
-                        $this->$map[$new->id] = $entry->id;
-                    });
-                }
+        if ($this->option($map)) {
+            if (! file_exists($this->option($map))) {
+                $this->error("{$this->option($map)} does not exist!");
             }
+            $this->$map = $this->$map + require $this->option($map);
+
+            return;
+        }
+
+        foreach ($newEntries as $new) {
+            $existingEntries->filter(function ($entry) use ($comparables, $new, $map) {
+                foreach ($comparables as $comp) {
+                    if ($entry->$comp != $new->$comp) {
+                        return;
+                    }
+                }
+
+                $this->$map[$new->id] = $entry->id;
+            });
         }
     }
 
