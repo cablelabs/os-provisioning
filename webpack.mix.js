@@ -58,7 +58,7 @@ mix.js('resources/js/app.js', 'public/js')
 
   // compress
   mix.compress({
-    productionOnly: false,
+    productionOnly: true,
   });
 
   // extract
