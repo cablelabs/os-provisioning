@@ -77,6 +77,27 @@ return [
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
+        // nms import
+        env('NMS_IMPORT_DB', 'nms-import') => [
+            'driver'    => env('NMS_IMPORT_DRIVER', 'mysql'),
+            'read'      => [
+                'host'      => explode(',', str_replace(' ', '', 'localhost')),
+            ],
+            'write'      => [
+                'host'      => explode(',', str_replace(' ', '', 'localhost')),
+            ],
+            'sticky' => true,
+            'database'  => env('NMS_IMPORT_DB', 'nms-import'),
+            'username'  => env('NMS_IMPORT_DB_USERNAME', 'root'),
+            'password' => env('NMS_IMPORT_DB_PASSWORD', ''),
+            'unix_socket' => env('NMS_IMPORT_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
+        ],
+
         // A mysql root connection
         // @NOTE: This could be useful when running special cmds on SQL table
         //       where advanced permissions are required.
