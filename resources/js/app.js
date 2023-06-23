@@ -31,13 +31,6 @@ import 'datatables.net-select-bs4'
 import 'datatables.net-buttons-bs4'
 import 'datatables.net-responsive'
 
-// pdfMaker
-import pdfMake from 'pdfmake/build/pdfmake'
-import pdfFonts from 'pdfmake/build/vfs_fonts'
-
-// jsZip
-import * as JSZip from 'jszip'
-
 // Panzoom
 import Panzoom from '@panzoom/panzoom'
 window.Panzoom = Panzoom
@@ -82,9 +75,6 @@ if (document.getElementById('sidebar')) {
     .component('select2', select2Component)
     .component('SidebarSelect2', SidebarSelect2Component)
     .mount('#sidebar')
-
-  pdfMake.vfs = pdfFonts.pdfMake.vfs
-  window.JSZip = JSZip
 }
 
 // right sidebar
