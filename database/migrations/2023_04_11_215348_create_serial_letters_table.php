@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
-    protected $tablename = 'document';
+    protected $tablename = 'serial_letters';
 
     /**
      * Run the migrations.
@@ -32,7 +32,7 @@ return new class extends BaseMigration
      */
     public function up()
     {
-        Schema::create('serial_letters', function (Blueprint $table) {
+        Schema::create($this->tablename, function (Blueprint $table) {
             $this->up_table_generic($table);
             $table->foreignId('template_id');
             $table->string('name');
@@ -50,6 +50,6 @@ return new class extends BaseMigration
      */
     public function down()
     {
-        Schema::dropIfExists('serial_letters');
+        Schema::dropIfExists($this->tablename);
     }
 };
