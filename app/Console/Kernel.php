@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \Modules\ProvBase\Console\ImportNmsCommand::class,
     ];
 
     /**
