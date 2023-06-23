@@ -222,24 +222,14 @@ class ImportNmsCommand extends Command
 
         // get existing numbers
         // select number from contract where deleted_at is null and (contract_end >= CURDATE() or contract_end is null or contract_end='0000-00-00');
-        $numbers = Contract::where(function ($query) {
-            $query
-                ->where('contract.contract_end', '>=', now())
-                ->orWhere('contract.contract_end', '0000-00-00')
-                ->orWhereNull('contract.contract_end');
-        })
+        $numbers = Contract::where(whereLaterOrEqual('contract_end', now()))
             ->whereNull('deleted_at')
             ->pluck('number');
 
         // check for relations in options
         $newContracts = Contract::on($this->argument('systemName'))
             ->whereNotIn('number', $numbers)
-            ->where(function ($query) {
-                $query
-                    ->where('contract.contract_end', '>=', now())
-                    ->orWhere('contract.contract_end', '0000-00-00')
-                    ->orWhereNull('contract.contract_end');
-            })
+            ->where(whereLaterOrEqual('contract_end', now()))
             ->with([
                 'items',
                 'items.product',
@@ -424,12 +414,7 @@ class ImportNmsCommand extends Command
     public function logDuplicateContracts($existingNumbers)
     {
         $numbersToImport = Contract::on($this->argument('systemName'))
-        ->where(function ($query) {
-            $query
-                ->where('contract.contract_end', '>=', now())
-                ->orWhere('contract.contract_end', '0000-00-00')
-                ->orWhereNull('contract.contract_end');
-        })
+            ->where(whereLaterOrEqual('contract_end', now()))
             ->pluck('number');
 
         $duplicates = $existingNumbers->filter(function ($existingNumber) use ($numbersToImport) {
