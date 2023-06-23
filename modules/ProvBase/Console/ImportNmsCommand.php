@@ -188,57 +188,7 @@ class ImportNmsCommand extends Command
      */
     public function handle()
     {
-        $this->createMappingFor(
-            'qosMap',
-            Qos::on($this->argument('systemName'))
-                ->where('deleted_at', null)
-                ->get(),
-            Qos::all(),
-            'ds_rate_max',
-            'us_rate_max'
-        );
-
-        $this->createMappingFor(
-            'productMap',
-            Product::on($this->argument('systemName'))
-                ->where('deleted_at', null)
-                ->get(),
-            Product::all(),
-            'products',
-            'price',
-            'type',
-            'billing_cycle'
-        );
-
-        $this->createMappingFor(
-            'ticketTypeMap',
-            TicketType::on($this->argument('systemName'))
-                ->where('deleted_at', null)
-                ->get(),
-            TicketType::all(),
-            'name',
-            'description'
-        );
-
-        if ($this->option('configfileMap')) {
-            $this->createMappingFor(
-                'configfileMap',
-                Configfile::on($this->argument('systemName'))
-                    ->where('deleted_at', null)
-                    ->get(),
-                Configfile::all(),
-                'text',
-                'device',
-                'public'
-            );
-        } else {
-            // for dev purpose
-            $this->mapConfigfiles(
-                Configfile::on($this->argument('systemName'))
-                    ->where('deleted_at', null)
-                    ->get()
-            );
-        }
+        $this->createMapping();
 
         // get existing numbers
         // select number from contract where deleted_at is null and (contract_end >= CURDATE() or contract_end is null or contract_end='0000-00-00');
@@ -351,6 +301,61 @@ class ImportNmsCommand extends Command
     private function getAttributesWithoutId($model)
     {
         return Arr::except($model->getAttributes(), ['id']);
+    }
+
+    private function createMapping()
+    {
+        $this->createMappingFor(
+            'qosMap',
+            Qos::on($this->argument('systemName'))
+            ->where('deleted_at', null)
+                ->get(),
+            Qos::all(),
+            'ds_rate_max',
+            'us_rate_max'
+        );
+
+        $this->createMappingFor(
+            'productMap',
+            Product::on($this->argument('systemName'))
+            ->where('deleted_at', null)
+                ->get(),
+            Product::all(),
+            'products',
+            'price',
+            'type',
+            'billing_cycle'
+        );
+
+        $this->createMappingFor(
+            'ticketTypeMap',
+            TicketType::on($this->argument('systemName'))
+            ->where('deleted_at', null)
+                ->get(),
+            TicketType::all(),
+            'name',
+            'description'
+        );
+
+        if ($this->option('configfileMap')) {
+            $this->createMappingFor(
+                'configfileMap',
+                Configfile::on($this->argument('systemName'))
+                ->where('deleted_at', null)
+                    ->get(),
+                Configfile::all(),
+                'text',
+                'device',
+                'public'
+            );
+        } else {
+            // for dev purpose
+            $this->mapConfigfiles(
+                Configfile::on($this->argument('systemName'))
+                ->where('deleted_at', null)
+                    ->get()
+            );
+        }
     }
 
     private function createMappingFor($map, $newEntries, $existingEntries, ...$comparables)
