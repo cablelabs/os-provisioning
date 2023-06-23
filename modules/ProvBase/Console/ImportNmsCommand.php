@@ -146,6 +146,26 @@ class ImportNmsCommand extends Command
      */
     protected $output;
 
+    protected $contractBar;
+
+    protected $itemBar;
+
+    protected $modemBar;
+
+    protected $mtaBar;
+
+    protected $phonenumberBar;
+
+    protected $sepaBar;
+
+    protected $settlementrunBar;
+
+    protected $invoiceBar;
+
+    protected $ticketBar;
+
+    protected $ticketTypeBar;
+
     /**
      * Create a new command instance.
      *
@@ -259,79 +279,33 @@ class ImportNmsCommand extends Command
             $numbers
         );
 
-        // use Symfony ProgressBar otherwise the bars will overwrite each other
-        ProgressBar::setFormatDefinition('custom', ' %current%/%max% [%bar%] %message% %percent:3s%% , %elapsed:6s% , %estimated:-6s% , %memory:6s%');
-        $this->output = new ConsoleOutput();
-
-        $contractBar = $this->createProgressBar(
-            count($newContracts),
-            'Contracts'
-        );
-
-        $itemBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                return $contract->items_count;
-            }),
-            'Items'
-        );
-
-        $modemBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                return $contract->modems_count;
-            }),
-            'Modems'
-        );
-
-        $mtaBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                return $contract->mtas_count;
-            }),
-            'Mtas'
-        );
-
-        $phonenumberBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                $mtas = $contract->mtas()->get();
-                if ($mtas->isNotEmpty()) {
-                    return $mtas->sum(function ($mta) {
-                        return count($mta->phonenumbers);
-                    });
-                }
-            }),
-            'Phonenumbers + Phonenumbermanagement'
-        );
-
-        $sepaBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                return $contract->sepamandates_count;
-            }),
-            'SepaMandates'
-        );
-
         $newSettlementRuns = SettlementRun::on($this->argument('systemName'))
             ->whereNull('deleted_at')
             // TODO: check for settlementrun instead of invoice creation
             ->where('executed_at', '>=', $this->option('invoices'))
             ->get();
-        $settlementrunBar = $this->createProgressBar(
-            $newSettlementRuns->count(),
-            'SettlementRuns'
-        );
 
-        $invoiceBar = $this->createProgressBar(
-            $newContracts->sum(function ($contract) {
-                return $contract->invoices_count;
-            }),
-            'Invoices'
-        );
+        $ticketTypes = TicketType::on($this->argument('systemName'))
+            ->whereNull('deleted_at')
+            ->get();
+
+        $tickets = Ticket::on($this->argument('systemName'))
+            ->whereNull('deleted_at')
+            ->where('state', '!=', 'Closed')
+            ->where('ticketable_type', Contract::class)
+            ->whereNotIn('ticketable_id', $numbers)
+            ->with('user')
+            ->get();
+
+        $this->createAllProgressBars($newContracts, $newSettlementRuns, $ticketTypes);
 
         if ($newSettlementRuns) {
-            $this->addSettlementRuns($newSettlementRuns, $settlementrunBar);
+            $this->addSettlementRuns($newSettlementRuns);
         }
 
         foreach ($newContracts as $contractToImport) {
             $contract = $this->addContract($contractToImport);
-            $contractBar->advance();
+            $this->contractBar->advance();
 
             if (! $contract) {
                 continue;
@@ -340,34 +314,34 @@ class ImportNmsCommand extends Command
             if (! $contractToImport->invoices->isEmpty()) {
                 $progress = $this->addInvoices($contractToImport, $contract);
                 $contract = $progress[0];
-                $invoiceBar->advance($progress[1]);
+                $this->invoiceBar->advance($progress[1]);
             }
 
             if (! $contractToImport->items->isEmpty()) {
                 $progress = $this->addItems($contractToImport, $contract);
                 $contract = $progress[0];
-                $itemBar->advance($progress[1]);
+                $this->itemBar->advance($progress[1]);
             }
 
             if (! $contractToImport->modems->isEmpty()) {
                 $progress = $this->addModems($contractToImport, $contract);
                 $contract = $progress[0];
-                $modemBar->advance($progress[1]);
-                $mtaBar->advance($progress[2]);
-                $phonenumberBar->advance($progress[3]);
+                $this->modemBar->advance($progress[1]);
+                $this->mtaBar->advance($progress[2]);
+                $this->phonenumberBar->advance($progress[3]);
             }
 
             if (! $contractToImport->sepamandates->isEmpty()) {
                 $progress = $this->addSepas($contractToImport, $contract);
                 $contract = $progress[0];
-                $sepaBar->advance($progress[1]);
+                $this->sepaBar->advance($progress[1]);
             }
 
             $contract->push();
         }
 
-        $this->addTicketTypes();
-        $this->addActiveTickets($numbers);
+        $this->addTicketTypes($ticketTypes);
+        $this->addActiveTickets($tickets);
 
         $this->printImportantInformation();
 
@@ -401,6 +375,75 @@ class ImportNmsCommand extends Command
                 $this->$map[$new->id] = $entry->id;
             });
         }
+    }
+
+    private function createAllProgressBars($newContracts, $settlementRuns, $ticketTypes)
+    {
+        // use Symfony ProgressBar otherwise the bars will overwrite each other
+        ProgressBar::setFormatDefinition('custom', ' %current%/%max% [%bar%] %message% %percent:3s%% , %elapsed:6s% , %estimated:-6s% , %memory:6s%');
+        $this->output = new ConsoleOutput();
+
+        $this->contractBar = $this->createProgressBar(
+            count($newContracts),
+            'Contracts'
+        );
+
+        $this->itemBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                return $contract->items_count;
+            }),
+            'Items'
+        );
+
+        $this->modemBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                return $contract->modems_count;
+            }),
+            'Modems'
+        );
+
+        $this->mtaBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                return $contract->mtas_count;
+            }),
+            'Mtas'
+        );
+
+        $this->phonenumberBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                $mtas = $contract->mtas()->get();
+                if ($mtas->isNotEmpty()) {
+                    return $mtas->sum(function ($mta) {
+                        return count($mta->phonenumbers);
+                    });
+                }
+            }),
+            'Phonenumbers + Phonenumbermanagement'
+        );
+
+        $this->sepaBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                return $contract->sepamandates_count;
+            }),
+            'SepaMandates'
+        );
+
+        $this->settlementrunBar = $this->createProgressBar(
+            $settlementRuns->count(),
+            'SettlementRuns'
+        );
+
+        $this->invoiceBar = $this->createProgressBar(
+            $newContracts->sum(function ($contract) {
+                return $contract->invoices_count;
+            }),
+            'Invoices'
+        );
+
+        $this->ticketTypeBar = $this->createProgressBar(
+            count($ticketTypes),
+            'Ticket Types'
+        );
     }
 
     private function createProgressBar($count, $name)
@@ -581,7 +624,7 @@ class ImportNmsCommand extends Command
         return [$contract, count($sepas)];
     }
 
-    private function addSettlementruns($settlementRuns, $settlementrunBar)
+    private function addSettlementruns($settlementRuns)
     {
         foreach ($settlementRuns as $sr) {
             $newSettlementRun = new SettlementRun($this->getAttributesWithoutId($sr));
@@ -591,7 +634,7 @@ class ImportNmsCommand extends Command
 
             $this->settlementrunMap[$sr->id] = $newSettlementRun->id;
 
-            $settlementrunBar->advance();
+            $this->settlementrunBar->advance();
         }
     }
 
@@ -612,42 +655,20 @@ class ImportNmsCommand extends Command
         return [$contract, count($invoices)];
     }
 
-    private function addTicketTypes()
+    private function addTicketTypes($ticketTypes)
     {
-        $ticketTypes = TicketType::on($this->argument('systemName'))
-            ->whereNull('deleted_at')
-            ->get();
-
-        $ticketTypeBar = $this->createProgressBar(
-            count($ticketTypes),
-            'Ticket Types'
-        );
-
         foreach ($ticketTypes as $ticketType) {
             $newTicketType = new TicketType($this->getAttributesWithoutId($ticketType));
             $newTicketType->updated_at = now();
             $newTicketType->parent_id = $ticketType->parent_id ? $this->ticketTypeMap[$ticketType->parent_id] : null;
             $newTicketType->save();
 
-            $ticketTypeBar->advance();
+            $this->ticketTypeBar->advance();
         }
     }
 
-    private function addActiveTickets($numbers)
+    private function addActiveTickets($tickets)
     {
-        $tickets = Ticket::on($this->argument('systemName'))
-            ->whereNull('deleted_at')
-            ->where('state', '!=', 'Closed')
-            ->where('ticketable_type', Contract::class)
-            ->whereNotIn('ticketable_id', $numbers)
-            ->with('user')
-            ->get();
-
-        $ticketBar = $this->createProgressBar(
-            count($tickets),
-            'Tickets'
-        );
-
         $users = User::where('deleted_at', null)
             ->pluck('id', 'email');
 
@@ -657,7 +678,7 @@ class ImportNmsCommand extends Command
                 $fyi[] = $message;
                 Log::warning($message);
 
-                $ticketBar->advance();
+                $this->ticketBar->advance();
 
                 continue;
             }
@@ -679,7 +700,7 @@ class ImportNmsCommand extends Command
 
             $newTicket->save();
 
-            $ticketBar->advance();
+            $this->ticketBar->advance();
         }
     }
 
