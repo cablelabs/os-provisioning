@@ -359,7 +359,7 @@ function clearFailedJobs($command = 'all')
 /**
  * Format date string dependent of set locale language
  *
- * @param $date
+ * @param  $date
  * @return false|int|string
  */
 function langDateFormat($date)
@@ -742,8 +742,9 @@ function sanitizeHtml(string $content, array $tags = ['script'], array $attribut
         protected function cleanup(): self
         {
             //Takes care of nested tags as well
-            $tagWithContentPattern = function(string $tag){
+            $tagWithContentPattern = function (string $tag) {
                 $tag = preg_quote($tag);
+
                 return '/<\s*'.$tag.'\b[^<]*(?:(?!<\/'.$tag.'>)<[^<]*)*<\/'.$tag.'>/i';
             };
 
@@ -752,7 +753,7 @@ function sanitizeHtml(string $content, array $tags = ['script'], array $attribut
             }
 
             //Takes care of double(\x22) and single(\x27) quotes
-            $attributeWithContentPattern = fn(string $attribute) => '/'.preg_quote($attribute).'\s*=\s*([\x22\x27])([\s\S]*?)\1/i';
+            $attributeWithContentPattern = fn (string $attribute) => '/'.preg_quote($attribute).'\s*=\s*([\x22\x27])([\s\S]*?)\1/i';
             foreach ($this->attributes as $attribute) {
                 $this->content = preg_replace($attributeWithContentPattern($attribute), '', $this->content);
             }

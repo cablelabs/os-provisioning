@@ -17,8 +17,8 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends BaseMigration
 {
@@ -35,7 +35,7 @@ return new class extends BaseMigration
         Schema::table($this->tablename, function (Blueprint $table) {
             $table->string('name')->nullable()->change();
             $table->dropColumn('job_batch_progress');
-            $table->renameColumn('job_batch_status','status');
+            $table->renameColumn('job_batch_status', 'status');
         });
     }
 
@@ -48,7 +48,7 @@ return new class extends BaseMigration
     {
         Schema::table($this->tablename, function (Blueprint $table) {
             $table->tinyInteger('job_batch_progress')->default(0);
-            $table->renameColumn('status','job_batch_status');
+            $table->renameColumn('status', 'job_batch_status');
         });
     }
 };

@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobBatch extends Model
 {
-
     protected $table = 'job_batches';
 
     protected $keyType = 'string';
@@ -58,7 +57,7 @@ class JobBatch extends Model
 
     public function finished(): bool
     {
-        return !is_null($this->finished_at);
+        return ! is_null($this->finished_at);
     }
 
     public function hasFailures(): bool
@@ -73,7 +72,6 @@ class JobBatch extends Model
 
     public function cancelled(): bool
     {
-        return !is_null($this->cancelled_at);
+        return ! is_null($this->cancelled_at);
     }
-
 }
