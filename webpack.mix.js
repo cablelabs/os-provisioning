@@ -41,6 +41,20 @@ mix.js('resources/js/app.js', 'public/js')
   .copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
   .copy('node_modules/pdfmake/build/pdfmake.min.js', 'public/js/pdfmake.min.js')
   .copy('node_modules/pdfmake/build/vfs_fonts.js', 'public/js/vfs_fonts.js')
+  .copy([
+    'node_modules/leaflet/dist/leaflet.js',
+    'node_modules/leaflet-draw/dist/leaflet.draw.js',
+    'node_modules/pixi.js/dist/pixi.js',
+    'node_modules/leaflet-pixi-overlay/L.PixiOverlay.js',
+    'node_modules/leaflet.gridlayer.googlemutant/dist/Leaflet.GoogleMutant.js',
+  ], 'public/js/leaflet/')
+  .copy([
+    'node_modules/leaflet/dist/leaflet.css',
+    'node_modules/leaflet-draw/dist/leaflet.draw.css',
+  ], 'public/css/leaflet/')
+  .copy([
+    'node_modules/leaflet-draw/dist/images',
+  ], 'public/css/leaflet/images');
 
   // compress
   mix.compress({
