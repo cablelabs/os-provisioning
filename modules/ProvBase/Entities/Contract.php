@@ -589,6 +589,11 @@ class Contract extends \BaseModel
         return $this->hasMany(\Modules\ProvVoipEnvia\Entities\EnviaOrder::class)->where('ordertype', 'NOT LIKE', 'order/create_attachment');
     }
 
+    public function mtas()
+    {
+        return $this->hasManyThrough(\Modules\ProvVoip\Entities\Mta::class, \Modules\ProvBase\Entities\Modem::class);
+    }
+
     public function items()
     {
         return $this->hasMany(\Modules\BillingBase\Entities\Item::class);
