@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 const path = require('path')
+require('laravel-mix-compress');
 
 /*
  |--------------------------------------------------------------------------
@@ -33,12 +34,18 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
-  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css')
-  .copy('node_modules/jstree/dist/themes/default/style.min.css', 'public/css/jstree/style.min.css')
-  .copy('node_modules/jstree/dist/themes/default/throbber.gif', 'public/css/jstree/throbber.gif')
-  .copy('node_modules/jstree/dist/themes/default/32px.png', 'public/css/jstree/32px.png')
-  .copy('node_modules/jstree/dist/themes/default/40px.png', 'public/css/jstree/40px.png')
+  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
+
+  // copy from node_modules do public
+  mix.copyDirectory('node_modules/jstree/dist/themes/default/', 'public/css/jstree/')
   .copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
   .copy('node_modules/pdfmake/build/pdfmake.min.js', 'public/js/pdfmake.min.js')
   .copy('node_modules/pdfmake/build/vfs_fonts.js', 'public/js/vfs_fonts.js')
-  .extract()
+
+  // compress
+  mix.compress({
+    productionOnly: false,
+  });
+
+  // extract
+  mix.extract();
