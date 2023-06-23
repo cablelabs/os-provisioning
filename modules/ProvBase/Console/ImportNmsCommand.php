@@ -369,6 +369,8 @@ class ImportNmsCommand extends Command
         $this->addTicketTypes();
         $this->addActiveTickets($numbers);
 
+        $this->printImportantInformation();
+
         $this->callObservers();
     }
 
@@ -456,6 +458,9 @@ class ImportNmsCommand extends Command
         $items = [];
         foreach ($contractToImport->items as $item) {
             if (! array_key_exists($item->product_id, $this->productMap)) {
+                $message = "Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('productMap')}";
+                $this->fyi[] = $message;
+                Log::warning($message);
                 continue;
             }
 
@@ -678,11 +683,15 @@ class ImportNmsCommand extends Command
         }
     }
 
-    private function callObservers()
+    private function printImportantInformation()
     {
         foreach ($this->fyi as $line) {
             $this->line($line);
         }
+    }
+
+    private function callObservers()
+    {
         // TODO call observers
         // TODO also copy all invoices somehow
     }
