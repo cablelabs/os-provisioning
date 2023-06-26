@@ -134,7 +134,7 @@ var prepareLivewireData = function (node){
             component.tearDown()
 
             /**
-            * Brining the livewire component to initial state won't make Livewire to re-initialize
+            * Bringing the livewire component to initial state won't make Livewire to re-initialize
             * it again. Livewire stores all the components' references (by ID from wire:id)
             * inside an internal Store (object). By default, we don't have
             * any helper/function from Livewire to delete that.
