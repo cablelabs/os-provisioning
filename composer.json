@@ -53,7 +53,7 @@
             "Database\\Migrations\\": "database/migrations/"
         },
         "files": [
-            "app/helpers.php"
+            "app/Utilities/helpers.php"
         ]
     },
     "autoload-dev": {
