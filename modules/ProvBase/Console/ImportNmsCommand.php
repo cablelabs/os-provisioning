@@ -224,37 +224,15 @@ class ImportNmsCommand extends Command
 
         foreach ($newContracts as $contractToImport) {
             $contract = $this->addContract($contractToImport);
-            $this->contractBar->advance();
 
             if (! $contract) {
                 continue;
             }
 
-            if (! $contractToImport->invoices->isEmpty()) {
-                $progress = $this->addInvoices($contractToImport, $contract);
-                $contract = $progress[0];
-                $this->invoiceBar->advance($progress[1]);
-            }
-
-            if (! $contractToImport->items->isEmpty()) {
-                $progress = $this->addItems($contractToImport, $contract);
-                $contract = $progress[0];
-                $this->itemBar->advance($progress[1]);
-            }
-
-            if (! $contractToImport->modems->isEmpty()) {
-                $progress = $this->addModems($contractToImport, $contract);
-                $contract = $progress[0];
-                $this->modemBar->advance($progress[1]);
-                $this->mtaBar->advance($progress[2]);
-                $this->phonenumberBar->advance($progress[3]);
-            }
-
-            if (! $contractToImport->sepamandates->isEmpty()) {
-                $progress = $this->addSepas($contractToImport, $contract);
-                $contract = $progress[0];
-                $this->sepaBar->advance($progress[1]);
-            }
+            $contract = $this->addInvoices($contractToImport, $contract);
+            $contract = $this->addItems($contractToImport, $contract);
+            $contract = $this->addModems($contractToImport, $contract);
+            $contract = $this->addSepas($contractToImport, $contract);
 
             $contract->push();
         }
@@ -498,11 +476,17 @@ class ImportNmsCommand extends Command
         $contract->save();
         $this->contractMap[$contractToImport->id] = $contract->id;
 
+        $this->contractBar->advance();
+
         return $contract;
     }
 
     private function addItems($contractToImport, $contract)
     {
+        if ($contractToImport->items->isEmpty()) {
+            return $contract;
+        }
+
         $items = [];
         foreach ($contractToImport->items as $item) {
             if (! array_key_exists($item->product_id, $this->productMap)) {
@@ -527,11 +511,17 @@ class ImportNmsCommand extends Command
         //     $items,
         // );
 
-        return [$contract, count($items)];
+        $this->itemBar->advance(count($items));
+
+        return $contract;
     }
 
     private function addModems($contractToImport, $contract)
     {
+        if ($contractToImport->modems->isEmpty()) {
+            return $contract;
+        }
+
         $modems = [];
         foreach ($contractToImport->modems as $modem) {
             $newModem = new Modem($this->getAttributesWithoutId($modem));
@@ -565,7 +555,11 @@ class ImportNmsCommand extends Command
             $phonenumberCount += count($phonenumbers);
         }
 
-        return [$contract, count($modems), $mtaCount, $phonenumberCount];
+        $this->modemBar->advance(count($modems));
+        $this->mtaBar->advance($mtaCount);
+        $this->phonenumberBar->advance($phonenumberCount);
+
+        return $contract;
     }
 
     private function addMtas($mta, $modem)
@@ -615,6 +609,10 @@ class ImportNmsCommand extends Command
 
     private function addSepas($contractToImport, $contract)
     {
+        if ($contractToImport->sepamandates->isEmpty()) {
+            return $contract;
+        }
+
         $sepas = [];
         foreach ($contractToImport->sepamandates as $sepa) {
             $newSepa = new SepaMandate($this->getAttributesWithoutId($sepa));
@@ -626,7 +624,9 @@ class ImportNmsCommand extends Command
             $sepas,
         );
 
-        return [$contract, count($sepas)];
+        $this->sepaBar->advance(count($sepas));
+
+        return $contract;
     }
 
     private function addSettlementruns($settlementRuns)
@@ -645,6 +645,10 @@ class ImportNmsCommand extends Command
 
     private function addInvoices($contractToImport, $contract)
     {
+        if ($contractToImport->invoices->isEmpty()) {
+            return $contract;
+        }
+
         $invoices = [];
         foreach ($contractToImport->invoices as $invoice) {
             $newInvoice = new Invoice(Arr::except($invoice->getAttributes(), ['id']));
@@ -657,7 +661,9 @@ class ImportNmsCommand extends Command
             $invoices[] = $newInvoice;
         }
 
-        return [$contract, count($invoices)];
+        $this->invoiceBar->advance(count($invoices));
+
+        return $contract;
     }
 
     private function addTicketTypes($ticketTypes)
