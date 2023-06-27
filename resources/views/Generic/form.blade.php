@@ -56,7 +56,7 @@
             @endif
             <div class="text-center">
                 <button type="submit" class="btn btn-primary m-r-5 m-t-15" style="simple" name="_save" value="1" title="{{ $button_title }}">
-                    <i class="fa fa-save fa-lg m-r-10" aria-hidden="true"></i>
+                    <i class="fa fa-{{ $save_button_icon }} fa-lg m-r-10" aria-hidden="true"></i>
                     {{ \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') }}
                 </button>
             </div>

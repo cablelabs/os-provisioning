@@ -51,6 +51,7 @@ class BaseController extends Controller
      */
     protected $edit_view_save_button = true;
     protected $save_button_name = 'Save';
+    protected $save_button_icon = 'save';
     // key in messages language file
     protected $save_button_title_key = null;
 
@@ -561,6 +562,7 @@ class BaseController extends Controller
 
         $a['edit_view_save_button'] = $this->edit_view_save_button;
         $a['save_button_name'] = $this->save_button_name;
+        $a['save_button_icon'] = $this->save_button_icon;
         $a['second_button_name'] = $this->second_button_name;
         $a['edit_view_second_button'] = $this->edit_view_second_button;
         $a['second_button_title_key'] = $this->second_button_title_key;
