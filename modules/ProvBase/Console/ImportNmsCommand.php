@@ -196,38 +196,7 @@ class ImportNmsCommand extends Command
             ->whereNull('deleted_at')
             ->pluck('number');
 
-        // check for relations in options
-        $newContracts = Contract::on($this->argument('systemName'))
-            ->whereNotIn('number', $numbers)
-            ->where(whereLaterOrEqual('contract_end', now()))
-            ->with([
-                'items',
-                'items.product',
-                'modems',
-                'modems.mtas',
-                'sepamandates',
-                'modems.mtas.phonenumbers',
-                'modems.mtas.phonenumbers.phonenumbermanagement',
-                'invoices' => function ($query) {
-                    $query->whereNull('deleted_at')
-                        ->where('created_at', '>=', $this->option('invoices'));
-                },
-            ])
-            ->withCount([
-                'items',
-                'modems',
-                'mtas',
-                'sepamandates',
-                'invoices' => function ($query) {
-                    $query->whereNull('deleted_at')
-                        ->where('created_at', '>=', $this->option('invoices'));
-                },
-            ])
-            ->get();
-
-        $this->logDuplicateContracts(
-            $numbers
-        );
+        $newContracts = $this->removeDuplicateContracts($numbers);
 
         $newSettlementRuns = SettlementRun::on($this->argument('systemName'))
             ->whereNull('deleted_at')
@@ -461,8 +430,37 @@ class ImportNmsCommand extends Command
         return $bar;
     }
 
-    public function logDuplicateContracts($existingNumbers)
+    public function removeDuplicateContracts($existingNumbers)
     {
+        // check for relations in options
+        $newContracts = Contract::on($this->argument('systemName'))
+        ->whereNotIn('number', $existingNumbers)
+            ->where(whereLaterOrEqual('contract.contract_end', now()))
+            ->with([
+                'items',
+                'items.product',
+                'modems',
+                'modems.mtas',
+                'sepamandates',
+                'modems.mtas.phonenumbers',
+                'modems.mtas.phonenumbers.phonenumbermanagement',
+                'invoices' => function ($query) {
+                    $query->whereNull('deleted_at')
+                    ->where('created_at', '>=', $this->option('invoices'));
+                },
+            ])
+            ->withCount([
+                'items',
+                'modems',
+                'mtas',
+                'sepamandates',
+                'invoices' => function ($query) {
+                    $query->whereNull('deleted_at')
+                    ->where('created_at', '>=', $this->option('invoices'));
+                },
+            ])
+            ->get();
+
         $numbersToImport = Contract::on($this->argument('systemName'))
             ->where(whereLaterOrEqual('contract_end', now()))
             ->pluck('number');
@@ -476,6 +474,8 @@ class ImportNmsCommand extends Command
             Log::warning($message);
             $fyi[] = $message;
         }
+
+        return $newContracts;
     }
 
     // TODO: add prompt to ask if the user wants to execute this command
