@@ -625,7 +625,7 @@ class ImportNmsCommand extends Command
         } else {
             $message = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
             $fyi[] = $message;
-            Log::warning($message);
+            Log::info($message);
         }
     }
 
