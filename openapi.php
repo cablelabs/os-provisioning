@@ -2,11 +2,10 @@
 
 // to be executed as a tinker script
 
-$apiRoutes = array_filter(array_map(function ($route) {
-    return str_replace('/v{ver}/', '/v0/', $route->uri);
-}, (array) Route::getRoutes()->getIterator()), function ($route) {
-    return Str::contains($route, 'api/v');
-});
+$apiRoutes = collect(Route::getRoutes()->getIterator())
+    ->filter(fn ($route) => Str::contains($route->uri, 'api/v'))
+    ->map(fn ($route) => Str::replaceFirst('/v{ver}/', '/v0/', $route->uri))
+    ->sort(SORT_NATURAL | SORT_FLAG_CASE);
 
 $base = 'https://localhost:8080';
 $user = 'root@localhost.com';
