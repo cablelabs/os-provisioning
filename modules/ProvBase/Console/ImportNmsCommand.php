@@ -289,21 +289,24 @@ class ImportNmsCommand extends Command
             $this->createMappingFor(
                 'configfileMap',
                 Configfile::on($this->argument('systemName'))
-                ->where('deleted_at', null)
+                    ->whereNull('deleted_at')
                     ->get(),
                 Configfile::all(),
                 'text',
                 'device',
                 'public'
             );
-        } else {
+        }
+        /*
+        else {
             // for dev purpose
             $this->mapConfigfiles(
                 Configfile::on($this->argument('systemName'))
-                ->where('deleted_at', null)
+                    ->where('deleted_at', null)
                     ->get()
             );
         }
+        */
     }
 
     private function createMappingFor($map, $newEntries, $existingEntries, ...$comparables)
@@ -416,18 +419,32 @@ class ImportNmsCommand extends Command
         ->whereNotIn('number', $existingNumbers)
             ->where(whereLaterOrEqual('contract.contract_end', now()))
             ->with([
-                'items',
-                'items.product',
-                'modems',
-                'modems.mtas',
-                'sepamandates',
-                'modems.mtas.phonenumbers',
-                'modems.mtas.phonenumbers.phonenumbermanagement',
+                'items' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'items.product' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'sepamandates' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas.phonenumbers' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas.phonenumbers.phonenumbermanagement' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
                 'invoices' => function ($query) {
                     $query->whereNull('deleted_at')
-                    ->where('created_at', '>=', $this->option('invoices'))
-                    ->where('year', '>=', Str::before($this->option('invoices'), '-'))
-                    ->where('month', '>=' , Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
+                        ->where('created_at', '>=', $this->option('invoices'))
+                        ->where('year', '>=', Str::before($this->option('invoices'), '-'))
+                        ->where('month', '>=' , Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
                 },
             ])
             ->withCount([
@@ -435,10 +452,7 @@ class ImportNmsCommand extends Command
                 'modems',
                 'mtas',
                 'sepamandates',
-                'invoices' => function ($query) {
-                    $query->whereNull('deleted_at')
-                    ->where('created_at', '>=', $this->option('invoices'));
-                },
+                'invoices',
             ])
             ->get();
 
