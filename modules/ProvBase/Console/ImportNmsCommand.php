@@ -21,6 +21,7 @@ namespace Modules\ProvBase\Console;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Log;
 use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\Item;
@@ -424,7 +425,9 @@ class ImportNmsCommand extends Command
                 'modems.mtas.phonenumbers.phonenumbermanagement',
                 'invoices' => function ($query) {
                     $query->whereNull('deleted_at')
-                    ->where('created_at', '>=', $this->option('invoices'));
+                    ->where('created_at', '>=', $this->option('invoices'))
+                    ->where('year', '>=', Str::before($this->option('invoices'), '-'))
+                    ->where('month', '>=' , Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
                 },
             ])
             ->withCount([
