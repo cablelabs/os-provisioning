@@ -205,11 +205,11 @@ class ImportNmsCommand extends Command
             ->where('executed_at', '>=', $this->option('invoices'))
             ->get();
 
-        $ticketTypes = TicketType::on($this->argument('systemName'))
+        $newTicketTypes = TicketType::on($this->argument('systemName'))
             ->whereNull('deleted_at')
             ->get();
 
-        $tickets = Ticket::on($this->argument('systemName'))
+        $newTickets = Ticket::on($this->argument('systemName'))
             ->whereNull('deleted_at')
             ->where('state', '!=', 'Closed')
             ->where('ticketable_type', Contract::class)
@@ -217,7 +217,7 @@ class ImportNmsCommand extends Command
             ->with('user')
             ->get();
 
-        $this->createAllProgressBars($newContracts, $newSettlementRuns, $ticketTypes);
+        $this->createAllProgressBars($newContracts, $newSettlementRuns, $newTicketTypes, $newTickets);
 
         if ($newSettlementRuns) {
             $this->addSettlementRuns($newSettlementRuns);
@@ -238,8 +238,8 @@ class ImportNmsCommand extends Command
             $contract->push();
         }
 
-        $this->addTicketTypes($ticketTypes);
-        $this->addActiveTickets($tickets);
+        $this->addTicketTypes($newTicketTypes);
+        $this->addActiveTickets($newTickets);
 
         $this->printImportantInformation();
 
@@ -333,7 +333,7 @@ class ImportNmsCommand extends Command
         }
     }
 
-    private function createAllProgressBars($newContracts, $settlementRuns, $ticketTypes)
+    private function createAllProgressBars($newContracts, $settlementRuns, $ticketTypes, $tickets)
     {
         // use Symfony ProgressBar otherwise the bars will overwrite each other
         ProgressBar::setFormatDefinition('custom', ' %current%/%max% [%bar%] %message% %percent:3s%% , %elapsed:6s% , %estimated:-6s% , %memory:6s%');
@@ -400,6 +400,11 @@ class ImportNmsCommand extends Command
             count($ticketTypes),
             'Ticket Types'
         );
+
+        $this->ticketBar = $this->createProgressBar(
+            count($tickets),
+            'Tickets'
+        );
     }
 
     private function createProgressBar($count, $name)
@@ -416,7 +421,7 @@ class ImportNmsCommand extends Command
     {
         // check for relations in options
         $newContracts = Contract::on($this->argument('systemName'))
-        ->whereNotIn('number', $existingNumbers)
+            ->whereNotIn('number', $existingNumbers)
             ->where(whereLaterOrEqual('contract.contract_end', now()))
             ->with([
                 'items' => function ($query) {
