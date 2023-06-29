@@ -1181,3 +1181,8 @@ table.dataTable > tbody > tr.selected > * {
 .show {
     opacity: 1;
 }
+
+.stats-summary-select > .select2-selection__rendered {
+    font-size: 13px !important;
+    min-width: 120px;
+}
