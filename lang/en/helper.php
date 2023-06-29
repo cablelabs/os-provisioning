@@ -229,6 +229,6 @@ return [
      */
     'statisticsQuery' => [
         'upsell' => 'Include product upsell: Includes existing customers who have purchased another product/tariff change',
-        'auto' => 'The cron string to automatically retrieve statistic repetetive. refer to: www.crontab.guru',
+        'auto' => 'The cron string to automatically retrieve the statistic repetetive. Format: minute hour day month weekday. Refer to: www.crontab.guru',
     ],
 ];
