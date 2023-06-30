@@ -44,7 +44,6 @@ class ImportNmsCommand extends Command
 {
     /**
      * The name and signature of the console command.
-     * TODO: split by modules or think about it.
      *
      * @var string
      */
@@ -53,11 +52,11 @@ class ImportNmsCommand extends Command
         {costcenter : Costcenter ID for all contracts}
         {--ag= : Contact of contract}
         {--invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
-        {--configfileMap= : Path to file containing an array of ID mapping between old and new configfiles}
-        {--qosMap= : Path to file containing an array of ID mapping between old and new QoS\'}
-        {--productMap= : Path to file containing an array of ID mapping between old and new products}
-        {--productCostcenterMap= : Path to file containing an array with each product.type as keys and costcenter ID as value}
-        {--ticketTypeMap= : Path to file containing an array of ID mapping between old and new ticket types}
+        {--configfileMap= : Path to file containing an array of ID\'s, mapping old to new configfiles}
+        {--qosMap= : Path to file containing an array of ID\'s, mapping old to new QoS\'}
+        {--productMap= : Path to file containing an array of ID\'s, mapping old to new products}
+        {--costcenterMap= : Path to file containing an array of ID\'s, mapping old to new costcenters}
+        {--ticketTypeMap= : Path to file containing an array of ID\'s, mapping old to new ticket types}
     ';
 
     /**
@@ -81,6 +80,13 @@ class ImportNmsCommand extends Command
      * @var array
      */
     protected $configfileMap = [];
+
+    /**
+     * Mapping of old costcenter ID's to new costcenter ID's.
+     *
+     * @var array
+     */
+    protected $costcenterMap = [];
 
     /**
      * Mapping of old MTA ID's to new MTA ID's.
@@ -253,41 +259,58 @@ class ImportNmsCommand extends Command
 
     private function createMapping()
     {
+        $this->createMappingFor('costcenterMap', null, null);
+
         $this->createMappingFor(
             'qosMap',
+            null,
+            null,
+            /*
             Qos::on($this->argument('systemName'))
-            ->where('deleted_at', null)
+                ->where('deleted_at', null)
                 ->get(),
             Qos::all(),
             'ds_rate_max',
             'us_rate_max'
+            */
         );
 
         $this->createMappingFor(
             'productMap',
+            null,
+            null,
+            /*
             Product::on($this->argument('systemName'))
-            ->where('deleted_at', null)
+                ->where('deleted_at', null)
                 ->get(),
             Product::all(),
             'products',
             'price',
             'type',
             'billing_cycle'
+            */
         );
 
         $this->createMappingFor(
             'ticketTypeMap',
+            null,
+            null,
+            /*
             TicketType::on($this->argument('systemName'))
             ->where('deleted_at', null)
                 ->get(),
             TicketType::all(),
             'name',
             'description'
+            */
         );
 
         if ($this->option('configfileMap')) {
             $this->createMappingFor(
                 'configfileMap',
+                null,
+                null,
+                /*
                 Configfile::on($this->argument('systemName'))
                     ->whereNull('deleted_at')
                     ->get(),
@@ -295,11 +318,12 @@ class ImportNmsCommand extends Command
                 'text',
                 'device',
                 'public'
+                */
             );
         }
         /*
         else {
-            // for dev purpose
+            // for dev purpose to check how many cfs only differ from whitespace/comments
             $this->mapConfigfiles(
                 Configfile::on($this->argument('systemName'))
                     ->where('deleted_at', null)
@@ -320,6 +344,7 @@ class ImportNmsCommand extends Command
             return;
         }
 
+        // currently not used but it can be used, when all entries should be imported (dev)
         foreach ($newEntries as $new) {
             $existingEntries->filter(function ($entry) use ($comparables, $new, $map) {
                 foreach ($comparables as $comp) {
@@ -521,7 +546,7 @@ class ImportNmsCommand extends Command
             $newItem = new Item($this->getAttributesWithoutId($item));
             $newItem->updated_at = now();
 
-            // TODO: handle costcenter mapping
+            $newItem->costcenter_id = $this->costcenterMap[$item->costcenter_id];
 
             $newItem->product_id = $this->productMap[$item->product_id];
             $items[] = $newItem;
@@ -639,6 +664,7 @@ class ImportNmsCommand extends Command
         foreach ($contractToImport->sepamandates as $sepa) {
             $newSepa = new SepaMandate($this->getAttributesWithoutId($sepa));
             $newSepa->updated_at = now();
+            $newSepa->costcenter_id = $this->costcenterMap[$sepa->costcenter_id];
             $sepas[] = $newSepa;
         }
 
