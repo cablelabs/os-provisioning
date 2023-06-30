@@ -21,36 +21,15 @@
       <meta content="" name="author" />
       <meta content="{{ csrf_token() }}" name="csrf-token" />
       <!-- ================== Pace Loading indicator ================== -->
-      <script src="{{asset('components/assets-admin/plugins/pace/pace.min.js')}}"></script>
-      <!-- ================== BEGIN BASE CSS STYLE ================== -->
-      <!-- JQuery UI & Bootstrap -->
-      <link href="{{asset('components/assets-admin/plugins/jquery-ui/jquery-ui.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/plugins/bootstrap4/css/bootstrap.min.css')}}" rel="stylesheet" />
-
-      <!-- icons -->
-      <link href="{{asset('components/assets-admin/plugins/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" />
-
+      <script src="{{asset('js/pace.min.js')}}"></script>
       <!-- Theme -->
-      <link href="{{asset('components/assets-admin/css/animate.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/css/style.css')}}" rel="stylesheet" />
       @if(isset($user) && $user->theme_color !== 'browser_preferences')
       <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
       @elseif(!isset($user) || (isset($user) && $user->theme_color !== 'browser_preferences'))
        <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
       @endif
-      <link href="{{asset('components/assets-admin/css/style-bs4.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/css/style-responsive.min.css')}}" rel="stylesheet" />
-      <link href="{{asset('components/assets-admin/css/theme/default.css')}}" rel="stylesheet" id="theme" />
-
-      <!-- Plugins -->
-      <link href="{{asset('css/jstree/style.min.css')}}" rel="stylesheet" />
-
-      <link href="{{asset('components/assets-admin/plugins/ionRangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet" />
-
-      <link href="{{asset('components/assets-admin/plugins/switchery/switchery.css')}}" rel="stylesheet" />
       <!-- SITE -->
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
-
       @if (request()->is('customer*'))
       <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
       @endif

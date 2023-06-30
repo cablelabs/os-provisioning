@@ -15,6 +15,18 @@
  * limitations under the License.
  */
 
+@import 'pace-js/pace-theme-default.min.css';
+@import 'jquery-ui/themes/base/all.css';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'fontawesome-4.7/css/font-awesome.min.css';
+@import 'animate.css/animate.min.css';
+@import '/components/assets-admin/css/style.css';
+@import '/components/assets-admin/css/style-bs4.css';
+@import '/components/assets-admin/css/style-responsive.min.css';
+@import '/components/assets-admin/css/theme/default.css';
+@import 'jstree/dist/themes/default/style.min.css';
+@import 'ion-rangeslider/css/ion.rangeSlider.css';
+@import 'switchery/switchery.css';
 @import '/components/assets-admin/css/color_config.css';
 
 @import "nmsprime.css";
