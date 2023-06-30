@@ -90,6 +90,7 @@ class ImportNmsCommand extends Command
 
     /**
      * Mapping of old MTA ID's to new MTA ID's.
+     * Used to add mta_id of phonenumbers
      *
      * @var array
      */
@@ -97,6 +98,7 @@ class ImportNmsCommand extends Command
 
     /**
      * Mapping of old phonenumber ID's to new phonenumber ID's.
+     * Used to add phonenumber_id of phonenumbermanagement
      *
      * @var array
      */
@@ -569,7 +571,6 @@ class ImportNmsCommand extends Command
             return $contract;
         }
 
-        $modems = [];
         foreach ($contractToImport->modems as $modem) {
             $newModem = new Modem($this->getAttributesWithoutId($modem));
             $newModem->updated_at = now();
@@ -578,65 +579,47 @@ class ImportNmsCommand extends Command
             $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
             $modems[] = $newModem;
             $newModem->saveQuietly();
+
+            $this->modemBar->advance();
+
+            $this->addMtas($modem);
         }
-
-        // in L10 we could use saveManyQuietly
-        // $contract->modems()->saveMany(
-        //     $modems,
-        // );
-
-        $mtaCount = 0;
-        $phonenumberCount = 0;
-        foreach ($contractToImport->modems as $modem) {
-            $mtas = [];
-            $phonenumbers = [];
-            foreach ($modem->mtas as $mta) {
-                $mtas = $this->addMtas($mta, $modem);
-
-                foreach ($mta->phonenumbers as $phonenumber) {
-                    $phonenumbers = $this->addPhonenumbers($phonenumber, $mta);
-                }
-            }
-
-            $mtaCount += count($mtas);
-            $phonenumberCount += count($phonenumbers);
-        }
-
-        $this->modemBar->advance(count($modems));
-        $this->mtaBar->advance($mtaCount);
-        $this->phonenumberBar->advance($phonenumberCount);
 
         return $contract;
     }
 
-    private function addMtas($mta, $modem)
+    private function addMtas($modem)
     {
-        $newMta = new Mta($this->getAttributesWithoutId($mta));
-        $newMta->updated_at = now();
-        $newMta->configfile_id = $this->configfileMap[$modem->configfile_id];
-        $newMta->modem_id = $modem->id;
-        $mtas[] = $newMta;
+        foreach ($modem->mtas as $mta) {
+            $newMta = new Mta($this->getAttributesWithoutId($mta));
+            $newMta->updated_at = now();
+            $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
+            $newMta->modem_id = $modem->id;
+            $mtas[] = $newMta;
 
-        $newMta->saveQuietly();
+            $newMta->saveQuietly();
 
-        $this->mtaMap[$mta->id] = $newMta->id;
+            $this->mtaMap[$mta->id] = $newMta->id;
+            $this->mtaBar->advance();
 
-        return $mtas;
+            $this->addPhonenumbers($mta);
+        }
     }
 
-    private function addPhonenumbers($phonenumber, $mta)
+    private function addPhonenumbers($mta)
     {
-        $newPhonenumber = new Phonenumber($this->getAttributesWithoutId($phonenumber));
-        $newPhonenumber->updated_at = now();
-        $newPhonenumber->mta_id = $this->mtaMap[$mta->id];
+        foreach ($mta->phonenumbers as $phonenumber) {
+            $newPhonenumber = new Phonenumber($this->getAttributesWithoutId($phonenumber));
+            $newPhonenumber->updated_at = now();
+            $newPhonenumber->mta_id = $this->mtaMap[$mta->id];
 
-        $phonenumbers[] = $newPhonenumber;
+            $phonenumbers[] = $newPhonenumber;
 
-        $newPhonenumber->saveQuietly();
-        $this->phonenumberMap[$phonenumber->id] = $newPhonenumber->id;
-        $this->addPhonenumbermanagement($phonenumber);
-
-        return $phonenumbers;
+            $newPhonenumber->saveQuietly();
+            $this->phonenumberMap[$phonenumber->id] = $newPhonenumber->id;
+            $this->addPhonenumbermanagement($phonenumber);
+            $this->phonenumberBar->advance();
+        }
     }
 
     private function addPhonenumbermanagement($phonenumber)
@@ -647,11 +630,13 @@ class ImportNmsCommand extends Command
             $newPhonenumberManagement->phonenumber_id = $this->phonenumberMap[$phonenumber->id];
 
             $newPhonenumberManagement->saveQuietly();
-        } else {
-            $message = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
-            $fyi[] = $message;
-            Log::info($message);
+
+            return;
         }
+
+        $message = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
+        $fyi[] = $message;
+        Log::info($message);
     }
 
     private function addSepas($contractToImport, $contract)
@@ -697,7 +682,6 @@ class ImportNmsCommand extends Command
             return $contract;
         }
 
-        $invoices = [];
         foreach ($contractToImport->invoices as $invoice) {
             $newInvoice = new Invoice(Arr::except($invoice->getAttributes(), ['id']));
             $newInvoice->updated_at = now();
@@ -706,10 +690,8 @@ class ImportNmsCommand extends Command
             $newInvoice->contract_id = $this->contractMap[$invoice->contract_id];
             $newInvoice->save();
 
-            $invoices[] = $newInvoice;
+            $this->invoiceBar->advance();
         }
-
-        $this->invoiceBar->advance(count($invoices));
 
         return $contract;
     }
