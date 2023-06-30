@@ -203,7 +203,7 @@ class ImportNmsCommand extends Command
             ->whereNull('deleted_at')
             ->pluck('number');
 
-        $newContracts = $this->removeDuplicateContracts($numbers);
+        $newContracts = $this->avoidDuplicateContracts($numbers);
 
         $newSettlementRuns = SettlementRun::on($this->argument('systemName'))
             ->whereNull('deleted_at')
@@ -442,7 +442,7 @@ class ImportNmsCommand extends Command
         return $bar;
     }
 
-    public function removeDuplicateContracts($existingNumbers)
+    public function avoidDuplicateContracts($existingNumbers)
     {
         // check for relations in options
         $newContracts = Contract::on($this->argument('systemName'))
