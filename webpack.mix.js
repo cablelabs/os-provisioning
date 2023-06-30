@@ -37,10 +37,10 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
 
   // copy from node_modules do public
-  mix.copyDirectory('node_modules/jstree/dist/themes/default/', 'public/css/jstree/')
-  .copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
+  mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
   .copy('node_modules/pdfmake/build/pdfmake.min.js', 'public/js/pdfmake.min.js')
   .copy('node_modules/pdfmake/build/vfs_fonts.js', 'public/js/vfs_fonts.js')
+  .copy('node_modules/pace-js/pace.min.js', 'public/js/pace.min.js')
   .copy([
     'node_modules/leaflet/dist/leaflet.js',
     'node_modules/leaflet-draw/dist/leaflet.draw.js',
