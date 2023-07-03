@@ -18,9 +18,7 @@
 
 use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Modules\DocumentManagement\DocumentTypes\DocumentType;
 
 return new class extends BaseMigration
 {
@@ -41,23 +39,10 @@ return new class extends BaseMigration
             $table->string('document_type');
             $table->string('type_view');
             $table->string('file');                                                     // the path the template file can be found at
-            $table->string('format')->nullable()->default(null);                        // e.g. LaTeX
+            $table->string('format')->nullable()->default(null);                        // e.g. HTML
             $table->string('filename_pattern')->nullable()->default(null);              // used to generate filename (overwrites DocumentType if given)
             $table->boolean('is_default')->default(false);
         });
-
-        $timestamps = date('Y-m-d H:i:s');
-        foreach (DocumentType::getTypes() as $typeClass => $name) {
-            $entry['created_at'] = $entry['updated_at'] = $timestamps;
-            $entry['document_type'] = $typeClass;
-            $entry['type_view'] = $name;
-            $entry['name'] = $name;
-            $entry['format'] = 'LaTeX';
-            $entry['file'] = $typeClass::getDefaultTemplatePath();
-            $entry['filename_pattern'] = $typeClass::getDefaultFilenamePattern();
-            $entry['is_default'] = true;
-            DB::table($this->tablename)->insert($entry);
-        }
     }
 
     /**
