@@ -44,6 +44,7 @@ return [
     ],
     'document_type' => [
         'missing_contract_end_date' => 'Missing contract end date',
+        'missing_contract_cancellation_confirmation_document' => 'Contract cancellation confirmation is missing and must be created before a dunning letter can be created',
         'missing_uncleared_debts' => 'No uncleared debts found',
         'missing_uncleared_invoice' => 'No overdue invoice found',
         'missing_user_creds' => 'Missing user login credentials',

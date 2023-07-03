@@ -44,6 +44,7 @@ return [
     ],
     'document_type' => [
         'missing_contract_end_date' => 'Vertragsende fehlt',
+        'missing_contract_cancellation_confirmation_document' => 'Es konnte keine Kündigungsbestätigung gefunden werden. Bitte erstellen Sie diese bevor ein Mahnschreiben erstellt werden kann.',
         'missing_uncleared_debts' => 'Keine offenen Posten gefunden',
         'missing_uncleared_invoice' => 'Keine überfällige Rechnung gefunden',
         'missing_user_creds' => 'Fehlende Benutzeranmeldedaten',
