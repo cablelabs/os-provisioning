@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Utilities;
 
 use Stringable;
@@ -9,7 +10,6 @@ use Stringable;
  *
  * @author Wali Razzaq
  */
-
 class HTMLSanitizer implements Stringable
 {
     public function __construct(private string $content, private array $tags, private array $attributes)
