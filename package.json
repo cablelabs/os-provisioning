@@ -27,7 +27,6 @@
     },
     "dependencies": {
         "@panzoom/panzoom": "^4.5.1",
-        "animate.css": "^4.1.1",
         "axios": "^0.25",
         "bootstrap": "^4.0.0",
         "chart.js": "^4.3.0",
