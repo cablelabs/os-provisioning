@@ -17,14 +17,15 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends BaseMigration
 {
     public $migrationScope = 'database';
 
     protected $tableName = 'dunning_run';
+
     /**
      * Run the migrations.
      *
@@ -47,7 +48,7 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['job_batch_id','status','description']);
+            $table->dropColumn(['job_batch_id', 'status', 'description']);
         });
     }
 };

@@ -726,7 +726,7 @@ return [
             'ready' => 'Ready',
             'failed' => 'Failed',
             'compilationFailed' => 'Compilation Failed',
-        ]
+        ],
     ],
     'preeq' => [
         'energy' => 'Amplitude / dB',
