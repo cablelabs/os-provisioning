@@ -229,6 +229,6 @@ return [
      */
     'statisticsQuery' => [
         'upsell' => 'Produkt-Upsell miteinbeziehen: Bezieht bereits bestehende Kunden mit ein, welche eine weiteres Produkt (Tarifwechsel) gekauft haben.',
-        'auto' => 'Die Cron-Zeichenkette zum automatischen, wiederholten Abrufen der Statistik. Format: Minute Stunde Tag Monat Wochentag. Siehe: www.crontab.guru. Entfernen Sie die Zeichenkette, wenn Sie nicht wollen, dass die Abfrage immer wieder ausgeführt wird!',
+        'auto' => 'Die Cron-Zeichenkette zum automatischen, wiederholten Abrufen der Statistik. Format: Minute Stunde Tag Monat Wochentag. Siehe: www.crontab.guru. Entfernen Sie die Zeichenkette, wenn sie die wiederkehrende Ausführung der Abfrage stoppen möchten!',
     ],
 ];
