@@ -7,7 +7,7 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production",
+        "production": "mix --production && npm run prod:pdf",
         "prod:pdf": "mix --production --mix-config=modules/DocumentManagement/webpack.mix.js",
         "watch:pdf": "mix watch --mix-config=modules/DocumentManagement/webpack.mix.js"
     },
