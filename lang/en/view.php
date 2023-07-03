@@ -719,6 +719,15 @@ return [
     'OverdueDebts' => 'Overdue Debts',
     'overview' => 'Overview',
     'parentNetelement' => 'Parent <br> netelement',
+    'pdf' => [
+        'status' => [
+            'generating' => 'Generating',
+            'compiling' => 'Compiling',
+            'ready' => 'Ready',
+            'failed' => 'Failed',
+            'compilationFailed' => 'Compilation Failed',
+        ]
+    ],
     'preeq' => [
         'energy' => 'Amplitude / dB',
         'amplitude' => 'Amplitude / dB',

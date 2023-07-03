@@ -718,6 +718,15 @@ return [
     'OverdueDebts' => 'Offene Posten',
     'overview' => 'Übersicht',
     'parentNetelement' => 'Übergeordnetes <br> Netzelement',
+    'pdf' => [
+        'status' => [
+            'generating' => 'Erzeugen von',
+            'compiling' => 'Kompilieren',
+            'ready' => 'Bereit',
+            'failed' => 'Gescheitert',
+            'compilationFailed' => 'Kompilierung Gescheitert',
+        ],
+    ],
     'preeq' => [
         'energy' => 'Amplitude / dB',
         'amplitude' => 'Amplitude / dB',
