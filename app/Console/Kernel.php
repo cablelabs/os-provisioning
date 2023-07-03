@@ -18,7 +18,6 @@
 
 namespace App\Console;
 
-use Cron\CronExpression;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Modules\Statistics\Entities\StatisticsQuery;
@@ -262,17 +261,7 @@ class Kernel extends ConsoleKernel
 
         if ($modules->has('Statistics')) {
             $schedule->call(function () {
-                StatisticsQuery::whereNotNull('auto')->chunk(100, function ($queries) {
-                    foreach ($queries as $query) {
-                        // Parse the cron string with the CronExpression library
-                        $cron = new CronExpression($query->auto);
-
-                        // Check if the current time matches the cron string
-                        if ($cron->isDue()) {
-                            $query->createResult();
-                        }
-                    }
-                });
+                StatisticsQuery::runRepetitiveQuery();
             })->everyMinute();
         }
 
