@@ -846,6 +846,73 @@ class ModemController extends \BaseController
         return response()->v0ApiReply([], true, $id);
     }
 
+    public function api_setWifi($ver, $id)
+    {
+        if ($ver !== '0') {
+            return response()->v0ApiReply(['messages' => ['errors' => ["Version $ver not supported"]]]);
+        }
+
+        $errors = [];
+        $modem = static::get_model_obj()->findOrFail($id);
+
+        foreach (['ssid', 'psk', 'model'] as $parameter) {
+            if (! request($parameter)) {
+                $errors[] = "parameter $parameter missing";
+            }
+        }
+
+        if (! in_array(request('model'), ['TG862S', 'TG3442S'])) {
+            $errors[] = 'unknown model';
+        }
+
+        $onlineStatus = $modem->onlineStatus();
+        if (! $onlineStatus['online']) {
+            $errors[] = 'modem is offline';
+        }
+
+        if ($errors) {
+            return response()->v0ApiReply(['messages' => ['errors' => $errors]]);
+        }
+
+        $config = ProvBase::first();
+        $fqdn = $modem->hostname.'.'.$config->domain_name;
+
+        try {
+            switch (request('model')) {
+                case 'TG862S':
+                    // set SSID name for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.2.10001', 's', request('ssid'));
+                    // set encryption type for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.5.10001', 'i', 3);
+                    // set psk for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.26.1.2.10001', 's', request('psk'));
+                    // apply setting to non-volatile memory
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.9.0', 'i', 1);
+                    break;
+                case 'TG3442S':
+                    // set SSID name for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.2.10001', 's', request('ssid'));
+                    // set SSID name for 5GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.2.10101', 's', request('ssid'));
+                    // set encryption type for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.5.10001', 'i', 3);
+                    // set encryption type for 5GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.5.10101', 'i', 3);
+                    // set psk for 2.4GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.26.1.2.10001', 's', request('psk'));
+                    // set psk for 5GHz
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.26.1.2.10101', 's', request('psk'));
+                    // apply setting to non-volatile memory
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.1001', 'i', 1);
+                    break;
+            }
+        } catch (\Exception $e) {
+            return response()->v0ApiReply(['messages' => ['errors' => $e->getMessage()]]);
+        }
+
+        return response()->v0ApiReply([], true, $id);
+    }
+
     /**
      * Set nullable fields.
      *

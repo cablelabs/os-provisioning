@@ -115,6 +115,12 @@ BaseRoute::group([], function () {
             'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_unsetDns',
             'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
         ]);
+
+        Route::get('Modem/{id}/setWifi', [
+            'as' => 'Modem.api_setWifi',
+            'uses' => 'Modules\ProvBase\Http\Controllers\ModemController@api_setWifi',
+            'middleware' => ['api', 'can:update,Modules\ProvBase\Entities\Modem'],
+        ]);
     });
 
     BaseRoute::get('modem/{id}/analysis', [
