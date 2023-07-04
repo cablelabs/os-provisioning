@@ -69,7 +69,7 @@ return [
     'Menu_Endpoint'             => 'Endpoints',
     'Menu_Number Range'         => 'Number Range',
     'Menu_Configfile'           => 'Configfiles',
-    'Menu_FirmwareUpgrades'     => 'Firmware Upgrades',
+    'Menu_FirmwareUpgrade'     => 'Firmware Upgrades',
     'Menu_Qos'                  => 'QoS'.(Module::collections()->has('SmartOnt') ? '/Service types' : ''),
     'Menu_NetGws'               => 'NetGws'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Menu_Ip-Pools'             => 'IP-Pools',
@@ -187,8 +187,8 @@ return [
     'Header_EditContract'       => 'Edit Contract',
     'Header_GroupContracts'      => 'Group Contracts',
     'Header_SepaMandate'        => 'SEPA-Mandate|SEPA-Mandates',
-    //FirmwareUpgrades
-    'Header_FirmwareUpgrades'    => 'Firmware Upgrade|Firmware Upgrades',
+    //FirmwareUpgrade
+    'Header_FirmwareUpgrade'    => 'Firmware Upgrade|Firmware Upgrades',
     //Modems
     'Header_Modems'             => 'Modem'.(Module::collections()->has('SmartOnt') ? '/ONT' : '').'|Modems'.(Module::collections()->has('SmartOnt') ? '/ONTs' : ''), //workaround
     'Header_ModemOption'        => 'Modem Option|Modem Options',
@@ -207,7 +207,7 @@ return [
     //Configfiles
     'Header_Configfile'         => 'Configfile|Configfiles',
     'Header_EditConfigfile'     => 'Edit Configfile',
-    'Header_FirmwareUpgrades'   => 'Firmware Upgrades',
+    'Header_FirmwareUpgrade'   => 'Firmware Upgrades',
     //QoS
     'Header_Qos'                => 'QoS-Rule|QoS-Rules',
     'Header_Device Type'        => 'Device Type|Device Types',

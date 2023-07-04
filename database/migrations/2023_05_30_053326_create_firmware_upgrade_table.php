@@ -24,7 +24,7 @@ return new class extends BaseMigration
 {
     public $migrationScope = 'database';
 
-    protected $tableName = 'firmware_upgrades';
+    protected $tableName = 'firmware_upgrade';
 
     /**
      * Run the migrations.

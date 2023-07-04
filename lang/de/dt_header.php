@@ -116,8 +116,8 @@ return [
         'voucher_nr' => 'Belegnr',
     ],
     'debts' => 'Schulden',
-    //FirmwareUpgrades
-    'firmware_upgrades' => [
+    //FirmwareUpgrade
+    'firmware_upgrade' => [
         'start_date' => 'Startdatum',
         'start_time' => 'Startzeit',
         'finished_date' => 'Abschlussdatum',

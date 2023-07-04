@@ -18,9 +18,9 @@
 
 namespace Modules\ProvBase\Entities;
 
-class FirmwareUpgrades extends \BaseModel
+class FirmwareUpgrade extends \BaseModel
 {
-    public $table = 'firmware_upgrades';
+    public $table = 'firmware_upgrade';
 
     public static $name = 'Firmware Upgrade';
 
@@ -110,7 +110,7 @@ class FirmwareUpgrades extends \BaseModel
     public function select2Configfiles(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return Configfile::select('id', 'name as text')
-            ->withCount('firmwareUpgrades as count')
+            ->withCount('firmwareUpgrade as count')
             ->when($search, function ($query, $search) {
                 foreach (['name'] as $field) {
                     $query = $query->orWhere($field, 'like', "%{$search}%");

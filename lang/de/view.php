@@ -69,7 +69,7 @@ return [
     'Menu_Endpoint'             => 'Endpunkte',
     'Menu_Number Range'         => 'Nummernkreis',
     'Menu_Configfile'           => 'Konfigurationsdateien',
-    'Menu_FirmwareUpgrades'     => 'Firmware-Aktualisierungen',
+    'Menu_FirmwareUpgrade'     => 'Firmware-Aktualisierungen',
     'Menu_Qos'                  => 'QoS'.(Module::collections()->has('SmartOnt') ? '/Dienst-Arten' : ''),
     'Menu_NetGws'               => 'NetGws'.(Module::collections()->has('SmartOnt') ? '/OLTs' : ''),
     'Menu_Ip-Pools'             => 'IP-Bereiche',
@@ -186,8 +186,8 @@ return [
     'Header_EditContract'       => 'Vertrag bearbeiten',
     'Header_GroupContracts'      => 'Gruppenverträge',
     'Header_SepaMandate'        => 'SEPA-Mandat|SEPA-Mandate',
-    //FirmwareUpgrades
-    'Header_FirmwareUpgrades'    => 'Firmware Upgrade|Firmware Upgrades',
+    //FirmwareUpgrade
+    'Header_FirmwareUpgrade'    => 'Firmware Upgrade|Firmware Upgrades',
     //Modems
     'Header_Modems'             => 'Modem'.(Module::collections()->has('SmartOnt') ? '/ONT' : '').'|Modems'.(Module::collections()->has('SmartOnt') ? '/ONTs' : ''), //workaround
     'Header_ModemOption'        => 'Modemoption|Modemoptionen',
@@ -206,7 +206,7 @@ return [
     //Configfiles
     'Header_Configfile'         => 'Konfigurationsdatei|Konfigurationsdateien',
     'Header_EditConfigfile'     => 'Konfigurationsdatei bearbeiten',
-    'Header_FirmwareUpgrades'   => 'Firmware-Aktualisierungen',
+    'Header_FirmwareUpgrade'   => 'Firmware-Aktualisierungen',
     //QoS
     'Header_Qos'                => 'QoS-Regel|QoS-Regeln',
     'Header_Device Type'        => 'Gerätetyp|Gerätetypen',

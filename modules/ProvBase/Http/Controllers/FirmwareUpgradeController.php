@@ -20,9 +20,9 @@ namespace Modules\ProvBase\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 use Illuminate\Validation\Rule;
-use Modules\ProvBase\Entities\FirmwareUpgrades;
+use Modules\ProvBase\Entities\FirmwareUpgrade;
 
-class FirmwareUpgradesController extends BaseController
+class FirmwareUpgradeController extends BaseController
 {
     protected $many_to_many = [
         [
@@ -36,7 +36,7 @@ class FirmwareUpgradesController extends BaseController
     public function view_form_fields($model = null)
     {
         if (! $model) {
-            $model = new FirmwareUpgrades;
+            $model = new FirmwareUpgrade;
         }
 
         $fromConfigfiles = $model->fromConfigfile()->pluck('configfile_id', 'configfile_id')->toArray();
@@ -86,7 +86,7 @@ class FirmwareUpgradesController extends BaseController
                     'class' => 'select2-ajax',
                     'multiple' => 'multiple',
                     'data-allow-clear' => 'true',
-                    'ajax-route' => route('FirmwareUpgrades.select2', ['relation' => 'configfiles']),
+                    'ajax-route' => route('FirmwareUpgrade.select2', ['relation' => 'configfiles']),
                 ],
                 'selected' => $fromConfigfiles,
             ],
@@ -98,7 +98,7 @@ class FirmwareUpgradesController extends BaseController
                 'options' => [
                     'class' => 'select2-ajax',
                     'data-allow-clear' => 'true',
-                    'ajax-route' => route('FirmwareUpgrades.select2', ['relation' => 'configfiles']),
+                    'ajax-route' => route('FirmwareUpgrade.select2', ['relation' => 'configfiles']),
                 ],
                 'selected' => $toConfigfiles,
             ],

@@ -5,7 +5,7 @@ namespace Modules\ProvBase\Services;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Modules\ProvBase\Entities\FirmwareUpgrades;
+use Modules\ProvBase\Entities\FirmwareUpgrade;
 use Modules\ProvBase\Entities\Modem;
 
 class FirmwareUpgradeService
@@ -17,7 +17,7 @@ class FirmwareUpgradeService
         $nowDate = $now->toDateString();
         $nowTime = $now->format('H:i');
 
-        return FirmwareUpgrades::where(function ($query) use ($nowDate, $nowTime) {
+        return FirmwareUpgrade::where(function ($query) use ($nowDate, $nowTime) {
             $query->where('start_date', '<', $nowDate)
                 ->orWhere(function ($query) use ($nowDate, $nowTime) {
                     $query->where('start_date', $nowDate)

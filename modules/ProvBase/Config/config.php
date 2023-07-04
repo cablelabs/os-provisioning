@@ -46,10 +46,10 @@ return  [
             'icon'	=> 'fa-file-code-o',
             'class' => Configfile::class,
         ],
-        'FirmwareUpgrades' => [
-            'link'	=> 'FirmwareUpgrades.index',
+        'FirmwareUpgrade' => [
+            'link'	=> 'FirmwareUpgrade.index',
             'icon'	=> 'fa-arrow-circle-up',
-            'class' => FirmwareUpgrades::class,
+            'class' => FirmwareUpgrade::class,
         ],
         'Qos' => [
             'link'	=> 'Qos.index',

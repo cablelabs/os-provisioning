@@ -158,9 +158,9 @@ class Configfile extends \BaseModel
         return $this->belongsTo(self::class);
     }
 
-    public function firmwareUpgrades()
+    public function firmwareUpgrade()
     {
-        return $this->belongsToMany(FirmwareUpgrades::class, 'firmware_upgrade_configfile', 'configfile_id', 'firmware_upgrade_id');
+        return $this->belongsToMany(FirmwareUpgrade::class, 'firmware_upgrade_configfile', 'configfile_id', 'firmware_upgrade_id');
     }
 
     /**
