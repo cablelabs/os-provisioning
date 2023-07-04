@@ -370,7 +370,7 @@ a:focus {
     color: var(--text-navbar);
 }
 .navbar.navbar-inverse .navbar-form .form-control {
-    /* background: url(../img/transparent/black-0.2.png); */
+    background: url(~/img/transparent/black-0.2.png);
     background: rgba(0,0,0,0.2);
     border-color: #1F2429;
     border-color: rgba(0,0,0,0.2);
@@ -566,7 +566,7 @@ a:focus {
 }
 .sidebar .nav > li.active > a .label.label-theme,
 .sidebar .nav > li.active > a .badge {
-    /* background: url(../img/transparent/black-0.4.png); */
+    background: url(~/img/transparent/black-0.4.png);
     background: rgba(0,0,0,0.4);
 }
 .sidebar .nav > li.expand > a,
@@ -970,7 +970,7 @@ a:focus {
     -webkit-box-shadow: none;
 }
 .form-control.inverse-mode {
-    /* background: url(../img/transparent/white-0.2.png); */
+    background: url(~/img/transparent/white-0.2.png);
     background: rgba(255,255,255,0.2);
     color: var(--form-control-input);
 }
@@ -2916,7 +2916,7 @@ a.text-white:focus {
 .gritter-top,
 .gritter-bottom,
 .gritter-item {
-    /* background: url(../img/transparent/black-0.8.png) !important; */
+    background: url(~/img/transparent/black-0.8.png) !important;
     background: rgba(0,0,0,0.8) !important;
 }
 .gritter-close,
@@ -2975,7 +2975,7 @@ a.text-white:focus {
 .gritter-light .gritter-item,
 .gritter-light .gritter-bottom,
 .gritter-light .gritter-top {
-    /* background: url(../img/transparent/white-0.98.png) !important; */
+    background: url(~/img/transparent/white-0.98.png) !important;
     background: rgba(255,255,255,0.98) !important;
     color: #999 !important;
 }
@@ -3506,7 +3506,7 @@ ul.tagit.inverse li.tagit-choice .tagit-close:focus .ui-icon-close:before {
     background: var(--lime-500) !important;
 }
 .bwizard-steps li.active .label {
-    /* background: url(../img/transparent/black-0.2.png) !important; */
+    background: url(~/img/transparent/black-0.2.png) !important;
     background: rgba(0,0,0,0.2) !important;
 }
 
@@ -3635,7 +3635,7 @@ body .fc button:active {
 .jvectormap-label {
     padding: 3px 6px !important;
     border: none !important;
-    /* background: url(../img/transparent/black-0.6.png) !important; */
+    background: url(~/img/transparent/black-0.6.png) !important;
     background: rgba(0,0,0,0.6) !important;
 }
 
@@ -3684,7 +3684,7 @@ body .fc button:active {
     padding: 6px 10px 7px;
     color: #fff;
     font-size: 11px;
-    /* background: url(../img/transparent/black-0.8.png); */
+    background: url(~/img/transparent/black-0.8.png);
     background-color: rgba(0,0,0,0.8);
     border-radius: 5px;
     opacity: 1.0;
@@ -3703,7 +3703,7 @@ body .fc button:active {
     background: var(----bg-jqstooltip) !important;
     width: auto !important;
     height: auto !important;
-    /* background: url(../img/transparent/black-0.8.png) !important; */
+    background: url(~/img/transparent/black-0.8.png) !important;
     background: rgba(0,0,0,0.8) !important;
 }
 
@@ -3878,7 +3878,7 @@ body .fc button:active {
     display: block;
     margin: 15px -15px -15px;
     padding: 7px 15px;
-    /* background: url(../img/transparent/black-0.4.png); */
+    background: url(~/img/transparent/black-0.4.png);
     background: rgba(0,0,0,0.4);
     text-align: right;
     color: #ddd;
@@ -3887,7 +3887,7 @@ body .fc button:active {
 }
 .widget-stats .stats-link a:hover,
 .widget-stats .stats-link a:focus {
-    /* background: url(../img/transparent/black-0.6.png); */
+    background: url(~/img/transparent/black-0.6.png);
     background: rgba(0,0,0,0.6);
     color: #fff;
 }
@@ -3917,7 +3917,7 @@ body .fc button:active {
     margin-bottom: 10px;
 }
 .widget-stats .stats-progress {
-    /* background: url('../img/transparent/black-0.2.png'); */
+    background: url('~/img/transparent/black-0.2.png');
     background: rgba(0,0,0,0.2);
     height: 2px;
     margin: 0 -15px 12px;
@@ -4017,7 +4017,7 @@ body .fc button:active {
     position: absolute;
     right: 25px;
     bottom: 25px;
-    /* background: url(../img/transparent/black-0.6.png); */
+    background: url(~/img/transparent/black-0.6.png);
     background: rgba(0,0,0,0.6);
 }
 .map-content {
@@ -4230,7 +4230,7 @@ body .fc button:active {
     position: absolute;
     top: 15px;
     left: 0;
-    /* background: url(../img/transparent/black-0.6.png); */
+    background: url(~/img/transparent/black-0.6.png);
     background: rgba(0,0,0,0.6);
     color: #fff;
     padding: 5px 15px;
@@ -4559,7 +4559,7 @@ body .fc button:active {
     z-index: 1020;
 }
 .coming-soon .coming-soon-header {
-    /* background: url(../img/coming-soon.jpg); */
+    /* background: url(~/img/coming-soon.jpg); */
     padding: 100px 0 50px;
     position: relative;
 }
@@ -4898,7 +4898,7 @@ body .fc button:active {
 /*  8.7 Login Page V2 */
 
 .login.login-v2 {
-    /* background: url(../img/transparent/black-0.4.png); */
+    background: url(~/img/transparent/black-0.4.png);
     background: rgba(0,0,0,0.4);
     color: #ccc;
     width: 450px;
@@ -4932,7 +4932,7 @@ body .fc button:active {
     filter: alpha(opacity=40);
 }
 .login.login-v2 .form-control {
-    /* background: url(../img/transparent/black-0.4.png); */
+    background: url(~/img/transparent/black-0.4.png);
     background: rgba(0,0,0,0.4);
     border: none;
     color: #fff;
@@ -5068,7 +5068,7 @@ body .fc button:active {
     color: rgba(255,255,255,0.3);
 }
 .morris-inverse .morris-hover {
-    /* background: url('../img/transparent/black-0.4.png'); */
+    background: url('~/img/transparent/black-0.4.png');
     background: rgba(0,0,0,0.4) !important;
     border: none !important;
     padding: 8px !important;
@@ -5817,7 +5817,7 @@ body.flat-black {
     background: #eaeaea;
 }
 .flat-black .widget-stats .stats-progress {
-    /* background: url(../img/transparent/black-0.2.png); */
+    background: url(~/img/transparent/black-0.2.png);
     background: rgba(0,0,0,.2);
 }
 
@@ -6701,11 +6701,11 @@ body .bootstrap-datetimepicker-widget table td {
     background: none;
 }
 .sidebar.sidebar-transparent .nav > li.nav-profile {
-    /* background: url('../img/transparent/black-0.3.png'); */
+    background: url('~/img/transparent/black-0.3.png');
     background: rgba(0, 0, 0, 0.25);
 }
 .sidebar.sidebar-transparent .nav > li.has-sub > .sub-menu {
-    /* background: url('../img/transparent/black-0.5.png'); */
+    background: url('~/img/transparent/black-0.5.png');
     background: rgba(26, 34, 41, 0.5);
 }
 .sidebar.sidebar-transparent .sub-menu {
@@ -6713,7 +6713,7 @@ body .bootstrap-datetimepicker-widget table td {
 }
 .page-sidebar-toggled.page-sidebar-minified .sidebar.sidebar-transparent + .sidebar-bg,
 .sidebar.sidebar-transparent + .sidebar-bg {
-    /* background: url('../img/sidebar_cover.jpg'); */
+    /* background: url('~/img/sidebar_cover.jpg'); */
     background-size: auto 100%;
 }
 .sidebar.sidebar-transparent + .sidebar-bg:before {
@@ -6723,11 +6723,11 @@ body .bootstrap-datetimepicker-widget table td {
     left: 0;
     right: 0;
     bottom: 0;
-    /* background: url('../img/transparent/black-0.5.png'); */
+    background: url('~/img/transparent/black-0.5.png');
     background: rgba(45, 53, 60, 0.75);
 }
 .page-sidebar-minified .sidebar.sidebar-transparent .nav > li.has-sub .sub-menu {
-    /* background: url('../img/transparent/black-0.7.png'); */
+    background: url('~/img/transparent/black-0.7.png');
     background: rgba(26, 34, 41, 0.85);
 }
 .sidebar.sidebar-transparent .nav > li.nav-header {
@@ -6738,7 +6738,7 @@ body .bootstrap-datetimepicker-widget table td {
 .sidebar.sidebar-transparent .nav > li.expand > a,
 .sidebar.sidebar-transparent .nav > li > a:focus,
 .sidebar.sidebar-transparent .nav > li > a:hover {
-    /* background: url('../img/transparent/black-0.5.png'); */
+    background: url('~/img/transparent/black-0.5.png');
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -6802,7 +6802,7 @@ body .bootstrap-datetimepicker-widget table td {
 }
 .top-menu .nav > li.active > a .label.label-theme,
 .top-menu .nav > li.active > a .badge {
-    /* background: url(../img/transparent/black-0.4.png); */
+    background: url(~/img/transparent/black-0.4.png);
     background: rgba(0,0,0,0.4);
 }
 .top-menu .nav > li > a i {
@@ -6849,7 +6849,7 @@ body .bootstrap-datetimepicker-widget table td {
     margin-top: 7px;
 }
 .top-menu .sub-menu .sub-menu {
-    /* background: url(../img/transparent/black-0.2.png); */
+    background: url(~/img/transparent/black-0.2.png);
     background: rgba(0,0,0,0.2);
     position: relative;
     left: 0;
@@ -6942,7 +6942,7 @@ body .bootstrap-datetimepicker-widget table td {
 /* 15.3 Boxed Layout Setting */
 
 .boxed-layout {
-    /* background-image: url(../img/pattern-cover.png); */
+    /* background-image: url(~/img/pattern-cover.png); */
 }
 .boxed-layout .page-container {
     width: 1080px;

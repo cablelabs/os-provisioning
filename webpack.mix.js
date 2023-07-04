@@ -19,7 +19,8 @@ mix.mergeManifest();
 
 /* Make alias for main resource/js directory */
 mix.alias({
-  '@': path.join(__dirname, 'resources/js')
+  '~': path.join(__dirname, 'resources'),
+  '@': path.join(__dirname, 'resources/js'),
 });
 
 mix.js('resources/js/app.js', 'public/js')
