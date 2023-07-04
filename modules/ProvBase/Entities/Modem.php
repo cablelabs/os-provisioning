@@ -146,10 +146,8 @@ class Modem extends \BaseModel
                 if (! Module::collections()->has('Altiplano')) {
                     $rules['ppp_password'][] = 'required';
                     array_unshift($rules['ppp_username'], 'required');
-                }
-
-                if (Module::collections()->has('Altiplano')) {
-                    $rules['fiber_name'] = 'required';
+                } else {
+                    $rules['fiber_name'][] = 'required';
                 }
 
                 // we wan't to show the required rule first, before any other validation error
