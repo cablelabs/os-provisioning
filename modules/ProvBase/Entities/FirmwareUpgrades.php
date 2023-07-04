@@ -122,12 +122,6 @@ class FirmwareUpgrades extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = 'info';
-
-        if ($this->finished_date) {
-            $bsclass = 'success';
-        }
-
-        return $bsclass;
+        return $this->finished_date ? 'success' : 'info';
     }
 }
