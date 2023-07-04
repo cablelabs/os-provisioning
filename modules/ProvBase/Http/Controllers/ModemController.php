@@ -381,11 +381,18 @@ class ModemController extends \BaseController
      */
     public function dynamicDisplayFormFields()
     {
-        $tr069Configfiles = Configfile::where('device', 'tr069')->pluck('id', 'id');
+        $allConfigfiles = [];
+        $tr069Configfiles = collect();
+
         $ontConfigfiles = Configfile::where('device', 'ont')->pluck('id', 'id');
         // keys are distinct here – can safely use the “+” operator
-        $allConfigfiles = $tr069Configfiles->toArray() + $ontConfigfiles->toArray();
-        ksort($allConfigfiles);
+        $allConfigfiles += $ontConfigfiles->toArray();
+
+        if (! Module::collections()->has('Altiplano')) {
+            $tr069Configfiles = Configfile::where('device', 'tr069')->pluck('id', 'id');
+            $allConfigfiles += $tr069Configfiles->toArray();
+            ksort($allConfigfiles);
+        }
 
         return [
             'keyById' => $allConfigfiles,

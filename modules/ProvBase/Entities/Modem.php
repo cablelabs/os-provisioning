@@ -142,9 +142,17 @@ class Modem extends \BaseModel
                     return $rules;
                 }
                 $rules['mac'][] = 'nullable';
-                $rules['ppp_password'][] = 'required';
+
+                if (! Module::collections()->has('Altiplano')) {
+                    $rules['ppp_password'][] = 'required';
+                    array_unshift($rules['ppp_username'], 'required');
+                }
+
+                if (Module::collections()->has('Altiplano')) {
+                    $rules['fiber_name'] = 'required';
+                }
+
                 // we wan't to show the required rule first, before any other validation error
-                array_unshift($rules['ppp_username'], 'required');
                 array_unshift($rules['serial_num'], 'required');
 
                 return $rules;
@@ -165,10 +173,6 @@ class Modem extends \BaseModel
 
         if ($this->contract && $this->contract->isCanceled()) {
             $rules['internet_access'][] = 'In:null,0,false';
-        }
-
-        if (Module::collections()->has('Altiplano')) {
-            $rules['fiber_name'] = 'nullable';
         }
 
         return $rules;
