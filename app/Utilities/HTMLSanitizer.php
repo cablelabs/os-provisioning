@@ -52,15 +52,13 @@ class HTMLSanitizer implements Stringable
         return $this;
     }
 
-    public function __toString(): string
+    public function getContent(): string
     {
-        $this->cleanup();
-
-        return $this->content;
+        return $this->cleanup()->content;
     }
 
-    public function __destruct()
+    public function __toString(): string
     {
-        return $this->__toString();
+        return $this->getContent();
     }
 }
