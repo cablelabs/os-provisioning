@@ -20,8 +20,6 @@
       <meta content="" name="description" />
       <meta content="" name="author" />
       <meta content="{{ csrf_token() }}" name="csrf-token" />
-      <!-- ================== Pace Loading indicator ================== -->
-      <script src="{{asset('js/pace.min.js')}}"></script>
       <!-- Theme -->
       @if(isset($user) && $user->theme_color !== 'browser_preferences')
       <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
