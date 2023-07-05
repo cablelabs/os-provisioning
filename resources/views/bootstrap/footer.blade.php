@@ -17,17 +17,18 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
+@if (request()->is('admin*'))
+    <script src="{{ mix('js/manifest.js') }}"></script>
+    <script src="{{ mix('js/vendor.js') }}"></script>
+    <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
+    @include('bootstrap.module-js')
+@endif
+
 @if (request()->is('customer*'))
     <script src="{{ asset('js/ccc.js') }}"></script>
 @endif
 
-@if (request()->is('admin*'))
-    <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
-    <script src="{{ mix('js/manifest.js') }}"></script>
-    <script src="{{ mix('js/vendor.js') }}"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
-    @include('bootstrap.module-js')
-@endif
 <!-- ================== END BASE JS ================== -->
 @if (request()->is('admin*'))
 <script language="javascript">

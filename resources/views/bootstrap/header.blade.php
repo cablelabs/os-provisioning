@@ -21,14 +21,15 @@
       <meta content="" name="author" />
       <meta content="{{ csrf_token() }}" name="csrf-token" />
       <!-- Theme -->
+      <script src="{{ asset('js/pace.js') }}"></script>
       @if(isset($user) && $user->theme_color !== 'browser_preferences')
-      <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
+            <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
       @elseif(!isset($user) || (isset($user) && $user->theme_color !== 'browser_preferences'))
-       <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
+            <link href="{{asset('components/assets-admin/css/config/default_theme_config.css')}}" rel="stylesheet" />
       @endif
       <!-- SITE -->
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
       @if (request()->is('customer*'))
-      <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
+            <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
       @endif
       <!-- ================== END BASE CSS STYLE ================== -->

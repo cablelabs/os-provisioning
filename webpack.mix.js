@@ -62,4 +62,5 @@ mix.js('resources/js/app.js', 'public/js')
   });
 
   // extract
+  mix.extract(['pace-js'], '/js/pace.js');
   mix.extract();
