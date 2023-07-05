@@ -342,6 +342,8 @@ class BaseController extends Controller
                 $tabs[] = [
                     'name' => $tab,
                     'icon' => $relations[$tab]['icon'] ?? '',
+                    'link' => $relations[$tab]['link'] ?? '',
+                    'route' => $relations[$tab]['route'] ?? '',
                 ];
             }
         }
