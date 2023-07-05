@@ -36,7 +36,7 @@ class FirmwareUpgradeController extends BaseController
     public function view_form_fields($model = null)
     {
         if (! $model) {
-            $model = new FirmwareUpgrade;
+            $model = new FirmwareUpgrade();
         }
 
         $fromConfigfiles = $model->fromConfigfile()->pluck('configfile_id', 'configfile_id')->toArray();
