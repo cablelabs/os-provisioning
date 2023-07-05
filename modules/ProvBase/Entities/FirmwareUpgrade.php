@@ -110,7 +110,7 @@ class FirmwareUpgrade extends \BaseModel
     public function select2Configfiles(?string $search): \Illuminate\Database\Eloquent\Builder
     {
         return Configfile::select('id', 'name as text')
-            ->withCount('firmwareUpgrade as count')
+            ->withCount('firmwareUpgrades as count')
             ->when($search, function ($query, $search) {
                 foreach (['name'] as $field) {
                     $query = $query->orWhere($field, 'like', "%{$search}%");
