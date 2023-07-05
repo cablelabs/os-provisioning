@@ -723,8 +723,8 @@ return [
             'generating' => 'Erzeugen von',
             'compiling' => 'Kompilieren',
             'ready' => 'Bereit',
-            'failed' => 'Gescheitert',
-            'compilationFailed' => 'Kompilierung Gescheitert',
+            'failed' => 'Fehlgeschlagen',
+            'compilationFailed' => 'Kompilierung fehlgeschlagen',
         ],
     ],
     'preeq' => [
