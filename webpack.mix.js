@@ -35,6 +35,21 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
+  .postCss('resources/css/vendor.css', 'public/css', [
+    require('postcss-purgecss-laravel')({
+      extend: {
+        content: [
+          path.join(__dirname, 'modules/**/*.php'),
+          path.join(__dirname, 'modules/**/*.js'),
+          path.join(__dirname, 'modules/**/*.vue'),
+          path.join(__dirname, 'public/components/assets-admin/js/apps.js'),
+        ],
+      },
+      safelist: {
+        greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/]
+      },
+    })
+  ])
   .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
 
   // copy from node_modules do public

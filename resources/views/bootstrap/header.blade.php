@@ -22,6 +22,7 @@
       <meta content="{{ csrf_token() }}" name="csrf-token" />
       <!-- Theme -->
       <script src="{{ asset('js/pace.js') }}"></script>
+      <link href="{{ mix('css/vendor.css') }}" rel="stylesheet" />
       @if(isset($user) && $user->theme_color !== 'browser_preferences')
             <link href="{{asset('components/assets-admin/css/config/'.$user->theme_color)}}" rel="stylesheet" />
       @elseif(!isset($user) || (isset($user) && $user->theme_color !== 'browser_preferences'))
@@ -29,6 +30,7 @@
       @endif
       <!-- SITE -->
       <link href="{{ mix('css/app.css') }}" rel="stylesheet" />
+
       @if (request()->is('customer*'))
             <link href="{{ mix('css/ccc.css') }}" rel="stylesheet" />
       @endif
