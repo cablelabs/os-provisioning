@@ -56,6 +56,7 @@
         "leaflet-heatmap": "^1.0.0",
         "leaflet-pixi-overlay": "^1.9.4",
         "leaflet.gridlayer.googlemutant": "^0.14.0",
+        "leaflet.heat": "^0.2.0",
         "pace-js": "^1.2.4",
         "pdfmake": "^0.2.5",
         "pixi.js": "^7.2.4",

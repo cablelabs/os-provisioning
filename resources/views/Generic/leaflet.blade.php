@@ -5,11 +5,11 @@
 
 @if (isset($includes) && in_array('js', $includes))
 <script src="{{ asset('js/leaflet/leaflet.js') }}"></script>
-<script src="{{ asset('components/assets-admin/plugins/leaflet-plugins/heatmap/dist/leaflet-heat.js') }}"></script>
+<script src="{{ asset('js/leaflet/leaflet-heat.js') }}"></script>
 <script src="{{ asset('js/leaflet/leaflet.draw.js') }}"></script>
 <script src="{{ asset('js/leaflet/pixi.js') }}"></script>
 <script src="{{ asset('js/leaflet/L.PixiOverlay.js') }}"></script>
-<script src="{{ asset('components/assets-admin/plugins/leaflet-plugins/pixi-overlay/docs/js/tools.min.js') }}"></script>
+<script src="{{ asset('js/components/assets-admin/pixi-overlay-tools.js') }}"></script>
 
 @if (config('app.googleApiKey'))
     <script src="{{ asset('js/leaflet/Leaflet.GoogleMutant.js') }}"></script>

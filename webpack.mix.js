@@ -67,6 +67,7 @@ if (mix.inProduction()) {
     'node_modules/pixi.js/dist/pixi.js',
     'node_modules/leaflet-pixi-overlay/L.PixiOverlay.js',
     'node_modules/leaflet.gridlayer.googlemutant/dist/Leaflet.GoogleMutant.js',
+    'node_modules/leaflet.heat/dist/leaflet-heat.js',
   ], 'public/js/leaflet/')
   .copy([
     'node_modules/leaflet/dist/leaflet.css',
