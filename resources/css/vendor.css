@@ -1,21 +1,19 @@
-@import 'fontawesome-4.7/css/font-awesome.css';
+@import '/node_modules/fontawesome-4.7/css/font-awesome.css';
 
-@import 'jquery-ui/themes/base/all.css';
-@import 'bootstrap/dist/css/bootstrap.css';
+@import '/node_modules/jquery-ui/themes/base/all.css';
+@import '/node_modules/bootstrap/dist/css/bootstrap.css';
 @import '/components/assets-admin/css/style.css';
 @import '/components/assets-admin/css/style-bs4.css';
 @import '/components/assets-admin/css/style-responsive.css';
 @import '/components/assets-admin/css/theme/default.css';
 
-@import 'jstree/dist/themes/default/style.css';
-@import 'ion-rangeslider/css/ion.rangeSlider.css';
-@import 'switchery/switchery.css';
+@import '/node_modules/ion-rangeslider/css/ion.rangeSlider.css';
+@import '/node_modules/switchery/switchery.css';
 @import '/components/assets-admin/css/color_config.css';
 
-@import 'datatables.net-buttons-bs4/css/buttons.bootstrap4';
-@import 'datatables.net-responsive-bs4/css/responsive.bootstrap4';
-@import 'datatables.net-bs4/css/dataTables.bootstrap4';
+@import '/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4';
+@import '/node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4';
+@import '/node_modules/datatables.net-bs4/css/dataTables.bootstrap4';
 
-@import "nmsprime.css";
-@import 'select2/dist/css/select2';
-@import 'vue3-snotify/style';
+@import '/node_modules/select2/dist/css/select2';
+@import '/node_modules/vue3-snotify/dist/style';
