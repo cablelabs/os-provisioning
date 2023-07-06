@@ -35,7 +35,10 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
-  .postCss('resources/css/vendor.css', 'public/css', [
+  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
+
+if (mix.inProduction()) {
+  mix.postCss('resources/css/vendor.css', 'public/css', [
     require('postcss-purgecss-laravel')({
       extend: {
         content: [
@@ -50,7 +53,9 @@ mix.js('resources/js/app.js', 'public/js')
       },
     })
   ])
-  .postCss('modules/Ccc/Resources/assets/css/ccc.css', 'css');
+} else {
+  mix.postCss('resources/css/vendor.css', 'public/css')
+}
 
   // copy from node_modules do public
   mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
