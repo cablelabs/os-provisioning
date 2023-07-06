@@ -722,10 +722,10 @@ return [
     'pdf' => [
         'status' => [
             'generating' => 'Generating',
-            'compiling' => 'Compiling',
+            'compiling' => 'Concatenating PDFs',
             'ready' => 'Ready',
             'failed' => 'Failed',
-            'compilationFailed' => 'Compilation Failed',
+            'compilationFailed' => 'Failed Concatenating PDFs',
         ],
     ],
     'preeq' => [

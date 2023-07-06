@@ -721,10 +721,10 @@ return [
     'pdf' => [
         'status' => [
             'generating' => 'Erzeugen von',
-            'compiling' => 'Kompilieren',
+            'compiling' => 'Füge PDFs zusammen',
             'ready' => 'Bereit',
             'failed' => 'Fehlgeschlagen',
-            'compilationFailed' => 'Kompilierung fehlgeschlagen',
+            'compilationFailed' => 'Zusammenfügen der PDFs fehlgeschlagen',
         ],
     ],
     'preeq' => [
