@@ -53,8 +53,8 @@
             @include ('bootstrap.widget',
                 array (
                     'content' => 'date',
-                    'widget_icon' => 'calendar',
-                    'widget_bg_color' => 'purple',
+                    'widget_icon' => 'fa-calendar',
+                    'widget_bg_color' => 'bg-purple',
                 )
             )
             @DivClose()
@@ -66,8 +66,8 @@
             @include ('bootstrap.widget',
                 array (
                    'content' => 'contracts_total',
-                    'widget_icon' => 'users',
-                    'widget_bg_color' => 'green',
+                    'widget_icon' => 'fa-users',
+                    'widget_bg_color' => 'bg-green',
                     'link_target' => '#anchor-contracts',
                 )
             )
@@ -77,7 +77,7 @@
             @DivOpen(4)
                 <div class="widget widget-stats bg-blue">
                     {{-- info/data --}}
-                    <div class="stats-info text-center">
+                    <div class="text-center stats-info">
 
                         {!! HTML::decode (HTML::linkRoute('Modem.firmware',
                             '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">

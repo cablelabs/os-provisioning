@@ -24,9 +24,9 @@
     }
 ?>
 
-<div class="widget widget-stats bg-{{ $widget_bg_color ?? 'white' }}">
+<div class="widget widget-stats {{ $widget_bg_color ?? 'bg-white' }}">
     <div class="stats-icon">
-        <i class="fa fa-{{ $widget_icon ?? 'bars' }}"></i>
+        <i class="fa {{ $widget_icon ?? 'fa-bars' }}"></i>
     </div>
 
     <div class="stats-info">
