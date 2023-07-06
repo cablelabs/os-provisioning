@@ -65,7 +65,7 @@
         "select2": "^4.1.0-rc.0",
         "svg-pan-zoom": "^3.6.1",
         "switchery": "0.0.2",
-        "vue": "3.2.44",
+        "vue": "^3.3.2",
         "vue3-snotify": "0.0.6",
         "vue3-touch-events": "^4.1.0",
         "vuedraggable": "^4.1.0"
