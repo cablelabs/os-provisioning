@@ -25,7 +25,7 @@
     "sInfoThousands":       "{{ trans('view.jQuery_sInfoThousands') }}",
     "sLengthMenu":          "{{ trans('view.jQuery_sLengthMenu') }}",
     "sLoadingRecords":      "{{ trans('view.jQuery_sLoadingRecords') }}",
-    "sProcessing":          "<span class='sr-only'>{{ trans('view.jQuery_sProcessing') }}</span>",
+    "sProcessing":          "<span class=\"sr-only\">{{ trans('view.jQuery_sProcessing') }}</span>",
     "sSearch":              "{{ trans('view.jQuery_sSearch') }}",
     "sZeroRecords":         "{{ trans('view.jQuery_sZeroRecords') }}",
     "oPaginate": {
