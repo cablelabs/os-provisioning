@@ -2,6 +2,7 @@
 
 return [
     'address' => 'Adresse',
+    'all' => 'Alle',
     'buttons' => [
         'revertDebtUpload' => 'OP Upload rückgängig machen',
     ],
@@ -919,6 +920,12 @@ return [
     'topology' => 'Topologie',
     'true' => 'ja',
     'Type' => 'Typ',
+    'timePeriod' => [
+        'today' => 'Heute',
+        'lastWeek' => 'Letzte Woche',
+        'lastMonth' => 'Letzter Monat',
+        'lastYear' => 'Letztes Jahr',
+    ],
     'users' => 'Nutzer',
     'warning' => 'Warnung',
     'success' => 'in Ordnung',

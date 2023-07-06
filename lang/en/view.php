@@ -2,6 +2,7 @@
 
 return [
     'address' => 'Adress',
+    'all' => 'All',
     'buttons' => [
         'revertDebtUpload' => 'Revert Debt Upload',
     ],
@@ -920,6 +921,12 @@ return [
     'topology' => 'Topology',
     'true' => 'true',
     'Type' => 'Type',
+    'timePeriod' => [
+        'today' => 'Today',
+        'lastWeek' => 'Last week',
+        'lastMonth' => 'Last Month',
+        'lastYear' => 'Last Year',
+    ],
     'users' => 'User',
     'warning' => 'warning',
     'success' => 'success',
