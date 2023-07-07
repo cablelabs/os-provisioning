@@ -480,7 +480,12 @@ class ImportNmsCommand extends Command
                 'modems',
                 'mtas',
                 'sepamandates',
-                'invoices',
+                'invoices' => function (Builder $query) {
+                    $query->whereNull('deleted_at')
+                        ->where('created_at', '>=', $this->option('invoices'))
+                        ->where('year', '>=', Str::before($this->option('invoices'), '-'))
+                        ->where('month', '>=', Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
+                }
             ])
             ->get();
 
