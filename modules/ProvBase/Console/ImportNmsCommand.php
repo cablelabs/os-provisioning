@@ -516,6 +516,7 @@ class ImportNmsCommand extends Command
 
         $contract->qos_id = $this->qosMap[$contractToImport->qos_id ?? 0];
         $contract->costcenter_id = $this->argument('costcenter');
+        $contract->contact = $this->option('contact');
 
         $contract->updated_at = now();
         $contract->save();
@@ -547,6 +548,8 @@ class ImportNmsCommand extends Command
             $newItem->costcenter_id = $this->costcenterMap[$item->costcenter_id];
 
             $newItem->product_id = $this->productMap[$item->product_id];
+
+            $newItem->contract_id = $contract->id;
             $items[] = $newItem;
 
             $newItem->saveQuietly();
@@ -568,9 +571,20 @@ class ImportNmsCommand extends Command
         }
 
         foreach ($contractToImport->modems as $modem) {
+            if (! array_key_exists($modem->configfile_id, $this->configfileMap)) {
+                $message = "Skipping modem with ID {$modem->id} is missing a configfile on this system!";
+                $fyi[] = $message;
+                Log::info($message);
+
+                $this->modemBar->advance();
+
+                continue;
+            }
+
             $newModem = new Modem($this->getAttributesWithoutId($modem));
             $newModem->updated_at = now();
             $newModem->configfile_id = $this->configfileMap[$modem->configfile_id];
+            $newModem->contract_id = $contract->id;
             // there exist modems with qos_id 0 and NULL
             $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
             $modems[] = $newModem;
