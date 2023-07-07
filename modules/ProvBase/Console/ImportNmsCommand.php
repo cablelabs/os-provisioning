@@ -295,16 +295,12 @@ class ImportNmsCommand extends Command
 
         $this->createMappingFor(
             'ticketTypeMap',
-            null,
-            null,
-            /*
             TicketType::on($this->argument('systemName'))
             ->where('deleted_at', null)
                 ->get(),
             TicketType::all(),
             'name',
             'description'
-            */
         );
 
         if ($this->option('configfileMap')) {
