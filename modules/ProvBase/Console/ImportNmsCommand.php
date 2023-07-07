@@ -57,6 +57,7 @@ class ImportNmsCommand extends Command
         {--productMap= : Path to file containing an array of ID\'s, mapping old to new products}
         {--costcenterMap= : Path to file containing an array of ID\'s, mapping old to new costcenters}
         {--ticketTypeMap= : Path to file containing an array of ID\'s, mapping old to new ticket types}
+        {--invoicesToImport= : Path to empty csv file where all invoices that should be imported are listed}
     ';
 
     /**
@@ -248,6 +249,8 @@ class ImportNmsCommand extends Command
 
         $this->addTicketTypes($newTicketTypes);
         $this->addActiveTickets($newTickets);
+
+        $this->copyInvoices();
 
         $this->printImportantInformation();
 
@@ -767,10 +770,30 @@ class ImportNmsCommand extends Command
         }
     }
 
+    private function copyInvoices()
+    {
+        $this->createTarCommand();
+        //exec("rsync -avz {$this->option('systemName')}:");
+    }
+
+    // add ssh/config for tar?
+    private function createTarCommand()
+    {
+        $invoicesToImport = fopen($this->option('invoicesToImport'), "a");
+        foreach ($this->contractMap as $old => $new) {
+            fwrite($invoicesToImport ,"$old;$new\n");
+        }
+
+        fclose($invoicesToImport);
+    }
+
     private function callObservers()
     {
         // TODO call observers
-        // TODO also copy all invoices somehow
+        // modem
+        // contract
+        // item
+        // mta
     }
 
     // dev purpose
