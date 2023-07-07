@@ -86,7 +86,7 @@ class ImportNmsCommand extends Command
      *
      * @var array
      */
-    protected $costcenterMap = [];
+    protected $costcenterMap = [0 => 0];
 
     /**
      * Mapping of old MTA ID's to new MTA ID's.
