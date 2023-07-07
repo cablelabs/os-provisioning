@@ -50,7 +50,7 @@ class ImportNmsCommand extends Command
     protected $signature = 'import:nms
         {systemName : Name of the Database Connection}
         {costcenter : Costcenter ID for all contracts}
-        {--ag= : Contact of contract}
+        {--contact= : Contact of contract}
         {--invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
         {--configfileMap= : Path to file containing an array of ID\'s, mapping old to new configfiles}
         {--qosMap= : Path to file containing an array of ID\'s, mapping old to new QoS\'}
