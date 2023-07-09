@@ -87,6 +87,9 @@ class ImportNmsCommand extends Command
      */
     protected $costcenterMap = [0 => 0];
 
+    protected $modemMacs = null;
+    protected $mtaMacs = null;
+
     /**
      * Mapping of old MTA ID's to new MTA ID's.
      * Used to add mta_id of phonenumbers
@@ -229,6 +232,8 @@ class ImportNmsCommand extends Command
         if ($newSettlementRuns) {
             $this->addSettlementRuns($newSettlementRuns);
         }
+
+        $this->getAllMacs();
 
         foreach ($newContracts as $contractToImport) {
             $contract = $this->addContract($contractToImport);
@@ -481,7 +486,7 @@ class ImportNmsCommand extends Command
                 'modems',
                 'mtas',
                 'sepamandates',
-                'invoices' => function (Builder $query) {
+                'invoices' => function ($query) {
                     $query->whereNull('deleted_at')
                         ->where('created_at', '>=', $this->option('invoices'))
                         ->where('year', '>=', Str::before($this->option('invoices'), '-'))
@@ -490,21 +495,21 @@ class ImportNmsCommand extends Command
             ])
             ->get();
 
-        $numbersToImport = Contract::on($this->argument('systemName'))
-            ->where(whereLaterOrEqual('contract_end', now()))
-            ->pluck('number');
+        $newContracts = $newContracts->filter(function ($newContract) use ($existingNumbers) {
+            if (! $existingNumbers->contains($newContract->number)) {
+                return true;
+            }
 
-        $duplicates = $existingNumbers->filter(function ($existingNumber) use ($numbersToImport) {
-            return $numbersToImport->contains($existingNumber);
+            $this->writeMessage("Skipping contract with number {$newContract->number}, since it already exists. ");
         });
 
-        foreach ($duplicates as $duplicate) {
-            $message = "Skipping contract with number {$duplicate}, since it already exists. ";
-            Log::warning($message);
-            $fyi[] = $message;
-        }
-
         return $newContracts;
+    }
+
+    private function getAllMacs()
+    {
+        $this->modemMacs = Modem::all()->pluck('mac');
+        $this->mtaMacs = Mta::all()->pluck('mac');
     }
 
     // TODO: add prompt to ask if the user wants to execute this command
@@ -542,9 +547,8 @@ class ImportNmsCommand extends Command
         $items = [];
         foreach ($contractToImport->items as $item) {
             if (! array_key_exists($item->product_id, $this->productMap)) {
-                $message = "Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('productMap')}";
-                $this->fyi[] = $message;
-                Log::warning($message);
+                $this->writeMessage("Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('productMap')}");
+
                 continue;
             }
 
@@ -577,10 +581,16 @@ class ImportNmsCommand extends Command
         }
 
         foreach ($contractToImport->modems as $modem) {
+            if ($this->modemMacs && $this->modemMacs->has($modem->mac)) {
+                $this->writeMessage("Skipping modem with douplicate MAC {$modem->mac}!");
+
+                $this->modemBar->advance();
+
+                continue;
+            }
+
             if (! array_key_exists($modem->configfile_id, $this->configfileMap)) {
-                $message = "Skipping modem with ID {$modem->id} is missing a configfile on this system!";
-                $fyi[] = $message;
-                Log::info($message);
+                $this->writeMessage("Skipping modem with ID {$modem->id}. It is missing a configfile on this system!");
 
                 $this->modemBar->advance();
 
@@ -607,6 +617,14 @@ class ImportNmsCommand extends Command
     private function addMtas($modem)
     {
         foreach ($modem->mtas as $mta) {
+            if ($this->mtaMacs && $this->mtaMacs->has($mta->mac)) {
+                $this->writeMessage("Skipping Mta with douplicate MAC {$mta->mac}!");
+
+                $this->mtaBar->advance();
+
+                continue;
+            }
+
             $newMta = new Mta($this->getAttributesWithoutId($mta));
             $newMta->updated_at = now();
             $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
@@ -651,7 +669,7 @@ class ImportNmsCommand extends Command
         }
 
         $message = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
-        $fyi[] = $message;
+        $this->fyi[] = $message;
         Log::info($message);
     }
 
@@ -731,9 +749,7 @@ class ImportNmsCommand extends Command
 
         foreach ($tickets as $ticket) {
             if (! $users->has($ticket->user->email)) {
-                $message = "Cannot find user with email '{$ticket->user->email}'. Ticket '{$ticket->name}' has to be created manually!";
-                $fyi[] = $message;
-                Log::warning($message);
+                $this->writeMessage("Cannot find user with email '{$ticket->user->email}'. Ticket '{$ticket->name}' has to be created manually!");
 
                 $this->ticketBar->advance();
 
@@ -759,6 +775,12 @@ class ImportNmsCommand extends Command
 
             $this->ticketBar->advance();
         }
+    }
+
+    private function writeMessage($message)
+    {
+        $this->fyi[] = $message;
+        Log::info($message);
     }
 
     private function printImportantInformation()
