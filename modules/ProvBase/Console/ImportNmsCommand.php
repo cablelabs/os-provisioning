@@ -190,15 +190,32 @@ class ImportNmsCommand extends Command
     /**
      * Execute the console command.
      * TODO: connection of mysql/pgsql
-     * TODO: import PDF's
      * TODO: call observers afterwards
-     * TODO: add mapping message
      * TODO: check for unique keys
      *
      * @return mixed
      */
     public function handle()
     {
+        if (! $this->confirm("IMPORTANT!!!\nHave the following things been prepared for this import?:
+            1. env variables for db connection nms-import
+            2. ~/.ssh/config entry for copying invoices exists (name needs to be the same as the specified db connection!)
+
+            3. ALL of the below listed arguments and options are specified
+            systemName : Name of the Database Connection
+            costcenter : Costcenter ID for all contracts
+            --contact= : Contact of contract
+            --invoices='1970-01-01' : Import invoices with settlementruns starting from YYYY-MM-DD
+            --configfileMap= : Path to file containing an array of ID's, mapping old to new configfiles
+            --qosMap= : Path to file containing an array of ID's, mapping old to new QoS'
+            --productMap= : Path to file containing an array of ID's, mapping old to new products
+            --costcenterMap= : Path to file containing an array of ID's, mapping old to new costcenters
+            --ticketTypeMap= : Path to file containing an array of ID's, mapping old to new ticket types
+            --invoicesToImport='/tmp/transform.csv' : Path to empty transform.csv file where all invoices that should be imported are listed\n\n"
+            )) {
+            return;
+        }
+
         $this->createMapping();
 
         // get existing numbers
