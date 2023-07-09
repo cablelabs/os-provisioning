@@ -25,13 +25,11 @@ use Illuminate\Support\Str;
 use Log;
 use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\Item;
-use Modules\BillingBase\Entities\Product;
 use Modules\BillingBase\Entities\SepaMandate;
 use Modules\BillingBase\Entities\SettlementRun;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\Contract;
 use Modules\ProvBase\Entities\Modem;
-use Modules\ProvBase\Entities\Qos;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvVoip\Entities\Phonenumber;
 use Modules\ProvVoip\Entities\PhonenumberManagement;
@@ -48,7 +46,7 @@ class ImportNmsCommand extends Command
      * @var string
      */
     protected $signature = 'import:nms
-        {systemName : Name of the Database Connection}
+        {systemName : Name of the database connection}
         {costcenter : Costcenter ID for all contracts}
         {--contact= : Contact of contract}
         {--invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
@@ -57,7 +55,7 @@ class ImportNmsCommand extends Command
         {--productMap= : Path to file containing an array of ID\'s, mapping old to new products}
         {--costcenterMap= : Path to file containing an array of ID\'s, mapping old to new costcenters}
         {--ticketTypeMap= : Path to file containing an array of ID\'s, mapping old to new ticket types}
-        {--invoicesToImport= : Path to empty csv file where all invoices that should be imported are listed}
+        {--invoicesToImport="/tmp/transform.csv" : Path to empty transform.csv file where all invoices that should be imported are listed}
     ';
 
     /**
@@ -773,7 +771,9 @@ class ImportNmsCommand extends Command
     private function copyInvoices()
     {
         $this->createTarCommand();
-        //exec("rsync -avz {$this->option('systemName')}:");
+        // make sure to use ssh-copy-id
+        $year = Str::before($this->option('invoices'), '-');
+        exec("cat {$this->option('invoicesToImport')} | ssh {$this->option('systemName')} \"cat - > /tmp/transform.csv && find /var/www/nmsprime/storage/app/data/billingbase/invoice/ -name '{$year}_*.pdf' | grep -f <(cut -d';' -f1 /tmp/transform.csv | sed 's|.*|/invoice/&/{$year}_|') | tar -cz -T- --transform=\\$(sed 's|^\([0-9]\+\);\([0-9]\+\)$|s\|/invoice/\\1/{$year}_\|/invoice/\\2/{$year}_\||' /tmp/transform.csv | tr '\\n' ';')\" | tar -C / -xz");
     }
 
     // add ssh/config for tar?
