@@ -388,7 +388,9 @@ return [
     'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
     // Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
-    // //QoS
+    // Firmware Upgrades
+    'Button_Create FirmwareUpgrade' => 'Schedule FirmwareUpgrade',
+    // QoS
     'Button_create_post_invoices_pdf' => 'Create Postal Invoices PDF',
     'Button_Create SettlementRun'   => 'Create Settlement Run',
     'Button_Rerun Accounting Command' => 'Rerun Accounting Command',

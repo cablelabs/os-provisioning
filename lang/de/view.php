@@ -387,7 +387,9 @@ return [
     'Button_Create PhonenumberManagement' => 'Rufnummerverwaltung anlegen',
     // Configfiles
     'Button_Create Configfile'      => 'Konfigurationsdatei erstellen',
-    // //QoS
+    // Firmware Upgrades
+    'Button_Create FirmwareUpgrade' => 'FirmwareUpgrade planen',
+    // QoS
     'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
     'Button_Create SettlementRun'   => 'Abrechnungslauf erstellen',
     'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
