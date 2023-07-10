@@ -21,8 +21,6 @@ class UdpdateSmartOntTableAddDefaultQosConfigfile extends BaseMigration
             $table->integer('default_configfile_id')->nullable();
             $table->integer('default_qos_id')->nullable();
         });
-
-        return parent::up();
     }
 
     /**

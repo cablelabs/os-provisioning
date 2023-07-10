@@ -20,8 +20,6 @@ class UdpdateSmartOntTableAddDefaultMgmtQos extends BaseMigration
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->integer('default_mgmt_qos_id')->nullable();
         });
-
-        return parent::up();
     }
 
     /**

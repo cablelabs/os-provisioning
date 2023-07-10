@@ -20,8 +20,6 @@ class UdpdateSmartOntTableAddRemoveFields extends BaseMigration
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->string('default_boc_label')->after('default_contact_phone')->nullable();
         });
-
-        return parent::up();
     }
 
     /**

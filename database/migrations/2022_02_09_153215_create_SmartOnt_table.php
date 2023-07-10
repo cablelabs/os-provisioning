@@ -30,8 +30,6 @@ class CreateSmartOntTable extends BaseMigration
 
         // Attention: while “VALUES ("n/a", "n/a")” worked on mariadb it crashes at postgres
         DB::update('INSERT INTO '.$this->tableName."(default_service_name, default_service_id) VALUES ('n/a', 'n/a');");
-
-        return parent::up();
     }
 
     /**
