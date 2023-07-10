@@ -305,7 +305,7 @@ return [
     'StatisticsQuery'           => 'Statistics Query',
     'StatisticsQueryResult'     => 'Statistics Query Result',
 
-    //BUTTON
+    // BUTTON
     'Sign me in'                => 'Login',
     'Button_Create'             => 'Create',
     'Button_Create'             => 'Export',
@@ -327,28 +327,28 @@ return [
     'Button_downloadCSV'        => 'Download CSV',
     'Button_Create Product'     => 'Create Product',
     'Button_Create SettlementRun' => 'Create Settlement Run',
-    //CostCenter
-    'Button_Create Cost Center'     => 'Create Cost Center', //Workaround decide which one to use
+    // CostCenter
+    'Button_Create Cost Center'     => 'Create Cost Center', // Workaround decide which one to use
     'Button_Create CostCenter'      => 'Create Cost Center',
     'Button_Create Users'           => 'Create User',
-    //Company
+    // Company
     'Button_Create Company'         => 'Create Company',
-    //Salesman
+    // Salesman
     'Button_Create Salesman'        => 'Create Salesman',
-    //Item
+    // Item
     'Button_Create Item'            => 'Create Item',
     'sr_dl_logs'                    => 'Download whole logfile',
-    //Numberrange
+    // Numberrange
     'Button_Create NumberRange'     => 'Create Numberrange',
-    //HFC
+    // HFC
     'Button_Create NetElementType' => 'Create NetElement Type',
     'Button_Create NetElement'     => 'Create NetElement',
     'Button_Create MibFile'     => 'Create Mib-File',
     'Button_Create OID'             => 'Create OID',
-    //SNMP Module
-    //Device
+    // SNMP Module
+    // Device
     'Button_Create Device'          => 'Create Device',
-    //Device Type
+    // Device Type
     'Button_Create Device Type'     => 'Create Devicetype',
     'Button_Create Phonenumber'     => 'Create Phonenumber',
     'Button_Create Tree Table'      => 'Create Tree Table',
@@ -360,16 +360,16 @@ return [
     'Button_Create Ticket'          => 'Create Ticket ',
     'Button_Create TicketType'      => 'Create Ticket Type',
     'Button_Create Comment'         => 'Create Comment',
-    //SEPA-Konto
+    // SEPA-Konto
     'Assigned'                  => 'Assigned',
-    'Button_Create SEPA Account'    => 'Create SEPA Account', //Workaround decide which one to use
+    'Button_Create SEPA Account'    => 'Create SEPA Account', // Workaround decide which one to use
     'SEPA Account'              => 'SEPA-Account',
     'Create'                    => 'Create ',
     'Edit'                      => 'Edit ',
     'Button_Create SepaAccount'     => 'Create SEPA Account',
 
-    //Provisioning
-    //Contract
+    // Provisioning
+    // Contract
     'Button_Create Apartment'       => 'Create Apartment',
     'Button_Create Node'            => 'Create Node',
     'Button_Create Realty'          => 'Create Realty',
@@ -377,26 +377,26 @@ return [
     'Button_Create Contract'        => 'Create Contract',
     'Button_Create Domain'          => 'Create Domain',
     'Button_Create SepaMandate'     => 'Create SEPA-Mandate',
-    // //Modems
+    // Modems
     'Button_Create Modem'           => 'Create Modem',
-    // //Endpoints
+    // Endpoints
     'Button_Create Endpoint'        => 'Create Endpoint',
-    //MTA
+    // MTA
     'Button_Create Mta'             => 'Create MTA',
-    // //Phonenumber
+    // Phonenumber
     'Button_Create PhoneTariff'     => 'Create Phonetariffs',
     'Button_Create PhonenumberManagement' => 'Create PhonenumberManagement',
-    // //Configfiles
+    // Configfiles
     'Button_Create Configfile'      => 'Create Configfile',
     // //QoS
     'Button_create_post_invoices_pdf' => 'Create Postal Invoices PDF',
     'Button_Create SettlementRun'   => 'Create Settlement Run',
     'Button_Rerun Accounting Command' => 'Rerun Accounting Command',
     'Button_Create Qos'             => 'Create QoS-Rule',
-    // //NetGws
+    // NetGws
     'Button_Create NetGw'          => 'Create NetGateway',
-    // //IpPool
-    'Button_Create IpPool'          => 'Create IpPool', //workaround
+    // IpPool
+    'Button_Create IpPool'          => 'Create IpPool', // workaround
     'Button_Create IP-Pools'        => 'Create IpPools',
     'Button_Create DocumentTemplate' => 'Create Document Template',
 

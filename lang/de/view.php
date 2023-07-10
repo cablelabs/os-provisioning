@@ -304,7 +304,7 @@ return [
     'StatisticsQuery'           => 'Statistik Abfrage',
     'StatisticsQueryResult'     => 'Ergebnis der Statistikabfrage',
 
-    //BUTTON
+    // BUTTON
     'Sign me in'                => 'Einloggen',
     'Button_Create'             => 'Erstelle',
     'Button_Export'             => 'Exportieren',
@@ -326,28 +326,28 @@ return [
     'Button_downloadCSV'        => 'CSV herunterladen',
     'Button_Create Product'     => 'Neues Produkt',
     'Button_Create SettlementRun' => 'Abrechnungslauf erstellen',
-    //CostCenter
-    'Button_Create Cost Center'     => 'Neue Kostenstelle', //Workaround decide which one to use
+    // CostCenter
+    'Button_Create Cost Center'     => 'Neue Kostenstelle', // Workaround decide which one to use
     'Button_Create CostCenter'      => 'Kostenstelle erstellen',
     'Button_Create Users'           => 'Benutzer anlegen',
-    //Company
+    // Company
     'Button_Create Company'         => 'Unternehmen erstellen',
-    //Salesman
+    // Salesman
     'Button_Create Salesman'        => 'Verkäufer erstellen',
-    //Item
+    // Item
     'Button_Create Item'            => 'Neuer Posten',
     'sr_dl_logs'                    => 'Gesamtes Logfile herunterladen',
-    //Numberrange
+    // Numberrange
     'Button_Create NumberRange'     => 'Nummernkreis erstellen',
-    //HFC
+    // HFC
     'Button_Create NetElementType'  => 'Netzelementtyp erstellen',
     'Button_Create NetElement'      => 'Netzelement erstellen',
     'Button_Create MibFile'         => 'MIB-Datei hinzufügen',
     'Button_Create OID'             => 'OID anlegen',
-    //SNMP Modul
-    //Device
+    // SNMP Modul
+    // Device
     'Button_Create Device'          => 'Neues Gerät',
-    //Device Type
+    // Device Type
     'Button_Create Device Type'     => 'Neuer Gerätetyp',
     'Button_Create Phonenumber'     => 'Telefonnummer anlegen',
     'Button_Create Tree Table'      => 'Baumdiagramm anlegen',
@@ -359,16 +359,16 @@ return [
     'Button_Create Ticket'          => 'Ticket erstellen',
     'Button_Create TicketType'      => 'Tickettypen erstellen',
     'Button_Create Comment'         => 'Kommentar erstellen',
-    //SEPA-Konto
+    // SEPA-Konto
     'Assigned'                  => 'Zugewiesen',
-    'Button_Create SEPA Account'    => 'Neues SEPA-Konto', //Workaround decide which one to use
+    'Button_Create SEPA Account'    => 'Neues SEPA-Konto', // Workaround decide which one to use
     'SEPA Account'              => 'SEPA-Konto',
     'Create'                    => 'Erstelle ',
     'Edit'                      => 'Bearbeite ',
     'Button_Create SepaAccount'     => 'SEPA-Konto erstellen',
 
-    //Provisioning
-    //Contract
+    // Provisioning
+    // Contract
     'Button_Create Apartment'       => 'Wohnung anlegen',
     'Button_Create Node'            => 'Übergabepunkt anlegen',
     'Button_Create Realty'          => 'Liegenschaft anlegen',
@@ -376,26 +376,26 @@ return [
     'Button_Create Contract'        => 'Vertrag erstellen',
     'Button_Create Domain'          => 'Domain erstellen',
     'Button_Create SepaMandate'     => 'SEPA-Mandat erstellen',
-    // //Modems
+    // Modems
     'Button_Create Modem'           => 'Modem erstellen',
-    // //Endpoints
+    // Endpoints
     'Button_Create Endpoint'        => 'Endpunkt erstellen',
-    //MTA
+    // MTA
     'Button_Create Mta'             => 'MTA erstellen',
-    // //Phonenumber
+    // Phonenumber
     'Button_Create PhoneTariff'     => 'Telefontarif anlegen',
     'Button_Create PhonenumberManagement' => 'Rufnummerverwaltung anlegen',
-    // //Configfiles
+    // Configfiles
     'Button_Create Configfile'      => 'Konfigurationsdatei erstellen',
     // //QoS
     'Button_create_post_invoices_pdf' => 'Erstelle PDF mit postalischen Rechnungen',
     'Button_Create SettlementRun'   => 'Abrechnungslauf erstellen',
     'Button_Rerun Accounting Command' => 'Rechnungslauf neu starten',
     'Button_Create Qos'             => 'QOS-Regel erstellen',
-    // //NetGws
+    // NetGws
     'Button_Create NetGw'          => 'NetGw anlegen',
-    // //IpPool
-    'Button_Create IpPool'          => 'IpPool anlegen', //workaround
+    // IpPool
+    'Button_Create IpPool'          => 'IpPool anlegen', // workaround
     'Button_Create IP-Pools'        => 'IpPool anlegen',
     'Button_Create DocumentTemplate' => 'Dokument-Vorlage anlegen',
 
