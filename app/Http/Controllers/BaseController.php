@@ -1702,6 +1702,7 @@ class BaseController extends Controller
             $localKey = $join['local_key'];
             $foreignKey = $join['foreign_key'];
             $joinType = $join['type'] ?? 'inner';
+            $joinGroupBy = $join['group_by'] ?? null;
 
             switch ($joinType) {
                 case 'left':
@@ -1710,6 +1711,10 @@ class BaseController extends Controller
                 default:
                     $query->join($joinTable, $localKey, '=', $foreignKey);
                     break;
+            }
+
+            if ($joinGroupBy) {
+                $query->groupBy($joinGroupBy);
             }
         }
 
