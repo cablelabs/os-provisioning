@@ -1,5 +1,15 @@
 # TODO: Remove this whole code after NMSPrime v3.2
 # The whole code just does the initial steps that need to be done before Laravel can be used again with Pgsql
+#
+# Postgresql
+#
+/usr/pgsql-13/bin/postgresql-13-setup initdb
+systemctl enable postgresql-13.service
+systemctl start postgresql-13.service
+
+if [ ! "$(sudo -u postgres /usr/pgsql-13/bin/psql -XtAc "SELECT 1 FROM pg_database WHERE datname='DB_NAME'" )" = '1' ]; then
+    sudo -u postgres /usr/pgsql-13/bin/psql -c 'create database nmsprime;'
+fi
 
 ret=$(sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "SELECT EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'nmsprime')")
 exists=$(echo $ret | cut -d ' ' -f 3)
