@@ -4,6 +4,8 @@ module load php80
 
 cd '/var/www/nmsprime'
 
+php artisan optimize:clear
+
 # Run artisan commands only after all installed NMSPrime modules have been upgraded
 tmpFile="$(mktemp)"
 lastModule=1
@@ -53,6 +55,14 @@ if [ $lastModule -eq 1 ]; then
 
     # finally: rebuild dhcpd/named config
     /opt/remi/php80/root/usr/bin/php artisan nms:dhcp
+
+    laravelModules=$(php /var/www/nmsprime/artisan module:list | cut -d'|' -f2)
+    if echo "$laravelModules" | grep -q "ProvMon"; then
+        sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
+            GRANT SELECT ON ALL TABLES IN SCHEMA nmsprime TO grafana;
+            GRANT USAGE ON SCHEMA nmsprime TO grafana;
+        "
+    fi
 fi
 
 systemctl reload httpd
@@ -62,8 +72,3 @@ rm -f storage/framework/sessions/*
 chown -R apache storage bootstrap/cache /var/log/nmsprime
 chown -R apache:dhcpd /etc/dhcp-nmsprime
 systemd-tmpfiles --create
-
-sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
-    GRANT SELECT ON ALL TABLES IN SCHEMA nmsprime TO grafana;
-    GRANT USAGE ON SCHEMA nmsprime TO grafana;
-"

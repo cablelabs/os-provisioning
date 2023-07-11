@@ -2711,6 +2711,7 @@ CREATE TABLE nmsprime.provbase (
     rw_community character varying(191),
     domain_name character varying(191),
     dns_password character varying(191),
+    notif_mail character varying(191),
     dhcp_def_lease_time bigint,
     dhcp_max_lease_time bigint,
     startid_contract bigint,
@@ -6606,11 +6607,11 @@ ALTER TABLE ONLY nmsprime.provbase
 
 
 --
--- Name: provmon idx_17748_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
+-- Name: provmon idx_17749_primary; Type: CONSTRAINT; Schema: nmsprime; Owner: nmsprime
 --
 
 ALTER TABLE ONLY nmsprime.provmon
-    ADD CONSTRAINT idx_17748_primary PRIMARY KEY (id);
+    ADD CONSTRAINT idx_17749_primary PRIMARY KEY (id);
 
 
 --
