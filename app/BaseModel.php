@@ -990,4 +990,17 @@ class BaseModel extends Eloquent
 
         return $restored;
     }
+
+    /**
+     * In cross connection relationships, related models' connection
+     * wasn't being set correctly;
+     * (i.e. was not using default one if $connection is not set)
+     * Implementing this method instead fixes the issues
+     * and also takes care of `protected $connection` property
+     * on the derived classes.
+     */
+    public function getConnectionName()
+    {
+        return $this->connection ?? config('database.default');
+    }
 }
