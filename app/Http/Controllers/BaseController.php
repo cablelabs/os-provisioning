@@ -1753,6 +1753,10 @@ class BaseController extends Controller
             }
 
             $DT->filterColumn($column, function ($query, $keyword) use ($customQuery) {
+                if (isset($customQuery['lowercase']) && $customQuery['lowercase']) {
+                    $keyword = strtolower($keyword);
+                }
+
                 if (isset($customQuery['exact']) && ! $customQuery['exact']) {
                     $keyword = "%{$keyword}%";
                 }
