@@ -1160,7 +1160,12 @@ class Modem extends \BaseModel
     {
         $onlineModems = [];
         $conf = ProvBase::first();
-        $hf = array_flip(config('hfcreq.hfParameters'));
+        $hf = array_flip(config('hfcreq.hfParameters', [
+            'us_pwr' => 'US Power',
+            'us_snr' => 'US SNR',
+            'ds_pwr' => 'DS Power',
+            'ds_snr' => 'DS SNR',
+        ]));
 
         $modemQuery = self::join('configfile as c', 'modem.configfile_id', 'c.id')
             ->where('c.device', 'cm');
