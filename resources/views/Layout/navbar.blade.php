@@ -39,7 +39,7 @@
                 request()->route()->getName(),
                 'edit',
             ))
-            <ul class="mt-2 nav nav-pills flex d-lg-none sm:hidden">
+            <ul class="flex mt-2 nav nav-pills d-lg-none sm:hidden">
                 <li class="nav-item dropdown">
                     <a class="text-white nav-link dropdown-toggle bg-dark active"
                         style="display:flex; align-items:center;" href="#"
@@ -134,7 +134,7 @@
             </li>
 
             {{-- global search form --}}
-            <li class="nav-item flex">
+            <li class="flex nav-item">
                 <a id="togglesearch" href="javascript:;" class="waves-effect waves-light" data-toggle="navbar-search">
                     <i class="fa fa-search fa-2x" aria-hidden="true"></i>
                 </a>
@@ -144,8 +144,8 @@
             @include('bootstrap._navbar-notifications')
 
             {{-- User Menu --}}
-            <li class="nav-item dropdown flex m-r-10">
-                <a id="navbarDropdown" class="nav-link flex align-items-end dropdown-toggle" href="#" role="button"
+            <li class="flex nav-item dropdown m-r-10">
+                <a id="navbarDropdown" class="flex nav-link align-items-end dropdown-toggle" href="#" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user-circle-o fa-2x d-inline" aria-hidden="true"></i>
                     <span class="hidden d-md-inline">
