@@ -18,9 +18,7 @@
  */
 
 use Database\Migrations\BaseMigration;
-use Modules\ProvBase\Entities\RadAcct;
-use Modules\ProvBase\Entities\RadIpPool;
-use Modules\ProvBase\Entities\RadPostAuth;
+use Nwidart\Modules\Facades\Module;
 
 class SwitchMysqltoPgsql extends BaseMigration
 {
@@ -58,7 +56,6 @@ class SwitchMysqltoPgsql extends BaseMigration
         $this->convertNmsprimeDbs();
         $this->fixNmsprimeDb();
         $this->switchKeaDb();
-        $this->adaptRadius();
         $this->changeConfig();
 
         // Icinga is done via icinga-module-director RPM - see SPEC file
@@ -75,12 +72,15 @@ class SwitchMysqltoPgsql extends BaseMigration
                     'password' => DB::getConfig('password'),
                     'schema' => DB::getConfig('schema') ?: DB::getConfig('search_path'),
                 ],
-                'nmsprime_ccc' => [
+            ];
+
+            if (Module::collections()->has('Ccc')) {
+                $this->databases['nmsprime_ccc'] = [
                     'user' => DB::connection('pgsql-ccc')->getConfig('username'),
                     'password' => DB::connection('pgsql-ccc')->getConfig('password'),
                     'schema' => DB::connection('pgsql-ccc')->getConfig('schema') ?: DB::connection('pgsql-ccc')->getConfig('search_path'),
-                ],
-            ];
+                ];
+            }
         }
 
         if (! $db) {
@@ -95,7 +95,13 @@ class SwitchMysqltoPgsql extends BaseMigration
      */
     private function convertNmsprimeDbs()
     {
-        foreach (['nmsprime', 'nmsprime_ccc'] as $db) {
+        $dbs = ['nmsprime'];
+
+        if (Module::collections()->has('Ccc')) {
+            $dbs[] = 'nmsprime_ccc';
+        }
+
+        foreach ($dbs as $db) {
             $conf = $this->getDbsConf($db);
             $user = $conf['user'];
             $schema = $conf['schema'];
@@ -177,9 +183,12 @@ class SwitchMysqltoPgsql extends BaseMigration
 
         DB::statement('ALTER table global_config RENAME COLUMN passwordresetinterval to password_reset_interval');
         DB::statement('ALTER table global_config RENAME COLUMN isallnetssidebarenabled to is_all_nets_sidebar_enabled');
-        DB::statement('ALTER table ticketsystem RENAME COLUMN noreplymail to noreply_mail');
-        DB::statement('ALTER table ticketsystem RENAME COLUMN noreplyname to noreply_name');
-        DB::statement('ALTER table ticketsystem RENAME COLUMN opentickets to open_tickets');
+
+        if (Schema::hasTable('ticketsystem')) {
+            DB::statement('ALTER table ticketsystem RENAME COLUMN noreplymail to noreply_mail');
+            DB::statement('ALTER table ticketsystem RENAME COLUMN noreplyname to noreply_name');
+            DB::statement('ALTER table ticketsystem RENAME COLUMN opentickets to open_tickets');
+        }
     }
 
     /**
@@ -232,85 +241,13 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system('systemctl restart kea-dhcp6');
     }
 
-    /**
-     * Adapt RADIUS Server to use postgresql and use separate database
-     */
-    private function adaptRadius()
-    {
-        $db = $user = 'radius';
-        $psw = DB::connection('pgsql-radius')->getConfig('password');
-
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
-        echo "radius\n";
-
-        // Add radius user
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c \"
-            CREATE USER $user PASSWORD '$psw';
-            GRANT USAGE ON SCHEMA public TO $user;
-            GRANT ALL PRIVILEGES ON ALL Tables in schema public TO $user;
-            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $user;
-            \"");
-
-        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
-        DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
-        \Artisan::call('nms:raddb-repopulate');
-
-        system('sudo -u postgres /usr/pgsql-13/bin/psql radius -c "ALTER ROLE postgres set search_path to \'public\'"');
-
-        system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" radius`;
-            do sudo -u postgres /usr/pgsql-13/bin/psql -d radius -c \"alter table ".'$tbl'." owner to $user\"; done");
-
-        // Adapt /etc/raddb/ config
-        system("sed -e 's|dialect = \"mysql\"|dialect = \"postgresql\"|' \\
-            -i /etc/raddb/mods-available/sql /etc/raddb/mods-available/sqlippool");
-        system("sed -e 's|driver = \"rlm_sql_mysql\"|driver = \"rlm_sql_postgresql\"|' \\
-            -e 's|login = \"nmsprime\"|login = \"$user\"|' \\
-            -e 's|password = \".*\"|password = \"$psw\"|' \\
-            -e 's|radius_db = \".*\"|radius_db = \"radius\"|' \\
-            -e 's|#\s*server = \".*\"|\tserver = \"localhost\"|' \\
-            -i /etc/raddb/mods-available/sql");
-
-        // Get entries of radippool, radacct, radpostauth
-        $allocatedIps = DB::connection('mysql')->table('radippool')->whereNotNull('expiry_time')->where('expiry_time', '>', now())->get();
-        foreach ($allocatedIps as $radip) {
-            RadIpPool::where('framedipaddress', $radip->framedipaddress)->update([
-                'callingstationid' => $radip->callingstationid,
-                'expiry_time' => $radip->expiry_time,
-                'username' => $radip->username,
-            ]);
-        }
-
-        $radaccts = DB::connection('mysql')->table('radacct')->orderBy('radacctid', 'desc')->groupBy('framedipaddress')->get();
-        foreach ($radaccts as $radacct) {
-            $data = (array) $radacct;
-            unset($data['radacctid']);
-
-            $radacct = new RadAcct();
-            foreach ($data as $key => $value) {
-                $radacct->$key = $value;
-            }
-
-            $radacct->saveQuietly();
-        }
-
-        $radpostauths = DB::connection('mysql')->table('radpostauth')->orderBy('id', 'desc')->groupBy('username')->get();
-        foreach ($radpostauths as $radpa) {
-            $data = (array) $radpa;
-            unset($data['id']);
-
-            $radpa = new RadPostAuth();
-            foreach ($data as $key => $value) {
-                $radpa->$key = $value;
-            }
-
-            $radpa->saveQuietly();
-        }
-    }
-
     private function changeConfig()
     {
         system("sed -i 's/QUEUE_DRIVER_DATABASE_CONNECTION=mysql/QUEUE_DRIVER_DATABASE_CONNECTION=pgsql/' /etc/nmsprime/env/global.env");
-        system("sed -i 's/ROOT_DB_DATABASE=nmsprime/ROOT_DB_DATABASE=cacti/' /etc/nmsprime/env/root.env");
+
+        if (Module::collections()->has('ProvMon')) {
+            system("sed -i 's/ROOT_DB_DATABASE=nmsprime/ROOT_DB_DATABASE=cacti/' /etc/nmsprime/env/root.env");
+        }
 
         \Artisan::call('config:cache');
     }
@@ -325,14 +262,9 @@ KEA_DB_DATABASE=kea\nKEA_DB_USERNAME=kea\nKEA_DB_PASSWORD=$psw", FILE_APPEND);
         system('sed -i \'s/"type": "postgresql"/"type": "mysql"/\' /etc/kea/dhcp6-nmsprime.conf');
         system('systemctl restart kea-dhcp6');
 
-        system("sed -i 's/dialect = \"postgresql\"/dialect = \"mysql\"/' /etc/raddb/mods-available/sql");
-        system('systemctl restart radiusd');
-
         // Remove kea and radius DB and user
         system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop database kea;'");
         system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop owned by kea; drop user kea;'");
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop database radius;'");
-        system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'drop owned by radius; drop user radius;'");
 
         // Remove nmsprime and icinga DBs and users
         $dbs = $this->getDbsConf();
