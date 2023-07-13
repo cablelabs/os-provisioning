@@ -12,7 +12,7 @@
                 <?php $labelData = $rel_elem->view_index_label(); ?>
                 <tr class="{{isset ($labelData['bsclass']) ? $labelData['bsclass'] : ''}}">
                     <td width="20"> {!! Form::checkbox('ids['.$rel_elem->id.']', 1, null, null, ['style' => 'simple']) !!} </td>
-                    <td class="d-flex flex-wrap items-center">
+                    <td class="flex flex-wrap items-center">
                         {!! $rel_elem->view_icon() !!}
                         <a href="{{ route($class.'.'.$method, $rel_elem->id) }}" class="ml-1">
                             {!! is_array($labelData) ? $labelData['header'] : $labelData !!}

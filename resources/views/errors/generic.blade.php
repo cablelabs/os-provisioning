@@ -47,7 +47,7 @@
                 @else
                     <div class="error-message my-5">{{ $message }}</div>
                 @endif
-                <div class="mt-4 d-flex flex-column align-items-center">
+                <div class="mt-4 flex flex-column align-items-center">
                     <a href="{{ $link ?? route('Home') }}" class="btn btn-lg btn-success mb-4">
                         <i class="fa fa-home"></i>
                         {{ trans('view.error.backToHomePage') }}

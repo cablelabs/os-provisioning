@@ -105,7 +105,7 @@ class FormBuilder extends CollectiveFormBuilder
      * to
      *		public function label($name, $value = null, $options = array(), $escape_html = true)
      */
-    public function label($name, $value = null, $options = [], $escape_html = true, $wrapperCol = null, $wrapperClass = 'd-flex')
+    public function label($name, $value = null, $options = [], $escape_html = true, $wrapperCol = null, $wrapperClass = 'flex')
     {
         $col = 4;
         if (isset(static::$layout_form_col_md['label'])) {

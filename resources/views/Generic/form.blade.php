@@ -49,7 +49,7 @@
 @endforeach
 
 @if(Bouncer::can($action, $model_name) || Bouncer::can($action, $view_var))
-    <div class="row d-flex justify-content-center d-print-none">
+    <div class="row flex justify-content-center d-print-none">
         @if ($edit_view_save_button)
             @if ($edit_view_second_button)
                 <div class='col-3'>

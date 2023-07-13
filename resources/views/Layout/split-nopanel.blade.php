@@ -114,7 +114,7 @@
                     </ul>
                 </div>
                 @endif
-                <div class="flex-wrap d-flex dark:bg-slate-900 mt-3.5 dark:mt-0" style="display:flex;flex: 1;">
+                <div class="flex-wrap flex dark:bg-slate-900 mt-3.5 dark:mt-0" style="display:flex;flex: 1;">
                     <div class="card card-inverse pb-3 col-lg-{{(!isset($relations) || empty($relations)) ? '12' : $edit_left_md_size}}" style="{{ (isset($withHistory) || in_array(\Request::route()->getName(), $fullscreenRoutes)) ? 'display:flex;flex: 1;' : '' }}">
                         @yield('content_left')
                     </div>

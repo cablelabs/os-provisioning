@@ -299,7 +299,7 @@
                                 </div>
                                 <transition enter-class="toggleWidthStart" enter-to-class="toggleWidthEnd"
                                     leave-class="toggleWidthEnd" leave-to-class="toggleWidthStart">
-                                    <div v-if="isVisible" class="d-flex align-items-center position-relative"
+                                    <div v-if="isVisible" class="flex align-items-center position-relative"
                                         style="cursor:pointer;background: #232a2f;border-radius: 9999px;height:1.35rem;transition: width .25s ease, margin-left .25s ease;width: 3.25rem;margin-left: 1rem;"
                                         v-on:click="setSearchMode">
                                         <div class="position-absolute"
@@ -317,7 +317,7 @@
                                 </transition>
                             </li>
                             <div v-show="isSearchMode && isVisible"
-                                class="my-1 d-flex align-items-center position-relative"
+                                class="my-1 flex align-items-center position-relative"
                                 style="padding:0.5rem 1.25rem;display:none;">
                                 <input type="text" v-model="clusterSearch" v-on:keyup="searchForNetOrCluster"
                                     class="form-control" style="padding-left:2rem;"
@@ -366,7 +366,7 @@
                                                     style="text-decoration: none;"></i>
                                                 <a :href="'/admin/Tree/erd/' + (netelement.base_type_id == 1 ? 'net/' :
                                                     'cluster/') + netelement.id"
-                                                    class="no-underline caret-link d-flex"
+                                                    class="no-underline caret-link flex"
                                                     style="max-height: 20px; white-space: nowrap;flex:1;width:80%;"
                                                     v-on:click="setNetActive(netelement.id)">
                                                     <span v-if="! store.minified" v-text="netelement.name"

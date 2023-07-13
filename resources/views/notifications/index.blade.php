@@ -21,13 +21,13 @@
 @section('content')
 <div id="app" class="row" style="padding-top:1rem;">
     <div class="card w-100 px-2">
-        <h2 class="card-title d-flex" style="justify-content: space-between;padding:0 1rem;">
-            <div class="d-flex align-items-baseline">
+        <h2 class="card-title flex" style="justify-content: space-between;padding:0 1rem;">
+            <div class="flex align-items-baseline">
               <i class="fa fa-inbox"></i>
               <div>{{ trans('messages.notifications') }}</div>
             </div>
         </h2>
-        <div class="d-flex flex-column-reverse flex-md-column mb-4">
+        <div class="flex flex-column-reverse flex-md-column mb-4">
             @if ($user->unread_notifications_count)
                 <form action="{{ route('Notifications.markAllRead') }}" method="post">
                     @csrf
@@ -60,7 +60,7 @@
                         <tr style="border-bottom: 1px solid rgba(0,0,0,.125);">
                             <td></td>
                             <td style="padding:1rem">
-                                <div class="d-flex align-items-center">
+                                <div class="flex align-items-center">
                                     <div style="flex:0 0;">
                                         @if (isset($notification->data['imgPath']))
                                             <img src="{{ $notification->data['imgPath'] }}" style="height:2rem;width:2rem;" alt="{{ array_slice(explode('\\', $notification->type), -1)[0] }}">
@@ -91,10 +91,10 @@
                             <td style="padding:1rem">
                                 <form class="text-center" action="{{ route('Notifications.markRead', [$notification]) }}" method="post">
                                     @csrf
-                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="d-none d-md-block text-secondary">
+                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="hidden d-md-block text-secondary">
                                         <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
                                     </a>
-                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="btn btn-secondary d-md-none">
+                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="btn btn-secondary d-mhidden">
                                         <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
                                         {{ trans('messages.mark as read') }}
                                     </a>
@@ -104,7 +104,7 @@
                     @empty
                         <tr>
                             <td colspan="42">
-                                <div class="d-flex h4" style="padding: 2rem;align-items:center;justify-content:center;">
+                                <div class="flex h4" style="padding: 2rem;align-items:center;justify-content:center;">
                                     <i class="fa fa-info" aria-hidden="true" style="width: 20px;"></i>
                                     <div class="text-dark">
                                         {{ trans('messages.No unread Notifications') }}

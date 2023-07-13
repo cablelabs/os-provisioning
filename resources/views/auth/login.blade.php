@@ -53,7 +53,7 @@
 
             @if ($head1 || $head2)
                 <div class="row">
-                    <div class="col-9 d-flex flex-column justify-content-center align-items-center">
+                    <div class="col-9 flex flex-column justify-content-center align-items-center">
                         <div style="font-size: 18px">{{ $head1 }}</div>
                         <div style="font-size: 14px">{{ $head2 }}</div>
                     </div>
@@ -84,7 +84,7 @@
                 </div>
 
                 {{-- Remember Checkbox --}}
-                <div class="form-group m-b-20 d-flex align-items-center">
+                <div class="form-group m-b-20 flex align-items-center">
                     <input align="left" class="mt-0 mb-2" name="remember" type="checkbox" value="1">
                     <label for="remember" class="control-label px-2">
                         {{ \App\Http\Controllers\BaseViewController::translate_label('Remember Me') . '!' }}

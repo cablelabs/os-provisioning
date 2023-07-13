@@ -1,6 +1,6 @@
 <template>
 <button @click="$emit('click')" :disabled="isLoading" 
-  class="text-white font-bold py-2 px-4 rounded d-flex items-center"
+  class="text-white font-bold py-2 px-4 rounded flex items-center"
   :class="{ 'bg-green-500 hover:bg-green-700': type === 'success', 'bg-red-500 hover:bg-red-700': type === 'danger', 'bg-blue-500 hover:bg-blue-700': type === 'primary' }"
 >
   <Spinner v-if="isLoading" size="4" border="2" class="mr-1" />

@@ -32,10 +32,10 @@
     @include('Layout.sidebar')
 
     @yield('sidebar-right')
-    <div id="page-container" class="d-flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
+    <div id="page-container" class="flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
 
         <div id="content"
-            class="d-flex flex-column flex-1 transition-all duration-200 {{ Module::collections()->has('CoreMon') ? 'ml-[6.25rem]' : 'ml-[1.5rem]' }}"
+            class="flex flex-column flex-1 transition-all duration-200 {{ Module::collections()->has('CoreMon') ? 'ml-[6.25rem]' : 'ml-[1.5rem]' }}"
             :class="{'{{ Module::collections()->has('CoreMon') ? 'ml-[22.25rem]' : 'ml-[17.5rem]' }}': !store.minified, 'mr-4': store.minifiedRight, 'mr-[17.5rem]': !store.minifiedRight}">
             <vue-snotify></vue-snotify>
 
@@ -85,7 +85,7 @@
     @include('Generic.userGeopos')
 
     {{-- scroll to top btn --}}
-    <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade d-flex"
+    <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade flex"
         data-click="scroll-top" style="justify-content: space-around;align-items: center">
         <i class="m-0 fa fa-angle-up"></i>
     </a>

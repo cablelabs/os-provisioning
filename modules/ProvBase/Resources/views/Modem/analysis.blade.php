@@ -19,8 +19,8 @@
 @extends ('provbase::layouts.split')
 
 @section('content_dash')
-    <div class="d-flex flex-wrap justify-content-between">
-    <div class="d-flex justify-content-end align-self-start {{ ($dash && count($dash) == 1) ? 'order-1 order-sm-3' : 'order-3'}}" style="flex: 1">
+    <div class="flex flex-wrap justify-content-between">
+    <div class="flex justify-content-end align-self-start {{ ($dash && count($dash) == 1) ? 'order-1 order-sm-3' : 'order-3'}}" style="flex: 1">
         @include('Generic.documentation', ['documentation' => $modem->help])
     </div>
     @if ($dash)
@@ -58,7 +58,7 @@
 
         <div class="tab-pane fade in" id="flood-ping">
             <form v-on:submit.prevent="floodPing">
-                <div class="row d-flex">
+                <div class="row flex">
                     <div style="flex:1;">
                         <select2 v-model="selectedPing" :initial-value="selectedPing" :i18n="{ all: '{{ trans('messages.all') }}'}">
                             <option v-for="option in pingOptions" :key="option.id" :value="option.id" v-text="option.name"></option>
@@ -70,7 +70,7 @@
                 </div>
             </form>
             {{-- Result --}}
-            <div v-if="pingStarted && ! floodPingResult" class="d-flex justify-content-center m-t-20" style="position:relative;height:200px;">
+            <div v-if="pingStarted && ! floodPingResult" class="flex justify-content-center m-t-20" style="position:relative;height:200px;">
                 <div id="loader" style="position: absolute;"></div>
             </div>
             <div v-if="floodPingResult">

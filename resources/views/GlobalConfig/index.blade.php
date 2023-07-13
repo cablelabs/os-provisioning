@@ -37,7 +37,7 @@
 		{!! \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header !!}
 	</h1>
 
-	<ul class="nav nav-pills d-flex nav-fill" id="SettingsTab">
+	<ul class="nav nav-pills flex nav-fill" id="SettingsTab">
 		@foreach($moduleModels as $count => $model)
 			<li class="nav-item">
 				<a href="#settings-{{Str::slug($links[$count]['name'],'_')}}" data-toggle="pill"> {{ $links[$count]['name'] }} </a>

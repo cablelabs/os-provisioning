@@ -28,7 +28,7 @@
         </button>
 
         {{-- NMSPrime Logo with link to global dashboard --}}
-        <span class="navbar-brand d-none d-sm-none d-md-block">
+        <span class="hidden navbar-brand d-sm-none d-md-block">
             <a href="{{ $nmsprimeLogoLink }}" target="_top" alt="NMS Prime Logo">
             <img @if($user->theme_color === 'dark_theme_config.css') src="{{ asset('images/nmsprime-logo-white.png') }}" @else src="{{ asset('images/nmsprime-logo.png') }}" @endif  class="h-10 ml-2 -mt-2 dark:bg-slate-900">
             </a>
@@ -39,19 +39,19 @@
                 request()->route()->getName(),
                 'edit',
             ))
-            <ul class="nav nav-pills mt-2 d-flex d-lg-none sm:hidden">
+            <ul class="mt-2 nav nav-pills flex d-lg-none sm:hidden">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle bg-dark active text-white"
+                    <a class="text-white nav-link dropdown-toggle bg-dark active"
                         style="display:flex; align-items:center;" href="#"
                         onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(0)';document.getElementById('breadcrumbexit').style.transform = 'translateY(0)';">
                         <i class="fa fa-ellipsis-h fa-2x" aria-hidden="true"></i>
-                        <div class="d-none d-md-block pl-2">{{ trans('view.Header_Dependencies') }}</div>
+                        <div class="hidden pl-2 d-md-block">{{ trans('view.Header_Dependencies') }}</div>
                     </a>
                 </li>
             </ul>
         @endif
         {{-- end mobile sidebar expand / collapse button --}}
-        <div id="breadcrumbscroller" class="d-flex col tab-overflow sm:hidden">
+        <div id="breadcrumbscroller" class="flex col tab-overflow sm:hidden">
             <ul class="nav nav-pills p-t-5">
                 <li class="prev-button "><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i
                             class="fa fa-arrow-left"></i></a></li>
@@ -70,22 +70,22 @@
         <ul class="flex items-center">
             {{-- @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics) && $modem_statistics->all)
             {{-- Modem Statistics (Online/Offline)
-            <li class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
-              <a class="d-flex" href="{{ route('HfcBase.index') }}" style="text-decoration: none;" data-toggle="tooltip" data-html="true" data-placement="auto" title="{!! $modem_statistics->text !!}">
+            <li class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
+              <a class="flex" href="{{ route('HfcBase.index') }}" style="text-decoration: none;" data-toggle="tooltip" data-html="true" data-placement="auto" title="{!! $modem_statistics->text !!}">
                   <i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
-                  <div class="badge badge-{{ $modem_statistics->style }} d-none d-lg-block">{!! $modem_statistics->text !!}</div>
+                  <div class="badge badge-{{ $modem_statistics->style }} hidden d-lg-block">{!! $modem_statistics->text !!}</div>
               </a>
             </li>
           @endif --}}
 
             {{-- count of user interaction needing EnviaOrders --}}
             @if (Module::collections()->has('ProvVoipEnvia'))
-          <li  class='d-none d-md-flex' style='font-size: 2em; font-weight: bold'>
+          <li  class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
             <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
               @if ($envia_interactioncount > 0)
-                <div class="d-flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
+                <div class="flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
                   <i class="fa fa-times fa-lg text-danger"></i>
-                  <div class="badge badge-danger d-none d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
+                  <div class="hidden badge badge-danger d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
                 </div>
               @else
                 <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
@@ -98,7 +98,7 @@
 
             {{-- quickview pre-selected network  --}}
             @if (Module::collections()->has('CoreMon') && isset($quick_view_network))
-            <li class="nav-item dropdown d-none d-md-flex">
+            <li class="hidden nav-item dropdown d-mflex">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" style="padding: 12px 10x 8px 8px;">
                     <img src="{{asset('storage/public/overview_network.webp')}}" class="w-8"/>
@@ -110,7 +110,7 @@
             @endif
 
             {{-- Help Section --}}
-            <li class="nav-item dropdown d-none d-md-flex">
+            <li class="hidden nav-item dropdown d-mflex">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" style="padding: 12px 10x 8px 8px;">
                     <i class="fa fa-question fa-2x" aria-hidden="true"></i>
@@ -134,7 +134,7 @@
             </li>
 
             {{-- global search form --}}
-            <li class="nav-item d-flex">
+            <li class="nav-item flex">
                 <a id="togglesearch" href="javascript:;" class="waves-effect waves-light" data-toggle="navbar-search">
                     <i class="fa fa-search fa-2x" aria-hidden="true"></i>
                 </a>
@@ -144,11 +144,11 @@
             @include('bootstrap._navbar-notifications')
 
             {{-- User Menu --}}
-            <li class="nav-item dropdown d-flex m-r-10">
-                <a id="navbarDropdown" class="nav-link d-flex align-items-end dropdown-toggle" href="#" role="button"
+            <li class="nav-item dropdown flex m-r-10">
+                <a id="navbarDropdown" class="nav-link flex align-items-end dropdown-toggle" href="#" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-user-circle-o fa-2x d-inline" aria-hidden="true"></i>
-                    <span class="d-none d-md-inline">
+                    <span class="hidden d-md-inline">
                         {{ $user->first_name . ' ' . $user->last_name }}
                     </span>
                 </a>
@@ -180,7 +180,7 @@
             </li>
         </ul>
         {{-- end header navigation right --}}
-        <div class="search-form bg-white" style="height: auto;">
+        <div class="bg-white search-form" style="height: auto;">
             <form id="globalSearchForm" class="form-open" method="GET" onsubmit="linkTag();">
                 <div class="btn-group search-btn">
                     <div class="input-group-append">

@@ -56,7 +56,7 @@
 $(document).ready(function()
 {
     $('input[class=toggleColorizeParams]').each(function () {
-        if (!$(this).is(':checked')) {$(this).next().toggleClass('d-none')};
+        if (!$(this).is(':checked')) {$(this).next().toggleClass('hidden')};
     });
 });
 </script>

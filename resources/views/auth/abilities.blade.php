@@ -116,7 +116,7 @@
                             @foreach ($actions as $action)
                                 @if (($action['name'] != 'delete' && $action['name'] != 'create') || $module != 'GlobalConfig')
                                     <span class="h-8">
-                                        <button class="mx-1 btn btn-sm d-none d-md-block" name="{!! $action['name'] . '_' . $module !!}"
+                                        <button class="mx-1 btn btn-sm hidden d-md-block" name="{!! $action['name'] . '_' . $module !!}"
                                             v-on:click.prevent="shortcutButtonClick"
                                             :class="[permissions.{!! $action['name'] !!}.{!! $module !!} ?
                                                 'btn-{!! $action['bsclass'] !!} {!! $action['name'] != 'update' ? 'active' : '' !!}' : 'btn-secondary'
@@ -131,7 +131,7 @@
                                                         '' : 'text-dark'
                                                     ]"></i>
                                             </span>
-                                            <span class="d-none d-wide-block" style="pointer-events: none;">
+                                            <span class="hidden d-wide-block" style="pointer-events: none;">
                                                 <i class="fa {!! $action['icon'] !!} fa-lg"
                                                     :class="[permissions.{!! $action['name'] !!}.{!! $module !!} ?
                                                         '' : 'text-dark'
@@ -152,7 +152,7 @@
                                                 'fa-save'">
                                         </i>
                                     </span>
-                                    <span class="d-none d-xl-block">
+                                    <span class="hidden d-xl-block">
                                         <i class="fa fa-lg"
                                             :class="loadingSpinner.{!! $module !!} ? 'fa-circle-o-notch fa-spin' :
                                                 'fa-save'">

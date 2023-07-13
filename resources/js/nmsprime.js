@@ -54,7 +54,7 @@ var makeNavbarSearch = function () {
 }
 
 $('.jsDateInterval').each(function () {
-  $(this.parentNode).addClass('d-flex')
+  $(this.parentNode).addClass('flex')
   $(this).addClass('h-100')
   $(this).after(`
     <div class="btn btn-secondary ml-2 jsToggle jsDate"><i class="fa mr-0 fa-calendar"></i></div>

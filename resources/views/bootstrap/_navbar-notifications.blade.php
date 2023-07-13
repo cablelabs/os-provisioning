@@ -52,13 +52,13 @@
                 </div>
                 <form action="{{ route('Notifications.markRead', [$notification]) }}" method="post">
                     @csrf
-                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="d-flex align-items-center text-secondary" style="padding: 10px 0 !important;">
+                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="flex align-items-center text-secondary" style="padding: 10px 0 !important;">
                         <i class="fa fa-check fa-lg" alt="mark as read"></i>
                     </a>
                 </form>
             </div>
         @empty
-            <div class="dropdown-item d-flex align-items-center" style="word-break: break-word;white-space: normal;">
+            <div class="dropdown-item flex align-items-center" style="word-break: break-word;white-space: normal;">
                 <i class="fa fa-info" aria-hidden="true" style="width: 30px;"></i>
                 <div>
                     {{ trans('messages.No unread Notifications') }}

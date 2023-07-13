@@ -35,9 +35,9 @@
                 @endif
                 <div v-for="(table, tableName) in realtime">
                     <div v-if="! tableName.includes('Channel') && isNaN(tableName)">
-                        <h4 v-if="isNaN(tableName)" class="d-flex">
+                        <h4 v-if="isNaN(tableName)" class="flex">
                             <div v-text="tableName.replace(/^DT\_|^PT\_/g, '')"></div>
-                            <div v-if="table.hasOwnProperty('#')" class="d-flex">
+                            <div v-if="table.hasOwnProperty('#')" class="flex">
                                 <div class="mx-2">-</div>
                                 <div v-text="Object.keys(table['#']).length + ' ' + translations.modemAnalysis.channels">
                             </div>

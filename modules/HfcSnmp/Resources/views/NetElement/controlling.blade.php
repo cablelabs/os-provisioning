@@ -127,7 +127,7 @@
         @endforeach
 
         {{-- Save Button --}}
-        <div class="d-flex justify-content-center">
+        <div class="flex justify-content-center">
             <input
                 class="btn btn-primary"
                 value="{!! \App\Http\Controllers\BaseViewController::translate_view($save_button_name , 'Button') !!}"

@@ -16,26 +16,26 @@
  * limitations under the License.
  */
 ?>
-        <div class="panel-heading d-flex flex-row justify-content-between dark:py-1 dark:px-2">
-            <h4 class="panel-title d-flex">
+        <div class="panel-heading flex flex-row justify-content-between dark:py-1 dark:px-2">
+            <h4 class="panel-title flex">
                 {!! $view_header !!}
             </h4>
-            <div class="panel-heading-btn d-flex flex-row">
+            <div class="panel-heading-btn flex flex-row">
                 <a href="javascript:;"
-                    class="btn btn-xs btn-icon btn-circle btn-default d-flex"
+                    class="btn btn-xs btn-icon btn-circle btn-default flex"
                     data-click="panel-expand"
                     style="justify-content: flex-end;align-items: center">
-                    <i class="fa fa-expand d-flex"></i>
+                    <i class="fa fa-expand flex"></i>
                 </a>
                 <!--a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a-->
                 <a href="javascript:;"
-                    class="btn btn-xs btn-icon btn-circle btn-warning d-flex"
+                    class="btn btn-xs btn-icon btn-circle btn-warning flex"
                     data-click="panel-collapse"
                     style="justify-content: flex-end;align-items: center">
                     <i class="fa fa-minus"></i>
                 </a>
                 <a href="javascript:;"
-                    class="btn btn-xs btn-icon btn-circle btn-danger d-flex"
+                    class="btn btn-xs btn-icon btn-circle btn-danger flex"
                     data-click="panel-remove"
                     style="justify-content: flex-end;align-items: center">
                     <i class="fa fa-times"></i>
