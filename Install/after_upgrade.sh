@@ -63,6 +63,10 @@ fi
 
 sed -i 's/^#RADIUS_DB/RADIUS_DB/' /etc/nmsprime/env/provbase.env
 sed -i "s/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$(pwgen 12 1)/" /etc/nmsprime/env/provbase.env
+
+if [ -d "/var/www/nmsprime/resources/lang" ]; then
+    rm -rf "/var/www/nmsprime/resources/lang"
+fi
 # TODO: END Custom NMS Prime 3.2 Code
 
 cd '/var/www/nmsprime'
