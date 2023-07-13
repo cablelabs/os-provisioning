@@ -4,8 +4,29 @@ module load php80
 
 # TODO: Remove this code section after NMSPrime v3.2
 # The whole code just does the initial steps that need to be done before Laravel can be used again with Pgsql
-# this file causes a class error, hence we have to remove it (would be done anyway during cleanup)
+# these files cause an error on install, hence we have to remove it (would be done anyway during cleanup)
 rm -f '/var/www/nmsprime/vendor/symfony/translation/TranslatorInterface.php'
+
+if [ -f "/var/www/nmsprime/modules/HfcCustomer/Config/config.php" ]; then
+    echo "<?php return [];" > '/var/www/nmsprime/modules/HfcCustomer/Config/config.php'
+fi
+
+if [ -f "/var/www/nmsprime/modules/HfcReq/Config/config.php" ]; then
+    echo "<?php return [];" > '/var/www/nmsprime/modules/HfcReq/Config/config.php'
+    sed -i "0,/NetElement.searchNetsClusters/s//NetElement.searchClusters/" '/var/www/nmsprime/modules/HfcReq/Http/routes.php'
+fi
+
+if [ -f "/var/www/nmsprime/modules/HfcSnmp/Config/config.php" ]; then
+    echo "<?php return [];" > '/var/www/nmsprime/modules/HfcSnmp/Config/config.php'
+fi
+
+if [ -f "/var/www/nmsprime/modules/ProvVoip/Config/config.php" ]; then
+    echo "<?php return [];" > '/var/www/nmsprime/modules/ProvVoip/Config/config.php'
+fi
+
+if [ -f "/var/www/nmsprime/modules/PropertyManagement/Config/config.php" ]; then
+    echo "<?php return [];" > '/var/www/nmsprime/modules/PropertyManagement/Config/config.php'
+fi
 
 read -r -a auths <<< $(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsprime/env/global.env | sort | cut -d'=' -f2 | xargs)
 

@@ -4,8 +4,6 @@ module load php80
 
 cd '/var/www/nmsprime'
 
-php artisan optimize:clear
-
 # Run artisan commands only after all installed NMSPrime modules have been upgraded
 tmpFile="$(mktemp)"
 lastModule=1
