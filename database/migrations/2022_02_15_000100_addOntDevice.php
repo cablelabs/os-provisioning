@@ -29,7 +29,7 @@ class AddOntDevice extends BaseMigration
     public function up()
     {
         /* DB::statement("ALTER TABLE configfile MODIFY COLUMN device ENUM('cm', 'mta', 'tr069', 'ont') NOT NULL"); // MariaDB version*/
-        DB::statement("ALTER TYPE nmsprime.configfile_device ADD VALUE 'ont'");
+        system('sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "ALTER TYPE nmsprime.configfile_device ADD VALUE \'ont\'"');
     }
 
     /**
