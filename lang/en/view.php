@@ -793,7 +793,8 @@ return [
         'headlines' => [
             'activeCustomers' => 'Active customers',
             'activeItems' => 'Active items',
-            'newCustomers' => 'New customers',
+            'acquiredCustomers' => 'Acquired Customers',
+            'newCustomers' => 'Active new customers',
             'perProductGroup' => 'per product group',
             'revenue' => 'Revenue',
         ],

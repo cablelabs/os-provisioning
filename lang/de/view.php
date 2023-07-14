@@ -794,7 +794,8 @@ return [
         'headlines' => [
             'activeCustomers' => 'Aktive Kunden',
             'activeItems' => 'Aktive Posten',
-            'newCustomers' => 'Neukunden',
+            'acquiredCustomers' => 'Akquirierte Neukunden',
+            'newCustomers' => 'Aktive Neukunden',
             'perProductGroup' => 'pro Produktgruppe',
             'revenue' => 'Umsatz aktiver Kunden',
         ],
