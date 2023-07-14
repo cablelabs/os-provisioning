@@ -151,6 +151,19 @@ class ImportNmsCommand extends Command
     protected $fyi = [];
 
     /**
+     * Array of all imported models.
+     *
+     * @var array
+     */
+    protected $importedModems = [];
+
+    protected $importedContracts = null;
+
+    protected $importedItems = [];
+
+    protected $importedMtas = [];
+
+    /**
      * Defines the sections for each progress bar.
      *
      * @var ConsoleOutput
@@ -264,6 +277,7 @@ class ImportNmsCommand extends Command
             $contract = $this->addModems($contractToImport, $contract);
             $contract = $this->addSepas($contractToImport, $contract);
 
+            $this->importedContracts[] = $contract;
             $contract->push();
         }
 
@@ -561,7 +575,6 @@ class ImportNmsCommand extends Command
             return $contract;
         }
 
-        $items = [];
         foreach ($contractToImport->items as $item) {
             if (! array_key_exists($item->product_id, $this->productMap)) {
                 $this->writeMessage("Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('productMap')}");
@@ -577,7 +590,9 @@ class ImportNmsCommand extends Command
             $newItem->product_id = $this->productMap[$item->product_id];
 
             $newItem->contract_id = $contract->id;
-            $items[] = $newItem;
+            $this->importedItems[] = $newItem;
+
+            $this->itemBar->advance();
 
             $newItem->saveQuietly();
         }
@@ -585,8 +600,6 @@ class ImportNmsCommand extends Command
         // $contract->items()->saveMany(
         //     $items,
         // );
-
-        $this->itemBar->advance(count($items));
 
         return $contract;
     }
@@ -620,7 +633,7 @@ class ImportNmsCommand extends Command
             $newModem->contract_id = $contract->id;
             // there exist modems with qos_id 0 and NULL
             $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
-            $modems[] = $newModem;
+            $this->importedModems[] = $newModem;
             $newModem->saveQuietly();
 
             $this->modemBar->advance();
@@ -646,7 +659,7 @@ class ImportNmsCommand extends Command
             $newMta->updated_at = now();
             $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
             $newMta->modem_id = $modem->id;
-            $mtas[] = $newMta;
+            $this->importedMtas[] = $newMta;
 
             $newMta->saveQuietly();
 
@@ -828,11 +841,11 @@ class ImportNmsCommand extends Command
 
     private function callObservers()
     {
-        // TODO call observers
-        // modem
-        // contract
-        // item
-        // mta
+        foreach (['importedContracts', 'importedModems', 'importedMtas', 'importedItems'] as $models) {
+            foreach ($this->$models as $model) {
+                $model->created();
+            }
+        }
     }
 
     // dev purpose
