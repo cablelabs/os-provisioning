@@ -20,8 +20,11 @@ module.exports = {
     }
   },
   plugins: [],
+  corePlugins: {
+    visibility: false
+  },
   safelist: [
     'bg-whitesmoke',
     'bg-gainsboro'
-  ]
+  ],
 }

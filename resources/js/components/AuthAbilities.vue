@@ -352,6 +352,7 @@ export default {
     return {
       capabilityUpdate,
       modelUpdate,
+      button,
       checkShortcutButtons,
       setShortcutButtons,
       shortcutButtonClick,
