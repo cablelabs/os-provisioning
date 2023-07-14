@@ -215,6 +215,8 @@ return [
     'PPP Username'              => 'PPP Nutzername',
     'PPP Password'              => 'PPP Passwort',
     'Sign me in'                => 'Anmelden',
+    'sidebarPinned'             => 'Sidebar angepinnt',
+    'sidebarUnpinned'           => 'Sidebar geschlossen',
     'snmp' => [
         'errors_walk' => 'Die Abfrage folgender OIDs schlug fehl: :oids.',
         'errors_set' => 'Das Setzen folgender Parameter schlug fehl: :oids.',

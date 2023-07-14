@@ -30,49 +30,56 @@
 <body {{ isset($body_onload) ? "onload=$body_onload()" : '' }} @if($user->theme_color === 'dark_theme_config.css') class="dark" @endif data-theme_color="{{$user->theme_color}}">
     @include('Layout.navbar')
     @include('Layout.sidebar')
-
     @yield('sidebar-right')
+
     <div id="page-container" class="flex flex-column fade page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
+        <Transition>
+            <div id="content"
+                class="flex flex-column flex-1 transition-all duration-200 ease-in-out {{ session('sidebar-pinned') ? (Module::collections()->has('CoreMon') ? 'md:ml-[22.75rem]' : 'md:ml-[17.5rem]') : (Module::collections()->has('CoreMon') ? 'md:ml-[6.25rem]' : 'md:ml-[1.5rem]') }}"
+                :class="{
+                    '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[22.75rem]' : 'md:!ml-[17.5rem]' }}': !store.minified,
+                    '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[6.25rem]' : 'md:!ml-[1.5rem]' }}': store.minified,
+                    'mr-2' : !store.hasSidebarRight,
+                    'mr-4': store.hasSidebarRight &&  store.minifiedRight,
+                    'mr-[17.5rem]': store.hasSidebarRight && !store.minifiedRight
+                }">
+                <vue-snotify></vue-snotify>
 
-        <div id="content"
-            class="flex flex-column flex-1 transition-all duration-200 {{ Module::collections()->has('CoreMon') ? 'ml-[6.25rem]' : 'ml-[1.5rem]' }}"
-            :class="{'{{ Module::collections()->has('CoreMon') ? 'ml-[22.25rem]' : 'ml-[17.5rem]' }}': !store.minified, 'mr-4': store.minifiedRight, 'mr-[17.5rem]': !store.minifiedRight}">
-            <vue-snotify></vue-snotify>
-
-            @if (session('GlobalNotification'))
-                <div style="padding-top:1rem;">
-                    @foreach (session('GlobalNotification') as $name => $options)
+                @if (session('GlobalNotification'))
+                    <div style="padding-top:1rem;">
+                        @foreach (session('GlobalNotification') as $name => $options)
+                            <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
+                                <h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
+                                <p class="mb-0 text-center">
+                                    {{ trans('messages.' . $options['reason']) }}
+                                    <a href="{{ route('User.profile', $user->id) }}" class="alert-link">
+                                        {{ trans('messages.PasswordClick') }}
+                                    </a>
+                                </p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+                @if (session('DashboardNotification'))
+                    @foreach (session('DashboardNotification') as $name => $options)
                         <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
-                            <h4 class="text-center alert-heading">{{ trans('messages.' . $options['message']) }} </h4>
                             <p class="mb-0 text-center">
-                                {{ trans('messages.' . $options['reason']) }}
-                                <a href="{{ route('User.profile', $user->id) }}" class="alert-link">
-                                    {{ trans('messages.PasswordClick') }}
-                                </a>
+                                {{ $options['message'] }}
                             </p>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                     @endforeach
+                @endif
+                <div class="flex flex-col flex-1 mt-2 d-print-flex">
+                    @yield ('content')
                 </div>
-            @endif
-            @if (session('DashboardNotification'))
-                @foreach (session('DashboardNotification') as $name => $options)
-                    <div class="alert alert-{{ $options['level'] }} alert-dismissible fade show" role="alert">
-                        <p class="mb-0 text-center">
-                            {{ $options['message'] }}
-                        </p>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endforeach
-            @endif
-            <div class="flex flex-col flex-1 d-print-flex">
-                @yield ('content')
             </div>
-        </div>
+        </Transition>
         <overlay/>
     </div>
 

@@ -17,11 +17,11 @@
  */
 ?>
 {{-- begin Navbar --}}
-<nav v-pre id="header" class="header navbar navbar-expand navbar-default navbar-fixed-top d-print-none dark:shadow-slate-100 dark:shadow">
+<nav v-pre id="header" class="h-[60px] header navbar navbar-expand navbar-default navbar-fixed-top d-print-none dark:shadow-slate-100 dark:shadow">
     {{-- only one row Navbar --}}
     <div class="flex justify-between dark:text-slate-100">
         {{-- begin mobile sidebar expand / collapse button --}}
-        <button type="button" class="navbar-toggle m-l-20" data-click="sidebar-toggled">
+        <button type="button" class="navbar-toggle m-l-20" v-on:click="toggleMobileSidebar">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -45,7 +45,7 @@
                         style="display:flex; align-items:center;" href="#"
                         onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(0)';document.getElementById('breadcrumbexit').style.transform = 'translateY(0)';">
                         <i class="fa fa-ellipsis-h fa-2x" aria-hidden="true"></i>
-                        <div class="hidden pl-2 d-md-block">{{ trans('view.Header_Dependencies') }}</div>
+                        <div class="hidden pl-2 md:block">{{ trans('view.Header_Dependencies') }}</div>
                     </a>
                 </li>
             </ul>

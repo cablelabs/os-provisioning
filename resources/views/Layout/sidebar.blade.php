@@ -1,6 +1,6 @@
 <div id="sidebar" data-net-count='{{ $netCount ?? 0 }}' data-netelements='@json($networks ?? new stdClass())'
-    data-favorites='@json($favorites ?? new stdClass())' class="fixed top-0 left-0 z-0 flex flex-col h-full">
-    <div class="mt-16 md:mt-[3.25rem] flex flex-1 text-gray-200">
+    data-favorites='@json($favorites ?? new stdClass())' class="fixed top-0 left-0 md:z-0 z-10 flex flex-col h-full">
+    <div class="mt-16 md:mt-[60px] flex flex-1 text-gray-200">
         @if (Module::collections()->has('CoreMon'))
         <div class="z-20 flex flex-col justify-between w-16 bg-slate-900">
             <div>
@@ -100,8 +100,7 @@
             </a>
         </div>
         @endif
-        <div class="relative z-10 transition-all duration-200"
-            :class="{ '-translate-x-full': store.minified }">
+        <div class="relative z-10">
             @if (Module::collections()->has('CoreMon'))
             <div v-cloak v-show="menu == 'Core Network'" class="flex w-64 h-full bg-gray-900 core-network-sidebar">
                 <div class="w-full px-3 py-2 text-gray-400">
@@ -165,8 +164,8 @@
             </div>
             @endif
             <!-- begin "old" sidebar -->
-            <div v-cloak v-show="(menu == 'Access Network' || {{ (int)!Module::collections()->has('CoreMon') }}) && !store.minified" class="flex w-64 overflow-y-auto sidebar d-print-none"
-                style="position: absolute;padding-top:0;">
+            <div class="fixed md:absolute flex md:w-64 pt-0 overflow-y-auto transition-all duration-200 ease-in-out sidebar d-print-none {{ session('sidebar-pinned') ? '' : 'md:-translate-x-full' }}"
+                :class="{ 'left-[-220px] md:!-translate-x-full': store.minified, 'left-0 md:!translate-x-0': !store.minified }">
                 <!-- begin sidebar scrollbar -->
                 <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
                     <!-- begin sidebar user -->
@@ -209,7 +208,7 @@
                                 }"
                                 style="z-index:10000;">
                                 <div class="flex recolor sidebar-element">
-                                    <a class="flex caret-link"
+                                    <a class="flex caret-link w-40 md:w-full"
                                         v-on:click="{{ isset($typearray['link']) ? "!store.minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug}')" }}"
                                         href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;' }}">
                                         @if (is_file(public_path('images/apps/') . $typearray['icon']))
@@ -219,7 +218,7 @@
                                         @else
                                             <i class="fa fa-fw {{ $typearray['icon'] }} mr-2"></i>
                                         @endif
-                                        <span>{{ $typearray['translated_name'] ?? $module_name }}</span>
+                                        <span class="text-ellipsis">{{ $typearray['translated_name'] ?? $module_name }}</span>
                                     </a>
                                     @if (isset($typearray['submenu']))
                                         <a class="flex-1 caret-link" href="javascript:;"
@@ -236,25 +235,23 @@
                                 </div>
                                 <!-- SubMenu -->
                                 @isset($typearray['submenu'])
-                                    <transition name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter"
+                                    <transition appear name="accordion" v-on:before-enter="beforeEnter" v-on:enter="enter"
                                         v-on:before-leave="beforeLeave" v-on:leave="leave" v-on:after-leave="afterLeave">
-                                        <ul v-show="activeItem == '{{ $moduleNameSlug }}' && ! isCollapsed"
-                                            class="pl-0 m-0 sidebar-hover p-b-10"
+                                        <ul v-cloak v-show="activeItem == '{{ $moduleNameSlug }}' && ! isCollapsed"
+                                            class="pl-0 m-0 sidebar-hover p-b-10 transition-all duration-200 ease-in-out overflow-hidden list-none bg-sidebar-darker"
                                             :class="{
                                                 'minifiedMenu': (showMinifiedHoverMenu && activeItem ==
                                                     '{{ $moduleNameSlug }}' && !isCollapsed)
-                                            }"
-                                            style="transition:all .3s linear;overflow:hidden;list-style-type: none;background: #1a2229;display:none;">
+                                            }">
                                             @foreach ($typearray['submenu'] as $type => $valuearray)
                                                 <li id="menu-{{ Str::slug($type, '_') }}"
-                                                    class="p-l-20 {{ $loop->first ? 'p-t-10' : '' }}"
+                                                    class="pl-8 {{ $loop->first ? 'pt-2' : '' }}"
                                                     :class="{
                                                         active: (lastClicked ==
                                                             'menu-{{ Str::slug($type, '_') }}')
                                                     }"
                                                     v-on:click="setSubMenu('menu-{{ Str::slug($type, '_') }}')">
-                                                    <a href="{{ route($valuearray['link']) }}"
-                                                        style="display:block;padding:5px 20px;color:#889097;overflow: hidden;white-space:nowrap;font-weight:300;text-decoration:none;">
+                                                    <a href="{{ route($valuearray['link']) }}" class="block py-1 text-neutral-500 font-light overflow-hidden whitespace-nowrap no-underline">
                                                         <i class="fa fa-fw {{ $valuearray['icon'] }}"></i>
                                                         <span>{{ $type }}</span>
                                                     </a>
@@ -385,11 +382,11 @@
                                                     style="transition:all .25s;"></i>
                                             </a>
                                         </div>
-                                        <transition 
-                                            name="accordion" 
-                                            v-on:before-enter="beforeEnter" 
+                                        <transition
+                                            name="accordion"
+                                            v-on:before-enter="beforeEnter"
                                             v-on:enter="enter"
-                                            v-on:before-leave="beforeLeave" 
+                                            v-on:before-leave="beforeLeave"
                                             v-on:leave="leave"
                                             v-on:after-leave="afterLeave"
                                         >
@@ -439,18 +436,13 @@
                     </ul>
                     <!-- end sidebar nav -->
             </div>
-            <div class="absolute top-0 flex flex-col items-center w-5 h-full pt-2 space-y-6 bg-lime-nmsprime -right-5" :class="{'left-64': (menu == 'Access Network' && !store.minified) || (!store.minified && {{(int)!Module::collections()->has('CoreMon')}})}">
-                <div v-cloak class="hover:cursor-pointer text-white" v-on:click="handleMinify">
+            <div
+                class="absolute top-0 hidden md:flex flex-col items-center w-5 h-full pt-2 space-y-6 transition-all duration-200 ease-in-out bg-lime-nmsprime -right-5 {{ session('sidebar-pinned') ? 'translate-x-64' : '' }}"
+                :class="{'!translate-x-64': !store.minified,'!translate-x-0': store.minified}">
+                <div v-cloak class="text-white hover:cursor-pointer" v-on:click="handleMinify">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 duration-300 ease-in-out" :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-                <div v-cloak v-if="!store.minified" class="hover:cursor-pointer text-white" v-on:click="pinSidebar">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 duration-300 ease-in-out" :class="{ 'rotate-0': pinned, 'rotate-90 hover:rotate-0': !pinned }" fill="currentColor"
-                        viewBox="0 0 384 512" stroke="none" stroke-width="2">
-                        <path
-                            d="M32 32C32 14.33 46.33 0 64 0H320C337.7 0 352 14.33 352 32C352 49.67 337.7 64 320 64H290.5L301.9 212.2C338.6 232.1 367.5 265.4 381.4 306.9L382.4 309.9C385.6 319.6 383.1 330.4 377.1 338.7C371.9 347.1 362.3 352 352 352H32C21.71 352 12.05 347.1 6.04 338.7C.0259 330.4-1.611 319.6 1.642 309.9L2.644 306.9C16.47 265.4 45.42 232.1 82.14 212.2L93.54 64H64C46.33 64 32 49.67 32 32zM224 384V480C224 497.7 209.7 512 192 512C174.3 512 160 497.7 160 480V384H224z" />
                     </svg>
                 </div>
             </div>

@@ -185,4 +185,9 @@ BaseRoute::group([], function () {
         'as' => 'Notifications.markRead',
         'uses' => 'NotificationController@markRead',
     ]);
+
+    BaseRoute::post('Sidebar/setPinnedState', [
+        'as' => 'Sidebar.setPinnedState',
+        'uses' => 'SidebarController@setPinnedState',
+    ]);
 });

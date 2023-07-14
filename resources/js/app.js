@@ -44,6 +44,7 @@ import snotify from 'vue3-snotify'
 
 import app from './components/App.vue'
 import sidebar from './components/Sidebar.vue'
+import navbar from './components/Navbar.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import SidebarSelect2Component from './components/SidebarSelect2.vue'
@@ -62,7 +63,9 @@ window.main = createApp(app)
   .mount('#page-container')
 
 // navbar
-window.navbar = createApp({}).component('NavbarQuickviewNetwork', NavbarQuickviewNetwork).mount('#header')
+window.navbar = createApp(navbar)
+  .component('NavbarQuickviewNetwork', NavbarQuickviewNetwork)
+  .mount('#header')
 
 // sidebar
 if (document.getElementById('sidebar')) {

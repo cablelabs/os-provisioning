@@ -44,7 +44,6 @@ export default {
     })
 
     const menu = ref('Core Network')
-    const pinned = ref(false)
     const leaveTimer = ref(null) // timer for leave and enter minified menu
     const showMinifiedHoverMenu = ref(false)
     const showMinifiedHoverNet = ref(false)
@@ -65,15 +64,10 @@ export default {
     const activeNetelement = ref(null)
     const clickedNetelement = ref(null)
     const netelements = ref([])
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || screen.width < 768
 
     function initSidebar() {
       initialNE.value = props.favorites.length === 0
-      pinned.value = localStorage.getItem('core-network-pinned') === 'true'
-
-      // load minified state
-      if (pinned.value) {
-        store.minified = localStorage.getItem('minified-state') === 'true'
-      }
 
       // load state of Net toggle
       isVisible.value = props.netCount ? localStorage.getItem('sidebar-net-isVisible') === 'true' : false
@@ -110,16 +104,6 @@ export default {
       })
     }
 
-    function pinSidebar() {
-      if (!store.minified && !pinned.value) {
-        localStorage.setItem('core-network-pinned', true)
-        return (pinned.value = true)
-      }
-
-      localStorage.setItem('core-network-pinned', false)
-      pinned.value = false
-    }
-
     function openSidebar(menuItem) {
       menu.value = menuItem
 
@@ -128,30 +112,19 @@ export default {
       }
     }
 
+    window.addEventListener('sidebar.toggle', function (e) {
+      handleMinify()
+    });
+
     /**
      * Handles the Click on the minify button. A lot of the logic copied from
      * color admin due to conflicts.
      */
     function handleMinify() {
-      let sidebar = document.getElementById('sidebar')
-
-      sidebar.style.marginTop = 0
-      sidebar.style.overflow = 'visible'
-      sidebar.removeAttribute('data-init')
-
-      if (!store.minified) {
-        pinSidebar()
+      if (store.minified || !isMobile) {
+        $(document.getElementById('sidebar')).slimScroll({ destroy: true })
       }
 
-      if (
-        store.minified ||
-        !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      ) {
-        $(sidebar).slimScroll({ destroy: true })
-      }
-
-      sidebar.style.transition = 'all .15s ease-in-out'
-      store.minified = !store.minified
       isCollapsed.value = true
       netelements.value.forEach((n) => (n.isCollapsed = true))
 
@@ -159,7 +132,15 @@ export default {
         setSearchMode()
       }
 
+      store.minified = !store.minified
+
+      if (isMobile) {
+        return
+      }
+
+      pushPinnedStateToSession(!store.minified) // pinned is opposite of minified
       localStorage.setItem('minified-state', store.minified)
+
       setTimeout(() => {
         $(window).trigger('resize')
         if ($('table.datatable').length && !store.minified) {
@@ -167,6 +148,24 @@ export default {
           $('table.datatable').DataTable().responsive.recalc()
         }
       }, 200)
+    }
+
+    function pushPinnedStateToSession(state) {
+      axios({
+          method: 'post',
+          url: '/admin/Sidebar/setPinnedState',
+          contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+          data: {
+            pinned: state
+          }
+        })
+          .then((response) => {
+            snotify.success(response.data.message)
+          })
+          .catch((error) => {
+            console.error(error)
+            snotify.error(error.message)
+          })
     }
 
     /**
@@ -316,7 +315,7 @@ export default {
           })
           .catch((error) => {
             console.error(error)
-            $snotify.error(error.message)
+            snotify.error(error.message)
           })
       }, 500)
     }
@@ -366,7 +365,7 @@ export default {
         })
         .catch((error) => {
           console.error(error)
-          $snotify.error(error.message)
+          snotify.error(error.message)
         })
     }
 
@@ -425,7 +424,7 @@ export default {
         })
         .catch((error) => {
           console.error(error)
-          $snotify.error(error.message)
+          snotify.error(error.message)
         })
     }
 
@@ -526,7 +525,6 @@ export default {
 
     return {
       menu,
-      pinned,
       leaveTimer,
       showMinifiedHoverMenu,
       showMinifiedHoverNet,
@@ -582,7 +580,6 @@ export default {
       leaveMinifiedSidebar,
       handleMinify,
       openSidebar,
-      pinSidebar,
       initSidebar,
       loopNetElements,
       store,

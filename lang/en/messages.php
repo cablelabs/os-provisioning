@@ -215,6 +215,8 @@ return [
     'PPP Username'              => 'PPP Username',
     'PPP Password'              => 'PPP Password',
     'Sign me in'                => 'Sign me in',
+    'sidebarPinned'             => 'Sidebar Pinned',
+    'sidebarUnpinned'           => 'Sidebar Unpinned',
     'snmp' => [
         'errors_walk' => 'Querying the following OIDs failed: :oids.',
         'errors_set' => 'The following Parameters could not be Set: :oids.',

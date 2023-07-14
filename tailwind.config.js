@@ -13,6 +13,7 @@ module.exports = {
     extend: {
       colors: {
         'sidebar-light': '#2d353c',
+        'sidebar-darker': '#1a2229',
         'lime-nmsprime': '#98d145',
         'whitesmoke' : '#f5f5f5',
         'gainsboro' : '#dcdcdc',

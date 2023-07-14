@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) NMS PRIME GmbH ("NMS PRIME Community Version")
  * and others – powered by CableLabs. All rights reserved.
@@ -15,20 +16,24 @@
  * limitations under the License.
  */
 
-import { reactive } from 'vue'
+namespace App\Http\Controllers;
 
-export const store = reactive({
-  minified: localStorage.getItem('minified-state') === 'true',
-  minifiedRight: true,
-  hasSidebarRight: false,
-  panelRightKeys: [],
-  panelRightData: {},
-  overlay: false,
-  icons: {
-    defaultColor: "#333",
-    defaultSize: 20,
-  },
-  urlParams: Object.fromEntries(new URLSearchParams(window.location.search).entries()),
-  snotify: null,
-  hfcStorageRequest: {}
-})
+use Illuminate\Http\Request;
+
+class SidebarController extends BaseController
+{
+    public function setPinnedState(Request $request)
+    {
+        if (! $request->has('pinned')) {
+            return;
+        }
+
+        session(['sidebar-pinned' => $request->get('pinned')]);
+
+        return response()->json([
+            'success' => true,
+            'pinned' => $pinned = session('sidebar-pinned'),
+            'message' => $pinned ? trans('messages.sidebarPinned') : trans('messages.sidebarUnpinned'),
+        ]);
+    }
+}
