@@ -57,6 +57,8 @@ if (mix.inProduction()) {
   mix.postCss('resources/css/vendor.css', 'public/css')
 }
 
+mix.js('resources/js/assets/nmsprime-canvas.js', 'public/js');
+
   // copy from node_modules do public
   mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
   .copy('node_modules/pdfmake/build/pdfmake.min.js', 'public/js/pdfmake.min.js')
