@@ -106,6 +106,13 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'browser' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/browser.log'),
+            'level' => 'debug',
+            'days' => 30,
+        ],
     ],
 
 ];
