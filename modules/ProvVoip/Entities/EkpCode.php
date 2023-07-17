@@ -50,7 +50,7 @@ class EkpCode extends \BaseModel
      *
      *	@author Patrick Reichel
      *
-     *	@return array containing all ekps
+     * @return array containing all ekps
      */
     public static function ekp_list_for_form_select()
     {

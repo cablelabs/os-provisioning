@@ -234,7 +234,7 @@ class BaseModel extends Eloquent
      *
      *	@param name column name of your database defined as enum
      *	@param with_empty_option should an empty option be added?
-     *	@return array with available enum options
+     * @return array with available enum options
      */
     public static function getPossibleEnumValues($name, $with_empty_option = false)
     {
@@ -526,7 +526,7 @@ class BaseModel extends Eloquent
      *
      *	@author Torsten Schmidt, Patrick Reichel
      *
-     *	@return array of all children objects
+     * @return array of all children objects
      */
     public function get_all_children()
     {

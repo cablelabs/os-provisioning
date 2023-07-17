@@ -50,7 +50,7 @@ class CarrierCode extends \BaseModel
      *
      *	@author Patrick Reichel
      *
-     *	@return array containing all carriers
+     * @return array containing all carriers
      */
     public static function carrier_list_for_form_select($with_empty = true)
     {

@@ -2014,7 +2014,7 @@ class BaseController extends Controller
      *
      *  @author Torsten Schmidt
      *
-     *  @return array of ['doc' => link, 'youtube' => link, 'url' => 'link']
+     * @return array of ['doc' => link, 'youtube' => link, 'url' => 'link']
      */
     public function view_help()
     {
