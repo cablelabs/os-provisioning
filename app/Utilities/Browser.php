@@ -23,20 +23,21 @@ class Browser
     {
         /**
          * Use Atomic locks to avoid race condition when
-         * more then one jobs run at the same time
-         * and request a browser instance
+         * more than one job runs at the same time
+         * and requests a browser instance
          */
         $lock = Cache::lock('resolve-browser-instance', 15);
         $browserResolved = false;
 
         do {
-            if ($lock->get()) {
-                $browser = static::existingOrNewBrowser($options);
-                $browserResolved = true;
-                $lock->forceRelease();
-            } else {
+            if (! $lock->get()) {
                 sleep(1);
+                continue;
             }
+
+            $browser = static::existingOrNewBrowser($options);
+            $browserResolved = true;
+            $lock->forceRelease();
         } while (! $browserResolved);
 
         return $browser;
