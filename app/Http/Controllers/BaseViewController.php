@@ -647,8 +647,6 @@ class BaseViewController extends Controller
             }
         }
 
-        $menu = array_filter($menu, fn ($item) => isset($item['submenu']) || $item['link'] == 'Workforce.index');
-
         Session::put('menu', $menu);
 
         return $menu;
