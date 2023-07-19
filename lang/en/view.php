@@ -797,6 +797,7 @@ return [
             'newCustomers' => 'Active new customers',
             'perProductGroup' => 'per product group',
             'revenue' => 'Revenue',
+            'revenueIncrease' => 'Revenue Increase of active new customers',
         ],
     ],
     'SettlementRun' => 'SettlementRun',

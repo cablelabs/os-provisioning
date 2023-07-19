@@ -798,6 +798,7 @@ return [
             'newCustomers' => 'Aktive Neukunden',
             'perProductGroup' => 'pro Produktgruppe',
             'revenue' => 'Umsatz aktiver Kunden',
+            'revenueIncrease' => 'Umsatzsteigerung aktiver Neukunden',
         ],
     ],
     'SettlementRun' => 'Abrechnungslauf',
