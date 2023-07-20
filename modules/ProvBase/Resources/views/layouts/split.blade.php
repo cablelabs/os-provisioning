@@ -52,6 +52,9 @@
     data-channel="{{ \Modules\ProvMon\Events\NewRealtimeValues::getChannelName($modem->id) }}"
     data-realtime-update-interval="{{ \Modules\ProvMon\Entities\ProvMon::first()->realtime_update_interval }}"
     data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
+    data-iperf-channel="{{ \Modules\ProvMon\Events\ArrisIperfProgress::getChannelName($modem->id) }}"
+    data-iperf-route="{{ route('Modem.arrisIperf', $modem->id) }}"
+    data-start-measurement="{{ trans('view.modemAnalysis.startMeasurement') }}"
 >
 
 @else
