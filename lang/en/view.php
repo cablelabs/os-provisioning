@@ -1003,4 +1003,7 @@ return [
         'avgUpstreamSnr' => 'Avg. Upstream SNR',
     ],
     'devices' => 'Devices',
+    'PDFs Generation'           => 'PDFs Generation',
+    'PDFs Concatenation'        => 'PDFs Concatenation',
+    'View' => 'View',
 ];

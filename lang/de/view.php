@@ -1002,4 +1002,7 @@ return [
         'avgUpstreamSnr' => 'Durchschnittliches Rückkanal-SNR',
     ],
     'devices' => 'Geräte',
+    'PDFs Generation'           => 'PDF-Generierung',
+    'PDFs Concatenation'        => 'Verkettung von PDFs',
+    'View' => 'Ansehen',
 ];
