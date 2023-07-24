@@ -33,7 +33,6 @@
         "swen100/geophp": "^1.0",
         "fruitcake/laravel-cors": "^3.0",
         "livewire/livewire": "^2.12",
-        "spatie/browsershot": "^3.57",
         "chrome-php/chrome": "^1.9"
     },
     "require-dev": {

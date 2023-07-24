@@ -61,7 +61,6 @@
         "pdfmake": "^0.2.5",
         "pixi.js": "^7.2.4",
         "popper.js": "^1.12",
-        "puppeteer": "^13.7.0",
         "pusher-js": "^7.1.0-beta",
         "select2": "^4.1.0-rc.0",
         "svg-pan-zoom": "^3.6.1",
