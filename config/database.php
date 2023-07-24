@@ -77,20 +77,14 @@ return [
             'engine' => 'InnoDB ROW_FORMAT=DYNAMIC',
         ],
 
-        // nms import
-        env('NMS_IMPORT_DB', 'nms-import') => [
-            'driver'    => env('NMS_IMPORT_DRIVER', 'mysql'),
-            'read'      => [
-                'host'      => explode(',', str_replace(' ', '', 'localhost')),
-            ],
-            'write'      => [
-                'host'      => explode(',', str_replace(' ', '', 'localhost')),
-            ],
+        'nms-import' => [
+            'driver' => 'mysql',
+            'host' => env('DB_IMPORT_HOST', 'localhost'),
             'sticky' => true,
-            'database'  => env('NMS_IMPORT_DB', 'nms-import'),
-            'username'  => env('NMS_IMPORT_DB_USERNAME', 'root'),
-            'password' => env('NMS_IMPORT_DB_PASSWORD', ''),
-            'unix_socket' => env('NMS_IMPORT_DB_SOCKET', ''),
+            'database' => env('DB_IMPORT_DATABASE', 'nmsprime'),
+            'username' => env('DB_IMPORT_USERNAME', 'nmsimport'),
+            'password' => env('DB_IMPORT_PASSWORD', ''),
+            'unix_socket' => env('DB_IMPORT_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

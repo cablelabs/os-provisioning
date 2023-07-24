@@ -19,16 +19,18 @@
 namespace Modules\ProvBase\Console;
 
 use App\User;
+use Artisan;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Log;
 use Modules\BillingBase\Entities\Invoice;
 use Modules\BillingBase\Entities\Item;
 use Modules\BillingBase\Entities\SepaMandate;
 use Modules\BillingBase\Entities\SettlementRun;
 use Modules\ProvBase\Entities\Configfile;
 use Modules\ProvBase\Entities\Contract;
+use Modules\ProvBase\Entities\Endpoint;
 use Modules\ProvBase\Entities\Modem;
 use Modules\ProvVoip\Entities\Mta;
 use Modules\ProvVoip\Entities\Phonenumber;
@@ -46,16 +48,15 @@ class ImportNmsCommand extends Command
      * @var string
      */
     protected $signature = 'import:nms
-        {systemName : Name of the database connection}
         {costcenter : Costcenter ID for all contracts}
-        {--contact= : Contact of contract}
-        {--invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
-        {--configfileMap= : Path to file containing an array of ID\'s, mapping old to new configfiles}
-        {--qosMap= : Path to file containing an array of ID\'s, mapping old to new QoS\'}
-        {--productMap= : Path to file containing an array of ID\'s, mapping old to new products}
-        {--costcenterMap= : Path to file containing an array of ID\'s, mapping old to new costcenters}
-        {--ticketTypeMap= : Path to file containing an array of ID\'s, mapping old to new ticket types}
-        {--invoicesToImport="/tmp/transform.csv" : Path to empty transform.csv file where all invoices that should be imported are listed}
+        {--configfile-map= : Path to file containing an array of ID\'s, mapping old to new configfiles}
+        {--C|contact= : Contact of contract}
+        {--costcenter-map= : Path to file containing an array of ID\'s, mapping old to new costcenters}
+        {--I|invoices="1970-01-01" : Import invoices with settlementruns starting from YYYY-MM-DD}
+        {--Q|qos-map= : Path to file containing an array of ID\'s, mapping old to new QoS\'}
+        {--P|product-map= : Path to file containing an array of ID\'s, mapping old to new products}
+        {--S|sepa-account-map= : Path to file containing an array of ID\'s, mapping old to new SEPA accounts}
+        {--T|ticket-type-map= : Path to file containing an array of ID\'s, mapping old to new ticket types}
     ';
 
     /**
@@ -66,102 +67,54 @@ class ImportNmsCommand extends Command
     protected $description = 'Import NMS Prime database.';
 
     /**
-     * Mapping of old contract ID's to new contract ID's.
-     * Used for ticket.ticketable_id
+     * Path of temporary file to list invoice path transformations for the bash command
      *
-     * @var array
+     * @var string
      */
-    protected $contractMap = [];
+    private const INVOICE_TRANSFORM_CSV_PATH = '/tmp/transform.csv';
 
     /**
-     * Mapping of old configfile ID's to new configfile ID's.
+     * Name of database connection in config/database.php to import data from
+     *
+     * @var string
+     */
+    private const DB_IMPORT_CON = 'nms-import';
+
+    /**
+     * Default date from when invoices shall be imported
+     *
+     * @var string
+     */
+    protected $invoicesFrom = '1970-01-01';
+
+    /**
+     * Mappings of old ID's to new ID's for several models
      *
      * @var array
      */
     protected $configfileMap = [];
+    protected $contractMap = [];
+    protected $costcenterMap = [0 => 0];
+    protected $productMap = [];
+    protected $qosMap = [0 => 0];
+    protected $sepaAccountMap = [];
+    protected $settlementrunMap = [];
+    protected $ticketTypeMap = [];
 
     /**
-     * Mapping of old costcenter ID's to new costcenter ID's.
+     * Arrays of MACs in lower case to check duplicates
      *
      * @var array
      */
-    protected $costcenterMap = [0 => 0];
-
     protected $modemMacs = null;
     protected $mtaMacs = null;
-
-    /**
-     * Mapping of old MTA ID's to new MTA ID's.
-     * Used to add mta_id of phonenumbers
-     *
-     * @var array
-     */
-    protected $mtaMap = [];
-
-    /**
-     * Mapping of old phonenumber ID's to new phonenumber ID's.
-     * Used to add phonenumber_id of phonenumbermanagement
-     *
-     * @var array
-     */
-    protected $phonenumberMap = [];
-
-    /**
-     * Mapping of old product ID's to new product ID's.
-     *
-     * @var array
-     */
-    protected $productMap = [];
-
-    /**
-     * Mapping of old QoS ID's to new QoS ID's.
-     * Zero allows contracts without a QoS
-     *
-     * @var array
-     */
-    protected $qosMap = [0 => 0];
-
-    /**
-     * Mapping of old sepamandat ID's to new sepamandate ID's.
-     *
-     * @var array
-     */
-    protected $sepaaccount = [];
-
-    /**
-     * Mapping of old settlementrun ID's to new settlementrun ID's.
-     * Used to add settlementrun_id of invoices
-     *
-     * @var array
-     */
-    protected $settlementrunMap = [];
-
-    /**
-     * Mapping of old ticket_type ID's to new ticket_type ID's.
-     *
-     * @var array
-     */
-    protected $ticketTypeMap = [];
 
     /**
      * Array of output, that will be returned in the end.
      *
      * @var array
      */
-    protected $fyi = [];
-
-    /**
-     * Array of all imported models.
-     *
-     * @var array
-     */
-    protected $importedModems = [];
-
-    protected $importedContracts = null;
-
-    protected $importedItems = [];
-
-    protected $importedMtas = [];
+    protected $errorsToResolve = [];
 
     /**
      * Defines the sections for each progress bar.
@@ -169,26 +122,7 @@ class ImportNmsCommand extends Command
      * @var ConsoleOutput
      */
     protected $output;
-
     protected $contractBar;
-
-    protected $itemBar;
-
-    protected $modemBar;
-
-    protected $mtaBar;
-
-    protected $phonenumberBar;
-
-    protected $sepaBar;
-
-    protected $settlementrunBar;
-
-    protected $invoiceBar;
-
-    protected $ticketBar;
-
-    protected $ticketTypeBar;
 
     /**
      * Create a new command instance.
@@ -202,93 +136,76 @@ class ImportNmsCommand extends Command
 
     /**
      * Execute the console command.
-     * TODO: connection of mysql/pgsql
-     * TODO: call observers afterwards
-     * TODO: check for unique keys
      *
      * @return mixed
      */
     public function handle()
     {
-        if (! $this->confirm("IMPORTANT!!!\nHave the following things been prepared for this import?:
-            1. env variables for db connection nms-import
-            2. ~/.ssh/config entry for copying invoices exists (name needs to be the same as the specified db connection!)
+        $this->confirmExecution();
 
-            3. ALL of the below listed arguments and options are specified
-            systemName : Name of the Database Connection
-            costcenter : Costcenter ID for all contracts
-            --contact= : Contact of contract
-            --invoices='1970-01-01' : Import invoices with settlementruns starting from YYYY-MM-DD
-            --configfileMap= : Path to file containing an array of ID's, mapping old to new configfiles
-            --qosMap= : Path to file containing an array of ID's, mapping old to new QoS'
-            --productMap= : Path to file containing an array of ID's, mapping old to new products
-            --costcenterMap= : Path to file containing an array of ID's, mapping old to new costcenters
-            --ticketTypeMap= : Path to file containing an array of ID's, mapping old to new ticket types
-            --invoicesToImport='/tmp/transform.csv' : Path to empty transform.csv file where all invoices that should be imported are listed\n\n"
-            )) {
-            return;
-        }
+        $this->checkOptions();
+        $this->createMappings();
+        $this->configureProgressBar();
 
-        $this->createMapping();
-
-        // get existing numbers
-        // select number from contract where deleted_at is null and (contract_end >= CURDATE() or contract_end is null or contract_end='0000-00-00');
-        $numbers = Contract::where(whereLaterOrEqual('contract_end', now()))
-            ->whereNull('deleted_at')
-            ->pluck('number');
-
-        $newContracts = $this->avoidDuplicateContracts($numbers);
-
-        $newSettlementRuns = SettlementRun::on($this->argument('systemName'))
-            ->whereNull('deleted_at')
-            // TODO: check for settlementrun instead of invoice creation
-            ->where('executed_at', '>=', $this->option('invoices'))
-            ->get();
-
-        $newTicketTypes = TicketType::on($this->argument('systemName'))
-            ->whereNull('deleted_at')
-            ->get();
-
-        $newTickets = Ticket::on($this->argument('systemName'))
-            ->whereNull('deleted_at')
-            ->where('state', '!=', 'Closed')
-            ->where('ticketable_type', Contract::class)
-            ->whereNotIn('ticketable_id', $numbers)
-            ->with('user')
-            ->get();
-
-        $this->createAllProgressBars($newContracts, $newSettlementRuns, $newTicketTypes, $newTickets);
-
-        if ($newSettlementRuns) {
-            $this->addSettlementRuns($newSettlementRuns);
-        }
+        $this->addSettlementRuns();
 
         $this->getAllMacs();
+        $this->line('Load contracts...');
+        $existingContractNrs = Contract::where(whereLaterOrEqual('contract_end', now()))->whereNull('deleted_at')->pluck('number');
+        $contracts = $this->getAllContractsToImport();
 
-        foreach ($newContracts as $contractToImport) {
+        $this->contractBar = $this->createProgressBar($contracts->count(), 'Contracts');
+
+        foreach ($contracts as $contractToImport) {
+            $this->checkForDuplicateContracts($contractToImport, $existingContractNrs);
+
             $contract = $this->addContract($contractToImport);
-
-            if (! $contract) {
-                continue;
-            }
-
             $contract = $this->addInvoices($contractToImport, $contract);
             $contract = $this->addItems($contractToImport, $contract);
             $contract = $this->addModems($contractToImport, $contract);
             $contract = $this->addSepas($contractToImport, $contract);
-
-            $this->importedContracts[] = $contract;
-            $contract->push();
         }
 
-        $this->addTicketTypes($newTicketTypes);
-        $this->addActiveTickets($newTickets);
-
+        $this->addActiveTickets();
         $this->copyInvoices();
+        $this->callObserverFuncs();
 
-        $this->printImportantInformation();
+        $this->printErrors();
+    }
 
-        $this->callObservers();
+    private function confirmExecution()
+    {
+        $info = "IMPORTANT!!!  Have the following things been prepared for this import?\n";
+        $info .= "    1. env variables for db connection nms-import\n";
+        $info .= "    2. ~/.ssh/config entry to remote server named 'nms-import' for copying invoices exists\n";
+        $info .= '    3. ALL of the below listed arguments and options are specified';
+        $info .= str_replace('import:nms', '', $this->signature);
+
+        if (! $this->confirm($info)) {
+            exit;
+        }
+    }
+
+    /**
+     * Handle invalid user input via options
+     *
+     * @throws \Exception
+     */
+    private function checkOptions()
+    {
+        if ($this->option('invoices')) {
+            $ts = strtotime($this->option('invoices'));
+            throw_if(! $ts, \InvalidOptionException::class, 'Please specify a date in format YYYY-MM-DD when using invoices option');
+
+            $this->invoicesFrom = Carbon::createFromTimestamp($ts)->addMonth();
+        }
+    }
+
+    private function configureProgressBar()
+    {
+        ProgressBar::setFormatDefinition('custom', ' %current%/%max% [%bar%] %message% %percent:3s%% , %elapsed:6s% , %estimated:-6s% , %memory:6s%');
+
+        $this->output = new ConsoleOutput();
     }
 
     private function getAttributesWithoutId($model)
@@ -296,103 +213,485 @@ class ImportNmsCommand extends Command
         return Arr::except($model->getAttributes(), ['id']);
     }
 
-    private function createMapping()
+    private function createMappings()
     {
-        $this->createMappingFor('costcenterMap', null, null);
+        $this->createMappingFor('costcenter-map', null, null);
+        $this->createMappingFor('product-map', null, null);
+        $this->createMappingFor('qos-map', null, null);
+        $this->createMappingFor('sepa-account-map', null, null);
 
         $this->createMappingFor(
-            'qosMap',
-            null,
-            null,
-            /*
-            Qos::on($this->argument('systemName'))
-                ->where('deleted_at', null)
-                ->get(),
-            Qos::all(),
-            'ds_rate_max',
-            'us_rate_max'
-            */
-        );
-
-        $this->createMappingFor(
-            'productMap',
-            null,
-            null,
-            /*
-            Product::on($this->argument('systemName'))
-                ->where('deleted_at', null)
-                ->get(),
-            Product::all(),
-            'products',
-            'price',
-            'type',
-            'billing_cycle'
-            */
-        );
-
-        $this->createMappingFor(
-            'ticketTypeMap',
-            TicketType::on($this->argument('systemName'))
-            ->where('deleted_at', null)
-                ->get(),
+            'ticket-type-map',
+            TicketType::on(self::DB_IMPORT_CON)->where('deleted_at', null)->get(),
             TicketType::all(),
             'name',
-            'description'
         );
 
-        if ($this->option('configfileMap')) {
-            $this->createMappingFor(
-                'configfileMap',
-                null,
-                null,
-                /*
-                Configfile::on($this->argument('systemName'))
-                    ->whereNull('deleted_at')
-                    ->get(),
-                Configfile::all(),
-                'text',
-                'device',
-                'public'
-                */
-            );
+        if ($this->option('configfile-map')) {
+            $this->createMappingFor('configfile-map', null, null);
         }
-        /*
-        else {
-            // for dev purpose to check how many cfs only differ from whitespace/comments
-            $this->mapConfigfiles(
-                Configfile::on($this->argument('systemName'))
-                    ->where('deleted_at', null)
-                    ->get()
-            );
-        }
-        */
     }
 
     private function createMappingFor($map, $newEntries, $existingEntries, ...$comparables)
     {
+        $varName = str_replace(' ', '', ucwords(str_replace('-', ' ', $map)));
+        $varName[0] = strtolower($varName[0]);
+
         if ($this->option($map)) {
             if (! file_exists($this->option($map))) {
                 $this->error("{$this->option($map)} does not exist!");
             }
-            $this->$map = $this->$map + require $this->option($map);
+            $this->$varName = $this->$varName + require $this->option($map);
 
             return;
         }
 
         // currently not used but it can be used, when all entries should be imported (dev)
         foreach ($newEntries as $new) {
-            $existingEntries->filter(function ($entry) use ($comparables, $new, $map) {
+            $existingEntries->filter(function ($entry) use ($comparables, $new, $varName) {
                 foreach ($comparables as $comp) {
                     if ($entry->$comp != $new->$comp) {
                         return;
                     }
                 }
 
-                $this->$map[$new->id] = $entry->id;
+                $this->$varName[$new->id] = $entry->id;
             });
         }
     }
 
+    private function createProgressBar($count, $name)
+    {
+        $bar = new ProgressBar($this->output->section(), $count);
+        $bar->setFormat('custom');
+        $bar->setMessage($name);
+        $bar->start();
+
+        return $bar;
+    }
+
+    public function getAllContractsToImport()
+    {
+        return Contract::on(self::DB_IMPORT_CON)
+            ->where(whereLaterOrEqual('contract.contract_end', now()))
+            ->with([
+                'items' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'items.product' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.endpoints' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'sepamandates' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas.phonenumbers' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'modems.mtas.phonenumbers.phonenumbermanagement' => function ($query) {
+                    $query->whereNull('deleted_at');
+                },
+                'invoices' => function ($query) {
+                    $query->whereNull('deleted_at')->where('created_at', '>=', $this->invoicesFrom->toDateString());
+                },
+            ])
+            ->withCount([
+                'items',
+                'modems',
+                'mtas',
+                'sepamandates',
+                'invoices' => function ($query) {
+                    $query->whereNull('deleted_at')
+                        ->where('created_at', '>=', $this->invoicesFrom->toDateString());
+                },
+            ])
+            // ->limit(100)
+            ->get();
+    }
+
+    /**
+     * Filter contracts with already existing contract number
+     */
+    public function checkForDuplicateContracts($newContract, $existingNumbers)
+    {
+        if ($existingNumbers->contains($newContract->number)) {
+            $this->errorsToResolve[] = "Skipping contract with number {$newContract->number} as it already exists.";
+        }
+    }
+
+    /**
+     * Retrieve all MAC addresses for later comparison if MAC already exists
+     */
+    private function getAllMacs()
+    {
+        $this->modemMacs = Modem::selectRaw('lower(mac) as mac')->pluck('mac');
+        $this->mtaMacs = Mta::selectRaw('lower(mac) as mac')->pluck('mac');
+    }
+
+    private function addContract($contract)
+    {
+        $newContract = new Contract($this->getAttributesWithoutId($contract));
+
+        $newContract->qos_id = $this->qosMap[$contract->qos_id ?? 0];
+        $newContract->costcenter_id = $this->argument('costcenter');
+        $newContract->contact = $this->option('contact');
+        $newContract->updated_at = now();
+        $newContract->saveQuietly();
+
+        $this->contractMap[$contract->id] = $newContract->id;
+        $this->contractBar->advance();
+
+        return $newContract;
+    }
+
+    private function addItems($contractToImport, $contract)
+    {
+        if ($contractToImport->items->isEmpty()) {
+            return $contract;
+        }
+
+        foreach ($contractToImport->items as $item) {
+            if (! array_key_exists($item->product_id, $this->productMap)) {
+                $this->errorsToResolve[] = "Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('product-map')}";
+
+                continue;
+            }
+
+            $newItem = new Item($this->getAttributesWithoutId($item));
+            $newItem->updated_at = now();
+            $newItem->costcenter_id = $this->costcenterMap[$item->costcenter_id];
+            $newItem->product_id = $this->productMap[$item->product_id];
+            $newItem->contract_id = $contract->id;
+
+            $newItem->saveQuietly();
+            // $this->itemBar->advance();
+        }
+
+        // $contract->items()->saveMany($items);
+
+        return $contract;
+    }
+
+    private function addModems($contractToImport, $contract)
+    {
+        if ($contractToImport->modems->isEmpty()) {
+            return $contract;
+        }
+
+        foreach ($contractToImport->modems as $modem) {
+            // TODO: This becomes a performance issue for huge systems - a direkt DB query would be slower for small systems but better for huge systems
+            if ($this->modemMacs && $this->modemMacs->contains(strtolower($modem->mac))) {
+                $this->errorsToResolve[] = "Skipping modem with duplicate MAC {$modem->mac}!";
+
+                continue;
+            }
+
+            // TODO: Here we could easily use Base Configfile instead of skipping the modem, but this message should be resolved upfront anyway
+            if (! array_key_exists($modem->configfile_id, $this->configfileMap)) {
+                $this->errorsToResolve[] = "Skipping modem with ID {$modem->id} as it is missing a configfile on this system!";
+
+                continue;
+            }
+
+            $newModem = new Modem($this->getAttributesWithoutId($modem));
+            $newModem->updated_at = now();
+            $newModem->netelement_id = null;
+            $newModem->configfile_id = $this->configfileMap[$modem->configfile_id];
+            $newModem->contract_id = $contract->id;
+            // there exist modems with qos_id 0 and NULL
+            $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
+            $newModem->saveQuietly();
+
+            $this->addMtas($modem, $newModem);
+            $this->addEndpoints($modem, $newModem);
+        }
+
+        return $contract;
+    }
+
+    private function addMtas($modem, $newModem)
+    {
+        foreach ($modem->mtas as $mta) {
+            if ($this->mtaMacs && $this->mtaMacs->contains(strtolower($mta->mac))) {
+                $this->errorsToResolve[] = "Skipping Mta with douplicate MAC {$mta->mac}!";
+
+                continue;
+            }
+
+            $newMta = new Mta($this->getAttributesWithoutId($mta));
+            $newMta->updated_at = now();
+            $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
+            $newMta->modem_id = $newModem->id;
+
+            $newMta->saveQuietly();
+
+            $this->addPhonenumbers($mta, $newMta);
+        }
+    }
+
+    private function addEndpoints($modem, $newModem)
+    {
+        // TODO: Check if IP already is set on an existing endpoint
+
+        foreach ($modem->endpoints as $ep) {
+            $newEp = new Endpoint($this->getAttributesWithoutId($ep));
+            $newEp->updated_at = now();
+            $newEp->modem_id = $newModem->id;
+
+            $newEp->saveQuietly();
+        }
+    }
+
+    private function addPhonenumbers($mta, $newMta)
+    {
+        foreach ($mta->phonenumbers as $pn) {
+            $newPn = new Phonenumber($this->getAttributesWithoutId($pn));
+            $newPn->updated_at = now();
+            $newPn->mta_id = $newMta->id;
+
+            $newPn->saveQuietly();
+
+            $this->addPhonenumbermanagement($pn, $newPn);
+        }
+    }
+
+    private function addPhonenumbermanagement($phonenumber, $newPhonenumber)
+    {
+        if (! $phonenumber->phonenumbermanagement) {
+            $this->errorsToResolve[] = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
+
+            return;
+        }
+
+        $newPnMgmt = new PhonenumberManagement($this->getAttributesWithoutId($phonenumber->phonenumbermanagement));
+        $newPnMgmt->updated_at = now();
+        $newPnMgmt->phonenumber_id = $newPhonenumber->id;
+
+        $newPnMgmt->saveQuietly();
+    }
+
+    private function addSepas($contractToImport, $contract)
+    {
+        if ($contractToImport->sepamandates->isEmpty()) {
+            return $contract;
+        }
+
+        $sepas = [];
+        foreach ($contractToImport->sepamandates as $sepa) {
+            $newSepa = new SepaMandate($this->getAttributesWithoutId($sepa));
+            $newSepa->updated_at = now();
+            $newSepa->costcenter_id = $this->costcenterMap[$sepa->costcenter_id];
+            $sepas[] = $newSepa;
+        }
+
+        $contract->sepamandates()->saveMany($sepas);
+
+        return $contract;
+    }
+
+    private function addSettlementRuns()
+    {
+        $settlementRuns = SettlementRun::on(self::DB_IMPORT_CON)
+            ->whereNull('deleted_at')
+            // TODO: check for settlementrun instead of invoice creation
+            ->where('executed_at', '>=', $this->option('invoices'))
+            ->get();
+
+        $settlementrunBar = $this->createProgressBar($settlementRuns->count(), 'SettlementRuns');
+
+        foreach ($settlementRuns as $sr) {
+            $newSettlementRun = new SettlementRun($this->getAttributesWithoutId($sr));
+            $newSettlementRun->updated_at = now();
+            $newSettlementRun->description .= "\r\nThis settlementrun was imported from ".self::DB_IMPORT_CON;
+            $newSettlementRun->saveQuietly();
+
+            $this->settlementrunMap[$sr->id] = $newSettlementRun->id;
+
+            $settlementrunBar->advance();
+        }
+    }
+
+    private function addInvoices($contractToImport, $contract)
+    {
+        if ($contractToImport->invoices->isEmpty()) {
+            return $contract;
+        }
+
+        foreach ($contractToImport->invoices as $invoice) {
+            $newInvoice = new Invoice(Arr::except($invoice->getAttributes(), ['id']));
+            $newInvoice->updated_at = now();
+            $newInvoice->contract_id = $this->contractMap[$invoice->contract_id];
+            $newInvoice->sepaaccount_id = $this->sepaAccountMap[$invoice->sepaaccount_id];
+            $newInvoice->settlementrun_id = $this->settlementrunMap[$invoice->settlementrun_id];
+            $newInvoice->saveQuietly();
+        }
+
+        return $contract;
+    }
+
+    private function addTicketTypes()
+    {
+        $ticketTypes = TicketType::on(self::DB_IMPORT_CON)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $ticketTypeBar = $this->createProgressBar($ticketTypes->count(), 'Ticket Types');
+
+        foreach ($ticketTypes as $ticketType) {
+            $newTicketType = new TicketType($this->getAttributesWithoutId($ticketType));
+            $newTicketType->updated_at = now();
+            $newTicketType->parent_id = $ticketType->parent_id ? $this->ticketTypeMap[$ticketType->parent_id] : null;
+            $newTicketType->saveQuietly();
+
+            $ticketTypeBar->advance();
+        }
+    }
+
+    private function addActiveTickets()
+    {
+        $tickets = Ticket::on(self::DB_IMPORT_CON)
+            ->whereNull('deleted_at')
+            ->where('state', '!=', 'Closed')
+            ->where('ticketable_type', Contract::class)
+            ->with('user')
+            ->get();
+
+        if ($tickets->isEmpty()) {
+            $this->notice('No tickets to import');
+        }
+
+        $ticketBar = $this->createProgressBar($tickets->count(), 'Tickets');
+        $users = User::where('deleted_at', null)->pluck('id', 'email');
+
+        foreach ($tickets as $ticket) {
+            $newTicket = new Ticket($this->getAttributesWithoutId($ticket));
+            $newTicket->ticketable_id = $this->contractMap[$ticket->ticketable_id] ?? null;
+
+            if (! $newTicket->ticketable_id) {
+                $this->errorsToResolve[] = 'Skip Ticket as we couldn\'t find the new Contract for that ticket '.$ticket->id;
+
+                continue;
+            }
+
+            $newTicket->updated_at = now();
+            $newTicket->user_id = $users[$ticket->user->email] ?? null;
+            // TODO: assigned users ?
+
+            $newTicket->save();
+
+            $ticketBar->advance();
+        }
+    }
+
+    private function printErrors()
+    {
+        foreach ($this->errorsToResolve as $line) {
+            $this->line($line);
+        }
+    }
+
+    /**
+     * Copy invoices after transforming IDs in directory paths
+     *
+     * NOTE: make sure to use ssh-copy-id
+     */
+    private function copyInvoices()
+    {
+        $this->createInvoiceMapFile();
+        $year = Str::before($this->option('invoices'), '-');
+
+        $cmd = 'cat '.self::INVOICE_TRANSFORM_CSV_PATH.' | ssh '.self::DB_IMPORT_CON.' "cat - > '.self::INVOICE_TRANSFORM_CSV_PATH;
+        $cmd .= " && find /var/www/nmsprime/storage/app/data/billingbase/invoice/ -name '{$year}_*.pdf' | grep -f <(cut -d';' -f1 ".self::INVOICE_TRANSFORM_CSV_PATH;
+        $cmd .= " | sed 's|.*|/invoice/&/{$year}_|') | tar -cz -T- --transform=\\$(sed 's|^\([0-9]\+\);\([0-9]\+\)$|s\|/invoice/\\1/{$year}_\|/invoice/\\2/{$year}_\||' ";
+        $cmd .= self::INVOICE_TRANSFORM_CSV_PATH." | tr '\\n' ';')\" | tar -C / -xz";
+
+        exec($cmd);
+    }
+
+    private function createInvoiceMapFile()
+    {
+        file_put_contents(self::INVOICE_TRANSFORM_CSV_PATH, '');
+
+        $invoicesToImport = fopen(self::INVOICE_TRANSFORM_CSV_PATH, 'a');
+        foreach ($this->contractMap as $old => $new) {
+            fwrite($invoicesToImport, "$old;$new\n");
+        }
+
+        fclose($invoicesToImport);
+    }
+
+    /**
+     * Execute the whole functionality of the observers delayed to improve performance
+     */
+    private function callObserverFuncs()
+    {
+        DB::statement("Update modem set hostname = concat('cm-', id) where hostname != concat('cm-', id) and deleted_at is null");
+        Artisan::call('nms:cacti');
+        Artisan::call('nms:configfile');
+        Artisan::call('nms:dhcp');
+    }
+
+    // dev purpose
+    private function mapConfigfiles($newCfs)
+    {
+        $cfs = $this->removeCommentsAndWhitespace(Configfile::all());
+        $newCfs = $this->removeCommentsAndWhitespace($newCfs);
+
+        // TODO: parent_ids?
+        foreach ($newCfs as $newCf) {
+            foreach ($cfs as $cf) {
+                if (
+                    $cf->text == $newCf->text &&
+                    $cf->device == $newCf->device &&
+                    $cf->public == $newCf->public &&
+                    $cf->dashboard == $newCf->dashboard
+                ) {
+                    $this->configfileMap[$newCf->id] = $cf->id;
+
+                    continue;
+                }
+            }
+            // if this cf does not exist => create new one
+            if (array_key_exists($newCf->id, $this->configfileMap)) {
+                continue;
+            }
+
+            $configfile = new Configfile($this->getAttributesWithoutId($newCf));
+            $configfile->name = $newCf->name.' '.self::DB_IMPORT_CON;
+            $configfile->save();
+
+            $this->configfileMap[$newCf->id] = $configfile->id;
+        }
+    }
+
+    /**
+     * Ignore newlines, tabs, comments and multiple spaces.
+     *
+     * @author Roy Schneider
+     *
+     * @param  Collection  $cfs
+     * @return Collection
+     */
+    private function removeCommentsAndWhitespace($cfs)
+    {
+        return $cfs->map(function ($cf) {
+            $cf->text = preg_replace("/(\r\n|\r|\n|\/\*.*\*\/|\/\/.*$|\#.*$|  +)/", '', trim($cf->text));
+
+            return $cf;
+        });
+    }
+
+    /**
+     * Unused function was prepared by @Roy Schneider and kept for reference
+     */
     private function createAllProgressBars($newContracts, $settlementRuns, $ticketTypes, $tickets)
     {
         // use Symfony ProgressBar otherwise the bars will overwrite each other
@@ -444,11 +743,6 @@ class ImportNmsCommand extends Command
             'SepaMandates'
         );
 
-        $this->settlementrunBar = $this->createProgressBar(
-            $settlementRuns->count(),
-            'SettlementRuns'
-        );
-
         $this->invoiceBar = $this->createProgressBar(
             $newContracts->sum(function ($contract) {
                 return $contract->invoices_count;
@@ -465,436 +759,5 @@ class ImportNmsCommand extends Command
             count($tickets),
             'Tickets'
         );
-    }
-
-    private function createProgressBar($count, $name)
-    {
-        $bar = new ProgressBar($this->output->section(), $count);
-        $bar->setFormat('custom');
-        $bar->setMessage($name);
-        $bar->start();
-
-        return $bar;
-    }
-
-    public function avoidDuplicateContracts($existingNumbers)
-    {
-        // check for relations in options
-        $newContracts = Contract::on($this->argument('systemName'))
-            ->whereNotIn('number', $existingNumbers)
-            ->where(whereLaterOrEqual('contract.contract_end', now()))
-            ->with([
-                'items' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'items.product' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'modems' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'modems.mtas' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'sepamandates' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'modems.mtas.phonenumbers' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'modems.mtas.phonenumbers.phonenumbermanagement' => function ($query) {
-                    $query->whereNull('deleted_at');
-                },
-                'invoices' => function ($query) {
-                    $query->whereNull('deleted_at')
-                        ->where('created_at', '>=', $this->option('invoices'))
-                        ->where('year', '>=', Str::before($this->option('invoices'), '-'))
-                        ->where('month', '>=' , Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
-                },
-            ])
-            ->withCount([
-                'items',
-                'modems',
-                'mtas',
-                'sepamandates',
-                'invoices' => function ($query) {
-                    $query->whereNull('deleted_at')
-                        ->where('created_at', '>=', $this->option('invoices'))
-                        ->where('year', '>=', Str::before($this->option('invoices'), '-'))
-                        ->where('month', '>=', Str::after(Str::beforeLast($this->option('invoices'), '-'), '-'));
-                }
-            ])
-            ->get();
-
-        $newContracts = $newContracts->filter(function ($newContract) use ($existingNumbers) {
-            if (! $existingNumbers->contains($newContract->number)) {
-                return true;
-            }
-
-            $this->writeMessage("Skipping contract with number {$newContract->number}, since it already exists. ");
-        });
-
-        return $newContracts;
-    }
-
-    private function getAllMacs()
-    {
-        $this->modemMacs = Modem::all()->pluck('mac');
-        $this->mtaMacs = Mta::all()->pluck('mac');
-    }
-
-    // TODO: add prompt to ask if the user wants to execute this command
-    private function addContract($contractToImport)
-    {
-        $contract = new Contract;
-        $columns = \Schema::getColumnListing($contract->getTable());
-        // do not import id
-        array_shift($columns);
-
-        // set all properties of column with properties of $contractToImport
-        foreach ($columns as $column) {
-            $contract->{$column} = $contractToImport->{$column};
-        }
-
-        $contract->qos_id = $this->qosMap[$contractToImport->qos_id ?? 0];
-        $contract->costcenter_id = $this->argument('costcenter');
-        $contract->contact = $this->option('contact');
-
-        $contract->updated_at = now();
-        $contract->save();
-        $this->contractMap[$contractToImport->id] = $contract->id;
-
-        $this->contractBar->advance();
-
-        return $contract;
-    }
-
-    private function addItems($contractToImport, $contract)
-    {
-        if ($contractToImport->items->isEmpty()) {
-            return $contract;
-        }
-
-        foreach ($contractToImport->items as $item) {
-            if (! array_key_exists($item->product_id, $this->productMap)) {
-                $this->writeMessage("Skipping Item {$item->id}, since product {$item->product_id} does not exist in {$this->option('productMap')}");
-
-                continue;
-            }
-
-            $newItem = new Item($this->getAttributesWithoutId($item));
-            $newItem->updated_at = now();
-
-            $newItem->costcenter_id = $this->costcenterMap[$item->costcenter_id];
-
-            $newItem->product_id = $this->productMap[$item->product_id];
-
-            $newItem->contract_id = $contract->id;
-            $this->importedItems[] = $newItem;
-
-            $this->itemBar->advance();
-
-            $newItem->saveQuietly();
-        }
-
-        // $contract->items()->saveMany(
-        //     $items,
-        // );
-
-        return $contract;
-    }
-
-    private function addModems($contractToImport, $contract)
-    {
-        if ($contractToImport->modems->isEmpty()) {
-            return $contract;
-        }
-
-        foreach ($contractToImport->modems as $modem) {
-            if ($this->modemMacs && $this->modemMacs->has($modem->mac)) {
-                $this->writeMessage("Skipping modem with douplicate MAC {$modem->mac}!");
-
-                $this->modemBar->advance();
-
-                continue;
-            }
-
-            if (! array_key_exists($modem->configfile_id, $this->configfileMap)) {
-                $this->writeMessage("Skipping modem with ID {$modem->id}. It is missing a configfile on this system!");
-
-                $this->modemBar->advance();
-
-                continue;
-            }
-
-            $newModem = new Modem($this->getAttributesWithoutId($modem));
-            $newModem->updated_at = now();
-            $newModem->configfile_id = $this->configfileMap[$modem->configfile_id];
-            $newModem->contract_id = $contract->id;
-            // there exist modems with qos_id 0 and NULL
-            $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
-            $this->importedModems[] = $newModem;
-            $newModem->saveQuietly();
-
-            $this->modemBar->advance();
-
-            $this->addMtas($modem);
-        }
-
-        return $contract;
-    }
-
-    private function addMtas($modem)
-    {
-        foreach ($modem->mtas as $mta) {
-            if ($this->mtaMacs && $this->mtaMacs->has($mta->mac)) {
-                $this->writeMessage("Skipping Mta with douplicate MAC {$mta->mac}!");
-
-                $this->mtaBar->advance();
-
-                continue;
-            }
-
-            $newMta = new Mta($this->getAttributesWithoutId($mta));
-            $newMta->updated_at = now();
-            $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
-            $newMta->modem_id = $modem->id;
-            $this->importedMtas[] = $newMta;
-
-            $newMta->saveQuietly();
-
-            $this->mtaMap[$mta->id] = $newMta->id;
-            $this->mtaBar->advance();
-
-            $this->addPhonenumbers($mta);
-        }
-    }
-
-    private function addPhonenumbers($mta)
-    {
-        foreach ($mta->phonenumbers as $phonenumber) {
-            $newPhonenumber = new Phonenumber($this->getAttributesWithoutId($phonenumber));
-            $newPhonenumber->updated_at = now();
-            $newPhonenumber->mta_id = $this->mtaMap[$mta->id];
-
-            $phonenumbers[] = $newPhonenumber;
-
-            $newPhonenumber->saveQuietly();
-            $this->phonenumberMap[$phonenumber->id] = $newPhonenumber->id;
-            $this->addPhonenumbermanagement($phonenumber);
-            $this->phonenumberBar->advance();
-        }
-    }
-
-    private function addPhonenumbermanagement($phonenumber)
-    {
-        if ($phonenumbermanagement = $phonenumber->phonenumbermanagement) {
-            $newPhonenumberManagement = new PhonenumberManagement($this->getAttributesWithoutId($phonenumbermanagement));
-            $newPhonenumberManagement->updated_at = now();
-            $newPhonenumberManagement->phonenumber_id = $this->phonenumberMap[$phonenumber->id];
-
-            $newPhonenumberManagement->saveQuietly();
-
-            return;
-        }
-
-        $message = "Phonenumber with ID {$phonenumber->id} is missing a Phonenumbermanagement!";
-        $this->fyi[] = $message;
-        Log::info($message);
-    }
-
-    private function addSepas($contractToImport, $contract)
-    {
-        if ($contractToImport->sepamandates->isEmpty()) {
-            return $contract;
-        }
-
-        $sepas = [];
-        foreach ($contractToImport->sepamandates as $sepa) {
-            $newSepa = new SepaMandate($this->getAttributesWithoutId($sepa));
-            $newSepa->updated_at = now();
-            $newSepa->costcenter_id = $this->costcenterMap[$sepa->costcenter_id];
-            $sepas[] = $newSepa;
-        }
-
-        $contract->sepamandates()->saveMany(
-            $sepas,
-        );
-
-        $this->sepaBar->advance(count($sepas));
-
-        return $contract;
-    }
-
-    private function addSettlementruns($settlementRuns)
-    {
-        foreach ($settlementRuns as $sr) {
-            $newSettlementRun = new SettlementRun($this->getAttributesWithoutId($sr));
-            $newSettlementRun->updated_at = now();
-            $newSettlementRun->description .= "\r\nThis settlementrun was imported from {$this->argument('systemName')}";
-            $newSettlementRun->saveQuietly();
-
-            $this->settlementrunMap[$sr->id] = $newSettlementRun->id;
-
-            $this->settlementrunBar->advance();
-        }
-    }
-
-    private function addInvoices($contractToImport, $contract)
-    {
-        if ($contractToImport->invoices->isEmpty()) {
-            return $contract;
-        }
-
-        foreach ($contractToImport->invoices as $invoice) {
-            $newInvoice = new Invoice(Arr::except($invoice->getAttributes(), ['id']));
-            $newInvoice->updated_at = now();
-            // sepaacount
-            $newInvoice->settlementrun_id = $this->settlementrunMap[$invoice->settlementrun_id];
-            $newInvoice->contract_id = $this->contractMap[$invoice->contract_id];
-            $newInvoice->save();
-
-            $this->invoiceBar->advance();
-        }
-
-        return $contract;
-    }
-
-    private function addTicketTypes($ticketTypes)
-    {
-        foreach ($ticketTypes as $ticketType) {
-            $newTicketType = new TicketType($this->getAttributesWithoutId($ticketType));
-            $newTicketType->updated_at = now();
-            $newTicketType->parent_id = $ticketType->parent_id ? $this->ticketTypeMap[$ticketType->parent_id] : null;
-            $newTicketType->save();
-
-            $this->ticketTypeBar->advance();
-        }
-    }
-
-    private function addActiveTickets($tickets)
-    {
-        $users = User::where('deleted_at', null)
-            ->pluck('id', 'email');
-
-        foreach ($tickets as $ticket) {
-            if (! $users->has($ticket->user->email)) {
-                $this->writeMessage("Cannot find user with email '{$ticket->user->email}'. Ticket '{$ticket->name}' has to be created manually!");
-
-                $this->ticketBar->advance();
-
-                continue;
-            }
-
-            $newTicket = new Ticket($this->getAttributesWithoutId($ticket));
-            $newTicket->updated_at = now();
-            $newTicket->user_id = $users[$ticket->user->email];
-            // TODO: set user as option
-            // TODO: assigned user null
-
-            match ($ticket->ticketable_type) {
-                Contract::class => $newTicket->ticketable_id = $this->contractMap[$ticket->ticketable_id],
-                Modem::class => $newTicket->ticketable_id = $this->contractMap[$ticket->ticketable_id],
-                //Contact::class => $newTicket->ticketable_id = $this->contactMap[$ticket->ticketable_id],
-                //Apartment::class => $newTicket->ticketable_id = $this->apartmentMap[$ticket->ticketable_id],
-                //Realty::class => $newTicket->ticketable_id = $this->realtyMap[$ticket->ticketable_id],
-                default => $newTicket->ticketable_id = null,
-            };
-
-            $newTicket->save();
-
-            $this->ticketBar->advance();
-        }
-    }
-
-    private function writeMessage($message)
-    {
-        $this->fyi[] = $message;
-        Log::info($message);
-    }
-
-    private function printImportantInformation()
-    {
-        foreach ($this->fyi as $line) {
-            $this->line($line);
-        }
-    }
-
-    private function copyInvoices()
-    {
-        $this->createTarCommand();
-        // make sure to use ssh-copy-id
-        $year = Str::before($this->option('invoices'), '-');
-        exec("cat {$this->option('invoicesToImport')} | ssh {$this->option('systemName')} \"cat - > /tmp/transform.csv && find /var/www/nmsprime/storage/app/data/billingbase/invoice/ -name '{$year}_*.pdf' | grep -f <(cut -d';' -f1 /tmp/transform.csv | sed 's|.*|/invoice/&/{$year}_|') | tar -cz -T- --transform=\\$(sed 's|^\([0-9]\+\);\([0-9]\+\)$|s\|/invoice/\\1/{$year}_\|/invoice/\\2/{$year}_\||' /tmp/transform.csv | tr '\\n' ';')\" | tar -C / -xz");
-    }
-
-    // add ssh/config for tar?
-    private function createTarCommand()
-    {
-        $invoicesToImport = fopen($this->option('invoicesToImport'), "a");
-        foreach ($this->contractMap as $old => $new) {
-            fwrite($invoicesToImport ,"$old;$new\n");
-        }
-
-        fclose($invoicesToImport);
-    }
-
-    private function callObservers()
-    {
-        foreach (['importedContracts', 'importedModems', 'importedMtas', 'importedItems'] as $models) {
-            foreach ($this->$models as $model) {
-                $model->created();
-            }
-        }
-    }
-
-    // dev purpose
-    private function mapConfigfiles($newCfs)
-    {
-        $cfs = $this->removeCommentsAndWhitespace(Configfile::all());
-        $newCfs = $this->removeCommentsAndWhitespace($newCfs);
-
-        // TODO: parent_ids?
-        foreach ($newCfs as $newCf) {
-            foreach ($cfs as $cf) {
-                if (
-                    $cf->text == $newCf->text &&
-                    $cf->device == $newCf->device &&
-                    $cf->public == $newCf->public &&
-                    $cf->dashboard == $newCf->dashboard
-                ) {
-                    $this->configfileMap[$newCf->id] = $cf->id;
-
-                    continue;
-                }
-            }
-            // if this cf does not exist => create new one
-            if (array_key_exists($newCf->id, $this->configfileMap)) {
-                continue;
-            }
-
-            $configfile = new Configfile($this->getAttributesWithoutId($newCf));
-            $configfile->name = $newCf->name." {$this->argument('systemName')}";
-            $configfile->save();
-
-            $this->configfileMap[$newCf->id] = $configfile->id;
-        }
-    }
-
-    /**
-     * Ignore newlines, tabs, comments and multiple spaces.
-     *
-     * @author Roy Schneider
-     *
-     * @param  Collection  $cfs
-     * @return Collection
-     */
-    private function removeCommentsAndWhitespace($cfs)
-    {
-        return $cfs->map(function ($cf) {
-            $cf->text = preg_replace("/(\r\n|\r|\n|\/\*.*\*\/|\/\/.*$|\#.*$|  +)/", '', trim($cf->text));
-
-            return $cf;
-        });
     }
 }
