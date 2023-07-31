@@ -27,7 +27,7 @@ export default {
         4: 30000
       }
 
-      this.$snotify.success(propData.messagesAnalysisPingInProgress, null, { timeout: timeout[selectedPing.value] })
+      snotify.success(propData.messagesAnalysisPingInProgress, null, { timeout: timeout[selectedPing.value] })
       pingStarted.value = true
       floodPingResult.value = ''
 

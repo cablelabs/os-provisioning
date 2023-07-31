@@ -224,10 +224,10 @@ export default {
                 setTr069ParamsFromForm: function (task) {
                     const { ssid, password, ...withoutValues } = task
                     if (Object.values(withoutValues).some(x => (x === null || x == ''))) {
-                        return this.$snotify.error(this.translations.modemAnalysis.missingInput)
+                        return snotify.error(this.translations.modemAnalysis.missingInput)
                     }
 
-                    this.$snotify.success(this.translations.modemAnalysis.refreshInProgress)
+                    snotify.success(this.translations.modemAnalysis.refreshInProgress)
                     axios({
                         method: 'post',
                         url: '{{ route('Modem.genieTask', $modem->id) }}',
@@ -240,15 +240,15 @@ export default {
                         }
                     })
                     .then((response) => {
-                        this.$snotify.info(response.data)
+                        snotify.info(response.data)
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.$snotify.error(error.message)
+                        snotify.error(error.message)
                     })
                 },
                 refreshGenieObject: function () {
-                    this.$snotify.success(this.translations.modemAnalysis.refreshInProgress)
+                    snotify.success(this.translations.modemAnalysis.refreshInProgress)
 
                     let needsRefresh = 'InternetGatewayDevice.LANDevice.1.WLANConfiguration.*'
                     if (this.refreshObject && this.refreshObject == 'lan') {
@@ -266,16 +266,16 @@ export default {
                         }
                     })
                     .then((response) => {
-                        this.$snotify.info(response.data)
+                        snotify.info(response.data)
                         location.reload()
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.$snotify.error(error.message)
+                        snotify.error(error.message)
                     })
                 },
                 refreshRealtimeTr069: function () {
-                    this.$snotify.success(this.translations.modemAnalysis.refreshInProgress)
+                    snotify.success(this.translations.modemAnalysis.refreshInProgress)
 
                     axios({
                         method:'POST',
@@ -287,11 +287,11 @@ export default {
                         }
                     })
                     .then((response) => {
-                        this.$snotify.info(response.data)
+                        snotify.info(response.data)
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.$snotify.error(error.message)
+                        snotify.error(error.message)
                     })
                 },
                 setWlan: function () {
@@ -321,11 +321,11 @@ export default {
                             }
                         })
 
-                        this.$snotify.success(response.data)
+                        snotify.success(response.data)
                     })
                     .catch((error) => {
                         console.error(error)
-                        this.$snotify.error(error.message)
+                        snotify.error(error.message)
                     })
                 },
                 floodPing: function() {
@@ -336,7 +336,7 @@ export default {
                         4: 30000
                     }
 
-                    this.$snotify.success('{{ trans('provmon::messages.analysis.pingInProgress') }}', null, {timeout: timeout[this.selectedPing]})
+                    snotify.success('{{ trans('provmon::messages.analysis.pingInProgress') }}', null, {timeout: timeout[this.selectedPing]})
                     this.pingStarted = true
                     this.floodPingResult = ''
 
@@ -359,7 +359,7 @@ export default {
                     })
                 },
                 showSpectrum: function() {
-                    var info = this.$snotify.info("{{ trans('messages.pleaseWait') }}")
+                    var info = snotify.info("{{ trans('messages.pleaseWait') }}")
 
                     axios({
                         method: 'GET',
@@ -370,8 +370,8 @@ export default {
                     })
                     .then((response) => {
                         if (! response.data || response.data == 'processing') {
-                            response.data ? this.$snotify.success("{{ trans('provmon::messages.spectrum.processing') }}") :
-                                this.$snotify.error("{{ trans('messages.noSpectrum') }}")
+                            response.data ? snotify.success("{{ trans('provmon::messages.spectrum.processing') }}") :
+                                snotify.error("{{ trans('messages.noSpectrum') }}")
 
                             return
                         }
@@ -380,7 +380,7 @@ export default {
                     })
                     .catch((error) => {
                         //Snotify.remove(info.id)
-                        this.$snotify.error("{{ trans('messages.noSpectrum') }}")
+                        snotify.error("{{ trans('messages.noSpectrum') }}")
                     })
                 },
                 setCurrentOfdmChannel: function(ofdmTableValues, tableName, ifIndex) {
