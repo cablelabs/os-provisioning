@@ -75,9 +75,9 @@ if (mix.inProduction()) {
   mix.postCss('resources/css/vendor.css', 'public/css')
 }
 
-  // extra assets
-  mix.js('resources/js/assets/nmsprime-canvas.js', 'public/js')
+// extra assets
   mix.js('resources/js/leaflet/pixi-overlay-tools.js', 'public/js/leaflet')
+  mix.js('resources/js/assets/nmsprime-canvas.js', 'public/js')
 
   // copy from node_modules do public
 mix.copy('node_modules/jszip/dist/jszip.min.js', 'public/js/jszip.min.js')
