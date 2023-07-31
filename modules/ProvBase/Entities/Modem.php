@@ -1912,9 +1912,8 @@ class Modem extends \BaseModel
      *
      * @author: Ole Ernst
      */
-    public function get_eventlog()
+    public function get_eventlog($conf)
     {
-        $conf = ProvBase::first();
         $fqdn = $this->hostname.'.'.$conf->domain_name;
         $com = $conf->ro_community;
 
@@ -2487,6 +2486,7 @@ class Modem extends \BaseModel
      */
     public function getAnalysisBaseData($api = false)
     {
+        $conf = ProvBase::first();
         $this->domainName = ProvBase::first()->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
@@ -2537,7 +2537,7 @@ class Modem extends \BaseModel
                 $dash['modemConfigfileStatus'] = $modemConfigfileStatus;
             }
 
-            $eventlog = $this->get_eventlog();
+            $eventlog = $this->get_eventlog($conf);
         }
 
         // time of this function should be observed - can take a huge time as well
