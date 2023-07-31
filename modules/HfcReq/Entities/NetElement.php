@@ -1127,7 +1127,6 @@ class NetElement extends \BaseModel
 
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->base_type_id;
-        session(['lastNetElement' => $this->id]);
 
         if (! $enabledModules->has('ProvBase')) {
             return $tabs;
