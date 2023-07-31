@@ -850,6 +850,7 @@ return [
         ],
         'notification' => [
             'NewTicket' => 'Neues Ticket',
+            'NewComment' => 'Neuer Kommentar',
             'RemovedFromTicket' => 'Nicht mehr zugewiesen',
             'TicketAccepted' => 'Ticket angenommen',
             'TicketDeclined' => 'Ticket abgelehnt',

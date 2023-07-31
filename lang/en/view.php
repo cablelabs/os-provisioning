@@ -851,6 +851,7 @@ return [
         ],
         'notification' => [
             'NewTicket' => 'New Ticket',
+            'NewComment' => 'New Comment',
             'RemovedFromTicket' => 'You were removed from ticket',
             'TicketAccepted' => 'Ticket accepted',
             'TicketDeclined' => 'Ticket declined',
