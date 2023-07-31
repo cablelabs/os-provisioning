@@ -291,11 +291,6 @@ class Kernel extends ConsoleKernel
             })->everyMinute();
         }
 
-        // TODO: improve
-        $schedule->call(function () {
-            exec('chown -R apache '.storage_path('logs'));
-        })->dailyAt('00:01');
-
         // Create monthly Billing Files and reset flags
         if ($modules->has('BillingBase')) {
             // Remove all old CDRs & Invoices
@@ -323,9 +318,6 @@ class Kernel extends ConsoleKernel
             $schedule->command('nms:update-altiplano-modem-status')->everyFiveMinutes();
             $schedule->command('nms:refresh-bearer-token')->everyThirtyMinutes();
         }
-
-        // TODO: run Kernel.php and supervisor queue workers as user 'apache'
-        exec('chown -R apache:apache '.storage_path('framework/cache'));
 
         if (\Module::collections()->has('SmartOnt')) {
             if (config('smartont.flavor.hasDreamfiberSubscriptions')) {
@@ -361,6 +353,14 @@ class Kernel extends ConsoleKernel
                 Queue::pushOn('low', new \Modules\SmartOnt\Jobs\OntGetOnlineOfflineJob());
             })->everyFiveMinutes();
         }
+
+        // TODO: improve
+        $schedule->call(function () {
+            exec('chown -R apache '.storage_path('logs'));
+        })->dailyAt('00:01');
+
+        // TODO: run Kernel.php and supervisor queue workers as user 'apache'
+        exec('chown -R apache:apache '.storage_path('framework/cache'));
     }
 
     /**
