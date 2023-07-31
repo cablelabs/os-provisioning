@@ -129,10 +129,11 @@ return [
     'invoice.year' => 'Jahr',
     'invoice.month' => 'Monat',
     //Item
-    'item.valid_from' => 'Posten Gültig ab',
+    'item.valid_from' => 'Gültig ab',
     'item.valid_from_fixed' => 'Ab Startdatum aktiv',
-    'item.valid_to' => 'Posten Gültig bis',
+    'item.valid_to' => 'Gültig bis',
     'item.valid_to_fixed' => 'Festes Enddatum',
+    'item.accounting_text' => 'Verwendungszweck',
     'fee' => 'Gebühr',
     'product' => [
         'proportional' => 'Anteilig',

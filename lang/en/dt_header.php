@@ -128,10 +128,11 @@ return [
     'invoice.year' => 'Year',
     'invoice.month' => 'Month',
     //Item
-    'item.valid_from' => 'Item Valid from',
-    'item.valid_from_fixed' => 'Item Valid from fixed',
-    'item.valid_to' => 'Item Valid to',
-    'item.valid_to_fixed' => 'Item Valid to fixed',
+    'item.valid_from' => 'Valid from',
+    'item.valid_from_fixed' => 'Valid from fixed',
+    'item.valid_to' => 'Valid to',
+    'item.valid_to_fixed' => 'Valid to fixed',
+    'item.accounting_text' => 'Purpose',
     'fee' => 'Fee',
     'product' => [
         'proportional' => 'Proportionate',
