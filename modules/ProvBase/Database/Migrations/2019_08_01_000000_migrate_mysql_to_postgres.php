@@ -1,6 +1,7 @@
 <?php
 
 use Database\Migrations\BaseMigration;
+use Modules\ProvBase\Entities\Nas;
 use Modules\ProvBase\Entities\RadAcct;
 use Modules\ProvBase\Entities\RadIpPool;
 use Modules\ProvBase\Entities\RadPostAuth;
@@ -107,6 +108,19 @@ class MigrateMysqlToPostgres extends BaseMigration
             }
 
             $radpa->saveQuietly();
+        }
+
+        $nases = DB::connection('mysql')->table('nas')->orderBy('id', 'desc')->groupBy('username')->get();
+        foreach ($nases as $nas) {
+            $data = (array) $nas;
+            unset($data['id']);
+
+            $nas = new Nas();
+            foreach ($data as $key => $value) {
+                $nas->$key = $value;
+            }
+
+            $nas->saveQuietly();
         }
     }
 }

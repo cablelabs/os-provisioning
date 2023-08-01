@@ -105,7 +105,7 @@ class NetGwObserver
             return;
         }
 
-        $update = ['nasname' => $netgw->ip, 'secret' => $netgw->nas_secret ?? ''];
+        $update = ['nasname' => $netgw->ip, 'secret' => $netgw->nas_secret];
 
         if ($netgw->nas()->count()) {
             $netgw->nas()->update($update);
