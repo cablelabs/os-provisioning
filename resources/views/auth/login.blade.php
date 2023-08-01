@@ -93,11 +93,11 @@
 
                 {{-- Error Message --}}
                 <div class="m-t-20">
-                    <p align="center"><font id="error" color="yellow">
+                    <p align="center"><span id="error" color="yellow">
                         @foreach ($errors->all() as $error)
                             {{ $error }}
                         @endforeach
-                    </font></p>
+                    </span></p>
                 </div>
                 <br>
                 {{-- Login Button --}}

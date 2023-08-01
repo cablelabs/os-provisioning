@@ -32,8 +32,8 @@
 		</tr>
 		<tr>
 			@foreach (['Internet', 'VoIP', 'TV', 'Other'] as $column)
-				<th width="20" class="text-center"><font color="green">+</font></th>
-				<th width="20" class="text-center"><font color="red">-</font></th>
+				<th width="20" class="text-center"><span color="green">+</span></th>
+				<th width="20" class="text-center"><span color="red">-</span></th>
 			@endforeach
 		</tr>
 	</thead>

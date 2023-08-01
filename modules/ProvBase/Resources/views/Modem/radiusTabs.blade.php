@@ -17,10 +17,10 @@
                             <!-- <td/> -->
                             @foreach ($tableData as $colHeader => $colarray)
                                 @if (! isset($colarray[$i]))
-                                    <td class="text-center"><font color="grey">n/a</font></td>
+                                    <td class="text-center"><span color="grey">n/a</span></td>
                                     @continue
                                 @endif
-                                <td class="text-center"><font color="grey">{!! $colarray[$i] !!}</font></td>
+                                <td class="text-center"><span color="grey">{!! $colarray[$i] !!}</span></td>
                             @endforeach
                         </tr>
                         @endforeach

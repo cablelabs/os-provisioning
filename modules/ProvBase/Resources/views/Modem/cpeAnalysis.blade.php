@@ -25,7 +25,7 @@
     </div>
 
     @if ($dash)
-        <font color="grey">{!!$dash!!}</font>
+        <span color="grey">{!!$dash!!}</span>
     @endif
 @stop
 
@@ -35,10 +35,10 @@
         @if (isset($lease['ipv6']))
             <h4> IPv4 </h4>
         @endif
-        <font color="{{$lease['state']}}"><b>{!!$lease['forecast']!!}</b></font><br>
+        <span color="{{$lease['state']}}"><b>{!!$lease['forecast']!!}</b></span><br>
         <table>
             @foreach ($lease['text'] as $line)
-                <tr><td><font color="grey">{!!$line!!}</font></td></tr>
+                <tr><td><span color="grey">{!!$line!!}</span></td></tr>
             @endforeach
         </table>
 
@@ -62,7 +62,7 @@
                 <tbody>
                     @foreach($lease['ipv6'] as $key => $lease6)
                     <tr class="{{ $lease6->bsclass }}">
-                        {{-- <td class="text-center"><font color="grey">{{}}</font></td> --}}
+                        {{-- <td class="text-center"><span color="grey">{{}}</span></td> --}}
                         <td class="text-center"></td>
                         <td class="text-center">{{ $key }}</td>
                         <td class="text-center">{{ $lease6->hwaddr }}</td>
@@ -77,54 +77,54 @@
             </div>
         @endif
     @else
-        <font color="red">{{ trans('messages.modem_lease_error')}}</font>
+        <span color="red">{{ trans('messages.modem_lease_error')}}</span>
     @endif
 
 @stop
 
 @section('content_log')
     @if ($log)
-        <font color="green"><b>{{$type}} Logs</b></font><br>
+        <span color="green"><b>{{$type}} Logs</b></span><br>
         <table>
             @foreach ($log as $line)
-                <tr><td><font color="grey">{{$line}}</font></td></tr>
+                <tr><td><span color="grey">{{$line}}</span></td></tr>
             @endforeach
         </table>
     @else
-        <font color="red">{{$type.' '.trans('messages.cpe_log_error')}}</font>
+        <span color="red">{{$type.' '.trans('messages.cpe_log_error')}}</span>
     @endif
 @stop
 
 @section('content_configfile')
     @if (isset($configfile))
-        <font color="green"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></font><br>
+        <span color="green"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></span><br>
         @if (isset($configfile['warn']))
-            <font color="red"><b>{{$configfile['warn']}}</b></font><br>
+            <span color="red"><b>{{$configfile['warn']}}</b></span><br>
         @endif
         <table>
             @foreach ($configfile['text'] as $line)
-                <tr><td><font color="grey">{!!$line!!}</font></td></tr>
+                <tr><td><span color="grey">{!!$line!!}</span></td></tr>
             @endforeach
         </table>
     @else
-        <font color="red">{{ trans('messages.mta_configfile_error')}}</font>
+        <span color="red">{{ trans('messages.mta_configfile_error')}}</span>
     @endif
 @stop
 
 @section('content_ping')
 
     @if ($ping)
-        <font color="{{ isset($ping[1]) ? "success" : "warning" }}">
+        <span color="{{ isset($ping[1]) ? "success" : "warning" }}">
             <b>{{ isset($ping[1]) ? "$type is Online" : trans('messages.device_probably_online', ['type' => $type]) }}</b>
-        </font>
+        </span>
         <br>
         <table>
             @foreach ($ping as $line)
-                <tr><td><font color="grey">{{$line}}</font></td></tr>
+                <tr><td><span color="grey">{{$line}}</span></td></tr>
             @endforeach
         </table>
     @else
-        <font color="red">{{$type}} is Offline</font> <br>
+        <span color="red">{{$type}} is Offline</span> <br>
     @endif
 
 @stop

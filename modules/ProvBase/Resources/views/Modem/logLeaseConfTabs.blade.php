@@ -18,42 +18,42 @@
 ?>
 <div class="tab-pane fade in" id="log">
     @if ($log)
-        <font color="green"><b>Modem Logfile</b></font><br>
+        <span color="green"><b>Modem Logfile</b></span><br>
         @foreach ($log as $line)
             <table>
                 <tr>
                     <td>
-                     <font color="grey">{{$line}}</font>
+                     <span color="grey">{{$line}}</span>
                     </td>
                 </tr>
             </table>
         @endforeach
     @else
-        <font color="red">{{ trans('messages.modem_log_error') }}</font>
+        <span color="red">{{ trans('messages.modem_log_error') }}</span>
     @endif
 </div>
 <div class="tab-pane fade in" id="lease">
     @if ($lease)
-        <font color="{{$lease['state']}}"><b>{{$lease['forecast']}}</b></font><br>
+        <span color="{{$lease['state']}}"><b>{{$lease['forecast']}}</b></span><br>
         @foreach ($lease['text'] as $line)
             <table>
                 <tr>
                     <td>
-                        <font color="grey">{!!$line!!}</font>
+                        <span color="grey">{!!$line!!}</span>
                     </td>
                 </tr>
             </table>
         @endforeach
     @else
-        <font color="red">{{ trans('messages.modem_lease_error')}}</font>
+        <span color="red">{{ trans('messages.modem_lease_error')}}</span>
     @endif
 </div>
 <div class="tab-pane fade in" id="configfile">
     @if ($configfile)
         @if ($modem->configfile->device != 'tr069')
-            <font color="green"><b>Modem Configfile ({{$configfile['mtime']}})</b></font><br>
+            <span color="green"><b>Modem Configfile ({{$configfile['mtime']}})</b></span><br>
             @if (isset($configfile['warn']))
-                <font color="red"><b>{{$configfile['warn']}}</b></font><br>
+                <span color="red"><b>{{$configfile['warn']}}</b></span><br>
             @endif
         @else
             <?php
@@ -116,13 +116,13 @@
             <table>
                 <tr>
                     <td>
-                     <font color="grey">{!! $line !!}</font>
+                     <span color="grey">{!! $line !!}</span>
                     </td>
                 </tr>
             </table>
         @endforeach
     @else
-        <font color="red">{{ trans('messages.modem_configfile_error')}}</font>
+        <span color="red">{{ trans('messages.modem_configfile_error')}}</span>
     @endif
 </div>
 
@@ -142,7 +142,7 @@
                     <tr class = "{{$row[2]}}">
                         @foreach ($row as $idx => $data)
                             @if($idx != 2)
-                                <td><font>{{$data}}</font></td>
+                                <td><span>{{$data}}</span></td>
                             @endif
                         @endforeach
                     </tr>
@@ -151,7 +151,7 @@
             </table>
         </div>
     @else
-        <font color="red">{{ trans('messages.modem_eventlog_error')}}</font>
+        <span color="red">{{ trans('messages.modem_eventlog_error')}}</span>
     @endif
 </div>
 
