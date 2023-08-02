@@ -156,6 +156,10 @@ class LoginController extends Controller
         }
 
         $user->update(['last_login_at' => Carbon::now()]);
+
+        if (! cache()->has('sidebar.pinnedState.'.$user->login_name)) {
+            cache(['sidebar.pinnedState.'.$user->login_name => true]);
+        }
     }
 
     /**

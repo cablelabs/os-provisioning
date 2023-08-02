@@ -164,7 +164,7 @@
             </div>
             @endif
             <!-- begin "old" sidebar -->
-            <div class="fixed md:absolute flex md:w-64 pt-0 overflow-y-auto transition-all duration-200 ease-in-out sidebar d-print-none {{ session('sidebar-pinned') ? '' : 'md:-translate-x-full' }}"
+            <div class="fixed md:absolute flex md:w-64 pt-0 overflow-y-auto transition-all duration-200 ease-in-out sidebar d-print-none {{ cache('sidebar.pinnedState.'.$user->login_name) ? '' : 'md:-translate-x-full' }}"
                 :class="{ 'left-[-220px] md:!-translate-x-full': store.minified, 'left-0 md:!translate-x-0': !store.minified }">
                 <!-- begin sidebar scrollbar -->
                 <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
@@ -437,7 +437,7 @@
                     <!-- end sidebar nav -->
             </div>
             <div
-                class="absolute top-0 hidden md:flex flex-col items-center w-5 h-full pt-2 space-y-6 transition-all duration-200 ease-in-out bg-lime-nmsprime -right-5 {{ session('sidebar-pinned') ? 'translate-x-64' : '' }}"
+                class="absolute top-0 hidden md:flex flex-col items-center w-5 h-full pt-2 space-y-6 transition-all duration-200 ease-in-out bg-lime-nmsprime -right-5 {{ cache('sidebar.pinnedState.'.$user->login_name) ? 'translate-x-64' : '' }}"
                 :class="{'!translate-x-64': !store.minified,'!translate-x-0': store.minified}">
                 <div v-cloak class="text-white hover:cursor-pointer" v-on:click="handleMinify">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 duration-300 ease-in-out" :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"

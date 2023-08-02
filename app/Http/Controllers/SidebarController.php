@@ -28,11 +28,12 @@ class SidebarController extends BaseController
             return;
         }
 
-        session(['sidebar-pinned' => $request->get('pinned')]);
+        $loginName = auth()->user()->login_name;
+        cache(['sidebar.pinnedState.'.$loginName => $request->get('pinned')]);
 
         return response()->json([
             'success' => true,
-            'pinned' => $pinned = session('sidebar-pinned'),
+            'pinned' => $pinned = cache('sidebar.pinnedState.'.$loginName),
             'message' => $pinned ? trans('messages.sidebarPinned') : trans('messages.sidebarUnpinned'),
         ]);
     }
