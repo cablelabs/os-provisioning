@@ -726,46 +726,13 @@ class BaseViewController extends Controller
             }
         }
 
-        // lambda function to extend the current breadcrumb by its predecessor
-        // code within this function originally written by Torsten
-        $extend_breadcrumb_path = function ($breadcrumb_path, $model, $i) {
-            if (! $model) {
-                return '';
-            }
-
-            // following is the original source code written by Torsten
-            $tmp = explode('\\', get_class($model));
-            $view = end($tmp);
-
-            // get header field name
-            // NOTE: for historical reasons check if this is a array or a plain string
-            // See: Confluence API  - get_view_headline()
-            $name = static::__get_view_icon($model);
-            if (is_array($model->view_index_label())) {
-                $name .= Str::limit($model->view_index_label()['header'], 40);
-            } else {
-                $name .= Str::limit($model->view_index_label(), 40);
-            }
-
-            if ($i == 0) {
-                $breadcrumb_path = "<div class='flex px-2'><div class='w-2 rounded-full bg-amber-400'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</div></div>';
-            } else {
-                $breadcrumb_path = "<div class='flex px-2'><div class='w-2 rounded-full bg-amber-400'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</div></div>'.$breadcrumb_path;
-            }
-
-            return $breadcrumb_path;
-        };
-
         if ($view_var != null) {
-            // Recursively parse all relations from view_var
             $parent = $view_var;
             $i = 0;
             while ($parent) {
                 if (
-                    // if $parent is not a Collection we have a 1:1 or 1:n relation
-                    (! ($parent instanceof \Illuminate\Support\Collection)) ||
-                    // there is a potential n:m relation, but only one model is really connected
-                    ($parent->count() == 1)
+                    (! ($parent instanceof \Illuminate\Support\Collection)) || // if $parent is not a Collection we have a 1:1 or 1:n relation
+                    ($parent->count() == 1)                     // there is a potential n:m relation, but only one model is really connected
                 ) {
                     // this means we have an explicit next step in our breadcrumb path
 
@@ -774,11 +741,13 @@ class BaseViewController extends Controller
                         $parent = $parent->pop();
                     }
 
+                    $hasParent = $parent->view_belongs_to();
                     // add the current model to breadcrumbs
-                    $breadcrumb_path = $extend_breadcrumb_path($breadcrumb_path, $parent, $i);
+                    $breadcrumb_path = self::extendBreadcrumbPath($breadcrumb_path, $parent, $i, $hasParent);
 
                     // get view parent
-                    $parent = $parent->view_belongs_to();
+
+                    $parent = $hasParent;
                     $i++;
                 } else {
                     // $parent is a collection with more than one entry – this means we have a multiple parents
@@ -790,7 +759,7 @@ class BaseViewController extends Controller
 
                     foreach ($parent as $p) {
                         // get the breadcrumb for the current parent
-                        $extended_path = $extend_breadcrumb_path($breadcrumb_path, $p, $i);
+                        $extended_path = self::extendBreadcrumbPath($breadcrumb_path, $p, $i);
                         $breadcrumb = str_replace($breadcrumb_path_before_split, '', $extended_path);
 
                         // overwrite style (default needs to much space on page)
@@ -839,9 +808,9 @@ class BaseViewController extends Controller
         // else if (Route::has($route_name.'.index'))
         //  $s = \HTML::linkRoute($route_name.'.index', $route_name).': '.$s;
         if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
-            $breadcrumb_path_base = "<div class='flex px-2'><div class='w-2 rounded-full bg-amber-400'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header')).'</div></div>';
+            $breadcrumb_path_base = "<div class='flex'><div class='flex flex-col py-1 px-2.5 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header'), [], ['class' => 'text-white hover:text:white no-underline']).'</div></div>';
         } else {
-            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='flex px-2'><div class='w-2 rounded-full bg-amber-400'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40)).'</div></div>' : '';
+            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='flex'><div class='flex flex-col py-1 !px-3 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40), [], ['class' => 'text-white hover:text:white no-underline']).'</div></div>' : '';
         }
 
         if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array
@@ -851,6 +820,35 @@ class BaseViewController extends Controller
         }
 
         return implode('', $breadcrumb_paths);
+    }
+
+    private static function extendBreadcrumbPath($breadcrumb_path, $model, $i, $hasParent = null)
+    {
+        if (! $model) {
+            return '';
+        }
+
+        // following is the original source code written by Torsten
+        $tmp = explode('\\', get_class($model));
+        $view = end($tmp);
+
+        // get header field name
+        // NOTE: for historical reasons check if this is a array or a plain string
+        // See: Confluence API  - get_view_headline()
+        $name = static::__get_view_icon($model);
+        if (is_array($model->view_index_label())) {
+            $name .= Str::limit($model->view_index_label()['header'], 40);
+        } else {
+            $name .= Str::limit($model->view_index_label(), 40);
+        }
+
+        if ($i == 0) {
+            $breadcrumb_path = "<div class='flex items-center'><div class='w-2 h-full rounded-full bg-".$model->get_bsclass()."'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).$breadcrumb_path.'</div></div>';
+        } else {
+            $breadcrumb_path = "<div class='flex items-center'><div class='w-2 h-full rounded-full bg-".$model->get_bsclass()."'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".static::__link_route_html($view.'.edit', self::translate_view($name, 'Header'), $model->id).'</div></div>'.$breadcrumb_path;
+        }
+
+        return $breadcrumb_path;
     }
 
     /*

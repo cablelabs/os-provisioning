@@ -65,19 +65,21 @@
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
             <div class="flex flex-1 card card-inverse">
-                <ul class="flex p-2 pl-2 space-x-2 list-none dark:bg-slate-800 dark:text-slate-100">
+                <ul class="flex py-2 space-x-2 list-none dark:bg-slate-800 dark:text-slate-100">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="px-2 dark:bg-slate-900 bg-slate-300 border-b border-gray-300 dark:border-slate-900 d-print-none shadow-md" style="padding-top:0;display:flex;">
-                    <ul id="tabs" class="flex pl-3 space-x-2 nav card-header-tabs nms-tabs text-black dark:text-slate-100" style="width:100%;">
+                <div class="flex pt-0 px-2 dark:bg-slate-900 bg-slate-300 border-b border-gray-300 dark:border-slate-900 d-print-none shadow-md">
+                    <ul id="tabs" class="flex w-full items-center pt-1 px-2 nav card-header-tabs nms-tabs text-black dark:text-slate-100">
                         @foreach ($tabs as $tab)
-
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
-                                <li class="order-12 p-1 ml-auto" role="tab" style="float: right">
+                                <li class="order-12 ml-auto p-1 !px-3 border-b-2 border-transparent hover:border-white hover:bg-slate-200 dark:hover:bg-slate-800 " role="tab">
                                     <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
-                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'dark:text-slate-100 text-gray-800'}} "><i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i> Logging</span>
+                                        <div class="flex items-center dark:text-slate-100 text-gray-800">
+                                            <i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i>
+                                            <div>Logging</div>
+                                        </div>
                                     </a>
                                 </li>
                                 @continue
@@ -85,12 +87,12 @@
 
                             {{-- Link to separate view --}}
                             @if (isset($tab['route']))
-                                <li class="p-1 " role="tab">
+                                <li class="p-1 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $routeName == $tab['route'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
                                     <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
-                                        <span class="{{ $routeName == $tab['route'] ? 'text-cyan-500' : 'dark:text-slate-100 text-gray-800'}}">
-                                        {{-- @if (isset($tab['icon']))
+                                        <span class="dark:text-slate-100 text-gray-800">
+                                        @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
-                                        @endif --}}
+                                        @endif
                                         {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                         </span>
                                     </a>
@@ -100,12 +102,12 @@
 
                             {{-- Other tabs --}}
                             {{-- probably the <a> tag must be set to active according to docu --}}
-                            <li class="p-1 " role="tab">
+                            <li class="p-1 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
                                 <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }} p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
-                                    <span class="{{ $firstTab == $tab['name'] ? 'text-cyan-500' : 'dark:text-slate-100 text-gray-800' }}">
-                                    {{-- @if (isset($tab['icon']))
+                                    <span class="dark:text-slate-100 text-gray-800">
+                                    @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>
-                                    @endif --}}
+                                    @endif
                                     {{ Lang::has('view.tab.'.$tab['name']) ? trans('view.tab.'.$tab['name']) : $tab['name'] }}
                                     </span>
                                 </a>

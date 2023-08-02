@@ -120,6 +120,16 @@ class BaseModel extends Eloquent
     }
 
     /**
+     * Get the class for breadcrumbs and index tables
+     *
+     * @return void
+     */
+    public function get_bsclass()
+    {
+        return 'success';
+    }
+
+    /**
      * Placeholder if specific Model does not have any rules
      */
     public function rules()
