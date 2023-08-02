@@ -225,9 +225,10 @@ class Phonenumber extends \BaseModel
     public function loadEditViewRelations()
     {
         $this->load([
-            'mta:id,modem_id,hostname,mac',
-            'mta.modem:id,contract_id,name,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date,mac',
-            'mta.modem.contract:id,number,firstname,lastname,contract_start',
+            'phonenumbermanagement:id',
+            'mta:id,modem_id,hostname,mac,configfile_id',
+            'mta.modem:id,contract_id,name,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date,mac,us_pwr,ont_state,internet_access',
+            'mta.modem.contract:id,number,firstname,lastname,contract_start,group_contract,internet_access,has_telephony',
             'mta.modem.contract.modems:id,contract_id,name,salutation,company,department,firstname,lastname,street,house_number,zip,city,district,installation_address_change_date',
             'mta.modem.contract.modems.mtas:id,modem_id,hostname,mac',
         ]);

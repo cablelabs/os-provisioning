@@ -80,7 +80,7 @@ class Mta extends \BaseModel
 
     public function get_bsclass()
     {
-        if (! array_key_exists('configfile', $this->relations)) {
+        if (! $this->configfile_id) {
             return 'danger';
         }
 

@@ -741,13 +741,11 @@ class BaseViewController extends Controller
                         $parent = $parent->pop();
                     }
 
-                    $hasParent = $parent->view_belongs_to();
                     // add the current model to breadcrumbs
-                    $breadcrumb_path = self::extendBreadcrumbPath($breadcrumb_path, $parent, $i, $hasParent);
+                    $breadcrumb_path = self::extendBreadcrumbPath($breadcrumb_path, $parent, $i);
 
                     // get view parent
-
-                    $parent = $hasParent;
+                    $parent = $parent->view_belongs_to();
                     $i++;
                 } else {
                     // $parent is a collection with more than one entry – this means we have a multiple parents
@@ -822,7 +820,7 @@ class BaseViewController extends Controller
         return implode('', $breadcrumb_paths);
     }
 
-    private static function extendBreadcrumbPath($breadcrumb_path, $model, $i, $hasParent = null)
+    private static function extendBreadcrumbPath($breadcrumb_path, $model, $i)
     {
         if (! $model) {
             return '';
