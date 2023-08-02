@@ -1463,11 +1463,13 @@ label {
 /* 3.9 Component - Nav Setting */
 
 .nav > li > a {
-    color: var(--nav-link-text);
+    color: var(--white);
 }
-.nav > li > a:hover,
-.nav > li > a:focus {
-    color: var(--text-navbar-default);
+
+.nav.nav-pills > li > a:hover,
+.nav.nav-pills > li > a:focus {
+    color: var(--gray-50);
+    background: var(--dark);
 }
 
 

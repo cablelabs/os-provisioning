@@ -59,7 +59,7 @@
 
     /* select color variable */
     --border-select : var(--slate-400);
-    
+
     /* legend color variable */
     --border-legend : var(--slate-200);
 
@@ -124,7 +124,7 @@
     --bg-nav-tabs-inverse : var(--gray-800);
     --text-nav-tabs-inverse : var(--gray-700);
     --text-nav-pills : var(--gray-700);
-    --bg-nav-pills-active : var(--gray-800);
+    --bg-nav-pills-active : var(--gray-700);
     --nav-link-text: var(--black);
     /* button color variable */
     --text-btn-default : var(--white);
@@ -260,7 +260,7 @@
     --bg-ul-tagit-success : var(--lime-500);
     --bg-ul-tagit-warning : var(--amber-500);
     --bg-ul-tagit-danger : var(--red-500);
-    
+
     /* Powerange Slider color variable */
     --bg-range-quantity : var(--lime-500);
     --bg-range-quantity-red : var(--red-500);
@@ -381,12 +381,12 @@
     --bg-table-td : var(--white);
     --text-table-td : var(--gray-500);
     --bg-table-hover : var(--slate-200);
-    
+
     /* underline color  */
     --underline : var(--slate-200);
 
     /* gritter text color */
-    --text-gritter : var(--gray-700); 
+    --text-gritter : var(--gray-700);
     --bg-gritter : var(--red-500);
 
     /* dataTables color */
@@ -424,7 +424,7 @@
     /* todolist color */
     --text-todolist : var(--gray-700);
     --text-todolist-active : var(--lime-500);
-    
+
     /* invoice-price color */
     --bg-nvoice-price : var(--gray-700);
 
@@ -470,7 +470,7 @@
 
     /* superbox show color */
     --superbox-show : var(--gray-700);
-    
+
     /* attached document color  */
     --bg-attached-document : var(--slate-200);
     --text-attached-document : var(--gray-700);
