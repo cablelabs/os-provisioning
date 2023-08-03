@@ -791,6 +791,14 @@ return [
     'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'statsSummary' => [
+        'emptyResult' => [
+            'activeCustomers' => 'Keine aktiven Kunden',
+            'activeItems' => 'Keine aktiven Posten',
+            'acquiredCustomers' => 'Keine akquirierten Neukunden',
+            'newCustomers' => 'Keine aktiven Neukunden',
+            'revenue' => 'Kein Umsatz aktiver Kunden',
+            'revenueIncrease' => 'Keine Umsatzsteigerung aktiver Neukunden',
+        ],
         'headlines' => [
             'activeCustomers' => 'Aktive Kunden',
             'activeItems' => 'Aktive Posten',

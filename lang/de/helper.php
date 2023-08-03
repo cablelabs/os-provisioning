@@ -228,6 +228,9 @@ return [
      * Start alphabetical order
      */
     'endpointMac' => 'Kann für alle PPPoE provisionierte Modems frei gelassen werden (dann wird der PPP Nutzername statt der MAC genutzt). Mit DHCP kann das Feld für IPv4 frei gelassen werden. Dann bekommen alle Geräte hinter dem Modem die spezifizierte IP, wobei nur das Gerät, dass sich zuletzt gemeldet hat, eine funktionierende IP-Konnektivität erhält. Für IPv6 ist dies noch nicht implementiert - bitte geben Sie hier immer die MAC des CPE an, das eine öffentliche oder feste IP erhalten soll!',
+    'statsSummary' => [
+        'upsell' => 'Bezieht bestehende Kunden ein, welche bereits einen gültigen Tarif hatten (Tarifwechsel).',
+    ],
 
     /*
      * MODULE: Statistics
