@@ -87,7 +87,7 @@
         $panelHeaderPing = '<ul class="nav nav-pills" id="ping-tab">
                 <li role="presentation"><a href="#ping-test" data-toggle="pill">Default Ping</a></li>
                 <li role="presentation"><a href="#flood-ping" data-toggle="pill">Flood-Ping</a></li>';
-        if (config('provmon.arrisIperf')['enable']) {
+        if (config('provmon.arrisIperf')['enable'] && \Str::contains($modem->model, 'TG3442S')) {
             $panelHeaderPing .= '<li role="presentation"><a href="#arris-iperf" data-toggle="pill">Iperf</a></li>';
         }
         $panelHeaderPing .= '</ul>';
