@@ -33,4 +33,14 @@ class RadAcct extends \BaseModel
     public static function bootSoftDeletes()
     {
     }
+
+    public function modem()
+    {
+        return $this->belongsTo(Modem::class, 'username', 'ppp_username');
+    }
+
+    public function nas()
+    {
+        return $this->belongsTo(Nas::class, 'nasipaddress', 'nasname');
+    }
 }

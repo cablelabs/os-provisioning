@@ -35,6 +35,11 @@ class Nas extends \BaseModel
     {
     }
 
+    public function netgw()
+    {
+        return $this->belongsTo(NetGw::class, 'shortname');
+    }
+
     /**
      * Truncate nas table and refresh all entries - corresponds to Netgw
      */
