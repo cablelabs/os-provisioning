@@ -26,15 +26,25 @@
     $parent = $model;
     $classname = explode('\\',get_class($parent));
     $classname = end($classname);
-
+?>
+<div class='flex'>
+    <div class='flex flex-col py-1 !px-3 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>
+        <a href="{{ route($classname.'.index')}}" class="text-white hover:text:white no-underline">
+            {!! $model->view_icon() !!}{{ $classname }}
+        </a>
+    </div>
+</div>
+@php
     while ($parent)
     {
         $tmp   = explode('\\',get_class($parent));
         $view  = end($tmp);
         $icon  = $parent->view_icon();
         $label = is_array($ret = $parent->view_index_label()) ? $ret['header'] : $ret;
-
-        $s = "<li>".HTML::decode(HTML::linkRoute($view.'.edit', $icon.$label, $parent->id)).'</li>'.$s;
+        $s =  "<div class='flex items-center'><div class='w-2 h-full rounded-full bg-".$parent->get_bsclass().
+            "'></div><div class='flex flex-col px-2.5 text-black dark:text-slate-100'>".
+                HTML::decode(HTML::linkRoute($view.'.edit', $icon.Str::limit($label, 40, '...'), $parent->id)).
+                '</div></div>'.$s;
 
         $parent = $parent->view_belongs_to();
 
@@ -42,24 +52,5 @@
             $parent = $parent->first();
         }
     }
-
-    // Show link to actual site. This depends on if we are in Modem Analysis or CPE Analysis context
-    if (! isset($type))
-    {
-        $route = 'ProvMon';
-
-        if (! Module::collections()->has('ProvMon') && $classname == 'Modem') {
-            $route = 'Modem';
-        }
-
-        $route .= '.'.($classname == 'Modem' ? 'analysis' : 'netgw');
-
-        $s .= "<li class='nav-tabs'>".HTML::linkRoute($route, trans('view.analysis'), $model->id).'</li>';
-    } elseif ($type == 'CPE') {
-        $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.cpeAnalysis', 'CPE-'.trans('view.analysis'), $model->id).'</li>';
-    } elseif ($type == 'MTA') {
-        $s .= "<li class='nav-tabs'>".HTML::linkRoute('Modem.mtaAnalysis', 'MTA-'.trans('view.analysis'), $model->id).'</li>';
-    }
-
-    echo "<li class='active'><a href='".route("$classname.index")."'><i class='fa fa-hdd-o'></i>$classname</a></li>".$s;
-?>
+@endphp
+{!! $s !!}

@@ -19,35 +19,35 @@
 @extends ('provbase::layouts.split')
 
 @section('content_dash')
-    <div class="flex flex-wrap justify-content-between">
-    <div class="flex justify-content-end align-self-start {{ ($dash && count($dash) == 1) ? 'order-1 order-sm-3' : 'order-3'}}" style="flex: 1">
-        @include('Generic.documentation', ['documentation' => $modem->help])
-    </div>
-    @if ($dash)
-        <div class="{{ count($dash) == 1 ? 'col-sm-10 col-xl-11 order-2' : '' }} ">
-            @foreach ($dash as $key => $info)
-                @if (! $info)
-                    @continue
-                @endif
-                <div class="alert alert-{{$info['bsclass']}} fade show">
-                    <div>
-                        {{ $info['text'] }}
-                    </div>
-                    @if (isset($info['instructions']))
-                        <div class="m-t-10 m-b-5">
-                            <code class="p-5">{{ $info['instructions'] }}</code>
-                        </div>
-                    @endif
-                </div>
-            @endforeach
+    <div class="relative flex">
+        <div class="absolute right-0 top-0">
+            @include('Generic.documentation', ['documentation' => $modem->help])
         </div>
-    @endif
+        @if ($dash)
+            <div class="{{ count($dash) == 1 ? 'col-sm-10 col-xl-11 order-2' : '' }} ">
+                @foreach ($dash as $key => $info)
+                    @if (! $info)
+                        @continue
+                    @endif
+                    <div class="alert alert-{{ $info['bsclass'] }} fade show">
+                        <div>
+                            {{ $info['text'] }}
+                        </div>
+                        @if (isset($info['instructions']))
+                            <div class="m-t-10 m-b-5">
+                                <code class="p-5">{{ $info['instructions'] }}</code>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 @stop
 
 @section('content_ping')
-    <div class="tab-content">
-        <div class="tab-pane fade in" id="ping-test">
+    <div class="tab-content h-80">
+        <div class="tab-pane" id="ping-test">
             @if ($online)
                 <span color="green"><b>Modem is Online</b></span><br>
             @else

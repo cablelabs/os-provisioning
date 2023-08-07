@@ -30,13 +30,13 @@
             @endphp
 
             @if ($help && $help['doc'])
-            <a class="dropdown-item" href="{{$help['doc']}}" target="_blank">Documentation</a>
+                <a class="dropdown-item" href="{{$help['doc']}}" target="_blank">Documentation</a>
             @endif
             @if ($help && $help['url'])
-            <a class="dropdown-item" href="{{$help['url']}}" target="_blank">URL</a>
+                <a class="dropdown-item" href="{{$help['url']}}" target="_blank">URL</a>
             @endif
             @if ($help && $help['youtube'])
-            <a class="dropdown-item" href="{{$help['youtube']}}" target="_blank">Youtube</a>
+                <a class="dropdown-item" href="{{$help['youtube']}}" target="_blank">Youtube</a>
             @endif
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{route('SupportRequest.index')}}">Request Professional Help</a>

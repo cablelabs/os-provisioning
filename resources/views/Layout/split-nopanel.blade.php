@@ -70,11 +70,11 @@
                 </ul>
                 @if(isset($tabs))
                 <div class="flex pt-0 px-2 dark:bg-slate-900 bg-slate-300 border-b border-gray-300 dark:border-slate-900 d-print-none shadow-md">
-                    <ul id="tabs" class="flex w-full items-center pt-1 px-2 nav card-header-tabs nms-tabs text-black dark:text-slate-100">
+                    <ul id="tabs" class="flex w-full items-center px-2 nav card-header-tabs nms-tabs text-black dark:text-slate-100">
                         @foreach ($tabs as $tab)
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
-                                <li class="order-12 ml-auto p-1 !px-3 border-b-2 border-transparent hover:border-white hover:bg-slate-200 dark:hover:bg-slate-800 " role="tab">
+                                <li class="order-12 ml-auto pb-1 pt-2 !px-3 border-b-2 border-transparent hover:border-white hover:bg-slate-200 dark:hover:bg-slate-800 " role="tab">
                                     <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
                                         <div class="flex items-center dark:text-slate-100 text-gray-800">
                                             <i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i>
@@ -87,8 +87,8 @@
 
                             {{-- Link to separate view --}}
                             @if (isset($tab['route']))
-                                <li class="p-1 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $routeName == $tab['route'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="{{ $routeName == $tab['route'] ? 'active' : ''}} p-0">
+                                <li class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $routeName == $tab['route'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="p-0">
                                         <span class="dark:text-slate-100 text-gray-800">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
@@ -102,8 +102,8 @@
 
                             {{-- Other tabs --}}
                             {{-- probably the <a> tag must be set to active according to docu --}}
-                            <li class="p-1 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
-                                <a id="{{$tab['name'].'tab'}}" class="{{ $firstTab == $tab['name'] ? 'active' : '' }} p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
+                            <li class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
+                                <a id="{{$tab['name'].'tab'}}" class="p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
                                     <span class="dark:text-slate-100 text-gray-800">
                                     @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>

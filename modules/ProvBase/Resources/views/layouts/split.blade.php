@@ -69,8 +69,6 @@
     data-route-modem-flood-ping="{{ route("Modem.floodPing", ["modem" => $modem->id]) }}"
 >
 @endif
-    <vue-snotify></vue-snotify>
-    {{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}
 
     <div class="col-md-7 ui-sortable">
         @include ('bootstrap.panel', array ('content' => 'content_dash', 'view_header' => 'Dashboard', 'i' => 1))
@@ -83,7 +81,6 @@
     </div>
 
     <div class="col-md-5 ui-sortable">
-
         @include ('bootstrap.panel', array ('content' => 'content_ping', 'view_header' =>
             '<ul class="nav nav-pills" id="ping-tab">
                 <li role="presentation"><a href="#ping-test" data-toggle="pill">Default Ping</a></li>
@@ -119,7 +116,7 @@
 
     @if (Module::collections()->has('ProvMon') && ! $modem->isPPP())
         <div class="col-md-12 ui-sortable">
-            @include ('bootstrap.panel', array ('content' => 'spectrum-analysis', 'view_header' => trans('messages.spectrum'),  'i' => '7'))
+            @include ('bootstrap.panel', array ('content' => 'spectrum-analysis', 'view_header' => trans('messages.spectrum'),  'i' => 7))
         </div>
     @endif
 
