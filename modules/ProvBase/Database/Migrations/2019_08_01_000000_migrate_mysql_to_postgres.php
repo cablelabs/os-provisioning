@@ -42,9 +42,16 @@ class MigrateMysqlToPostgres extends BaseMigration
     {
         $db = $user = 'radius';
         $psw = DB::connection('pgsql-radius')->getConfig('password');
+        $hasRadiusDbQueryResult = DB::select("SELECT datname FROM pg_catalog.pg_database WHERE datname = 'radius';");
+
+        if (count($hasRadiusDbQueryResult)) {
+            echo "Radius DB already set up \n";
+
+            return;
+        }
 
         system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
-        echo "radius\n";
+        echo "radiusdb created\n";
 
         // Add radius user
         system("sudo -u postgres /usr/pgsql-13/bin/psql -d $db -c \"
@@ -56,8 +63,6 @@ class MigrateMysqlToPostgres extends BaseMigration
 
         DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/main/postgresql/schema.sql'));
         DB::connection('pgsql-radius')->unprepared(file_get_contents('/etc/raddb/mods-config/sql/ippool/postgresql/schema.sql'));
-
-        \Artisan::call('nms:raddb-repopulate');
 
         system('sudo -u postgres /usr/pgsql-13/bin/psql radius -c "ALTER ROLE postgres set search_path to \'public\'"');
 
@@ -110,7 +115,7 @@ class MigrateMysqlToPostgres extends BaseMigration
             $radpa->saveQuietly();
         }
 
-        $nases = DB::connection('mysql')->table('nas')->orderBy('id', 'desc')->groupBy('username')->get();
+        $nases = DB::connection('mysql')->table('nas')->orderBy('id', 'desc')->get();
         foreach ($nases as $nas) {
             $data = (array) $nas;
             unset($data['id']);
