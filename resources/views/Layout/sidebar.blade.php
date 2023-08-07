@@ -208,7 +208,7 @@
                                 }"
                                 style="z-index:10000;">
                                 <div class="flex recolor sidebar-element">
-                                    <a class="flex caret-link w-40 md:w-full"
+                                    <a class="flex caret-link"
                                         v-on:click="{{ isset($typearray['link']) ? "!store.minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug}')" }}"
                                         href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;' }}">
                                         @if (is_file(public_path('images/apps/') . $typearray['icon']))
@@ -439,8 +439,8 @@
             <div
                 class="absolute top-0 hidden md:flex flex-col items-center w-5 h-full pt-2 space-y-6 transition-all duration-200 ease-in-out bg-lime-nmsprime -right-5 {{ cache('sidebar.pinnedState.'.$user->login_name) ? 'translate-x-64' : '' }}"
                 :class="{'!translate-x-64': !store.minified,'!translate-x-0': store.minified}">
-                <div v-cloak class="text-white hover:cursor-pointer" v-on:click="handleMinify">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 duration-300 ease-in-out" :class="{ 'rotate-180': !store.minified, 'rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"
+                <div class="text-white hover:cursor-pointer" v-on:click="handleMinify">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 duration-300 ease-in-out {{ cache('sidebar.pinnedState.'.$user->login_name) ? 'rotate-180' : 'rotate-0' }}" :class="{ '!rotate-180': !store.minified, '!rotate-0': store.minified }" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
