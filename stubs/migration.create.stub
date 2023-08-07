@@ -23,6 +23,10 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends BaseMigration
 {
+    public $migrationScope = 'database';
+
+    protected $tableName = '{{ table }}';
+
     /**
      * Run the migrations.
      *
@@ -30,7 +34,7 @@ return new class extends BaseMigration
      */
     public function up()
     {
-        Schema::create('{{ table }}', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
@@ -43,6 +47,6 @@ return new class extends BaseMigration
      */
     public function down()
     {
-        Schema::dropIfExists('{{ table }}');
+        Schema::dropIfExists($this->tableName);
     }
 };

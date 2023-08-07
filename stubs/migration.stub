@@ -23,6 +23,10 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends BaseMigration
 {
+    public $migrationScope = 'database';
+
+    protected $tableName = '';
+
     /**
      * Run the migrations.
      *

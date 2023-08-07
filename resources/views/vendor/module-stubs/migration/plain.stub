@@ -4,7 +4,7 @@ use Database\Migrations\BaseMigration;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
-class $CLASS$ extends BaseMigration
+return new class extends BaseMigration
 {
     public $migrationScope = 'database';
 
@@ -29,4 +29,4 @@ class $CLASS$ extends BaseMigration
     {
         //
     }
-}
+};
