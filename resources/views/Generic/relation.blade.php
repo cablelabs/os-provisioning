@@ -40,9 +40,9 @@ Relation Blade is used inside a Panel Element to display relational class object
             </div>
         @else
             <div class="col-md-1">
-                <a data-toggle="popover" data-container="body" data-trigger="hover" title="Info" data-placement="right" data-content="{{ $info }}">
+                <popover title="Info" content="{{ $info }}">
                     <i class="fa fa-2x p-t-5 fa-question-circle text-info"></i>
-                </a>
+                </popover>
             </div>
         @endif
     @endif

@@ -565,10 +565,11 @@ class BaseViewController extends Controller
         $title = isset($field['description']) ? self::translate_label($field['description']) : '';
         $icon = $field['help_icon'] ?? 'fa-question-circle';
 
-        return '<div class="col-1">
-            <a data-toggle="popover" data-html="true" data-container="body" data-trigger="hover" title="'.$title.'" data-placement="right" data-content="'.$field['help'].'">'.
-                '<i class="fa fa-2x p-t-5 '.$icon.' text-'.$bsClass.'"></i>
-            </a></div>';
+        return "<popover title=\"{$title}\" content=\"{$field['help']}\">".
+            '<div class=\"col-1\">'.
+                "<i class=\"fa fa-2x p-t-5 {$icon} text-{$bsClass}\"></i>".
+            '</div>'.
+        '</popover>';
     }
 
     /**

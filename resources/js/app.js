@@ -45,6 +45,7 @@ import snotify from 'vue3-snotify'
 import app from './components/App.vue'
 import sidebar from './components/Sidebar.vue'
 import navbar from './components/Navbar.vue'
+import popover from './components/Popover.vue'
 import sidebarRight from './components/SidebarRight.vue'
 import select2Component from './components/Select2.vue'
 import SidebarSelect2Component from './components/SidebarSelect2.vue'
@@ -59,6 +60,7 @@ window.main = createApp(app)
   .component('select2', select2Component)
   .component('SidebarSelect2', SidebarSelect2Component)
   .component('skeleton', skeletonComponent)
+  .component('popover', popover)
   .use(snotify)
   .mount('#page-container')
 
@@ -90,7 +92,9 @@ if (document.getElementById('vue-body')) {
 }
 
 if (document.getElementById('auth-abilities')) {
-  window.authAbilities = createApp(AuthAbilities).mount('#auth-abilities')
+  window.authAbilities = createApp(AuthAbilities)
+    .component('popover', popover)
+    .mount('#auth-abilities')
 }
 
 const themeColor = $('body').data('theme_color')

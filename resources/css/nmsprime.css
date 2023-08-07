@@ -374,11 +374,6 @@ table .index_check {
     color: var(--gray-500);
 }
 
-.popover-header{
-    margin-top: 0;
-}
-
-
 .card-inverse {
     color: var(--text-card-inverse);
     background-color: var(--bg-card-inverse);
@@ -802,7 +797,7 @@ div.recolor:hover,
         width: 170mm !important;
     }
 
-    a[data-toggle="popover"], textarea:empty, .btn, .panel-heading-btn .select2-selection__arrow, .clearfix {
+    popover, textarea:empty, .btn, .panel-heading-btn .select2-selection__arrow, .clearfix {
         display: none !important;
     }
 

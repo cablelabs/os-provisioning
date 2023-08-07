@@ -27,6 +27,7 @@
         "vue-loader": "^17.1.0"
     },
     "dependencies": {
+        "@floating-ui/vue": "^1.0.2",
         "@panzoom/panzoom": "^4.5.1",
         "axios": "^0.25",
         "bootstrap": "^4.0.0",

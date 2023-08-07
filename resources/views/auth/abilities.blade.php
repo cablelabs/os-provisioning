@@ -84,11 +84,10 @@
                                 </div>
                             </td>
                             <td align="center">
-                                <a class="cursor-pointer" data-toggle="popover" data-container="body"
-                                    data-trigger="hover" data-placement="right" :title="ability['localTitle']"
-                                    :data-content="ability['helperText']">
+                                <popover class="cursor-pointer" :title="ability['localTitle']"
+                                    :content="ability['helperText']">
                                     <i class="fa fa-2x text-info p-t-5 fa-question-circle"></i>
-                                </a>
+                                </popover>
                             </td>
                         </tr>
                     </table>
