@@ -62,21 +62,6 @@ class InstallKea extends BaseMigration
         system("for tbl in `sudo -u postgres /usr/pgsql-13/bin/psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" kea`;
             do sudo -u postgres /usr/pgsql-13/bin/psql -d kea -c \"alter table ".'$tbl'.' owner to '.$user.'"; done');
 
-        $find = [
-            '<DB_USERNAME>',
-            '<DB_PASSWORD>',
-        ];
-
-        $replace = [
-            $user,
-            $psw,
-        ];
-
-        $filename = '/etc/kea/dhcp6-nmsprime.conf';
-        $content = file_get_contents($filename);
-        preg_replace($find, $replace, $content);
-        file_put_contents($filename, $content);
-
         system('systemctl enable kea-dhcp6');
     }
 
