@@ -1174,3 +1174,7 @@ table.dataTable > tbody > tr.selected > * {
 .select2-results .select2-disabled,  .select2-results__option[aria-disabled=true] {
     display: none;
 }
+
+.show {
+    opacity: 1;
+}
