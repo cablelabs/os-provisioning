@@ -24,7 +24,7 @@
         "intervention/validation": "^3.0",
         "kalnoy/nestedset": "^6.0",
         "beyondcode/laravel-websockets": "^1.13",
-        "pusher/pusher-php-server": "^5.0",
+        "pusher/pusher-php-server": "^7.0",
         "laravel/ui": "^3.0",
         "symfony/mailgun-mailer": "^6.0",
         "symfony/http-client": "^6.0",
