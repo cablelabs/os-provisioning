@@ -24,15 +24,6 @@ mix.alias({
 });
 
 mix.js('resources/js/app.js', 'public/js')
-  .js('modules/Ccc/Resources/assets/js/ccc.js', 'public/js')
-  .js('modules/CoreMon/Resources/assets/js/core-mon.js', 'public/js')
-  .js('modules/HfcBase/Resources/assets/js/hfc-base.js', 'public/js')
-  .js('modules/ProvBase/Resources/assets/js/prov-base.js', 'public/js')
-  .js('modules/ProvMon/Resources/assets/js/prov-mon.js', 'public/js')
-  .js('modules/Statistics/Resources/assets/js/statistics.js', 'public/js')
-  .js('modules/Ticketsystem/Resources/js/ticketsystem.js', 'public/js')
-  .vue()
-  .version()
   .postCss('resources/css/app.css', 'public/css', [
     require('tailwindcss'),
   ])
