@@ -77,7 +77,7 @@ Afterwards the NMS Prime RPM packages are replaced with the GIT repository by is
 ```bash
 for module in $(rpm -qa "nmsprime-*" | grep -v '^nmsprime-repos'); do rpm -e --justdb --noscripts --nodeps "$module"; done
 
-yum install git
+yum install git npm
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer
@@ -89,23 +89,25 @@ rm -rf nmsprimeGit/
 cd nmsprime
 
 git checkout -- .
+git clean -f -x
 
 # move enterprise apps into /root folder for reference, they are not needed for the community git version
 for module in $(ls -1 modules | grep -v '^HfcReq$\|^HfcSnmp$\|^NmsMail$\|^ProvBase$\|^ProvVoip$'); do mv "$module" /root/; done
 
-COMPOSER_MEMORY_LIMIT=-1 composer update
+composer update
 
-/opt/remi/php80/root/usr/bin/php artisan config:cache
-/opt/remi/php80/root/usr/bin/php artisan clear-compiled
-/opt/remi/php80/root/usr/bin/php artisan optimize
-/opt/remi/php80/root/usr/bin/php artisan migrate
-/opt/remi/php80/root/usr/bin/php artisan module:migrate
-/opt/remi/php80/root/usr/bin/php artisan module:publish
-/opt/remi/php80/root/usr/bin/php artisan queue:restart
-/opt/remi/php80/root/usr/bin/php artisan bouncer:clean
-/opt/remi/php80/root/usr/bin/php artisan auth:nms
-/opt/remi/php80/root/usr/bin/php artisan route:cache
-/opt/remi/php80/root/usr/bin/php artisan view:clear
+php artisan module:v6:migrate
+npm i && npm run dev
+
+yum install $(for file in $(find /var/www/nmsprime -name config.cfg); do grep '^depends[[:space:]]*=' "$file" | cut -d'=' -f2- | cut -d'"' -f2; done | tr ';' '\n' | sed -e '/^$/d' -e '/^nmsprime-/d' | sort -u)
+
+php artisan migrate
+php artisan module:migrate
+php artisan module:publish
+php artisan bouncer:clean
+php artisan auth:nms
+php artisan optimize
+systemctl restart supervisord
 ```
 
 ---
