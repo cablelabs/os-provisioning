@@ -80,6 +80,8 @@ return [
     'Menu_PropertyManagement'   => 'Property Management',
     'Menu_DocumentManagement'    => 'Document Management',
     'Menu_DocumentTemplates'    => 'Templates',
+    'Menu_Queries'              => 'Queries',
+    'Menu_Statistics'           => 'Statistics',
     'Menu_SerialLetter'         => 'Serial Letters',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Phonenumbers',
@@ -285,8 +287,8 @@ return [
     'Header_Functions'          => 'Functions',
 
     'Header_Ccap'               => 'CCAP',
-
-    'Header_StatisticsResult'  => 'Results',
+    'Header_StatisticsQuery' => 'Statistics Query',
+    'Header_StatisticsQueryResult'  => 'Results',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
@@ -578,6 +580,7 @@ return [
         'Create'            => 'Create',
         'Custom Abilities'  => 'Custom Abilities',
         'Delete'            => 'Delete',
+        'DocumentManagement' => 'Document management',
         'Download settlement runs' => 'Download Settlement Runs',
         'Edit'              => 'Edit',
         'Forbid'            => 'Forbid',

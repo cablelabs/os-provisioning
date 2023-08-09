@@ -80,6 +80,8 @@ return [
     'Menu_PropertyManagement'   => 'Gebäudeverwaltung',
     'Menu_DocumentManagement'   => 'Dokumentenmanagement',
     'Menu_DocumentTemplates'    => 'Vorlagen',
+    'Menu_Queries'              => 'Abfragen',
+    'Menu_Statistics'           => 'Statistik',
     'Menu_SerialLetter'         => 'Serienbriefe',
     'Menu_MTA'                  => 'MTAs',
     'Menu_Phonenumber'          => 'Telefonnummern',
@@ -275,7 +277,7 @@ return [
     'Header_SubNetElement'      => 'Untergeordnete Netzelemente',
     'Header_tap'                => 'Steuerbarer Abzweiger-Port',
 
-    'Header_SummaryStatistic'   => 'Summary',
+    'Header_SummaryStatistic'   => 'Übersicht / Dashboard',
 
     // Workforce
     'Header_Workforce'          => 'Workforce Kommandozentrale',
@@ -285,8 +287,8 @@ return [
     'Header_Functions'          => 'Funktionen',
 
     'Header_Ccap'               => 'CCAP',
-
-    'Header_StatisticsResult'  => 'Ergebnisse',
+    'Header_StatisticsQuery' => 'Abfragen',
+    'Header_StatisticsQueryResult' => 'Ergebnisse',
 
     //Header Relation
     // 'Assigned'               => 'Zugewiesene',
@@ -579,6 +581,7 @@ return [
         'Create'            => 'Erstellen',
         'Custom Abilities'  => 'Besondere Berechtigungen',
         'Delete'            => 'Lösche',
+        'DocumentManagement' => 'Dokumentenmanagement',
         'Download settlement runs' => 'Abrechnungsläufe downloaden',
         'Edit'              => 'Ändern',
         'Forbid'            => 'Verbieten',
