@@ -76,6 +76,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \Bouncer::setClipboard(new \App\extensions\bouncer\AdvancedCachedClipboard(new \Illuminate\Cache\ArrayStore));
     }
 }
