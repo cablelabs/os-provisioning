@@ -173,7 +173,7 @@ class ModemController extends \BaseController
             ],
             ['form_type' => 'checkbox', 'name' => 'public', 'description' => 'Public CPE', 'value' => '1'],
             ['form_type' => 'checkbox', 'name' => 'internet_access', 'description' => 'Internet Access',
-                'value' => '1', 'help' => trans('helper.Modem_InternetAccess'),
+                'value' => '1', 'help' => trans('helper.modem.internetAccess'),
                 'options' => $model->contract?->isCanceled() ? ['onclick' => 'return false;', 'readonly'] : [],
             ],
         ];
