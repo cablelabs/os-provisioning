@@ -32,4 +32,25 @@ return [
         'rpmName' => 'grafana',
         'maxDiagrams' => env('GRAFANA_MAX_DIAGRAMS', 200),
     ],
+    'Kafka' => [
+        'icon'  => 'Kafka.svg',
+        'description' => 'apps.Kafka',
+        'link' => '#',
+        'website' => 'https://kafka.apache.org/',
+        'rpmName' => 'kafka',
+    ],
+    'Telegraf' => [
+        'icon'  => 'Telegraf.svg',
+        'description' => 'apps.Telegraf',
+        'link' => '#',
+        'website' => 'https://docs.influxdata.com/telegraf/',
+        'rpmName' => 'telegraf',
+    ],
+    'Prometheus' => [
+        'icon'  => 'Prometheus.svg',
+        'description' => 'apps.Prometheus',
+        'link' => '#',
+        'website' => 'https://prometheus.io/',
+        'rpmName' => 'prometheus',
+    ],
 ];
