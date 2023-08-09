@@ -287,6 +287,8 @@ return [
     'Header_Functions'          => 'Functions',
 
     'Header_Ccap'               => 'CCAP',
+
+    // Statistics
     'Header_StatisticsQuery' => 'Statistics Query',
     'Header_StatisticsQueryResult'  => 'Results',
 
@@ -580,7 +582,7 @@ return [
         'Create'            => 'Create',
         'Custom Abilities'  => 'Custom Abilities',
         'Delete'            => 'Delete',
-        'DocumentManagement' => 'Document management',
+        'DocumentManagement' => 'Document Management',
         'Download settlement runs' => 'Download Settlement Runs',
         'Edit'              => 'Edit',
         'Forbid'            => 'Forbid',

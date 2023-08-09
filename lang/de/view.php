@@ -287,6 +287,8 @@ return [
     'Header_Functions'          => 'Funktionen',
 
     'Header_Ccap'               => 'CCAP',
+
+    // Statistics
     'Header_StatisticsQuery' => 'Abfragen',
     'Header_StatisticsQueryResult' => 'Ergebnisse',
 
