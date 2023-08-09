@@ -142,9 +142,9 @@ return [
     //ModemController
     'modem' => [
         'internetAccess' => 'Internetzugriff für CPEs. (MTAs werden nicht beachtet und gehen immer online, wenn alle restlich notwendigen Konfigurationen korrekt vorgenommen wurden) - Achtung: Mit Billingmodul wird diese Checkbox während der nächtlichen Prüfung (nur) bei Tarifänderung überschrieben. Kann nicht mehr gesetzt werden, wenn Vertrag abgelaufen ist.',
+        'qosCount' => 'Die Zahl in Klammern zeigt an, wie häufig der jeweilige QOS bereits verwendet wird.',
         'configfileSelect' => 'Es ist nicht möglich den Typ des Modems über das Configfile zu ändern (z.B. von \'cm\' zu \'tr-69\'). Bitte löschen Sie das Modem dazu und erstellen Sie ein neues!',
         'additional' => 'Hier können zusätzliche Bemerkungen notiert werden.',
-        'qosCount' => 'Die Zahl in Klammern zeigt an, wie häufig der jeweilige QOS bereits verwendet wird.',
     ],
     'Modem_InstallationAddressChangeDate'   => 'Datum der Änderung der Installationsadresse. Wenn nur lesbar existiert bereits ein offener Auftrag.',
     'Modem_GeocodeOrigin'           => 'Quelle der Geodaten. Falls hier „n/a“ steht konnte die Adresse nicht aufgelöst werden. Bei manueller Änderung der Geodaten wird der aktuelle Nutzer eingetragen.',

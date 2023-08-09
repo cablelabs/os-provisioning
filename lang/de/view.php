@@ -115,7 +115,7 @@ return [
     'Header_Overview'           => 'Übersicht',
     'Header_Assigned'           => 'Zugewiesene',
     'Header_Create'             => 'Erstellen',
-    'Header_Net'                => 'Netzwerk',
+    'Header_Net'                => 'Netze',
     //Module specific
     'Header_MibFile'            => 'MIB-Datei|MIB-Dateien',
     'Header_OID'                => 'OID|OIDs',
