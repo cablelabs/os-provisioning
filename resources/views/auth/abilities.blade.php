@@ -84,7 +84,8 @@
                                 </div>
                             </td>
                             <td align="center">
-                                <popover class="cursor-pointer" :title="ability['localTitle']"
+                                <popover class="flex justify-center"
+                                    :title="ability['localTitle']"
                                     :content="ability['helperText']">
                                     <i class="fa fa-2x text-info p-t-5 fa-question-circle"></i>
                                 </popover>
