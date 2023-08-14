@@ -20,7 +20,7 @@
                 type: 'column', {{-- auto resize the Table to fit the viewing device --}}
                 }
             },
-            dom: "Btip",
+            dom: "<'flow-root mb-3'B>rtip",
             fnAdjustColumnSizing: true,
             autoWidth: false,
             aoColumnDefs: [ {

@@ -74,7 +74,10 @@
                         @foreach ($tabs as $tab)
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")
-                                <li class="order-12 ml-auto pb-1 pt-2 !px-3 border-b-2 border-transparent hover:border-white hover:bg-slate-200 dark:hover:bg-slate-800 " role="tab">
+                                <li v-on:click="toggleLoggingTab"
+                                    class="order-12 ml-auto pb-1 pt-2 !px-3 border-b-2 border-transparent hover:bg-slate-200 dark:hover:bg-slate-800"
+                                    :class="loggingTab ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white'"
+                                    role="tab">
                                     <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
                                         <div class="flex items-center dark:text-slate-100 text-gray-800">
                                             <i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i>

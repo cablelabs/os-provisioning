@@ -16,7 +16,7 @@
  */
 
 <script>
-import { onMounted, getCurrentInstance } from 'vue'
+import { onMounted, ref, getCurrentInstance } from 'vue'
 import { store } from '@/store/store'
 
 export default {
@@ -29,7 +29,16 @@ export default {
       window.snotify = getCurrentInstance().appContext.config.globalProperties.$snotify
     })
 
-    return { store }
+    const loggingTab = ref (false)
+    function toggleLoggingTab(e) {
+      loggingTab.value = !loggingTab.value
+    }
+
+    return {
+      store,
+      loggingTab,
+      toggleLoggingTab,
+    }
   }
 }
 </script>
