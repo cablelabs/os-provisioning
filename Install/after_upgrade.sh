@@ -20,6 +20,11 @@ if [ -f "/var/www/nmsprime/modules/HfcSnmp/Config/config.php" ]; then
     echo "<?php return [];" > '/var/www/nmsprime/modules/HfcSnmp/Config/config.php'
 fi
 
+if [ -f "/var/www/nmsprime/modules/Ccc/Http/routes.php" ]; then
+    truncate -s0 '/var/www/nmsprime/modules/Ccc/Http/routes.php'
+fi
+
+
 if [ -f "/var/www/nmsprime/modules/ProvMon/Http/routes.php" ]; then
     truncate -s0 '/var/www/nmsprime/modules/ProvMon/Http/routes.php'
 fi
