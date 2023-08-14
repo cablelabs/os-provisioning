@@ -622,7 +622,7 @@ class BaseController extends Controller
     protected function globalSearch($fromTags = null)
     {
         $query = Request::get('query');
-        $view_header = 'Global Search';
+        $view_header = trans('view.Header_GlobalSearch');
         $basemodel = new BaseModel;
 
         // search for tags?
@@ -687,8 +687,12 @@ class BaseController extends Controller
         $devices = [];
 
         foreach ($tables as $table) {
-            $model = \BaseModel::_guess_model_name($table->table_name);
+            if (! $model = \BaseModel::_guess_model_name($table->table_name)) {
+                continue;
+            }
+
             $hasAttribute = $model::where($name, $attribute)->first();
+
             if ($hasAttribute) {
                 $devices[] = $hasAttribute;
             }

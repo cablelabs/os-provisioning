@@ -135,7 +135,7 @@
 
             {{-- global search form --}}
             <li class="flex nav-item">
-                <a id="togglesearch" href="javascript:;" class="waves-effect waves-light" data-toggle="navbar-search">
+                <a href="javascript:;" class="waves-effect waves-light" v-on:click="showSearchbar = true">
                     <i class="fa fa-search fa-2x" aria-hidden="true"></i>
                 </a>
             </li>
@@ -180,26 +180,29 @@
             </li>
         </ul>
         {{-- end header navigation right --}}
-        <div class="bg-white search-form" style="height: auto;">
-            <form id="globalSearchForm" class="form-open" method="GET" onsubmit="linkTag();">
-                <div class="btn-group search-btn">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" onsubmit="linkTag();"
-                            for="prefillSearchbar">{{ trans('view.jQuery_sSearch') }}</button>
+        <div v-cloak v-show="showSearchbar" class="bg-white absolute w-full h-[60px]">
+            <form class="form-open flex items-center h-full px-4" method="GET" :action="selectedRoute">
+                <div class="flex space-x-2">
+                    <div>
+                        <button class="btn btn-primary" for="prefillSearchbar">
+                            <i class="fa fa-search"></i>
+                            {{ trans('view.jQuery_sSearch') }}
+                        </button>
                     </div>
-                    <select class="custom-select" id="prefillSearchbar" onchange="getSearchTag();">
-                        <option selected value="" data-route="{{ route('Base.globalSearch') }}">
-                            {{ trans('view.jQuery_All') }}</option>
-                        @if (Module::collections()->has('ProvMon'))
-                            {
-                            <option value="ip:" data-route="{{ route('Ip.globalSearch') }}">IP</option>
-                        @endif
-                    </select>
+                    @if (Module::collections()->has('ProvMon'))
+                        <select2 v-model="selectedRoute" class="w-16">
+                            <option selected value="{{ route('Base.globalSearch') }}">
+                                {{ trans('view.jQuery_All') }}
+                            </option>
+                            <option value="{{ route('Ip.globalSearch') }}">IP</option>
+                        </select2>
+                    @endif
                 </div>
-                <input id="globalSearch" type="text" name="query" class="form-control navbar"
+                <input ref="searchfield" type="text" name="query" class="flex-1 text-2xl px-4 outline-none" v-on:keydown.esc="blurInput" v-model="search"
                     placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search') }}">
-                <a href="#" class="close" data-dismiss="navbar-search"><i class="fa fa-angle-up fa-2x"
-                        aria-hidden="true"></i></a>
+                <div v-on:click="showSearchbar = false" class="cursor-pointer pr-5">
+                    <i class="fa fa-angle-up fa-2x" :aria-hidden="showSearchbar"></i>
+                </div>
             </form>
         </div>
     </div> {{-- End ROW --}}

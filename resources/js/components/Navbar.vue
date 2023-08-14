@@ -1,13 +1,39 @@
 <script>
-export default {
-    setup() {
-        function toggleMobileSidebar() {
-            window.dispatchEvent( new Event('sidebar.toggle') );
-        }
+import { ref } from 'vue'
 
-        return {
-            toggleMobileSidebar
-        }
+export default {
+  setup() {
+    function toggleMobileSidebar() {
+      window.dispatchEvent( new Event('sidebar.toggle') );
     }
+
+    const selectedRoute = ref('');
+    const searchfield = ref()
+    const showSearchbar = ref(false)
+    const search = ref('')
+    window.addEventListener('keypress', function (e) {
+      if ((document.activeElement.tagName.toLowerCase() === 'input') || e.ctrlKey || e.metaKey || e.altKey ) {
+        return
+      }
+
+      showSearchbar.value = true
+      search.value = e.key
+      this.setTimeout(() => searchfield.value.focus(),25)
+    })
+
+    function blurInput(e) {
+      e.target.blur()
+      showSearchbar.value = false
+    }
+
+    return {
+      searchfield,
+      showSearchbar,
+      toggleMobileSidebar,
+      blurInput,
+      search,
+      selectedRoute,
+    }
+  }
 }
 </script>

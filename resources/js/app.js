@@ -67,6 +67,7 @@ window.main = createApp(app)
 // navbar
 window.navbar = createApp(navbar)
   .component('NavbarQuickviewNetwork', NavbarQuickviewNetwork)
+  .component('select2', select2Component)
   .mount('#header')
 
 // sidebar

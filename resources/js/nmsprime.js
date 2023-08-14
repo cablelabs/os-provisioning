@@ -16,43 +16,6 @@
  */
 
 // Own JS NMS Prime File for our specific functions
-
-// Type anywhere to search in global search for keyword
-// Escape Keymodifiers and exit with escape
-// @author: Christian Schramm
-var makeNavbarSearch = function () {
-  $('#togglesearch').on('click', function (event) {
-    $('#globalsearch').focus().select()
-  })
-
-  $(document).on('keypress', function (event) {
-    if ($('*:focus').length == 0 && event.target.id != 'globalsearch') {
-      var code = event.keyCode ? event.keyCode : event.which
-      if (
-        event.which !== 0 &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !event.altKey
-      ) {
-        $('#togglesearch').click()
-        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-          $('#globalsearch').val(String.fromCharCode(code))
-        }
-      }
-    }
-  })
-
-  $('#globalsearch').on('keydown', function (event) {
-    var code = event.keyCode ? event.keyCode : event.which
-    if (code == 27) {
-      $('#globalsearch').val('')
-      $('#header').removeClass('navbar-search-toggled')
-      $('#globalsearch').removeClass('navbar-search-toggled')
-      $('#globalsearch').blur()
-    }
-  })
-}
-
 $('.jsDateInterval').each(function () {
   $(this.parentNode).addClass('flex')
   $(this).addClass('h-100')
@@ -95,7 +58,7 @@ var saveTabPillState = function () {
   // Show tab from hash
   // Note: for an URL with hash the function above will not be initialised and therefore will not save the tab state
   if (window.location.hash) {
-    return $("a[href='" + window.location.hash + "']").click()
+    return $("a[href='" + window.location.hash + "']").trigger()
   }
 
   $(function () {
@@ -390,30 +353,6 @@ function rangeSlider(argument) {
   })
 }
 
-function getSearchTag() {
-  var element = document.getElementById('prefillSearchbar')
-  document.getElementById('globalSearch').value =
-    element.options[element.selectedIndex].value
-}
-
-function linkTag() {
-  var element = document.getElementById('prefillSearchbar')
-  var select = element.options[element.selectedIndex]
-  var search = document.getElementById('globalSearch')
-
-  // if you search 'ip:...' in 'all', still use the 'ip:' tag
-  // if there is no tag, you search in 'all'
-  Array.from(element.options).forEach(function (option) {
-    if (search.value.startsWith(option.value) && option.value != '') {
-      var querySelector = `[value='${option.value}']`
-      document.getElementById('globalSearchForm').action =
-        document.querySelectorAll(querySelector)[0].dataset.route
-    } else {
-      document.getElementById('globalSearchForm').action = select.dataset.route
-    }
-  })
-}
-
 document.addEventListener('DOMContentLoaded', function () {
   const datatable_selector = document.querySelector(".datatable")
   if (! datatable_selector) {
@@ -463,7 +402,6 @@ window.NMS = (function () {
   return {
     //main function
     init: function () {
-      makeNavbarSearch()
       initSelect2Fields()
       saveTabPillState()
       rezizeTextareas()

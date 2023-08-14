@@ -20,7 +20,7 @@
 
 @section ('content')
 
-<div class="row">
+<div class="row pt-2">
 	<div class="col-12">
 
 	{{-- We need to include sections dynamically: always content left and if needed content right - more than 1 time possible --}}

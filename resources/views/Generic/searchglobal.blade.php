@@ -25,7 +25,7 @@
 @section('content_left')
     @DivOpen(12)
         @if (isset($query))
-            <h4>{{"$results ". \App\Http\Controllers\BaseViewController::translate_view('MatchesFor', 'Search')." '$query'" }}</h4>
+            <h4 class="text-xl">{{ "{$results} ".trans_choice('view.Search_MatchesFor', $results)." '{$query}'" }}</h4>
             <hr>
         @endif
     @DivClose()

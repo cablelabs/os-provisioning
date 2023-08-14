@@ -11,7 +11,7 @@ return [
     ],
     //SEARCH
     'Search_EnterKeyword'       => 'Suchbegriff eingeben',
-    'Search_MatchesFor'         => 'Ergebnisse für',
+    'Search_MatchesFor'         => 'Ergebnis für|Ergebnisse für',
     'Search_In'                 => 'in der Tabelle',
     //jQuery
     //Translations for this at https://datatables.net/plug-ins/i18n/

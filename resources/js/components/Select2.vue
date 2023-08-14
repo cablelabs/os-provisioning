@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onDeactivated } from 'vue'
+import { ref, onMounted, onDeactivated } from 'vue'
 import $ from 'jquery'
 import 'select2'
 
@@ -82,8 +82,9 @@ const selected = ref(null)
 const i18nAll = ref('all')
 
 onMounted(() => {
+  selected.value = props.modelValue ? props.modelValue : select.value.value
+  emit('update:modelValue', selected.value)
   select.value = $(select.value)
-  selected.value = props.modelValue
 
   if (props.initial) {
     setValue(props.multiple || props.asArray ? [props.initial] : props.initial)
