@@ -182,7 +182,7 @@ function filterSelect2(payload) {
       $(item[i]).find('option').each(function() {
         const optionAttr = $(this).data('parent');
 
-        if (selectedValue === optionAttr || selectedValue === '') {
+        if (selectedValue === optionAttr || selectedValue === '' || optionAttr === 'all') {
           $(this).attr('disabled', false);
         } else {
           $(this).attr('disabled', true);
