@@ -7,7 +7,9 @@ export default {
       window.dispatchEvent( new Event('sidebar.toggle') );
     }
 
-    const selectedRoute = ref('');
+    const breadcrumbScroller = ref(false)
+
+    const selectedRoute = ref('')
     const searchfield = ref()
     const showSearchbar = ref(false)
     const search = ref('')
@@ -27,6 +29,7 @@ export default {
     }
 
     return {
+      breadcrumbScroller,
       searchfield,
       showSearchbar,
       toggleMobileSidebar,

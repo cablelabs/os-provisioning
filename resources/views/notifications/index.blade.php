@@ -70,7 +70,7 @@
                                             <i class="fa fa-2x fa-info-circle text-info"></i>
                                         @endif
                                     </div>
-                                    <div class="ml-3 text-ellipsis mw-48 mw-sm-80 mw-100-md">
+                                    <div class="ml-3 text-ellipsis w-full max-w-xs md:max-w-sm">
                                         <a href="{{ $notification->data['link'] }}" class="font-weight-bold text-dark ">
                                             {{ trans('view.ticket.notification.'.array_slice(explode('\\', $notification->type), -1)[0]) }}: {{ $notification->data['title'] ?? '' }}
                                         </a>

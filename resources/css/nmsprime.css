@@ -90,57 +90,6 @@ input[type="checkbox"].form-control:checked:after {
     padding: 5px 7px;
 }
 
-/* Breadcrumb pills custom style */
-.tab-overflow .nav.nav-pills {
-    white-space: nowrap;
-    overflow: hidden;
-    display: table;
-    margin: 0;
-    -webkit-border-radius: 2px 2px 0 0;
-    -moz-border-radius: 2px 2px 0 0;
-    border-radius: 2px 2px 0 0;
-}
-.tab-overflow .nav.nav-pills > li,
-.tab-overflow.nav.nav-pills > li {
-    display: table-cell;
-    float: none;
-}
-
-.tab-overflow .next-button,
-.tab-overflow .prev-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 10;
-    display: none !important;
-    opacity: 0;
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    -webkit-transition: all .2s linear;
-    -moz-transition: all .2s linear;
-    transition: all .2s linear;
-}
-.tab-overflow .prev-button {
-    left: 0;
-    right: auto;
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
-.tab-overflow .nav.nav-tabs.nav-tabs-inverse .next-button,
-.tab-overflow .nav.nav-tabs.nav-tabs-inverse .prev-button {
-    -webkit-box-shadow: 0 0 15px #000;
-    box-shadow: 0 0 15px #000;
-}
-.tab-overflow .nav.nav-tabs.nav-tabs-inverse .prev-button {
-    -webkit-box-shadow: 0 0 15px #000;
-    box-shadow: 0 0 15px #000;
-}
-.tab-overflow .next-button a,
-.tab-overflow .prev-button a {
-    margin: 0;
-    background: #283339;
-}
-
 @media (max-width: 767px) {
     .page-header {
         font-size: 24px;
@@ -716,75 +665,14 @@ div.recolor:hover,
     min-height: 80vh;
 }
 
-.mw-48 {
-    width: 100%;
-    max-width: 12rem;
-}
-
-#breadcrumbscroller {
-    position: absolute;
-    width: 80vw;
-    z-index: 100;
-    padding-top: .5rem;
-    background-color: white;
-    transform: translateY(-150px);
-    transition: 325ms ease-in;
-}
-
-#breadcrumbexit {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    left: 80vw;
-    width: 20vw;
-    z-index: 100;
-    padding: 1rem;
-    background-color: white;
-    transform: translateY(-150px);
-    transition: 325ms ease-in;
-}
-
 .erd-legend {
     position: relative;
 }
-/* Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) {
-    .mw-sm-80 {
-        width: 100%;
-        max-width: 20rem;
-    }
-
-    #breadcrumbscroller {
-        width: 90vw;
-    }
-
-    #breadcrumbexit {
-        left: 90vw;
-        width: 10vw;
-    }
-}
-
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-    .mw-100-md {
-        width: 100%;
-        max-width: 100%;
-    }
- }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     #mapid, #map {
         min-height: 50vh;
-    }
-
-    #breadcrumbscroller {
-        position: relative;
-        padding-top: 0;
-        margin-top: .5rem;
-        width: inherit;
-        background-color: transparent;
-        transform: translateY(0);
     }
 }
 

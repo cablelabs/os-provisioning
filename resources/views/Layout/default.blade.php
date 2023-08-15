@@ -35,7 +35,7 @@
     <div id="page-container" class="flex flex-column page-sidebar-fixed page-header-fixed in" style="min-height:100%;">
         <Transition>
             <div id="content"
-                class="flex flex-column flex-1 transition-all duration-200 ease-in-out {{ cache('sidebar.pinnedState.'.$user->login_name) ? (Module::collections()->has('CoreMon') ? 'md:ml-[22.75rem]' : 'md:ml-[17.5rem]') : (Module::collections()->has('CoreMon') ? 'md:ml-[6.25rem]' : 'md:ml-[1.5rem]') }}"
+                class="mt-[60px] md:mt-0 flex flex-column flex-1 transition-all duration-200 ease-in-out {{ cache('sidebar.pinnedState.'.$user->login_name) ? (Module::collections()->has('CoreMon') ? 'md:ml-[22.75rem]' : 'md:ml-[17.5rem]') : (Module::collections()->has('CoreMon') ? 'md:ml-[6.25rem]' : 'md:ml-[1.5rem]') }}"
                 :class="{
                     '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[22.75rem]' : 'md:!ml-[17.5rem]' }}': !store.minified,
                     '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[6.25rem]' : 'md:!ml-[1.5rem]' }}': store.minified,

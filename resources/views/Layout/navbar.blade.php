@@ -19,7 +19,7 @@
 {{-- begin Navbar --}}
 <nav v-pre id="header" class="fixed h-[60px] header navbar navbar-expand navbar-default navbar-fixed-top d-print-none dark:shadow-slate-100 dark:shadow">
     {{-- only one row Navbar --}}
-    <div class="flex justify-between dark:text-slate-100">
+    <div class="flex justify-between dark:text-slate-100 h-full">
         {{-- begin mobile sidebar expand / collapse button --}}
         <button type="button" class="navbar-toggle m-l-20" v-on:click="toggleMobileSidebar">
             <span class="icon-bar"></span>
@@ -34,39 +34,30 @@
             </a>
         </span>
 
-        @if ($headline &&
-            Illuminate\Support\Str::endsWith(
-                request()->route()->getName(),
-                'edit',
-            ))
-            <ul class="flex mt-2 nav nav-pills d-lg-none sm:hidden">
-                <li class="nav-item dropdown">
-                    <a class="text-white nav-link dropdown-toggle bg-dark active"
-                        style="display:flex; align-items:center;" href="#"
-                        onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(0)';document.getElementById('breadcrumbexit').style.transform = 'translateY(0)';">
-                        <i class="fa fa-ellipsis-h fa-2x" aria-hidden="true"></i>
-                        <div class="hidden pl-2 md:block">{{ trans('view.Header_Dependencies') }}</div>
+        @if ($headline && Illuminate\Support\Str::endsWith(request()->route()->getName(), 'edit'))
+            <div class="flex my-2 nav nav-pills md:hidden">
+                <a href="#"
+                    class="text-white bg-dark flex items-center px-3 rounded no-underline"
+                    v-on:click="breadcrumbScroller = true">
+                    <i class="fa fa-ellipsis-h fa-2x m-0" aria-hidden="true"></i>
+                    <div class="hidden pl-2 sm:block">{{ trans('view.Header_Dependencies') }}</div>
+                </a>
+            </div>
+            <div v-cloak
+                class="absolute bg-white flex z-10 w-full h-[60px] items-center transition-transform duration-300"
+                :class="{'-translate-y-full': !breadcrumbScroller, 'translate-y-0': breadcrumbScroller}"
+            >
+                {{-- end mobile sidebar expand / collapse button --}}
+                <div class="flex whitespace-nowrap space-x-2 items-center md:hidden overflow-x-scroll flex-1 px-3 h-full">
+                    @yield('content_top')
+                </div>
+                <div>
+                    <a href="#" class="text-dark mx-4" v-on:click="breadcrumbScroller = false">
+                        <i class="fa fa-close fa-2x"></i>
                     </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         @endif
-        {{-- end mobile sidebar expand / collapse button --}}
-        <div id="breadcrumbscroller" class="flex col tab-overflow sm:hidden">
-            <ul class="nav nav-pills p-t-5">
-                <li class="prev-button "><a href="javascript:;" data-click="prev-tab" class="m-t-10"><i
-                            class="fa fa-arrow-left"></i></a></li>
-                @yield('content_top')
-                <li class="next-button"><a href="javascript:;" data-click="next-tab" class="m-t-10"><i
-                            class="fa fa-arrow-right"></i></a></li>
-            </ul>
-        </div>
-        <div id="breadcrumbexit" class="d-lg-none sm:hidden">
-            <a href="#" class="text-dark"
-                onClick="document.getElementById('breadcrumbscroller').style.transform = 'translateY(-150px)';document.getElementById('breadcrumbexit').style.transform = 'translateY(-150px)';">
-                <i class="fa fa-close fa-2x"></i>
-            </a>
-        </div>
-
         <ul class="flex items-center">
             {{-- @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics) && $modem_statistics->all)
             {{-- Modem Statistics (Online/Offline)
@@ -80,21 +71,21 @@
 
             {{-- count of user interaction needing EnviaOrders --}}
             @if (Module::collections()->has('ProvVoipEnvia'))
-          <li  class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
-            <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
-              @if ($envia_interactioncount > 0)
-                <div class="flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
-                  <i class="fa fa-times fa-lg text-danger"></i>
-                  <div class="hidden badge badge-danger d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
-                </div>
-              @else
-                <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
-                  <i class="fa fa-check fa-lg text-success"></i>
-                </div>
-              @endif
-            </a>
-          </li>
-        @endif
+                <li  class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
+                    <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
+                    @if ($envia_interactioncount > 0)
+                        <div class="flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
+                        <i class="fa fa-times fa-lg text-danger"></i>
+                        <div class="hidden badge badge-danger d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
+                        </div>
+                    @else
+                        <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
+                        <i class="fa fa-check fa-lg text-success"></i>
+                        </div>
+                    @endif
+                    </a>
+                </li>
+            @endif
 
             {{-- quickview pre-selected network  --}}
             @if (Module::collections()->has('CoreMon') && isset($quick_view_network))
@@ -180,27 +171,26 @@
             </li>
         </ul>
         {{-- end header navigation right --}}
-        <div v-cloak v-show="showSearchbar" class="bg-white absolute w-full h-[60px]">
-            <form class="form-open flex items-center h-full px-4" method="GET" :action="selectedRoute">
-                <div class="flex space-x-2">
-                    <div>
-                        <button class="btn btn-primary" for="prefillSearchbar">
-                            <i class="fa fa-search"></i>
-                            {{ trans('view.jQuery_sSearch') }}
-                        </button>
-                    </div>
-                    @if (Module::collections()->has('ProvMon'))
-                        <select2 v-model="selectedRoute" class="w-16">
-                            <option selected value="{{ route('Base.globalSearch') }}">
-                                {{ trans('view.jQuery_All') }}
-                            </option>
-                            <option value="{{ route('Ip.globalSearch') }}">IP</option>
-                        </select2>
-                    @endif
+        <div v-cloak class="bg-white absolute w-full h-[60px] transition-transform duration-300"
+            :class="{'-translate-y-full': !showSearchbar, 'translate-y-0': showSearchbar}">
+            <form class="form-open flex items-center h-full px-2" method="GET" :action="selectedRoute">
+                @if (Module::collections()->has('ProvMon'))
+                <div class="w-16 mx-2">
+                    <select2 v-model="selectedRoute" class="text-normal">
+                        <option selected value="{{ route('Base.globalSearch') }}">
+                            {{ trans('view.jQuery_All') }}
+                        </option>
+                        <option value="{{ route('Ip.globalSearch') }}">IP</option>
+                    </select2>
                 </div>
-                <input ref="searchfield" type="text" name="query" class="flex-1 text-2xl px-4 outline-none" v-on:keydown.esc="blurInput" v-model="search"
+                @endif
+                <input ref="searchfield" type="text" name="query" class="w-2/3 md:flex-1 text-lg md:text-2xl md:px-6 outline-none" v-on:keydown.esc="blurInput" v-model="search"
                     placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search') }}">
-                <div v-on:click="showSearchbar = false" class="cursor-pointer pr-5">
+                <button class="btn btn-primary md:flex" for="prefillSearchbar">
+                    <i class="fa fa-search"></i>
+                    <span class="hidden md:block m-0 md:mr-1">{{ trans('view.jQuery_sSearch') }}</span>
+                </button>
+                <div v-on:click="showSearchbar = false" class="cursor-pointer mx-4">
                     <i class="fa fa-angle-up fa-2x" :aria-hidden="showSearchbar"></i>
                 </div>
             </form>

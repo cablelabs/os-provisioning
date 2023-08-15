@@ -65,7 +65,7 @@
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
             <div class="flex flex-1 card card-inverse">
-                <ul class="flex py-2 space-x-2 list-none dark:bg-slate-800 dark:text-slate-100">
+                <ul class="hidden md:flex py-2 space-x-2 list-none dark:bg-slate-800 dark:text-slate-100">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
