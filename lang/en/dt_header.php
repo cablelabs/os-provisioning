@@ -656,7 +656,6 @@ return [
         'zip' => 'Zip Code Filter',
         'gender' => 'Gender',
         'age_groups' => 'Age Groups',
-        'revenue' => 'Revenue',
         'diagram' => 'Diagram',
         'upsell' => 'Upsell',
         'from' => 'From',
@@ -671,6 +670,7 @@ return [
         'new_items' => 'New Items',
         'revenue_from' => 'Revenue From',
         'revenue_to' => 'Revenue To',
+        'revenue_change' => 'Revenue Change',
         'created_at' => 'Created',
     ],
 ];

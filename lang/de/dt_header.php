@@ -657,7 +657,6 @@ return [
         'zip' => 'PLZ Filter',
         'gender' => 'Geschlecht',
         'age_groups' => 'Altersgruppen',
-        'revenue' => 'Umsatz',
         'diagram' => 'Diagramm',
         'upsell' => 'Upsel',
         'from' => 'von',
@@ -672,6 +671,7 @@ return [
         'new_items' => 'Neue Artikel',
         'revenue_from' => 'Einnahmen aus',
         'revenue_to' => 'Einnahmen an',
+        'revenue_change' => 'Umsatzveränderung',
         'created_at' => 'Erstellt',
     ],
 ];
