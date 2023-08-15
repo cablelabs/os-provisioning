@@ -25,14 +25,14 @@
                     class="btn btn-xs btn-icon btn-circle btn-default flex"
                     data-click="panel-expand"
                     style="justify-content: flex-end;align-items: center">
-                    <i class="fa fa-expand flex"></i>
+                    <i class="fa fa-expand"></i>
                 </a>
                 <!--a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a-->
                 <a href="javascript:;"
                     class="btn btn-xs btn-icon btn-circle btn-warning flex"
                     data-click="panel-collapse"
                     style="justify-content: flex-end;align-items: center">
-                    <i class="fa fa-minus"></i>
+                    <i class="fa fa-minus mt-1"></i>
                 </a>
                 <a href="javascript:;"
                     class="btn btn-xs btn-icon btn-circle btn-danger flex"

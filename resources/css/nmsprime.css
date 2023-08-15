@@ -61,6 +61,9 @@ input[type="checkbox"].form-control:checked:after {
 .fa {
   margin-right: 5px;
 }
+.panel-heading-btn .fa {
+    margin-right: inherit;
+}
 .card-2 {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
