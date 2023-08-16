@@ -106,6 +106,7 @@ return [
     'numeric' => 'The :attribute must be a number.',
     'password' => 'The password is incorrect.',
     'present' => 'The :attribute field must be present.',
+    'prohibited_if' => 'Must be unset when :other = :value',
     'regex' => 'The :attribute format is invalid.',
     'required' => 'The :attribute field is required.',
     'required_if' => 'The :attribute field is required when :other is :value.',
@@ -128,6 +129,15 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
+
+    /**
+     * Translation of column values for validation messages
+     */
+    'values' => [
+        'status' => [
+            'in_termination' => 'In termination',
+        ],
+     ],
 
     /*
     |--------------------------------------------------------------------------
