@@ -650,7 +650,7 @@ return [
         'product_type' => 'Product Type',
         'split_combination_packages' => 'Split Combination Packages',
         'tariffs' => 'Tariffs',
-        'status' => 'Status',
+        'status' => 'Contract status',
         'consider_tariff_change' => 'Consider Tariff Change',
         'antenna_communities' => 'Antenna Communities',
         'zip' => 'Zip Code Filter',
