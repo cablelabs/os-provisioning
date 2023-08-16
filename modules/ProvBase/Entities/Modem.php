@@ -678,14 +678,11 @@ class Modem extends \BaseModel
     }
 
     /**
-     * BOOT:
-     * - init modem observer
+     * Init modem observer
      */
     public static function boot()
     {
         parent::boot();
-
-        Log::debug(__METHOD__.' started');
 
         self::observe(new \App\Observers\SystemdObserver);
         self::observe(new \Modules\ProvBase\Observers\ModemObserver);
