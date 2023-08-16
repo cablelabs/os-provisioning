@@ -654,6 +654,25 @@ class Contract extends \BaseModel
     }
 
     /**
+     * Scopes
+     */
+
+    /**
+     * Filter contracts that are active within a specified time period (from - to)
+     *
+     * @param string date - e.g. '2023-08-10'
+     * @param string date
+     */
+    public function scopeActive($query, $from, $to)
+    {
+        $query->where('contract_start', '<=', $to)
+            ->where(function ($query) use ($from) {
+                $query->whereNull('contract_end')
+                    ->orWhere('contract_end', '>=', $from);
+            });
+    }
+
+    /**
      * Emulate a belongsTo contract->realty relation consisting actually of chain contract->modem->apartment->realty
      * Note: A direct contract->realty relation can not exist
      *
