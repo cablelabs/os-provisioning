@@ -5,18 +5,19 @@
  * See https://github.com/JosephSilber/bouncer/issues/430
  * https://github.com/JosephSilber/bouncer/issues/600
  * https://github.com/JosephSilber/bouncer/issues/596
- * 
+ *
  * @author https://github.com/ppisecky
  */
+
 namespace App\extensions\bouncer;
 
-use Silber\Bouncer\CachedClipboard;
 use Illuminate\Database\Eloquent\Model;
+use Silber\Bouncer\CachedClipboard;
 
-class AdvancedCachedClipboard extends CachedClipboard {
-
-    protected $abilities = array();
-    protected $roles = array();
+class AdvancedCachedClipboard extends CachedClipboard
+{
+    protected $abilities = [];
+    protected $roles = [];
 
     /**
      * Get the given authority's abilities.
@@ -29,13 +30,13 @@ class AdvancedCachedClipboard extends CachedClipboard {
     {
         $key = $this->getCacheKey($authority, 'abilities', $allowed);
 
-        if (!isset($this->abilities[$key])) {
+        if (! isset($this->abilities[$key])) {
             $this->abilities[$key] = parent::getAbilities($authority, $allowed);
         }
 
         return $this->abilities[$key];
     }
-    
+
     /**
      * Get the given authority's roles.
      *
@@ -46,7 +47,7 @@ class AdvancedCachedClipboard extends CachedClipboard {
     {
         $key = $this->getCacheKey($authority, 'roles');
 
-        if (!isset($this->roles[$key])) {
+        if (! isset($this->roles[$key])) {
             $this->roles[$key] = parent::getRoles($authority);
         }
 
@@ -64,8 +65,8 @@ class AdvancedCachedClipboard extends CachedClipboard {
         parent::refresh($authority);
 
         if (is_null($authority)) {
-            $this->abilities = array();
-            $this->roles = array();
+            $this->abilities = [];
+            $this->roles = [];
         }
 
         return $this;
