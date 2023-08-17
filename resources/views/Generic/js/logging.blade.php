@@ -5,7 +5,7 @@
 
     // $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $('#loggingtab').click(function (e) {
-        var table = $('table.datatable').DataTable(
+        let table = $('table.datatable').DataTable(
         {
         {{-- STANDARD CONFIGURATION --}}
             {{-- Translate Datatables Base --}}
@@ -47,6 +47,7 @@
                         {data: 'model_id', name: 'model_id'},
             ],
         })
+    table.buttons(0, null).container().addClass('grid gap-2 sm:flex').removeClass('btn-group')
     $( $.fn.dataTable.tables(true) ).DataTable().responsive.recalc()
     })
 </script>
