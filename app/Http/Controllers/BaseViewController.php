@@ -494,7 +494,7 @@ class BaseViewController extends Controller
 
             // Space Element between fields and color switching
             if (array_key_exists('space', $field)) {
-                $s .= '<div class=col-md-12><br></div>';
+                $s .= '<div class=col-12><br></div>';
                 $color_array = \Acme\php\ArrayHelper::array_rotate($color_array);
                 $color = $color_array[0];
             }
@@ -565,7 +565,7 @@ class BaseViewController extends Controller
         $title = isset($field['description']) ? self::translate_label($field['description']) : '';
         $icon = $field['help_icon'] ?? 'fa-question-circle';
 
-        return '<div class=\"col-1\">'.
+        return '<div class=\'col-2 col-md-1 text-right order-2 md:order-3\'>'.
             "<popover title=\"{$title}\" content=\"{$field['help']}\">".
                 "<i class=\"fa fa-2x p-t-5 {$icon} text-{$bsClass}\"></i>".
             '</popover>'.

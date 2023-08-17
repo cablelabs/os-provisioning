@@ -42,11 +42,13 @@ class FormBuilder extends CollectiveFormBuilder
      * Append <div> block with col-md-7 </div>
      * NOTE: 4: col for label, 7: col for form field, 1: col for help image - if set
      */
-    public function appendDiv($s, $col = 7, $classes = '')
+    public function appendDiv($s, $col = 7, $classes = '', $isInput = true)
     {
         if (isset(static::$layout_form_col_md['form']) && ! $classes) {
             $col = static::$layout_form_col_md['form'];
         }
+
+        $classes = $isInput ? 'order-3 md:order-2'.$classes : $classes;
 
         return "<div class=\"col-md-{$col} {$classes}\">{$s}</div>";
     }
@@ -121,7 +123,7 @@ class FormBuilder extends CollectiveFormBuilder
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
-        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $wrapperCol ?? $col, $wrapperClass);
+        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $wrapperCol ?? $col, 'order-1 col-10 '.$wrapperClass, false);
     }
 
     /**
@@ -154,17 +156,13 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function model($model, array $options = [], $style = 'simple')
     {
-        $options = $this->appendClassToOptions('form-group form-horizontal', $options);
+        $options = $this->appendClassToOptions('form-group form-horizontal space-y-4', $options);
+
         if (! isset($options['method'])) {
             $options['method'] = 'put';
         }
 
-        $fill = '';
-        if ($style == 'advanced') {
-            $fill = '<br>';
-        }
-
-        return parent::model($model, $options).$fill;
+        return parent::model($model, $options);
     }
 
     /**
@@ -261,7 +259,7 @@ class FormBuilder extends CollectiveFormBuilder
 
     public function open(array $options = [])
     {
-        $options['class'] = 'form_open'; // Note: this avoids form input fields with large distances
+        $options = $this->appendClassToOptions('form_open', $options); // Note: this avoids form input fields with large distances
 
         return parent::open($options);
     }
