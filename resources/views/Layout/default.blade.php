@@ -39,7 +39,7 @@
                 :class="{
                     '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[22.75rem]' : 'md:!ml-[17.5rem]' }}': !store.minified,
                     '{{ Module::collections()->has('CoreMon') ? 'md:!ml-[6.25rem]' : 'md:!ml-[1.5rem]' }}': store.minified,
-                    'mr-2' : !store.hasSidebarRight,
+                    'mr-0' : !store.hasSidebarRight,
                     'mr-4': store.hasSidebarRight &&  store.minifiedRight,
                     'mr-[17.5rem]': store.hasSidebarRight && !store.minifiedRight
                 }">
