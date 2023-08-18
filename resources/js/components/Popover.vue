@@ -15,15 +15,35 @@ const props = defineProps({
     }
 })
 
+const referenceEl = ref(null)
 const show = ref(false)
 
+function __touchOutsideEventHandler(event) {
+  if (referenceEl.value == event.target || referenceEl.value.contains(event.target)) {
+    return
+  }
+
+  show.value = false
+  document.body.removeEventListener('touchstart', __touchOutsideEventHandler)
+}
+
+function handleTouch(e) {
+  if (show.value) {
+    show.value = false
+    return document.body.removeEventListener('touchstart', __touchOutsideEventHandler)
+  }
+
+  show.value = true
+  setTimeout(positionArrow, 25)
+  document.body.addEventListener('touchstart', __touchOutsideEventHandler)
+}
+
 const floatingArrow = ref(null)
-const reference = ref(null)
 const floating = ref(null)
 const arrowStyles = ref({})
 const arrowClasses = ref([])
 
-const {floatingStyles, middlewareData, placement} = useFloating(reference, floating, {
+const {floatingStyles, middlewareData, placement} = useFloating(referenceEl, floating, {
   placement: props.placement,
   whileElementsMounted: autoUpdate,
   middleware: [
@@ -57,11 +77,11 @@ function positionArrow() {
       classes: ['border-t', 'border-r']
     },
     top: {
-      styles: {left: `${x}px`, top: '-6px'},
-      classes: ['border-t', 'border-l']
+      styles: {left: `${x}px`, bottom: '-6px'},
+      classes: ['border-b', 'border-r']
     },
     bottom: {
-      styles: {left: `${x}px`, bottom: '-6px'},
+      styles: {left: `${x}px`, top: '-6px'},
       classes: ['border-b', 'border-r']
     },
   }
@@ -74,7 +94,7 @@ function positionArrow() {
 
 <template>
   <div>
-    <div ref="reference" class="cursor-pointer" @mouseenter="showPopover" @mouseleave="show = false">
+    <div ref="referenceEl" class="cursor-pointer flex" @mouseenter="showPopover" @mouseleave="show = false" @touchstart="handleTouch">
       <slot></slot>
     </div>
 
