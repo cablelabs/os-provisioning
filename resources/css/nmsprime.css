@@ -209,7 +209,7 @@ table .index_check {
 .table > tbody > tr.active > th,
 .table > tfoot > tr.active > th {
     background: var(--gray-200);
-    border-color: #ffffff;
+    border-color: var(--gray-100);
     color: var(--gray-500);
 }
 
