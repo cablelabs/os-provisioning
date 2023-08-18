@@ -201,6 +201,12 @@ class BaseViewController extends Controller
 
         // for all fields
         foreach ($fields as $field) {
+            if ($field['form_type'] === 'collapse') {
+                $field['form_fields'] = self::prepare_form_fields($field['form_fields'], $model);
+                array_push($ret, $field);
+                continue;
+            }
+
             // rule exists for actual field ?
             if (isset($rules[$field['name']])) {
                 $rulesArray = is_array($rules[$field['name']]) ? $rules[$field['name']] : explode('|', $rules[$field['name']]);
@@ -332,7 +338,6 @@ class BaseViewController extends Controller
      */
     public static function add_html_string($fields, $context = 'edit')
     {
-        // init
         $ret = [];
 
         // background color's to toggle through
@@ -402,16 +407,10 @@ class BaseViewController extends Controller
                 $additional_classes = $checkbox;
             }
 
-            // handle collapsible classes
-            if (isset($options['class']) && $options['class'] == 'collapse') {
-                $additional_classes['class'] = ' collapse';
-
-                // TODO: add the collapse button
-                // $s .= "<button type=\"button\" class=\"btn btn-info\" data-toggle=\"collapse\" data-target=\"#number2\">+</button>";
-            }
-
             // Open Form Group
-            $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, $color);
+            if (! in_array($field['form_type'], ['collapse'])) {
+                $s .= Form::openGroup($field['name'], $field['description'], $additional_classes, $color);
+            }
 
             // Output the Form Elements
             switch ($field['form_type']) {
@@ -476,6 +475,13 @@ class BaseViewController extends Controller
                     $s .= Form::input('time', $field['name'], $field['field_value'], $options);
                     break;
 
+                case 'collapse':
+                    $s .= view('Components.collapse', [
+                        'color' => $color,
+                        'innerFields' => self::add_html_string($field['form_fields']),
+                        'field' => $field,
+                    ])->render();
+                    break;
                 default:
                     $form = $field['form_type'];
                     $s .= Form::$form($field['name'], $field['field_value'], $options);
@@ -488,13 +494,15 @@ class BaseViewController extends Controller
             }
 
             // Close Form Group
-            $s .= Form::closeGroup();
+            if (! in_array($field['form_type'], ['collapse'])) {
+                $s .= Form::closeGroup();
+            }
 
             finish:
 
             // Space Element between fields and color switching
             if (array_key_exists('space', $field)) {
-                $s .= '<div class=col-12><br></div>';
+                $s .= '<div class=\'col-12 mb-6\'></div>';
                 $color_array = \Acme\php\ArrayHelper::array_rotate($color_array);
                 $color = $color_array[0];
             }

@@ -341,9 +341,13 @@ class ContractController extends \BaseController
         $a = [
             // basic data
             ['form_type' => 'text', 'name' => 'number', 'description' => $model->get_column_description('number'), 'help' => trans('helper.contract_number')],
-            ['form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2'), 'options' => ['class' => 'collapse']],
-            ['form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.', 'options' => ['class' => 'collapse']],
-            ['form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4'), 'space' => 1, 'options' => ['class' => 'collapse']],
+            [
+                'form_type' => 'collapse', 'name' => 'collapse', 'description' => trans('view.collapseNumbers'), 'space' => 1, 'form_fields' => [
+                    ['form_type' => 'text', 'name' => 'number2', 'description' => $model->get_column_description('number2')],
+                    ['form_type' => 'text', 'name' => 'number3', 'description' => $model->get_column_description('number3'), 'help' => 'If left empty contract number will be used as customer number, too.'],
+                    ['form_type' => 'text', 'name' => 'number4', 'description' => $model->get_column_description('number4')],
+                ],
+            ],
             // 'create' makes this field a hidden input field in Modem create form - so the company, etc. will be already set from contract when the user wants to create a new modem
             ['form_type' => 'text', 'name' => 'company', 'description' => 'Company', 'create' => ['Modem']],
             ['form_type' => 'text', 'name' => 'department', 'description' => 'Department', 'create' => ['Modem']],

@@ -53,6 +53,7 @@ import skeletonComponent from './components/Skeleton.vue'
 import overlay from './components/Overlay.vue'
 import AuthAbilities from './components/AuthAbilities.vue'
 import NavbarQuickviewNetwork from './components/navbar/QuickviewNetwork.vue'
+import Collapse from './components/Collapse.vue'
 
 // app
 window.main = createApp(app)
@@ -61,6 +62,7 @@ window.main = createApp(app)
   .component('SidebarSelect2', SidebarSelect2Component)
   .component('skeleton', skeletonComponent)
   .component('popover', popover)
+  .component('collapse', Collapse)
   .use(snotify)
   .mount('#page-container')
 

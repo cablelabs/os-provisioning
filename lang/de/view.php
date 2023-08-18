@@ -966,6 +966,7 @@ return [
         'stacked' => 'haben weitere Tickets',
         'summary' => 'Übersicht',
     ],
+    'collapseNumbers' => 'Weitere Vertragsnummern',
     'contract' => [
         'groundForDismissal' => 'Kündigungsgrund',
         'groundsForDismissal' => [

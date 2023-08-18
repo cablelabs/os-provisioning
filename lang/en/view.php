@@ -965,6 +965,7 @@ return [
         'stacked' => 'Have more tickets',
         'summary' => 'Overview',
     ],
+    'collapseNumbers' => 'Additional Contract Numbers',
     'contract' => [
         'groundForDismissal' => 'Ground for dismissal',
         'groundsForDismissal' => [
