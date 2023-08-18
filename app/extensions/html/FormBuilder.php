@@ -117,13 +117,11 @@ class FormBuilder extends CollectiveFormBuilder
         $options = $this->appendClassToOptions('control-label', $options);
 
         // translate the value if necessary
-        // $bc = new \App\Http\Controllers\BaseController;
-        // $value = $bc->translate($value);
         $value = \App\Http\Controllers\BaseViewController::translate_label($value);
 
         // Call the parent input method so that Laravel can handle
         // the rest of the input set up.
-        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $wrapperCol ?? $col, 'order-1 col-10 '.$wrapperClass, false);
+        return $this->appendDiv(parent::label($name, $value, $options, $escape_html), $wrapperCol ?? $col, 'order-1 col-10 items-center '.$wrapperClass, false);
     }
 
     /**
@@ -156,7 +154,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function model($model, array $options = [], $style = 'simple')
     {
-        $options = $this->appendClassToOptions('form-group form-horizontal space-y-4', $options);
+        $options = $this->appendClassToOptions('', $options);
 
         if (! isset($options['method'])) {
             $options['method'] = 'put';
@@ -259,14 +257,9 @@ class FormBuilder extends CollectiveFormBuilder
 
     public function open(array $options = [])
     {
-        $options = $this->appendClassToOptions('form_open', $options); // Note: this avoids form input fields with large distances
+        $options = $this->appendClassToOptions('', $options); // Note: this avoids form input fields with large distances
 
         return parent::open($options);
-    }
-
-    public function hr($value = '')
-    {
-        return '<br><hr style="width: 97%; color: #D8D8D8; height: 1px; background-color:#D8D8D8;"/>';
     }
 
     /**
@@ -313,7 +306,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function openGroup($name, $label = null, $options = [], $color = false)
     {
-        $options = $this->appendClassToOptions('form-group row dark:bg-slate-900', $options);
+        $options = $this->appendClassToOptions('flex flex-wrap py-2 sm:py-1 dark:bg-slate-900', $options);
 
         // Append the name of the group to the groupStack.
         $this->groupStack[] = $name;
