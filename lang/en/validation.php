@@ -135,6 +135,7 @@ return [
      */
     'values' => [
         'status' => [
+            'active_in_the_future' => 'active in future',
             'in_termination' => 'In termination',
         ],
     ],

@@ -738,7 +738,7 @@ return [
             'status' => [
                 'active' => 'Active',
                 'inTermination' => 'In termination',
-                'activeInTheFuture' => 'Active in the future',
+                'activeInTheFuture' => 'Active in future',
             ],
             'gender' => [
                 'male' => 'Male',
