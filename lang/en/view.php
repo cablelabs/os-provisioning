@@ -744,11 +744,6 @@ return [
                 'male' => 'Male',
                 'female' => 'Female',
             ],
-            'ageGroups' => [
-                '18-25' => '18-25',
-                '26-35' => '26-35',
-                '35+' => '35+',
-            ],
         ],
     ],
     'OverdueDebts' => 'Overdue Debts',
