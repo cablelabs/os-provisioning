@@ -1400,6 +1400,13 @@ class Modem extends \BaseModel
                 ]);
             }
 
+            if ($match[1] == 'del') {
+                $val = json_encode([
+                    'name' => 'deleteObject',
+                    'objectName' => "$match[2]",
+                ]);
+            }
+
             array_push($genieCmds[$match[0]], $val);
         }
 
