@@ -229,7 +229,7 @@ return [
      */
     'endpointMac' => 'Can be left empty for all PPPoE provisioned modems (PPP username is used instead of MAC). With DHCP it can be left empty for IPv4. Then all devices behind the modem will get the specified IP, but only the last one that requested the IP will have a working IP connectivity. This is not yet implemented for IPv6 - please always specify the CPE MAC that shall get the public or fixed IP.',
     'statsSummary' => [
-        'upsell' => 'Adds already active customers with a valid tariff that ',
+        'upsell' => 'Also counts active customers that already had a valid tariff in the past (but e.g. had a tariff change within the given time span)',
     ],
 
     /*
