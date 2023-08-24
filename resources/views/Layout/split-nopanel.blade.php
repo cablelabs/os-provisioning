@@ -78,7 +78,7 @@
                                     class="order-12 ml-auto pb-1 pt-2 !px-3 border-b-2 border-transparent hover:bg-slate-200 dark:hover:bg-slate-800"
                                     :class="loggingTab ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white'"
                                     role="tab">
-                                    <a id="loggingtab" class="p-0" href="#logging" data-toggle="tab">
+                                    <a id="loggingtab" class="p-0 no-underline" href="#logging" data-toggle="tab">
                                         <div class="flex items-center dark:text-slate-100 text-gray-800">
                                             <i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i>
                                             <div>Logging</div>
@@ -91,7 +91,7 @@
                             {{-- Link to separate view --}}
                             @if (isset($tab['route']))
                                 <li class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $routeName == $tab['route'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
-                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="p-0">
+                                    <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="p-0 no-underline">
                                         <span class="dark:text-slate-100 text-gray-800">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
@@ -103,10 +103,12 @@
                                 @continue
                             @endif
 
-                            {{-- Other tabs --}}
-                            {{-- probably the <a> tag must be set to active according to docu --}}
-                            <li class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
-                                <a id="{{$tab['name'].'tab'}}" class="p-0" href="#{{ $tab['name'] }}" data-toggle="tab">
+                            {{-- (Local) Tabs without page reload --}}
+                            <li v-on:click="setActiveTab('{{ $tab['name'] }}')"
+                                :class="tabStates['{{ $tab['name'] }}'] ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white border-transparent'"
+                                class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? 'border-cyan-500' : 'border-transparent hover:border-white'}}"
+                                role="tab">
+                                <a class="p-0 no-underline" href="#{{ $tab['name'] }}" data-toggle="tab">
                                     <span class="dark:text-slate-100 text-gray-800">
                                     @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>

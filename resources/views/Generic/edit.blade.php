@@ -44,7 +44,7 @@
 
     @include('Generic.above_infos')
     {!! Form::model($view_var, ['route' => [$form_update, $view_var->id], 'method' => 'put', 'files' => true, 'id' => 'EditForm']) !!}
-    
+
         @include($form_path, $view_var)
 
     {{ Form::close() }}
@@ -57,7 +57,9 @@
             <div class="tab-content bg-gray-100 dark:bg-slate-900">
                 @foreach ($tabs as $tab)
                     @if (isset($relations[$tab['name']]))
-                        <div class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}" id="{{ $tab['name'] }}">
+                        <div v-show="tabStates['{{ $tab['name'] }}']"
+                            :class="{'active': tabStates['{{ $tab['name'] }}']}"
+                            class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}">
                             @foreach($relations[$tab['name']] as $view => $relation)
                                 @if ($view === 'icon')
                                     @continue

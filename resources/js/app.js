@@ -56,7 +56,11 @@ import NavbarQuickviewNetwork from './components/navbar/QuickviewNetwork.vue'
 import Collapse from './components/Collapse.vue'
 
 // app
-window.main = createApp(app)
+let appProps = document.querySelector('#page-container').dataset
+window.main = createApp(app, {
+    tabs: appProps.tabs ? JSON.parse(appProps.tabs) : [],
+    defaultTab: appProps.defaultTab ? appProps.defaultTab : ''
+  })
   .component('overlay', overlay)
   .component('select2', select2Component)
   .component('SidebarSelect2', SidebarSelect2Component)

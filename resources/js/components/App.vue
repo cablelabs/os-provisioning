@@ -20,24 +20,63 @@ import { onMounted, ref, getCurrentInstance } from 'vue'
 import { store } from '@/store/store'
 
 export default {
-  setup() {
+  props: {
+    tabs: [Object, Array],
+    defaultTab: String
+  },
+  setup(props) {
+    const tabStates = ref({})
     onMounted(() => {
       if (typeof Storage === 'undefined') {
         console.error('Sorry, no Web Storage Support - Cant save State of Sidebar - please update your Browser')
       }
       // prepare snotify
       window.snotify = getCurrentInstance().appContext.config.globalProperties.$snotify
+
+      setupTabs()
     })
+
+    function setupTabs() {
+      if (! props.tabs.length) { // no edit page / no tabs
+        return
+      }
+
+      props.tabs.map((tab) => tabStates.value[tab.name] = false)
+
+      if (tabStates.value.hasOwnProperty(window.location.hash.substring(1))) {
+        return setActiveTab(window.location.hash.substring(1))
+      }
+
+      if (props.defaultTab && tabStates.value.hasOwnProperty(props.defaultTab)) {
+        return setActiveTab(props.defaultTab)
+      }
+
+      if (tabStates.value.hasOwnProperty('Edit')) {
+        return setActiveTab('Edit')
+      }
+
+      // if everything fails, just set the second tab (first is guilog)
+      // to to be the active one
+      setActiveTab(props.tabs[1].name)
+    }
 
     const loggingTab = ref (false)
     function toggleLoggingTab(e) {
       loggingTab.value = !loggingTab.value
     }
 
+    function setActiveTab(tabName) {
+      Object.keys(tabStates.value).forEach(v => tabStates.value[v] = false)
+
+      tabStates.value[tabName] = true
+    }
+
     return {
       store,
       loggingTab,
       toggleLoggingTab,
+      tabStates,
+      setActiveTab
     }
   }
 }

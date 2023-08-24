@@ -55,12 +55,6 @@ $('.jsToggle').click(function (event) {
  * http://stackoverflow.com/posts/16984739/revisions
  */
 var saveTabPillState = function () {
-  // Show tab from hash
-  // Note: for an URL with hash the function above will not be initialised and therefore will not save the tab state
-  if (window.location.hash) {
-    return $("a[href='" + window.location.hash + "']").trigger()
-  }
-
   $(function () {
     var json, tabsState
     $('a[data-toggle="pill"], a[data-toggle="tab"]').on(
