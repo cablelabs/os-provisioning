@@ -1,15 +1,15 @@
-@import '/node_modules/fontawesome-4.7/css/font-awesome.css';
+@import '/node_modules/fontawesome-4.7/css/font-awesome';
 
-@import '/node_modules/jquery-ui/themes/base/all.css';
-@import '/node_modules/bootstrap/dist/css/bootstrap.css';
-@import '/components/assets-admin/css/style.css';
-@import '/components/assets-admin/css/style-bs4.css';
-@import '/components/assets-admin/css/style-responsive.css';
-@import '/components/assets-admin/css/theme/default.css';
+@import '/node_modules/jquery-ui/themes/base/all';
+@import '/node_modules/bootstrap/dist/css/bootstrap';
+@import '/components/assets-admin/css/style';
+@import '/components/assets-admin/css/style-bs4';
+@import '/components/assets-admin/css/style-responsive';
+@import '/components/assets-admin/css/theme/default';
 
-@import '/node_modules/ion-rangeslider/css/ion.rangeSlider.css';
-@import '/node_modules/switchery/switchery.css';
-@import '/components/assets-admin/css/color_config.css';
+@import '/node_modules/ion-rangeslider/css/ion.rangeSlider';
+@import '/node_modules/switchery/switchery';
+@import '/components/assets-admin/css/color_config';
 
 @import '/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4';
 @import '/node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4';
