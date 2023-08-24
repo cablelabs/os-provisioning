@@ -1926,6 +1926,9 @@ class Contract extends \BaseModel
         }
 
         return [
+            trans('messages.Contract Number') => [
+                'text' => "{$this->number}",
+            ],
             trans('messages.Personal Contact') => [
                 'text' => "{$this->company} {$this->department} {$this->salutation} {$this->academic_degree} {$this->firstname} {$this->lastname}",
             ],
@@ -1959,7 +1962,7 @@ class Contract extends \BaseModel
     {
         return [
             'id', 'company', 'department', 'salutation', 'academic_degree', 'firstname', 'lastname',
-            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'lng', 'lat',
+            'street', 'house_number', 'zip', 'city', 'district', 'phone', 'mail', 'lng', 'lat', 'number',
         ];
     }
 

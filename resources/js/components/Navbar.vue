@@ -14,7 +14,13 @@ export default {
     const showSearchbar = ref(false)
     const search = ref('')
     window.addEventListener('keypress', function (e) {
-      if ((document.activeElement.tagName.toLowerCase() === 'input') || e.ctrlKey || e.metaKey || e.altKey ) {
+      if (
+        document.activeElement.tagName.toLowerCase() === 'input' ||
+        document.activeElement.contentEditable === 'true' ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey
+      ) {
         return
       }
 

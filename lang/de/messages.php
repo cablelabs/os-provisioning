@@ -667,7 +667,7 @@ return [
     'description'               => 'Beschreibung',
     'ticketDeclined'            => ':user hat das Ticket ":title" abgelehnt.',
     'ticketNew'                 => ':user hat das Ticket ":title" erstellt und Dir zugewiesen.',
-    'ticketNoUsers'             => 'Das Ticket ":title" hat keinen zugewiesenen Nutzer mehr. Bitte einen neuen Nutzer zuweisen!',
+    'ticketNoUsers'             => 'Das Ticket ":title" wurde von allen zugewiesenen Nutzern abgelehnt. Bitte einen neuen Nutzer zuweisen!',
     'ticketUpdated'             => ':user hat das Ticket ":title" aktualisiert.',
     'ticketRemoved'             => 'Die Zuweisung zum Ticket ":title" wurde entfernt.',
     'newComment'                => 'Neuer Kommentar von :user zum Ticket ":title"',
