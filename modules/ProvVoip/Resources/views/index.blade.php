@@ -16,29 +16,19 @@
  * limitations under the License.
  */
 ?>
-@extends ('Layout.default')
+@extends ('Generic.dashboard')
 
-@section('content')
-
-    <div class="col-md-12">
-
-        <h1 class="page-header">{{ $title }}</h1>
-
-        {{--Quickstart--}}
-
-        <div class="row">
-            @DivOpen(3)
-                @include('provvoip::widgets.quickstart')
-            @DivClose()
-
-            @DivOpen(5)
-                @include('Generic.widgets.moduleDocu', [ 'urls' => [
-                        'documentation' => 'https://devel.roetzer-engineering.com/confluence/display/NMS/VoIP',
-                        'youtube' => 'https://youtu.be/SxTsflcNeUQ',
-                        'forum' => 'https://devel.roetzer-engineering.com/confluence/display/nmsprimeforum/VoIP',
-                    ]])
-            @DivClose()
+@section('dashboard')
+    <div class="grid gap-x-2 sm:grid-cols-12">
+        <div class="sm:col-span-6 lg:col-span-4 2xl:col-span-3 wide:col-span-2">
+            @include('provvoip::widgets.quickstart')
+        </div>
+        <div class="sm:col-span-12 lg:col-span-8 wide:col-span-4">
+            @include('Generic.widgets.moduleDocu', [ 'urls' => [
+                'documentation' => 'https://devel.nmsprime.com/confluence/display/NMS/VoIP',
+                'youtube' => 'https://youtu.be/SxTsflcNeUQ',
+                'forum' => 'https://devel.nmsprime.com/confluence/display/nmsprimeforum/VoIP',
+            ]])
         </div>
     </div>
-
 @stop

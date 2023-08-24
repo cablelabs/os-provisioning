@@ -17,7 +17,7 @@
  */
 ?>
 
-<a href="/admin/createCSV" class="btn btn-primary">{{ trans('view.Button_downloadCSV') }}</a>
+<a href="/admin/createCSV" class="mb-2 btn btn-primary">{{ trans('view.Button_downloadCSV') }}</a>
 
 <!-- Table -->
 <table class="table table-hover table-bordered">
