@@ -718,6 +718,7 @@ return [
         'log' =>[
             'created'       => 'erstellt',
             'deleted'       => 'löscht',
+            'factory-reset' => 'Werksreset',
             'restored'      => 'wiederhergestellt',
             'updated'       => 'aktualisiert',
             'updated N:M'   => 'aktualisiert',

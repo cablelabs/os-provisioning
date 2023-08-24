@@ -1899,6 +1899,16 @@ class Modem extends \BaseModel
             return;
         }
 
+        $user = auth()->user();
+
+        \App\GuiLog::create([
+            'user_id' => $user ? $user->id : null,
+            'username' => $user ? $user->label() : 'cronjob|CLI',
+            'method' => 'factory-reset',
+            'model' => 'Modem',
+            'model_id' => $this->id,
+        ]);
+
         return $this->restart_modem(false, false, true);
     }
 

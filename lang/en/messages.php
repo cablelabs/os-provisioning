@@ -718,6 +718,7 @@ return [
         'log' =>[
             'created'       => 'created',
             'deleted'       => 'deleted',
+            'factory-reset' => 'Factory reset',
             'restored'      => 'restored',
             'updated'       => 'updated',
             'updated N:M'   => 'updated',

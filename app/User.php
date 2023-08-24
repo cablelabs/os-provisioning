@@ -189,6 +189,11 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         ];
     }
 
+    public function label()
+    {
+        return $this->first_name || $this->last_name ? $this->first_name.' '.$this->last_name : $this->login_name;
+    }
+
     public function getHighestRank(): int
     {
         $ranks = $this->roles()->pluck('rank');

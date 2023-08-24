@@ -139,7 +139,7 @@ class BaseObserver
 
         $data = [
             'user_id'   => $user ? $user->id : 0,
-            'username'  => $user ? ($user->first_name || $user->last_name) ? $user->first_name.' '.$user->last_name : $user->login_name : 'cronjob',
+            'username'  => $user ? $user->label() : 'cronjob|CLI',
             'method'    => $action,
             'model'     => $model_name,
             'model_id'  => $model->id,
