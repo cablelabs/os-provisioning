@@ -19,7 +19,7 @@
 {{-- begin Navbar --}}
 <nav v-pre id="header" class="fixed h-[60px] header navbar navbar-expand navbar-default navbar-fixed-top d-print-none dark:shadow-slate-100 dark:shadow">
     {{-- only one row Navbar --}}
-    <div class="flex justify-between dark:text-slate-100 h-full">
+    <div class="flex justify-between h-full dark:text-slate-100">
         {{-- begin mobile sidebar expand / collapse button --}}
         <button type="button" class="navbar-toggle m-l-20" v-on:click="toggleMobileSidebar">
             <span class="icon-bar"></span>
@@ -37,9 +37,9 @@
         @if ($headline && Illuminate\Support\Str::endsWith(request()->route()->getName(), 'edit'))
             <div class="flex my-2 nav nav-pills md:hidden">
                 <a href="#"
-                    class="text-white bg-dark flex items-center px-3 rounded no-underline"
+                    class="flex items-center px-3 text-white no-underline rounded bg-dark"
                     v-on:click="breadcrumbScroller = true">
-                    <i class="fa fa-ellipsis-h fa-2x m-0" aria-hidden="true"></i>
+                    <i class="m-0 fa fa-ellipsis-h fa-2x" aria-hidden="true"></i>
                     <div class="hidden pl-2 sm:block">{{ trans('view.Header_Dependencies') }}</div>
                 </a>
             </div>
@@ -48,11 +48,11 @@
                 :class="{'-translate-y-full': !breadcrumbScroller, 'translate-y-0': breadcrumbScroller}"
             >
                 {{-- end mobile sidebar expand / collapse button --}}
-                <div class="flex whitespace-nowrap space-x-2 items-center md:hidden overflow-x-scroll flex-1 px-3 h-full">
+                <div class="flex items-center flex-1 h-full px-3 space-x-2 overflow-x-scroll whitespace-nowrap md:hidden">
                     @yield('content_top')
                 </div>
                 <div>
-                    <a href="#" class="text-dark mx-4" v-on:click="breadcrumbScroller = false">
+                    <a href="#" class="mx-4 text-dark" v-on:click="breadcrumbScroller = false">
                         <i class="fa fa-close fa-2x"></i>
                     </a>
                 </div>
@@ -173,7 +173,7 @@
         {{-- end header navigation right --}}
         <div v-cloak class="bg-white absolute w-full h-[60px] transition-transform duration-300"
             :class="{'-translate-y-full': !showSearchbar, 'translate-y-0': showSearchbar}">
-            <form class="form-open flex items-center h-full px-2" method="GET" :action="selectedRoute">
+            <form class="flex items-center h-full px-2 form-open" method="GET" :action="selectedRoute">
                 @if (Module::collections()->has('ProvMon'))
                 <div class="w-16 mx-2">
                     <select2 v-model="selectedRoute" class="text-normal">
@@ -184,13 +184,13 @@
                     </select2>
                 </div>
                 @endif
-                <input ref="searchfield" type="text" name="query" class="w-2/3 md:flex-1 text-lg md:text-2xl md:px-6 outline-none" v-on:keydown.esc="blurInput" v-model="search"
+                <input ref="searchfield" type="text" name="query" class="w-2/3 text-lg outline-none md:flex-1 md:text-2xl md:px-6" v-on:keydown.esc="blurInput" v-model="search"
                     placeholder="{{ \App\Http\Controllers\BaseViewController::translate_view('EnterKeyword', 'Search') }}">
                 <button class="btn btn-primary md:flex" for="prefillSearchbar">
                     <i class="fa fa-search"></i>
-                    <span class="hidden md:block m-0 md:mr-1">{{ trans('view.jQuery_sSearch') }}</span>
+                    <span class="hidden m-0 md:block md:mr-1">{{ trans('view.jQuery_sSearch') }}</span>
                 </button>
-                <div v-on:click="showSearchbar = false" class="cursor-pointer mx-4">
+                <div v-on:click="showSearchbar = false" class="mx-4 cursor-pointer">
                     <i class="fa fa-angle-up fa-2x" :aria-hidden="showSearchbar"></i>
                 </div>
             </form>
