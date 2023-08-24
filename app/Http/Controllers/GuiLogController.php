@@ -59,7 +59,7 @@ class GuiLogController extends BaseController
                 'form_type' => 'html',
                 'name' => 'link',
                 'description' => 'Link',
-                'html' => '<div class="col-md-7">
+                'html' => '<div class="col-md-7 order-3">
                         <a class="btn btn-default btn-block" href="'.$route.'">'.$model->model.' '.$model->model_id.'</a>
                     </div>',
             ];
@@ -73,7 +73,7 @@ class GuiLogController extends BaseController
                 'form_type' => 'html',
                 'name' => 'deleted_at',
                 'description' => 'Restore',
-                'html' => '<div class="col-md-7">
+                'html' => '<div class="col-md-7 order-3">
                         <a class="btn btn-default btn-block" href="'.$route.'"> Restore '.$model->model.'</a>
                     </div>',
             ];
