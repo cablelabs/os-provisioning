@@ -359,7 +359,7 @@ class Contract extends \BaseModel
         $ret[$i18nContract]['Modem']['count'] = $this->modems_count;
         $ret[$i18nContract]['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
             collect([new Modem()]) :
-            $this->modems;
+            $this->modems()->with('contract')->get();
 
         if (Module::collections()->has('BillingBase')) {
             $ret[$i18nContract]['Item']['class'] = 'Item';
