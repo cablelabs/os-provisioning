@@ -1,16 +1,16 @@
 <template id="greetings">
-    <p class="mb-2" greetings>Sehr geehrter {{contract.salutation}} {{contract.lastname}}</p>
+    <p class="mb-2" greetings>Sehr geehrter {{ contract.salutation }} {{ contract.lastname }}</p>
 </template>
 <template id="contract-info">
     <table class="max-w-fit mt-0" contract-info>
         <tbody>
             <tr>
                 <th style="padding-left: 0;">Vertragsnummer:</th>
-                <td>{{contract.number}}</td>
+                <td>{{ contract.number }}</td>
             </tr>
             <tr>
                 <th style="padding-left: 0;">Vertragsbeginn:</th>
-                <td>{{dayjs(contract.contract_start ?? undefined).format('D.M.YYYY')}}</td>
+                <td>{{ dayjs(contract.contract_start ?? undefined).format('D.M.YYYY') }}</td>
             </tr>
         </tbody>
     </table>
@@ -36,24 +36,24 @@
             <span>{{ company.city }}</city>
         </company>
         <row class="flex-col gap-px text-xs [&>*]:whitespace-nowrap [&>*]:justify-end [&>*]:gap-2">
-            <row><label>Tel</label>{{company.phone}}</row>
-            <row><label>Fax</label>{{company.fax}}</row>
-            <row><label>Mail</label>{{company.mail}}</row>
-            <row><label>Web</label>{{company.web}}</row>
+            <row><label>Tel</label>{{ company.phone }}</row>
+            <row><label>Fax</label>{{ company.fax }}</row>
+            <row><label>Mail</label>{{ company.mail }}</row>
+            <row><label>Web</label>{{ company.web }}</row>
         </row>
     </row>
     <to>
         <row>{{ contract.company ?? '' }}</row>
         <row>{{ contract.department ?? '' }}</row>
-        <row>{{ contract.academic_degree ?? ''}} {{contract.firstname ?? '' }} {{contract.lastname ?? '' }}</row>
-        <row>{{contract.district ?? ''}}</row>
-        <row>{{contract.zip ?? ''}} {{contract.city ?? ''}}</row>
-        <row>{{contract.street ?? ''}} {{contract.housenumber ?? ''}}</row>
+        <row>{{ contract.academic_degree ?? '' }} {{ contract.firstname ?? '' }} {{ contract.lastname ?? '' }}</row>
+        <row>{{ contract.district ?? '' }}</row>
+        <row>{{ contract.zip ?? '' }} {{ contract.city ?? '' }}</row>
+        <row>{{ contract.street ?? '' }} {{ contract.housenumber ?? '' }}</row>
     </to>
     <row>
-        <subject class="inline-block font-bold text-2xl py-6">{{meta.type}}</subject>
+        <subject class="inline-block font-bold text-2xl py-6">{{ meta.type }}</subject>
         <template x-if="meta.date">
-            <date class="inline-flex">Dresden,&nbsp;{{dayjs(meta.date).format('D.M.YYYY')}}</date>
+            <date class="inline-flex">Dresden,&nbsp;{{ dayjs(meta.date).format('D.M.YYYY') }}</date>
         </template>
     </row>
     <span x-component:contract-info></span>
@@ -68,11 +68,11 @@
     <row>
         <column>
             <strong>Registergericht:</strong>
-            <div>{{company.registration_court_1}}</div>
+            <div>{{ company.registration_court_1 }}</div>
         </column>
         <column>
             <strong>Geschäftsführer:</strong>
-            <div>{{company.management}}</div>
+            <div>{{ company.management }}</div>
         </column>
         <column>
             <strong>Bankverbindung:</strong>
@@ -86,9 +86,9 @@
         <column>
             <strong>Steuer:</strong>
             <br />
-            <label>USt.-IdNr.</label> {{company.tax_id_nr ?? ''}}
+            <label>USt.-IdNr.</label> {{ company.tax_id_nr ?? '' }}
             <br />
-            <label>Steuer-Nr.</label> {{company.tax_nr ?? ''}}
+            <label>Steuer-Nr.</label> {{ company.tax_nr ?? '' }}
         </column>
     </row>
 </footer>
