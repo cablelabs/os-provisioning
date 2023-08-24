@@ -22,10 +22,10 @@
     <div>
 
         <div class="flex justify-center pb-6">
-            <h2 class="text-3xl">NMS Prime Apps</h2>
+            <h1 class="text-3xl">NMS Prime Apps</h1>
         </div>
 
-        <h3 class="text-xl">{{ trans('messages.nativeApps') }}</h3>
+        <h2 class="text-xl">{{ trans('messages.nativeApps') }}</h2>
         @foreach ($nativeApps as $nativeApp)
             <div class="grid grid-flow-row-dense grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 gap-4 lg:gap-6 py-6">
                 @foreach ($nativeApp as $category => $modules)
@@ -50,7 +50,7 @@
                 @endphp
                     <div class="bg-white shadow-md p-4 {{ $colSpan }}">
                         <div>
-                            <h4 class="text-lg mb-2">{{ $category }}</h4>
+                            <h3 class="text-lg mb-2">{{ $category }}</h3>
                         </div>
                         <div class="grid {{ $gridCols }} grid-flow-row gap-3">
                             @foreach ($modules as $attr)
@@ -61,7 +61,7 @@
                                             title="{{ trans('view.'.$attr['description']) }}"
                                         >
                                     </a>
-                                    <div class="dark:text-slate-100 !pt-5 font-semibold">{{ $attr['name'] }}</div>
+                                    <div class="dark:text-slate-100 !pt-5 font-semibold text-center">{{ $attr['name'] }}</div>
                                 </div>
                             @endforeach
                         </div>
@@ -71,7 +71,7 @@
         @endforeach
         </div>
 
-        <h3 class="text-xl ">{{ trans('messages.externalApps') }}</h3>
+        <h2 class="text-xl ">{{ trans('messages.externalApps') }}</h2>
         <div class="grid grid-flow-row-dense grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 gap-4 lg:gap-6 py-6">
             @foreach ($externalApps as $name => $externalApp)
                 @if (Route::currentRouteName() == 'Apps.'.$externalApp['state'] && file_exists(public_path('images/'.$externalApp['icon'])))
