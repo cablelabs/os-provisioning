@@ -146,5 +146,5 @@ return [
     /**
      * For certain
      */
-    'relationThreshhold' => env('DATATABLES_RELATION_THRESHHOLD', 25),
+    'relationThreshold' => env('DATATABLES_RELATION_THRESHOLD', 25),
 ];

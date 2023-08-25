@@ -333,8 +333,8 @@ class Contract extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        $this->setRelationCounts();
-        $relationThreshhold = config('datatables.relationThreshhold');
+        $relationThreshold = config('datatables.relationThreshold');
+        $this->setRelationCounts($relationThreshold);
         $i18nContract = trans_choice('view.Header_Contract', 1);
 
         if (
@@ -357,14 +357,17 @@ class Contract extends \BaseModel
         $ret[$i18nContract]['icon'] = 'pencil';
         $ret[$i18nContract]['Modem']['class'] = 'Modem';
         $ret[$i18nContract]['Modem']['count'] = $this->modems_count;
-        $ret[$i18nContract]['Modem']['relation'] = $this->modems_count >= $relationThreshhold ?
-            collect([new Modem()]) :
-            $this->modems()->with('contract')->get();
+
+        $ret[$i18nContract]['Modem']['relation'] = collect([new Modem()]);
+        if ($this->modems_count <= $relationThreshold) {
+            $this->setRelation('modems', $this->modems()->with('contract')->get());
+            $ret[$i18nContract]['Modem']['relation'] = $this->modems;
+        }
 
         if (Module::collections()->has('BillingBase')) {
             $ret[$i18nContract]['Item']['class'] = 'Item';
             $ret[$i18nContract]['Item']['count'] = $this->items_count;
-            $ret[$i18nContract]['Item']['relation'] = $this->items_count >= $relationThreshhold ?
+            $ret[$i18nContract]['Item']['relation'] = $this->items_count >= $relationThreshold ?
                 collect([new \Modules\BillingBase\Entities\Item()]) :
                 $this->items;
 
@@ -410,7 +413,7 @@ class Contract extends \BaseModel
             $ret['Billing']['Invoice']['count'] = $this->invoices_count;
             $ret['Billing']['Invoice']['options']['hide_delete_button'] = 1;
             $ret['Billing']['Invoice']['options']['hide_create_button'] = 1;
-            $ret['Billing']['Invoice']['relation'] = $this->invoices_count >= $relationThreshhold ?
+            $ret['Billing']['Invoice']['relation'] = $this->invoices_count >= $relationThreshold ?
                 collect([new \Modules\BillingBase\Entities\Invoice()]) :
                 $this->invoices;
         }
@@ -463,14 +466,12 @@ class Contract extends \BaseModel
         return $ret;
     }
 
-    public function setRelationCounts()
+    public function setRelationCounts($threshold)
     {
-        $threshhold = config('datatables.relationThreshhold');
-
         if (Module::collections()->has('BillingBase')) {
-            $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->limit($threshhold)->get());
+            $this->setRelation('invoices', $this->invoices()->orderBy('id', 'desc')->limit($threshold)->get());
             $this->invoices_count = $this->invoices->count();
-            $this->setRelation('items', $this->items()->limit($threshhold)->get());
+            $this->setRelation('items', $this->items()->limit($threshold)->get());
             $this->items_count = $this->items->count();
         }
 
@@ -480,7 +481,7 @@ class Contract extends \BaseModel
             return;
         }
 
-        $this->modems_count = $this->modems()->limit($threshhold)->get('id')->count();
+        $this->modems_count = $this->modems()->limit($threshold)->get('id')->count();
     }
 
     public function view_belongs_to()
