@@ -79,7 +79,7 @@
                                     :class="loggingTab ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white'"
                                     role="tab">
                                     <a id="loggingtab" class="p-0 no-underline" href="#logging" data-toggle="tab">
-                                        <div class="flex items-center dark:text-slate-100 text-gray-800">
+                                        <div class="flex items-center text-gray-800 dark:text-slate-100">
                                             <i class="fa fa-{{ $tab['icon'] ?? 'history' }}"></i>
                                             <div>Logging</div>
                                         </div>
@@ -92,7 +92,7 @@
                             @if (isset($tab['route']))
                                 <li class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $routeName == $tab['route'] ? ' border-cyan-500' : 'border-transparent hover:border-white'}}" role="tab">
                                     <a href="{{ route($tab['route'], is_array($tab['link']) ? $tab['link'] : [$tab['link']]) }}{{ $routeName == $tab['route'] ? '#' : ''}}" class="p-0 no-underline">
-                                        <span class="dark:text-slate-100 text-gray-800">
+                                        <span class="text-gray-800 dark:text-slate-100">
                                         @if (isset($tab['icon']))
                                             <i class="fa fa-{{ $tab['icon'] }}"></i>
                                         @endif
@@ -109,7 +109,7 @@
                                 class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? 'border-cyan-500' : 'border-transparent hover:border-white'}}"
                                 role="tab">
                                 <a class="p-0 no-underline" href="#{{ $tab['name'] }}" data-toggle="tab">
-                                    <span class="dark:text-slate-100 text-gray-800">
+                                    <span class="text-gray-800 dark:text-slate-100">
                                     @if (isset($tab['icon']))
                                         <i class="fa fa-{{$tab['icon']}}"></i>
                                     @endif
