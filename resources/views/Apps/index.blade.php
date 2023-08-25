@@ -27,7 +27,7 @@
 
         <h2 class="text-xl">{{ trans('messages.nativeApps') }}</h2>
         @foreach ($nativeApps as $nativeApp)
-            <div class="grid grid-flow-row-dense grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 gap-4 lg:gap-6 py-6">
+            <div class="grid grid-flow-row-dense grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 py-6 {{ $gap }}">
                 @foreach ($nativeApp as $category => $modules)
                 @php
                     $moduleCount = count($modules);
@@ -50,11 +50,11 @@
                 @endphp
                     <div class="bg-white shadow-md p-4 {{ $colSpan }}">
                         <div>
-                            <h3 class="text-lg mb-2">{{ $category }}</h3>
+                            <h3 class="mb-2 text-lg">{{ $category }}</h3>
                         </div>
-                        <div class="grid {{ $gridCols }} grid-flow-row gap-3">
+                        <div class="grid grid-flow-row {{ $gridCols }} {{ $gap }}">
                             @foreach ($modules as $attr)
-                                <div class="flex flex-col justify-center items-center">
+                                <div class="flex flex-col items-center justify-center">
                                     <a href="{{ $attr['link'] }}">
                                         <img class="h-28"
                                             src="{{ asset('images/apps/'.$attr['icon']) }}"
@@ -72,11 +72,11 @@
         </div>
 
         <h2 class="text-xl ">{{ trans('messages.externalApps') }}</h2>
-        <div class="grid grid-flow-row-dense grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 gap-4 lg:gap-6 py-6">
+        <div class="grid grid-flow-row-dense grid-cols-2 py-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 wide:grid-cols-7 {{ $gap }}">
             @foreach ($externalApps as $name => $externalApp)
                 @if (Route::currentRouteName() == 'Apps.'.$externalApp['state'] && file_exists(public_path('images/'.$externalApp['icon'])))
-                    <div class="bg-white shadow-md p-4 grid place-content-center">
-                        <div class="flex flex-col justify-center items-center">
+                    <div class="grid p-4 bg-white shadow-md place-content-center">
+                        <div class="flex flex-col items-center justify-center">
                             <a href="{{ $externalApp['state'] == 'active' ? $externalApp['link'] : $externalApp['website'] }}">
                                 <img class="h-28"
                                     title="{{ trans('view.'.$externalApp['description']) }}"

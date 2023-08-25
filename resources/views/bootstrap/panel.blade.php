@@ -16,9 +16,8 @@
  * limitations under the License.
  */
     if (isset($height) && !Str::endsWith($height, 'vh')) {
-        $height = ($height == 'auto') ? '100%' : "$height%";
+        $height = 'height: '.(($height == 'auto') ? '100%' : "$height%");
     }
-
 
     $overflow_y = isset($overflow) ? $overflow : 'auto';
 
@@ -32,9 +31,9 @@
 @if(isset($md))
 <div class="col-{{ $md }}">
 @endif
-    <div class="{{ isset($fillToContainerHeight) ? 'h-full' : '' }} panel panel-inverse card-2 dark:shadow-none dark:border-none dark:p-2 dark:bg-slate-800" data-sort{{$attrExt}}-id="{{ $dataSortId }}">
+    <div class="{{ isset($fillToContainerHeight) ? 'h-full' : '' }} {{ $classes ?? '' }} flex flex-col panel panel-inverse card-2 dark:shadow-none dark:border-none dark:p-2 dark:bg-slate-800" data-sort{{$attrExt}}-id="{{ $dataSortId }}">
         @include ('bootstrap.panel-header', ['view_header' => $view_header])
-        <div class="text-gray-500 panel-body fader dark:bg-slate-900 dark:mx-2" style="overflow-x: hidden; overflow-y:{{ $overflow_y }};height: {{ $height ?? '100%' }}; {{ $display }}">
+        <div class="flex flex-col text-gray-500 panel-body fader dark:bg-slate-900 dark:mx-2 {{ isset($fillToContainerHeight) ? 'flex-1' : '' }}" style="overflow-x: hidden; overflow-y:{{ $overflow_y }};{{ $height ?? '' }}; {{ $display }}">
             @yield($content)
         </div>
     </div>

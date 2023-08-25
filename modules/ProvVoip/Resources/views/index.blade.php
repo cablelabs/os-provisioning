@@ -19,7 +19,7 @@
 @extends ('Generic.dashboard')
 
 @section('dashboard')
-    <div class="grid gap-x-2 sm:grid-cols-12">
+    <div class="grid {{ $gap }} sm:grid-cols-12">
         <div class="sm:col-span-6 lg:col-span-4 2xl:col-span-3 wide:col-span-2">
             @include('provvoip::widgets.quickstart')
         </div>

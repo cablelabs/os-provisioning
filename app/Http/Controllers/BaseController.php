@@ -559,6 +559,10 @@ class BaseController extends Controller
             $a['externalApps'] = $this->getExternalApps();
         }
 
+        if (! isset($a['gap'])) {
+            $a['gap'] = 'gap-5';
+        }
+
         $a['edit_view_save_button'] = $this->edit_view_save_button;
         $a['save_button_name'] = $this->save_button_name;
         $a['second_button_name'] = $this->second_button_name;

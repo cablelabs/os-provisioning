@@ -36,7 +36,7 @@
 
 @section('dashboard')
     {{--Quickstart--}}
-    <div class="grid sm:grid-cols-12 sm:gap-x-2">
+    <div class="grid {{ $gap }} sm:grid-cols-12">
         <div class="col-span-12 2xl:col-span-10">
             @include('provbase::widgets.quickstart')
         </div>
@@ -44,30 +44,30 @@
             @include ('bootstrap.widget', [
                 'content' => 'date',
                 'widget_icon' => 'fa-calendar',
-                'widget_bg_color' => 'bg-purple',
+                'widget_bg_color' => 'bg-violet-400',
             ])
         </div>
         <div class="sm:col-span-6 lg:col-span-5 2xl:col-span-3">
             @include ('bootstrap.widget', [
             'content' => 'contracts_total',
                 'widget_icon' => 'fa-users',
-                'widget_bg_color' => 'bg-green',
+                'widget_bg_color' => 'bg-lime-500/75',
                 'link_target' => '#anchor-contracts',
             ])
         </div>
-        <div class="sm:col-span-6 lg:col-span-4 2xl:col-span-3 widget widget-stats bg-blue">
+        <div class="bg-blue-400 sm:col-span-6 lg:col-span-4 2xl:col-span-3 widget widget-stats">
             {{-- info/data --}}
             <div class="text-center stats-info">
                 {!! HTML::decode (HTML::linkRoute('Modem.firmware',
-                    '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                        <i style="font-size: 25px;" class="img-center fa fa-file-code-o p-10"></i><br>
-                        <span class="text-ellipsis text-center">Firmwares</span>
+                    '<span class="p-10 m-5 text-center btn btn-dark m-r-10">
+                        <i style="font-size: 25px;" class="p-10 img-center fa fa-file-code-o"></i><br>
+                        <span class="text-center text-ellipsis">Firmwares</span>
                     </span>'))
                 !!}
                 {!! HTML::decode (HTML::linkRoute('Modem.cwmp',
-                    '<span class="btn btn-dark p-10 m-5 m-r-10 text-center">
-                        <i style="font-size: 25px;" class="img-center fa fa-hdd-o p-10"></i><br>
-                        <span class="text-ellipsis text-center">CWMP</span>
+                    '<span class="p-10 m-5 text-center btn btn-dark m-r-10">
+                        <i style="font-size: 25px;" class="p-10 img-center fa fa-hdd-o"></i><br>
+                        <span class="text-center text-ellipsis">CWMP</span>
                     </span>'))
                 !!}
 
@@ -82,43 +82,45 @@
                 'forum' => 'https://devel.nmsprime.com/confluence/display/nmsprimeforum/Provisioning+General',
             ]])
         </div>
+        @if (Module::collections()->has('HfcCustomer'))
+            <div class="sm:col-span-12 lg:col-span-6 2xl:col-span-4">
+                @section('impaired_modems')
+                    <div class="mb-3 input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="impairedModemRow">{{ trans('messages.sort') }}</label>
+                            <select class="custom-select" id="impairedModemRow">
+                                @foreach (config('hfcreq.hfParameters') as $value => $name)
+                                    @if ($loop->first)
+                                        <option selected value="{{ $value }}">{{ $name }}</option>
+                                    @else
+                                        <option value="{{ $value }}">{{ $name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="input-group-prepend" style="margin-top: 20px; margin-bottom: 20px;">
+                            <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="lowerValue">{{ trans('messages.minimum') }}</label>
+                            <input type="number" value="50" class="form-control dark:bg-slate-800 dark:text-slate-100" id="lowerValue">
+                        </div>
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="upperValue">{{ trans('messages.maximum') }}</label>
+                            <input type="number" value="75" class="form-control dark:bg-slate-800 dark:text-slate-100" id="upperValue">
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button class="btn btn-primary" onclick="filterImpairedModems()" type="button">{{ trans('view.Button_Search') }}</button>
+                        <a href="{!! route('CustomerTopo.show_impaired', ['offline']) !!}" class="btn btn-secondary">{{ trans('messages.showOfflineModems') }}</a>
+                    </div>
+                @stop
+                @include ('bootstrap.panel', [
+                        'content' => "impaired_modems",
+                        'view_header' => trans('view.dashboard.impairedModem'),
+                        'height' => 'auto',
+                        'i' => '1',
+                    ])
+            </div>
+        @endif
     </div>
-    @if (Module::collections()->has('HfcCustomer'))
-        <div class="lg:w-1/2 2xl:w-1/4">
-            @section('impaired_modems')
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="impairedModemRow">{{ trans('messages.sort') }}</label>
-                        <select class="custom-select" id="impairedModemRow">
-                            @foreach (config('hfcreq.hfParameters') as $value => $name)
-                                @if ($loop->first)
-                                    <option selected value="{{ $value }}">{{ $name }}</option>
-                                @else
-                                    <option value="{{ $value }}">{{ $name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="input-group-prepend" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="lowerValue">{{ trans('messages.minimum') }}</label>
-                        <input type="number" value="50" class="form-control dark:bg-slate-800 dark:text-slate-100" id="lowerValue">
-                    </div>
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" style="padding-top: 0; padding-bottom: 0;" for="upperValue">{{ trans('messages.maximum') }}</label>
-                        <input type="number" value="75" class="form-control dark:bg-slate-800 dark:text-slate-100" id="upperValue">
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="filterImpairedModems()" type="button">{{ trans('view.Button_Search') }}</button>
-                <a href="{!! route('CustomerTopo.show_impaired', ['offline']) !!}" class="btn btn-secondary" type="button" style="float: right;">{{ trans('messages.showOfflineModems') }}</a>
-            @stop
-            @include ('bootstrap.panel', [
-                    'content' => "impaired_modems",
-                    'view_header' => trans('view.dashboard.impairedModem'),
-                    'height' => 'auto',
-                    'i' => '1',
-                ])
-        </div>
-    @endif
 @stop
 
 @section('javascript_extra')
