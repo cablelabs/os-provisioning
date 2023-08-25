@@ -306,7 +306,7 @@ class FormBuilder extends CollectiveFormBuilder
      */
     public function openGroup($name, $label = null, $options = [], $color = false)
     {
-        $options = $this->appendClassToOptions('flex flex-wrap py-2 sm:py-1 dark:bg-slate-900', $options);
+        $options = $this->appendClassToOptions('flex flex-wrap dark:bg-slate-900', $options);
 
         // Append the name of the group to the groupStack.
         $this->groupStack[] = $name;
