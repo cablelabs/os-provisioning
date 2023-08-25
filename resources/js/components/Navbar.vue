@@ -15,7 +15,7 @@ export default {
     const search = ref('')
     window.addEventListener('keypress', function (e) {
       if (
-        document.activeElement.tagName.toLowerCase() === 'input' ||
+        ['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase()) ||
         document.activeElement.contentEditable === 'true' ||
         e.ctrlKey ||
         e.metaKey ||
