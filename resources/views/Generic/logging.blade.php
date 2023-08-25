@@ -17,8 +17,8 @@
  */
 ?>
 <div class="">
-    <div id="logging" class="col-md-12 card tab-content" style="display:none;">
-        <table id="datatable" class="table table-hover datatable table-bordered d-table">
+    <div v-cloak v-show="loggingTab" class="p-3 mb-6 bg-white shadow-md col-md-12">
+        <table class="table table-hover datatable table-bordered d-table">
             <thead>
                 <tr>
                     <th class="nocolvis" style="min-width:20px;width:20px;"></th> {{-- Responsive Column --}}
