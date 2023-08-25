@@ -56,7 +56,7 @@ export default {
       }
 
       // if everything fails, just set the second tab (first is guilog)
-      // to to be the active one
+      // to be the active one
       setActiveTab(props.tabs[1].name)
     }
 
