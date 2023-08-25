@@ -67,7 +67,7 @@ if (mix.inProduction()) {
         ],
       },
       safelist: {
-        greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/]
+        greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/, /snotify.*/]
       },
     })
   ])
