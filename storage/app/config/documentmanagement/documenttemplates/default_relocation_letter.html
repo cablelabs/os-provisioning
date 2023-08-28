@@ -23,9 +23,9 @@
 <table class="max-w-full">
     <thead>
         <tr>
-            <th>Item</th>
-            <th align="right">Price (VAT Inc.)</th>
-            <th>Period</th>
+            <th>Posten</th>
+            <th align="right">Preis <small>(MwSt. inkl.)</small></th>
+            <th>Zeitraum</th>
         </tr>
     </thead>
     <tbody class="text-sm">
@@ -33,7 +33,7 @@
             <tr>
                 <td>{{item.accounting_text ?? item.product?.name}}</td>
                 <td align="right">
-                    <small class="opacity-60">{{meta?.currency}}</small>{{item.computed.price}}
+                    <small class="opacity-60">{{meta?.currency}}</small>{{item.computed.display_price}}
                 </td>
                 <td>
                     <template x-if="item.product.type.toLowerCase() != 'once'">
