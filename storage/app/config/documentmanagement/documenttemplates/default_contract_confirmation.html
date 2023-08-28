@@ -68,9 +68,9 @@
     <table class="max-w-full">
         <thead>
             <tr>
-                <th>Tariff</th>
-                <th align="right">Price (VAT Inc.)</th>
-                <th>Period</th>
+                <th>Tarif</th>
+                <th align="right">Preis <small>(MwSt. inkl.)</small></th>
+                <th>Zeitraum</th>
             </tr>
         </thead>
         <tbody class="text-sm">
@@ -78,7 +78,7 @@
                 <tr>
                     <td>{{tariff.accounting_text ?? tariff.product?.name}}</td>
                     <td align="right">
-                        <small class="opacity-60">{{meta?.currency}}</small>{{tariff.computed.price}}
+                        <small class="opacity-60">{{meta?.currency}}</small>{{tariff.computed.display_price}}
                     </td>
                     <td>
                         <template x-if="tariff.product.type.toLowerCase() != 'once'">
