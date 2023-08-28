@@ -112,7 +112,9 @@ class NetElementObserver
                 }
             }
 
-            $this->handleTypeChangeForCoreMon($netelement);
+            if (Module::collections()->has('CoreMon')) {
+                $this->handleTypeChangeForCoreMon($netelement);
+            }
         }
     }
 
