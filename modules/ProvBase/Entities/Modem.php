@@ -2033,7 +2033,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if ($this->us_pwr > config('hfccustomer.threshhold.single.us.critical')) {
+        if ($this->us_pwr > config('hfccustomer.threshold.single.us.critical')) {
             if ($return_type == 'string') {
                 return 'critical';
             } else {
@@ -2041,7 +2041,7 @@ class Modem extends \BaseModel
             }
         }
 
-        if ($this->us_pwr > config('hfccustomer.threshhold.single.us.warning')) {
+        if ($this->us_pwr > config('hfccustomer.threshold.single.us.warning')) {
             if ($return_type == 'string') {
                 return 'warning';
             } else {

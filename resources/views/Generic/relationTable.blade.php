@@ -6,7 +6,7 @@
         {!! Form::open(array('route' => array($class.'.destroy', 0), 'method' => 'delete', 'id' => $tab['name'].$class)) !!}
     @endif
 
-    @if ($count < config('datatables.relationThreshhold'))
+    @if ($count < config('datatables.relationThreshold'))
         <table class="table">
             @foreach ($relation as $rel_elem)
                 <?php $labelData = $rel_elem->view_index_label(); ?>

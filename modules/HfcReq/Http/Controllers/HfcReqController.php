@@ -54,16 +54,16 @@ class HfcReqController extends \BaseController
         $c = [];
         // if (Module::collections()->has('HfcCustomer')) {
         //     $c = [
-        //         ['form_type' => 'text', 'name' => 'us_single_warning', 'description' => 'Upstream single warning threshhold', 'options' => ['placeholder' => '50']],
-        //         ['form_type' => 'text', 'name' => 'us_single_critical', 'description' => 'Upstream single critical threshhold', 'options' => ['placeholder' => '55']],
-        //         ['form_type' => 'text', 'name' => 'us_avg_warning', 'description' => 'Upstream average Warning Threshhold', 'options' => ['placeholder' => '45']],
-        //         ['form_type' => 'text', 'name' => 'us_avg_critical', 'description' => 'Upstream average critical Threshhold', 'options' => ['placeholder' => '52'], 'space' => 1],
-        //         ['form_type' => 'text', 'name' => 'online_absolute_minor', 'description' => 'Absolute Modem Offline Threshhold: Minor', 'options' => ['placeholder' => '5']],
-        //         ['form_type' => 'text', 'name' => 'online_absolute_major', 'description' => 'Absolute Modem Offline Threshhold: Major', 'options' => ['placeholder' => '25']],
-        //         ['form_type' => 'text', 'name' => 'online_absolute_critical', 'description' => 'Absolute Modem Offline Threshhold: Critical', 'options' => ['placeholder' => '100'], 'space' => 1],
-        //         ['form_type' => 'text', 'name' => 'online_percentage_minor', 'description' => 'Percentage Modem Offline Threshhold: Minor', 'options' => ['placeholder' => '34']],
-        //         ['form_type' => 'text', 'name' => 'online_percentage_major', 'description' => 'Percentage Modem Offline Threshhold: Major', 'options' => ['placeholder' => '51']],
-        //         ['form_type' => 'text', 'name' => 'online_percentage_critical', 'description' => 'Percentage Modem Offline Threshhold: Critical', 'options' => ['placeholder' => '81']],
+        //         ['form_type' => 'text', 'name' => 'us_single_warning', 'description' => 'Upstream single warning threshold', 'options' => ['placeholder' => '50']],
+        //         ['form_type' => 'text', 'name' => 'us_single_critical', 'description' => 'Upstream single critical threshold', 'options' => ['placeholder' => '55']],
+        //         ['form_type' => 'text', 'name' => 'us_avg_warning', 'description' => 'Upstream average Warning Threshold', 'options' => ['placeholder' => '45']],
+        //         ['form_type' => 'text', 'name' => 'us_avg_critical', 'description' => 'Upstream average critical Threshold', 'options' => ['placeholder' => '52'], 'space' => 1],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_minor', 'description' => 'Absolute Modem Offline Threshold: Minor', 'options' => ['placeholder' => '5']],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_major', 'description' => 'Absolute Modem Offline Threshold: Major', 'options' => ['placeholder' => '25']],
+        //         ['form_type' => 'text', 'name' => 'online_absolute_critical', 'description' => 'Absolute Modem Offline Threshold: Critical', 'options' => ['placeholder' => '100'], 'space' => 1],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_minor', 'description' => 'Percentage Modem Offline Threshold: Minor', 'options' => ['placeholder' => '34']],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_major', 'description' => 'Percentage Modem Offline Threshold: Major', 'options' => ['placeholder' => '51']],
+        //         ['form_type' => 'text', 'name' => 'online_percentage_critical', 'description' => 'Percentage Modem Offline Threshold: Critical', 'options' => ['placeholder' => '81']],
         //     ];
         // }
 

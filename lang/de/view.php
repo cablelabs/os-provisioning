@@ -1012,7 +1012,7 @@ return [
         'diagramOperandPlaceholder' => 'Wert zur Berechnung des Parameters für das Diagramm',
         'colorize' => 'Auf der Karte farbig darstellen?',
         'selectMapParameter' => 'Auswählen, als welcher Parameter der Wert auf der Karte angezeigt werden soll.',
-        'threshholds' => 'Optional: Schwellwerte für ":Severity" (:color) – z.B.: “..10”, “-1.5..1.5”, “-20..-10;10..20” oder “20..”',
+        'thresholds' => 'Optional: Schwellwerte für ":Severity" (:color) – z.B.: “..10”, “-1.5..1.5”, “-20..-10;10..20” oder “20..”',
         'listtype' => [
             'list' => 'Zeilen',
             'table' => 'Spalten',

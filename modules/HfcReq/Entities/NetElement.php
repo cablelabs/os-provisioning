@@ -319,7 +319,7 @@ class NetElement extends \BaseModel
                 $this->excludeCanceledContractsQuery($query);
             },
             'modems as modems_critical_count' => function ($query) {
-                $query->where('us_pwr', '>=', config('hfccustomer.threshhold.single.us.critical'));
+                $query->where('us_pwr', '>=', config('hfccustomer.threshold.single.us.critical'));
 
                 $this->excludeCanceledContractsQuery($query);
             },

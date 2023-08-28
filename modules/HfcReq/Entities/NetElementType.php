@@ -112,13 +112,13 @@ class NetElementType extends \BaseModel
     // returns all objects that are related to a DeviceType
     public function view_has_many()
     {
-        $threshhold = config('datatables.relationThreshhold');
-        $this->setRelation('netelements', $this->netelements()->limit($threshhold)->get());
+        $threshold = config('datatables.relationThreshold');
+        $this->setRelation('netelements', $this->netelements()->limit($threshold)->get());
         $this->netelements_count = $this->netelements->count();
 
         $ret['Edit']['NetElement']['class'] = 'NetElement';
         $ret['Edit']['NetElement']['count'] = $this->netelements_count;
-        $ret['Edit']['NetElement']['relation'] = $this->netelements_count >= $threshhold ?
+        $ret['Edit']['NetElement']['relation'] = $this->netelements_count >= $threshold ?
             collect([new \Modules\HfcReq\Entities\NetElement()]) :
             $this->netelements;
 

@@ -134,14 +134,14 @@ return [
     ],
 
     /**
-     * This defines the threshhold from which we talk about a large dataset.
+     * This defines the threshold from which we talk about a large dataset.
      * Index tables of large datasets are handled a bit different to not dramatically decrease performance.
      * This currently affects only sorting. As sorting decreases the performance the most, sorting is removed
      * when the user initially opens the index page and no filter is set. Everytime a/the filter is changed the
      * sorting (order by) is initially removed
      */
     'isIndexCachingEnabled' => false,
-    'hugeTableThreshhold' => env('DATATABLES_HUGE_TABLE_THRESHHOLD', 500000),
+    'hugeTableThreshold' => env('DATATABLES_HUGE_TABLE_THRESHOLD', 500000),
 
     /**
      * For certain

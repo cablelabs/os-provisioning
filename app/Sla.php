@@ -38,7 +38,7 @@ class Sla extends BaseModel
         'normal' => ['time' => '9to5', 'Response time' => '<b><2w</b> (typical < 3 days)', 'RT without SLA' => '<i class="fa fa-times fa-lg text-danger" title="undefined"></i>'],
     ];
 
-    public static $threshholds = [
+    public static $thresholds = [
         'xs' => ['modems' => 10, 'contracts' => 40, 'netgw' => 1, 'netelements' => 10],
         's' => ['modems' => 100, 'contracts' => 400, 'netgw' => 1, 'netelements' => 10],
         'm' => ['modems' => 500, 'contracts' => 2000, 'netgw' => 2, 'netelements' => 50],
@@ -94,7 +94,7 @@ class Sla extends BaseModel
     {
         $this->set_sla_dependent_values();
 
-        foreach (array_reverse(self::$threshholds) as $size => $table) {
+        foreach (array_reverse(self::$thresholds) as $size => $table) {
             foreach ($table as $key => $value) {
                 if ($this->{'num_'.$key} >= $value) {
                     return $size;
@@ -119,7 +119,7 @@ class Sla extends BaseModel
         return Cache::remember('sla_valid', now()->addDay(), function () {
             $this->set_sla_dependent_values();
 
-            foreach (self::$threshholds[$this->name] as $key => $value) {
+            foreach (self::$thresholds[$this->name] as $key => $value) {
                 if ($this->{'num_'.$key} >= $value) {
                     return false;
                 }

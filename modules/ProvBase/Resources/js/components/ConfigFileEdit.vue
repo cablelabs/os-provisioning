@@ -120,9 +120,9 @@
                       </div>
                       <div v-show="element.colorize" class="flex flex-col">
                         <div class="flex flex-col mb-2">
-                          <input type="text" name="colorDanger" class="p-1" style="background-color: #ffddbb;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsCriticalOrange" :title="propData.configfileDragDropThreshholdsCriticalOrange" v-model="element.colorDanger" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
-                          <input type="text" name="colorWarning" class="p-1" style="background-color: #ffffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsWarningYellow" :title="propData.configfileDragDropThreshholdsWarningYellow" v-model="element.colorWarning" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
-                          <input type="text" name="colorSuccess" class="p-1" style="background-color: #ddffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThreshholdsSuccessGreen" :title="propData.configfileDragDropThreshholdsSuccessGreen" v-model="element.colorSuccess" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
+                          <input type="text" name="colorDanger" class="p-1" style="background-color: #ffddbb;margin-top:.5rem;" :placeholder="propData.configfileDragDropThresholdsCriticalOrange" :title="propData.configfileDragDropThresholdsCriticalOrange" v-model="element.colorDanger" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
+                          <input type="text" name="colorWarning" class="p-1" style="background-color: #ffffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThresholdsWarningYellow" :title="propData.configfileDragDropThresholdsWarningYellow" v-model="element.colorWarning" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
+                          <input type="text" name="colorSuccess" class="p-1" style="background-color: #ddffdd;margin-top:.5rem;" :placeholder="propData.configfileDragDropThresholdsSuccessGreen" :title="propData.configfileDragDropThresholdsSuccessGreen" v-model="element.colorSuccess" @keypress.enter.prevent.stop="blurInput" @blur="refreshJson"/>
                         </div>
                         <select2 data-allow-clear="true" :data-placeholder="translations.selectMapParameter" name="valueType" v-model="element.valueType" title="Usage e.g. in topo map" @change="refreshJson">
                           <option value=""></option>

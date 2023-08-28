@@ -1011,7 +1011,7 @@ return [
         'diagramOperandPlaceholder' => 'Calculation value for the monitoring diagram',
         'colorize' => 'Colorize On Map?',
         'selectMapParameter' => 'Select as which parameter it should appear on the map',
-        'threshholds' => 'Optional: Threshold(s) for :severity (:color) – e.g. “..10” or “-1.5..1.5” or “-20..-10;10..20” or “20..”',
+        'thresholds' => 'Optional: Threshold(s) for :severity (:color) – e.g. “..10” or “-1.5..1.5” or “-20..-10;10..20” or “20..”',
         'listtype' => [
             'list' => 'Rows',
             'table' => 'Columns',

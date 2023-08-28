@@ -1701,7 +1701,7 @@ class Contract extends \BaseModel
     }
 
     /**
-     * Check if the Contract has Debts that exceed the threshholds of the module configuration and therefore the internet has to be blocked
+     * Check if the Contract has Debts that exceed the thresholds of the module configuration and therefore the internet has to be blocked
      *
      * @author Nino Ryschawy
      *

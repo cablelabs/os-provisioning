@@ -899,14 +899,14 @@ class BaseModel extends Eloquent
     }
 
     /**
-     * Check if entry count of the index table of the model exceeds configured threshhold
+     * Check if entry count of the index table of the model exceeds configured threshold
      * Huge tables behave a bit different to not degrade performance - see description in config/datatables.php
      */
     public function hasHugeIndexTable()
     {
         if (
             config('datatables.isIndexCachingEnabled') &&
-            $this->cachedIndexTableCount > config('datatables.hugeTableThreshhold')
+            $this->cachedIndexTableCount > config('datatables.hugeTableThreshold')
         ) {
             return true;
         }
