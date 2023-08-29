@@ -5911,7 +5911,7 @@ body.flat-black {
 }
 .pace-progress {
     position: fixed;
-    top: 54px;
+    top: 62px;
     left: 0;
     right: 0;
     text-align: center;
@@ -5927,7 +5927,7 @@ body.flat-black {
     content: '';
     background: none;
     position: fixed;
-    top: 54px;
+    top: 62px;
     right: 0;
     left: 0;
     height: 3px;

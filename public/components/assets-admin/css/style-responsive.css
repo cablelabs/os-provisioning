@@ -727,24 +727,6 @@ Website: http://www.seantheme.com/color-admin-v3.0/admin/html/
     }
 }
 
-
-/* -------------------------------
-   v1.5 Update
-------------------------------- */
-
-/* Pace Progress Loader */
-
-@media (max-width: 767px) {
-    .pace-progress {
-        top: 109px;
-    }
-    .pace .pace-activity {
-        top: 120px
-    }
-}
-
-
-
 /* -------------------------------
    v1.7 Update
 ------------------------------- */
