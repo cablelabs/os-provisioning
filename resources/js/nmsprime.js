@@ -115,6 +115,8 @@ var initSelect2Fields = function () {
   }
 
   window.initDefaultSelect2($('select').not('.select2-ajax,.nms-select2'))
+
+  $('.select2').css('width', '100%')
 }
 
 window.initDefaultSelect2 = function (item, lang = null) {
@@ -283,8 +285,9 @@ function rezizeTextareas() {
   $('textarea')
     .each(function () {
       $(this).css({
-        height: this.scrollHeight + 5 + 'px',
-        'max-height': '85vh'
+        height: (this.scrollHeight < 48 ? 48 : this.scrollHeight + 5) + 'px',
+        'max-height': '85vh',
+        'margin-bottom': '3px',
       })
     })
     .on('input', function () {
