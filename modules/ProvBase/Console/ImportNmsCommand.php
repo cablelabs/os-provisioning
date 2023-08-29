@@ -95,6 +95,7 @@ class ImportNmsCommand extends Command
     protected $configfileMap = [];
     protected $contractMap = [];
     protected $costcenterMap = [0 => 0];
+    protected $modemMap = [];
     protected $productMap = [];
     protected $qosMap = [0 => 0];
     protected $sepaAccountMap = [];
@@ -104,10 +105,10 @@ class ImportNmsCommand extends Command
     /**
      * Arrays of MACs in lower case to check duplicates
      *
-     * @var array
+     * @var array|Collection
      */
-    protected $modemMacs = null;
-    protected $mtaMacs = null;
+    protected $modemMacs = [];
+    protected $mtaMacs = [];
 
     /**
      * Array of output, that will be returned in the end.
@@ -410,6 +411,8 @@ class ImportNmsCommand extends Command
             $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
             $newModem->saveQuietly();
 
+            $this->modemMap[$modem->id] = $newModem->id;
+
             $this->addMtas($modem, $newModem);
             $this->addEndpoints($modem, $newModem);
         }
@@ -557,10 +560,16 @@ class ImportNmsCommand extends Command
 
     private function addActiveTickets()
     {
+        $ticketTypes = [Contract::class, Modem::class];
+
+        // if (\Module::has('HfcReq')) {
+        //     $ticketTypes[] = Modules\HfcReq\Entities\NetElement::class;
+        // }
+
         $tickets = Ticket::on(self::DB_IMPORT_CON)
             ->whereNull('deleted_at')
             ->where('state', '!=', 'Closed')
-            ->where('ticketable_type', Contract::class)
+            ->whereIn('ticketable_type', $ticketTypes)
             ->with('user')
             ->get();
 
@@ -573,7 +582,11 @@ class ImportNmsCommand extends Command
 
         foreach ($tickets as $ticket) {
             $newTicket = new Ticket($this->getAttributesWithoutId($ticket));
-            $newTicket->ticketable_id = $this->contractMap[$ticket->ticketable_id] ?? null;
+            // TODO: Handle NetElements when they shall be imported automatically
+            $newTicket->ticketable_id = $ticket->ticketable_type == Contract::class ?
+                ($this->contractMap[$ticket->ticketable_id] ?? null)
+                :
+                ($this->modemMap[$ticket->ticketable_id] ?? null);
 
             if (! $newTicket->ticketable_id) {
                 $this->errorsToResolve[] = 'Skip Ticket as we couldn\'t find the new Contract for that ticket '.$ticket->id;
@@ -586,7 +599,6 @@ class ImportNmsCommand extends Command
             // TODO: assigned users ?
 
             $newTicket->save();
-
             $ticketBar->advance();
         }
     }
