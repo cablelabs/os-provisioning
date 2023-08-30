@@ -274,6 +274,12 @@ class BaseController extends Controller
             // multiple select?
             if ($field['form_type'] == 'select' && isset($field['options']['multiple'])) {
                 $field['name'] = str_replace('[]', '', $field['name']);
+
+                // check if the field is not passed through the payload, but it exists in view_form_fields (means: The field is empty). so we need to update the DB value by null
+                if (! array_key_exists($field['name'], $data)) {
+                    $data[$field['name']] = null;
+                }
+
                 continue; 			// multiselects will have array in data so don't trim
             }
         }
