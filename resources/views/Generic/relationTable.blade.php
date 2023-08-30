@@ -39,10 +39,10 @@
     @endif
     {!! Form::close() !!}
 @DivClose()
-@elseif (isset($options['empty_message']))
+@else
 
 <div class="text-dark" style="padding: 1.5rem;font-weight:bold;">
-    {{ $options['empty_message'] }}
+    {{ $options['empty_message'] ?? trans('view.jQuery_sZeroRecords') }}
 </div>
 
 @endif
