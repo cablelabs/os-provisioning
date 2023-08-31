@@ -112,9 +112,7 @@ class NetElementObserver
                 }
             }
 
-            if (Module::collections()->has('CoreMon')) {
-                $this->handleTypeChangeForCoreMon($netelement);
-            }
+            $this->handleTypeChangeForCoreMon($netelement);
         }
     }
 
@@ -177,6 +175,10 @@ class NetElementObserver
      */
     private function handleTypeChangeForCoreMon($netelement)
     {
+        if (! Module::collections()->has('CoreMon')) {
+            return;
+        }
+
         // Create
         $clone = clone $netelement;
         $origAttrs = $clone->getRawOriginal();
