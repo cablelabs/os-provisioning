@@ -260,9 +260,11 @@ class Kernel extends ConsoleKernel
             // })->everyTwoHours();
         }
 
-        if ($modules->has('HfcBase')) {
+        if ($modules->has('HfcCustomer')) {
             $schedule->command('nms:icingadata')->cron('4-59/5 * * * *');
+        }
 
+        if ($modules->has('HfcBase')) {
             // Clean Up of HFC Base
             $schedule->call(function () {
                 \Storage::deleteDirectory(\Modules\HfcBase\Http\Controllers\TreeErdController::$path_rel);
