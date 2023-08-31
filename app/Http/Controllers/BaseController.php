@@ -2006,8 +2006,13 @@ class BaseController extends Controller
                 ($model->index_delete_disabled ? 'disabled' : '').'>';
             }, 0)
             ->addColumn('label', function ($model) use ($relationClass) {
-                return '<a href="'.route($relationClass.'.edit', $model->id).'">'.
-                    $model->view_icon().' '.$model->label().'</a>';
+                $link = '<a href="'.route($relationClass.'.edit', $model->id).'">';
+
+                if (method_exists($model, 'label')) {
+                    return $link.$model->label().'</a>';
+                }
+
+                return $link.$model->view_index_label()['header'].'</a>';
             }, 1)
             ->only(['checkbox', 'label'])
             ->rawColumns(['checkbox', 'label'])
