@@ -116,5 +116,3 @@ function positionArrow() {
     </Transition>
   </div>
 </template>
-
-30 steaks 2 Marinaden
