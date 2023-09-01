@@ -1107,15 +1107,6 @@ class NetElement extends \BaseModel
 
         $tabs = [];
         $i18nNetElement = trans_choice('view.Header_NetElement', 1);
-
-        $currentRoute = \Route::getCurrentRoute()->getAction('as');
-        $netElementNotSetRoutes = ['CoreMon.network.overview', 'NetElement.edit'];
-
-        // Disabling the Net Element tab https://devel.nmsprime.com/jira/browse/NPS-215
-        // if (! in_array($currentRoute, $netElementNotSetRoutes)) {
-        //     $tabs = [['name' => $i18nNetElement, 'icon' => 'pencil', 'route' => 'NetElement.edit', 'link' => $this->id]];
-        // }
-
         $enabledModules = Module::collections();
 
         if ($enabledModules->has('CoreMon') && in_array($this->base_type_id, [1, 16, 17, 18, 19, 20, 21, 22, 23])) {
@@ -1151,38 +1142,22 @@ class NetElement extends \BaseModel
         $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
 
         if (! in_array($type, [8, 9])) {
-            $tabs[] = ['name' => trans('view.tab.Topography'), 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
-            $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
-            $tabs[] = ['name' => $i18nModem.' '.trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
+            if ($enabledModules->has('HfcBase')) {
+                $tabs[] = ['name' => trans('view.tab.Topography'), 'icon' => 'map', 'route' => 'TreeTopo.show', 'link' => [$sqlCol, $this->id]];
+            }
+
+            if ($enabledModules->has('HfcCustomer')) {
+                $tabs[] = ['name' => trans('view.tab.Customers'), 'icon' => 'map', 'route' => 'CustomerTopo.show', 'link' => ['netelement_id', $this->id]];
+                $tabs[] = ['name' => $i18nModem.' '.trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'CustomerModem.showDiagrams', 'link' => ['id' => $this->id]];
+            }
         }
 
-        $lastIndex = array_key_last($tabs);
-        if (! $enabledModules->has('HfcBase')) {
-            $tabs[$lastIndex - 3]['route'] = $tabs[$lastIndex - 2]['route'] = 'missingModule';
-            $tabs[$lastIndex - 3]['link'] = $tabs[$lastIndex - 2]['link'] = 'HfcBase';
-        }
-
-        if (! $enabledModules->has('HfcCustomer')) {
-            $tabs[$lastIndex - 1]['route'] = $tabs[$lastIndex]['route'] = 'missingModule';
-            $tabs[$lastIndex - 1]['link'] = $tabs[$lastIndex]['link'] = 'HfcCustomer';
-        }
-
-        if (! in_array($type, [1, 8, 9])) {
+        if (! in_array($type, [1, 8, 9]) && $enabledModules->has('HfcSnmp')) {
             $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'wrench', 'route' => 'NetElement.controlling_edit', 'link' => [$this->id, 0, 0]];
         }
 
-        if (! $enabledModules->has('HfcSnmp')) {
-            $tabs[array_key_last($tabs)]['route'] = 'missingModule';
-            $tabs[array_key_last($tabs)]['link'] = 'HfcSnmp';
-        }
-
-        if ($type == 9) {
+        if ($type == 9 && $enabledModules->has('Satkabel')) {
             $tabs[] = ['name' => trans('view.tab.Controlling'), 'icon' => 'bar-chart fa-rotate-90', 'route' => 'NetElement.tapControlling', 'link' => [$this->id]];
-
-            if (! $enabledModules->has('Satkabel')) {
-                $tabs[array_key_last($tabs)]['route'] = 'missingModule';
-                $tabs[array_key_last($tabs)]['link'] = 'Satkabel';
-            }
         }
 
         if ($type == 3 && $this->prov_device_id) {
@@ -1209,17 +1184,8 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! in_array($type, [1, 4, 5, 8, 9])) {
+        if (! in_array($type, [1, 4, 5, 8, 9]) && $provmonEnabled && $enabledModules->has('HfcCustomer')) {
             $tabs[] = ['name' => $i18nNetElement.' '.trans('view.tab.Diagrams'), 'icon' => 'area-chart', 'route' => 'ProvMon.diagram_edit', 'link' => [$this->id]];
-
-            if (! $provmonEnabled && Module::collections()->has('HfcCustomer')) {
-                $tabs[array_key_last($tabs)]['route'] = 'missingModule';
-                $tabs[array_key_last($tabs)]['link'] = 'Prime Monitoring & Prime Detect';
-            }
-        }
-
-        if (isset($coremonTabs)) {
-            $tabs = array_merge($coremonTabs, $tabs);
         }
 
         return $tabs;
