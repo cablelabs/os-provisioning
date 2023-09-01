@@ -71,12 +71,22 @@ export default {
       tabStates.value[tabName] = true
     }
 
+    function transformScroll(event) {
+      if (!event.deltaY) {
+        return;
+      }
+
+      event.currentTarget.scrollLeft += event.deltaY + event.deltaX;
+      event.preventDefault();
+    }
+
     return {
       store,
       loggingTab,
       toggleLoggingTab,
       tabStates,
-      setActiveTab
+      setActiveTab,
+      transformScroll,
     }
   }
 }

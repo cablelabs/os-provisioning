@@ -65,12 +65,12 @@
         @yield('contentLeftLeft')
         <div class="flex flex-1 overflow-y-auto">
             <div class="flex flex-1 card card-inverse">
-                <ul class="hidden py-2 space-x-2 overflow-x-auto list-none md:flex dark:bg-slate-800 dark:text-slate-100 whitespace-nowrap">
+                <ul v-on:wheel.stop="transformScroll" class="hidden py-2 space-x-2 overflow-x-auto scrollbar scrollbar-h-1 scrollbar-thumb-gray-500 scrollbar-track-gray-100 list-none md:flex dark:bg-slate-800 dark:text-slate-100 whitespace-nowrap">
                     @yield('content_top')
                 </ul>
                 @if(isset($tabs))
-                <div class="flex px-2 pt-0 overflow-x-auto border-b border-gray-300 shadow-md dark:bg-slate-900 bg-slate-300 dark:border-slate-900 d-print-none whitespace-nowrap">
-                    <ul id="tabs" class="flex items-center w-full px-2 text-black dark:text-slate-100">
+                <div id="tabs" v-on:wheel.stop="transformScroll" class="flex px-2 pt-0 overflow-x-auto scrollbar scrollbar-h-1 scrollbar-thumb-gray-500 scrollbar-track-gray-100 border-b border-gray-300 shadow-md dark:bg-slate-900 bg-slate-300 dark:border-slate-900 d-print-none whitespace-nowrap">
+                    <ul class="flex items-center w-full px-2 text-black dark:text-slate-100">
                         @foreach ($tabs as $tab)
                             {{-- Logging tab --}}
                             @if ($tab['name'] == "Logging")

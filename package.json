@@ -23,6 +23,7 @@
         "path": "^0.12.7",
         "postcss": "^8.4.14",
         "postcss-purgecss-laravel": "^2.0.0",
+        "tailwind-scrollbar": "^3.0.5",
         "tailwindcss": "^3.1.4",
         "vue-loader": "^17.1.0"
     },
