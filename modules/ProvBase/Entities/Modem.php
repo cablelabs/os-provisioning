@@ -2780,14 +2780,14 @@ class Modem extends \BaseModel
 
             // lease calculation
             // take care changing the state - it's used under cpe analysis
-            $lease['state'] = 'green';
+            $lease['state'] = 'text-green-600';
             $lease['forecast'] = "$type has a valid lease.";
             if ($endtime < \Carbon\Carbon::now()) {
-                $lease['state'] = 'red';
+                $lease['state'] = 'text-red-600';
                 $lease['forecast'] = 'Lease is out of date';
             }
         } else {
-            $lease['state'] = $onlineTr069 ? 'orange' : 'red';
+            $lease['state'] = $onlineTr069 ? 'text-orange-600' : 'text-red-600';
             $lease['forecast'] = trans('messages.modem_lease_error');
         }
 

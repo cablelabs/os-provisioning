@@ -49,9 +49,9 @@
     <div class="tab-content h-80">
         <div class="tab-pane" id="ping-test">
             @if ($online)
-                <span color="green"><b>Modem is Online</b></span><br>
+                <div class="font-semibold text-green-600 pb-2"><b>Modem is Online</b></div>
             @else
-                <span color="red">{{ trans('messages.modem_offline') }}</span>
+                <div class="font-semibold text-red-600">{{ trans('messages.modem_offline') }}</div>
             @endif
             {{-- pings are appended dynamically here by javascript --}}
         </div>
@@ -108,7 +108,7 @@
                 <tbody>
                     <!-- <td/> -->
                     @foreach ($radius['DT_Current Session'] as $colHeader => $colData)
-                        <td class="text-center"><span color="grey"> {{ $colData[0] }}</span></td>
+                        <td class="text-center">{{ $colData[0] }}</td>
                     @endforeach
                 </tbody>
             </table>

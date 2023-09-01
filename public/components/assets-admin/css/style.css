@@ -1550,15 +1550,6 @@ label {
 
 
 /* 3.12 Component - Tab Content */
-
-.tab-content {
-    padding: 15px;
-    margin-bottom: 20px;
-    background: var(--tab-content);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
 .nav-tabs + .tab-content {
     -webkit-border-radius: 0 0 3px 3px;
     -moz-border-radius: 0 0 3px 3px;

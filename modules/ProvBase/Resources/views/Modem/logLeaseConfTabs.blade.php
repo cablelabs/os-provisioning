@@ -18,7 +18,7 @@
 ?>
 <div class="tab-pane fade in" id="log">
     @if ($log)
-        <span color="green"><b>Modem Logfile</b></span><br>
+        <span class="text-green-600"><b>Modem Logfile</b></span><br>
         @foreach ($log as $line)
             <table>
                 <tr>
@@ -29,12 +29,12 @@
             </table>
         @endforeach
     @else
-        <span color="red">{{ trans('messages.modem_log_error') }}</span>
+        <span class="text-red-600">{{ trans('messages.modem_log_error') }}</span>
     @endif
 </div>
 <div class="tab-pane fade in" id="lease">
     @if ($lease)
-        <span color="{{$lease['state']}}"><b>{{$lease['forecast']}}</b></span><br>
+        <span class="{{ $lease['state'] }}"><b>{{ $lease['forecast'] }}</b></span><br>
         @foreach ($lease['text'] as $line)
             <table>
                 <tr>
@@ -45,15 +45,15 @@
             </table>
         @endforeach
     @else
-        <span color="red">{{ trans('messages.modem_lease_error')}}</span>
+        <span class="text-red-600">{{ trans('messages.modem_lease_error')}}</span>
     @endif
 </div>
 <div class="tab-pane fade in" id="configfile">
     @if ($configfile)
         @if ($modem->configfile->device != 'tr069')
-            <span color="green"><b>Modem Configfile ({{$configfile['mtime']}})</b></span><br>
+            <span class="text-green-600"><b>Modem Configfile ({{$configfile['mtime']}})</b></span><br>
             @if (isset($configfile['warn']))
-                <span color="red"><b>{{$configfile['warn']}}</b></span><br>
+                <span class="text-red-600"><b>{{$configfile['warn']}}</b></span><br>
             @endif
         @else
             <?php
@@ -122,7 +122,7 @@
             </table>
         @endforeach
     @else
-        <span color="red">{{ trans('messages.modem_configfile_error')}}</span>
+        <span class="text-red-600">{{ trans('messages.modem_configfile_error')}}</span>
     @endif
 </div>
 
@@ -151,7 +151,7 @@
             </table>
         </div>
     @else
-        <span color="red">{{ trans('messages.modem_eventlog_error')}}</span>
+        <span class="text-red-600">{{ trans('messages.modem_eventlog_error')}}</span>
     @endif
 </div>
 

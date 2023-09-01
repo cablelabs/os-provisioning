@@ -35,7 +35,7 @@
         @if (isset($lease['ipv6']))
             <h4> IPv4 </h4>
         @endif
-        <span color="{{$lease['state']}}"><b>{!!$lease['forecast']!!}</b></span><br>
+        <span class="{{ $lease['state'] }}"><b>{!! $lease['forecast'] !!}</b></span><br>
         <table>
             @foreach ($lease['text'] as $line)
                 <tr><td><span color="grey">{!!$line!!}</span></td></tr>
@@ -77,29 +77,29 @@
             </div>
         @endif
     @else
-        <span color="red">{{ trans('messages.modem_lease_error')}}</span>
+        <span class="text-red-600">{{ trans('messages.modem_lease_error')}}</span>
     @endif
 
 @stop
 
 @section('content_log')
     @if ($log)
-        <span color="green"><b>{{$type}} Logs</b></span><br>
+        <span class="text-green-600"><b>{{$type}} Logs</b></span><br>
         <table>
             @foreach ($log as $line)
                 <tr><td><span color="grey">{{$line}}</span></td></tr>
             @endforeach
         </table>
     @else
-        <span color="red">{{$type.' '.trans('messages.cpe_log_error')}}</span>
+        <span class="text-red-600">{{$type.' '.trans('messages.cpe_log_error')}}</span>
     @endif
 @stop
 
 @section('content_configfile')
     @if (isset($configfile))
-        <span color="green"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></span><br>
+        <span class="text-green-600"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></span><br>
         @if (isset($configfile['warn']))
-            <span color="red"><b>{{$configfile['warn']}}</b></span><br>
+            <span class="text-red-600"><b>{{$configfile['warn']}}</b></span><br>
         @endif
         <table>
             @foreach ($configfile['text'] as $line)
@@ -107,7 +107,7 @@
             @endforeach
         </table>
     @else
-        <span color="red">{{ trans('messages.mta_configfile_error')}}</span>
+        <span class="text-red-600">{{ trans('messages.mta_configfile_error')}}</span>
     @endif
 @stop
 
@@ -124,7 +124,7 @@
             @endforeach
         </table>
     @else
-        <span color="red">{{$type}} is Offline</span> <br>
+        <span class="text-red-600">{{$type}} is Offline</span> <br>
     @endif
 
 @stop
