@@ -208,7 +208,7 @@
                                 }"
                                 style="z-index:10000;">
                                 <div class="flex recolor sidebar-element">
-                                    <a class="flex caret-link"
+                                    <a class="flex caret-link items-center no-underline"
                                         v-on:click="{{ isset($typearray['link']) ? "!store.minified ? setMenu('{$moduleNameSlug}', false) : ''" : "setMenu('{$moduleNameSlug}')" }}"
                                         href="{{ isset($typearray['link']) ? route($typearray['link']) : 'javascript:;' }}">
                                         @if (is_file(public_path('images/apps/') . $typearray['icon']))
@@ -216,9 +216,9 @@
                                                 class="mr-2"
                                                 style="height: 20px; filter: saturate(25%) brightness(80%);">
                                         @else
-                                            <i class="fa fa-fw {{ $typearray['icon'] }} mr-2"></i>
+                                            <i class="fa fa-fw fa-lg {{ $typearray['icon'] }} mr-2 self-baseline"></i>
                                         @endif
-                                        <span class="text-ellipsis">{{ $typearray['translated_name'] ?? $module_name }}</span>
+                                        <span class="text-ellipsis hover:underline">{{ $typearray['translated_name'] ?? $module_name }}</span>
                                     </a>
                                     @if (isset($typearray['submenu']))
                                         <a class="flex-1 caret-link" href="javascript:;"
