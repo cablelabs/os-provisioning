@@ -18,7 +18,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -108,14 +107,16 @@ class GlobalConfigController extends BaseController
         $route_name = 'Config.index';
 
         $enabled = Module::allEnabled();
-        $moduleControllers = [0 => $this];
-        $moduleModels = [0 => static::get_model_obj()->first()];
+        $slug = Str::slug('Global Config', '_');
+        $moduleControllers[$slug] = $this;
+        $moduleModels[$slug] = static::get_model_obj()->first();
 
-        $links = [0 => ['name' => 'Global Config',
-            'link' => 'GlobalConfig', ],
+        $links[$slug] = [
+            'name' => $slug,
+            'local' => 'Global Config',
+            'link' => 'GlobalConfig',
         ];
 
-        $i = 1;
         foreach ($enabled as $module) {
             $mod_path = explode('/', $module->getPath());
             $tmp = end($mod_path);
@@ -127,24 +128,30 @@ class GlobalConfigController extends BaseController
             if (method_exists($modController, 'view_form_fields') &&
                 Bouncer::can('view', $modModelNamespace)) {
                 $modModel = new $modModelNamespace();
+                $slug = Str::slug(trans("view.$tmp"), '_');
 
-                $moduleControllers[$i] = $modController;
-                $moduleModels[$i] = $modModel->first();
+                $moduleControllers[$slug] = $modController;
+                $moduleModels[$slug] = $modModel->first();
 
-                Arr::set($links, $i.'.name', trans("view.$tmp"));
-                Arr::set($links, $i.'.link', $tmp);
-
-                $i++;
+                $links[$slug] = [
+                    'name' => $slug,
+                    'local' => trans("view.$tmp"),
+                    'link' => $tmp,
+                ];
             }
         }
 
         // Add SLA Tab
         if (Bouncer::can('view', '\App\Sla')) {
-            $moduleControllers[$i] = new \App\Http\Controllers\SlaController();
+            $slug = Str::lower('SLA');
+            $moduleControllers[$slug] = new \App\Http\Controllers\SlaController();
             $sla_model = new \App\Sla();
-            $moduleModels[$i] = $sla_model->first();
-            $links[$i] = ['name' => 'SLA', 'link' => 'Sla'];
-            $i++;
+            $moduleModels[$slug] = $sla_model->first();
+            $links[$slug] = [
+                'name' => $slug,
+                'local' => 'SLA',
+                'link' => 'Sla',
+            ];
         }
 
         foreach ($moduleControllers as $key => $controller) {
