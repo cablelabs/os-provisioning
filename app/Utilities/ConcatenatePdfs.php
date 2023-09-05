@@ -49,6 +49,7 @@ class ConcatenatePdfs extends Process
             '-dNumRenderingThreads=6',
             '-dBATCH',
             '-dNOPAUSE',
+            '-dRENDERTTNOTDEF',
             $this->shouldTrackProgress ? null : '-q', // Progress tracking relies on verbose output
             '-sDEVICE=pdfwrite',
             '-sOutputFile='.$this->outputFile,
