@@ -669,6 +669,7 @@ return [
         'new_customers' => 'Neue Kunden',
         'items' => 'Artikel',
         'new_items' => 'Neue Artikel',
+        'revenue' => 'Umsatz',
         'revenue_from' => 'Umsatz',
         'revenue_change' => 'Umsatzänderung',
         'created_at' => 'Erstellt',

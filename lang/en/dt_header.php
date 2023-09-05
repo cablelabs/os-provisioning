@@ -668,6 +668,7 @@ return [
         'new_customers' => 'New Customers',
         'items' => 'Items',
         'new_items' => 'New Items',
+        'revenue' => 'Revenue',
         'revenue_from' => 'Revenue From',
         'revenue_to' => 'Revenue To',
         'revenue_change' => 'Revenue Change',
