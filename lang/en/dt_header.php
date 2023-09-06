@@ -670,7 +670,6 @@ return [
         'new_items' => 'New Items',
         'revenue' => 'Revenue',
         'revenue_from' => 'Revenue From',
-        'revenue_to' => 'Revenue To',
         'revenue_change' => 'Revenue Change',
         'created_at' => 'Created',
     ],
