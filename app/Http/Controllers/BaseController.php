@@ -1644,33 +1644,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Grep Log entries of all severity Levels above the specified one of a specific Logfile
-     *
-     * @author Nino Ryschawy
-     *
-     * @return array Last Log entry first
-     */
-    public static function get_logs($filename, $severity_level = Logger::DEBUG)
-    {
-        $levels = Logger::getLevels();
-
-        foreach ($levels as $key => $value) {
-            if ($severity_level <= $value) {
-                break;
-            }
-
-            unset($levels[$key]);
-        }
-
-        $levels = implode('\|', array_keys($levels));
-        $filename = $filename[0] == '/' ? $filename : storage_path("logs/$filename");
-
-        exec("grep \"$levels\" $filename", $logs);
-
-        return array_reverse($logs);
-    }
-
-    /**
      * Process datatables ajax request.
      *
      * For Performance tests and fast Copy and Paste: $start = microtime(true) and $end = microtime(true);
