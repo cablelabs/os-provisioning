@@ -30,7 +30,7 @@
 @section('content_top')
 
 	{!! $headline !!}
-	<li class='px-2'><a onMouseOver="this.style.backgroundColor='#FFFFFF'"><span>{{ \App\Http\Controllers\BaseViewController::translate_view('Create', 'Header') }}</span></a></li>
+	<li class='px-2 flex items-center'><a onMouseOver="this.style.backgroundColor='#FFFFFF'"><span>{{ \App\Http\Controllers\BaseViewController::translate_view('Create', 'Header') }}</span></a></li>
 
 @stop
 
