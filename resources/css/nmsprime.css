@@ -208,8 +208,8 @@ table .index_check {
 .table > thead > tr.active > th,
 .table > tbody > tr.active > th,
 .table > tfoot > tr.active > th {
-    background: var(--gray-200);
-    border-color: var(--gray-300);
+    background: var(--gray-100);
+    border-color: var(--gray-200);
     color: var(--gray-500);
 }
 
