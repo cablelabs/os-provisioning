@@ -1713,7 +1713,7 @@ class Contract extends \BaseModel
             return false;
         }
 
-        $parser = new \Modules\OverdueDebts\Entities\DefaultTransactionParser;
+        $parser = new \Modules\OverdueDebts\Utils\DefaultTransactionParser;
         $debts = clone $this->debts;
 
         // Filter special debts to exclude (special voucher number and customer had less then 4 weeks to pay)
