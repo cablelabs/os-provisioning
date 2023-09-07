@@ -1807,6 +1807,16 @@ class BaseController extends Controller
                 $model->view_icon().$content.'</strong></a>';
         });
 
+        if (in_array('created_at', $headerFields) || in_array("{$model->table}.created_at", $headerFields)) {
+            $DT->editColumn('created_at', function ($model) {
+                if (! $model->created_at instanceof \Carbon\Carbon) {
+                    return;
+                }
+
+                return $model->created_at->toDateTimeString();
+            });
+        }
+
         foreach ($editColumnData as $column => $functionname) {
             if ($column == $firstColumn) {
                 $DT->editColumn($column, function ($model) use ($functionname) {
