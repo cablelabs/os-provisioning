@@ -28,6 +28,10 @@
 @stop
 
 @section('content_left')
+    @php
+      $blade_type = 'index_list'
+    @endphp
+    @include('Generic.above_infos')
 
     @DivOpen(12)
 
