@@ -18,15 +18,16 @@
 
 namespace App;
 
+use App\Http\Controllers\BaseViewController;
+use App\Observers\BaseObserver;
 use DB;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
-use Str;
 use Module;
 use Schema;
 use Session;
-use App\Observers\BaseObserver;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Str;
 
 /**
  *	Class to add functionality – use instead of Eloquent for your models
@@ -693,7 +694,7 @@ class BaseModel extends Eloquent
         // always return this value (also in your derived classes!)
         $deleted = $this->_delete();
         $class = $this->get_model_name();
-        $translatedClass = trans("messages.{$class}") != "messages.{$class}" ?: trans_choice("view.Header_{$class}", 1);
+        $translatedClass = BaseViewController::getTranslatedClassName($class);
 
         if ($deleted) {
             $msg = trans('messages.base.delete.success', ['model' => $translatedClass, 'id' => $this->id]);

@@ -135,6 +135,21 @@ class BaseViewController extends Controller
     }
 
     /**
+     * Get translation of class name
+     *
+     * @return string
+     */
+    public static function getTranslatedClassName($class, $count = 1)
+    {
+        // Look in view.php first
+        if (trans("view.Header_{$class}") != "view.Header_{$class}") {
+            return trans_choice("view.Header_{$class}", $count ?: 1);
+        }
+
+        return trans("messages.{$class}");
+    }
+
+    /**
      * Generate the Array for Language selection in select fields
      *
      * @param  array  $languageArray  or iterable
