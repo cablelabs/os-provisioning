@@ -46,7 +46,7 @@
 @stop
 
 @section('content_ping')
-    <div class="tab-content h-80">
+    <div class="tab-content h-80 p-3.5">
         <div class="tab-pane" id="ping-test">
             @if ($online)
                 <div class="font-semibold text-green-600 pb-2"><b>Modem is Online</b></div>
@@ -65,7 +65,7 @@
                         </select2>
                     </div>
                     <div class="text-center">
-                        <button class="btn btn-primary" type="submit" style="margin-left: 10px; margin-bottom: 10px;">{{ trans('view.modemAnalysis.sendPing') }}</button>
+                        <button class="btn btn-primary ml-2.5 mb-2.5" type="submit">{{ trans('view.modemAnalysis.sendPing') }}</button>
                     </div>
                 </div>
             </form>
