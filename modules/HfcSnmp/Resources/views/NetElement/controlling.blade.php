@@ -43,7 +43,9 @@
             @if ($netelement->controlling_link)
                 {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
             @endif
-            <button type="button" id="stop-button" class="btn btn-primary mb-3 ml-5 mr-4" onclick="subscribe()">auto update</button>
+            <div id="stop-button" class="btn mr-4 border border-gray-800 btn-outline-dark" title="Autorefresh" onclick="subscribe()">
+                <i class="fa fa-refresh mr-0"></i>
+            </div>
         </div>
     @endif
 
@@ -203,8 +205,9 @@
                 console.log('Listening to channel ' + channel);
             });
 
-        $('#stop-button').html('stop');
-        $('#stop-button').attr("onclick", "unsubscribe(true)");
+        document.getElementById('stop-button').classList.remove('btn-outline-dark')
+        document.getElementById('stop-button').classList.add('btn-dark')
+        document.getElementById('stop-button').onclick = () => unsubscribe(true)
     }
 
     /**
@@ -221,8 +224,9 @@
         echo.leave(channel);
         console.log('Leave channel ' + channel);
 
-        $('#stop-button').html('auto update');
-        $('#stop-button').attr("onclick", "subscribe()");
+        document.getElementById('stop-button').classList.remove('btn-dark')
+        document.getElementById('stop-button').classList.add('btn-outline-dark')
+        document.getElementById('stop-button').onclick = () => subscribe()
     }
 
     // Only listen in active tab
