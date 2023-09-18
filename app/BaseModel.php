@@ -551,6 +551,7 @@ class BaseModel extends Eloquent
             'configfile_id',
             'costcenter_id',
             'country_id',	// not used yet
+            'debt_import_id',
             //'mibfile_id',
             //'oid_id',
             'node_id',
