@@ -882,4 +882,7 @@ return [
     'switchdate'                => 'Switchdate',
     'timestamp'                 => 'Timestamp',
     'wishdate'                  => 'Wishdate',
+    'worker' => [
+        'stopped' => 'The background process to perform the job is not running. Please refer to your administrator!',
+    ],
 ];

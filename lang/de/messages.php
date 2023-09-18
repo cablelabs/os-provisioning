@@ -882,4 +882,7 @@ return [
     'switchdate'                => 'Schaltdatum',
     'timestamp'                 => 'Zeitpunkt',
     'wishdate'                  => 'Wunschdatum',
+    'worker' => [
+        'stopped' => 'Der Hintergrundprozess zum Abarbeiten von Jobs läuft nicht. Bitte wenden Sie sich an Ihren Administrator!',
+    ],
 ];

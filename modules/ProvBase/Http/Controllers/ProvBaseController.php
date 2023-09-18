@@ -89,6 +89,8 @@ class ProvBaseController extends BaseController
      * As stated in https://www.php.net/manual/en/function.flush.php,
      * you sometimes need to send whitespace if you want the browser to display the data.
      *
+     * TODO: Please use function serverSentEventResponse() in helpers.php when this is changed next time
+     *
      * @param  string
      * @return \Illuminate\Http\Response
      *
