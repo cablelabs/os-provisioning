@@ -1675,9 +1675,10 @@ class Contract extends \BaseModel
         //     ->groupBy('contract_id')
         //     ->select('missing_amount')
         //     ->sum('missing_amount');
+
         $block = false;
         if (config('overduedebts.debtMgmtType') == 'csv') {
-            $block = $this->blockInetFromDebts();
+            $block = $this->shouldDebtsBlockInetAccess();
         }
 
         $totalAmount = 0;
@@ -1707,9 +1708,9 @@ class Contract extends \BaseModel
      *
      * @return bool internet should be blocked
      */
-    public function blockInetFromDebts()
+    public function shouldDebtsBlockInetAccess()
     {
-        if (! Module::collections()->has('OverdueDebts')) {
+        if (Module::collections()->has('OverdueDebts')) {
             return false;
         }
 

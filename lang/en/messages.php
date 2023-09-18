@@ -76,6 +76,7 @@ return [
     ],
     'Debt'                      => 'Debt',
     'debtImport' => [
+        'noBlockConf' => 'Skip automatic internet blocking as no thresholds are configured.',
         'wait' => 'There is currently an import running or debts are deleted. Please wait and reload the page if you want to create another import.',
     ],
     'Debt to clear'             => 'Debt to clear',

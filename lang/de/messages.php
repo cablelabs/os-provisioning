@@ -76,6 +76,7 @@ return [
     ],
     'Debt'                      => 'Offener Posten',
     'debtImport' => [
+        'noBlockConf' => 'Überspringe automatische Internetblockierfunktion, da keine Schwellwerte konfiguriert wurden.',
         'wait' => 'Es läuft gerade ein Import oder Offene Posten werden gelöscht. Bitte warten Sie und laden Sie die Seite neu, wenn Sie einen neuen Import durchführen wollen.',
     ],
     'Debt to clear'             => 'Zu verrechnender OP',
