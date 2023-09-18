@@ -272,6 +272,7 @@ return [
     'Header_Contact'            => 'Ansprechpartner / Hausverwaltungen',
     'Header_Documents'          => 'Dokumente',
     'Header_Debt'               => 'Offene Posten',
+    'Header_DebtImport'         => 'OP-Import',
     'Header_DebtResult'         => 'Summe offener Posten',
     'Header_Node'               => 'Übergabepunkte',
     'Header_Realty'             => 'Liegenschaften',
@@ -417,7 +418,7 @@ return [
         'Configfile' => 'eine Konfigurationsdatei',
         'Contact' => 'einen Ansprechpartner',
         'Contract' => 'einen Vertrag',
-        'fiberName' => 'einen Namen der Glasfaser',
+        'fiberName' => 'einen Glasfasernamen',
         'Mta' => 'ein MTA',
         'NetElement' => 'ein Netzelement',
         'NetElementType' => 'ein Netzelementtyp',
@@ -427,7 +428,6 @@ return [
         'provDevice' => 'ein entsprechendes Gerät aus dem Provisionierungsmodul',
         'Realty' => 'eine Liegenschaft',
         'Qos' => 'ein QOS',
-        'fiberName' => 'einen Glasfasernamen',
     ],
 
     // Index

@@ -272,6 +272,7 @@ return [
     'Header_Contact'            => 'Contacts',
     'Header_Documents'          => 'Documents',
     'Header_Debt'               => 'Debt History',
+    'Header_DebtImport'         => 'Debt Import',
     'Header_DebtResult'         => 'Outstanding payments total',
     'Header_Node'               => 'Nodes',
     'Header_Realty'             => 'Realties',
