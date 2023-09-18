@@ -800,8 +800,8 @@ class BaseController extends Controller
         $model = static::get_model_obj();
         $headline = BaseViewController::translate_view($model->view_headline(), 'Header', 2);
         $view_header = BaseViewController::translate_view('Overview', 'Header');
-        $create_allowed = static::get_controller_obj()->index_create_allowed;
-        $delete_allowed = static::get_controller_obj()->index_delete_allowed;
+        $create_allowed = $this->index_create_allowed;
+        $delete_allowed = $this->index_delete_allowed;
 
         if ($this->index_tree_view) {
             // TODO: remove orWhere statement when it is sure that parent_id is nullable and can not be 0 in all NMSPrime instances and after new installation!!!

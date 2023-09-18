@@ -75,6 +75,9 @@ return [
         'revert' => 'Delete debts',
     ],
     'Debt'                      => 'Debt',
+    'debtImport' => [
+        'wait' => 'There is currently an import running or debts are deleted. Please wait and reload the page if you want to create another import.',
+    ],
     'Debt to clear'             => 'Debt to clear',
     'Debt Management Type'      => 'Debt Management Type',
     'Default country code'      => 'Default country code',
