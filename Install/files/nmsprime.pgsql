@@ -920,7 +920,7 @@ CREATE TABLE nmsprime.debt (
     number character varying(191),
     voucher_nr character varying(191),
     due_date date,
-    cleared boolean,
+    cleared boolean DEFAULT false,
     indicator smallint,
     dunning_date date,
     parent_id bigint,
