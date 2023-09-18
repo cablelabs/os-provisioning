@@ -29,7 +29,6 @@ use Cache;
 use Illuminate\Support\Facades\File;
 use Log;
 use Modules\CoreMon\Helpers\AlertmanagerApi;
-use Monolog\Logger;
 use Nwidart\Modules\Facades\Module;
 use Redirect;
 use Request;
