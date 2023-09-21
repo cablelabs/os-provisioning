@@ -794,6 +794,7 @@ return [
     'redirectNote' => 'You are not logged in and tried to access an internal page. After a successful login you are redirected to:',
     'showChanges' => 'Show the change|Show :num changes',
     'statsSummary' => [
+        'considerUpsell' => 'Consider product upsell',
         'emptyResult' => [
             'activeCustomers' => 'No active customers',
             'activeItems' => 'No active items',
@@ -811,6 +812,7 @@ return [
             'revenue' => 'Revenue',
             'revenueIncrease' => 'Revenue increase of active new customers',
         ],
+        'splitCombi' => 'Split combi packages',
     ],
     'SettlementRun' => 'SettlementRun',
     'SipDevices' => 'SIP Devices',

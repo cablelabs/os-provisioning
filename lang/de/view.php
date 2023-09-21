@@ -794,6 +794,7 @@ return [
     'redirectNote' => 'Sie sind nicht eingeloggt und versuchen auf eine interne Seite zuzugreifen.Nach dem Log-In werden Sie direkt weitergeleitet zu',
     'showChanges' => 'Zeige Änderung|Zeige :num Änderungen',
     'statsSummary' => [
+        'considerUpsell' => 'Product-Upsell einbeziehen',
         'emptyResult' => [
             'activeCustomers' => 'Keine aktiven Kunden',
             'activeItems' => 'Keine aktiven Posten',
@@ -811,6 +812,7 @@ return [
             'revenue' => 'Umsatz aktiver Kunden',
             'revenueIncrease' => 'Umsatzsteigerung aktiver Neukunden',
         ],
+        'splitCombi' => 'Kombipakete aufteilen',
     ],
     'SettlementRun' => 'Abrechnungslauf',
     'SipDevices' => 'SIP Geräte',
