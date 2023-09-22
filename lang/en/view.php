@@ -778,6 +778,7 @@ return [
             'quarterly' => 'quarterly',
             'yearly' => 'yearly',
         ],
+        'parentId' => 'Combined with',
         'types' => [
             'credit' => 'Credit',
             'device' => 'Device',

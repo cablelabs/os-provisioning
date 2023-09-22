@@ -63,6 +63,7 @@ return [
         'maturity_min'          => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'maturity'              => 'Laufzeitverlängerung nach der Mindestlaufzeit. <br> Die Gesamtlaufzeit wird automatisch um diese Zeit verlängert, wenn der Tarif nicht vor der Kündigungsfrist gekündigt wurde. Default: 1 Monat. Wird keine Laufzeit angegeben, wird das Laufzeitende des Tarifs immer auf den letzten Tag des Monats gesetzt. <br><br> Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'Name'                  => 'Für Kredite ist es möglich einen Typ zuzuweisen, indem der Typname dem Namen des Kredits angefügt wird - z.B.: \'Kredit Gerät\'',
+        'parentId' => 'Wählen Sie hier den Basis-Tarif aus, mit dem dieses Produkt einen Kombinationstarif bildet. Aktuell wird dies nur zur Auswertung für Statistiken genutzt und hat sonst keine weitere Funktion.',
         'pod'                   => 'Beispiele: 14D (14 Tage), 3M (Drei Monate), 1Y (Ein Jahr)',
         'proportional'          => 'Setzen Sie diesen Haken, wenn Posten, die innerhalb des aktuellen Abrechnungszyklus beginnen, anteilig berechnet werden sollen. Somit würde bei einem monatlich abzurechnenden Produkt mit Beginn in der Mitte des Monats im aktuellen Abrechnungszyklus nur die Hälfte des vollen Preises abgerechnet werden.',
         'Type'                  => 'Alle Felder außer dem Abrechnungszyklus müssen vor einer Änderung des Produkts gelöscht werden! Andernfalls können die Produkte in den meisten Fällen nicht gespeichert werden.',

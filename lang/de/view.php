@@ -778,6 +778,7 @@ return [
             'quarterly' => 'vierteljährlich',
             'yearly' => 'jährlich',
         ],
+        'parentId' => 'Kombiniert mit',
         'types' => [
             'credit' => 'Gutschrift',
             'device' => 'Gerät',
