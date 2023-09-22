@@ -300,7 +300,7 @@ class NetElement extends \BaseModel
         }
 
         if ($minify) {
-            $query->select(['id', '_lft', '_rgt', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng']);
+            $query->select(['id', '_lft', '_rgt', 'id_name', 'name', 'ip', 'cluster', 'net', 'netelementtype_id', 'netgw_id', 'parent_id', 'link', 'descr', 'lat', 'lng', 'base_type_id']);
         }
 
         if (is_countable($operator)) {
@@ -355,7 +355,7 @@ class NetElement extends \BaseModel
 
     public function scopeTreeQuery($query)
     {
-        return $query->select('id', 'name', 'cluster', 'net', 'ip', 'parent_id', 'prov_device_id', 'netelementtype_id', '_lft', '_rgt')
+        return $query->select('id', 'name', 'id_name', 'cluster', 'net', 'ip', 'parent_id', 'prov_device_id', 'netelementtype_id', '_lft', '_rgt', 'base_type_id')
             ->with(['netelementtype:id,name,base_type_id']);
     }
 

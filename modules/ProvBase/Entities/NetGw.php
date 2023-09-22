@@ -39,7 +39,7 @@ class NetGw extends \BaseModel
     // Attributes
     public $guarded = ['formatted_support_state'];
     protected $appends = ['formatted_support_state'];
-    protected $with = ['ippools', 'netelement:id,cluster,net,ip,parent_id,netelementtype_id,prov_device_id,_lft,_rgt'];
+    protected $with = ['ippools', 'netelement:id,cluster,net,ip,parent_id,base_type_id,netelementtype_id,prov_device_id,_lft,_rgt'];
     protected $without = ['netelement.netelementtype'];
 
     // Add your validation rules here

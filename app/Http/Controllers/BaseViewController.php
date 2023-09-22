@@ -821,7 +821,7 @@ class BaseViewController extends Controller
         if (in_array($route_name, BaseController::get_config_modules())) {  // parse: Global Config requires own link
             $breadcrumb_path_base = "<div class='flex'><div class='flex flex-col py-1 px-2.5 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>".static::__link_route_html('Config.index', static::__get_view_icon($view_var).self::translate_view('Global Configurations', 'Header'), [], ['class' => 'text-white hover:text:white no-underline']).'</div></div>';
         } else {
-            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='flex'><div class='flex flex-col py-1 !px-3 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40), [], ['class' => 'text-white hover:text:white no-underline']).'</div></div>' : '';
+            $breadcrumb_path_base = Route::has($route_name.'.index') ? "<div class='flex items-center'><div class='flex flex-col py-1 !px-3 text-slate-100 rounded bg-slate-800 hover:bg-slate-900'>".static::__link_route_html($route_name.'.index', static::__get_view_icon($view_var).Str::limit($view_header, 40), [], ['class' => 'text-white hover:text:white no-underline']).'</div></div>' : '';
         }
 
         if (! $breadcrumb_paths) {  // if this array is still empty: put the one and only breadcrumb path in this array
