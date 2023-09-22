@@ -34,7 +34,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('revenue_to', 'revenue_change');
+            $table->decimal('revenue_change', 10, 4);
         });
     }
 
@@ -46,7 +46,7 @@ return new class extends BaseMigration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->renameColumn('revenue_change', 'revenue_to');
+            $table->dropColumn('revenue_change');
         });
     }
 };
