@@ -20,7 +20,7 @@ use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class alterDebtAddImportId extends BaseMigration
+class AlterDebtAddImportId extends BaseMigration
 {
     public $migrationScope = 'database';
     protected $table = 'debt';
