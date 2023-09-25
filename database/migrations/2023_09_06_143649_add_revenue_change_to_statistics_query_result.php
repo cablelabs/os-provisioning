@@ -34,7 +34,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->decimal('revenue_change', 10, 4);
+            $table->decimal('revenue_change', 10, 4)->nullable();
         });
     }
 
