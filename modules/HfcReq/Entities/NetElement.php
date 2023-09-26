@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
+use Modules\ProvBase\Entities\NetGw;
 use Nwidart\Modules\Facades\Module;
 
 class NetElement extends \BaseModel
@@ -162,7 +163,8 @@ class NetElement extends \BaseModel
             return 'info';
         }
 
-        if ($this->netelementtype_id && $this->base_type_id == 9) {
+        // local adjustments
+        if ($this->netelementtype_id && in_array($this->netelementtype_id, [9, 1008, 1009])) {
             switch ($this->state) {
                 case 'C': // off
 
@@ -176,18 +178,23 @@ class NetElement extends \BaseModel
             }
         }
 
-        if (! Module::collections()->has('HfcBase') ||
-            (! array_key_exists('icingaObject', $this->relations) &&
-            ! \Modules\HfcBase\Entities\IcingaObject::db_exists())) {
+        if (! Module::collections()->has('HfcBase') || ! \Modules\HfcBase\Entities\IcingaObject::db_exists()) {
             return 'warning';
         }
 
-        $icingaObj = $this->icingaObject;
-        if ($icingaObj && $icingaObj->is_active) {
-            $icingaObj = $icingaObj->hostStatus;
-            if ($icingaObj) {
-                return $icingaObj->last_hard_state ? 'danger' : 'success';
-            }
+        if (! array_key_exists('icingaObject', $this->relations)) {
+            $this->load([
+                'icingaObject:object_id,objecttype_id,name1,is_active',
+                'icingaObject.hostStatus:host_object_id,last_hard_state',
+            ]);
+        }
+
+        if (! $this->icingaObject) {
+            return 'warning';
+        }
+
+        if ($this->icingaObject->is_active && $this->icingaObject->hostStatus) {
+            return $this->icingaObject->hostStatus->last_hard_state ? 'danger' : 'success';
         }
 
         return 'warning';
