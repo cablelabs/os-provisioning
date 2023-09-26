@@ -311,7 +311,9 @@ class Kernel extends ConsoleKernel
         }
 
         if ($modules->has('VoipMon')) {
-            $schedule->command('voipmon:match_records')->everyFiveMinutes();
+            $schedule->call(function () {
+                Queue::pushOn('low', new \Modules\VoipMon\Jobs\MatchRecordsJob());
+            })->everyFiveMinutes();
             $schedule->command('voipmon:delete_old_records')->daily();
         }
 
