@@ -961,3 +961,7 @@ table.dataTable > tbody > tr.selected > * {
     font-size: 13px !important;
     min-width: 120px;
 }
+
+.bg-info {
+    background-color: var(--cyan-500);
+}
