@@ -25,27 +25,29 @@ $('.jsDateInterval').each(function () {
   `)
 })
 
-$('.jsToggle').click(function (event) {
-  let jqEl = $(this)
-  if (jqEl.hasClass('btn-secondary')) {
-    return
-  }
+$(function () {
+  $('.jsToggle').click(function (event) {
+    let jqEl = $(this)
+    if (jqEl.hasClass('btn-secondary')) {
+      return
+    }
 
-  let jqInputgroup = jqEl.siblings()
-  let input = jqInputgroup.closest('input')[0]
-  jqInputgroup.closest('.btn-secondary').removeClass('btn-secondary')
+    let jqInputgroup = jqEl.siblings()
+    let input = jqInputgroup.closest('input')[0]
+    jqInputgroup.closest('.btn-secondary').removeClass('btn-secondary')
 
-  if (jqEl.hasClass('jsDate')) {
-    input.setAttribute('placeholder', '')
-    input.setAttribute('type', 'date')
-  }
+    if (jqEl.hasClass('jsDate')) {
+      input.setAttribute('placeholder', '')
+      input.setAttribute('type', 'date')
+    }
 
-  if (jqEl.hasClass('jsInterval')) {
-    input.setAttribute('placeholder', '12M')
-    input.setAttribute('type', 'text')
-  }
+    if (jqEl.hasClass('jsInterval')) {
+      input.setAttribute('placeholder', '12M')
+      input.setAttribute('type', 'text')
+    }
 
-  jqEl.addClass('btn-secondary')
+    jqEl.addClass('btn-secondary')
+  })
 })
 
 /* This bit can be used on the entire app over all pages and will work for both tabs and pills.
