@@ -84,7 +84,15 @@ class Mta extends \BaseModel
             return 'danger';
         }
 
-        return 'info';
+        if (! array_key_exists('phonenumbers', $this->relations)) {
+            $this->load('phonenumbers:id,mta_id');
+        }
+
+        if ($this->phonenumbers->count()) {
+            return 'success';
+        }
+
+        return 'warning';
     }
 
     public function label()

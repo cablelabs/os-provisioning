@@ -244,13 +244,12 @@ class PhonebookEntry extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        if (\Module::collections()->has('ProvVoipEnvia')) {
-            // TODO: auth - loading controller from model could be a security issue ?
-            $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonebookEntryController::_get_envia_management_jobs($this);
-        } else {
+        if (! \Module::collections()->has('ProvVoipEnvia')) {
             $ret = [];
         }
+
+        $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+        $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonebookEntryController::_get_envia_management_jobs($this);
 
         return $ret;
     }

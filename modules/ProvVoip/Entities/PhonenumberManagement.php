@@ -173,37 +173,36 @@ class PhonenumberManagement extends \BaseModel
     // View Relation.
     public function view_has_many()
     {
-        if (\Module::collections()->has('ProvVoipEnvia')) {
-            $ret['envia TEL']['EnviaOrder']['class'] = 'EnviaOrder';
-            $ret['envia TEL']['EnviaOrder']['relation'] = $this->_envia_orders;
-            $ret['envia TEL']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
-            $ret['envia TEL']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
-
-            $ret['envia TEL']['EnviaContract']['class'] = 'EnviaContract';
-            $enviacontracts = is_null($this->envia_contract) ? new Collection() : collect([$this->envia_contract]);
-            $ret['envia TEL']['EnviaContract']['relation'] = $enviacontracts;
-            $ret['envia TEL']['EnviaContract']['options']['hide_create_button'] = 1;
-            $ret['envia TEL']['EnviaContract']['options']['hide_delete_button'] = 1;
-
-            $ret['envia TEL']['PhonebookEntry']['class'] = 'PhonebookEntry';
-
-            $relation = $this->phonebookentry;
-
-            // can be created if no one exists, can be deleted if one exists
-            if (is_null($relation)) {
-                $ret['envia TEL']['PhonebookEntry']['relation'] = new Collection();
-                $ret['envia TEL']['PhonebookEntry']['options']['hide_delete_button'] = 1;
-            } else {
-                $ret['envia TEL']['PhonebookEntry']['relation'] = collect([$relation]);
-                $ret['envia TEL']['PhonebookEntry']['options']['hide_create_button'] = 1;
-            }
-
-            // TODO: auth - loading controller from model could be a security issue ?
-            $ret['envia TEL']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
-            $ret['envia TEL']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
-        } else {
+        if (! \Module::collections()->has('ProvVoipEnvia')) {
             $ret = [];
         }
+        $ret['Edit']['EnviaOrder']['class'] = 'EnviaOrder';
+        $ret['Edit']['EnviaOrder']['relation'] = $this->_envia_orders;
+        $ret['Edit']['EnviaOrder']['options']['create_button_text'] = trans('provvoipenvia::view.enviaOrder.createButton');
+        $ret['Edit']['EnviaOrder']['options']['delete_button_text'] = trans('provvoipenvia::view.enviaOrder.deleteButton');
+
+        $ret['Edit']['EnviaContract']['class'] = 'EnviaContract';
+        $enviacontracts = is_null($this->envia_contract) ? new Collection() : collect([$this->envia_contract]);
+        $ret['Edit']['EnviaContract']['relation'] = $enviacontracts;
+        $ret['Edit']['EnviaContract']['options']['hide_create_button'] = 1;
+        $ret['Edit']['EnviaContract']['options']['hide_delete_button'] = 1;
+
+        $ret['Edit']['PhonebookEntry']['class'] = 'PhonebookEntry';
+
+        $relation = $this->phonebookentry;
+
+        // can be created if no one exists, can be deleted if one exists
+        if (is_null($relation)) {
+            $ret['Edit']['PhonebookEntry']['relation'] = new Collection();
+            $ret['Edit']['PhonebookEntry']['options']['hide_delete_button'] = 1;
+        } else {
+            $ret['Edit']['PhonebookEntry']['relation'] = collect([$relation]);
+            $ret['Edit']['PhonebookEntry']['options']['hide_create_button'] = 1;
+        }
+
+        // TODO: auth - loading controller from model could be a security issue ?
+        $ret['Edit']['EnviaAPI']['view']['view'] = 'provvoipenvia::ProvVoipEnvia.actions';
+        $ret['Edit']['EnviaAPI']['view']['vars']['extra_data'] = \Modules\ProvVoip\Http\Controllers\PhonenumberManagementController::_get_envia_management_jobs($this);
 
         return $ret;
     }
