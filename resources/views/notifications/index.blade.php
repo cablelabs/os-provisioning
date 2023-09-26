@@ -19,102 +19,102 @@
 @extends ('Layout.split84-nopanel')
 
 @section('content')
-<div id="app" class="row" style="padding-top:1rem;">
+<div id="app" class="col-md-12 p-2" style="padding-top:1rem;">
     <div class="card w-100 px-2">
-        <h2 class="card-title flex" style="justify-content: space-between;padding:0 1rem;">
-            <div class="flex align-items-baseline">
-              <i class="fa fa-inbox"></i>
-              <div>{{ trans('messages.notifications') }}</div>
-            </div>
-        </h2>
-        <div class="flex flex-column-reverse flex-md-column mb-4">
-            @if ($user->unread_notifications_count)
-                <form action="{{ route('Notifications.markAllRead') }}" method="post">
-                    @csrf
-                    <div class="text-right" style="padding:1rem;">
-                        <button type="submit" class="btn btn-primary"> {{ trans('messages.mark all as read') }}</button>
-                    </div>
-                </form>
-                <table id="datatable" class="w-100 table table-hover" style="border-bottom: 1px solid rgba(0,0,0,.125);">
-                    <thead class="text-dark" style="border-bottom: 3px solid rgba(0,0,0,.125);">
-                        <tr>
-                            <th data-priority="1"></th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="1">
-                                {{ trans('messages.title') }}
-                            </th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;">
-                                {{ trans('messages.details') }}
-                            </th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="10">
-                                {{ trans('messages.State') }}
-                            </th>
-                            <th scope="col" style="padding:0.75rem 1.5rem;background-color: #F8FAFC;" data-priority="1">
-                            </th>
-                        </tr>
-                    </thead>
-            @else
-                <table class="w-100">
-            @endif
-                <tbody>
-                    @forelse($user->unreadNotifications as $notification)
-                        <tr style="border-bottom: 1px solid rgba(0,0,0,.125);">
-                            <td></td>
-                            <td style="padding:1rem">
-                                <div class="flex align-items-center">
-                                    <div style="flex:0 0;">
-                                        @if (isset($notification->data['imgPath']))
-                                            <img src="{{ $notification->data['imgPath'] }}" style="height:2rem;width:2rem;" alt="{{ array_slice(explode('\\', $notification->type), -1)[0] }}">
-                                        @elseif(isset($notification->data['icon']))
-                                            <i class="fa fa-2x {{ $notification->data['icon']['fa'] }} {{ $notification->data['icon']['color'] }}"></i>
-                                        @else
-                                            <i class="fa fa-2x fa-info-circle text-info"></i>
-                                        @endif
-                                    </div>
-                                    <div class="ml-3 text-ellipsis w-full max-w-xs md:max-w-sm">
-                                        <a href="{{ $notification->data['link'] }}" class="font-weight-bold text-dark ">
-                                            {{ trans('view.ticket.notification.'.array_slice(explode('\\', $notification->type), -1)[0]) }}: {{ $notification->data['title'] ?? '' }}
-                                        </a>
-                                        <div class="text-secondary">
-                                            {{ \Carbon\Carbon::parse($notification->getAttributes()['created_at'])->diffForHumans() }} {{ $notification->data['user'] ?? '' }}
+        <div class="card-block">
+            <h3 class="text-2xl flex-1 dark:text-slate-100">
+                <i class="fa fa-inbox"></i>
+                {{ trans('messages.notifications') }}
+            </h3>
+            <div class="flex flex-column-reverse flex-md-column mb-4">
+                @if ($user->unread_notifications_count)
+                    <form action="{{ route('Notifications.markAllRead') }}" method="post">
+                        @csrf
+                        <div class="text-right" style="padding:1rem;">
+                            <button type="submit" class="btn btn-primary"> {{ trans('messages.mark all as read') }}</button>
+                        </div>
+                    </form>
+                    <table id="datatable" class="w-100 table table-hover" style="border-bottom: 1px solid rgba(0,0,0,.125);">
+                        <thead class="text-dark" style="border-bottom: 3px solid rgba(0,0,0,.125);">
+                            <tr>
+                                <th data-priority="1"></th>
+                                <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="1">
+                                    {{ trans('messages.title') }}
+                                </th>
+                                <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;">
+                                    {{ trans('messages.details') }}
+                                </th>
+                                <th scope="col" style="padding:0.75rem 1.5rem;text-transform:uppercase;letter-spacing:0.05em;background-color: #F8FAFC;" data-priority="10">
+                                    {{ trans('messages.State') }}
+                                </th>
+                                <th scope="col" style="padding:0.75rem 1.5rem;background-color: #F8FAFC;" data-priority="1">
+                                </th>
+                            </tr>
+                        </thead>
+                @else
+                    <table class="w-100">
+                @endif
+                    <tbody>
+                        @forelse($user->unreadNotifications as $notification)
+                            <tr style="border-bottom: 1px solid rgba(0,0,0,.125);">
+                                <td></td>
+                                <td style="padding:1rem">
+                                    <div class="flex align-items-center">
+                                        <div style="flex:0 0;">
+                                            @if (isset($notification->data['imgPath']))
+                                                <img src="{{ $notification->data['imgPath'] }}" style="height:2rem;width:2rem;" alt="{{ array_slice(explode('\\', $notification->type), -1)[0] }}">
+                                            @elseif(isset($notification->data['icon']))
+                                                <i class="fa fa-2x {{ $notification->data['icon']['fa'] }} {{ $notification->data['icon']['color'] }}"></i>
+                                            @else
+                                                <i class="fa fa-2x fa-info-circle text-info"></i>
+                                            @endif
+                                        </div>
+                                        <div class="ml-3 text-ellipsis w-full max-w-xs md:max-w-sm">
+                                            <a href="{{ $notification->data['link'] }}" class="font-weight-bold text-dark ">
+                                                {{ trans('view.ticket.notification.'.array_slice(explode('\\', $notification->type), -1)[0]) }}: {{ $notification->data['title'] ?? '' }}
+                                            </a>
+                                            <div class="text-secondary">
+                                                {{ \Carbon\Carbon::parse($notification->getAttributes()['created_at'])->diffForHumans() }} {{ $notification->data['user'] ?? '' }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td style="padding:1rem">
-                                <div class="text-dark">{{ $notification->data['shortDetail'] }}</div>
-                            </td>
-                            <td style="padding:1rem">
-                                <div class="badge badge-danger">
-                                    {{ trans('messages.unread') }}
-                                </div>
-                            </td>
-                            <td style="padding:1rem">
-                                <form class="text-center" action="{{ route('Notifications.markRead', [$notification]) }}" method="post">
-                                    @csrf
-                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="hidden d-md-block text-secondary">
-                                        <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
-                                    </a>
-                                    <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="btn btn-secondary d-mhidden">
-                                        <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
-                                        {{ trans('messages.mark as read') }}
-                                    </a>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="42">
-                                <div class="flex h4" style="padding: 2rem;align-items:center;justify-content:center;">
-                                    <i class="fa fa-info" aria-hidden="true" style="width: 20px;"></i>
-                                    <div class="text-dark">
-                                        {{ trans('messages.No unread Notifications') }}
+                                </td>
+                                <td style="padding:1rem">
+                                    <div class="text-dark">{{ $notification->data['shortDetail'] }}</div>
+                                </td>
+                                <td style="padding:1rem">
+                                    <div class="badge badge-danger">
+                                        {{ trans('messages.unread') }}
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                </td>
+                                <td style="padding:1rem">
+                                    <form class="text-center" action="{{ route('Notifications.markRead', [$notification]) }}" method="post">
+                                        @csrf
+                                        <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="hidden d-md-block text-secondary">
+                                            <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
+                                        </a>
+                                        <a href="javascript;" onclick="this.parentNode.submit(); return false;" class="btn btn-secondary d-mhidden">
+                                            <i class="fa fa-check fa-lg" alt="{{ trans('messages.mark as read') }}"></i>
+                                            {{ trans('messages.mark as read') }}
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="42">
+                                    <div class="flex h4" style="padding: 2rem;align-items:center;justify-content:center;">
+                                        <i class="fa fa-info" aria-hidden="true" style="width: 20px;"></i>
+                                        <div class="text-dark">
+                                            {{ trans('messages.No unread Notifications') }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
