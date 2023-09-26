@@ -220,7 +220,7 @@ class NetGw extends \BaseModel
         //$ret['Base']['NetElement']['relation'] = $this->clusters;
 
         if ($this->netelement) {
-            $ret['NetGw'] = $ret['Edit'];
+            $ret['NetGW'] = $ret['Edit'];
             unset($ret['Edit']);
         }
 

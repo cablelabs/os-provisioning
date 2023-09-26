@@ -1123,6 +1123,13 @@ class NetElement extends \BaseModel
             return array_merge($coremonTabs, $tabs);
         }
 
+        $tabs[] = [
+            'name' => trans_choice('view.Header_NetElement', 1),
+            'icon' => 'pencil',
+            'route' => 'NetElement.edit',
+            'link' => $this->id,
+        ];
+
         $provmonEnabled = $enabledModules->has('ProvMon');
         $type = $this->base_type_id;
 
@@ -1139,6 +1146,10 @@ class NetElement extends \BaseModel
                 'route' => ($type == 3 ? 'NetGw.edit' : 'Modem.edit'),
                 'link' => $this->prov_device_id,
             ];
+
+            if (in_array(request()->route()->getName(), ['Modem.edit', 'NetGw.edit'])) {
+                [$tabs[0], $tabs[1]] = [$tabs[1], $tabs[0]];
+            }
         }
 
         $sqlCol = 'id';

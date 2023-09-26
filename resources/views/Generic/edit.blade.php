@@ -57,7 +57,8 @@
             <div class="tab-content bg-gray-100 dark:bg-slate-900">
                 @foreach ($tabs as $tab)
                     @if (isset($relations[$tab['name']]))
-                        <div v-show="tabStates['{{ $tab['name'] }}']"
+                        <div id="{{ $tab['name'] }}"
+                            v-show="tabStates['{{ $tab['name'] }}']"
                             :class="{'active': tabStates['{{ $tab['name'] }}']}"
                             class="tab-pane {{ $firstTab == $tab['name'] ? 'active' : ''}}">
                             @foreach($relations[$tab['name']] as $view => $relation)

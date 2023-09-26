@@ -57,7 +57,9 @@ export default {
 
       // if everything fails, just set the second tab (first is guilog)
       // to be the active one
-      setActiveTab(props.tabs[1].name)
+      if (props.tabs.length >= 2) {
+        setActiveTab(props.tabs[1].name)
+      }
     }
 
     const loggingTab = ref (false)

@@ -438,7 +438,7 @@ class ModemController extends \BaseController
         ) {
             $tabs = $model->provNetelement->tabs();
             $tabs[] = $defaultTabs[1];
-            unset($tabs[1]['route']);
+            unset($tabs[0]['route']);
 
             return $tabs;
         }

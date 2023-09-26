@@ -160,20 +160,16 @@ class NetGwController extends \BaseController
     {
         $defaultTabs = parent::editTabs($netGw);
 
+        if (\Module::collections()->has('ProvMon')) {
+            $defaultTabs[] = ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $netGw->id];
+        }
+
         if ($netGw->netelement) {
             $tabs = $netGw->netelement->tabs();
-            unset($tabs[1]['route']);
-
+            unset($tabs[0]['route']);
             $tabs[] = $defaultTabs[1];
 
             return $tabs;
-        }
-
-        $defaultTabs[] = ['name' => 'Analyses', 'icon' => 'area-chart', 'route' => 'ProvMon.netgw', 'link' => $netGw->id];
-
-        if (! \Module::collections()->has('ProvMon')) {
-            $defaultTabs[array_key_last($defaultTabs)]['route'] = 'missingModule';
-            $defaultTabs[array_key_last($defaultTabs)]['link'] = 'Prime Monitoring';
         }
 
         return $defaultTabs;
