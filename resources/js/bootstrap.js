@@ -35,6 +35,9 @@ import 'jquery-ui/ui/widgets/autocomplete'
 // bootstrap
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+// jQuery SlimScroll
+import 'jquery-slimscroll/jquery.slimscroll.min.js';
+
 // jstree
 import 'jstree';
 

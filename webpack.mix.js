@@ -109,8 +109,21 @@ mix.compress({
   productionOnly: true,
 });
 
+mix.webpackConfig(webpack => {
+  return {
+      plugins: [
+          new webpack.ProvidePlugin({
+              $: 'jquery',
+              jQuery: 'jquery',
+              'window.jQuery': 'jquery'
+          })
+      ]
+  }
+})
+
 // extract
-mix.extract(['pace-js'], '/js/pace.js');
+mix.extract(['pace-js'], '/js/pace.js')
 mix.extract();
 
 mix.vue()
+mix.version()

@@ -35,9 +35,6 @@ import 'datatables.net-responsive'
 import Panzoom from '@panzoom/panzoom'
 window.Panzoom = Panzoom
 
-// jQuery SlimScroll
-import 'jquery-slimscroll/jquery.slimscroll.min.js';
-
 // Main App
 import { createApp } from 'vue'
 import snotify from 'vue3-snotify'
