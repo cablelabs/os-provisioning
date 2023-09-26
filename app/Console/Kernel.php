@@ -288,7 +288,7 @@ class Kernel extends ConsoleKernel
 
         if ($modules->has('Statistics')) {
             $schedule->call(function () {
-                StatisticsQuery::runRepetitiveQuery();
+                StatisticsQuery::runRecurringQueries();
             })->everyMinute();
         }
 
