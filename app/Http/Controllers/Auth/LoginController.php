@@ -133,6 +133,10 @@ class LoginController extends Controller
         // Set (cached) session key with model namespaces for authorization functionaity
         BaseModel::get_models();
 
+        if ($this->isMobileDevice()) {
+            cache(['sidebar.pinnedState.'.$user->login_name => false]);
+        }
+
         $request->session()->put('GlobalNotification', []);
         App::setLocale(\App\Http\Controllers\BaseViewController::get_user_lang());
 

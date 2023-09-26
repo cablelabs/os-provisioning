@@ -102,6 +102,10 @@ export default {
           loadCluster(n)
         }
       })
+
+      if (isMobile) {
+        store.minified = true
+      }
     }
 
     function openSidebar(menuItem) {

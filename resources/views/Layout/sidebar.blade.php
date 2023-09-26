@@ -167,7 +167,7 @@
             <div class="fixed md:absolute flex md:w-64 pt-0 overflow-y-auto transition-all duration-200 ease-in-out sidebar d-print-none {{ cache('sidebar.pinnedState.'.$user->login_name) ? '' : 'md:-translate-x-full' }}"
                 :class="{ 'left-[-220px] md:!-translate-x-full': store.minified, 'left-0 md:!translate-x-0': !store.minified }">
                 <!-- begin sidebar scrollbar -->
-                <ul class="overflow-y-auto" data-scrollbar="true" data-height="100%">
+                <ul class="overflow-y-auto w-full" data-scrollbar="true" data-height="100%">
                     <!-- begin sidebar user -->
                     <ul class="nav">
                         <li class="nav-profile">
@@ -323,7 +323,7 @@
                                 <i class="fa fa-search position-absolute" style="left:30px;"></i>
                             </div>
                             <template v-if="isVisible">
-                                @if ($globalConfig->isAllNetsSidebarEnabled)
+                                @if ($globalConfig->is_all_nets_sidebar_enabled)
                                     <li v-if="!isSearchMode" id="network_overview" class="has-sub">
                                         <div class="recolor sidebar-element">
                                             <a href="{{ route('TreeErd.show', ['field' => 'all', 'search' => 1]) }}"
