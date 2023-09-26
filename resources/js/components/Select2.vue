@@ -60,7 +60,7 @@ const props = defineProps({
     default: false
   },
   initial: {
-    type: Number,
+    type: [Number, String],
     default: 0
   },
   i18n: {
@@ -83,7 +83,6 @@ const i18nAll = ref('all')
 
 onMounted(() => {
   selected.value = props.modelValue ? props.modelValue : select.value.value
-  emit('update:modelValue', selected.value)
   select.value = $(select.value)
 
   if (props.initial) {
@@ -97,6 +96,8 @@ onMounted(() => {
     })
     .val(selected.value)
     .trigger('change')
+
+  setValue($(select.value).val())
 
   if (!props.multiple && !props.asArray) {
     return select.value.on('select2:select select2:unselect', (e) => {
@@ -125,8 +126,8 @@ function onSelect(value) {
   }
 
   selected.value.push(value)
-
   publishChanges()
+  setValue(selected.value)
 
   // reset values since you don't want to push multiple tasks when executing another task
   if (props.asArray) {

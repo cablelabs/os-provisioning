@@ -451,7 +451,7 @@
     --border-select2 : var(--slate-200);
     --text-select2 : var(--gray-800);
     --bg-select-2 : var(--slate-100);
-    --bg-select-2-selected : var(--slate-50);
+    --bg-select-2-selected : var(--gray-300);
 
     /* List Group Item color */
     --list-group-item :  var(--gray-700);

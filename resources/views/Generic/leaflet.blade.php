@@ -13,6 +13,6 @@
 
 @if (config('app.googleApiKey'))
     <script src="{{ asset('js/leaflet/Leaflet.GoogleMutant.js') }}"></script>
-    <script async defer src="https://maps.google.com/maps/api/js?key={{ config('app.googleApiKey') }}"></script>
+    <script async defer src="https://maps.google.com/maps/api/js?key={{ config('app.googleApiKey') }}&callback=Function.prototype"></script>
 @endif
 @endif

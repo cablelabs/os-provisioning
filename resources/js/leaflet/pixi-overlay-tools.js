@@ -1,6 +1,8 @@
+import { quadtree } from 'd3-quadtree'
+
 window.solveCollision = function(circles, opts) {
 	opts = opts || {};
-	var tree = d3.quadtree()
+	var tree = quadtree()
 		.x(function(d) {return d.xp;})
 		.y(function(d) {return d.yp;});
 	if (opts.extent !== undefined) tree.extent(opts.extent);

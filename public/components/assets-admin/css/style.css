@@ -6504,8 +6504,11 @@ body.flat-black {
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     margin-top: 6px !important;
 }
-.select2-container--default .select2-selection--multiple .select2-selection__rendered {
-	padding: 0 12px !important;
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+    display: block !important;
+}
+.select2-container .select2-selection--multiple textarea {
+    height: 18px !important;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
 	border: none !important;

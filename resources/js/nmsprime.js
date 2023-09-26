@@ -122,7 +122,9 @@ var initSelect2Fields = function () {
 window.initDefaultSelect2 = function (item, lang = null) {
   item.select2({ language: lang })
   .on('select2:open', function (e) {
-    setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
+    if (! e.target.multiple) {
+      setTimeout(function() {document.querySelector('input.select2-search__field').focus();}, 300);
+    }
   })
   .on('select2:select', function (e) {
     filterSelect2({e, item, lang})
