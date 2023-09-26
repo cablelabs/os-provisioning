@@ -19,7 +19,7 @@ module.exports = {
         'gainsboro' : '#dcdcdc',
       },
       screens: {
-        'wide': '1920px',
+        'wide': '1921px',
       }
     }
   },
