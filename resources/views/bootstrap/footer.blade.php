@@ -17,12 +17,13 @@
  */
 ?>
 <!-- ================== BEGIN BASE JS ================== -->
+<script src="{{ mix('js/manifest.js') }}"></script>
+<script src="{{ mix('js/vendor.js') }}"></script>
+<script src="{{ asset('components/assets-admin/js/apps.js') }}"></script>
+
 @if (request()->is('admin*'))
-    <script src="{{ mix('js/manifest.js') }}"></script>
-    <script src="{{ mix('js/vendor.js') }}"></script>
-    <script src="{{asset('components/assets-admin/js/apps.js')}}"></script>
-    <script src="{{ mix('js/app.js') }}"></script>
-    @include('bootstrap.module-js')
+  <script src="{{ mix('js/app.js') }}"></script>
+  @include('bootstrap.module-js')
 @endif
 
 @if (request()->is('customer*'))
@@ -30,16 +31,18 @@
 @endif
 
 <!-- ================== END BASE JS ================== -->
-@if (request()->is('admin*'))
 <script language="javascript">
-/*
- * global document ready function
- */
 $(document).ready(function() {
   App.init();
-  NMS.init();
-  {{-- init modals --}}
-  $("#alertModal").modal();
+});
+</script>
+
+@if (request()->is('admin*'))
+<script language="javascript">
+  $(document).ready(function() {
+    NMS.init();
+    {{-- init modals --}}
+    $("#alertModal").modal();
 });
 </script>
 @endif

@@ -436,7 +436,7 @@ return [
     'sr_repeat'             => 'Wiederholen für SEPA-Konto:', // Settlementrun repeat
     'Account Holder'            => 'Kontoinhaber',
     'Account Name'              => 'Kontoname',
-    'receiveNewsletters'        => 'Soll Newsletter erhalten?',
+    'receiveNewsletters'        => 'Zum Newsletter anmelden?',
     'Choose Call Data Record template file' => 'Wählen Sie eine Einzelverbindungsnachweis-Vorlage',
     'Choose invoice template file'          => 'Wählen Sie eine Rechnungs-Vorlage',
     'CostCenter'                => 'Kostenstelle',
