@@ -18,7 +18,6 @@
 ?>
 <script language="javascript">
 var handlePanel = function () {
-    "use strict"
     var targetHandle = '.panel-heading'
     var connectedTarget = '.tab-pane'
 
@@ -35,7 +34,6 @@ var handlePanel = function () {
 };
 
 var handlePanelPosition = function(element) {
-    "use strict"
     if ($('.ui-sortable').length == 0) {
         return
     }
@@ -56,7 +54,7 @@ var handlePanelPosition = function(element) {
 
         PanelObject[id] = tabPanel
     })).done(function() {
-        var targetPage = "{!! isset($view_header) ? $view_header : '' !!}"
+        var targetPage = "{!! isset($view_header) ? $view_header : 'Panels' !!}"
         localStorage.setItem(targetPage, JSON.stringify(PanelObject))
         $(element).find('[data-id="title-spinner"]').delay(500).fadeOut(500, function() {
             $(this).remove()
@@ -65,13 +63,12 @@ var handlePanelPosition = function(element) {
 };
 
 var loadPanelPositionFromStorage = function() {
-    "use strict"
     if (typeof(Storage) == 'undefined' && typeof(localStorage) == 'undefined') {
        alert('Your browser is not supported with the local storage')
        return
     }
 
-    var targetPage = "{!! isset($view_header) ? $view_header : '' !!}"
+    var targetPage = "{!! isset($view_header) ? $view_header : 'Panels' !!}"
     var panelPositionData = localStorage.getItem(targetPage)
 
     if (panelPositionData) {

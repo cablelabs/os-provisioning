@@ -16,12 +16,6 @@
  * limitations under the License.
  */
 ?>
-<style>
-    a:hover {
-        text-decoration: none;
-    }
-</style>
-
 <div class="widget widget-stats bg-grey">
     {{-- info/data --}}
     <div class="stats-info text-center">
