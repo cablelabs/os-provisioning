@@ -59,24 +59,24 @@
             </div>
         @endif
         <ul class="flex items-center">
-            {{-- @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics) && $modem_statistics->all)
-            {{-- Modem Statistics (Online/Offline)
-            <li class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
+            @if (Module::collections()->has(['Dashboard', 'HfcBase']) && is_object($modem_statistics) && $modem_statistics->all)
+            {{-- Modem Statistics (Online/Offline) --}}
+            <li class="md:flex pr-3" style='font-size: 2em; font-weight: bold'>
               <a class="flex" href="{{ route('HfcBase.index') }}" style="text-decoration: none;" data-toggle="tooltip" data-html="true" data-placement="auto" title="{!! $modem_statistics->text !!}">
                   <i class="{{ $modem_statistics->fa }} fa-lg text-{{ $modem_statistics->style }}"></i>
-                  <div class="badge badge-{{ $modem_statistics->style }} hidden d-lg-block">{!! $modem_statistics->text !!}</div>
+                  <div class="badge badge-{{ $modem_statistics->style }} hidden lg:block">{!! $modem_statistics->text !!}</div>
               </a>
             </li>
-          @endif --}}
+          @endif
 
             {{-- count of user interaction needing EnviaOrders --}}
             @if (Module::collections()->has('ProvVoipEnvia'))
-                <li  class='hidden d-mflex' style='font-size: 2em; font-weight: bold'>
+                <li  class='md:flex pr-3' style='font-size: 2em; font-weight: bold'>
                     <a href="{{ route('EnviaOrder.index', ['show_filter' => 'action_needed']) }}" target="_self" style="text-decoration: none;">
                     @if ($envia_interactioncount > 0)
                         <div class="flex" data-toggle="tooltip" data-placement="auto" title="{{ $envia_interactioncount }} {{ trans_choice('messages.envia_interaction', $envia_interactioncount )}}">
                         <i class="fa fa-times fa-lg text-danger"></i>
-                        <div class="hidden badge badge-danger d-lg-block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
+                        <div class="badge badge-danger lg:block" style="width:110px;word-wrap:break-word;white-space:normal;">{{ $envia_interactioncount }} {{ substr(trans_choice('messages.envia_interaction', $envia_interactioncount), 0, 19) }}</div>
                         </div>
                     @else
                         <div data-toggle="tooltip" data-placement="auto" title="{{ trans('messages.envia_no_interaction')}}">
