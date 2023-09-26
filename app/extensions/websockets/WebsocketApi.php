@@ -18,47 +18,31 @@
 
 namespace App\extensions\websockets;
 
+use Illuminate\Support\Facades\Broadcast;
+
 class WebsocketApi
 {
     protected $pusherApi;
 
     public function getPusherApi()
     {
-        return \Broadcast::driver('pusher-php')->getPusher();
+        $this->pusherApi = Broadcast::driver('pusher-php')->getPusher();
     }
 
     /**
      * Check if subscribers are currently listening to the given channel
      * See BeyondCode\LaravelWebSockets\HttpApi\Controllers\FetchChannelsController
      *
-     * @param string
-     * @param bool
-     * @return bool
+     * @param string  The name of the channel with type prefix
+     * @return bool channel only exists, as long as users are subscribed to it
      */
-    public function channelHasSubscribers($channel, $excludeRequestingUser = false)
+    public function channelHasSubscribers($channel)
     {
         if (! $this->pusherApi) {
-            $this->pusherApi = $this->getPusherApi();
+            $this->getPusherApi();
         }
 
-        $users = $this->pusherApi->get_users_info($channel);
-        if (! $users) {
-            \Log::debug("$channel channel - Subscribed users: false");
-
-            return false;
-        }
-
-        /* Attention: With this the currently initiating user will not be counted as subscriber even when websocket
-            connection is already established so that initiating the loop always works. The resulting problem can be
-            that the user can initiate multiple loops when opening multiple tabs (at the same time). This should be
-            addressed in javascript by not triggering the loop when the tab is hidden
-        */
-        if ($excludeRequestingUser && isset($users->users[0]) && $users->users[0]->id == auth()->user()->id) {
-            unset($users->users[0]);
-        }
-
-        \Log::debug("$channel channel - subscribed users: ".json_encode($users->users));
-
-        return $users->users != [];
+        return array_key_exists($channel, $this->pusherApi->getChannels()->channels) &&
+            count($this->pusherApi->get_users_info($channel)->users);
     }
 }

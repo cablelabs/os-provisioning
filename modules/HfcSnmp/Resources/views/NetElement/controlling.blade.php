@@ -157,20 +157,20 @@
 
 @section('javascript_extra')
 
-<script src="{{ asset('vendor/pusher-js/dist/web/pusher-with-encryption.min.js') }}"></script>
+<script src="{{ asset('vendor/pusher-js-node/dist/web/pusher-with-encryption.min.js') }}"></script>
 <script language="javascript">
 
-    let channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}";
-    let subscribed = false;
+    let channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}"
+    let subscribed = false
 
     function subscribe()
     {
         if (document.hidden) {
-            return;
+            return
         }
 
-        console.log('trigger SNMP query loop');
-        subscribed = true;
+        console.log('trigger SNMP query loop')
+        subscribed = true
 
         // Trigger SNMP polling and/or add subscriber
         window.xhrInit = $.ajax({
@@ -180,30 +180,30 @@
                 _token: "{{\Session::get('_token')}}",
             },
             success: function (msg) {
-                console.log('SnmpQueryLoop ' + msg);
-            },
+                console.log('SnmpQueryLoop ' + msg)
+			},
         });
 
-        console.log('Subscribe to channel ' + channel);
+        console.log('Subscribe to channel ' + channel)
 
         // window.echo.channel(channel)
-        window.echo.join(channel)
+        echo.join(channel)
             .listen('.newSnmpValues', (data) => {
-                // console.log((new Date()).toLocaleTimeString(), data);
-                data = JSON.parse(data.data);
+                // console.log((new Date()).toLocaleTimeString(), data)
+                data = JSON.parse(data.data)
 
                 for (var key in data) {
                     if (document.getElementsByName(key)[0] instanceof HTMLInputElement) {
-                        document.getElementsByName(key)[0].value = data[key];
+                        document.getElementsByName(key)[0].value = data[key]
                     } else if (document.getElementsByName(key)[0] != undefined) {
-                        document.getElementsByName(key)[0].innerHTML = data[key];
+                        document.getElementsByName(key)[0].innerHTML = data[key]
                     }
                 }
 
             })
             .here((users) => {
-                console.log('Listening to channel ' + channel);
-            });
+                console.log('Listening to channel ' + channel)
+            })
 
         document.getElementById('stop-button').classList.remove('btn-outline-dark')
         document.getElementById('stop-button').classList.add('btn-dark')
@@ -262,7 +262,4 @@
     // this.source.close();
 
 </script>
-
-@include('Generic.broadcasting')
-
 @stop

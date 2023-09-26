@@ -225,15 +225,13 @@ class SnmpController extends \BaseController
         $websocketApi = new \App\extensions\websockets\WebsocketApi();
 
         // Don't run another query loop when someone else already triggered it
-        if ($websocketApi->channelHasSubscribers($channelName, true)) {
+        if ($websocketApi->channelHasSubscribers($channelName)) {
             return 'already running';
         }
 
         $this->init($netelement, $paramId, $index);
         $params = $this->getParameters();
 
-        // TODO: Write as Job ? - Then we would need to start and stop as many workers on demand as we
-        // have loops running as the jobs/loops would need to run simultaneously
         do {
             $start = microtime(true);
             $data = $this->getSnmpValues(false, $params);

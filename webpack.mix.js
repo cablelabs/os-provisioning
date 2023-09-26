@@ -17,6 +17,10 @@ const fs = require("fs")
 require('laravel-mix-merge-manifest');
 mix.mergeManifest();
 
+/* Allow alternative env file */
+require('mix-env-file')
+mix.env(process.env.ENV_FILE)
+
 /* Make alias for main resource/js directory */
 mix.alias({
   '~': path.join(__dirname, 'resources'),

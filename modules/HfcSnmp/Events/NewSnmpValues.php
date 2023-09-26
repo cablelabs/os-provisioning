@@ -22,14 +22,15 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-// use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Must run synchronously to wait for the SNMP Values to come in. With standard
+ * Queue it will be pushed in sleep duration and this can lead to overlap.
+ */
 class NewSnmpValues implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    // public $broadcastQueue = 'snmpValues';
 
     private $data;
     private $netelement;

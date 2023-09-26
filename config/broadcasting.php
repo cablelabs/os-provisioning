@@ -47,7 +47,7 @@ return [
     'connections' => [
         'pusher-php' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
+            'key' => env('MIX_PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
@@ -69,14 +69,14 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
+            'key' => env('MIX_PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'host' => env('APP_URL', '127.0.0.1'),
-                'port' => (int) env('LARAVEL_WEBSOCKETS_PORT', env('HTTPS_ADMIN_PORT', 8080)),
-                'encrypted' => true,
+                'port' => (int) env('MIX_WEBSOCKETS_PORT', env('HTTPS_ADMIN_PORT', 8080)),
+                'encrypted' => env('MIX_PUSHER_FORCE_TLS=true', true),
                 'scheme' => env('PUSHER_APP_SCHEME', 'https'),
             ],
         ],

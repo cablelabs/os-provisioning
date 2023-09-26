@@ -25,9 +25,7 @@ class BroadcastServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Broadcast::channel('snmpvalues.{netelement}.{thirdDim}', function ($user) {
-            // \Log::debug(__class__.': Authenticate user '.$user->id);
-
+        Broadcast::channel('snmpvalues.{netelement}.{paramId}.{index}', function ($user) {
             return ['id' => $user->id, 'name' => $user->login_name];
         });
 
