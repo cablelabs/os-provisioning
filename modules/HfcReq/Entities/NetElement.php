@@ -164,7 +164,7 @@ class NetElement extends \BaseModel
         }
 
         // local adjustments
-        if ($this->netelementtype_id && in_array($this->netelementtype_id, [9, 1008, 1009])) {
+        if ($this->netelementtype_id && $this->base_type_id == 9) {
             switch ($this->state) {
                 case 'C': // off
 
