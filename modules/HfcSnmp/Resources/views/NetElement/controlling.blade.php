@@ -210,11 +210,11 @@
     function unsubscribe(manually)
     {
         if (manually) {
-            subscribed = false;
+            subscribed = false
         }
 
-        echo.leave(channel);
-        console.log('Leave channel ' + channel);
+        echo.leave(channel)
+        console.log('Leave channel ' + channel)
 
         document.getElementById('stop-button').classList.remove('btn-dark')
         document.getElementById('stop-button').classList.add('btn-outline-dark')
@@ -223,20 +223,20 @@
 
     // Only listen in active tab
     document.addEventListener("visibilitychange", function() {
-        tabVisible = document.hidden ? 'hidden' : 'active';
-        console.log('Tab visibility changed to ' + tabVisible);
+        tabVisible = document.hidden ? 'hidden' : 'active'
+        console.log('Tab visibility changed to ' + tabVisible)
 
         if (document.hidden) {
-            unsubscribe(false);
+            unsubscribe(false)
         } else if (subscribed) {
-            subscribe();
+            subscribe()
         }
-    });
+    })
 
     $(document).ready(function()
     {
         if ("{{ ! $error && $reload }}") {
-            setTimeout(subscribe, "{{$reload}}" * 1000);
+            setTimeout(subscribe, "{{$reload}}" * 1000)
         }
 
         $('.controllingtable').DataTable({
@@ -244,7 +244,7 @@
             fixedHeader: true,
             @include('datatables.buttons')
             @include('datatables.lang')
-        });
-    });
+        })
+    })
 </script>
 @stop
