@@ -156,8 +156,6 @@
 
 
 @section('javascript_extra')
-
-<script src="{{ asset('vendor/pusher-js-node/dist/web/pusher-with-encryption.min.js') }}"></script>
 <script language="javascript">
 
     let channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}"
@@ -173,16 +171,10 @@
         subscribed = true
 
         // Trigger SNMP polling and/or add subscriber
-        window.xhrInit = $.ajax({
-            url: "{{ route('NetElement.triggerSnmpQueryLoop', [$netelement->id, $paramId, $index]) }}",
-            type: "post",
-            data: {
-                _token: "{{\Session::get('_token')}}",
-            },
-            success: function (msg) {
+        axios.post('{{ route('NetElement.triggerSnmpQueryLoop', [$netelement->id, $paramId, $index]) }}')
+            .then(function (msg) {
                 console.log('SnmpQueryLoop ' + msg)
-			},
-        });
+            })
 
         console.log('Subscribe to channel ' + channel)
 
@@ -254,12 +246,5 @@
             @include('datatables.lang')
         });
     });
-
-    // this.source = new EventSource("{!! route('NetElement.triggerSnmpQueryLoop', [$netelement->id, $paramId, $index]) !!}");
-    // this.source.onmessage = function(e) {
-    //     console.log(JSON.parse(e.data));
-    // }
-    // this.source.close();
-
 </script>
 @stop
