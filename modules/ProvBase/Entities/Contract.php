@@ -237,7 +237,7 @@ class Contract extends \BaseModel
             'index_header' => $this->getIndexHeader(),
             'header' =>  $this->label(),
             'edit' => ['ground_for_dismissal' => 'getGroundForDismissal'],
-            'disable_sortsearch' => ['ground_for_dismissal' => 'false'],
+            'sortsearch' => ['ground_for_dismissal' => ['order' => 'false', 'search' => 'false']],
             'bsclass' => $bsclass,
             'order_by' => ['0' => 'asc'],
         ];

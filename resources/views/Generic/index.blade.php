@@ -141,7 +141,7 @@
                 @if (isset($model) && $methodExists && is_array($indexTableInfo) && isset($indexTableInfo['index_header']))
                     @foreach ($indexTableInfo['index_header'] as $field)
                         <th class="content" style="text-align:center; vertical-align:middle;">{{ trans('dt_header.'.$field).' ' }}
-                        @if ((! empty($indexTableInfo['disable_sortsearch'])) && ($indexTableInfo['disable_sortsearch'] == [$field => 'false']))
+                        @if (isset($indexTableInfo['sortsearch'][$field]) && $indexTableInfo['sortsearch'][$field]['order'] === 'false')
                             <i class="fa fa-info-circle text-info" data-trigger="hover" data-container="body" data-toggle="tooltip" data-placement="top"
                                 data-delay='{"show":"250"}' data-original-title="{{trans('helper.SortSearchColumn')}}"></i>
                         @elseif (! empty($indexTableInfo['help'][$field]))
@@ -164,7 +164,7 @@
                     <th></th> {{-- Checkbox Column if delete is allowed --}}
                 @endif
                 @foreach ($indexTableInfo['index_header'] as $field)
-                    @if ((!empty($indexTableInfo['disable_sortsearch'])) && ( Illuminate\Support\Arr::has( $indexTableInfo['disable_sortsearch'] , $field) ) )
+                    @if (isset($indexTableInfo['sortsearch'][$field]) && $indexTableInfo['sortsearch'][$field]['search'] === 'false')
                         <th></th>
                     @else
                         <th class="searchable"></th>

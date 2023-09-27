@@ -296,7 +296,7 @@ class Modem extends \BaseModel
         $ret['header'] = $this->label();
         $ret['edit'] = ['contract_valid' => 'get_contract_valid'];
         $ret['eager_loading'] = ['configfile', 'contract', 'qos', 'netgw'];
-        $ret['disable_sortsearch'] = ['contract_valid' => 'false'];
+        $ret['sortsearch'] = ['contract_valid' => ['order' => 'false', 'search' => 'false']];
         $ret['help'] = [$this->table.'.model' => 'modem_update_frequency', $this->table.'.sw_rev' => 'modem_update_frequency'];
         $ret['globalFilter'] = ['sw_rev' => e(session('filter_data', ''))];
 
