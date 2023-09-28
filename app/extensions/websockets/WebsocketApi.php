@@ -36,13 +36,20 @@ class WebsocketApi
      * @param string  The name of the channel with type prefix
      * @return bool channel only exists, as long as users are subscribed to it
      */
-    public function channelHasSubscribers($channel)
+    public function channelHasSubscribers(string $channel, bool $initial = false): bool
     {
         if (! $this->pusherApi) {
             $this->getPusherApi();
         }
 
-        return array_key_exists($channel, $this->pusherApi->getChannels()->channels) &&
-            count($this->pusherApi->get_users_info($channel)->users);
+        if (! array_key_exists($channel, $this->pusherApi->getChannels()->channels)) {
+            return false;
+        }
+
+        if ($initial) {
+            return $this->pusherApi->getChannelInfo($channel)->subscription_count > 1;
+        }
+
+        return $this->pusherApi->getChannelInfo($channel)->subscription_count;
     }
 }

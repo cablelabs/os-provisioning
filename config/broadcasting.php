@@ -76,7 +76,7 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'host' => env('APP_URL', '127.0.0.1'),
                 'port' => (int) env('MIX_WEBSOCKETS_PORT', env('HTTPS_ADMIN_PORT', 8080)),
-                'encrypted' => env('MIX_PUSHER_FORCE_TLS=true', true),
+                'encrypted' => env('MIX_PUSHER_FORCE_TLS', true),
                 'scheme' => env('PUSHER_APP_SCHEME', 'https'),
             ],
         ],

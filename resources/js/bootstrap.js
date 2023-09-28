@@ -88,13 +88,15 @@ import Echo from 'laravel-echo'
 import Pusher from 'pusher-js'
 
 window.Pusher = Pusher;
-window.echo = new Echo({
-  broadcaster: 'pusher',
-  key: process.env.MIX_PUSHER_APP_KEY,
-  wsHost: window.location.hostname,
-  wsPort: parseInt(process.env.MIX_WEBSOCKETS_PORT),
-  wssPort: parseInt(process.env.MIX_WEBSOCKETS_PORT),
-  forceTLS: process.env.MIX_PUSHER_FORCE_TLS === 'true',
-  disableStats: true,
-  enabledTransports: ['ws', 'wss']
-})
+window.wssConnect = () => {
+  window.echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: parseInt(process.env.MIX_WEBSOCKETS_PORT),
+    wssPort: parseInt(process.env.MIX_WEBSOCKETS_PORT),
+    forceTLS: process.env.MIX_PUSHER_FORCE_TLS === 'true',
+    disableStats: true,
+    enabledTransports: ['ws', 'wss']
+  })
+}

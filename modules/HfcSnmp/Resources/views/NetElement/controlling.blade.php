@@ -157,15 +157,16 @@
 
 @section('javascript_extra')
 <script language="javascript">
-
     let channel = "{{ \Modules\HfcSnmp\Events\NewSnmpValues::getChannelName($netelement, $paramId, $index) }}"
     let subscribed = false
+    wssConnect()
 
     function subscribe()
     {
         if (document.hidden) {
             return
         }
+
 
         console.log('trigger SNMP query loop')
         subscribed = true
