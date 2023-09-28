@@ -42,6 +42,33 @@ read -r -a auths <<< $(grep '^DB_DATABASE\|^DB_USERNAME\|^DB_PASSWORD' /etc/nmsp
 # this file is not present before upgrade, hence we have to do it here...
 sudo -u postgres psql nmsprime < /etc/nmsprime/sql-schemas/nmsprime.pgsql
 
+# Remove default entries from schema
+sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c '
+    Delete from abilities;
+    Delete from carriercode;
+    Delete from configfile;
+    Delete from costcenter;
+    Delete from billingbase;
+    Delete from ccc;
+    Delete from company;
+    Delete from contract;
+    Delete from ekpcode;
+    Delete from global_config;
+    Delete from hfcreq;
+    Delete from overduedebts;
+    Delete from phonetariff;
+    Delete from provbase;
+    Delete from provvoip;
+    Delete from roles;
+    Delete from sepaaccount;
+    Delete from ticketsystem;
+    Delete from trcclass;
+    Delete from netelementtype;
+    Delete from provmon;
+    Delete from qos;
+    Delete from sla;
+'
+
 echo "LOAD DATABASE
   FROM mysql://psqlconverter@localhost/nmsprime
   INTO postgresql:///nmsprime
@@ -50,7 +77,6 @@ echo "LOAD DATABASE
     ;" > /tmp/nmsprime.load
 
 sudo -u postgres pgloader -q /tmp/nmsprime.load
-sudo -u postgres pgloader mysql://psqlconverter@localhost/nmsprime postgresql:///nmsprime
 
 sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     GRANT USAGE, CREATE ON SCHEMA ${auths[0]} TO ${auths[2]};
