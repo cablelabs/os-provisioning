@@ -72,7 +72,7 @@ sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c '
 echo "LOAD DATABASE
   FROM mysql://psqlconverter@localhost/nmsprime
   INTO postgresql:///nmsprime
-  WITH data only, truncate, batch rows = 5000, prefetch rows = 5000
+  WITH data only, reset sequences, truncate, batch rows = 5000, prefetch rows = 5000
   EXCLUDING TABLE NAMES MATCHING 'hfcbase','nas','radacct','radcheck','radgroupcheck','radgroupreply','radippool','radpostauth','radreply','radusergroup'
     ;" > /tmp/nmsprime.load
 

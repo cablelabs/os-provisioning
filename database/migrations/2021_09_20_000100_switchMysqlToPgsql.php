@@ -117,7 +117,7 @@ class SwitchMysqltoPgsql extends BaseMigration
                 exec('sudo -u postgres psql nmsprime_ccc < /etc/nmsprime/sql-schemas/nmsprime_ccc.pgsql');
                 system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'CREATE SCHEMA nmsprime_ccc;
                     ALTER TABLE public.cccauthuser SET SCHEMA nmsprime_ccc'");
-                exec("sudo -u postgres pgloader --with 'data only' mysql://psqlconverter@localhost/$db postgresql:///$db", $ret);
+                exec("sudo -u postgres pgloader --with 'data only' --with 'reset sequences' mysql://psqlconverter@localhost/$db postgresql:///$db", $ret);
 
                 echo implode(PHP_EOL, $ret)."\n";
                 $ret = [];
