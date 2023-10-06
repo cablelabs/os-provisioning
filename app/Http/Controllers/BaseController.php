@@ -81,8 +81,8 @@ class BaseController extends Controller
     protected $edit_right_md_size = null;
 
     protected $defaultMdSizes = [
-        'leftLeftLg' => 3,
-        'leftLeftXl' => 2,
+        'leftLeftLg' => 4,
+        'leftLeftXl' => 3,
         'rightRightLg' => 3,
         'rightRightXl' => 2,
     ];

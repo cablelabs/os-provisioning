@@ -2494,7 +2494,7 @@ class Modem extends \BaseModel
     public function getAnalysisBaseData($api = false)
     {
         $conf = ProvBase::first();
-        $this->domainName = ProvBase::first()->domain_name;
+        $this->domainName = $conf->domain_name;
         $mac = strtolower($this->mac);
         $eventlog = null;
         $wifi = null;
