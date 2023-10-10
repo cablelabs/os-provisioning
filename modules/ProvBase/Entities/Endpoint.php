@@ -434,4 +434,20 @@ class Endpoint extends \BaseModel
 
         return $default.'-'.(substr(strrchr($lastHostname, '-'), 1) + 1);
     }
+
+    /**
+     * Get IpPool corresponding to a given IP address
+     *
+     * @author Ole Ernst
+     */
+    public function getIpPool($ip)
+    {
+        $validator = new \App\extensions\validators\ExtendedValidator;
+
+        foreach (IpPool::all() as $pool) {
+            if ($validator->validateIpInRange(0, $ip, [$pool->net, $pool->netmask])) {
+                return $pool;
+            }
+        }
+    }
 }

@@ -148,8 +148,8 @@ class EndpointObserver
         // delete radreply containing Framed-IP-Address
         $endpoint->modem->radreply()->delete();
 
-        // add / update unreserved ip address
-        if ($endpoint->getRawOriginal('ip')) {
+        // add / update unreserved ip address in case it belongs to a bras IpPool
+        if ($endpoint->getRawOriginal('ip') && $endpoint->getIpPool($endpoint->getOriginal('ip'))?->netgw?->type == 'bras') {
             RadIpPool::updateOrCreate(
                 ['framedipaddress' => $endpoint->getRawOriginal('ip')],
                 ['pool_name' => 'CPEPub', 'username' => '']
