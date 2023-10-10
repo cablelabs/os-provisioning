@@ -1710,7 +1710,7 @@ class Contract extends \BaseModel
      */
     public function shouldDebtsBlockInetAccess()
     {
-        if (Module::collections()->has('OverdueDebts')) {
+        if (! Module::collections()->has('OverdueDebts')) {
             return false;
         }
 
