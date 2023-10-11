@@ -31,8 +31,8 @@ columns:[
                 data: '{{ $field }}',
             @endif
             name: '{{ $field }}',
-            searchable: {{ isset($indexTableInfo["sortsearch"][$field]) ? $indexTableInfo["sortsearch"][$field]['order'] : "true" }},
-            orderable:  {{ isset($indexTableInfo["sortsearch"][$field]) ? $indexTableInfo["sortsearch"][$field]['search'] : "true" }}
+            searchable: {{ isset($indexTableInfo["sortsearch"][$field]) ? $indexTableInfo["sortsearch"][$field]['search'] : "true" }},
+            orderable:  {{ isset($indexTableInfo["sortsearch"][$field]) ? $indexTableInfo["sortsearch"][$field]['order'] : "true" }}
         },
         @endforeach
     @endif
