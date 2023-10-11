@@ -71,6 +71,7 @@ if (mix.inProduction()) {
         ],
       },
       safelist: {
+        standard: [/tooltip$/],
         greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/, /snotify.*/]
       },
     })
