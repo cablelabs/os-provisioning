@@ -34,7 +34,7 @@ trait HasConfigfile
             ->whereIn('device', $this->exists ? [$this->configfile->device] : static::TYPES)
             ->where('public', 'yes')
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%");
+                return $query->where('name', 'ilike', "%{$search}%");
             });
     }
 

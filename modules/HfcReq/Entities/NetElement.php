@@ -845,8 +845,8 @@ class NetElement extends \BaseModel
                     ->orWhereNull('netelement.parent_id');
             })
             ->when($search, function ($query, $search) {
-                return $query->where('netelement.name', 'like', "%{$search}%")
-                    ->orWhere('nt.name', 'like', "%{$search}%");
+                return $query->where('netelement.name', 'ilike', "%{$search}%")
+                    ->orWhere('nt.name', 'ilike', "%{$search}%");
             });
     }
 
@@ -866,7 +866,7 @@ class NetElement extends \BaseModel
 
         return $class::select('id', 'hostname as text')
             ->when($search, function ($query, $search) {
-                return $query->where('hostname', 'like', "%{$search}%");
+                return $query->where('hostname', 'ilike', "%{$search}%");
             });
     }
 
@@ -882,8 +882,8 @@ class NetElement extends \BaseModel
             ->join('netelementtype as nt', 'nt.id', '=', 'netelementtype_id')
             ->selectRaw('CONCAT(nt.name,\': \', netelement.name) as text')
             ->when($search, function ($query, $search) {
-                return $query->where('netelement.name', 'like', "%{$search}%")
-                    ->orWhere('nt.name', 'like', "%{$search}%");
+                return $query->where('netelement.name', 'ilike', "%{$search}%")
+                    ->orWhere('nt.name', 'ilike', "%{$search}%");
             });
     }
 
@@ -897,8 +897,8 @@ class NetElement extends \BaseModel
     {
         return NetElementType::select('id', 'name as text', 'version as count')
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('version', 'like', "%{$search}%");
+                return $query->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('version', 'ilike', "%{$search}%");
             });
     }
 

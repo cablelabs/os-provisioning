@@ -741,7 +741,7 @@ class BaseController extends Controller
                 continue;
             }
 
-            $queryResult = $model::whereRaw("CONCAT_WS('|', ".$model::getTableColumns($model->getTable()).') LIKE ?', [$query])->limit(100);
+            $queryResult = $model::whereRaw("CONCAT_WS('|', ".$model::getTableColumns($model->getTable()).') ILIKE ?', [$query])->limit(100);
 
             if ($queryResult) {
                 $results[] = $queryResult->get();
@@ -1827,7 +1827,7 @@ class BaseController extends Controller
         $model = static::get_model_obj();
 
         return $model->select($column)
-            ->where($column, 'like', '%'.\Request::get('q').'%')
+            ->where($column, 'ilike', '%'.\Request::get('q').'%')
             ->distinct()
             ->pluck($column);
     }

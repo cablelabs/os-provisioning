@@ -204,7 +204,7 @@ class Configfile extends \BaseModel
                     ->orWhereNull('parent_id');
             })
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%");
+                return $query->where('name', 'ilike', "%{$search}%");
             });
     }
 

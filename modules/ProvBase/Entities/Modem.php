@@ -482,7 +482,7 @@ class Modem extends \BaseModel
             ->selectRaw('CONCAT(number, \' - \', firstname, \' \', lastname) as text')
             ->when($search, function ($query, $search) {
                 foreach (['number', 'firstname', 'lastname'] as $field) {
-                    $query = $query->orWhere($field, 'like', "%{$search}%");
+                    $query = $query->orWhere($field, 'ilike', "%{$search}%");
                 }
 
                 return $query;
@@ -501,7 +501,7 @@ class Modem extends \BaseModel
             ->withCount('modem as count')
             ->when($search, function ($query, $search) {
                 foreach (['name'] as $field) {
-                    $query = $query->orWhere($field, 'like', "%{$search}%");
+                    $query = $query->orWhere($field, 'ilike', "%{$search}%");
                 }
 
                 return $query;

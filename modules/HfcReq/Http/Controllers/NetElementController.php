@@ -216,7 +216,7 @@ class NetElementController extends BaseController
 
         return NetElement::without('netelementtype')
             ->whereIn('base_type_id', [$netId, $clusterId])
-            ->where('name', 'like', '%'.$request->get('query').'%')
+            ->where('name', 'ilike', '%'.$request->get('query').'%')
             ->limit(25)
             ->orderBy('base_type_id', 'ASC')
             ->get(['name', 'id', 'base_type_id'])

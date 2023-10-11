@@ -79,7 +79,7 @@ class Phonenumber extends \BaseModel
 
     public function number_query()
     {
-        return "CONCAT(phonenumber.prefix_number,'/',phonenumber.number) like ?";
+        return "CONCAT(phonenumber.prefix_number,'/',phonenumber.number) ilike ?";
     }
 
     public function get_bsclass()
@@ -286,11 +286,11 @@ class Phonenumber extends \BaseModel
             ->where('m.deleted_at', '=', null)
             ->where('c.deleted_at', '=', null)
             ->when($search, function ($query, $search) {
-                return $query->where('mta.hostname', 'like', "%{$search}%")
-                    ->orWhere('mta.mac', 'like', "%{$search}%")
-                    ->orWhere('c.number', 'like', "%{$search}%")
-                    ->orWhere('c.firstname', 'like', "%{$search}%")
-                    ->orWhere('c.lastname', 'like', "%{$search}%");
+                return $query->where('mta.hostname', 'ilike', "%{$search}%")
+                    ->orWhere('mta.mac', 'ilike', "%{$search}%")
+                    ->orWhere('c.number', 'ilike', "%{$search}%")
+                    ->orWhere('c.firstname', 'ilike', "%{$search}%")
+                    ->orWhere('c.lastname', 'ilike', "%{$search}%");
             });
     }
 

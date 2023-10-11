@@ -188,7 +188,7 @@ class NetElementType extends \BaseModel
         return self::select('id', 'name as text')
             ->whereNotIn('id', [1, 2, 8, 9, $modelId])
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%");
+                return $query->where('name', 'ilike', "%{$search}%");
             });
     }
 
@@ -203,9 +203,9 @@ class NetElementType extends \BaseModel
         return \Modules\HfcSnmp\Entities\OID::select('id', 'name_gui as count')
             ->selectRaw('CONCAT(oid, \' - \', name) as text')
             ->when($search, function ($query, $search) {
-                return $query->where('oid', 'like', "%{$search}%")
-                    ->where('name', 'like', "%{$search}%")
-                    ->where('name_gui', 'like', "%{$search}%");
+                return $query->where('oid', 'ilike', "%{$search}%")
+                    ->orWhere('name', 'ilike', "%{$search}%")
+                    ->orWhere('name_gui', 'ilike', "%{$search}%");
             });
     }
 

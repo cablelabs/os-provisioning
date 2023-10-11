@@ -113,7 +113,7 @@ class FirmwareUpgrade extends \BaseModel
             ->withCount('firmwareUpgrades as count')
             ->when($search, function ($query, $search) {
                 foreach (['name'] as $field) {
-                    $query = $query->orWhere($field, 'like', "%{$search}%");
+                    $query = $query->orWhere($field, 'ilike', "%{$search}%");
                 }
 
                 return $query;
