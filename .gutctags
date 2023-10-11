@@ -19,3 +19,4 @@
 --exclude=*/nmsprime/public/vendor/*
 --exclude=*/nmsprime/storage/*
 --exclude=*/nmsprime/vendor/*
+--exclude=*/nmsprime/public/js/leaflet/*

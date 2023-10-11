@@ -5,6 +5,7 @@
 --exclude=public-ccc/components/*
 --exclude=public/components/*
 --exclude=public/css/*
+--exclude=public/js/leaflet/*
 --exclude=public/vendor/*
 --exclude=storage/*
 --exclude=vendor/*

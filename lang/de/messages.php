@@ -874,6 +874,7 @@ return [
     'l1_handover_equipment_slot' => 'Level-1-Übergabegerät-Slot',
     'modificationdate'          => 'Änderungsdatum',
     'note'                      => 'Notiz',
+    'service_id'                => 'Dienst-ID',
     'service_name'              => 'Dienstbezeichnung',
     'service_type'              => 'Diensttyp',
     'sf_sla'                    => 'SF-SLA',

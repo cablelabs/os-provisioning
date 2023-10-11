@@ -1532,6 +1532,13 @@ class ModemController extends \BaseController
             }
         }
 
+        if (sizeof($fieldMap) > sizeof($headerPos)) {
+            $missing = array_diff(array_keys($fieldMap), array_keys($headerPos));
+            \Session::push('tmp_error_above_form', 'Malformed/missing fields in CSV file: '.implode(', ', $missing));
+
+            return redirect($this->redirectUrl);
+        }
+
         $modemsCreated = 0;
         $modemsUpdated = 0;
 
@@ -1544,9 +1551,7 @@ class ModemController extends \BaseController
             if (isset($headerPos['macAddress'])) {
                 $macAddress = $line[$headerPos['macAddress']] ?: null;
                 if ($macAddress) {
-                    $tmp = unifyMac(['mac' => $macAddress]);
-                    $mac = $tmp['mac'];
-                    $macAddress = $mac;
+                    $macAddress = unifyMac($macAddress);
                 }
             }
 

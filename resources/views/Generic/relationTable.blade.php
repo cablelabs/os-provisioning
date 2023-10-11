@@ -24,7 +24,7 @@
             @endforeach
         </table>
     @else
-        <table id="{{ strtolower($tab['name']).$class }}Datatable"
+        <table id="{{ Str::slug(strtolower($tab['name']).$class) }}Datatable"
             class="table table-hover datatable table-bordered d-table w-100"
             data-table="true"
             data-ajax="{{ route((new ReflectionClass($view_var))->getShortName().'.relationDatatable', ['model' => $view_var->id, 'relation' => $class]) }}"

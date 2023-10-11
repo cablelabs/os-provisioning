@@ -874,6 +874,7 @@ return [
     'l1_handover_equipment_slot' => 'Level1 handover equippment slot',
     'modificationdate'          => 'Modificationdate',
     'note'                      => 'Note',
+    'service_id'                => 'Service ID',
     'service_name'              => 'Service name',
     'service_type'              => 'Service type',
     'sf_sla'                    => 'SF SLA',
