@@ -14,8 +14,8 @@ const path = require('path')
 const fs = require("fs")
 
 /* Allow multiple Laravel Mix applications */
-require('laravel-mix-merge-manifest');
-mix.mergeManifest();
+require('laravel-mix-merge-manifest')
+mix.mergeManifest()
 
 /* Allow alternative env file */
 require('mix-env-file')
@@ -33,7 +33,7 @@ mix.js('resources/js/app.js', 'public/js')
   ])
 
 /* read out the available modules */
-let modules = JSON.parse(fs.readFileSync("modules_statuses.json").toString());
+let modules = JSON.parse(fs.readFileSync("modules_statuses.json").toString())
 
 for (let module in modules) {
   if (! modules[module]) {
@@ -124,7 +124,7 @@ mix.webpackConfig(webpack => {
 
 // extract
 mix.extract(['pace-js'], '/js/pace.js')
-mix.extract();
+mix.extract()
 
 mix.vue()
 mix.version()
