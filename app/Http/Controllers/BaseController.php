@@ -463,7 +463,8 @@ class BaseController extends Controller
             ->withCount('unreadNotifications')
             ->with([
                 'unreadNotifications' => function ($query) {
-                    $query->orderByDesc('created_at');
+                    $query->orderByDesc('created_at')
+                        ->limit(config('notifications.navbarLength'));
                 },
             ])
             ->first();
