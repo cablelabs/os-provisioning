@@ -71,8 +71,8 @@ if (mix.inProduction()) {
         ],
       },
       safelist: {
-        standard: [/tooltip$/],
-        greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/, /snotify.*/]
+        standard: ['tooltip-inner'],
+        greedy: [/select2.*/, /pace.*/, /datatable.*/, /dataTable.*/, /dt.*/, /col-.*/, /snotify.*/, /ui-.*/, /bs-tooltip.*/]
       },
     })
   ])
