@@ -972,7 +972,7 @@ class NetElement extends \BaseModel
                 fn ($query) => $query->with(['netelementtype:id,base_type_id']),
                 fn ($query) => $query->without(['netelementtype'])
             )
-            ->get(['id', 'netelementtype_id']);
+            ->get(['id', 'base_type_id']);
 
         if (! $netelements->count()) {
             return null;

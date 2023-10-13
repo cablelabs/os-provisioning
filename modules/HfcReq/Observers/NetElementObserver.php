@@ -88,7 +88,7 @@ class NetElementObserver
             $this->handleTypeChangeForCoreMon($netelement);
         }
 
-        if ($netelement->isDirty('parent_id', 'name')) {
+        if ($netelement->isDirty('parent_id', 'name', 'netelementtype_id')) {
             $this->flushSidebarNetCache();
 
             $netelement->net = $netelement->get_native_net();
