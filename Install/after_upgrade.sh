@@ -44,29 +44,29 @@ sudo -u postgres psql nmsprime < /etc/nmsprime/sql-schemas/nmsprime.pgsql
 
 # Remove default entries from schema
 sudo -u postgres /usr/pgsql-13/bin/psql nmsprime -c '
-    Delete from abilities;
-    Delete from carriercode;
-    Delete from configfile;
-    Delete from costcenter;
-    Delete from billingbase;
-    Delete from ccc;
-    Delete from company;
-    Delete from contract;
-    Delete from ekpcode;
-    Delete from global_config;
-    Delete from hfcreq;
-    Delete from overduedebts;
-    Delete from phonetariff;
-    Delete from provbase;
-    Delete from provvoip;
-    Delete from roles;
-    Delete from sepaaccount;
-    Delete from ticketsystem;
-    Delete from trcclass;
-    Delete from netelementtype;
-    Delete from provmon;
-    Delete from qos;
-    Delete from sla;
+    Delete from nmsprime.abilities;
+    Delete from nmsprime.carriercode;
+    Delete from nmsprime.configfile;
+    Delete from nmsprime.costcenter;
+    Delete from nmsprime.billingbase;
+    Delete from nmsprime.ccc;
+    Delete from nmsprime.company;
+    Delete from nmsprime.contract;
+    Delete from nmsprime.ekpcode;
+    Delete from nmsprime.global_config;
+    Delete from nmsprime.hfcreq;
+    Delete from nmsprime.overduedebts;
+    Delete from nmsprime.phonetariff;
+    Delete from nmsprime.provbase;
+    Delete from nmsprime.provvoip;
+    Delete from nmsprime.roles;
+    Delete from nmsprime.sepaaccount;
+    Delete from nmsprime.ticketsystem;
+    Delete from nmsprime.trcclass;
+    Delete from nmsprime.netelementtype;
+    Delete from nmsprime.provmon;
+    Delete from nmsprime.qos;
+    Delete from nmsprime.sla;
 '
 
 echo "LOAD DATABASE
