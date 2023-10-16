@@ -34,7 +34,7 @@ return new class extends BaseMigration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->date('finished_at')->nullable();
+            $table->timestampTz('finished_at')->nullable();
         });
     }
 
