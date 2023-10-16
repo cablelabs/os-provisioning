@@ -47,9 +47,9 @@ return [
     'connections' => [
         'pusher-php' => [
             'driver' => 'pusher',
-            'key' => env('MIX_PUSHER_APP_KEY'),
-            'secret' => env('PUSHER_APP_SECRET'),
-            'app_id' => env('PUSHER_APP_ID'),
+            'key' => env('MIX_PUSHER_APP_KEY', 'nmsprime'),
+            'secret' => env('PUSHER_APP_SECRET', 'nmsprime'),
+            'app_id' => env('PUSHER_APP_ID', 'nmsprime'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'host' => '127.0.0.1',
