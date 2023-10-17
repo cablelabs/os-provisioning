@@ -84,6 +84,8 @@ sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA ${auths[0]} TO ${auths[2]};
 "
 
+rm -rf /var/www/nmsprime/bootstrap/cache/*
+
 laravelModules=$(php /var/www/nmsprime/artisan module:list | cut -d'|' -f2)
 if echo "$laravelModules" | grep -q "ProvMon"; then
     sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
