@@ -195,13 +195,15 @@ class OID extends \BaseModel
             return substr($string, $x + 1, strlen($string) - $x - 2);
         }
 
-        if (($x = strpos($string, '(')) !== false) {
-            // start & end value
-            $y = strpos($string, '..');
-            $startval = substr($string, $x + 1, $y - $x - 1);
-            $endval = substr($string, $y + 2, strlen($string) - 1);
-
-            return [$startval, $endval];
+        // NOTE: This skips handling of special cases - TODO: handle them and check via # grep -R "SYNTAX" .snmp/mibs/
+        if (($x = strpos($string, '(')) === false || strpos($string, '|') !== false || ($y = strpos($string, '..')) === false) {
+            return;
         }
+
+        // start & end value
+        $startval = substr($string, $x + 1, $y - $x - 1) ?: null;
+        $endval = substr($string, $y + 2, strlen($string) - $y - 3) ?: null;
+
+        return [$startval, $endval];
     }
 }
