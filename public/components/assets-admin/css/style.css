@@ -2150,7 +2150,6 @@ label {
 .media,
 .media-body {
     overflow: hidden;
-    zoom: 1;
 }
 .media .media-object {
     width: 128px;
