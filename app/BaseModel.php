@@ -411,7 +411,13 @@ class BaseModel extends Eloquent
         return $result;
     }
 
-    protected function _guess_model_name($s)
+    /**
+     * Do an educated guess for the model based on the given string
+     *
+     * @param  string  $s
+     * @return string
+     */
+    public function guessModelName($s)
     {
         return current(preg_grep('|.*?'.str_replace('_', '', $s).'$|i', $this->get_models()));
     }
@@ -581,7 +587,7 @@ class BaseModel extends Eloquent
                     ->get();
 
                 foreach ($children as $child) {
-                    $class_child_name = $this->_guess_model_name($table);
+                    $class_child_name = $this->guessModelName($table);
 
                     // check if we got a model name
                     if ($class_child_name) {
@@ -598,7 +604,7 @@ class BaseModel extends Eloquent
                     // seems to be a n:m relation
                     $parts = $table == 'ticket_type_ticket' ? ['ticket_type', 'ticket'] : explode('_', $table);
                     foreach ($parts as $part) {
-                        $class_child_name = $this->_guess_model_name($part);
+                        $class_child_name = $this->guessModelName($part);
 
                         // one of the models in pivot tables is the current model – skip
                         if ($class_child_name == get_class($this)) {

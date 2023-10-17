@@ -697,7 +697,7 @@ class BaseController extends Controller
         $devices = [];
 
         foreach ($tables as $table) {
-            if (! $model = \BaseModel::_guess_model_name($table->table_name)) {
+            if (! $model = (new BaseModel())->guessModelName($table->table_name)) {
                 continue;
             }
 

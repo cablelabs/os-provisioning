@@ -731,11 +731,10 @@ class BaseViewController extends Controller
         // only for create context: parse headline from HTML POST context array
         if (! is_null($html) && isset(array_keys($html)[0])) {
             $key = array_keys($html)[0];
-            $class_name = BaseModel::_guess_model_name(ucwords(explode('_id', $key)[0]));
+            $fullyQualifiedClassName = (new BaseModel())->guessModelName(ucwords(explode('_id', $key)[0]));
 
-            if (class_exists($class_name)) {
-                $class = new $class_name;
-                $view_var = is_int($html[$key]) ? $class->find($html[$key]) : null;
+            if (class_exists($fullyQualifiedClassName)) {
+                $view_var = $fullyQualifiedClassName::find(intval($html[$key]));
             }
         }
 
