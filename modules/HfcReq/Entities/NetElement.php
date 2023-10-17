@@ -1157,7 +1157,9 @@ class NetElement extends \BaseModel
             $sqlCol = $this->cluster ? 'cluster' : 'net';
         }
 
-        $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
+        if ($enabledModules->has('HfcBase')) {
+            $tabs[] = ['name' => trans('view.tab.Entity Diagram'), 'icon' => 'sitemap', 'route' => 'TreeErd.show', 'link' => [$sqlCol, $this->id]];
+        }
 
         if (! in_array($type, [8, 9])) {
             if ($enabledModules->has('HfcBase')) {
