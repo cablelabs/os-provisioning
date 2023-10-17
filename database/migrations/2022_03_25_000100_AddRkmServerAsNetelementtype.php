@@ -31,7 +31,12 @@ class AddRkmServerAsNetelementtype extends BaseMigration
      */
     public function up()
     {
-        DB::statement("INSERT into netelementtype (id, created_at, updated_at, name, vendor, base_type_id) values (15, current_timestamp(0), current_timestamp(0), 'RKM-Server', 'SAT-Kabel', 15)");
+        NetElementType::create([
+            'id' => 15,
+            'name' => 'RKM-Server',
+            'vendor' => 'SAT-Kabel',
+            'base_type_id' => 15,
+        ]);
 
         Schema::table('netelement', function (Blueprint $table) {
             $table->string('username')->nullable();
