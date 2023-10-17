@@ -113,18 +113,26 @@ class SwitchMysqltoPgsql extends BaseMigration
                 system("sudo -u postgres /usr/pgsql-13/bin/psql -c 'CREATE DATABASE $db'");
                 echo "$db\n";
 
-                // Convert MySQL DB to PostgreSQL
-                exec('sudo -u postgres psql nmsprime_ccc < /etc/nmsprime/sql-schemas/nmsprime_ccc.pgsql');
-                system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'CREATE SCHEMA nmsprime_ccc;
-                    ALTER TABLE public.cccauthuser SET SCHEMA nmsprime_ccc'");
-                exec("sudo -u postgres pgloader --with 'data only' --with 'reset sequences' mysql://psqlconverter@localhost/$db postgresql:///$db", $ret);
-
-                echo implode(PHP_EOL, $ret)."\n";
-                $ret = [];
-
                 // Create user
                 system("sudo -u postgres /usr/pgsql-13/bin/psql -c \"CREATE USER $user PASSWORD '".$conf['password'].'\'"');
                 echo "$user\n";
+
+                // Convert MySQL DB to PostgreSQL
+                exec('sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc < /etc/nmsprime/sql-schemas/nmsprime_ccc.pgsql');
+                system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'CREATE SCHEMA nmsprime_ccc;
+                    ALTER TABLE public.cccauthuser SET SCHEMA nmsprime_ccc'");
+
+                file_put_contents('/tmp/nmsprime_ccc.load', [
+                    "LOAD DATABASE\n",
+                    "FROM mysql://psqlconverter@localhost/nmsprime_ccc\n",
+                    "INTO postgresql:///nmsprime_ccc\n",
+                    "WITH data only, reset sequences, truncate, batch rows = 5000, prefetch rows = 5000;\n",
+                ]);
+
+                exec('sudo -u postgres pgloader -q /tmp/nmsprime_ccc.load', $ret);
+
+                echo implode(PHP_EOL, $ret)."\n";
+                $ret = [];
 
                 // Move nmsprime_ccc table to schema public
                 system("sudo -u postgres /usr/pgsql-13/bin/psql nmsprime_ccc -c 'ALTER TABLE nmsprime_ccc.cccauthuser SET SCHEMA public'");
