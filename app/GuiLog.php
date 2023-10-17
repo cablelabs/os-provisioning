@@ -18,6 +18,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class GuiLog extends \BaseModel
 {
     // The associated SQL table for this Model
@@ -37,6 +39,18 @@ class GuiLog extends \BaseModel
         return '<i class="fa fa-history"></i>';
     }
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('ancient', function (Builder $builder) {
+            $builder->whereNotIn('model', self::EXCLUDED_MODELS);
+        });
+    }
+
     // AJAX Index list function
     // generates datatable content and classes for model
     public function view_index_label()
@@ -54,16 +68,12 @@ class GuiLog extends \BaseModel
 
     public function get_bsclass()
     {
-        $bsclass = 'info';
+        $lookup = [
+            'created' => 'success',
+            'deleted' => 'danger',
+        ];
 
-        if ($this->method == 'created') {
-            $bsclass = 'success';
-        }
-        if ($this->method == 'deleted') {
-            $bsclass = 'danger';
-        }
-
-        return $bsclass;
+        return $lookup[$this->method] ?? 'info';
     }
 
     public function generate_model_link()

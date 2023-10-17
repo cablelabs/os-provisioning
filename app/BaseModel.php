@@ -89,6 +89,21 @@ class BaseModel extends Eloquent
     public const AVAILABLE_FILTERS = [];
 
     /**
+     * Models to be excluded from search and GuiLog
+     */
+    public const EXCLUDED_MODELS = [
+        'AddressFunctionsTrait',
+        'Ability',
+        'App',
+        'BaseModel',
+        'BillingLogger',
+        'CarrierCode', // cron updated data; not for standalone use
+        'EkpCode', // cron updated data; not for standalone use
+        'ProvVoipEnviaHelpers',
+        'TRCClass',	// static data; not for standalone use
+    ];
+
+    /**
      * Helper to get the model name.
      *
      * @author Patrick Reichel
@@ -346,19 +361,6 @@ class BaseModel extends Eloquent
             return Session::get('models');
         }
 
-        // models to be excluded from search
-        $exclude = [
-            'AddressFunctionsTrait',
-            'Ability',
-            'BaseModel',
-            'CsvData',
-            'helpers',
-            'BillingLogger',
-            'TRCClass',	// static data; not for standalone use
-            'CarrierCode', // cron updated data; not for standalone use
-            'EkpCode', // cron updated data; not for standalone use
-            'ProvVoipEnviaHelpers',
-        ];
         $result = [];
 
         /*
@@ -369,7 +371,7 @@ class BaseModel extends Eloquent
         foreach ($models as $model) {
             $model = str_replace(app_path().'/', '', $model);
             $model = str_replace('.php', '', $model);
-            if (array_search($model, $exclude) === false) {
+            if (array_search($model, self::EXCLUDED_MODELS) === false) {
                 $namespace = 'App\\'.$model;
                 if (is_subclass_of($namespace, '\App\BaseModel')) {
                     $result[$model] = $namespace;
@@ -395,7 +397,7 @@ class BaseModel extends Eloquent
                 $module = $module_array[1];
                 $model = preg_replace("|$path/(.*?)/Entities/|", '', $model);
                 $model = str_replace('.php', '', $model);
-                if (array_search($model, $exclude) === false) {
+                if (array_search($model, self::EXCLUDED_MODELS) === false) {
                     $namespace = "Modules\\$module\Entities\\".$model;
                     if (is_subclass_of($namespace, '\App\BaseModel')) {
                         $result[$model] = $namespace;
