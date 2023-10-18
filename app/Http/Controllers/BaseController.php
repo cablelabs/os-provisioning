@@ -27,6 +27,7 @@ use BaseModel;
 use Bouncer;
 use Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Log;
 use Modules\CoreMon\Helpers\AlertmanagerApi;
 use Nwidart\Modules\Facades\Module;
@@ -1625,25 +1626,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Return a List of Filenames (e.g. PDF Logos, Tex Templates)
-     *
-     * @param 	dir 	Directory name relative to storage/app/config/
-     * @return array of Filenames
-     *
-     * @author 	Nino Ryschawy
-     */
-    public static function get_storage_file_list($dir)
-    {
-        $files[null] = 'None';
-        foreach (\Storage::files("config/$dir") as $file) {
-            $name = basename($file);
-            $files[$name] = $name;
-        }
-
-        return $files;
-    }
-
-    /**
      * Process datatables ajax request.
      *
      * For Performance tests and fast Copy and Paste: $start = microtime(true) and $end = microtime(true);
@@ -2154,5 +2136,29 @@ class BaseController extends Controller
         }
 
         return [$filename, $csv];
+    }
+
+    /**
+     * Search through given directory and return array for select field.
+     *
+     * @param  string  Directory relative to storage/app/
+     * @return array Filenames/Select
+     */
+    protected function getFilesForSelect(string $directory, bool $withEmptyOption = true): array
+    {
+        if (! Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+        }
+
+        $files = array_map(function ($file) {
+            return $file->getRelativePathName();
+        }, File::allFiles(storage_path('app/').$directory));
+
+        $select = [];
+        if ($withEmptyOption) {
+            $select[null] = '[Default]';
+        }
+
+        return $select += array_combine($files, $files);
     }
 }

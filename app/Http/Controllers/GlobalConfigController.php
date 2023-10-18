@@ -18,7 +18,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Facades\Module;
@@ -28,7 +27,7 @@ class GlobalConfigController extends BaseController
 {
     protected $log_level = ['0 - Emergency', '1 - Alert', '2 - Critical', '3 - Error', '4 - Warning', '5 - Notice', '6 - Info', '7 - Debug'];
 
-    public const BG_IMAGES_PATH_REL = 'app/public/base/bg-images/';
+    public const BG_IMAGES_PATH_REL = 'public/base/bg-images/';
 
     protected function getFileUploadPaths(): array
     {
@@ -42,16 +41,7 @@ class GlobalConfigController extends BaseController
      */
     public function view_form_fields($model = null)
     {
-        if (! Storage::exists(self::BG_IMAGES_PATH_REL)) {
-            Storage::makeDirectory(self::BG_IMAGES_PATH_REL);
-        }
-
-        $pics = array_map(function ($file) {
-            return $file->getRelativePathName();
-        }, Storage::allfiles(self::BG_IMAGES_PATH_REL));
-
-        $pictures[null] = null;
-        $pictures += array_combine($pics, $pics);
+        $pictures = $this->getFilesForSelect(self::BG_IMAGES_PATH_REL);
 
         $ret = [
             ['form_type' => 'text', 'name' => 'name', 'description' => 'ISP Name'],
