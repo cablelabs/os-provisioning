@@ -18,9 +18,8 @@
 
 use Database\Migrations\BaseMigration;
 use Illuminate\Database\Schema\Blueprint;
-use Modules\HfcReq\Entities\NetElementType;
 
-class AddRkmServerAsNetelementtype extends BaseMigration
+class AddUsernameAndPasswordToNetelementTable extends BaseMigration
 {
     public $migrationScope = 'database';
 
@@ -31,13 +30,6 @@ class AddRkmServerAsNetelementtype extends BaseMigration
      */
     public function up()
     {
-        NetElementType::create([
-            'id' => 15,
-            'name' => 'RKM-Server',
-            'vendor' => 'SAT-Kabel',
-            'base_type_id' => 15,
-        ]);
-
         Schema::table('netelement', function (Blueprint $table) {
             $table->string('username')->nullable();
             $table->string('password')->nullable();
@@ -51,8 +43,6 @@ class AddRkmServerAsNetelementtype extends BaseMigration
      */
     public function down()
     {
-        NetElementType::where('id', 15)->forceDelete();
-
         Schema::table('netelement', function (Blueprint $table) {
             $table->dropColumn(['username', 'password']);
         });
