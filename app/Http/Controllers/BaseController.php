@@ -2156,7 +2156,7 @@ class BaseController extends Controller
 
         $select = [];
         if ($withEmptyOption) {
-            $select[null] = '[Default]';
+            $select[null] = trans('view.noFileSelected');
         }
 
         return $select += array_combine($files, $files);

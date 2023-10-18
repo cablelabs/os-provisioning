@@ -505,9 +505,13 @@ class Configfile extends \BaseModel
      */
     public static function undeletables()
     {
-        return self::where('public', 'yes')
-            ->has('modem')->orHas('mtas')->orHas('children')
-            ->pluck('id')->toArray();
+        $undeletables = self::where('public', 'yes')->has('modem')->orHas('children');
+
+        if (Module::collections()->has('ProvVoip')) {
+            $undeletables->orHas('mtas');
+        }
+
+        return $undeletables->pluck('id')->toArray();
     }
 
     /**

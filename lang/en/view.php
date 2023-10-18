@@ -1043,4 +1043,5 @@ return [
     'PDFs Generation'           => 'PDFs Generation',
     'PDFs Concatenation'        => 'PDFs Concatenation',
     'View' => 'View',
+    'noFileSelected' => 'No File Selected',
 ];

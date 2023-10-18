@@ -1043,4 +1043,5 @@ return [
     'PDFs Generation'           => 'PDF-Generierung',
     'PDFs Concatenation'        => 'Verkettung von PDFs',
     'View' => 'Ansehen',
+    'noFileSelected' => 'Keine Datei ausgewählt',
 ];
