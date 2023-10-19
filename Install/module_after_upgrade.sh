@@ -28,6 +28,9 @@ fi
 
 # Migrate when all modules are upgraded
 if [ $lastModule -eq 1 ]; then
+    # TODO: Remove for version > 3.2.0
+    rm -rf /var/www/nmsprime/modules/*/Resources/lang
+
     rm -f /var/www/nmsprime/config/excel.php
     /opt/remi/php80/root/usr/bin/php artisan module:v6:migrate
     /opt/remi/php80/root/usr/bin/php artisan optimize:clear
