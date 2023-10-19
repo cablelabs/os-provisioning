@@ -120,7 +120,30 @@ function fpm($dir, $version, $rpm_dir, $module = 'base', $options = '')
         return false;
     }
 
-    return 'fpm -s dir -t rpm -v '.$version.' '.' --architecture all --force --verbose '.$config;
+    // Note: --edit let's you see and edit the SPEC file before the package is built - see https://github.com/jordansissel/fpm/issues/199
+    $cmd = 'fpm -s dir -t rpm -v '.$version.' '.' --architecture all --force --verbose ';
+
+    // Specify all directories of a package so that these are deleted when removing or updating a package
+    // (in case the other package doesn't have these files and folders as well)
+    // This is a bug of fpm - see https://github.com/jordansissel/fpm/issues/199 and https://github.com/jordansissel/fpm/issues/701
+    // Note: using --rpm-auto-add-directories the installation fails
+    $nmsRootDir = '/var/www/nmsprime';
+
+    if ($module == 'base') {
+        foreach (glob(getcwd().'/*', GLOB_ONLYDIR) as $dirPath) {
+            $dirName = basename($dirPath);
+
+            if (in_array($dirName, ['modules', 'Install'])) {
+                continue;
+            }
+
+            $cmd .= "--directories '$nmsRootDir/$dirName' ";
+        }
+    } else {
+        $cmd .= "--directories '$nmsRootDir/modules/".basename($dir)."' ";
+    }
+
+    return $cmd.$config;
 }
 
 /*
