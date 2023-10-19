@@ -430,11 +430,10 @@ class ImportNmsCommand extends Command
             }
 
             $newMta = new Mta($this->getAttributesWithoutId($mta));
-            $newMta->updated_at = now();
             $newMta->configfile_id = $this->configfileMap[$mta->configfile_id];
             $newMta->modem_id = $newModem->id;
 
-            $newMta->saveQuietly();
+            $newMta->save();
 
             $this->addPhonenumbers($mta, $newMta);
         }
