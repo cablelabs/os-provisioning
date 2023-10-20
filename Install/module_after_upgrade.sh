@@ -10,7 +10,7 @@ lastModule=1
 rpm -qa nmsprime-* --queryformat '%{NAME}-%{VERSION}-%{RELEASE}\n' | sort > $tmpFile
 
 # Get packages that not have been updated yet
-read -r -a packages <<< $(cut -d '-' -f1,2 $tmpFile | uniq -c | grep 1 | cut -d '1' -f2 | sed 's/^ *//')
+read -r -a packages <<< $(cut -d '-' -f1,2 $tmpFile | uniq -c | grep 1 | grep -v repos | cut -d '1' -f2 | sed 's/^ *//')
 
 # Check if all packages have the newest version (also new manually installed packages)
 if [ ${#packages[@]} -ne 0 ]; then
