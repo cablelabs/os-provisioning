@@ -85,6 +85,7 @@ sudo -u postgres /usr/pgsql-13/bin/psql -d nmsprime -c "
 "
 
 rm -rf /var/www/nmsprime/bootstrap/cache/*
+rm -f /var/www/nmsprime/app/helpers.php
 
 laravelModules=$(php /var/www/nmsprime/artisan module:list | cut -d'|' -f2)
 if echo "$laravelModules" | grep -q "ProvMon"; then
@@ -100,6 +101,7 @@ sed -i "s/^RADIUS_DB_PASSWORD=.*$/RADIUS_DB_PASSWORD=$(pwgen 12 1)/" /etc/nmspri
 if [ -d "/var/www/nmsprime/resources/lang" ]; then
     rm -rf "/var/www/nmsprime/resources/lang"
 fi
+
 # TODO: END Custom NMS Prime 3.2 Code
 
 cd '/var/www/nmsprime'
