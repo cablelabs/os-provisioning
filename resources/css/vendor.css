@@ -8,7 +8,6 @@
 @import '/components/assets-admin/css/theme/default';
 
 @import '/node_modules/ion-rangeslider/css/ion.rangeSlider';
-@import '/node_modules/switchery/switchery';
 @import '/components/assets-admin/css/color_config';
 
 @import '/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4';
