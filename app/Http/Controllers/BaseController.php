@@ -2139,6 +2139,14 @@ class BaseController extends Controller
 
         $filename = Request::file($formField)->getClientOriginalName();
 
+        // check if file starts with BOM; if so: skip that
+        // see https://www.php.net/manual/de/function.fgetcsv.php#122696
+        $bom = "\xef\xbb\xbf";
+        if (fgets($filehandle, 4) !== $bom) {
+            // BOM not found - rewind pointer to start of file.
+            rewind($filehandle);
+        }
+
         $csv = [];
         while (($data = fgetcsv($filehandle, null, ';')) !== false) {
             array_push($csv, $data);
