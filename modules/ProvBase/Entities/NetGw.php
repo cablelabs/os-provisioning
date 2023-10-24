@@ -22,6 +22,7 @@ use App\Sla;
 use File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Str;
 
 class NetGw extends \BaseModel
 {
@@ -484,6 +485,14 @@ class NetGw extends \BaseModel
         Storage::put(self::US_SNR_PATH."/$this->id.json", json_encode($ret['SNR']));
     }
 
+    /**
+     * Map list of IUC's to corresponding Modem MAC with data from docsIf31CmtsCmRegStatusUsProfileIucList.
+     * Have a look at modules/ProvMon/Install/files/cmtspoller-nmsprime.sh for the OID's.
+     *
+     * @author Roy Schneider
+     *
+     * @return array $ret
+     */
     public function mapOfdmaChannelDataToMac()
     {
         $iucStats = [];
@@ -503,14 +512,20 @@ class NetGw extends \BaseModel
         });
 
         /* first 4 octets: ifIndex
-         * next 2 octets: number or count of Data IUCs
+         * next octet: number or count of Data IUCs
          * next octet: Data IUC (5, 6, 9-13)
+         *
+         * Examples: a CM with a single OFDMA channel (ifIndex 36) and two
+         * assigned Data IUCs (5 and 6) would have a ProfileIdList value of
+         * 0x00000024020506. A CM with a 2 OFDMA channel bonding group each
+         * with one assigned Data IUC (IUC 5 on channel with ifIndex 34 and
+         * IUC 13 on channel with ifIndex 35) would have a UsProfileIucList
+         * value of 0x00000022010500000023010D).
          */
         $data = array_map(function ($hex) {
-            // split string in chunks of length 14 since there can be multiple OFDMA Channels
-            foreach (str_split(str_replace(' ', '', $hex), 14) as $key => $value) {
-                return [$key => [hexdec(substr($value, 0, 8)), hexdec(substr($value, 8, 4)), hexdec(substr($value, 12, 2))]];
-            }
+            // split string in chunks since there can be multiple OFDMA channels
+            // $hex = '00000022010500000023010D';
+            return $this->addIucProfilesToOfdmaChannel($hex);
         }, $iucList);
 
         $ret = [];
@@ -523,6 +538,41 @@ class NetGw extends \BaseModel
         }
 
         return $ret;
+    }
+
+    /**
+     * Recursive function to split hex string from docsIf31CmtsCmRegStatusUsProfileIucList into OFDMA channels with corresponding IUC profiles.
+     *
+     * @author Roy Schneider
+     *
+     * @param  string  $hex
+     * @param  array  $map
+     * @return array $map
+     */
+    public function addIucProfilesToOfdmaChannel($hex, $map = [])
+    {
+        // length of 1 channel and 1 profile but this can be multiple channels/profiles
+        $length = 10;
+
+        $hex = str_replace(' ', '', $hex);
+        $ifIndex = hexdec(substr($hex, 0, 8));
+        $iucNumber = hexdec(substr($hex, 8, 2));
+
+        // add each profile of the channel
+        for ($i = 1; $i <= $iucNumber; $i++) {
+            // for each channel add next 2 octets (next profile ID)
+            array_push($map, [$ifIndex, $iucNumber, hexdec(substr($hex, 8 + 2 * $i, 2))]);
+        }
+
+        $length += $iucNumber * 2;
+
+        // remove channel from the string if there are other channels
+        // and recursively iterate over remaining string
+        if ($length < Str::length($hex)) {
+            $map = $this->addIucProfilesToOfdmaChannel(substr($hex, $length), $map);
+        }
+
+        return $map;
     }
 
     /**
