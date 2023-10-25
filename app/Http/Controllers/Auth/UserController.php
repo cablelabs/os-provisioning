@@ -163,7 +163,10 @@ class UserController extends BaseController
 
         if (\Route::currentRouteName() == 'User.profile') {
             $form_update = 'Profile.update';
-            $headline = '';
+            $user = auth()->user();
+            $headline = "<div class='flex items-center'><div class='w-2 h-6 rounded-full bg-".
+                $user->get_bsclass()."'></div><div class='flex px-2.5 text-black dark:text-slate-100'>".
+                $user->view_icon().$user->label().'</div></div>';
 
             return $view->with(compact('form_update', 'headline'));
         }

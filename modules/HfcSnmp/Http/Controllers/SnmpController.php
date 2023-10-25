@@ -148,7 +148,13 @@ class SnmpController extends \BaseController
         // Init View
         $view_header = 'SNMP Settings: '.$netelement->name;
         $route_name = \NamespaceController::get_route_name();
-        $headline = BaseViewController::compute_headline($route_name, $view_header, $netelement);
+        $headline = view('hfcreq::NetElement.breadcrumb', [
+            'column' => 'not set',
+            'route' => $route_name,
+            'header' => $view_header,
+            'rootNode' => $netelement,
+        ])->render();
+
         $tabs = $netelement->tabs();
         $reload = $netelement->netelementtype->page_reload_time ?: 0;
 
