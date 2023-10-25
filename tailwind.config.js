@@ -1,12 +1,11 @@
 module.exports = {
   darkMode: 'class',
   content: [
+    './app/*.php',
+    './app/extensions/**/*.php',
     './app/Http/Controllers/*.php',
-    './resources/**/*.blade.php',
-    './resources/**/*.js',
-    './resources/**/*.vue',
-    './modules/**/*.blade.php',
-    './modules/**/*.vue',
+    './resources/**/*.{blade.php,js,vue}',
+    './modules/**/*.{blade.php,js,vue}',
     './modules/**/*.php'
   ],
   theme: {
