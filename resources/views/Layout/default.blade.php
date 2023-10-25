@@ -38,7 +38,7 @@
             data-default-tab="{{ $firstTab ?? request()->route()->getName() }}"
         @elseif(request()->route()->getName() == 'Config.index')
             data-tabs='@json(collect($links)->values())'
-            data-default-tab="{{ $links['global_config']['name'] }}"
+            data-default-tab="{{ $firstTab }}"
         @endif
         class="flex flex-column page-sidebar-fixed page-header-fixed in"
         style="min-height:100%;">

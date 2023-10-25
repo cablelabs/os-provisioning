@@ -21,7 +21,7 @@
 @section('content_top')
 
 <li class="active">
-	<a href="{{route($route_name)}}">
+	<a href="{{ route($route_name) }}">
 	{!! \App\Http\Controllers\BaseViewController::__get_view_icon(isset($view_var[0]) ? $view_var[0] : null).$view_header !!}
 	</a>
 </li>
@@ -40,7 +40,7 @@
 	<div id="tabs" v-on:wheel.stop="transformScroll" class="flex px-2 pt-0 overflow-x-auto scrollbar scrollbar-h-1 scrollbar-thumb-gray-500 scrollbar-track-gray-100 border-b border-gray-300 shadow-md dark:bg-slate-900 bg-slate-300 dark:border-slate-900 d-print-none whitespace-nowrap">
 		<ul class="flex items-center w-full px-2 text-black dark:text-slate-100">
 			@foreach($moduleModels as $slug => $model)
-				<li v-on:click="setActiveTab('{{ $links[$slug]['name'] }}')"
+				<li v-on:click="setAndStoreActiveTab('{{ $links[$slug]['name'] }}')"
 					:class="tabStates['{{ $links[$slug]['name'] }}'] ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white border-transparent'"
 					class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $loop->first ? 'border-cyan-500' : 'border-transparent hover:border-white'}}"
 					role="tab">

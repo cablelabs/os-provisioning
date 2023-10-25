@@ -20,7 +20,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class SidebarController extends BaseController
+class SessionAndCacheStateController extends BaseController
 {
     public function setPinnedState(Request $request)
     {
@@ -36,5 +36,18 @@ class SidebarController extends BaseController
             'pinned' => $pinned = cache('sidebar.pinnedState.'.$loginName),
             'message' => $pinned ? trans('messages.sidebarPinned') : trans('messages.sidebarUnpinned'),
         ]);
+    }
+
+    public function setActiveTab(Request $request)
+    {
+        if (! $request->has('tab') || ! $request->has('url')) {
+            return;
+        }
+
+        $route = explode('/', $request->get('url'))[2];
+
+        session(["tab.{$route}" => $request->get('tab')]);
+
+        return response()->json(['success' => true]);
     }
 }

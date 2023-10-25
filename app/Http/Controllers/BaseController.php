@@ -1035,7 +1035,8 @@ class BaseController extends Controller
         $view_var->loadEditViewRelations();
 
         $view_header = BaseViewController::translate_view($model->view_headline(), 'Header');
-        $headline = BaseViewController::compute_headline(NamespaceController::get_route_name(), $view_header, $view_var);
+        $routeName = NamespaceController::get_route_name();
+        $headline = BaseViewController::compute_headline($routeName, $view_header, $view_var);
 
         $fields = BaseViewController::prepare_form_fields(static::get_controller_obj()->view_form_fields($view_var), $view_var);
         $form_fields = BaseViewController::add_html_string($fields, 'edit');
@@ -1047,6 +1048,7 @@ class BaseController extends Controller
         if ($firstTab) {
             $firstTab = $firstTab['name'];
         }
+        $firstTab = session("tab.{$routeName}", $firstTab);
 
         // check if there is additional data to be passed to blade template
         // on demand overwrite base method getAdditionalDataForEditView($model)

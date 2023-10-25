@@ -102,7 +102,7 @@
                             @endif
 
                             {{-- (Local) Tabs without page reload --}}
-                            <li v-on:click="setActiveTab('{{ $tab['name'] }}')"
+                            <li v-on:click="setAndStoreActiveTab('{{ $tab['name'] }}')"
                                 :class="tabStates['{{ $tab['name'] }}'] ? '!border-cyan-500 hover:border-cyan-500' : 'hover:border-white border-transparent'"
                                 class="pb-1 pt-2 !px-3 border-b-2 hover:bg-slate-200 dark:hover:bg-slate-800 {{ $firstTab == $tab['name'] ? 'border-cyan-500' : 'border-transparent hover:border-white'}}"
                                 role="tab">

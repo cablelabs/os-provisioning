@@ -188,6 +188,11 @@ BaseRoute::group([], function () {
 
     BaseRoute::post('Sidebar/setPinnedState', [
         'as' => 'Sidebar.setPinnedState',
-        'uses' => 'SidebarController@setPinnedState',
+        'uses' => 'SessionAndCacheStateController@setPinnedState',
+    ]);
+
+    BaseRoute::post('Session/SetActiveTab', [
+        'as' => 'App.SetActiveTab',
+        'uses' => 'SessionAndCacheStateController@setActiveTab',
     ]);
 });

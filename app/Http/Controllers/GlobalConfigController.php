@@ -144,11 +144,13 @@ class GlobalConfigController extends BaseController
             ];
         }
 
+        $firstTab = session('tab.Config', $links['global_config']['name']);
+
         foreach ($moduleControllers as $key => $controller) {
             $fields[$key] = BaseViewController::prepare_form_fields($controller->view_form_fields($moduleModels[$key]), $moduleModels[$key]);
             $form_fields[$key] = BaseViewController::add_html_string($fields[$key], 'edit');
         }
 
-        return View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'moduleModels', 'form_fields')));
+        return View::make('GlobalConfig.index', $base_controller->compact_prep_view(compact('links', 'view_header', 'route_name', 'moduleModels', 'form_fields', 'firstTab')));
     }
 }

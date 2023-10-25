@@ -73,6 +73,24 @@ export default {
       tabStates.value[tabName] = true
     }
 
+    function setAndStoreActiveTab(tabName) {
+      if (tabStates.value[tabName]) {
+        return
+      }
+
+      setActiveTab(tabName)
+
+      axios({
+        method: 'post',
+        url: '/admin/Session/SetActiveTab',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: {
+          tab: tabName,
+          url: window.location.pathname,
+        }
+      })
+    }
+
     function transformScroll(event) {
       if (!event.deltaY) {
         return;
@@ -88,6 +106,7 @@ export default {
       toggleLoggingTab,
       tabStates,
       setActiveTab,
+      setAndStoreActiveTab,
       transformScroll,
     }
   }
