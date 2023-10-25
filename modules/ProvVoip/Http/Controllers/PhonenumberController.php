@@ -142,7 +142,7 @@ class PhonenumberController extends \BaseController
             }
 
             $active_checkbox = ['form_type' => 'html', 'name' => 'active', 'description' => 'Active',
-                'html' => '<div class="col-md-7">
+                'html' => '<div class="col-md-7 order-3">
                         <input name="active" type="hidden" id="active" value="'.$active_state.'">'.$active_symbol.'
                     </div>',
                 'help' => 'Automatically set by (de)activation date in phonenumber management',
