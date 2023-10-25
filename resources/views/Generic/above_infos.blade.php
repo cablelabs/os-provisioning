@@ -44,7 +44,7 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
 ?>
 
 @foreach ($tmp_msg_above as $tmp_msg_above_key => $tmp_msg_above_msg)
-    @DivOpen(12)
+    <div class="w-full flex-none mb-3">
     <?php
 
         // for better handling: transform strings to array (containing one element)
@@ -83,11 +83,5 @@ foreach ($tmp_msg_above_keys as $tmp_msg_above_key) {
         // we could use Session::flash for this behavior – but this supports no arrays…
         Session::forget($tmp_msg_above_key);
     ?>
-    @DivClose()
+    </div>
 @endforeach
-
-@if ($tmp_msg_above)
-    @DivOpen(12)
-        &nbsp;
-    @DivClose()
-@endif
