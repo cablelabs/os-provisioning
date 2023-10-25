@@ -1166,7 +1166,7 @@ class ModemController extends \BaseController
         $ip = $mta->hostname == $ip ? null : $ip;
         $mac = strtolower($mta->mac);
         $search = $ip ? "$mac|$mta->hostname|$ip " : "$mac|$mta->hostname";
-        $log = getLogEntries('/var/log/messages', $search, '| tail -n 25  | tac');
+        $log = getLogEntries('/var/log/messages', $search, '| tail -n 25 | tac');
 
         end:
 

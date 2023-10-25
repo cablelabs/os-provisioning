@@ -52,6 +52,7 @@
     data-channel="{{ \Modules\ProvMon\Events\NewRealtimeValues::getChannelName($modem->id) }}"
     data-realtime-update-interval="{{ \Modules\ProvMon\Entities\ProvMon::first()->realtime_update_interval }}"
     data-view-header="{!! isset($view_header) ? $view_header : 'undefined'!!}"
+    data-log='@json($log, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
 >
 
 @else
@@ -66,6 +67,7 @@
     data-messages-analysis-ping-in-progress="{{ trans('provmon::messages.analysis.pingInProgress') }}"
     data-csrf-token="{{ csrf_token() }}"
     data-route-modem-flood-ping="{{ route("Modem.floodPing", ["modem" => $modem->id]) }}"
+    data-log='@json($log, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)'
 >
 @endif
 
