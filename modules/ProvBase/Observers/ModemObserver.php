@@ -32,6 +32,13 @@ use Modules\ProvBase\Entities\Modem;
  */
 class ModemObserver
 {
+    public function creating($modem)
+    {
+        if (! $modem->qos_id) {
+            $modem->qos_id = $modem->contract->qos_id;
+        }
+    }
+
     public function created($modem)
     {
         Log::debug(__METHOD__.' started for '.$modem->hostname);
