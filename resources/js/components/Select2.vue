@@ -92,7 +92,8 @@ onMounted(() => {
   select.value
     .select2({
       data: props.options,
-      multiple: props.multiple
+      multiple: props.multiple,
+      width: '100%'
     })
     .val(selected.value)
     .trigger('change')
