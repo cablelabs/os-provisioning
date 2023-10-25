@@ -66,7 +66,7 @@
                 $blade_type = 'form';
             ?>
             @include('Generic.above_infos')
-            <form v-on:submit.prevent="updateGenieTasks">
+            <form v-if="taskOptions" v-on:submit.prevent="updateGenieTasks">
                 <div class="row flex">
                     <div style="flex: 1;">
                         <select2 v-model="selectedTask" :initial="taskOptions.length > 0 ? taskOptions[0] : ''" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
