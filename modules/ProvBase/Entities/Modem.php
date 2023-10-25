@@ -2539,7 +2539,7 @@ class Modem extends \BaseModel
             $genieId = $this->getGenieId();
 
             // Log tab
-            $log = getLogEntries('/var/log/genieacs/genieacs-cwmp-access.log', $genieId, '| tail -n 30 | tac');
+            $log = getLogEntries('/var/log/genieacs/genieacs-cwmp-access.log', $genieId, null, '-i -m 30', true);
 
             // Wifi and LAN tab
             $dataModel = $this->getCwmpDataModel($genieId);

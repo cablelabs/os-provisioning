@@ -166,13 +166,14 @@ if (! function_exists('multi_array_key_exists')) {
  * @param  string  $path  path of files like /var/log/messages or /var/log/genieacs-cwmp-access.log
  * @param  string  $search  only look for entries matching $search
  * @param  string  $grepPipes  slim down search result
+ * @param  string  $options  options of grep command
+ * @param  string  $reverse  search file in reverse order - used for TR-069 devices
  * @return array
  */
-function getLogEntries($path, $search, $grepPipes)
+function getLogEntries($path, $search, $grepPipes, $options = '-i', $reverse = false)
 {
     $search = escapeshellarg($search);
-
-    exec("egrep -i $search $path $grepPipes", $log);
+    exec(createGrepCommand($path, $search, $grepPipes, $options, $reverse), $log);
 
     if ($log) {
         return $log;
@@ -180,14 +181,19 @@ function getLogEntries($path, $search, $grepPipes)
 
     $files = glob("$path-*");
 
-    if (!empty($files)) {
-        $max = max($files);
+    if (! empty($files)) {
+        $path = max($files);
 
         // Logrotate was probably done during last hours -> consider older logfiles (e.g. /var/log/messages-20170904)
-        exec("egrep -i $search $max $grepPipes", $log);
+        exec(createGrepCommand($path, $search, $grepPipes, $options, $reverse), $log);
     }
 
     return $log;
+}
+
+function createGrepCommand($path, $search, $grepPipes, $options, $reverse)
+{
+    return $reverse ? "tac $path | egrep $options $search $grepPipes" : "egrep $options $search $path $grepPipes";
 }
 
 function isMobileRegEx(int $check): string
