@@ -2540,7 +2540,7 @@ class Modem extends \BaseModel
             $genieId = $this->getGenieId();
 
             // Log tab
-            $log['tr069'] = getLogEntries('/var/log/genieacs/genieacs-cwmp-access.log', $genieId, null, '-i -m 30', true);
+            $log['tr069'] = getTr069LogEntries($genieId);
 
             // Wifi and LAN tab
             $dataModel = $this->getCwmpDataModel($genieId);
@@ -2574,7 +2574,7 @@ class Modem extends \BaseModel
         $search = $mac ? "$mac|" : '';
         $search .= "$this->hostname[^0-9]";
         $search .= $ip ? "|$ip " : '';
-        $log['dhcp'] = getLogEntries('/var/log/messages', $search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
+        $log['dhcp'] = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
         $lease['text'] = self::searchLease($mac ? "hardware ethernet $mac" : '');
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
 

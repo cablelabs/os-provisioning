@@ -161,39 +161,64 @@ if (! function_exists('multi_array_key_exists')) {
 }
 
 /**
- * Helper to get Syslog entries dependent on what should be searched and discarded.
- *
- * @param  string  $path  path of files like /var/log/messages or /var/log/genieacs-cwmp-access.log
+ * Helper to get Log entries.
+ * 
+ * @author Roy Schneider
+ * @param  string  $grep  grep with options (prepended pipes are possible=
  * @param  string  $search  only look for entries matching $search
- * @param  string  $grepPipes  slim down search result
- * @param  string  $options  options of grep command
- * @param  string  $reverse  search file in reverse order - used for TR-069 devices
+ * @param  string  $file  the file that should be searched
+ * @param  string  $pipes  slim down search result
  * @return array
+ *
+ * Attention: pipes must not contain user input!
  */
-function getLogEntries($path, $search, $grepPipes, $options = '-i', $reverse = false)
+function getLogEntries($grep, $search, $file, $pipes)
 {
     $search = escapeshellarg($search);
-    exec(createGrepCommand($path, $search, $grepPipes, $options, $reverse), $log);
+    // $pipes = escapeshellarg($pipes);
+
+    exec("$grep $search $file $pipes", $log);
 
     if ($log) {
         return $log;
     }
 
-    $files = glob("$path-*");
-
+    // Logrotate was probably done during last hours -> consider older logfiles (e.g. /var/log/messages-20170904)
+    $files = glob("$file-*");
     if (! empty($files)) {
-        $path = max($files);
-
-        // Logrotate was probably done during last hours -> consider older logfiles (e.g. /var/log/messages-20170904)
-        exec(createGrepCommand($path, $search, $grepPipes, $options, $reverse), $log);
+        $file = max($files);
+        exec("$grep $search $file $pipes", $log);
     }
 
     return $log;
 }
 
-function createGrepCommand($path, $search, $grepPipes, $options, $reverse)
+/**
+ * Helper to get Syslog entries dependent on what should be searched and discarded.
+ *
+ * @author Roy Schneider
+ * @param  string  $search  only look for entries matching $search
+ * @param  string  $pipes  slim down search result
+ * @return array
+ *
+ * Attention: pipes must not contain user input!
+ */
+function getSyslogEntries($search, $pipes = null)
 {
-    return $reverse ? "tac $path | egrep $options $search $grepPipes" : "egrep $options $search $path $grepPipes";
+    return getLogEntries('egrep -i', $search, '/var/log/messages', $pipes);
+}
+
+/**
+ * Helper to get TR-069 entries dependent on what should be searched and discarded.
+ *
+ * @author Roy Schneider
+ * @param  string  $search  only look for entries matching $search
+ * @param  string  $pipes  slim down search result
+ * @return array
+ */
+function getTr069logEntries($search, $pipes = null)
+{
+    return getLogEntries("tac /var/log/genieacs/genieacs-cwmp-access.log | egrep -i -m 30", $search, null, $pipes);
 }
 
 function isMobileRegEx(int $check): string
