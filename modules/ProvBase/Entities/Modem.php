@@ -2389,6 +2389,8 @@ class Modem extends \BaseModel
             return;
         }
 
+        $useRadiusRelayInfo = ProvBase::first()->use_radius_relay_info;
+
         // renew RadCheck, if non-exisiting or not as expected
         if ($count = $this->radcheck()->count() != 2) {
             if ($count) {
@@ -2397,9 +2399,14 @@ class Modem extends \BaseModel
 
             $check = new RadCheck;
             $check->username = $this->ppp_username;
-            $check->attribute = 'Cleartext-Password';
             $check->op = ':=';
-            $check->value = $this->ppp_password;
+            if ($useRadiusRelayInfo) {
+                $check->attribute = 'Cleartext-Password';
+                $check->value = $this->ppp_password;
+            } else {
+                $check->attribute = 'Auth-Type';
+                $check->value = 'Accept';
+            }
             $check->save();
 
             $check = new RadCheck;
@@ -2413,7 +2420,7 @@ class Modem extends \BaseModel
         }
 
         // update existing RadCheck, if password was changed
-        if (array_key_exists('ppp_password', $this->getDirty())) {
+        if (array_key_exists('ppp_password', $this->getDirty()) && ! $useRadiusRelayInfo) {
             $check = $this->radcheckPassword;
             $check->value = $this->ppp_password;
             $check->save();

@@ -158,7 +158,7 @@ class ModemController extends \BaseController
             ['form_type' => 'text', 'name' => 'mac', 'description' => 'MAC Address', 'options' => ['placeholder' => 'AA:BB:CC:DD:EE:FF'], 'autocomplete' => ['modem'], 'help' => trans('helper.mac_formats')],
             ['form_type' => 'text', 'name' => 'serial_num', 'description' => 'Serial Number / CWMP-ID'],
             ['form_type' => 'text', 'name' => 'ppp_username', 'description' => 'PPP Username', 'select' => $cfIds['tr069'], 'options' => [$model->exists ? 'readonly' : '']],
-            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'PPP Password', 'select' => $cfIds['tr069']],
+            ['form_type' => 'text', 'name' => 'ppp_password', 'description' => 'PPP Password', 'select' => $cfIds['tr069'], 'hidden' => (ProvBase::first()->use_radius_relay_info) ? '1' : '0'],
             [
                 'form_type' => 'select',
                 'name' => 'contract_id',

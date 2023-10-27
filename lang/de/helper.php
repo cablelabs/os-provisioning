@@ -137,6 +137,7 @@ return [
     'additional_modem_reset'           => 'Zeigt einen zusätzlichen Modem Reset Button an, um das Modem ohne Hilfe des NetGws direkt per SNMP neu zu starten.',
     'auto_factory_reset'            => 'Führt für TR-069 CPEs automatisch einen Werksreset nach Änderung relevanter Einstellungen, die eine Neuprovisionierung erfordern, durch. (Änderung der Telefonnummern, PPPoE Zugangsdaten bzw. der Konfigurationsdatei)',
     'factory_reset_discovered_cpes' => 'Führt einen automatischen Werksreset für neu entdeckte TR-069 CPEs aus',
+    'use_radius_relay_info' => 'Authentifiziere IPoE Clients via DHCP Relay Informationen anstelle von PPPoE Zugangsdaten (setze sql_user_name = "%{Agent-Circuit-Id}" in /etc/raddb/mods-config/sql/main/postgresql/queries.conf)',
     'acct_interim_interval'         => 'Die Zeit in Sekunden zwischen vom NAS gesendeten Interim Updates (PPPoE).',
     'openning_new_tab_for_modem' => 'Öffnet die Modem-Edit Seite in einem neuen Fenster (Topographie).',
     'ppp_session_timeout'           => 'In Sekunden. Bei einem Wert von 0 werden die PPP Sessions nicht getrennt.',
