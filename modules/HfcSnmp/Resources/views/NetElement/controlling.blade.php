@@ -39,7 +39,7 @@
 
     {{-- Auto update button - Show only when device could be queried via SNMP --}}
     @if (! $error)
-        <div class="row justify-content-end">
+        <div class="row justify-content-end items-baseline space-x-2">
             @if ($netelement->controlling_link)
                 {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
             @endif
