@@ -18,10 +18,6 @@ export default {
       { id: 4, text: propData.modemAnalysisFloodpingHugeLoad },
     ]
 
-    const currentLog = ref('dhcp')
-    const switchLogButtonText = ref('Switch to TR069 Log')
-    const log = ref(JSON.parse(propData.log))
-
     // methods
     function floodPing() {
       let timeout = {
@@ -54,11 +50,6 @@ export default {
           console.error(error)
           pingStarted.value = false
         })
-    }
-
-    function switchLog() {
-      switchLogButtonText.value = `Switch to ${currentLog.value.toUpperCase()} Log`
-      currentLog.value = currentLog.value == 'dhcp' ? 'tr069' : 'dhcp'
     }
 
     return {

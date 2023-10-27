@@ -16,27 +16,8 @@
  * limitations under the License.
  */
 ?>
-<div v-if="log" class="tab-pane fade in flex" id="log">
-    <div class="flex justify-between">
-        <span class="text-green-600">
-            <b>Modem Logfile</b>
-        </span>
-        <button v-if="log.dhcp && log.tr069" class="btn btn-primary ml-2 mb-2" v-on:click="switchLog" v-text="switchLogButtonText"></button>
-    </div>
-    <br>
-    <div v-for="line in log[currentLog]">
-        <table>
-            <tr>
-                <td>
-                    <span color="grey" v-text="line"></span>
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
-<div v-else>
-    <span class="text-red-600">{{ trans('messages.modem_log_error') }}</span>
-</div>
+@include('provbase::Modem.log', ['log' => $dhcpLog, 'id' => 'dhcpLog'])
+@include('provbase::Modem.log', ['log' => $tr069Log, 'id' => 'tr069Log'])
 
 <div class="tab-pane fade in" id="lease">
     @if ($lease)

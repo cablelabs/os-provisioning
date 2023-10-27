@@ -2515,7 +2515,7 @@ class Modem extends \BaseModel
         $lan = null;
         $tickets = $this->tickets;
         $genieCmds = [];
-        $log = [];
+        $tr069Log = [];
 
         if ($this->isTR069()) {
             // Configfile tab
@@ -2540,7 +2540,7 @@ class Modem extends \BaseModel
             $genieId = $this->getGenieId();
 
             // Log tab
-            $log['tr069'] = getTr069LogEntries($genieId);
+            $tr069Log = getTr069LogEntries($genieId);
 
             // Wifi and LAN tab
             $dataModel = $this->getCwmpDataModel($genieId);
@@ -2574,23 +2574,23 @@ class Modem extends \BaseModel
         $search = $mac ? "$mac|" : '';
         $search .= "$this->hostname[^0-9]";
         $search .= $ip ? "|$ip " : '';
-        $log['dhcp'] = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
+        $dhcpLog = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
         $lease['text'] = self::searchLease($mac ? "hardware ethernet $mac" : '');
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
 
         $radius = $this->radiusData();
 
         if ($api) {
-            return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip', 'radius');
+            return compact('online', 'lease', 'tr069Log', 'dhcpLog', 'configfile', 'eventlog', 'dash', 'ip', 'radius');
         }
 
         $tabs = $this->analysisTabs();
-        $pills = ['log', 'lease', 'configfile', 'eventlog', 'wifi', 'lan'];
+        $pills = ['dhcpLog', 'tr069Log', 'lease', 'configfile', 'eventlog', 'wifi', 'lan'];
         $view_header = 'Modem-'.trans('view.analysis');
         $this->help = 'modem_analysis';
         $modem = $this;
 
-        return compact('online', 'lease', 'log', 'configfile', 'eventlog', 'dash', 'ip',
+        return compact('online', 'lease', 'dhcpLog', 'tr069Log', 'configfile', 'eventlog', 'dash', 'ip',
             'genieCmds', 'modem', 'pills', 'tabs', 'view_header', 'tickets', 'radius', 'wifi', 'lan');
     }
 
