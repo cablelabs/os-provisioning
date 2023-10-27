@@ -31,4 +31,22 @@ class RadReply extends \BaseModel
     public static function bootSoftDeletes()
     {
     }
+
+    /**
+     * Truncate radreply table and refresh all entries
+     */
+    public static function repopulateDb()
+    {
+        RadReply::truncate();
+
+        $observer = new Modules\ProvBase\Observers\EndpointObserver;
+
+        $pppEndpoints = Endpoint::whereHas('modem', function ($q) {
+            $q->whereNotNull('ppp_username');
+        })->get();
+
+        foreach ($pppEndpoints as $pppEndpoint) {
+            $observer->reserveAddress($pppEndpoint);
+        }
+    }
 }

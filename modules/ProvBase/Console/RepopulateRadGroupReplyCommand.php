@@ -24,6 +24,7 @@ use Modules\ProvBase\Entities\Nas;
 use Modules\ProvBase\Entities\RadCheck;
 use Modules\ProvBase\Entities\RadGroupReply;
 use Modules\ProvBase\Entities\RadIpPool;
+use Modules\ProvBase\Entities\RadReply;
 use Modules\ProvBase\Entities\RadUserGroup;
 
 class RepopulateRadGroupReplyCommand extends Command
@@ -66,6 +67,7 @@ class RepopulateRadGroupReplyCommand extends Command
 
         Nas::repopulateDb();                    // NetGw
         RadGroupReply::repopulateDb();          // QoS
+        RadReply::repopulateDb();               // Endpoints
         RadIpPool::repopulateDb();              // IpPool
 
         $this->repopulateRadModems();
