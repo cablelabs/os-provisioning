@@ -60,8 +60,8 @@
             <form v-on:submit.prevent="floodPing">
                 <div class="row flex">
                     <div class="flex-1">
-                        <select2 v-model="selectedPing" :initial="selectedPing" :i18n="{ all: '{{ trans('messages.all') }}'}">
-                            <option v-for="option in pingOptions" :key="option.id" :value="option.id" v-text="option.name"></option>
+                        <select2 id="pingselect" v-model="selectedPing" :initial="1" :i18n="{ all: '{{ trans('messages.all') }}'}">
+                            <option v-for="option in pingOptions" :key="option.id" :value="option.id" v-text="option.text" :selected="option.id == 1"></option>
                         </select2>
                     </div>
                     <div class="text-center">
