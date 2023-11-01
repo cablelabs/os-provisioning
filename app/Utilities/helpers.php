@@ -219,7 +219,7 @@ function getSyslogEntries($search, $pipes = null)
  * @param  string  $pipes  slim down search result
  * @return array
  */
-function getTr069logEntries($search, $pipes = null)
+function getTr069LogEntries($search, $pipes = null)
 {
     return getLogEntries('tac /var/log/genieacs/genieacs-cwmp-access.log | egrep -i -m 30', $search, null, $pipes);
 }
