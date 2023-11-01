@@ -19,7 +19,8 @@ export default {
         document.activeElement.contentEditable === 'true' ||
         e.ctrlKey ||
         e.metaKey ||
-        e.altKey
+        e.altKey ||
+        e.code === 'Enter'
       ) {
         return
       }
