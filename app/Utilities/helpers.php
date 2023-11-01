@@ -194,36 +194,6 @@ function getLogEntries($grep, $search, $file, $pipes)
     return $log;
 }
 
-/**
- * Helper to get Syslog entries dependent on what should be searched and discarded.
- *
- * @author Roy Schneider
- *
- * @param  string  $search  only look for entries matching $search
- * @param  string  $pipes  slim down search result
- * @return array
- *
- * Attention: pipes must not contain user input!
- */
-function getSyslogEntries($search, $pipes = null)
-{
-    return getLogEntries('egrep -i', $search, '/var/log/messages', $pipes);
-}
-
-/**
- * Helper to get TR-069 entries dependent on what should be searched and discarded.
- *
- * @author Roy Schneider
- *
- * @param  string  $search  only look for entries matching $search
- * @param  string  $pipes  slim down search result
- * @return array
- */
-function getTr069LogEntries($search, $pipes = null)
-{
-    return getLogEntries('tac /var/log/genieacs/genieacs-cwmp-access.log | egrep -i -m 30', $search, null, $pipes);
-}
-
 function isMobileRegEx(int $check): string
 {
     if ($check == 1) {

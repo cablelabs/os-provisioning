@@ -1069,14 +1069,14 @@ class ModemController extends \BaseController
         }
 
         /// get MAC of CPE first
-        $str = getSyslogEntries($modem_mac, '| grep CPE | tail -n 1 | tac');
+        $str = $modem->getSyslogEntries($modem_mac, '| grep CPE | tail -n 1 | tac');
 
         if ($str == []) {
             $mac = $modem_mac;
             $mac[0] = ' ';
             $mac = trim($mac);
             $mac_bug = true;
-            $str = getSyslogEntries($mac, '| grep CPE | tail -n 1 | tac');
+            $str = $modem->getSyslogEntries($mac, '| grep CPE | tail -n 1 | tac');
 
             if (! $str && $lease['text']) {
                 // get cpe mac addr from lease - first option tolerates small structural changes in dhcpd.leases and assures that it's a mac address
@@ -1094,7 +1094,7 @@ class ModemController extends \BaseController
 
         if (isset($cpeMac[0][0])) {
             $cpeMac = $cpeMac[0][0];
-            $log = getSyslogEntries($cpeMac, '| tail -n 20 | tac');
+            $log = $modem->getSyslogEntries($cpeMac, '| tail -n 20 | tac');
             $this->addIPv6LeaseInfo($cpeMac, $lease);
         }
 
@@ -1166,7 +1166,7 @@ class ModemController extends \BaseController
         $ip = $mta->hostname == $ip ? null : $ip;
         $mac = strtolower($mta->mac);
         $search = $ip ? "$mac|$mta->hostname|$ip " : "$mac|$mta->hostname";
-        $log = getSyslogEntries($search, '| tail -n 25 | tac');
+        $log = $modem->getSyslogEntries($search, '| tail -n 25 | tac');
 
         end:
 

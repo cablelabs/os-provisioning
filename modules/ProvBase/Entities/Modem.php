@@ -1990,6 +1990,36 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Get Syslog entries dependent on what should be searched and discarded.
+     *
+     * @author Roy Schneider
+     *
+     * @param  string  $search  only look for entries matching $search
+     * @param  string  $pipes  slim down search result
+     * @return array
+     *
+     * Attention: pipes must not contain user input!
+     */
+    public function getSyslogEntries($search, $pipes = null)
+    {
+        return getLogEntries('egrep -i', $search, '/var/log/messages', $pipes);
+    }
+
+    /**
+     * Get TR-069 log entries dependent on what should be searched and discarded.
+     *
+     * @author Roy Schneider
+     *
+     * @param  string  $search  only look for entries matching $search
+     * @param  string  $pipes  slim down search result
+     * @return array
+     */
+    public function getTr069LogEntries($search, $pipes = null)
+    {
+        return getLogEntries('tac /var/log/genieacs/genieacs-cwmp-access.log | egrep -i -m 30', $search, null, $pipes);
+    }
+
+    /**
      * Get Pre-equalization data of a modem via cacti
      *
      * @return: Array
@@ -2540,7 +2570,7 @@ class Modem extends \BaseModel
             $genieId = $this->getGenieId();
 
             // Log tab
-            $tr069Log = getTr069LogEntries($genieId);
+            $tr069Log = $this->getTr069LogEntries($genieId);
 
             // Wifi and LAN tab
             $dataModel = $this->getCwmpDataModel($genieId);
@@ -2574,7 +2604,7 @@ class Modem extends \BaseModel
         $search = $mac ? "$mac|" : '';
         $search .= "$this->hostname[^0-9]";
         $search .= $ip ? "|$ip " : '';
-        $dhcpLog = getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
+        $dhcpLog = $this->getSyslogEntries($search, '| grep -v MTA | grep -v CPE | tail -n 30 | tac');
         $lease['text'] = self::searchLease($mac ? "hardware ethernet $mac" : '');
         $lease = self::validateLease($lease, null, $online && $this->isTR069());
 
