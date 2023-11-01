@@ -46,7 +46,7 @@
 @stop
 
 @section('content_ping')
-    <div class="tab-content h-80 p-3">
+    <div class="tab-content min-h-[20rem] p-3">
         <div class="tab-pane" id="ping-test">
             @if ($online)
                 <div class="font-semibold text-green-600 pb-2"><b>Modem is Online</b></div>
