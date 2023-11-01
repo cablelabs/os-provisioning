@@ -24,7 +24,7 @@ class WebsocketApi
 {
     protected $pusherApi;
 
-    public function getPusherApi()
+    public function __construct()
     {
         $this->pusherApi = Broadcast::driver('pusher-php')->getPusher();
     }
@@ -38,10 +38,6 @@ class WebsocketApi
      */
     public function channelHasSubscribers(string $channel, bool $initial = false): bool
     {
-        if (! $this->pusherApi) {
-            $this->getPusherApi();
-        }
-
         if (! array_key_exists($channel, $this->pusherApi->getChannels()->channels)) {
             return false;
         }
