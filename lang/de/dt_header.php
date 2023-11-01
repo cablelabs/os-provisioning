@@ -37,12 +37,13 @@ return [
     'type' => 'Typ',
     'zip' => 'PLZ',
     'version' => 'Version',
-    'to_disconnect' => 'Zum Trennen der Verbindung',
+    'to_disconnect' => 'Abzuschalten',
     'apartment' => [
-        'number' => 'Nummer',
         'connected' => 'Angeschlossen',
         'occupied' => 'Bewohnt',
         'code' => 'Code',
+        'debts' => 'Ausstehender Betrag durch OPs',
+        'number' => 'Nummer',
     ],
     'contact' => [
         'administration' => 'Hausverwaltung',

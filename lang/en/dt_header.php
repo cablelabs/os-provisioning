@@ -39,10 +39,11 @@ return [
     'version' => 'Version',
     'to_disconnect' => 'To disconnect',
     'apartment' => [
-        'number' => 'Number',
         'connected' => 'Connected',
         'occupied' => 'Occupied',
         'code' => 'Code',
+        'debts' => 'Sum of Debts',
+        'number' => 'Number',
     ],
     'contact' => [
         'administration' => 'Administration',
@@ -669,7 +670,7 @@ return [
         'items' => 'Items',
         'new_items' => 'New Items',
         'revenue' => 'Revenue',
-        'revenue_from' => 'Revenue From',
+        'revenue_from' => 'Revenue',
         'revenue_change' => 'Revenue Change',
         'created_at' => 'Created',
     ],
