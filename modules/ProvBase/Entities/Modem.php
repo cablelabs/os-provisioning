@@ -2570,7 +2570,7 @@ class Modem extends \BaseModel
             $genieId = $this->getGenieId();
 
             // Log tab
-            $tr069Log = $this->getTr069LogEntries($genieId);
+            $tr069Log = $genieId ? $this->getTr069LogEntries($genieId) : [];
 
             // Wifi and LAN tab
             $dataModel = $this->getCwmpDataModel($genieId);
