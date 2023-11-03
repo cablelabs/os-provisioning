@@ -55,7 +55,7 @@
 
         {{-- LIST --}}
         @if ($form_fields['list'])
-        <div class="col-md-12 row" style="padding-right: 0px;"><div class="col-md-12 well row">
+        <div class="col-md-12 row pr-0"><div class="col-md-12 well row">
         @foreach ($form_fields['list'] as $field)
             <div class="col-md-6">
             {!! $field !!}
@@ -77,7 +77,7 @@
                         $col_width = 4; break;
                 }
             ?>
-            <div class="col-md-12 row" style="padding-right: 0px;">
+            <div class="col-md-12 row pr-0">
             @foreach ($form_fields['frame']['linear'] as $frame)
                 <div class="col-md-{{$col_width}} well">
                     @foreach ($frame as $field)
@@ -89,7 +89,7 @@
         @endif
 
         @foreach ($form_fields['frame']['tabular'] as $row)
-            <div class="col-md-12 row" style="padding-right: 0px;">
+            <div class="col-md-12 row pr-0">
                 <?php $col_width = (int) (12 / count($row)) ?>
                 @foreach ($row as $col)
                     <div class="col-md-{{$col_width}} well">
@@ -105,9 +105,9 @@
         @foreach ($form_fields['table'] as $table)
             <table class="table controllingtable table-bordered">
                 <thead>
-                        <th style="padding: 4px"> Index </th>
+                        <th class="p-1"> Index </th>
                     @foreach ($table['head'] as $oid => $head)
-                        <th align="center" style="padding: 4px">{!!$head!!}</th>
+                        <th align="center" class="text-center p-1">{!!$head!!}</th>
                     @endforeach
                 </thead>
                 <tbody>
@@ -120,7 +120,7 @@
                             ?>
                             <td> {!! isset($table['3rd_dim']) ? HTML::linkRoute('NetElement.controlling_edit', $i, [$table['3rd_dim']['netelement_id'], $table['3rd_dim']['paramId'], $i]) : $i !!} </td>
                             @foreach ($row as $col)
-                                <td align="center" style="padding: 4px"> {!! $col !!} </td>
+                                <td align="center" class="p-1"> {!! $col !!} </td>
                             @endforeach
                         </tr>
                     @endforeach
