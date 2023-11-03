@@ -731,6 +731,12 @@ return [
         '#' => 'Index',
     ],
     'name' => 'Name',
+    'neControl' => [
+        'autoUpdate' => [
+            'running' => 'Auto-Refresh is running. Klick to stop!',
+            'stopped' => 'Auto-Refresh is stopped. Klick to start!',
+        ],
+    ],
     'option' => [
         'statisticsQuery' => [
             'customerType' => [

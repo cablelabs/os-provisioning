@@ -43,7 +43,7 @@
             @if ($netelement->controlling_link)
                 {!! link_to($netelement->controlling_link, 'View...', ['class' => 'btn btn-primary mb-3']) !!}
             @endif
-            <div id="stop-button" class="btn mr-4 border border-gray-800 btn-outline-dark" title="Autorefresh" onclick="subscribe()">
+            <div id="stop-button" class="btn mr-4 mb-1 border border-gray-800 btn-outline-dark" title="{{ trans('view.neControl.autoUpdate.stopped') }}" onclick="subscribe()">
                 <i class="fa fa-refresh mr-0"></i>
             </div>
         </div>
@@ -199,6 +199,7 @@
 
         document.getElementById('stop-button').classList.remove('btn-outline-dark')
         document.getElementById('stop-button').classList.add('btn-dark')
+        document.getElementById('stop-button').title = "{{ trans('view.neControl.autoUpdate.running') }}"
         document.getElementById('stop-button').onclick = () => unsubscribe(true)
     }
 
@@ -218,6 +219,7 @@
 
         document.getElementById('stop-button').classList.remove('btn-dark')
         document.getElementById('stop-button').classList.add('btn-outline-dark')
+        document.getElementById('stop-button').title = "{{ trans('view.neControl.autoUpdate.stopped') }}"
         document.getElementById('stop-button').onclick = () => subscribe()
     }
 
