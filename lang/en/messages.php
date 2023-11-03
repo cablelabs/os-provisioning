@@ -842,7 +842,7 @@ return [
     'endpointIsActive'          => 'Endpoint is active.',
     'ontIsActive'               => 'ONT is active.',
     'qosIsInUse'                => 'QoS is in use.',
-    'iperf_max_stream'          => 'Maximum value for Iperf stream',
+    'iperf_max_stream'          => 'Maximum display value for the iPerf diagram in Mbit/s',
 
     // SmartOnt
     'alau_order_ref'            => 'Own order reference',
