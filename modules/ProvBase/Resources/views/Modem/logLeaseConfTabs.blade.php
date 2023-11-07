@@ -36,7 +36,7 @@
     @endif
 </div>
 <div class="tab-pane fade in" id="configfile">
-    @if ($configfile)
+    @if ($configfile && data_get($configfile, 'text', null))
         @if ($modem->configfile->device != 'tr069')
             <span class="text-green-600"><b>Modem Configfile ({{$configfile['mtime']}})</b></span><br>
             @if (isset($configfile['warn']))
