@@ -733,8 +733,8 @@ return [
     'name' => 'Name',
     'neControl' => [
         'autoUpdate' => [
-            'running' => 'Auto-Refresh is running. Klick to stop!',
-            'stopped' => 'Auto-Refresh is stopped. Klick to start!',
+            'running' => 'Auto-Refresh is running. Click to stop!',
+            'stopped' => 'Auto-Refresh is stopped. Click to start!',
         ],
     ],
     'option' => [
