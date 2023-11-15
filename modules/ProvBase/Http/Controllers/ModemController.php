@@ -913,7 +913,7 @@ class ModemController extends \BaseController
                     // set psk for 5GHz
                     snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.26.1.2.10101', 's', request('psk'));
                     // apply setting to non-volatile memory
-                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.1001', 'i', 1);
+                    snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.1001.0', 'i', 1);
                     break;
             }
         } catch (\Exception $e) {
