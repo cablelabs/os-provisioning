@@ -409,7 +409,7 @@ class ImportNmsCommand extends Command
             $newModem->contract_id = $contract->id;
             // there exist modems with qos_id 0 and NULL
             $newModem->qos_id = $this->qosMap[$modem->qos_id ?? 0];
-            $newModem->saveQuietly();
+            $newModem->save();
 
             $this->modemMap[$modem->id] = $newModem->id;
 
