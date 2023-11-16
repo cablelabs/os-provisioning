@@ -31,6 +31,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ImportNetUserCommand extends Command
 {
+    use \App\AddressFunctionsTrait;
+
     /**
      * The console command name.
      *
@@ -209,34 +211,6 @@ class ImportNetUserCommand extends Command
     }
 
     /**
-     * Extract last number from street (and encode dependent of andre schuberts encoding mechanism)
-     */
-    public static function split_street_housenr($string, $utf8_encode = false)
-    {
-        preg_match('/(\d+)(?!.*\d)/', $string, $matches);
-        $matches = $matches ? $matches[0] : '';
-
-        if (! $matches) {
-            // $street = $utf8_encode ? utf8_encode($string) : $string;
-            return [$string, null];
-        }
-
-        $x = strpos($string, $matches);
-        $housenr = substr($string, $x);
-
-        if (strlen($housenr) > 6) {
-            $street = str_replace($matches, '', $string);
-            $housenr = $matches;
-        } else {
-            $street = trim(substr($string, 0, $x));
-        }
-
-        // $street = $utf8_encode ? utf8_encode($street) : $street;
-
-        return [$street, $housenr];
-    }
-
-    /**
      * Add Contract Data
      *
      * @param   old_contract        Object      Contract from old DB
@@ -263,7 +237,7 @@ class ImportNetUserCommand extends Command
         $c->firstname = isset($names[1]) ? trim($names[1]) : '';
         $c->lastname = isset($names[0]) ? trim($names[0]) : '';
 
-        $ret = self::split_street_housenr($old_contract->Strasse);
+        $ret = self::splitStreetHousenr($old_contract->Strasse);
         $c->street = $ret[0];
         $c->house_number = $ret[1];
 

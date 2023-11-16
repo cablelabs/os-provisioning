@@ -35,6 +35,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ImportCommand extends Command
 {
+    use \App\AddressFunctionsTrait;
+
     /**
      * The console command name.
      *
@@ -322,37 +324,6 @@ class ImportCommand extends Command
     }
 
     /**
-     * Extract last number from street (and encode dependent of andre schuberts encoding mechanism)
-     */
-    public static function split_street_housenr($string, $utf8_encode = false)
-    {
-        preg_match('/(\d+)(?!.*\d)/', $string, $matches);
-        $matches = $matches ? $matches[0] : '';
-
-        if (! $matches) {
-            $street = $utf8_encode ? utf8_encode($string) : $string;
-
-            return [$street, null];
-        }
-
-        $x = strpos($string, $matches);
-        $housenr = substr($string, $x);
-
-        if (strlen($housenr) > 6) {
-            $street = str_replace($matches, '', $string);
-            $housenr = $matches;
-        } else {
-            $street = trim(substr($string, 0, $x));
-        }
-
-        $street = $utf8_encode ? utf8_encode($street) : $street;
-        // $street = mb_convert_encoding(trim(substr($string, 0, $x)), 'iso-8859-1', 'ascii');
-        // var_dump(mb_detect_encoding ($street), $street);
-
-        return [$street, $housenr];
-    }
-
-    /**
      * Add Contract Data
      *
      * @param 	old_contract 		Object 		Contract from old DB
@@ -396,7 +367,7 @@ class ImportCommand extends Command
         $c->firstname = $old_contract->vorname;
         $c->lastname = $old_contract->nachname;
 
-        $ret = self::split_street_housenr($old_contract->strasse);
+        $ret = self::splitStreetHousenr($old_contract->strasse);
         $c->street = $ret[0];
         $c->house_number = $ret[1];
 
@@ -746,7 +717,7 @@ class ImportCommand extends Command
         $modem->lastname = $new_contract->lastname;
 
         if ($old_modem->strasse) {
-            $ret = self::split_street_housenr($old_modem->strasse, true);
+            $ret = self::splitStreetHousenr($old_modem->strasse, true);
 
             $modem->street = $ret[0];
             $modem->house_number = $ret[1];

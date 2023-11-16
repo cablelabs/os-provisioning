@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputOption;
 class ImportTvCustomersCommand extends Command
 {
     use ImportTrait;
+    use \App\AddressFunctionsTrait;
 
     /**
      * The console command name.
@@ -167,7 +168,7 @@ class ImportTvCustomersCommand extends Command
         $name = explode(',', $line[self::C_NAME]);
         $firstname = isset($name[1]) ? trim($name[1]) : trim($name[0]);
         $lastname = isset($name[1]) ? trim($name[0]) : '';
-        $ret = ImportCommand::split_street_housenr($line[self::C_STRASSE]);
+        $ret = self::splitStreetHousenr($line[self::C_STRASSE]);
         $street = $ret[0];
         $housenr = $ret[1];
         $arr = explode(' OT ', $line[self::C_CITY]);

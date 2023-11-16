@@ -149,4 +149,29 @@ trait AddressFunctionsTrait
 
         return $result;
     }
+
+    /**
+     * Separate number from street in address string
+     */
+    public static function splitStreetHousenr($string)
+    {
+        preg_match('/(\d+)(?!.*\d)/', $string, $matches);
+        $matches = $matches ? $matches[0] : '';
+
+        if (! $matches) {
+            return [$string, null];
+        }
+
+        $x = strpos($string, $matches);
+        $housenr = substr($string, $x);
+
+        if (strlen($housenr) > 6) {
+            $street = str_replace($matches, '', $string);
+            $housenr = $matches;
+        } else {
+            $street = trim(substr($string, 0, $x));
+        }
+
+        return [$street, $housenr];
+    }
 }
