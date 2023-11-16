@@ -117,6 +117,14 @@ return [
         'voucher_nr' => 'Belegnr',
     ],
     'debts' => 'Schulden',
+    'document' => [
+        'model_id' => 'Gehört zu',
+    ],
+    'documenttemplate' => [
+        'file' => 'Template Datei',
+        'format' => 'Template Format',
+        'type_view' => 'Typ',
+    ],
     //FirmwareUpgrade
     'firmware_upgrade' => [
         'start_date' => 'Startdatum',

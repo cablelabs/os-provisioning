@@ -75,6 +75,7 @@ return [
         'bof_label' => 'BOF label',
         'type' => 'Type',
     ],
+    'contract_id' => 'Contract',
     // Auth
     'users' => [
         'login_name' => 'Login Name',
@@ -116,6 +117,14 @@ return [
         'voucher_nr' => 'Voucher nr',
     ],
     'debts' => 'Debts',
+    'document' => [
+        'model_id' => 'Belongs to',
+    ],
+    'documenttemplate' => [
+        'file' => 'Template file',
+        'format' => 'Template format',
+        'type_view' => 'Type',
+    ],
     //FirmwareUpgrade
     'firmware_upgrade' => [
         'start_date' => 'Start date',
