@@ -32,7 +32,6 @@ if [ $lastModule -eq 1 ]; then
     rm -rf /var/www/nmsprime/modules/*/Resources/lang
 
     rm -f /var/www/nmsprime/config/excel.php
-    /opt/remi/php80/root/usr/bin/php artisan module:v6:migrate
     /opt/remi/php80/root/usr/bin/php artisan optimize:clear
     /opt/remi/php80/root/usr/bin/php artisan module:publish
     /opt/remi/php80/root/usr/bin/php artisan migrate

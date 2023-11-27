@@ -5,7 +5,6 @@ env='/etc/nmsprime/env'
 
 cd '/var/www/nmsprime'
 rm -rf /var/www/nmsprime/bootstrap/cache/*
-/opt/remi/php80/root/usr/bin/php artisan module:v6:migrate
 /opt/remi/php80/root/usr/bin/php artisan config:cache
 /opt/remi/php80/root/usr/bin/php artisan module:publish
 /opt/remi/php80/root/usr/bin/php artisan module:migrate

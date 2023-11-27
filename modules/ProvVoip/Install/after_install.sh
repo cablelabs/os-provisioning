@@ -8,7 +8,6 @@ sed -i '/^#.*mta.conf";/s/^#//' /etc/dhcp-nmsprime/dhcpd.conf
 firewall-cmd --reload
 
 # Note: this script runs before module_after_install.sh - active state must be set before artisan cmds shall run
-/opt/remi/php80/root/usr/bin/php /var/www/nmsprime/artisan module:v6:migrate
 /opt/remi/php80/root/usr/bin/php /var/www/nmsprime/artisan module:migrate
 /opt/remi/php80/root/usr/bin/php /var/www/nmsprime/artisan provvoip:update_carrier_code_database
 /opt/remi/php80/root/usr/bin/php /var/www/nmsprime/artisan provvoip:update_ekp_code_database
