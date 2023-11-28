@@ -949,10 +949,6 @@ table.dataTable > tbody > tr.selected > * {
     padding-right: 1px;
 }
 
-.select2-results .select2-disabled,  .select2-results__option[aria-disabled=true] {
-    display: none;
-}
-
 .show {
     opacity: 1;
 }
