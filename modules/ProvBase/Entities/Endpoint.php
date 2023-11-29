@@ -450,4 +450,58 @@ class Endpoint extends \BaseModel
             }
         }
     }
+
+    /**
+     * Handle changes of reserved ip addresses based on endpoints
+     * This is called on created/updated/deleted in Endpoint observer
+     *
+     * @author Ole Ernst
+     */
+    public function reserveAddress()
+    {
+        // delete radreply containing Framed-IP-Address
+        $this->modem->radreply()->delete();
+
+        // add / update unreserved ip address in case it belongs to a bras IpPool
+        if ($this->getRawOriginal('ip') && $this->getIpPool($this->getOriginal('ip'))?->netgw?->type == 'bras') {
+            RadIpPool::updateOrCreate(
+                ['framedipaddress' => $this->getRawOriginal('ip')],
+                ['pool_name' => 'CPEPub', 'username' => '']
+            );
+        }
+
+        if ($this->deleted_at || ! $this->ip || ! $this->modem->isPPP()) {
+            return;
+        }
+
+        // add new radreply
+        $reply = new RadReply;
+        $reply->username = $this->modem->ppp_username;
+        $reply->attribute = 'Framed-IP-Address';
+        $reply->op = ':=';
+        $reply->value = $this->ip;
+        $reply->save();
+
+        // remove reserved ip address from ippool
+        RadIpPool::where('framedipaddress', $this->ip)->delete();
+    }
+
+    /**
+     * Release IP of the Modem if it is assigned to an endpoint
+     *
+     * @author Roy Schneider
+     */
+    public function releaseIp()
+    {
+        $lease = $this->modem::searchLease($this->ip.' ');
+        $validation['text'] = $lease;
+        $validation = Modem::validateLease($validation);
+
+        if (! $lease || $validation['state'] == 'red') {
+            return;
+        }
+
+        preg_match('/cm_mac = "(.+?)";/', $lease[0], $mac);
+        Modem::where('mac', $mac[1])->first()?->restart_modem();
+    }
 }

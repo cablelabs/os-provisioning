@@ -39,14 +39,11 @@ class RadReply extends \BaseModel
     {
         RadReply::truncate();
 
-        $observer = new \Modules\ProvBase\Observers\EndpointObserver;
-
-        $pppEndpoints = Endpoint::whereHas('modem', function ($q) {
+        Endpoint::whereHas('modem', function ($q) {
             $q->whereNotNull('ppp_username');
-        })->get();
-
-        foreach ($pppEndpoints as $pppEndpoint) {
-            $observer->reserveAddress($pppEndpoint);
-        }
+        })
+        ->with('modem')
+        ->get()
+        ->each(fn ($pppEndpoint) => $pppEndpoint->reserveAddress());
     }
 }
