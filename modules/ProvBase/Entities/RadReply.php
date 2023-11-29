@@ -39,7 +39,7 @@ class RadReply extends \BaseModel
     {
         RadReply::truncate();
 
-        $observer = new Modules\ProvBase\Observers\EndpointObserver;
+        $observer = new \Modules\ProvBase\Observers\EndpointObserver;
 
         $pppEndpoints = Endpoint::whereHas('modem', function ($q) {
             $q->whereNotNull('ppp_username');
