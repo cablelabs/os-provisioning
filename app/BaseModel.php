@@ -571,8 +571,16 @@ class BaseModel extends Eloquent
         ];
 
         // Lookup all SQL Tables
-        foreach (DB::getDoctrineSchemaManager()->listTableNames() as $table) {
-            foreach (Schema::getColumnListing($table) as $column) {
+        $tableWithColumns = collect(DB::select("SELECT table_name, column_name
+            FROM information_schema.columns
+            WHERE table_schema = 'nmsprime'
+            ORDER BY table_name, ordinal_position"
+        ))->groupBy('table_name');
+
+        foreach ($tableWithColumns as $table => $columns) {
+            $columns = $columns->map(fn ($column) => $column->column_name);
+
+            foreach ($columns as $column) {
                 if ($column != $this->table.'_id') {
                     continue;
                 }
@@ -581,12 +589,13 @@ class BaseModel extends Eloquent
                     continue;
                 }
 
-                $children = DB::table($table)
-                    ->where($column, $this->id)
-                    ->whereNull('deleted_at')
-                    ->get();
+                $children = DB::table($table)->where($column, $this->id);
 
-                foreach ($children as $child) {
+                if ($columns->contains('deleted_at')) {
+                    $children->whereNull('deleted_at');
+                }
+
+                foreach ($children->get() as $child) {
                     $class_child_name = $this->guessModelName($table);
 
                     // check if we got a model name
