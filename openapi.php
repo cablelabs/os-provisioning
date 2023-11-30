@@ -245,7 +245,7 @@ foreach ($apiRoutes as $route) {
             ],
         ];
 
-        $ret['paths']["/$route/{{$entity}Id}"]['post'] = [
+        $ret['paths']["/$route/{{$entity}Id}"]['patch'] = [
             'summary' => "Update existing $entity",
             'description' => "Update existing $entity by Id",
             'operationId' => "update{$entity}ById",
