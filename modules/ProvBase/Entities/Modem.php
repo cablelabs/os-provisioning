@@ -20,6 +20,7 @@ namespace Modules\ProvBase\Entities;
 
 use Acme\php\ArrayHelper;
 use App\Sla;
+use Carbon\Carbon;
 use DB;
 use File;
 use Illuminate\Support\Facades\Log;
@@ -2688,10 +2689,9 @@ class Modem extends \BaseModel
             $conf['warn'] = trans('messages.configfile_outdated');
         }
 
-        $conf['mtime'] = strftime('%c', filemtime("$path.cfg"));
+        $conf['mtime'] = Carbon::parse(filemtime("$path.cfg"))->isoFormat('lll');
 
         exec("cd /tmp; docsis -d $path.cfg", $conf['text']);
-        $conf['text'] = str_replace("\t", '&nbsp;&nbsp;&nbsp;&nbsp;', $conf['text']);
 
         return $conf;
     }
@@ -2786,10 +2786,7 @@ class Modem extends \BaseModel
         // fetch all lines matching $search
         foreach (array_unique($leases[0]) as $leaseStr) {
             if (preg_match("/$search/", $leaseStr)) {
-                $leaseStr = str_replace('  ', '&nbsp;&nbsp;', $leaseStr);
-
-                // push matching results
-                array_push($ret, preg_replace('/\r|\n/', '<br/>', $leaseStr));
+                array_push($ret, $leaseStr);
             }
         }
 

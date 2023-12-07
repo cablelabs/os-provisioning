@@ -33,19 +33,17 @@
 
     @if ($lease)
         @if (isset($lease['ipv6']))
-            <h4> IPv4 </h4>
+            <h4 class="h4"> IPv4 </h4>
         @endif
-        <span class="{{ $lease['state'] }}"><b>{!! $lease['forecast'] !!}</b></span><br>
-        <table>
+        <div class="{{ $lease['state'] }} pb-2"><b>{{ $lease['forecast'] }}</b></div>
+        <div class="space-y-3">
             @foreach ($lease['text'] as $line)
-                <tr><td><span color="grey">{!!$line!!}</span></td></tr>
+                <pre class="text-gray-500 whitespace-pre-wrap">{{ $line }}</pre>
             @endforeach
-        </table>
-
-        <br>
+        </div>
 
         @if (isset($lease['ipv6']))
-            <h4> IPv6 </h4>
+            <h4 class="h4"> IPv6 </h4>
             <div class="table-responsive">
             <table class="table streamtable table-bordered" width="auto">
                 <thead>
@@ -97,15 +95,15 @@
 
 @section('content_configfile')
     @if (isset($configfile))
-        <span class="text-green-600"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></span><br>
+        <div class="text-green-600 pb-2"><b>{{$type}} Configfile ({{$configfile['mtime']}})</b></div>
         @if (isset($configfile['warn']))
-            <span class="text-red-600"><b>{{$configfile['warn']}}</b></span><br>
+            <div class="text-red-600"><b>{{ $configfile['warn'] }}</b></div>
         @endif
-        <table>
+        <div class="space-y-1">
             @foreach ($configfile['text'] as $line)
-                <tr><td><span color="grey">{!!$line!!}</span></td></tr>
+                <pre class="text-gray-500 whitespace-pre-wrap">{{ $line }}</pre>
             @endforeach
-        </table>
+        </div>
     @else
         <span class="text-red-600">{{ trans('messages.mta_configfile_error')}}</span>
     @endif

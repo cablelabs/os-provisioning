@@ -16,31 +16,30 @@
  * limitations under the License.
  */
 ?>
+
 @include('provbase::Modem.log', ['log' => $dhcpLog, 'id' => 'dhcpLog'])
 @include('provbase::Modem.log', ['log' => $tr069Log, 'id' => 'tr069Log'])
 
+
 <div class="tab-pane fade in" id="lease">
     @if ($lease)
-        <span class="{{ $lease['state'] }}"><b>{{ $lease['forecast'] }}</b></span><br>
-        @foreach ($lease['text'] as $line)
-            <table>
-                <tr>
-                    <td>
-                        <span color="grey">{!!$line!!}</span>
-                    </td>
-                </tr>
-            </table>
-        @endforeach
+        <div class="{{ $lease['state'] }} pb-2"><b>{{ $lease['forecast'] }}</b></div>
+        <div class="space-y-3">
+            @foreach ($lease['text'] as $line)
+                <pre class="text-gray-500 whitespace-pre-wrap">{{ $line }}</pre>
+            @endforeach
+        </div>
     @else
-        <span class="text-red-600">{{ trans('messages.modem_lease_error')}}</span>
+        <div class="{{ $lease['state'] }}"><b>{{ $lease['forecast'] }}</b></div>
     @endif
 </div>
+
 <div class="tab-pane fade in" id="configfile">
     @if ($configfile && data_get($configfile, 'text', null))
         @if ($modem->configfile->device != 'tr069')
-            <span class="text-green-600"><b>Modem Configfile ({{$configfile['mtime']}})</b></span><br>
+            <div class="text-green-600 pb-2"><b>Modem Configfile ({{$configfile['mtime']}})</b></div>
             @if (isset($configfile['warn']))
-                <span class="text-red-600"><b>{{$configfile['warn']}}</b></span><br>
+                <div class="text-red-600"><b>{{ $configfile['warn'] }}</b></div>
             @endif
         @else
             <?php
@@ -50,7 +49,7 @@
             <form v-if="taskOptions" v-on:submit.prevent="updateGenieTasks">
                 <div class="row flex">
                     <div style="flex: 1;">
-                        <select2 v-model="selectedTask" :initial="taskOptions.length > 0 ? taskOptions[0] : ''" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
+                        <select2 v-model="selectedTask" :initial="taskOptions.length > 0 ? 0 : ''" v-on:input="setTask" :as-array="true" :i18n="{ all: '{{ trans('messages.all') }}'}">
                             <option v-for="(option, i) in taskOptions" :key="i" :value="option.task" v-text="option.name"></option>
                         </select2>
                     </div>
@@ -58,7 +57,7 @@
                 </div>
             </form>
         @endif
-        <div v-if="selectedTask == 'custom/setWlan'">
+        <div v-cloak v-if="selectedTask == 'custom/setWlan'">
             <form v-on:submit.prevent="setWlan" style="margin-top: 10px;">
                 <div class="form-group row">
                     <label for="WLANIndex" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">{{ trans('view.modemAnalysis.index') }}</label>
@@ -87,7 +86,7 @@
                 <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
             </form>
         </div>
-        <div v-if="selectedTask == 'custom/setDns'">
+        <div v-cloak v-if="selectedTask == 'custom/setDns'">
             <form v-on:submit.prevent="setDns" style="margin-top: 10px;">
                 <div class="form-group row">
                     <label for="DNS" class="col-sm-2 col-form-label" style="display: flex; align-items: center;">DNS</label>
@@ -98,18 +97,13 @@
                 <button type="submit" class="btn btn-danger" style="margin-top: 5px; margin-bottom: 10px;">{{ trans('view.Button_Submit') }}</button>
             </form>
         </div>
-
-        @foreach ($configfile['text'] as $line)
-            <table>
-                <tr>
-                    <td>
-                     <span color="grey">{!! $line !!}</span>
-                    </td>
-                </tr>
-            </table>
-        @endforeach
+        <div class="space-y-1">
+            @foreach ($configfile['text'] as $line)
+                <pre class="text-gray-500 whitespace-pre-wrap">{{ $line }}</pre>
+            @endforeach
+        </div>
     @else
-        <span class="text-red-600">{{ trans('messages.modem_configfile_error')}}</span>
+        <div class="text-red-600">{{ trans('messages.modem_configfile_error')}}</div>
     @endif
 </div>
 

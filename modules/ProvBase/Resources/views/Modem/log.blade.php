@@ -1,19 +1,12 @@
 <div class="tab-pane fade in" id="{{ $id }}">
     @if ($log)
-        <span class="text-green-600">
-            <b>Modem Logfile</b>
-        </span>
-        <br>
-        @foreach ($log as $line)
-            <table>
-                <tr>
-                    <td>
-                        <span color="grey">{{$line}}</span>
-                    </td>
-                </tr>
-            </table>
-        @endforeach
+        <div class="text-green-600 pb-2"><b>Modem Logfile</b></div>
+        <div class="divide-y">
+            @foreach ($log as $line)
+                <div class="text-gray-500 whitespace-pre-wrap py-1">{{ $line }}</div>
+            @endforeach
+        </div>
     @else
-        <span class="text-red-600">{{ trans('messages.modem_log_error') }}</span>
+        <div class="text-red-600">{{ trans('messages.modem_log_error') }}</div>
     @endif
 </div>
