@@ -153,18 +153,20 @@ class ModemObserver
             $modem->updateAddressFromProperty();
         }
 
-        // update modem address is pgsql (used by grafana)
-        if (multi_array_key_exists([
-            'company',
-            'firstname',
-            'lastname',
-            'street',
-            'house_number',
-            'zip',
-            'city',
-            'district',
-        ], $diff)) {
-            \Queue::pushOn('low', new \Modules\ProvMon\Jobs\PushModemAddressToPostgresql($modem->id));
+        if (Module::collections()->has('ProvMon')) {
+            // update modem address is pgsql (used by grafana)
+            if (multi_array_key_exists([
+                'company',
+                'firstname',
+                'lastname',
+                'street',
+                'house_number',
+                'zip',
+                'city',
+                'district',
+            ], $diff)) {
+                \Queue::pushOn('low', new \Modules\ProvMon\Jobs\PushModemAddressToPostgresql($modem->id));
+            }
         }
     }
 
