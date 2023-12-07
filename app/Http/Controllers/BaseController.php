@@ -587,6 +587,7 @@ class BaseController extends Controller
         $a['save_button_title_key'] = $this->save_button_title_key;
         $a['printButton'] = $this->printButton;
         $a['nmsprimeLogoLink'] = Module::collections()->has('Dashboard') ? route('Dashboard.index') : '';
+        $a['isMobile'] = preg_match(isMobileRegEx(1), $_SERVER['HTTP_USER_AGENT']);
 
         // Get Framework Informations
         $a['globalConfig'] = Cache::rememberForever('GlobalConfig', function () {
