@@ -42,6 +42,12 @@ class ContractObserver
         if (! ($contract->lng && $contract->lat)) {
             $contract->setGeocodes();
         }
+
+        if (\Module::collections()->has('SmartOnt')) {
+            if ((! $contract->contract_start) && in_array($contract->type, ['OTO_OWN', 'OTO_FTTH_FR'])) {
+                $contract->contract_start = date('Y-m-d');
+            }
+        }
     }
 
     public function created($contract)
