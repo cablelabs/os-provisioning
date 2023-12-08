@@ -259,21 +259,50 @@ window.initAjaxSelect2 = function (item, lang = null) {
  *  - search in tr HTML code for an HTML "a" element and fetch the href attribute
  * INFO: - working directly with row element also adds a click object to checkbox entry, which disabled checkbox functionality
  */
-$( document ).ready(function() {
-  $('.datatable, .clickableRow').click(function (e) {
-    if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
-      window.location = $(e.target.parentNode).find('a').attr('href')
+jQuery(function() {
+  $('#selectall').on('click', function (e) {
+    let checkboxes = $('#datatable').find('td input:checkbox:enabled')
+    let isCheckbox = $(e.target).is('#allCheck')
+    let currentState = $('#allCheck').prop('checked')
+    currentState = isCheckbox ? ! currentState : currentState
+
+    if (! isCheckbox) {
+      $('#allCheck').prop('checked', !currentState)
     }
+    checkboxes.prop('checked', !currentState)
+  })
+
+  $('.datatable, .clickableRow').on('click', function (e) {
+    console.log(e.target)
+    console.log($(e.target).is('input:checkbox'))
+    console.log($(e.target).hasClass('index_check'))
     if (
-      $(e.target).hasClass('index_check') &&
+      ($(e.target).is('input:checkbox') ||
+      $(e.target).hasClass('index_check')) &&
       !$(e.target).find('input:checkbox').is(':disabled')
     ) {
-      var checkbox = $(e.target).find('input:checkbox')
-      checkbox.prop('checked', !checkbox.prop('checked'))
+      let checkbox = $(e.target).find('input:checkbox')
+
+      if (! $(e.target).is('input:checkbox')) {
+        checkbox.prop('checked', !checkbox.prop('checked'))
+      }
+
+      if ($('#allCheck').prop('checked')) {
+        $('#allCheck').prop('checked', false)
+      }
+
+      if (
+        $('#datatable').find('td input:checkbox:enabled').length ==
+        $('#datatable').find('td input:checkbox:checked').length
+      ) {
+        $('#allCheck').prop('checked', true)
+      }
+
+      return
     }
-    if (e.target.id == 'selectall' || e.target.id == 'allCheck') {
-      var allCheck = $(this).closest('table').find('td input:checkbox:enabled')
-      allCheck.prop('checked', !allCheck.prop('checked'))
+
+    if ($(e.target).hasClass('ClickableTd') && $(e.target).is('td')) {
+      window.location = $(e.target.parentNode).find('a').attr('href')
     }
   })
 })

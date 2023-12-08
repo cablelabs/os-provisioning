@@ -233,12 +233,12 @@ $(document).ready(function() {
             className: 'index_check',
             orderable: false,
             searchable: false,
-            targets:   [1]
+            targets:   [0]
         },
         @endif
         {
             className: 'nocolvis',
-            targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[2]' : '[1]'}},
+            targets: {{ (isset($delete_allowed) && $delete_allowed == true) ? '[1]' : '[0]'}},
         },
         {
             targets :  "_all",
