@@ -2438,11 +2438,11 @@ class Modem extends \BaseModel
             $check->username = $this->ppp_username;
             $check->op = ':=';
             if ($useRadiusRelayInfo) {
-                $check->attribute = 'Cleartext-Password';
-                $check->value = $this->ppp_password;
-            } else {
                 $check->attribute = 'Auth-Type';
                 $check->value = 'Accept';
+            } else {
+                $check->attribute = 'Cleartext-Password';
+                $check->value = $this->ppp_password;
             }
             $check->save();
 
