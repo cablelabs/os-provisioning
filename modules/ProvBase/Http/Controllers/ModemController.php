@@ -386,16 +386,17 @@ class ModemController extends \BaseController
     {
         $allConfigfiles = [];
         $tr069Configfiles = collect();
+        $ontConfigfiles = collect();
 
-        $ontConfigfiles = Configfile::where('device', 'ont')->pluck('id', 'id');
-        // keys are distinct here – can safely use the “+” operator
-        $allConfigfiles += $ontConfigfiles->toArray();
-
-        if (! Module::collections()->has('Altiplano')) {
-            $tr069Configfiles = Configfile::where('device', 'tr069')->pluck('id', 'id');
-            $allConfigfiles += $tr069Configfiles->toArray();
-            ksort($allConfigfiles);
+        if (Module::collections()->has('Altiplano')) {
+            $ontConfigfiles = Configfile::where('device', 'ont')->pluck('id', 'id');
+            // keys are distinct here – can safely use the “+” operator
+            $allConfigfiles += $ontConfigfiles->toArray();
         }
+
+        $tr069Configfiles = Configfile::where('device', 'tr069')->pluck('id', 'id');
+        $allConfigfiles += $tr069Configfiles->toArray();
+        ksort($allConfigfiles);
 
         return [
             'keyById' => $allConfigfiles,
