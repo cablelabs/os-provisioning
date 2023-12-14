@@ -189,7 +189,7 @@
                     </ul>
                     <!-- end sidebar user -->
                     <!-- begin sidebar nav -->
-                    <ul class="nav">
+                    <ul class="nav pb-20">
                         <li class="nav-header" style="border-top: 1px solid; font-size: 13px !important;">
                             <a href="{{ route('Apps.active') }}" class="text-success d-inline w-100"
                                 style="display: inline-block !important; width: 100%;">{{ trans('messages.nativeApps') }}
