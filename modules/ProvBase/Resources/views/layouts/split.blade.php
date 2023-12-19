@@ -106,7 +106,8 @@
                         continue;
                     }
 
-                    $panelHeader .= "<li role=\"presentation\"><a href=\"#$table\" data-toggle=\"pill\">".trans("view.modemAnalysis.$table").'</a></li>';
+                    $panelHeader .= "<li role=\"presentation\"><a href=\"#".Str::slug($table, '_')
+                        ."\" data-toggle=\"pill\">".trans("view.modemAnalysis.$table").'</a></li>';
                 }
             }
 
