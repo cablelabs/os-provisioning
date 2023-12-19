@@ -10,8 +10,8 @@ const map = L.map('map', {
         [{{ $bounds['minLat'] }}, {{ $bounds['minLng'] }}]
     ])
 @else
-    map.setView(new L.LatLng(50.82,12.928), 16);
-    var marker = L.marker([50.81987, 12.9276208]).addTo(map);
+    map.setView(new L.LatLng(50.84,12.923), 16);
+    var marker = L.marker([50.84471, 12.92376]).addTo(map);
     var popup = marker.bindPopup('{!! trans('view.map.NMS Prime') !!}');
     alert('{{ trans('view.map.noData') }}')
 @endif
