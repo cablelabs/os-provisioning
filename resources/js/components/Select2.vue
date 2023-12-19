@@ -100,7 +100,7 @@ onMounted(() => {
 
   setValue($(select.value).val())
 
-  if (!props.multiple && !props.asArray) {
+  if (props.multiple && !props.asArray) {
     return select.value.on('select2:select select2:unselect', (e) => {
       setValue($(select.value).val())
       emit('input', $(select.value).val())
@@ -118,7 +118,7 @@ onMounted(() => {
 })
 
 function onSelect(value) {
-  if (value == i18nAll.value) {
+  if (value == i18nAll.value || props.asArray) {
     selected.value = []
   }
 
@@ -129,11 +129,6 @@ function onSelect(value) {
   selected.value.push(value)
   publishChanges()
   setValue(selected.value)
-
-  // reset values since you don't want to push multiple tasks when executing another task
-  if (props.asArray) {
-    selected.value = []
-  }
 }
 
 function onUnselect(value) {
