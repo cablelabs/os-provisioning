@@ -571,9 +571,10 @@ class BaseModel extends Eloquent
         ];
 
         // Lookup all SQL Tables
+        $database = config('database.connections.'.config('database.default').'.database');
         $tableWithColumns = collect(DB::select("SELECT table_name, column_name
             FROM information_schema.columns
-            WHERE table_schema = 'nmsprime'
+            WHERE table_schema = '{$database}'
             ORDER BY table_name, ordinal_position"
         ))->groupBy('table_name');
 
