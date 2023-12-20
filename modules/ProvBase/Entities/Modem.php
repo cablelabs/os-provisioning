@@ -2798,7 +2798,7 @@ class Modem extends \BaseModel
         // actual strategy: if possible grep active lease, otherwise return all entries
         //                  in reverse ordered format from dhcpd.leases
         foreach ($ret as $text) {
-            if (preg_match('/starts \d ([^;]+);.*;binding state active;/', $text, $match)) {
+            if (Str::contains($text, '  binding state active;') && preg_match('/starts \d ([^;]+);/', $text, $match)) {
                 $start[] = $match[1];
                 $lease[] = $text;
             }
