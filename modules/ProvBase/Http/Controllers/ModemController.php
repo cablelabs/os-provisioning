@@ -872,7 +872,7 @@ class ModemController extends \BaseController
             }
         }
 
-        if (! in_array(request('model'), ['TG862S', 'TG3442S'])) {
+        if (! in_array(request('model'), ['TG862S', 'TG3442S', 'TG3442SP'])) {
             $errors[] = 'unknown model';
         }
 
@@ -901,6 +901,7 @@ class ModemController extends \BaseController
                     snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.9.0', 'i', 1);
                     break;
                 case 'TG3442S':
+                case 'TG3442SP':
                     // set SSID name for 2.4GHz
                     snmpset($fqdn, $config->rw_community, '1.3.6.1.4.1.4115.1.20.1.1.3.22.1.2.10001', 's', request('ssid'));
                     // set SSID name for 5GHz
