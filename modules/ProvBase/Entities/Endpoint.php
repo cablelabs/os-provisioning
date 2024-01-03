@@ -41,13 +41,10 @@ class Endpoint extends \BaseModel
         $id = $this->id ?: 0;
         $modem = $this->exists ? $this->modem : Modem::with('configfile')->find(Request::get('modem_id'));
 
-        // Hostname/MAC must be unique only inside all ipv4 or ipv6 endpoints - on creation it must be compared to version=NULL to work
-        $versionFilter = ',version,'.($this->version ?: 'NULL');
-
         $rules = [
-            'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'.$versionFilter],
+            'mac' => ['nullable', 'mac', 'unique:endpoint,mac,'.$id.',id,deleted_at,NULL'],
             'hostname' => ['required', 'regex:/^(?!cm-)(?!mta-)[0-9A-Za-z\-]+$/',
-                'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'.$versionFilter, ],
+                'unique:endpoint,hostname,'.$id.',id,deleted_at,NULL'],
             'ip' => ['nullable', 'required_if:fixed_ip,1', 'ip', 'unique:endpoint,ip,'.$id.',id,deleted_at,NULL'],
             'prefix' => ['nullable', 'unique:endpoint,prefix,'.$id.',id,deleted_at,NULL'],
         ];

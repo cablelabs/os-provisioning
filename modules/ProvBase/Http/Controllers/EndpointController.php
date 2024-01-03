@@ -170,6 +170,13 @@ class EndpointController extends \BaseController
             unset($rules['mac'][array_search('required', $rules['mac'])]);
         }
 
+        // Hostname / MAC must be unique only inside all ipv4 or ipv6 endpoints
+        foreach (['mac', 'hostname'] as $ipFilterKey) {
+            if (array_key_exists($ipFilterKey, $rules) && $match = preg_grep('/^unique:endpoint.*/', $rules[$ipFilterKey])) {
+                $rules[$ipFilterKey][array_key_first($match)] .= ",version,{$data['version']}";
+            }
+        }
+
         return parent::prepare_rules($rules, $data);
     }
 }
