@@ -1565,11 +1565,8 @@ class BaseController extends Controller
                     self::$I--;
                 }
 
-                // $data .= '<ul role="group" class="jstree-children" style>';
                 $data .= self::_create_index_view_data($object);
-                // $data .= '</ul>';
             } else {
-                // $data .= self::_print_label_elem($object, isset($ordered_tree[$key+1]));
                 $data .= self::_print_label_elem($object);
             }
 

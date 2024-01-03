@@ -55,6 +55,7 @@ class FirmwareUpgradeService
             // If restart_only is false, update the Modems to use to_configfile_id
             if (! $firmwareUpgrade->restart_only) {
                 $this->updateModemConfigfile($modems, $firmwareUpgrade->to_configfile_id);
+
                 // Return early since modems restart automatically after being updated
                 return;
             }
