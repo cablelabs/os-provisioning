@@ -88,7 +88,7 @@ mysqldump -u "${auths[2]}" --password="${auths[1]}" "${auths[0]}" | gzip > "/roo
 
 for db in director icinga2 icingaweb2 nmsprime nmsprime_ccc radius; do
 	# see aws.sh for an alternative, if the dump gets too large at some point in time
-	su - postgres -c '/usr/pgsql-13/bin/pg_dump -Fc $db' > "/root/$db_dir/$db.psql"
+	su - postgres -c "/usr/pgsql-13/bin/pg_dump -Fc $db" > "/root/$db_dir/$db.psql"
 done
 
 mongodump --db=genieacs --gzip --archive="/root/$db_dir/genieacs.gz"
