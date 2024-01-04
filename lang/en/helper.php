@@ -138,6 +138,7 @@ return [
     'auto_factory_reset'            => 'Performs an automatic factory reset for TR-069 CPEs, if relevant configurations have been changed, which reqiure a reprovision. (i.e. change of phonenumbers, PPPoE credentials or configfile)',
     'factory_reset_discovered_cpes' => 'Performs an automatic factory reset for newly discovered TR-069 CPEs',
     'use_radius_relay_info' => 'Authenticate IPoE clients via DHCP Relay Information instead of PPPoE credentials, (set sql_user_name = "%{Agent-Circuit-Id}" in /etc/raddb/mods-config/sql/main/postgresql/queries.conf)',
+    'use_framed_pool' => 'Let BRAS handle IP assignments. Signal from which IP pool (named CPEPriv or CPEPub) the BRAS should assign the IP address via the Framed-Pool RADIUS attribute.',
     'acct_interim_interval'         => 'The number of seconds between each interim update to be sent from the NAS for a session (PPPoE).',
     'openning_new_tab_for_modem' => 'Check the box to open the modem edit page in new tab in topography view.',
     'ppp_session_timeout'           => 'In seconds. PPP session will not be terminated when setting the value to zero.',

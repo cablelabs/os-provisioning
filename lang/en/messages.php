@@ -318,6 +318,8 @@ return [
     'Additional modem reset button' => 'Additional modem reset button',
     'Automatic factory reset' => 'Automatic factory reset',
     'Factory reset discovered CPEs' => 'Factory reset discovered CPEs',
+    'Use RADIUS Relay Information' => 'Use RADIUS Relay Information',
+    'Send Framed-Pool attribute to BRAS' => 'Send Framed-Pool attribute to BRAS',
     'Allocate PPPoE IPs randomly' => 'Allocate PPPoE IPs randomly',
     'Last update of geoposition' => 'Last update of geoposition',
     'modemAnalysis' => [

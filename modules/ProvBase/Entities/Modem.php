@@ -556,9 +556,16 @@ class Modem extends \BaseModel
             ->where('attribute', 'Pool-Name');
     }
 
-    public function radreply()
+    public function radreplyIp()
     {
-        return $this->hasOne(RadReply::class, 'username', 'ppp_username');
+        return $this->hasOne(RadReply::class, 'username', 'ppp_username')
+            ->where('attribute', 'Framed-IP-Address');
+    }
+
+    public function radreplyPool()
+    {
+        return $this->hasOne(RadReply::class, 'username', 'ppp_username')
+            ->where('attribute', 'Framed-Pool');
     }
 
     public function radusergroups()
@@ -2519,6 +2526,31 @@ class Modem extends \BaseModel
     }
 
     /**
+     * Synchronize radreply with modem table, if PPPoE is used.
+     *
+     * @author Ole Ernst
+     */
+    public function updateRadReplyFramedPool()
+    {
+        $provBase = ProvBase::first();
+
+        // delete radreply containing Framed-Pool
+        $this->radreplyPool()->delete();
+
+        if ($this->deleted_at || ! $provBase->use_framed_pool || ! $this->isPPP()) {
+            return;
+        }
+
+        // add new radreply
+        $reply = new RadReply;
+        $reply->username = $this->ppp_username;
+        $reply->attribute = 'Framed-Pool';
+        $reply->op = ':=';
+        $reply->value = $this->public ? 'CPEPub' : 'CPEPriv';
+        $reply->save();
+    }
+
+    /**
      * Synchronize the freeradius tables with NMSPrime.
      * This function should be called on created(), updated() and deleted()
      * in the modem observer.
@@ -2529,6 +2561,7 @@ class Modem extends \BaseModel
     {
         $this->updateRadCheck();
         $this->updateRadUserGroups();
+        $this->updateRadReplyFramedPool();
     }
 
     /**

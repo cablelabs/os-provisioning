@@ -39,11 +39,17 @@ class RadReply extends \BaseModel
     {
         RadReply::truncate();
 
-        Endpoint::whereHas('modem', function ($q) {
-            $q->whereNotNull('ppp_username');
-        })
-        ->with('modem')
-        ->get()
-        ->each(fn ($pppEndpoint) => $pppEndpoint->reserveAddress());
+        Modem::whereNotNull('ppp_username')
+            ->with('endpoints')
+            ->get()
+            ->each(function ($modem) {
+                // add reserved addresses
+                foreach ($modem->endpoints as $pppEndpoint) {
+                    $pppEndpoint->reserveAddress();
+                }
+
+                // add framed IP pool, if configured in ProvBase
+                $modem->updateRadReplyFramedPool();
+            });
     }
 }

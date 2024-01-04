@@ -457,7 +457,7 @@ class Endpoint extends \BaseModel
     public function reserveAddress()
     {
         // delete radreply containing Framed-IP-Address
-        $this->modem->radreply()->delete();
+        $this->modem->radreplyIp()->delete();
 
         // add / update unreserved ip address in case it belongs to a bras IpPool
         if ($this->getRawOriginal('ip') && $this->getIpPool($this->getOriginal('ip'))?->netgw?->type == 'bras') {

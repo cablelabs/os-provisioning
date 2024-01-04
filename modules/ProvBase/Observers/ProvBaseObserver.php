@@ -22,6 +22,7 @@ use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\ProvBase;
 use Modules\ProvBase\Entities\Qos;
 use Modules\ProvBase\Entities\RadGroupReply;
+use Modules\ProvBase\Entities\RadReply;
 use Queue;
 
 /**
@@ -116,6 +117,10 @@ class ProvBaseObserver
 
         if (array_key_exists('factory_reset_discovered_cpes', $changes)) {
             Queue::pushOn('medium', new \Modules\ProvBase\Jobs\ConfigfileJob('tr069'));
+        }
+
+        if (array_key_exists('use_framed_pool', $changes)) {
+            RadReply::repopulateDb();
         }
     }
 
