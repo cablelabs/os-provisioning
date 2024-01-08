@@ -1775,12 +1775,16 @@ class BaseController extends Controller
         foreach ($editColumnData as $column => $functionname) {
             if ($column == $firstColumn) {
                 $DT->editColumn($column, function ($model) use ($functionname) {
+                    $functionname = is_callable($functionname) ? $functionname : fn ($model) => $model->$functionname();
+
                     return '<a href="'.route(NamespaceController::get_route_name().'.edit', $model->id).
-                        '"><strong>'.$model->view_icon().$model->$functionname().'</strong></a>';
+                        '"><strong>'.$model->view_icon().$functionname($model).'</strong></a>';
                 });
             } else {
                 $DT->editColumn($column, function ($model) use ($functionname) {
-                    return $model->$functionname();
+                    $functionname = is_callable($functionname) ? $functionname : fn ($model) => $model->$functionname();
+
+                    return $functionname($model);
                 });
             }
         }
