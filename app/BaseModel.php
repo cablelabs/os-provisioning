@@ -560,6 +560,7 @@ class BaseModel extends Eloquent
             'costcenter_id',
             'country_id',	// not used yet
             'debt_import_id',
+            'documenttemplate_id',
             //'mibfile_id',
             //'oid_id',
             'node_id',
