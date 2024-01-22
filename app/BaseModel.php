@@ -55,7 +55,7 @@ class BaseModel extends Eloquent
     // left here as a reminder that there is a connection variable
     // we do not set explicitely here (this is done by laravel) to be able to change it using the config
     // but you may overwrite it in case you need another connection for your derived class
-    /* protected $connection = pgsql; */
+    /* protected $connection = 'pgsql'; */
 
     protected $dateFormat = 'Y-m-d H:i:sO';
 
