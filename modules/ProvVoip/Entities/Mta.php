@@ -300,11 +300,19 @@ class Mta extends \BaseModel
             // restart - PKTC-EXCENTIS-MTA-MIB::pktcMtaDevResetNow
             // NOTES: Version 2 is important!
             // 'private' is the always working default community
-            snmp2_set($fqdn, 'private', '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
+            $ret = snmp2_set($fqdn, 'private', '1.3.6.1.4.1.7432.1.1.1.1.0', 'i', '1', 300000, 1);
+
+            if (! $ret) {
+                throw new \Exception('SNMP error');
+            }
         } catch (\Exception $e) {
             try {
                 // PKTC-IETF-MTA-MIB::pktcMtaDevResetNow
-                snmp2_set($fqdn, 'private', '1.3.6.1.2.1.140.1.1.1.0', 'i', '1', 300000, 1);
+                $ret = snmp2_set($fqdn, 'private', '1.3.6.1.2.1.140.1.1.1.0', 'i', '1', 300000, 1);
+
+                if (! $ret) {
+                    throw new \Exception('SNMP error');
+                }
             } catch (\Exception $e) {
                 Log::error('Exception restarting MTA '.$this->id.' ('.$this->mac.'): '.$e->getMessage());
 
