@@ -1051,4 +1051,15 @@ return [
     'PDFs Concatenation'        => 'PDFs Concatenation',
     'View' => 'View',
     'noFileSelected' => 'No File Selected',
+    'firmwareUpgrade' => [
+        'startDate' => 'Start Date',
+        'startTime' => 'Start Time',
+        'onlyRestartRequired' => 'Only Restart Required',
+        'cronString' => 'Cron String',
+        'batchSize' => 'Batch Size',
+        'fromConfigfile' => 'From Configfile',
+        'toConfigfile' => 'To Configfile',
+        'enterRegexp' => 'Enter regex string to match firmware version.',
+        'finishDate' => 'Finished Date',
+    ],
 ];

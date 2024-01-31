@@ -46,41 +46,41 @@ class FirmwareUpgradeController extends BaseController
             [
                 'form_type' => 'date',
                 'name' => 'start_date',
-                'description' => 'Start Date',
+                'description' => trans('view.firmwareUpgrade.startDate'),
                 'options' => ['placeholder' => 'YYYY-MM-DD'],
                 'help' => trans('helper.start_date'),
             ],
             [
                 'form_type' => 'time',
                 'name' => 'start_time',
-                'description' => 'Start Time',
+                'description' => trans('view.firmwareUpgrade.startTime'),
                 'options' => ['placeholder' => 'HH:MM'],
                 'help' => trans('helper.start_time'),
             ],
             [
                 'form_type' => 'checkbox',
                 'name' => 'restart_only',
-                'description' => 'Only Restart Required',
+                'description' => trans('view.firmwareUpgrade.onlyRestartRequired'),
                 'options' => [],
                 'help' => trans('helper.restart_only'),
             ],
             [
                 'form_type' => 'text',
                 'name' => 'cron_string',
-                'description' => 'Cron String',
+                'description' => trans('view.firmwareUpgrade.cronString'),
                 'options' => ['placeholder' => '* * * * *'],
                 'help' => trans('helper.cron_string'),
             ],
             [
                 'form_type' => 'text',
                 'name' => 'batch_size',
-                'description' => 'Batch Size',
+                'description' => trans('view.firmwareUpgrade.batchSize'),
                 'help' => trans('helper.batch_size'),
             ],
             [
                 'form_type' => 'select',
                 'name' => 'fromconfigfile_ids[]',
-                'description' => 'From Configfile',
+                'description' => trans('view.firmwareUpgrade.fromConfigfile'),
                 'value' => $this->setupSelect2FieldForPivotTable($model, 'fromConfigfile', 'Configfile'),
                 'options' => [
                     'class' => 'select2-ajax',
@@ -93,7 +93,7 @@ class FirmwareUpgradeController extends BaseController
             [
                 'form_type' => 'select',
                 'name' => 'to_configfile_id',
-                'description' => 'To Configfile',
+                'description' => trans('view.firmwareUpgrade.toConfigfile'),
                 'value' => $this->setupSelect2Field($model, 'Configfile'),
                 'options' => [
                     'class' => 'select2-ajax',
@@ -105,14 +105,14 @@ class FirmwareUpgradeController extends BaseController
             [
                 'form_type' => 'textarea',
                 'name' => 'firmware_match_string',
-                'description' => 'Enter regex string to match firmware version.',
+                'description' => trans('view.firmwareUpgrade.enterRegexp'),
                 'options' => ['rows' => '5'],
                 'help' => trans('helper.firmware_match_string'),
             ],
             [
                 'form_type' => 'text',
                 'name' => 'finished_date',
-                'description' => 'Finished Date',
+                'description' => trans('view.firmwareUpgrade.finishDate'),
                 'options' => ['readonly' => 'readonly'],
                 'help' => trans('helper.finished_time'),
             ],

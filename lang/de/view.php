@@ -1051,4 +1051,15 @@ return [
     'PDFs Concatenation'        => 'Verkettung von PDFs',
     'View' => 'Ansehen',
     'noFileSelected' => 'Keine Datei ausgewählt',
+    'firmwareUpgrade' => [
+        'startDate' => 'Startdatum',
+        'startTime' => 'Startzeit',
+        'onlyRestartRequired' => 'Nur Neustarten',
+        'cronString' => 'Cron Zeichenkette',
+        'batchSize' => 'Batch Größe',
+        'fromConfigfile' => 'Von Konfigurationsdatei',
+        'toConfigfile' => 'Zu Konfigurationsdatei',
+        'enterRegexp' => 'Regex zum Suchen der Firmware Version',
+        'finishDate' => 'Enddatum',
+    ],
 ];

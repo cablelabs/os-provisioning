@@ -178,6 +178,7 @@ return [
     'cron_string' => 'Geben Sie einen gültigen Cron-Ausdruck im Cron-Syntax ein. Ein Cron-Ausdruck besteht aus fünf Feldern, die Minute, Stunde, Tag des Monats, Monat und Wochentag repräsentieren und durch Leerzeichen getrennt sind. Verwenden Sie die https://crontab.guru/ Website für Hilfe, Beispiele und um Ihre Cron-Ausdrücke zu validieren.',
     'finished_time' => 'Dieses Feld zeigt das Datum und die Uhrzeit an, wenn das System erkannt hat, dass keine weiteren Modems ein Firmware-Upgrade benötigen. Es wird automatisch eingestellt.',
     'firmware_match_string' => 'Jede Zeile des Textbereichs wird als separater Regex-String behandelt.',
+    'restart_only' => 'Startet Geräte mit der jeweiligen Firmware nur neu.',
     /*
      * MODULE: ProvVoip
      */
