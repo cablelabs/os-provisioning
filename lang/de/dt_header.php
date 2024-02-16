@@ -634,6 +634,12 @@ return [
     'assigned_users' => 'Bearbeiter',
     'tickettypes.name' => 'Typ',
     'total_fee' => 'Gebühren',
+    'vendor' => 'Hersteller',
+    'internalId' => 'Interne Referenz',
+    'dunning' => [
+        'contract_id' => 'Vertrag',
+    ],
+    'created_at' => 'Erstellt am',
 
     // SmartOnt
     'dfsubscription' => [

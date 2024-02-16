@@ -634,6 +634,12 @@ return [
     'assigned_users' => 'Assigned Users',
     'tickettypes.name' => 'Type',
     'total_fee' => 'Fee',
+    'vendor' => 'Vendor',
+    'internalId' => 'Internal Reference',
+    'dunning' => [
+        'contract_id' => 'Contract',
+    ],
+    'created_at' => 'Created at',
 
     // SmartOnt
     'dfsubscription' => [

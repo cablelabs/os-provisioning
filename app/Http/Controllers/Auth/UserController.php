@@ -74,13 +74,6 @@ class UserController extends BaseController
             throw new \App\Exceptions\AuthException(trans('Not allowed to acces this user').'!');
         }
 
-        $roleOptions = [
-            'multiple' => 'multiple',
-        ];
-        if (! Bouncer::can('update', User::class)) {
-            $roleOptions['disabled'] = 'true';
-        }
-
         $color_files = Storage::disk('public-folder')->allFiles('components/assets-admin/css/config');
 
         $themes = ['browser_preferences' => 'browser preferences'];

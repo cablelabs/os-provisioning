@@ -2,12 +2,12 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "mix && npm run dev:pdf",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "development": "ENV_FILE=/etc/nmsprime/env/global.env mix && npm run dev:pdf",
+        "watch": "ENV_FILE=/etc/nmsprime/env/global.env mix watch",
+        "watch-poll": "mix watch --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production && npm run prod:pdf",
+        "production": "ENV_FILE=/etc/nmsprime/env/global.env mix --production && npm run prod:pdf",
         "prod:pdf": "mix --production --mix-config=modules/DocumentManagement/webpack.mix.js",
         "watch:pdf": "mix watch --mix-config=modules/DocumentManagement/webpack.mix.js",
         "dev:pdf": "mix --mix-config=modules/DocumentManagement/webpack.mix.js"

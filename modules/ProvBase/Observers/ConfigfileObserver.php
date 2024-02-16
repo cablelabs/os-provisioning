@@ -18,10 +18,10 @@
 
 namespace Modules\ProvBase\Observers;
 
-use Queue;
-use Nwidart\Modules\Facades\Module;
-use Modules\ProvBase\Entities\Modem;
 use Modules\ProvBase\Entities\Configfile;
+use Modules\ProvBase\Entities\Modem;
+use Nwidart\Modules\Facades\Module;
+use Queue;
 
 /**
  * Configfile Observer Class

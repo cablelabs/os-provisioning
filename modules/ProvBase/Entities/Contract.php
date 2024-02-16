@@ -18,11 +18,11 @@
 
 namespace Modules\ProvBase\Entities;
 
+use App\Observers\BaseObserver;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Module;
 use Request;
-use App\Observers\BaseObserver;
-use Illuminate\Support\Facades\Log;
 
 class Contract extends \BaseModel
 {
@@ -461,6 +461,33 @@ class Contract extends \BaseModel
         if (Module::collections()->has('SmartOnt') && config('smartont.flavor.hasDreamfiberSubscriptions')) {
             $ret[$i18nContract]['DfSubscription']['class'] = 'DfSubscription';
             $ret[$i18nContract]['DfSubscription']['relation'] = $this->dfsubscriptions;
+        }
+
+        if (Module::collections()->has('DocumentManagement')) {
+            data_set($ret, 'Documents.UploadDocument.view', [
+                'view' => 'documentmanagement::Document.upload',
+                'vars' => [
+                    'model_id' => $this->getKey(),
+                    'model_type' => $this::class,
+                ],
+            ]);
+
+            data_set(
+                $ret,
+                'Documents.GenerateDocument.html',
+                \Livewire\Livewire::mount(
+                    'documentmanagement::generate-document',
+                    ['contract' => $this->withoutRelations()]
+                )->html()
+            );
+
+            data_set($ret, 'Documents.Documents', [
+                'class' => 'Document',
+                'relation' => $this->documents,
+                'options' => [
+                    'hide_create_button' => true,
+                ],
+            ]);
         }
 
         return $ret;
